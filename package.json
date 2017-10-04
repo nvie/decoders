@@ -13,6 +13,8 @@
     "build:lib": "babel -d lib src --ignore '**/__tests__/**'",
     "lint": "eslint --report-unused-disable-directives src",
     "prepublish": "npm run build",
+    "prettier:check": "prettier --list-different 'src/**/*.js'",
+    "prettier:fix": "prettier --write 'src/**/*.js'",
     "test": "jest"
   },
   "repository": {
