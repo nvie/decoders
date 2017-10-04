@@ -1,6 +1,5 @@
 // @flow
 
-import { describe, it, expect } from 'jest';
 import { decodeString } from '../primitives';
 import { map } from '../transform';
 

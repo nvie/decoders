@@ -1,6 +1,5 @@
 // @flow
 
-import { describe, it, expect } from 'jest';
 import { decodeBoolean, decodeNull, decodeNumber, decodeString, decodeUndefined, decodeValue } from '../primitives';
 
 describe('decodes booleans from JSON', () => {

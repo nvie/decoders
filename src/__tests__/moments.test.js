@@ -1,6 +1,5 @@
 // @flow
 
-import { describe, it, expect } from 'jest';
 import moment from 'moment';
 
 import { decodeMoment, decodeTimestamp } from '../moments';

@@ -3,6 +3,7 @@
 [include]
 
 [libs]
+decls/
 
 [lints]
 all=error
