@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/nvie/decoders.svg?token=aq9GGFeH6P9dKDFz65um&branch=scatter-out-modules)](https://travis-ci.com/nvie/decoders)
+[![Build Status](https://travis-ci.com/nvie/decoders.svg?token=aq9GGFeH6P9dKDFz65um&branch=master)](https://travis-ci.com/nvie/decoders)
 
 Elm-like decoders for use with Flow in JS.
 
