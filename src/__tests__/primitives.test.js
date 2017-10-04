@@ -6,7 +6,7 @@ describe('decodes booleans from JSON', () => {
     const decoder = decodeBoolean();
 
     it('simply returns booleans if inputs are booleans', () => {
-        expect(decoder(false)).toBe(false);
+        expect(decoder(false)).toBe(2);
         expect(decoder(true)).toBe(true);
     });
 
