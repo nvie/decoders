@@ -1,6 +1,7 @@
 // @flow
 
-import { decodeArray, decodeMap, decodeObject, decodeTuple2, nullable, oneOf, optional } from '../compositions';
+import { decodeMap, decodeObject, decodeTuple2, nullable, oneOf, optional } from '../compositions';
+import { array as decodeArray } from '../array';
 import { decodeNumber, decodeString } from '../primitives';
 
 describe('compose decoders to form complex decoders', () => {

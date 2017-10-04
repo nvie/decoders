@@ -29,7 +29,6 @@ export type { Decoder } from './types';
 
 export { decodeBoolean, decodeConstant, fail, decodeNumber, decodeString, decodeValue } from './primitives';
 export {
-    decodeArray,
     decodeField,
     decodeMap,
     decodeObject,
@@ -41,5 +40,6 @@ export {
     oneOf4,
     optional,
 } from './compositions';
+export { array } from './array';
 export { decodeDate, decodeTimestamp, decodeMoment } from './moments';
 export { map } from './transform';
