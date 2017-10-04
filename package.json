@@ -1,0 +1,36 @@
+{
+  "name": "decoders",
+  "version": "0.0.1",
+  "description": "Elm-like decoders for when working with Flow types in JS",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "npm run build:clean && npm run build:lib && npm run build:flow",
+    "build:clean": "rimraf lib",
+    "build:flow": "flow-copy-source -v -i '**/__tests__/**' src lib",
+    "build:lib": "babel -d lib src --ignore '**/__tests__/**'",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nvie/decoders.git"
+  },
+  "author": "Vincent Driessen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nvie/decoders/issues"
+  },
+  "homepage": "https://github.com/nvie/decoders#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-flow": "^6.23.0",
+    "flow-bin": "^0.56.0",
+    "flow-copy-source": "^1.2.1",
+    "flow-typed": "^2.1.5",
+    "jest": "^21.2.1",
+    "jest-cli": "^21.2.1",
+    "rimraf": "^2.6.2"
+  },
+  "dependencies": {}
+}
