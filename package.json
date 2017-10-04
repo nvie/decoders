@@ -3,6 +3,9 @@
   "version": "0.0.3",
   "description": "Elm-like decoders for when working with Flow types in JS",
   "main": "lib/index.js",
+  "files": [
+    "lib/"
+  ],
   "scripts": {
     "build": "npm run build:clean && npm run build:lib && npm run build:flow",
     "build:clean": "rimraf lib",
