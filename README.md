@@ -86,17 +86,17 @@ decoder?  By composing it out of prefab building blocks!
 First, build a `Point` decoder!  It'll be a building block:
 
 ```javascript
-const decodePoint = decodeObject({
-    x: decodeNumber(),
-    y: decodeNumber(),
+const decodePoint = dec.object({
+    x: dec.number(),
+    y: dec.number(),
 });
 ```
 
 Next, use it to define the `Payload` decoder:
 
 ```javascript
-const decodePayload = decodeObject({
-    points: decodeArray(decodePoint);
+const decodePayload = dec.object({
+    points: dec.array(decodePoint);
 });
 ```
 
@@ -113,3 +113,49 @@ a runtime error:
 ```javascript
 type Decoder<T> = (value: any) => T;
 ```
+
+## The API
+
+The decoders package consists of a few building blocks:
+
+* [Primivites](#primitives)
+* [Compositions](#compositions)
+* [Helpers](#helpers)
+
+
+### Primitives
+
+* `dec.number()`
+  Decodes a value as a number.  NaN, Infinity, and other "special" values like
+  this are not considered valid numbers.
+
+* `dec.string()`
+* `dec.boolean()`
+* `dec.null()`
+
+* `dec.constant()`
+
+
+### Compositions
+
+Composite decoders are "higher order" decoders that can build new decoders from
+existing decoders that can already decode a "subtype".  Examples are: if you
+already have a decoder for a `Point` (= `Decoder<Point>`), then you can use
+`dec.array()` to automatically build a decoder for arrays of points:
+`dec.array(pointDecoder)`, which will be of type `Decoder<Array<Point>>`.
+
+* `dec.array()`
+* `dec.object()`
+
+<a name="array" href="#array">#</a> dec.<b>array</b>(<i>decoder</i>: <i>Decoder&lt;T&gt;</i>) [<>](https://github.com/nvie/decoders/blob/master/src/array.js "Source")
+
+Foo bar qux.
+
+
+<a name="object" href="#object">#</a> dec.<b>object</b>(<i>decoder</i>: <i>Decoder&lt;XXX&gt;</i>) [<>](https://github.com/nvie/decoders/blob/master/src/object.js "Source")
+
+Foo bar qux.
+
+
+### Helpers
+
