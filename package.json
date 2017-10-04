@@ -11,6 +11,7 @@
     "build:clean": "rimraf lib",
     "build:flow": "flow-copy-source -v -i '**/__tests__/**' src lib",
     "build:lib": "babel -d lib src --ignore '**/__tests__/**'",
+    "lint": "eslint --report-unused-disable-directives src",
     "prepublish": "npm run build",
     "test": "jest"
   },
@@ -27,8 +28,11 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
+    "babel-eslint": "^8.0.1",
     "babel-preset-env": "^1.6.0",
     "babel-preset-flow": "^6.23.0",
+    "eslint": "^4.8.0",
+    "eslint-plugin-flowtype": "^2.37.0",
     "flow-bin": "^0.56.0",
     "flow-copy-source": "^1.2.1",
     "flow-typed": "^2.1.5",
