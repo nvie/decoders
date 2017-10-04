@@ -7,15 +7,18 @@
     "lib/"
   ],
   "scripts": {
-    "build": "npm run build:clean && npm run build:lib && npm run build:flow",
+    "build": "yarn run build:clean && yarn run build:lib && yarn run build:flow",
     "build:clean": "rimraf lib",
     "build:flow": "flow-copy-source -v -i '**/__tests__/**' src lib",
     "build:lib": "babel -d lib src --ignore '**/__tests__/**'",
-    "lint": "eslint --report-unused-disable-directives src",
-    "prepublish": "npm run build",
-    "prettier:check": "prettier --list-different 'src/**/*.js'",
+    "check": "yarn run check:flow && yarn run check:eslint && yarn run check:prettier",
+    "check:eslint": "eslint --report-unused-disable-directives src",
+    "check:prettier": "prettier --list-different 'src/**/*.js'",
+    "prepublish": "yarn run test && yarn run check && yarn run build",
     "prettier:fix": "prettier --write 'src/**/*.js'",
-    "test": "jest"
+    "test": "yarn run test:flow && yarn run test:jest",
+    "test:flow": "flow check",
+    "test:jest": "jest"
   },
   "repository": {
     "type": "git",
