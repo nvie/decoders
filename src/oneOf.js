@@ -38,5 +38,5 @@ export function oneOf4<T1, T2, T3, T4>(
     alt3: Decoder<T3>,
     alt4: Decoder<T4>
 ): Decoder<T1 | T2 | T3 | T4> {
-    return oneOf(oneOf(alt1, alt2), oneOf(alt3, alt4));
+    return oneOf(alt1, oneOf3(alt2, alt3, alt4));
 }
