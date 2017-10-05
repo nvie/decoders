@@ -132,6 +132,14 @@ a `DecodeError` if anything other than a finite number value is found.  This
 means that values like `NaN`, or positive and negative `Infinity` are not
 considered valid numbers.
 
+```javascript
+const mydecoder = decodeNumber();
+mydecoder(123) === 123
+mydecoder(-3.14) === -3.14
+mydecoder(NaN)   // DecodeError
+mydecoder('not a number')   // DecodeError
+```
+
 * `dec.string()`
 * `dec.boolean()`
 * `dec.null()`
