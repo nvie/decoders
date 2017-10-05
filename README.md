@@ -120,7 +120,6 @@ The decoders package consists of a few building blocks:
 
 * [Primivites](#primitives)
 * [Compositions](#compositions)
-* [Helpers](#helpers)
 
 
 ### Primitives
