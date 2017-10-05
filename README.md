@@ -270,12 +270,14 @@ mydecoder(['hello', 'world'])  // DecodeError
 ---
 
 
-<a name="decodeObject" href="#decodeObject">#</a> <b>decodeObject</b><i>&lt;O: { [field: string]: Decoder&lt;any&gt; }&gt;</i>(mapping: O): <i>Decoder&lt;$ObjMap&lt;O, &lt;T&gt;(decoder: Decoder&lt;T&gt;) => T&gt;&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/object.js "Source")
+<a name="decodeObject" href="#decodeObject">#</a> <b>decodeObject</b><i>&lt;O: { [field: string]: Decoder&lt;any&gt; }&gt;</i>(mapping: O): <i>Decoder&lt;{ ... }&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/object.js "Source")
 
 Returns a decoder capable of decoding **objects of the given shape**
 corresponding decoders, provided that you already have decoders for all values
 in the mapping.
 
+> 
+> **NOTE:**
 > 🙀 OMG, that type signature!  **Don't panic.**  Here's what it says with an
 > example.  Given this mapping of field-to-decoder instances:
 > 
@@ -285,6 +287,7 @@ in the mapping.
 >     }
 > 
 > compose a decoder of this type: `Decoder<{ name: string, age: number }>`.
+>
 
 ```javascript
 const mydecoder = decodeObject({
