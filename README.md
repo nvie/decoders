@@ -237,18 +237,23 @@ already have a decoder for a `Point` (= `Decoder<Point>`), then you can use
 `decodeArray()` to automatically build a decoder for arrays of points:
 `decodeArray(pointDecoder)`, which will be of type `Decoder<Array<Point>>`.
 
-* `decodeArray()`
-* `decodeObject()`
 
-<a name="array" href="#array">#</a> .<b>decodeArray</b>(<i>decoder</i>: <i>Decoder&lt;T&gt;</i>) [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/array.js "Source")
+<a name="decodeArray" href="#decodeArray">#</a> <b>decodeArray</b><i>&lt;T&gt;</i>(decoder: <i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;Array&lt;T&gt;&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/array.js "Source")
 
-Foo bar qux.
+Returns a decoder capable of decoding **an array of <i>T</i>'s**, provided that
+you already have a decoder for <i>T</i>.
+
+```javascript
+const mydecoder = decodeArray(decodeString());
+mydecoder(['hello', 'world']) === ['hello', 'world']
+mydecoder(['hello', 1.2])  // DecodeError
+```
 
 
-<a name="object" href="#object">#</a> <b>decodeObject</b>(<i>decoder</i>: <i>Decoder&lt;XXX&gt;</i>) [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/object.js "Source")
+---
 
-Foo bar qux.
+<a name="decodeObject" href="#decodeObject">#</a> <b>decodeObject</b>(<i>decoder</i>: <i>Decoder&lt;XXX&gt;</i>) [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/object.js "Source")
 
+...
 
-### Helpers
 
