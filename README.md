@@ -214,6 +214,21 @@ mydecoder(undefined)       // DecodeError
 ```
 
 
+---
+
+<a name="decodeValue" href="#decodeValue">#</a> <b>decodeValue</b><i>&lt;T&gt;</i>(value: T): <i>Decoder&lt;T&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/constants.js "Source")
+
+Returns a decoder that will always return the provided value **without looking
+at the input**.  This is useful to manually add extra fields.
+
+```javascript
+const mydecoder = decodeValue(2.1);
+mydecoder('hello') === 2.1
+mydecoder(false) === 2.1
+mydecoder(undefined) === 2.1
+```
+
+
 ### Compositions
 
 Composite decoders are "higher order" decoders that can build new decoders from
