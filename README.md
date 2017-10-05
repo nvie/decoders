@@ -252,6 +252,45 @@ mydecoder(['hello', 1.2])  // DecodeError
 
 ---
 
+
+<a name="decodeTuple2" href="#decodeTuple2">#</a> <b>decodeTuple2</b><i>&lt;T1, T2&gt;</i>(decoder1: <i>Decoder&lt;T1&gt;</i>, decoder2: <i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;[T1, T2]&lt;T&gt;&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/tuple.js "Source")
+
+Returns a decoder capable of decoding **a 2-tuple of <i>(T1, T2)</i>'s**,
+provided that you already have a decoder for <i>T1</i> and <i>T2</i>.  A tuple
+is like an Array, but the number of items in the array is fixed (two) and their
+types don't have to be homogeneous.
+
+```javascript
+const mydecoder = decodeTuple2(decodeString(), decodeNumber());
+mydecoder(['hello', 1.2]) === ['hello', 1.2]
+mydecoder(['hello', 'world'])  // DecodeError
+```
+
+
+---
+
+
+<a name="decodeObject" href="#decodeObject">#</a> <b>decodeObject</b><i>&lt;O: { [field: string]: Decoder&lt;any&gt; }&gt;</i>(mapping: O): <i>Decoder&lt;O, Dedecoder&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/object.js "Source")
+
+🙀 OMG, that type signature!  **Don't panic.**
+
+Returns a decoder capable of decoding **objects of the given shape**
+corresponding decoders, provided that you already have decoders for all values
+in the mapping.
+
+```javascript
+const mydecoder = decodeObject({
+    x: decodeNumber(),
+    y: decodeNumber(),
+});
+mydecoder({ x: 1, y: 2 }) === { x: 1, y: 2 };
+mydecoder({ x: 1, y: 2, z: 3 }) === { x: 1, y: 2 };  // ⚠️
+mydecoder({ x: 1 })  // DecodeError (missing field y)
+```
+
+
+---
+
 <a name="decodeObject" href="#decodeObject">#</a> <b>decodeObject</b>(<i>decoder</i>: <i>Decoder&lt;XXX&gt;</i>) [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/object.js "Source")
 
 ...
