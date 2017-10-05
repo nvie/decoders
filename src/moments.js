@@ -3,7 +3,7 @@
 import moment from 'moment';
 
 import { DecodeError } from './asserts';
-import { decodeNumber } from './primitives';
+import { decodeNumber } from './number';
 import type { Decoder } from './types';
 import { map } from './utils';
 

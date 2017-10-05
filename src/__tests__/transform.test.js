@@ -1,7 +1,6 @@
 // @flow
 
-import { decodeString } from '../primitives';
-import { map } from '../utils';
+import { decodeString, map } from '..';
 
 describe('compose using map', () => {
     it('map produces derived decoders', () => {

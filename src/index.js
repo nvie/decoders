@@ -28,13 +28,15 @@
 export type { Decoder } from './types';
 
 export { decodeArray } from './array';
+export { decodeBoolean } from './boolean';
 export { andThen, decodeField, decodeMap, decodeObject, optional } from './compositions';
 export { decodeConstant, decodeNull, decodeUndefined } from './constants';
 export { fail } from './fail';
 export { decodeDate, decodeMoment, decodeTimestamp } from './moments';
 export { nullable } from './nullable';
+export { decodeNumber } from './number';
 export { oneOf, oneOf3, oneOf4 } from './oneOf';
-export { decodeBoolean, decodeNumber, decodeString } from './primitives';
+export { decodeString } from './string';
 export { decodeTuple2 } from './tuple';
 export { map } from './utils';
 export { decodeValue } from './value';
