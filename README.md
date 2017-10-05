@@ -253,7 +253,7 @@ mydecoder(['hello', 1.2])  // DecodeError
 ---
 
 
-<a name="decodeTuple2" href="#decodeTuple2">#</a> <b>decodeTuple2</b><i>&lt;T1, T2&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;[T1, T2]&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/tuple.js "Source")
+<a name="decodeTuple2" href="#decodeTuple2">#</a> <b>decodeTuple2</b><i>&lt;T1, T2&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;[T1, T2]&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/tuple.js "Source")<br />
 <a name="decodeTuple3" href="#decodeTuple3">#</a> <b>decodeTuple3</b><i>&lt;T1, T2, T3&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>, <i>Decoder&lt;T3&gt;</i>): <i>Decoder&lt;[T1, T2, T3]&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/tuple.js "Source")
 
 Returns a decoder capable of decoding **a 2-tuple of <i>(T1, T2)</i>'s**,
@@ -302,8 +302,8 @@ mydecoder({ x: 1 })  // DecodeError (missing field y)
 ---
 
 
-<a name="oneOf" href="#oneOf">#</a> <b>oneOf</b><i>&lt;T1, T2&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;T1 | T2&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/oneOf.js "Source")
-<a name="oneOf2" href="#oneOf2">#</a> <b>oneOf2</b><i>&lt;T1, T2&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;T1 | T2&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/oneOf.js "Source")
+<a name="oneOf" href="#oneOf">#</a> <b>oneOf</b><i>&lt;T1, T2&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;T1 | T2&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/oneOf.js "Source")<br />
+<a name="oneOf2" href="#oneOf2">#</a> <b>oneOf2</b><i>&lt;T1, T2&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;T1 | T2&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/oneOf.js "Source")<br />
 <a name="oneOf3" href="#oneOf3">#</a> <b>oneOf3</b><i>&lt;T1, T2, T3&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>, <i>Decoder&lt;T3&gt;</i>): <i>Decoder&lt;T1 | T2 | T3&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/oneOf.js "Source")
 ...
 
