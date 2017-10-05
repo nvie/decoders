@@ -238,7 +238,7 @@ already have a decoder for a `Point` (= `Decoder<Point>`), then you can use
 `decodeArray(pointDecoder)`, which will be of type `Decoder<Array<Point>>`.
 
 
-<a name="decodeArray" href="#decodeArray">#</a> <b>decodeArray</b><i>&lt;T&gt;</i>(decoder: <i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;Array&lt;T&gt;&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/array.js "Source")
+<a name="decodeArray" href="#decodeArray">#</a> <b>decodeArray</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;Array&lt;T&gt;&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/array.js "Source")
 
 Returns a decoder capable of decoding **an array of <i>T</i>'s**, provided that
 you already have a decoder for <i>T</i>.
@@ -253,7 +253,8 @@ mydecoder(['hello', 1.2])  // DecodeError
 ---
 
 
-<a name="decodeTuple2" href="#decodeTuple2">#</a> <b>decodeTuple2</b><i>&lt;T1, T2&gt;</i>(decoder1: <i>Decoder&lt;T1&gt;</i>, decoder2: <i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;[T1, T2]&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/tuple.js "Source")
+<a name="decodeTuple2" href="#decodeTuple2">#</a> <b>decodeTuple2</b><i>&lt;T1, T2&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;[T1, T2]&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/tuple.js "Source")
+<a name="decodeTuple3" href="#decodeTuple3">#</a> <b>decodeTuple3</b><i>&lt;T1, T2, T3&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>, <i>Decoder&lt;T3&gt;</i>): <i>Decoder&lt;[T1, T2, T3]&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/tuple.js "Source")
 
 Returns a decoder capable of decoding **a 2-tuple of <i>(T1, T2)</i>'s**,
 provided that you already have a decoder for <i>T1</i> and <i>T2</i>.  A tuple
@@ -276,7 +277,6 @@ Returns a decoder capable of decoding **objects of the given shape**
 corresponding decoders, provided that you already have decoders for all values
 in the mapping.
 
-> 
 > **NOTE:**
 > 🙀 OMG, that type signature!  **Don't panic.**  Here's what it says with an
 > example.  Given this mapping of field-to-decoder instances:
@@ -287,7 +287,6 @@ in the mapping.
 >     }
 > 
 > compose a decoder of this type: `Decoder<{ name: string, age: number }>`.
->
 
 ```javascript
 const mydecoder = decodeObject({
@@ -299,3 +298,22 @@ mydecoder({ x: 1, y: 2, z: 3 }) === { x: 1, y: 2 };  // ⚠️
 mydecoder({ x: 1 })  // DecodeError (missing field y)
 ```
 
+
+---
+
+
+<a name="oneOf" href="#oneOf">#</a> <b>oneOf</b><i>&lt;T1, T2&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;T1 | T2&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/oneOf.js "Source")
+<a name="oneOf2" href="#oneOf2">#</a> <b>oneOf2</b><i>&lt;T1, T2&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;T1 | T2&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/oneOf.js "Source")
+<a name="oneOf3" href="#oneOf3">#</a> <b>oneOf3</b><i>&lt;T1, T2, T3&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>, <i>Decoder&lt;T3&gt;</i>): <i>Decoder&lt;T1 | T2 | T3&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/oneOf.js "Source")
+...
+
+Returns a decoder capable of decoding **either one of <i>T1</i> or <i>T2</i>**,
+provided that you already have decoders for <i>T1</i> and <i>T2</i>.
+
+```javascript
+const mydecoder = oneOf(decodeNumber(), decodeString());
+mydecoder('hello world') === 'hello world';
+mydecoder(123) === 123;
+mydecoder(false)     // DecodeError
+```
+ 
