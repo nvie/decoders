@@ -140,6 +140,8 @@ mydecoder('not a number')  // DecodeError
 ```
 
 
+---
+
 <a name="decodeString" href="#decodeString">#</a> <b>decodeString</b>(): <i>Decoder&lt;string&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/string.js "Source")
 
 Returns a decoder capable of decoding string values.
@@ -150,6 +152,8 @@ mydecoder('hello world') === 'hello world'
 mydecoder(123)             // DecodeError
 ```
 
+
+---
 
 <a name="decodeBoolean" href="#decodeBoolean">#</a> <b>decodeBoolean</b>(): <i>Decoder&lt;boolean&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/string.js "Source")
 
@@ -165,6 +169,8 @@ mydecoder(123)             // DecodeError
 ```
 
 
+---
+
 <a name="decodeNull" href="#decodeNull">#</a> <b>decodeNull</b>(): <i>Decoder&lt;null&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/constants.js "Source")
 
 Returns a decoder capable of decoding the constant value `null`.
@@ -178,6 +184,8 @@ mydecoder('hello world')   // DecodeError
 ```
 
 
+---
+
 <a name="decodeUndefined" href="#decodeUndefined">#</a> <b>decodeUndefined</b>(): <i>Decoder&lt;void&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/constants.js "Source")
 
 Returns a decoder capable of decoding the constant value `undefined`.
@@ -190,6 +198,8 @@ mydecoder(false)           // DecodeError
 mydecoder('hello world')   // DecodeError
 ```
 
+
+---
 
 <a name="decodeConstant" href="#decodeConstant">#</a> <b>decodeConstant</b><i>&lt;T&gt;</i>(value: T): <i>Decoder&lt;T&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/constants.js "Source")
 
