@@ -4,8 +4,8 @@ import moment from 'moment';
 
 import { DecodeError } from './asserts';
 import { decodeNumber } from './primitives';
-import { map } from './transform';
 import type { Decoder } from './types';
+import { map } from './utils';
 
 const date_re = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
 const datetime_with_tzinfo_re = /^[0-9]{4}-[0-9]{2}-[0-9]{2}[ T][0-9]{2}:[0-9]{2}:[0-9]{2}(?:[.][0-9]+)?(?:Z|[+-][0-9]{2}:?[0-9]{2})$/;

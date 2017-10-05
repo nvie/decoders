@@ -35,6 +35,6 @@ export { decodeDate, decodeMoment, decodeTimestamp } from './moments';
 export { nullable } from './nullable';
 export { oneOf, oneOf3, oneOf4 } from './oneOf';
 export { decodeBoolean, decodeNumber, decodeString } from './primitives';
-export { map } from './transform';
 export { decodeTuple2 } from './tuple';
+export { map } from './utils';
 export { decodeValue } from './value';
