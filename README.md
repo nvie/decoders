@@ -86,17 +86,17 @@ decoder?  By composing it out of prefab building blocks!
 First, build a `Point` decoder!  It'll be a building block:
 
 ```javascript
-const decodePoint = dec.object({
-    x: dec.number(),
-    y: dec.number(),
+const decodePoint = decodeObject({
+    x: decodeNumber(),
+    y: decodeNumber(),
 });
 ```
 
 Next, use it to define the `Payload` decoder:
 
 ```javascript
-const decodePayload = dec.object({
-    points: dec.array(decodePoint);
+const decodePayload = decodeObject({
+    points: decodeArray(decodePoint);
 });
 ```
 
@@ -136,15 +136,40 @@ considered valid numbers.
 const mydecoder = decodeNumber();
 mydecoder(123) === 123
 mydecoder(-3.14) === -3.14
-mydecoder(NaN)   // DecodeError
-mydecoder('not a number')   // DecodeError
+mydecoder(NaN)             // DecodeError
+mydecoder('not a number')  // DecodeError
 ```
 
-* `dec.string()`
-* `dec.boolean()`
-* `dec.null()`
 
-* `dec.constant()`
+<a name="decodeString" href="#decodeString">#</a> <b>decodeString</b>() [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/string.js "Source")
+
+Decodes a string value.  Will throw a DecodeError if anything other than
+a string value is found.
+
+```javascript
+const mydecoder = decodeString();
+mydecoder('hello world') === 'hello world'
+mydecoder(123)             // DecodeError
+```
+
+
+<a name="decodeBoolean" href="#decodeBoolean">#</a> <b>decodeBoolean</b>() [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/string.js "Source")
+
+Decodes a boolean value.  Will throw a DecodeError if anything other than
+a boolean value is found.
+
+```javascript
+const mydecoder = decodeBoolean();
+mydecoder(false) === false
+mydecoder(true) === true
+mydecoder(undefined)       // DecodeError
+mydecoder('hello world')   // DecodeError
+mydecoder(123)             // DecodeError
+```
+
+
+* `decodeNull()`
+* `decodeConstant()`
 
 
 ### Compositions
@@ -152,18 +177,18 @@ mydecoder('not a number')   // DecodeError
 Composite decoders are "higher order" decoders that can build new decoders from
 existing decoders that can already decode a "subtype".  Examples are: if you
 already have a decoder for a `Point` (= `Decoder<Point>`), then you can use
-`dec.array()` to automatically build a decoder for arrays of points:
-`dec.array(pointDecoder)`, which will be of type `Decoder<Array<Point>>`.
+`decodeArray()` to automatically build a decoder for arrays of points:
+`decodeArray(pointDecoder)`, which will be of type `Decoder<Array<Point>>`.
 
-* `dec.array()`
-* `dec.object()`
+* `decodeArray()`
+* `decodeObject()`
 
-<a name="array" href="#array">#</a> dec.<b>array</b>(<i>decoder</i>: <i>Decoder&lt;T&gt;</i>) [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/array.js "Source")
+<a name="array" href="#array">#</a> .<b>decodeArray</b>(<i>decoder</i>: <i>Decoder&lt;T&gt;</i>) [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/array.js "Source")
 
 Foo bar qux.
 
 
-<a name="object" href="#object">#</a> dec.<b>object</b>(<i>decoder</i>: <i>Decoder&lt;XXX&gt;</i>) [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/object.js "Source")
+<a name="object" href="#object">#</a> <b>decodeObject</b>(<i>decoder</i>: <i>Decoder&lt;XXX&gt;</i>) [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/object.js "Source")
 
 Foo bar qux.
 
