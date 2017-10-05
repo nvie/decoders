@@ -165,8 +165,43 @@ mydecoder(123)             // DecodeError
 ```
 
 
-* `decodeNull()`
-* `decodeConstant()`
+<a name="decodeNull" href="#decodeNull">#</a> <b>decodeNull</b>(): <i>Decoder&lt;null&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/constants.js "Source")
+
+Returns a decoder capable of decoding the constant value `null`.
+
+```javascript
+const mydecoder = decodeNull();
+mydecoder(null) === null
+mydecoder(false)           // DecodeError
+mydecoder(undefined)       // DecodeError
+mydecoder('hello world')   // DecodeError
+```
+
+
+<a name="decodeUndefined" href="#decodeUndefined">#</a> <b>decodeUndefined</b>(): <i>Decoder&lt;void&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/constants.js "Source")
+
+Returns a decoder capable of decoding the constant value `undefined`.
+
+```javascript
+const mydecoder = decodeUndefined();
+mydecoder(undefined) === undefined
+mydecoder(null)            // DecodeError
+mydecoder(false)           // DecodeError
+mydecoder('hello world')   // DecodeError
+```
+
+
+<a name="decodeConstant" href="#decodeConstant">#</a> <b>decodeConstant</b><i>&lt;T&gt;</i>(value: T): <i>Decoder&lt;T&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/constants.js "Source")
+
+Returns a decoder capable of decoding just the given constant value.
+
+```javascript
+const mydecoder = decodeConstant('hello');
+mydecoder('hello') === 'hello'
+mydecoder('this breaks')   // DecodeError
+mydecoder(false)           // DecodeError
+mydecoder(undefined)       // DecodeError
+```
 
 
 ### Compositions
