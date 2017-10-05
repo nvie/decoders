@@ -16,6 +16,18 @@ export function asArray(blobs: any): Array<any> {
 }
 
 /**
+ * Will verify that the passed-in arbitrary object indeed is an Object,
+ * and return it.  Otherwise throws a runtime error.
+ */
+export function asObject(blob: any): Object {
+    if (typeof blob !== 'object') {
+        throw DecodeError('Not an object', 'Expected an object', blob);
+    }
+
+    return (blob: Object);
+}
+
+/**
  * Create a decoder that, when decoding A works, will allow you to generate a decoder B on
  * the fly, based on the parsed-out value of A, then continue feeding that decoder the
  * original blob.

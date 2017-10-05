@@ -27,16 +27,18 @@
  */
 export type { Decoder } from './types';
 
+export { andThen } from './andThen';
 export { decodeArray } from './array';
 export { decodeBoolean } from './boolean';
-export { andThen, decodeField, decodeMap, decodeObject, optional } from './compositions';
-export { decodeConstant, decodeNull, decodeUndefined } from './constants';
+export { decodeConstant, decodeNull, decodeUndefined, decodeValue } from './constants';
 export { fail } from './fail';
+export { decodeMap } from './map';
 export { decodeDate, decodeMoment, decodeTimestamp } from './moments';
 export { nullable } from './nullable';
 export { decodeNumber } from './number';
+export { decodeField, decodeObject } from './object';
 export { oneOf, oneOf3, oneOf4 } from './oneOf';
+export { optional } from './optional';
 export { decodeString } from './string';
 export { decodeTuple2 } from './tuple';
 export { map } from './utils';
-export { decodeValue } from './value';
