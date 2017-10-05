@@ -11,11 +11,13 @@
     "build:clean": "rimraf lib",
     "build:flow": "flow-copy-source -v -i '**/__tests__/**' src lib",
     "build:lib": "babel -d lib src --ignore '**/__tests__/**'",
-    "check": "yarn run check:eslint && yarn run check:prettier",
+    "check": "yarn run check:eslint && yarn run check:prettier && yarn run check:import-sort",
     "check:eslint": "eslint --report-unused-disable-directives src",
+    "check:import-sort": "find src -iname '*.js' | xargs -n1 import-sort --diff",
     "check:prettier": "prettier --list-different 'src/**/*.js'",
+    "fix:import-sort": "find src -iname '*.js' | xargs -n1 import-sort -o",
+    "fix:prettier": "prettier --write 'src/**/*.js'",
     "prepublish": "yarn run test && yarn run check && yarn run build",
-    "prettier:fix": "prettier --write 'src/**/*.js'",
     "test": "yarn run test:flow && yarn run test:jest && yarn run check",
     "test:flow": "flow check",
     "test:jest": "jest"
@@ -42,6 +44,9 @@
     "flow-copy-source": "^1.2.1",
     "flow-typed": "^2.1.5",
     "import-sort-cli": "^3.3.0",
+    "import-sort-parser-babylon": "^3.2.0",
+    "import-sort-style-eslint": "^3.0.0",
+    "import-sort-style-module": "^3.0.0",
     "jest": "^21.2.1",
     "jest-cli": "^21.2.1",
     "prettier": "^1.7.4",
@@ -51,7 +56,7 @@
     "moment": "^2.18.1"
   },
   "importSort": {
-    ".js, .jsx": {
+    ".js": {
       "parser": "babylon",
       "style": "module"
     }
