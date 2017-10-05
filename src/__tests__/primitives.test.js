@@ -1,6 +1,6 @@
 // @flow
 
-import { decodeBoolean, decodeNull, decodeNumber, decodeString, decodeUndefined, decodeValue } from '../primitives';
+import { decodeBoolean, decodeNull, decodeNumber, decodeString, decodeUndefined, decodeValue } from '../index';
 
 describe('decodes booleans from JSON', () => {
     const decoder = decodeBoolean();

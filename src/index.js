@@ -27,19 +27,14 @@
  */
 export type { Decoder } from './types';
 
-export { decodeBoolean, decodeConstant, fail, decodeNumber, decodeString, decodeValue } from './primitives';
-export {
-    decodeArray,
-    decodeField,
-    decodeMap,
-    decodeObject,
-    decodeTuple2,
-    andThen,
-    nullable,
-    oneOf,
-    oneOf3,
-    oneOf4,
-    optional,
-} from './compositions';
-export { decodeDate, decodeTimestamp, decodeMoment } from './moments';
+export { decodeArray } from './array';
+export { andThen, decodeField, decodeMap, decodeObject, optional } from './compositions';
+export { decodeConstant, decodeNull, decodeUndefined } from './constants';
+export { fail } from './fail';
+export { decodeDate, decodeMoment, decodeTimestamp } from './moments';
+export { nullable } from './nullable';
+export { oneOf, oneOf3, oneOf4 } from './oneOf';
+export { decodeBoolean, decodeNumber, decodeString } from './primitives';
 export { map } from './transform';
+export { decodeTuple2 } from './tuple';
+export { decodeValue } from './value';
