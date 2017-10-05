@@ -127,10 +127,9 @@ The decoders package consists of a few building blocks:
 
 <a name="decodeNumber" href="#decodeNumber">#</a> <b>decodeNumber</b>(): <i>Decoder&lt;number&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/number.js "Source")
 
-Decodes a finite (!) number (integer or float) value.  Will throw
-a `DecodeError` if anything other than a finite number value is found.  This
-means that values like `NaN`, or positive and negative `Infinity` are not
-considered valid numbers.
+Returns a decoder capable of decoding finite (!) numbers (integer or float
+values).  This means that values like `NaN`, or positive and negative
+`Infinity` are not considered valid numbers.
 
 ```javascript
 const mydecoder = decodeNumber();
@@ -143,8 +142,7 @@ mydecoder('not a number')  // DecodeError
 
 <a name="decodeString" href="#decodeString">#</a> <b>decodeString</b>(): <i>Decoder&lt;string&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/string.js "Source")
 
-Decodes a string value.  Will throw a DecodeError if anything other than
-a string value is found.
+Returns a decoder capable of decoding string values.
 
 ```javascript
 const mydecoder = decodeString();
@@ -155,8 +153,7 @@ mydecoder(123)             // DecodeError
 
 <a name="decodeBoolean" href="#decodeBoolean">#</a> <b>decodeBoolean</b>(): <i>Decoder&lt;boolean&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/string.js "Source")
 
-Decodes a boolean value.  Will throw a DecodeError if anything other than
-a boolean value is found.
+Returns a decoder capable of decoding boolean values.
 
 ```javascript
 const mydecoder = decodeBoolean();
