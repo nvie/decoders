@@ -3,6 +3,7 @@
 import { DecodeError } from './asserts';
 import { decodeNull, decodeUndefined, decodeValue } from './primitives';
 import type { Decoder } from './types';
+import { asArray} from './utils';
 
 /**
  * A "type function" which informs Flow about how a type will be modified at runtime.
@@ -10,18 +11,6 @@ import type { Decoder } from './types';
  * definition helps construct $ObjMap types.
  */
 type Dedecoder = <T>(decoder: Decoder<T>) => T;
-
-/**
- * Will verify that the passed-in arbitrary object indeed is an Array,
- * and return it.  Otherwise throws a runtime error.
- */
-function asArray(blobs: any): Array<any> {
-    if (!Array.isArray(blobs)) {
-        throw DecodeError('Not an array', 'Expected an array', blobs);
-    }
-
-    return (blobs: Array<any>);
-}
 
 /**
  * Will verify that the passed-in arbitrary object indeed is an Object,
@@ -64,26 +53,6 @@ export function optional<T>(decoder: Decoder<T>, allowNull: boolean = false): De
  */
 export function nullable<T>(decoder: Decoder<T>): Decoder<null | T> {
     return oneOf(decoder, decodeNull());
-}
-
-/**
- * Decodes an Array<T> from the given input, given a decoder for type T.
- */
-export function decodeArray<T>(itemDecoder: Decoder<T>): Decoder<Array<T>> {
-    return (blobs: any) => {
-        blobs = asArray(blobs);
-        return blobs.map((blob, index) => {
-            try {
-                return itemDecoder(blob);
-            } catch (e) {
-                if ('blob' in e) {
-                    throw DecodeError(`Unexpected value at index ${index}`, 'See below.', blob, [e]);
-                } else {
-                    throw e;
-                }
-            }
-        });
-    };
 }
 
 /**
