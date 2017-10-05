@@ -301,6 +301,33 @@ mydecoder({ x: 1 })  // DecodeError (missing field y)
 
 ---
 
+<a name="decodeMap" href="#decodeMap">#</a> <b>decodeMap</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;Map&lt;string, T&gt;&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/map.js "Source")
+
+Returns a decoder capable of decoding **Map instances of strings-to-T's**
+, provided that you already have a decoder for <i>T</i>.
+
+The main difference between `decodeObject()` and `decodeMap()` is that you'd
+typically use `decodeObject()` if this is a record-like object, where you know
+all the field names and the values are heterogeneous.  Whereas with Mappings
+the keys are typically unknown and the values homogeneous.
+
+
+```javascript
+const mydecoder = decodeMapping(decodePerson());
+mydecoder({
+    "1": { name: "Alice" },
+    "2": { name: "Bob" },
+    "3": { name: "Charlie" },
+}) === Map([
+    ['1', { name: "Alice" }],
+    ['2', { name: "Bob" }],
+    ['3', { name: "Charlie" }],
+])
+```
+
+
+---
+
 
 <a name="oneOf" href="#oneOf">#</a> <b>oneOf</b><i>&lt;T1, T2&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;T1 | T2&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/oneOf.js "Source")<br />
 <a name="oneOf2" href="#oneOf2">#</a> <b>oneOf2</b><i>&lt;T1, T2&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;T1 | T2&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/oneOf.js "Source")<br />
