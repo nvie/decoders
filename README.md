@@ -125,9 +125,12 @@ The decoders package consists of a few building blocks:
 
 ### Primitives
 
-* `dec.number()`
-  Decodes a value as a number.  NaN, Infinity, and other "special" values like
-  this are not considered valid numbers.
+<a name="decodeNumber" href="#decodeNumber">#</a> <b>decodeNumber</b>() [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/number.js "Source")
+
+Decodes a finite (!) number (integer or float) value.  Will throw
+a `DecodeError` if anything other than a finite number value is found.  This
+means that values like `NaN`, or positive and negative `Infinity` are not
+considered valid numbers.
 
 * `dec.string()`
 * `dec.boolean()`
@@ -147,12 +150,12 @@ already have a decoder for a `Point` (= `Decoder<Point>`), then you can use
 * `dec.array()`
 * `dec.object()`
 
-<a name="array" href="#array">#</a> dec.<b>array</b>(<i>decoder</i>: <i>Decoder&lt;T&gt;</i>) [<>](https://github.com/nvie/decoders/blob/master/src/array.js "Source")
+<a name="array" href="#array">#</a> dec.<b>array</b>(<i>decoder</i>: <i>Decoder&lt;T&gt;</i>) [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/array.js "Source")
 
 Foo bar qux.
 
 
-<a name="object" href="#object">#</a> dec.<b>object</b>(<i>decoder</i>: <i>Decoder&lt;XXX&gt;</i>) [<>](https://github.com/nvie/decoders/blob/master/src/object.js "Source")
+<a name="object" href="#object">#</a> dec.<b>object</b>(<i>decoder</i>: <i>Decoder&lt;XXX&gt;</i>) [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/object.js "Source")
 
 Foo bar qux.
 
