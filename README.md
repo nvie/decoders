@@ -114,7 +114,7 @@ a runtime error:
 type Decoder<T> = (value: any) => T;
 ```
 
-## The API
+## API
 
 The decoders package consists of a few building blocks:
 
