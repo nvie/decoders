@@ -253,7 +253,7 @@ mydecoder(['hello', 1.2])  // DecodeError
 ---
 
 
-<a name="decodeTuple2" href="#decodeTuple2">#</a> <b>decodeTuple2</b><i>&lt;T1, T2&gt;</i>(decoder1: <i>Decoder&lt;T1&gt;</i>, decoder2: <i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;[T1, T2]&lt;T&gt;&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/tuple.js "Source")
+<a name="decodeTuple2" href="#decodeTuple2">#</a> <b>decodeTuple2</b><i>&lt;T1, T2&gt;</i>(decoder1: <i>Decoder&lt;T1&gt;</i>, decoder2: <i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;[T1, T2]&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/tuple.js "Source")
 
 Returns a decoder capable of decoding **a 2-tuple of <i>(T1, T2)</i>'s**,
 provided that you already have a decoder for <i>T1</i> and <i>T2</i>.  A tuple
