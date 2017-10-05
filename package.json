@@ -41,6 +41,7 @@
     "flow-bin": "^0.56.0",
     "flow-copy-source": "^1.2.1",
     "flow-typed": "^2.1.5",
+    "import-sort-cli": "^3.3.0",
     "jest": "^21.2.1",
     "jest-cli": "^21.2.1",
     "prettier": "^1.7.4",
@@ -48,5 +49,11 @@
   },
   "dependencies": {
     "moment": "^2.18.1"
+  },
+  "importSort": {
+    ".js, .jsx": {
+      "parser": "babylon",
+      "style": "module"
+    }
   }
 }
