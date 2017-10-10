@@ -56,7 +56,7 @@
     "rimraf": "^2.6.2"
   },
   "dependencies": {
-    "moment": "^2.18.1"
+    "moment": "2.x"
   },
   "importSort": {
     ".js": {
