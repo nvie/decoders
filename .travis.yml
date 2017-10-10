@@ -20,5 +20,9 @@ script:
   - yarn --version
   - yarn test
 
+after_success:
+  # Publish the coverage report to Coveralls
+  - cat coverage/lcov.info | node_modules/.bin/coveralls
+
 notifications:
   email: false

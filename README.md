@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/nvie/decoders.svg?branch=master)](https://travis-ci.org/nvie/decoders)
+[![Build Status](https://img.shields.io/travis/nvie/decoders.svg)](https://travis-ci.org/nvie/decoders)
+[![Coverage Status](https://img.shields.io/coveralls/nvie/decoders.svg)](https://coveralls.io/github/nvie/decoders?branch=master)
 
 Elm-like decoders for use with Flow in JS.
 
