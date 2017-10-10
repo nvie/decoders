@@ -2,15 +2,15 @@
 
 import { decodeBoolean } from '../boolean';
 
-describe('decodes booleans from JSON', () => {
+describe('boolean', () => {
     const decoder = decodeBoolean();
 
-    it('simply returns booleans if inputs are booleans', () => {
+    it('valid', () => {
         expect(decoder(false)).toBe(false);
         expect(decoder(true)).toBe(true);
     });
 
-    it('throws runtime error if inputs are not booleans', () => {
+    it('invalid', () => {
         expect(() => decoder('')).toThrow();
         expect(() => decoder('1')).toThrow();
         expect(() => decoder('not a number')).toThrow();

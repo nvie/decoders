@@ -5,13 +5,13 @@ import { decodeNumber } from '../number';
 import { decodeString } from '../string';
 
 describe('arrays', () => {
-    it('composes array-of decoders', () => {
+    it('one-level array wrapping', () => {
         const dec = decodeArray(decodeString());
         expect(dec([])).toEqual([]);
         expect(dec(['foo', 'bar'])).toEqual(['foo', 'bar']);
     });
 
-    it('composes nested array-of decoders', () => {
+    it('complex nesting decoding', () => {
         const dec = decodeArray(decodeArray(decodeNumber()));
         expect(dec([])).toEqual([]);
         expect(dec([[]])).toEqual([[]]);
