@@ -3,6 +3,12 @@
 import { assertTest, assertType } from './asserts';
 import type { Decoder } from './types';
 
+const nullDecoder: Decoder<null> = decodeConstant(null);
+const undefinedDecoder: Decoder<void> = blob => {
+    assertType(blob, 'undefined');
+    return undefined;
+};
+
 /**
  * Decodes any hardcoded value, without looking at the input data.
  */
@@ -31,15 +37,12 @@ export function decodeConstant<T>(value: T): Decoder<T> {
  * Decodes the null value.
  */
 export function decodeNull(): Decoder<null> {
-    return decodeConstant(null);
+    return nullDecoder;
 }
 
 /**
  * Decodes the undefined value.
  */
 export function decodeUndefined(): Decoder<void> {
-    return (blob: any) => {
-        assertType(blob, 'undefined');
-        return undefined;
-    };
+    return undefinedDecoder;
 }
