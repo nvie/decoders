@@ -32,7 +32,7 @@ export { decodeArray } from './array';
 export { decodeBoolean } from './boolean';
 export { decodeConstant, decodeNull, decodeUndefined, decodeValue } from './constants';
 export { fail } from './fail';
-export { decodeMap } from './map';
+export { decodeMap } from './mapping';
 export { decodeDate, decodeMoment, decodeTimestamp } from './moments';
 export { nullable } from './nullable';
 export { decodeNumber } from './number';

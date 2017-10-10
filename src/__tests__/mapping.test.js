@@ -1,6 +1,6 @@
 // @flow
 
-import { decodeMap } from '../map';
+import { decodeMap } from '../mapping';
 import { decodeObject } from '../object';
 import { decodeString } from '../string';
 
