@@ -1,67 +1,48 @@
 // @flow
 
-import { decodeBoolean, decodeNull, decodeNumber, decodeString, decodeUndefined, decodeValue } from '../index';
+import { decodeConstant, decodeNull, decodeUndefined, decodeValue } from '../constants';
 
-describe('decodes booleans from JSON', () => {
-    const decoder = decodeBoolean();
-
-    it('simply returns booleans if inputs are booleans', () => {
-        expect(decoder(false)).toBe(false);
-        expect(decoder(true)).toBe(true);
-    });
-
-    it('throws runtime error if inputs are not booleans', () => {
-        expect(() => decoder('')).toThrow();
-        expect(() => decoder('1')).toThrow();
-        expect(() => decoder('not a number')).toThrow();
-        expect(() => decoder(null)).toThrow();
-        expect(() => decoder(undefined)).toThrow();
-        expect(() => decoder(NaN)).toThrow();
-        expect(() => decoder(1 / 0)).toThrow();
-    });
-});
-
-describe('decodes numbers from JSON', () => {
-    const decoder = decodeNumber();
-
-    it('simply returns numbers if inputs are numbers', () => {
-        expect(decoder(0)).toBe(0);
-        expect(decoder(1)).toBe(1);
-        expect(decoder(3.14)).toBeCloseTo(3.14);
-        expect(decoder(-13)).toBe(-13);
-    });
-
-    it('throws runtime error if inputs are not numbers', () => {
-        expect(() => decoder('')).toThrow();
-        expect(() => decoder('1')).toThrow();
-        expect(() => decoder('not a number')).toThrow();
-        expect(() => decoder(true)).toThrow();
-        expect(() => decoder(null)).toThrow();
-        expect(() => decoder(undefined)).toThrow();
-        expect(() => decoder(1 / 0)).toThrow();
-    });
-
-    it('throws runtime error if inputs are not _finite_ numbers', () => {
-        expect(() => decoder(Number.NEGATIVE_INFINITY)).toThrow();
-        expect(() => decoder(Number.POSITIVE_INFINITY)).toThrow();
-        expect(() => decoder(NaN)).toThrow();
-    });
-});
-
-describe('decodes strings from JSON', () => {
-    const decoder = decodeString();
-
-    it('simply returns strings if inputs are strings', () => {
-        expect(decoder('')).toBe('');
-        expect(decoder('foo')).toBe('foo');
-        expect(decoder(' 1 2 3 ')).toBe(' 1 2 3 ');
-    });
-
-    it('throws runtime error if inputs are not strings', () => {
+describe('decodes constant from JSON', () => {
+    it('decode the null constant (just like decodeNull)', () => {
+        const decoder = decodeConstant(null);
+        expect(decoder(null)).toBeNull();
         expect(() => decoder(1)).toThrow();
         expect(() => decoder(true)).toThrow();
-        expect(() => decoder(null)).toThrow();
         expect(() => decoder(undefined)).toThrow();
+        expect(() => decoder('foo')).toThrow();
+        expect(() => decoder(NaN)).toThrow();
+        expect(() => decoder(1 / 0)).toThrow();
+    });
+
+    it('decode string constants', () => {
+        const decoder = decodeConstant('foo');
+        expect(decoder('foo')).toEqual('foo');
+        expect(() => decoder(1)).toThrow();
+        expect(() => decoder(true)).toThrow();
+        expect(() => decoder(undefined)).toThrow();
+        expect(() => decoder('bar')).toThrow();
+        expect(() => decoder(NaN)).toThrow();
+        expect(() => decoder(1 / 0)).toThrow();
+    });
+
+    it('decode number constants', () => {
+        const decoder = decodeConstant(42);
+        expect(decoder(42)).toEqual(42);
+        expect(() => decoder(1)).toThrow();
+        expect(() => decoder(true)).toThrow();
+        expect(() => decoder(undefined)).toThrow();
+        expect(() => decoder('bar')).toThrow();
+        expect(() => decoder(NaN)).toThrow();
+        expect(() => decoder(1 / 0)).toThrow();
+    });
+
+    it('decode boolean constants', () => {
+        const decoder = decodeConstant(false);
+        expect(decoder(false)).toEqual(false);
+        expect(() => decoder(1)).toThrow();
+        expect(() => decoder(true)).toThrow();
+        expect(() => decoder(undefined)).toThrow();
+        expect(() => decoder('bar')).toThrow();
         expect(() => decoder(NaN)).toThrow();
         expect(() => decoder(1 / 0)).toThrow();
     });
