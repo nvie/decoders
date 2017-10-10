@@ -16,6 +16,7 @@ const THIS_YEAR = moment().year();
 
 function validateMoment(moment: moment$Moment): moment$Moment {
     // This is a noop in production, for perf reasons
+    /* istanbul ignore if */
     if (process.env.NODE_ENV === 'production') {
         return moment;
     }
