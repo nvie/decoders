@@ -1,3 +1,4 @@
+[![npm](https://img.shields.io/npm/v/decoders.svg)](https://www.npmjs.com/package/decoders)
 [![Build Status](https://img.shields.io/travis/nvie/decoders.svg)](https://travis-ci.org/nvie/decoders)
 [![Coverage Status](https://img.shields.io/coveralls/nvie/decoders.svg)](https://coveralls.io/github/nvie/decoders?branch=master)
 
