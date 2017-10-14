@@ -11,12 +11,12 @@ describe('boolean', () => {
     });
 
     it('invalid', () => {
-        expect(() => decoder('')).toThrow();
-        expect(() => decoder('1')).toThrow();
-        expect(() => decoder('not a number')).toThrow();
-        expect(() => decoder(null)).toThrow();
-        expect(() => decoder(undefined)).toThrow();
-        expect(() => decoder(NaN)).toThrow();
-        expect(() => decoder(1 / 0)).toThrow();
+        expect(() => decoder('')).toThrow('Must be boolean');
+        expect(() => decoder('1')).toThrow('Must be boolean');
+        expect(() => decoder('not a number')).toThrow('Must be boolean');
+        expect(() => decoder(null)).toThrow('Must be boolean');
+        expect(() => decoder(undefined)).toThrow('Must be boolean');
+        expect(() => decoder(NaN)).toThrow('Must be boolean');
+        expect(() => decoder(1 / 0)).toThrow('Must be boolean');
     });
 });
