@@ -1,19 +1,22 @@
 // @flow
 
-import { assertTest } from './asserts';
-import type { Decoder } from './types';
+import * as Result from './Result';
+import type { Decoder, Verifier } from './types';
+import { makeDecoder } from './utils';
 
-const numberDecoder: Decoder<number> = blob => {
-    assertTest(blob, Number.isFinite, 'Not a number', 'Expected a finite number');
-    return (blob: number);
+const verifyNumber: Verifier<number> = (blob: any) => {
+    return typeof blob === 'number' ? Result.ok(blob) : Result.err('Must be number number');
 };
 
+const verifyFiniteNumber: Verifier<number> = (blob: any) =>
+    Result.chain(verifyNumber(blob), n => (Number.isFinite(n) ? Result.ok(n) : Result.err('Number must be finite')));
+
 /**
- * Decodes a finite (!) number (integer or float) value.  Will throw
- * a `DecodeError` if anything other than a finite number value is found.  This
- * means that values like `NaN`, or positive and negative `Infinity` are not
- * considered valid numbers.
+ * Decodes a boolean value.
+ * Will throw a DecodeError if anything other than a boolean value is found.
  */
-export function decodeNumber(): Decoder<number> {
-    return numberDecoder;
+const _finnumdec = makeDecoder(verifyFiniteNumber);
+const _numdec = makeDecoder(verifyNumber);
+export function decodeNumber(allowInfinity: boolean = false): Decoder<number> {
+    return allowInfinity ? _numdec : _finnumdec;
 }

@@ -2,7 +2,7 @@
 
 import { decodeNumber } from '../number';
 
-describe('decodes numbers from JSON', () => {
+describe('decodes numbers', () => {
     const decoder = decodeNumber();
 
     it('simply returns numbers if inputs are numbers', () => {
@@ -12,19 +12,26 @@ describe('decodes numbers from JSON', () => {
         expect(decoder(-13)).toBe(-13);
     });
 
-    it('throws runtime error if inputs are not numbers', () => {
-        expect(() => decoder('')).toThrow();
-        expect(() => decoder('1')).toThrow();
-        expect(() => decoder('not a number')).toThrow();
-        expect(() => decoder(true)).toThrow();
-        expect(() => decoder(null)).toThrow();
-        expect(() => decoder(undefined)).toThrow();
-        expect(() => decoder(1 / 0)).toThrow();
+    it('throws runtime error if inputs are not _finite_ numbers', () => {
+        expect(() => decoder(Number.NEGATIVE_INFINITY)).toThrow('Number must be finite');
+        expect(() => decoder(Number.POSITIVE_INFINITY)).toThrow('Number must be finite');
+        expect(() => decoder(NaN)).toThrow('Number must be finite');
     });
 
-    it('throws runtime error if inputs are not _finite_ numbers', () => {
-        expect(() => decoder(Number.NEGATIVE_INFINITY)).toThrow();
-        expect(() => decoder(Number.POSITIVE_INFINITY)).toThrow();
-        expect(() => decoder(NaN)).toThrow();
+    it('throws runtime error if inputs are not numbers', () => {
+        expect(() => decoder('')).toThrow('Must be number');
+        expect(() => decoder('1')).toThrow('Must be number');
+        expect(() => decoder('not a number')).toThrow('Must be number');
+        expect(() => decoder(true)).toThrow('Must be number');
+        expect(() => decoder(null)).toThrow('Must be number');
+        expect(() => decoder(undefined)).toThrow('Must be number');
+        expect(() => decoder(1 / 0)).toThrow('Number must be finite');
+    });
+
+    it('decode infinite numbers when requested', () => {
+        const decoder = decodeNumber(/* allowInfinity */ true);
+        expect(decoder(Number.NEGATIVE_INFINITY)).toEqual(Number.NEGATIVE_INFINITY);
+        expect(decoder(Number.POSITIVE_INFINITY)).toEqual(Number.POSITIVE_INFINITY);
+        expect(decoder(NaN)).toBeNaN();
     });
 });

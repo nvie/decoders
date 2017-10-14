@@ -1,6 +1,8 @@
 // @flow
 
 import { DecodeError } from './asserts';
+import * as Result from './Result';
+import type { Decoder, Verifier } from './types';
 
 /**
  * Will verify that the passed-in arbitrary object indeed is an Array,
@@ -24,4 +26,17 @@ export function asObject(blob: any): Object {
     }
 
     return (blob: Object);
+}
+
+export function makeDecoder<T>(verifier: Verifier<T>): Decoder<T> {
+    return (blob: any) => {
+        const result = verifier(blob);
+        return Result.dispatch(
+            result,
+            error => {
+                throw new Error(error);
+            },
+            data => data
+        );
+    };
 }
