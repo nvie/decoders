@@ -34,12 +34,7 @@ export function dispatch<T, O>(
  * Chain together a sequence of computations that may fail.
  */
 export function andThen<A, B>(result: ResultT<A>, callback: A => ResultT<B>): ResultT<B> {
-    // prettier-ignore
-    return dispatch(
-        result,
-        msg => err(msg),
-        value => callback(value)
-    );
+    return result.Result === 'Ok' ? callback(result.value) : result;
 }
 
 export const chain = andThen;

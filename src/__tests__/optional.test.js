@@ -1,5 +1,3 @@
-// @flow
-
 import { optional } from '../optional';
 import { decodeString } from '../string';
 

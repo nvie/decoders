@@ -2,7 +2,7 @@
 
 import * as Result from './Result';
 import type { Decoder, Verifier } from './types';
-import { makeDecoder } from './utils';
+import { toDecoder } from './utils';
 
 const verifyNumber: Verifier<number> = (blob: any) => {
     if (typeof blob !== 'number') {
@@ -25,8 +25,8 @@ const verifyFiniteNumber: Verifier<number> = (blob: any) => {
  * Decodes a boolean value.
  * Will throw a DecodeError if anything other than a boolean value is found.
  */
-const _finnumdec = makeDecoder(verifyFiniteNumber);
-const _numdec = makeDecoder(verifyNumber);
+const _finnumdec = toDecoder(verifyFiniteNumber);
+const _numdec = toDecoder(verifyNumber);
 export function decodeNumber(allowInfinity: boolean = false): Decoder<number> {
     return allowInfinity ? _numdec : _finnumdec;
 }
