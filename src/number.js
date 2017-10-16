@@ -5,11 +5,21 @@ import type { Decoder, Verifier } from './types';
 import { makeDecoder } from './utils';
 
 const verifyNumber: Verifier<number> = (blob: any) => {
-    return typeof blob === 'number' ? Result.ok(blob) : Result.err('Must be number number');
+    if (typeof blob !== 'number') {
+        return Result.err('Must be number');
+    } else if (Number.isNaN(blob)) {
+        return Result.err('Must be number, got NaN');
+    } else {
+        return Result.ok(blob);
+    }
 };
 
-const verifyFiniteNumber: Verifier<number> = (blob: any) =>
-    Result.chain(verifyNumber(blob), n => (Number.isFinite(n) ? Result.ok(n) : Result.err('Number must be finite')));
+const verifyFiniteNumber: Verifier<number> = (blob: any) => {
+    return Result.chain(
+        verifyNumber(blob),
+        n => (Number.isFinite(n) ? Result.ok(n) : Result.err('Number must be finite'))
+    );
+};
 
 /**
  * Decodes a boolean value.
