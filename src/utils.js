@@ -1,7 +1,8 @@
 // @flow
 
+import { Result } from 'lemons';
+
 import { DecodeError } from './asserts';
-import * as Result from './Result';
 import type { Decoder, Verifier } from './types';
 
 const DECODER_MARK = Symbol('DECODER_MARK');
@@ -38,8 +39,8 @@ export function isDecoderError(error: Error): boolean {
 export function toDecoder<T>(verifier: Verifier<T>): Decoder<T> {
     return (blob: any) => {
         const result = verifier(blob);
-        return Result.dispatch(
-            result,
+        return result.dispatch(
+            data => data,
             error => {
                 const e = new Error(error);
                 // $FlowFixMe
@@ -47,8 +48,7 @@ export function toDecoder<T>(verifier: Verifier<T>): Decoder<T> {
                 // $FlowFixMe
                 e.blob = blob;
                 throw e;
-            },
-            data => data
+            }
         );
     };
 }

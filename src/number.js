@@ -1,24 +1,23 @@
 // @flow
 
-import * as Result from './Result';
+import { Err, Ok } from 'lemons';
+
 import type { Decoder, Verifier } from './types';
 import { toDecoder } from './utils';
 
 const verifyNumber: Verifier<number> = (blob: any) => {
     if (typeof blob !== 'number') {
-        return Result.err('Must be number');
+        return Err('Must be number');
     } else if (Number.isNaN(blob)) {
-        return Result.err('Must be number, got NaN');
+        return Err('Must be number, got NaN');
     } else {
-        return Result.ok(blob);
+        return Ok(blob);
     }
 };
 
 const verifyFiniteNumber: Verifier<number> = (blob: any) => {
-    return Result.chain(
-        verifyNumber(blob),
-        n => (Number.isFinite(n) ? Result.ok(n) : Result.err('Number must be finite'))
-    );
+    const result = verifyNumber(blob);
+    return result.andThen(n => (Number.isFinite(n) ? Ok(n) : Err('Number must be finite')));
 };
 
 /**

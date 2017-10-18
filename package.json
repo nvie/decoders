@@ -56,6 +56,7 @@
     "rimraf": "^2.6.2"
   },
   "dependencies": {
+    "lemons": "^0.0.3",
     "moment": "2.x"
   },
   "importSort": {

@@ -1,11 +1,12 @@
 // @flow
 
-import * as Result from './Result';
+import { Err, Ok } from 'lemons';
+
 import type { Decoder, Verifier } from './types';
 import { toDecoder } from './utils';
 
 const verifyBoolean: Verifier<boolean> = (blob: any) => {
-    return typeof blob === 'boolean' ? Result.ok(blob) : Result.err('Must be boolean');
+    return typeof blob === 'boolean' ? Ok(blob) : Err('Must be boolean');
 };
 
 /**
