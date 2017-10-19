@@ -1,22 +1,21 @@
 // @flow
 
-// import { decodeBoolean } from '../boolean';
+import { boolean } from '../boolean';
 
-// describe('boolean', () => {
-//     const decoder = decodeBoolean();
+describe('boolean', () => {
+    const verifier = boolean;
 
-//     it('valid', () => {
-//         expect(decoder(false)).toBe(false);
-//         expect(decoder(true)).toBe(true);
-//     });
+    it('valid', () => {
+        const okay = [true, false];
+        for (const value of okay) {
+            expect(verifier(value).isOk()).toBe(true);
+        }
+    });
 
-//     it('invalid', () => {
-//         expect(() => decoder('')).toThrow('Must be boolean');
-//         expect(() => decoder('1')).toThrow('Must be boolean');
-//         expect(() => decoder('not a number')).toThrow('Must be boolean');
-//         expect(() => decoder(null)).toThrow('Must be boolean');
-//         expect(() => decoder(undefined)).toThrow('Must be boolean');
-//         expect(() => decoder(NaN)).toThrow('Must be boolean');
-//         expect(() => decoder(1 / 0)).toThrow('Must be boolean');
-//     });
-// });
+    it('invalid', () => {
+        const not_okay = ['', '1', 'not a number', null, undefined, NaN, 1 / 0];
+        for (const value of not_okay) {
+            expect(verifier(value).isErr()).toBe(true);
+        }
+    });
+});

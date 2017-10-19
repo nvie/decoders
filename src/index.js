@@ -17,28 +17,23 @@
  * take anything and either fail with an error, or guarantee to return the expected
  * type.  In our case, it's fine to fail with a runtime error.
  *
- * For example a string decoder will:
- *
- * decodeString('ohai')      => 'ohai'
- * decodeString(false)       => RUNTIME ERROR
- * decodeString({foo: 123})  => RUNTIME ERROR
- * decodeString(null)        => RUNTIME ERROR
- *
  */
-export type { Decoder } from './types';
+export type { Decoder, Verifier } from './types';
 
-export { andThen } from './andThen';
-export { decodeArray } from './array';
-export { decodeBoolean } from './boolean';
-export { decodeConstant, decodeNull, decodeUndefined, decodeValue } from './constants';
-export { fail } from './fail';
-export { map } from './map';
-export { decodeMap } from './mapping';
-export { decodeDate, decodeMoment, decodeTimestamp } from './moments';
-export { nullable } from './nullable';
-export { decodeNumber } from './number';
-export { decodeField, decodeObject } from './object';
-export { oneOf, oneOf3, oneOf4 } from './oneOf';
-export { optional } from './optional';
-export { decodeString } from './string';
-export { decodeTuple2 } from './tuple';
+import { boolean } from './boolean';
+import { number } from './number';
+import { buildDecoder } from './utils';
+
+/* export { andThen } from './andThen'; */
+/* export { decodeArray } from './array'; */
+/* export { decodeConstant, decodeNull, decodeUndefined, decodeValue } from './constants'; */
+/* export { fail } from './fail'; */
+/* export { map } from './map'; */
+/* export { decodeMap } from './mapping'; */
+/* export { decodeDate, decodeMoment, decodeTimestamp } from './moments'; */
+/* export { nullable } from './nullable'; */
+/* export { decodeField, decodeObject } from './object'; */
+/* export { oneOf, oneOf3, oneOf4 } from './oneOf'; */
+/* export { optional } from './optional'; */
+/* export { decodeString } from './string'; */
+/* export { decodeTuple2 } from './tuple'; */

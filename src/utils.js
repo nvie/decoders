@@ -36,9 +36,11 @@ export function isDecoderError(error: Error): boolean {
     return !!error[DECODER_MARK];
 }
 
-export function toDecoder<T>(verifier: Verifier<T>): Decoder<T> {
+export function buildDecoder<T>(verifier: Verifier<T>): Decoder<T> {
     return (blob: any) => verifier(blob).unwrap();
 }
+
+export const toDecoder = buildDecoder;
 
 export function toVerifier<T>(decoder: Decoder<T>): Verifier<T> {
     return (blob: any) => {
