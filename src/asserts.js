@@ -1,6 +1,8 @@
 // @flow
 
-import type { JSType } from './types';
+import { Err } from 'lemons';
+
+import type { DecodeErrorType, JSType } from './types';
 
 export function summarizer(key: string, value: mixed): mixed {
     // Don't collapse the outer level
@@ -16,15 +18,12 @@ export function summarizer(key: string, value: mixed): mixed {
     return value;
 }
 
-export type DecodeErrorType = {
+export function DecodeError(
     message: string,
-    details: string,
-    blob: any,
-    parents: Array<DecodeErrorType>,
-    format: (prefix?: string) => string,
-};
-
-export function DecodeError(message: string, details: string, blob: any, parents: Array<DecodeError> = []) {
+    details: string = '',
+    blob: any = undefined,
+    parents: Array<DecodeErrorType> = []
+): DecodeErrorType {
     let err = {
         message,
         details,
@@ -63,4 +62,13 @@ export function assertTest(blob: any, predicate: any => boolean, message: string
  */
 export function assertType(blob: any, jsType: JSType): void {
     return assertTest(blob, x => typeof x === jsType, `Not a ${jsType}`, `Expected a "${jsType}" value`);
+}
+
+export function makeErr(
+    message: string,
+    details: string = '',
+    blob: any = undefined,
+    parents: Array<DecodeErrorType> = []
+) {
+    return Err(DecodeError(message, details, blob, parents));
 }

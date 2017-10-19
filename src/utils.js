@@ -37,20 +37,7 @@ export function isDecoderError(error: Error): boolean {
 }
 
 export function toDecoder<T>(verifier: Verifier<T>): Decoder<T> {
-    return (blob: any) => {
-        const result = verifier(blob);
-        return result.dispatch(
-            data => data,
-            error => {
-                const e = new Error(error);
-                // $FlowFixMe
-                e[DECODER_MARK] = true;
-                // $FlowFixMe
-                e.blob = blob;
-                throw e;
-            }
-        );
-    };
+    return (blob: any) => verifier(blob).unwrap();
 }
 
 export function toVerifier<T>(decoder: Decoder<T>): Verifier<T> {

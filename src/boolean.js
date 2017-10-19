@@ -4,9 +4,10 @@ import { Err, Ok } from 'lemons';
 
 import type { Decoder, Verifier } from './types';
 import { toDecoder } from './utils';
+import { DecodeError } from './asserts';
 
 const verifyBoolean: Verifier<boolean> = (blob: any) => {
-    return typeof blob === 'boolean' ? Ok(blob) : Err('Must be boolean');
+    return typeof blob === 'boolean' ? Ok(blob) : Err(DecodeError('Must be boolean', '', blob));
 };
 
 /**
