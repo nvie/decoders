@@ -1,17 +1,10 @@
 // @flow
 
-import { assertType } from './asserts';
-import type { Decoder } from './types';
+import { Ok } from 'lemons';
 
-const stringDecoder: Decoder<string> = blob => {
-    assertType(blob, 'string');
-    return (blob: string);
+import type { Verifier } from './types';
+import { makeErr } from './asserts';
+
+export const string: Verifier<string> = (blob: any) => {
+    return typeof blob === 'string' ? Ok(blob) : makeErr('Must be string');
 };
-
-/**
- * Decodes a string value.
- * Will throw a DecodeError if anything other than a string value is found.
- */
-export function decodeString(): Decoder<string> {
-    return stringDecoder;
-}

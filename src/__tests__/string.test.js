@@ -1,22 +1,34 @@
 // @flow
 
-// import { decodeString } from '../string';
+import { string } from '../string';
 
-// describe('strings', () => {
-//     const decoder = decodeString();
+describe('string', () => {
+    const verifier = string;
+    const okay = ['', 'foo', ' 1 2 3 '];
+    const not_okay = [
+        null,
+        false,
+        true,
+        -1,
+        0,
+        1,
+        3.14,
+        -13,
+        Number.NEGATIVE_INFINITY,
+        Number.POSITIVE_INFINITY,
+        NaN,
+        undefined,
+    ];
 
-//     it('valid', () => {
-//         expect(decoder('')).toBe('');
-//         expect(decoder('foo')).toBe('foo');
-//         expect(decoder(' 1 2 3 ')).toBe(' 1 2 3 ');
-//     });
+    it('valid', () => {
+        for (const value of okay) {
+            expect(verifier(value).unwrap()).toBe(value);
+        }
+    });
 
-//     it('invalid', () => {
-//         expect(() => decoder(1)).toThrow();
-//         expect(() => decoder(true)).toThrow();
-//         expect(() => decoder(null)).toThrow();
-//         expect(() => decoder(undefined)).toThrow();
-//         expect(() => decoder(NaN)).toThrow();
-//         expect(() => decoder(1 / 0)).toThrow();
-//     });
-// });
+    it('invalid', () => {
+        for (const value of not_okay) {
+            expect(verifier(value).isErr()).toBe(true);
+        }
+    });
+});

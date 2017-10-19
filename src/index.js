@@ -20,9 +20,10 @@
  */
 export type { Decoder, Verifier } from './types';
 
-import { boolean } from './boolean';
-import { number } from './number';
-import { buildDecoder } from './utils';
+export { boolean } from './boolean';
+export { number } from './number';
+export { string } from './string';
+export { buildDecoder } from './utils';
 
 /* export { andThen } from './andThen'; */
 /* export { decodeArray } from './array'; */
