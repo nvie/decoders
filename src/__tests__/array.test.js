@@ -28,4 +28,11 @@ describe('array', () => {
         expect(verifier([[]]).unwrap()).toEqual([[]]);
         expect(verifier([[1, 2], [], [3, 4, 5]]).unwrap()).toEqual([[1, 2], [], [3, 4, 5]]);
     });
+
+    it('failure to unpack', () => {
+        const verifier = array(string);
+        expect(() => verifier('boop').unwrap()).toThrow('Must be an array');
+        expect(() => verifier([42]).unwrap()).toThrow('Unexpected value at index 0');
+        expect(() => verifier(['foo', 'bar', 42]).unwrap()).toThrow('Unexpected value at index 2');
+    });
 });

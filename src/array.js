@@ -1,9 +1,30 @@
 // @flow
 
-import { Ok } from 'lemons';
+import { Err, Result, Ok } from 'lemons';
 
 import { makeErr } from './asserts';
 import type { Verifier } from './types';
+
+/**
+ * Given an iterable of Result instances, exhaust them all and return:
+ * - An [index, err] tuple, indicating the (index of the) first Err instance
+ *   encountered; or
+ * - a new Ok with an array of all unwrapped Ok'ed values
+ */
+function all<E, T>(iterable: Iterable<Result<E, T>>): Result<[number, E], Array<T>> {
+    const results: Array<T> = [];
+    let index = 0;
+    for (const result of iterable) {
+        try {
+            const value = result.unwrap();
+            results.push(value);
+        } catch (e) {
+            return Err([index, e]);
+        }
+        index++;
+    }
+    return Ok(results);
+}
 
 /**
  * Builds a Verifier for `Array<T>`, given a Verifier for `T`.
@@ -14,22 +35,11 @@ export function array<T>(verifier: Verifier<T>): Verifier<Array<T>> {
             return makeErr('Must be an array');
         }
 
-        // Introspect the items in the array to be of type T.  If any of them
-        // produce Err, then the entire result will be an Err.
-
-        const results: Array<T> = [];
-        let index = 0;
-        for (const blob of blobs) {
-            const result = verifier(blob);
-            try {
-                const value = result.unwrap();
-                results.push(value);
-            } catch (e) {
-                return makeErr(`Unexpected value at index ${index}`, '', blob, [e]);
-            }
-            index++;
-        }
-
-        return Ok(results);
+        const results = blobs.map(verifier);
+        const result = all(results);
+        return result.dispatch(
+            value => Ok(value),
+            ([index, e]) => makeErr(`Unexpected value at index ${index}`, '', e.blob, [e])
+        );
     };
 }
