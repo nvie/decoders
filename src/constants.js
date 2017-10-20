@@ -1,48 +1,52 @@
 // @flow
 
-import { assertTest, assertType } from './asserts';
-import type { Decoder } from './types';
+import { Ok } from 'lemons';
 
-const nullDecoder: Decoder<null> = decodeConstant(null);
-const undefinedDecoder: Decoder<void> = blob => {
-    assertType(blob, 'undefined');
-    return undefined;
-};
+import { makeErr } from './asserts';
+import type { Verifier } from './types';
 
-/**
- * Decodes any hardcoded value, without looking at the input data.
- */
-export function decodeValue<T>(value: T): Decoder<T> {
-    return () => {
-        return value;
-    };
+export const Null: Verifier<null> = (blob: any) => (blob === null ? Ok(blob) : makeErr('Must be null'));
+
+export const Undefined: Verifier<void> = (blob: any) => (blob === undefined ? Ok(blob) : makeErr('Must be undefined'));
+
+export function constant<T>(value: T) {
+    return (blob: any) => (blob === value ? Ok(blob) : makeErr(`Must be constant ${(value: any)}`, '', blob));
 }
 
-/**
- * Decodes any constant value.
- */
-export function decodeConstant<T>(value: T): Decoder<T> {
-    return (blob: any) => {
-        assertTest(
-            blob,
-            blob => blob === value,
-            `Not ${JSON.stringify(value)}`,
-            `Expected the constant value ${JSON.stringify(value)}`
-        );
-        return value;
-    };
-}
+// /**
+//  * Decodes any hardcoded value, without looking at the input data.
+//  */
+// export function decodeValue<T>(value: T): Decoder<T> {
+//     return () => {
+//         return value;
+//     };
+// }
 
-/**
- * Decodes the null value.
- */
-export function decodeNull(): Decoder<null> {
-    return nullDecoder;
-}
+// /**
+//  * Decodes any constant value.
+//  */
+// export function decodeConstant<T>(value: T): Decoder<T> {
+//     return (blob: any) => {
+//         assertTest(
+//             blob,
+//             blob => blob === value,
+//             `Not ${JSON.stringify(value)}`,
+//             `Expected the constant value ${JSON.stringify(value)}`
+//         );
+//         return value;
+//     };
+// }
 
-/**
- * Decodes the undefined value.
- */
-export function decodeUndefined(): Decoder<void> {
-    return undefinedDecoder;
-}
+// /**
+//  * Decodes the null value.
+//  */
+// export function decodeNull(): Decoder<null> {
+//     return nullDecoder;
+// }
+
+// /**
+//  * Decodes the undefined value.
+//  */
+// export function decodeUndefined(): Decoder<void> {
+//     return undefinedDecoder;
+// }

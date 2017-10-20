@@ -50,6 +50,7 @@
     "import-sort-style-eslint": "^3.0.0",
     "import-sort-style-module": "^3.0.0",
     "in-publish": "^2.0.0",
+    "itertools": "^1.0.0",
     "jest": "^21.2.1",
     "jest-cli": "^21.2.1",
     "prettier": "^1.7.4",
@@ -64,5 +65,10 @@
       "parser": "babylon",
       "style": "module"
     }
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "fixtures.js"
+    ]
   }
 }

@@ -1,29 +1,23 @@
 // @flow
 
-import { number, anyNumber } from '../number';
+import { partition } from 'itertools';
+
+import { anyNumber, number } from '../number';
+import { INPUTS } from './fixtures';
 
 describe('number', () => {
     const verifier = number;
-    const okay = [0, 1, 3.14, -13];
-    const not_okay = [
-        null,
-        true,
-        '',
-        '1',
-        'not a number',
-        NaN,
-        Number.NEGATIVE_INFINITY,
-        Number.POSITIVE_INFINITY,
-        undefined,
-    ];
+    const [okay, not_okay] = partition(INPUTS, Number.isFinite);
 
     it('valid', () => {
+        expect(okay.length).not.toBe(0);
         for (const value of okay) {
             expect(verifier(value).unwrap()).toBe(value);
         }
     });
 
     it('invalid', () => {
+        expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
             expect(verifier(value).isErr()).toBe(true);
         }
@@ -32,25 +26,17 @@ describe('number', () => {
 
 describe('anyNumber', () => {
     const verifier = anyNumber;
-    const okay = [
-        0,
-        1,
-        3.14,
-        -13,
-
-        // Compared to "normal" numbers, these "special" values will also be found to be OK
-        Number.NEGATIVE_INFINITY,
-        Number.POSITIVE_INFINITY,
-    ];
-    const not_okay = [null, true, '', '1', 'not a number', NaN, undefined];
+    const [okay, not_okay] = partition(INPUTS, x => typeof x === 'number' && !Number.isNaN(x));
 
     it('valid', () => {
+        expect(okay.length).not.toBe(0);
         for (const value of okay) {
             expect(verifier(value).unwrap()).toBe(value);
         }
     });
 
     it('invalid', () => {
+        expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
             expect(verifier(value).isErr()).toBe(true);
         }
