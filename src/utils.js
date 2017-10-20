@@ -8,18 +8,6 @@ import type { Decoder, Verifier } from './types';
 const DECODER_MARK = Symbol('DECODER_MARK');
 
 /**
- * Will verify that the passed-in arbitrary object indeed is an Array,
- * and return it.  Otherwise throws a runtime error.
- */
-export function asArray(blobs: any): Array<any> {
-    if (!Array.isArray(blobs)) {
-        throw DecodeError('Not an array', 'Expected an array', blobs);
-    }
-
-    return (blobs: Array<any>);
-}
-
-/**
  * Will verify that the passed-in arbitrary object indeed is an Object,
  * and return it.  Otherwise throws a runtime error.
  */

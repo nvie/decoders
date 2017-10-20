@@ -1,25 +1,35 @@
 // @flow
 
-import { DecodeError } from './asserts';
-import type { Decoder } from './types';
-import { asArray } from './utils';
+import { Ok } from 'lemons';
+
+import { makeErr } from './asserts';
+import type { Verifier } from './types';
 
 /**
- * Decodes an Array<T> from the given input, given a decoder for type T.
+ * Builds a Verifier for `Array<T>`, given a Verifier for `T`.
  */
-export function decodeArray<T>(itemDecoder: Decoder<T>): Decoder<Array<T>> {
+export function array<T>(verifier: Verifier<T>): Verifier<Array<T>> {
     return (blobs: any) => {
-        blobs = asArray(blobs);
-        return blobs.map((blob, index) => {
+        if (!Array.isArray(blobs)) {
+            return makeErr('Must be an array');
+        }
+
+        // Introspect the items in the array to be of type T.  If any of them
+        // produce Err, then the entire result will be an Err.
+
+        const results: Array<T> = [];
+        let index = 0;
+        for (const blob of blobs) {
+            const result = verifier(blob);
             try {
-                return itemDecoder(blob);
+                const value = result.unwrap();
+                results.push(value);
             } catch (e) {
-                if ('blob' in e) {
-                    throw DecodeError(`Unexpected value at index ${index}`, 'See below.', blob, [e]);
-                } else {
-                    throw e;
-                }
+                return makeErr(`Unexpected value at index ${index}`, '', blob, [e]);
             }
-        });
+            index++;
+        }
+
+        return Ok(results);
     };
 }

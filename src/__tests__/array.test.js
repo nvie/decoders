@@ -1,20 +1,31 @@
 // @flow
 
-// import { decodeArray } from '../array';
-// import { decodeNumber } from '../number';
-// import { decodeString } from '../string';
+import { array } from '../array';
+import { number } from '../number';
+import { string } from '../string';
 
-// describe('arrays', () => {
-//     it('one-level array wrapping', () => {
-//         const dec = decodeArray(decodeString());
-//         expect(dec([])).toEqual([]);
-//         expect(dec(['foo', 'bar'])).toEqual(['foo', 'bar']);
-//     });
+describe('array', () => {
+    it('empty array', () => {
+        // What type it is does not matter if the array is empty
+        expect(array(string)([]).unwrap()).toEqual([]);
+        expect(array(number)([]).unwrap()).toEqual([]);
+        expect(array(array(array(array(number))))([]).unwrap()).toEqual([]);
+    });
 
-//     it('complex nesting decoding', () => {
-//         const dec = decodeArray(decodeArray(decodeNumber()));
-//         expect(dec([])).toEqual([]);
-//         expect(dec([[]])).toEqual([[]]);
-//         expect(dec([[1, 2], [], [3, 4, 5]])).toEqual([[1, 2], [], [3, 4, 5]]);
-//     });
-// });
+    it('simple nesting', () => {
+        const verifier1 = array(string);
+        expect(verifier1([]).unwrap()).toEqual([]);
+        expect(verifier1(['foo', 'bar']).unwrap()).toEqual(['foo', 'bar']);
+
+        const verifier2 = array(number);
+        expect(verifier2([]).unwrap()).toEqual([]);
+        expect(verifier2([0, 1, 2, Math.PI]).unwrap()).toEqual([0, 1, 2, Math.PI]);
+    });
+
+    it('complex nesting decoding', () => {
+        const verifier = array(array(number));
+        expect(verifier([]).unwrap()).toEqual([]);
+        expect(verifier([[]]).unwrap()).toEqual([[]]);
+        expect(verifier([[1, 2], [], [3, 4, 5]]).unwrap()).toEqual([[1, 2], [], [3, 4, 5]]);
+    });
+});
