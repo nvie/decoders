@@ -2,7 +2,7 @@
 
 import { partition } from 'itertools';
 
-import { Null, Undefined, constant } from '../constants';
+import { Null, Undefined, constant, hardcoded } from '../constants';
 import { INPUTS } from './fixtures';
 
 describe('null', () => {
@@ -119,14 +119,25 @@ describe('boolean constants #2', () => {
     });
 });
 
-// describe('decodes hardcoded values', () => {
-//     const fourtyTwoDecoder = decodeValue(42);
+describe('hardcoded value', () => {
+    it('valid', () => {
+        // Test all hardcoded inputs...
+        for (const hardcodedValue of INPUTS) {
+            if (Number.isNaN(hardcodedValue)) {
+                // Skip NaN, as we can't compare those for our test cases...
+                continue;
+            }
 
-//     it('simply returns 42 for any input', () => {
-//         expect(fourtyTwoDecoder('')).toBe(42);
-//         expect(fourtyTwoDecoder('foo')).toBe(42);
-//         expect(fourtyTwoDecoder(undefined)).toBe(42);
-//         expect(fourtyTwoDecoder([1, 2, 3])).toBe(42);
-//         expect(fourtyTwoDecoder()).toBe(42);
-//     });
-// });
+            const verifier = hardcoded(hardcodedValue);
+
+            // Against all inputs...
+            for (const input of INPUTS) {
+                expect(verifier(input).unwrap()).toBe(hardcodedValue);
+            }
+        }
+    });
+
+    it('invalid', () => {
+        // hardcoded verifiers never fail
+    });
+});
