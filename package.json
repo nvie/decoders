@@ -68,7 +68,9 @@
   },
   "jest": {
     "testPathIgnorePatterns": [
-      "fixtures.js"
+      "node_modules",
+      "fixtures.js",
+      ".skip.js"
     ]
   }
 }
