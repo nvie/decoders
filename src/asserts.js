@@ -2,7 +2,7 @@
 
 import { Err } from 'lemons';
 
-import type { DecodeErrorType, JSType } from './types';
+import type { DecodeErrorType } from './types';
 
 export function summarizer(key: string, value: mixed): mixed {
     // Don't collapse the outer level
@@ -55,13 +55,6 @@ export function assertTest(blob: any, predicate: any => boolean, message: string
     if (!predicate(blob)) {
         throw DecodeError(message, details, blob);
     }
-}
-
-/**
- * Helper to enforce a runtime type check on the given value.
- */
-export function assertType(blob: any, jsType: JSType): void {
-    return assertTest(blob, x => typeof x === jsType, `Not a ${jsType}`, `Expected a "${jsType}" value`);
 }
 
 export function makeErr(
