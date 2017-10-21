@@ -30,4 +30,14 @@ describe('objects and fields', () => {
         expect(verifier({ id: 1, name: 'test', extra: 'foo' }).unwrap()).toEqual({ id: 1, name: 'test', extra: 'foo' });
         expect(verifier({}).isErr()).toBe(true); // missing keys 'id' and 'name'
     });
+
+    it('decodes objects and fields (ignore fields)', () => {
+        const verifier = object({ id: string });
+
+        expect(verifier('foo').isErr()).toBe(true);
+        expect(verifier(3.14).isErr()).toBe(true);
+        expect(verifier([]).isErr()).toBe(true);
+        expect(verifier(undefined).isErr()).toBe(true);
+        expect(verifier(NaN).isErr()).toBe(true);
+    });
 });
