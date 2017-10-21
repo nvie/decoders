@@ -1,15 +1,26 @@
 // @flow
 
-import { DecodeError } from './asserts';
-import type { Decoder } from './types';
-import { asObject } from './utils';
+import { Result, Ok } from 'lemons';
+
+import { makeErr } from './asserts';
+import type { DecodeErrorType, Verifier } from './types';
+
+function compose<T, V>(verifier: Verifier<T>, next: T => Result<DecodeErrorType, V>): Verifier<V> {
+    return (blob: any) => verifier(blob).andThen(next);
+}
+
+// TODO: rename pojo => object
+// TODO: rename object => record
+export const pojo: Verifier<Object> = (blob: any) => {
+    return typeof blob === 'object' ? Ok(blob) : makeErr('Not an object', 'Expected an object', blob);
+};
 
 /**
  * A "type function" which informs Flow about how a type will be modified at runtime.
  * Read this as "given a Decoder of type T, I can produce a value of type T".  This
  * definition helps construct $ObjMap types.
  */
-type Dedecoder = <T>(decoder: Decoder<T>) => T;
+type UnwrapVerifier = <T>(Verifier<T>) => T;
 
 /**
  * Given a mapping of fields-to-decoders, builds a decoder for an object type.
@@ -30,53 +41,52 @@ type Dedecoder = <T>(decoder: Decoder<T>) => T;
  * Put simply: it'll "peel off" all of the nested Decoders, puts them together
  * in an object, and wraps it in a Decoder<...>.
  */
-export function decodeObject<O: { [field: string]: Decoder<any> }>(mapping: O): Decoder<$ObjMap<O, Dedecoder>> {
-    return (blob: any) => {
-        // Verify that blob actually _is_ a POJO and it has all the fields
-        blob = asObject(blob);
+export function object<O: { [field: string]: Verifier<any> }>(mapping: O): Verifier<$ObjMap<O, UnwrapVerifier>> {
+    return compose(pojo, (blob: Object) => {
+        //
+        // TODO:
+        // Work on better error messages, like:
+        // missing keys 'id' and 'name' (report them all at once, don't even
+        // invoke nested verifiers before all required keys are present)
+        //
 
-        let result = {};
-        Object.keys(mapping).forEach(key => {
-            const decoder = mapping[key];
+        let record = {};
+
+        // NOTE: We're using .keys() here over .entries(), since .entries()
+        // will type the value part as "mixed"for (const key of Object.keys(mapping)) {
+        for (const key of Object.keys(mapping)) {
+            const verifier = mapping[key];
             const value = blob[key];
+            const result = verifier(value);
             try {
-                result[key] = decoder(value);
+                record[key] = result.unwrap();
             } catch (e) {
-                if ('blob' in e) {
-                    throw DecodeError(
-                        'Unexpected object shape',
-                        `Expected object to have "${key}" field matching its expected type`,
-                        blob,
-                        [e]
-                    );
-                } else {
-                    throw e;
-                }
-            }
-        });
-        return result;
-    };
-}
-
-export function decodeField<T>(field: string, decoder: Decoder<T>): Decoder<T> {
-    return (blob: any) => {
-        // Verify that blob actually _is_ a POJO and it has all the fields
-        blob = asObject(blob);
-
-        const value = blob[field];
-        try {
-            return decoder(value);
-        } catch (e) {
-            if ('blob' in e) {
-                throw DecodeError(
-                    `Unexpected field value for field "${field}"`,
-                    `Expected object to have "${field}" field matching its expected type`,
+                return makeErr(
+                    'Unexpected object shape',
+                    `Expected object to have "${key}" field matching its expected type`,
                     blob,
                     [e]
                 );
-            } else {
-                throw e;
             }
         }
-    };
+        return Ok(record);
+    });
 }
+
+// export function field<T>(field: string, verifier: Verifier<T>): Verifier<T> {
+//     // TODO: Optimize away the many calls to pojo() (one made for each field like this, not efficient -- pull it out of this function)
+//     return compose(pojo, (blob: Object) => {
+//         const value = blob[field];
+//         const result = verifier(value);
+//         try {
+//             return Ok(result.unwrap());
+//         } catch (e) {
+//             return makeErr(
+//                 `Unexpected field value for field "${field}"`,
+//                 `Expected object to have "${field}" field matching its expected type`,
+//                 blob,
+//                 [e]
+//             );
+//         }
+//     });
+// }
