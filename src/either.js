@@ -22,3 +22,16 @@ export function either<T1, T2>(v1: Verifier<T1>, v2: Verifier<T2>): Verifier<T1 
                 )
         );
 }
+
+export function either3<T1, T2, T3>(v1: Verifier<T1>, v2: Verifier<T2>, v3: Verifier<T3>): Verifier<T1 | T2 | T3> {
+    return either(v1, either(v2, v3));
+}
+
+export function either4<T1, T2, T3, T4>(
+    v1: Verifier<T1>,
+    v2: Verifier<T2>,
+    v3: Verifier<T3>,
+    v4: Verifier<T4>
+): Verifier<T1 | T2 | T3 | T4> {
+    return either(v1, either3(v2, v3, v4));
+}
