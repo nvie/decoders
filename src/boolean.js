@@ -6,8 +6,7 @@ import { makeErr } from './asserts';
 import type { Verifier } from './types';
 
 /**
- * Decodes a boolean value.
- * Will throw a DecodeError if anything other than a boolean value is found.
+ * Verifier that only returns Ok for boolean inputs.  Err otherwise.
  */
 export const boolean: Verifier<boolean> = (blob: any) => {
     return typeof blob === 'boolean' ? Ok(blob) : makeErr('Must be boolean');

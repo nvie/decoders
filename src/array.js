@@ -27,7 +27,8 @@ function all<E, T>(iterable: Iterable<Result<E, T>>): Result<[number, E], Array<
 }
 
 /**
- * Builds a Verifier for `Array<T>`, given a Verifier for `T`.
+ * Builds a Verifier that returns Ok for values of `Array<T>`, given a Verifier
+ * for `T`.  Err otherwise.
  */
 export function array<T>(verifier: Verifier<T>): Verifier<Array<T>> {
     return (blobs: any) => {
