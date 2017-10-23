@@ -46,6 +46,10 @@ export function toVerifier<T>(decoder: Decoder<T>): Verifier<T> {
     };
 }
 
+export function map<T, V>(verifier: Verifier<T>, mapper: T => V): Verifier<V> {
+    return compose(verifier, x => Ok(mapper(x)));
+}
+
 export function compose<T, V>(verifier: Verifier<T>, next: T => Result<DecodeErrorType, V>): Verifier<V> {
     return (blob: any) => verifier(blob).andThen(next);
 }

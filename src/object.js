@@ -9,7 +9,7 @@ import { compose } from './utils';
 // TODO: rename pojo => object
 // TODO: rename object => record
 export const pojo: Verifier<Object> = (blob: any) => {
-    return typeof blob === 'object' ? Ok(blob) : makeErr('Not an object', 'Expected an object', blob);
+    return typeof blob === 'object' ? Ok(blob) : makeErr('Must be an object', '', blob);
 };
 
 /**
@@ -70,20 +70,17 @@ export function object<O: { [field: string]: Verifier<any> }>(mapping: O): Verif
     });
 }
 
-// export function field<T>(field: string, verifier: Verifier<T>): Verifier<T> {
-//     // TODO: Optimize away the many calls to pojo() (one made for each field like this, not efficient -- pull it out of this function)
-//     return compose(pojo, (blob: Object) => {
-//         const value = blob[field];
-//         const result = verifier(value);
-//         try {
-//             return Ok(result.unwrap());
-//         } catch (e) {
-//             return makeErr(
-//                 `Unexpected field value for field "${field}"`,
-//                 `Expected object to have "${field}" field matching its expected type`,
-//                 blob,
-//                 [e]
-//             );
-//         }
-//     });
-// }
+export function field<T>(field: string, verifier: Verifier<T>): Verifier<T> {
+    // TODO: Optimize away the many calls to pojo() (one made for each field
+    // like this, not efficient -- pull it out of this function)
+    return compose(pojo, (blob: Object) => {
+        const value = blob[field];
+        const result = verifier(value);
+        try {
+            return Ok(result.unwrap());
+        } catch (e) {
+            const errText = value === undefined ? `Missing field "${field}"` : `Unexpected value for field "${field}"`;
+            return makeErr(errText, `Expected object to have "${field}" field matching its expected type`, blob, [e]);
+        }
+    });
+}

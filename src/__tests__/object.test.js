@@ -1,11 +1,11 @@
 // @flow
 
 import { number } from '../number';
-import { object } from '../object';
+import { field, object } from '../object';
 import { optional } from '../optional';
 import { string } from '../string';
 
-describe('objects and fields', () => {
+describe('objects', () => {
     it('decodes objects and fields', () => {
         const verifier = object({
             id: number,
@@ -39,5 +39,19 @@ describe('objects and fields', () => {
         expect(verifier([]).isErr()).toBe(true);
         expect(verifier(undefined).isErr()).toBe(true);
         expect(verifier(NaN).isErr()).toBe(true);
+    });
+});
+
+describe('fields', () => {
+    const verifier = field('type', string);
+
+    it('valid', () => {
+        expect(verifier({ type: 'foo' }).unwrap()).toEqual('foo');
+    });
+
+    it('invalid', () => {
+        expect(() => verifier('foo').unwrap()).toThrow('Must be an object');
+        expect(() => verifier({}).unwrap()).toThrow('Missing field "type"');
+        expect(() => verifier({ type: 42 }).unwrap()).toThrow('Unexpected value for field "type"');
     });
 });
