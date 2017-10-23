@@ -1,13 +1,10 @@
 // @flow
 
-import { Result, Ok } from 'lemons';
+import { Ok } from 'lemons';
 
 import { makeErr } from './asserts';
-import type { DecodeErrorType, Verifier } from './types';
-
-function compose<T, V>(verifier: Verifier<T>, next: T => Result<DecodeErrorType, V>): Verifier<V> {
-    return (blob: any) => verifier(blob).andThen(next);
-}
+import type { Verifier } from './types';
+import { compose } from './utils';
 
 // TODO: rename pojo => object
 // TODO: rename object => record

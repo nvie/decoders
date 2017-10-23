@@ -1,9 +1,9 @@
 // @flow
 
-import { Result } from 'lemons';
+import { Ok, Result } from 'lemons';
 
-import { DecodeError } from './asserts';
-import type { Decoder, Verifier } from './types';
+import { DecodeError, makeErr } from './asserts';
+import type { DecodeErrorType, Decoder, Verifier } from './types';
 
 const DECODER_MARK = Symbol('DECODER_MARK');
 
@@ -43,5 +43,15 @@ export function toVerifier<T>(decoder: Decoder<T>): Verifier<T> {
             // Re-throw it, it's something else
             throw err;
         }
+    };
+}
+
+export function compose<T, V>(verifier: Verifier<T>, next: T => Result<DecodeErrorType, V>): Verifier<V> {
+    return (blob: any) => verifier(blob).andThen(next);
+}
+
+export function predicate<T>(predicate: T => boolean, msg: string): Verifier<T> {
+    return (value: T) => {
+        return predicate(value) ? Ok(value) : makeErr(msg);
     };
 }
