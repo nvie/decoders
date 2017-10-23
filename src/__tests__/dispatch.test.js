@@ -7,20 +7,26 @@ import { field, object } from '../object';
 import { string } from '../string';
 import { fail } from '../fail';
 
-const rectangle = object({
-    type: constant('rect'),
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-});
+const rectangle = object(
+    {
+        type: constant('rect'),
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+    },
+    'Must be rectangle'
+);
 
-const circle = object({
-    type: constant('circle'),
-    x: number,
-    y: number,
-    r: number,
-});
+const circle = object(
+    {
+        type: constant('circle'),
+        x: number,
+        y: number,
+        r: number,
+    },
+    'Must be circle'
+);
 
 describe('dispatch', () => {
     // The "deciderer" ;) effectively dispatches the real decoding to
@@ -47,6 +53,6 @@ describe('dispatch', () => {
         expect(() => verifier('foo').unwrap()).toThrow('Must be an object');
         expect(() => verifier({}).unwrap()).toThrow('Missing field "type"');
         expect(() => verifier({ type: 'blah' }).unwrap()).toThrow('Must be a valid shape');
-        expect(() => verifier({ type: 'rect' }).unwrap()).toThrow('Unexpected object shape');
+        expect(() => verifier({ type: 'rect' }).unwrap()).toThrow('Must be rectangle');
     });
 });

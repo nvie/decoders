@@ -38,7 +38,10 @@ type UnwrapVerifier = <T>(Verifier<T>) => T;
  * Put simply: it'll "peel off" all of the nested Decoders, puts them together
  * in an object, and wraps it in a Decoder<...>.
  */
-export function object<O: { [field: string]: Verifier<any> }>(mapping: O): Verifier<$ObjMap<O, UnwrapVerifier>> {
+export function object<O: { [field: string]: Verifier<any> }>(
+    mapping: O,
+    msg: string = 'Unexpected object shape'
+): Verifier<$ObjMap<O, UnwrapVerifier>> {
     return compose(pojo, (blob: Object) => {
         //
         // TODO:
@@ -58,12 +61,7 @@ export function object<O: { [field: string]: Verifier<any> }>(mapping: O): Verif
             try {
                 record[key] = result.unwrap();
             } catch (e) {
-                return makeErr(
-                    'Unexpected object shape',
-                    `Expected object to have "${key}" field matching its expected type`,
-                    blob,
-                    [e]
-                );
+                return makeErr(msg, `Expected object to have "${key}" field matching its expected type`, blob, [e]);
             }
         }
         return Ok(record);
