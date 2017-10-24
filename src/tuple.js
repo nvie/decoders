@@ -11,15 +11,11 @@ import type { Verifier } from './types';
 export function tuple2<T, V>(verifier1: Verifier<T>, verifier2: Verifier<V>): Verifier<[T, V]> {
     return (blobs: any) => {
         if (!Array.isArray(blobs)) {
-            return makeErr('Must be an array');
+            return makeErr('Must be an array', blobs);
         }
 
         if (blobs.length !== 2) {
-            return makeErr(
-                'Must be a 2-tuple',
-                `Expected a 2-tuple, but got an array of ${blobs.length} elements`,
-                blobs
-            );
+            return makeErr('Must be a 2-tuple', blobs);
         }
 
         const [blob1, blob2] = blobs;
