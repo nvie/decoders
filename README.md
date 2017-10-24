@@ -8,10 +8,12 @@ See http://elmplayground.com/decoding-json-in-elm-1 for an introduction.
 
 ## Why?
 
-All data coming from outside your nice and cozy typed app is essentially of
-unknown shape and form.  Think about your typical JSON responses.  For example,
-if you have the following JSON response, parsed and returned from
-`JSON.parse(payload)`:
+If you're using Flow to statically typecheck your JavaScript, you'll know that
+any JSON data coming from the outside is essentially free-form and untyped.  In
+order to validate and enforce the correct shape of that data, you'll need
+"decoders".
+
+For example, imagine your app expects a list of points in a JSON response:
 
 ```javascript
 {
@@ -22,8 +24,9 @@ if you have the following JSON response, parsed and returned from
 }
 ```
 
-You can likely guess what the type of this structure is.  You may have even
-defined a type for it!
+In order to decode this, you'll have to tell Flow about the expected structure,
+and use the decoders to validate at runtime that the free-form data will be in
+the expected shape.
 
 ```javascript
 type Point = { x: number, y: number };
@@ -33,43 +36,33 @@ type Payload = {
 };
 ```
 
-But the problem is that Flow **does not have a runtime presence**, so it cannot
-possibly inspect the _value_ of the payload while running it statically.  In
-other words, Flow is unable to guess the type of the return value of
-`JSON.parse(payload)`.  After all, what if your HTTP endpoint returned any of these instead:
+Here's a decoder that will work for this type:
 
 ```javascript
-// Malformed content
-{
-  points: [
-    { y: 2 },  // no "x"
-    { x: 3, y: '4' },  // y is a string, not a number
-  ],
-}
+const point = object({
+    x: number,
+    y: number,
+});
 
-// No data at all
-{ points: null }
+const payload = object({
+    points: array(point),
+});
 
-// Vastly different output than expected
-{ error: "Oops, something happened" }
+const payloadDecoder = decoder(payload);
 ```
 
-Of course, you can trick it into believing it actually received a Payload,
-always, but who are you kidding?
+And then, you can use it to decode values:
 
 ```javascript
-const data = ((JSON.parse(payload): any): Payload);  // Don't try this at home
+>>> payloadDecoder(1)      // throws!
+>>> payloadDecoder('foo')  // throws!
+>>> payloadDecoder({       // OK!
+...     points: [
+...         { x: 1, y: 2 },
+...         { x: 3, y: 4 },
+...     ],
+... })                     
 ```
-
-The only way to ensure we can rely on Flow's type checking benefits to match
-our runtime behaviour is to make sure we **verify** that the expected types
-match our values at runtime!
-
-Elm's solution to this problem is to define composable decoders: functions that
-take anything and either fail with an error, or guarantee to return the
-expected type.  This is exactly what the `decoders` package does: it offers
-composable decoders (think verifiers, if that helps) that help you verify your
-runtime data to match your expected Flow types.
 
 
 ## How do I use it?
