@@ -28,7 +28,7 @@ export function mapping<T>(verifier: Verifier<T>): Verifier<Map<string, T>> {
                 )
             );
         } catch (e) {
-            return makeErr('Unexpected value', '', blob, [e]);
+            return makeErr('Unexpected value', blob, [e]);
         }
     });
 }

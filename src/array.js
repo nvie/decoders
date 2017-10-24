@@ -40,7 +40,7 @@ export function array<T>(verifier: Verifier<T>): Verifier<Array<T>> {
         const result = all(results);
         return result.dispatch(
             value => Ok(value),
-            ([index, e]) => makeErr(`Unexpected value at index ${index}`, '', e.blob, [e])
+            ([index, e]) => makeErr(`Unexpected value at index ${index}`, e.blob, [e])
         );
     };
 }

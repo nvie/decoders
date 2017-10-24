@@ -31,9 +31,9 @@ export function tuple2<T, V>(verifier1: Verifier<T>, verifier2: Verifier<V>): Ve
             (value1: T) =>
                 t2.dispatch(
                     (value2: V) => Ok([value1, value2]),
-                    e => makeErr('Unexpected value in 2nd tuple position', '', blob2, [e])
+                    e => makeErr('Unexpected value in 2nd tuple position', blob2, [e])
                 ),
-            e => makeErr('Unexpected value in 1st tuple position', '', blob1, [e])
+            e => makeErr('Unexpected value in 1st tuple position', blob1, [e])
         );
     };
 }

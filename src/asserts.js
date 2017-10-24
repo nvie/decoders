@@ -20,19 +20,16 @@ export function summarizer(key: string, value: mixed): mixed {
 
 export function DecodeError(
     message: string,
-    details: string = '',
     blob: any = undefined,
     parents: Array<DecodeErrorType> = []
 ): DecodeErrorType {
     let err = {
         message,
-        details,
         blob,
         parents,
         format(prefix: string = '') {
             let msg = '';
             msg += `${prefix}Error: ${err.message}\n`;
-            msg += `${prefix}${err.details}\n`;
             msg += `${prefix}Actual: ${JSON.stringify(err.blob, summarizer, 1)}\n`;
             if (err.parents.length > 0) {
                 msg += `${prefix}Parent errors:\n`;
@@ -47,21 +44,6 @@ export function DecodeError(
     return err;
 }
 
-/**
- * Helper to enforce a runtime check on the given value.  No-op if the given blob
- * matches the predicate, but throws a decoding runtime error otherwise.
- */
-export function assertTest(blob: any, predicate: any => boolean, message: string, details: string): void {
-    if (!predicate(blob)) {
-        throw DecodeError(message, details, blob);
-    }
-}
-
-export function makeErr(
-    message: string,
-    details: string = '',
-    blob: any = undefined,
-    parents: Array<DecodeErrorType> = []
-) {
-    return Err(DecodeError(message, details, blob, parents));
+export function makeErr(message: string, blob: any = undefined, parents: Array<DecodeErrorType> = []) {
+    return Err(DecodeError(message, blob, parents));
 }

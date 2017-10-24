@@ -61,7 +61,7 @@ export function object<O: { [field: string]: Verifier<any> }>(
             try {
                 record[key] = result.unwrap();
             } catch (e) {
-                return makeErr(msg, `Expected object to have "${key}" field matching its expected type`, blob, [e]);
+                return makeErr(msg, blob, [e]);
             }
         }
         return Ok(record);
@@ -78,7 +78,7 @@ export function field<T>(field: string, verifier: Verifier<T>): Verifier<T> {
             return Ok(result.unwrap());
         } catch (e) {
             const errText = value === undefined ? `Missing field "${field}"` : `Unexpected value for field "${field}"`;
-            return makeErr(errText, `Expected object to have "${field}" field matching its expected type`, blob, [e]);
+            return makeErr(errText, blob, [e]);
         }
     });
 }

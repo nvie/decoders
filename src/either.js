@@ -14,8 +14,7 @@ export function either<T1, T2>(v1: Verifier<T1>, v2: Verifier<T2>): Verifier<T1 
                     value2 => Ok(value2),
                     err2 =>
                         makeErr(
-                            'None of the allowed alternatives matched',
-                            "I've tried to match the following alternatives in order, but none of them could decode the input.",
+                            'None of the allowed alternatives matched.  I\'ve tried to match the alternatives in their given order, but none of them could decode the input',
                             blob,
                             [err1, err2]
                         )
