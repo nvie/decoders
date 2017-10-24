@@ -20,7 +20,8 @@
  */
 import type { Decoder, Verifier } from './types';
 
-export { compose, decoder, map, predicate } from './utils';
+export { decoder } from './decoder';
+export { compose, map, predicate } from './utils';
 
 export { array } from './array';
 export { boolean } from './boolean';
