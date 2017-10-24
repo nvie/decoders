@@ -24,26 +24,8 @@ export function isDecoderError(error: Error): boolean {
     return !!error[DECODER_MARK];
 }
 
-export function buildDecoder<T>(verifier: Verifier<T>): Decoder<T> {
+export function decoder<T>(verifier: Verifier<T>): Decoder<T> {
     return (blob: any) => verifier(blob).unwrap();
-}
-
-export const toDecoder = buildDecoder;
-
-export function toVerifier<T>(decoder: Decoder<T>): Verifier<T> {
-    return (blob: any) => {
-        try {
-            const result: T = decoder(blob);
-            return Result.ok(result);
-        } catch (err) {
-            if (isDecoderError(err)) {
-                return Result.err(err.message);
-            }
-
-            // Re-throw it, it's something else
-            throw err;
-        }
-    };
 }
 
 export function map<T, V>(verifier: Verifier<T>, mapper: T => V): Verifier<V> {
