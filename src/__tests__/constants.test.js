@@ -2,11 +2,11 @@
 
 import { partition } from 'itertools';
 
-import { Null, Undefined, constant, hardcoded } from '../constants';
+import { null_, undefined_, constant, hardcoded } from '../constants';
 import { INPUTS } from './fixtures';
 
 describe('null', () => {
-    const verifier = Null;
+    const verifier = null_;
     const [okay, not_okay] = partition(INPUTS, x => x === null);
 
     it('valid', () => {
@@ -25,7 +25,7 @@ describe('null', () => {
 });
 
 describe('undefined', () => {
-    const verifier = Undefined;
+    const verifier = undefined_;
     const [okay, not_okay] = partition(INPUTS, x => x === undefined);
 
     it('valid', () => {

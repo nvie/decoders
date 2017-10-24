@@ -3,7 +3,7 @@
 import { partition } from 'itertools';
 
 import { boolean } from '../boolean';
-import { Undefined } from '../constants';
+import { undefined_ } from '../constants';
 import { either, either4 } from '../either';
 import { number } from '../number';
 import { string } from '../string';
@@ -29,7 +29,7 @@ describe('either', () => {
 });
 
 describe('either3', () => {
-    const verifier = either4(string, boolean, number, Undefined);
+    const verifier = either4(string, boolean, number, undefined_);
     const [okay, not_okay] = partition(
         INPUTS,
         x => x === undefined || typeof x === 'string' || typeof x === 'boolean' || Number.isFinite(x)

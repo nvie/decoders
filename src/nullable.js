@@ -1,9 +1,9 @@
 // @flow
 
-import { Null } from './constants';
+import { null_ } from './constants';
 import { either } from './either';
 import type { Verifier } from './types';
 
 export function nullable<T>(verifier: Verifier<T>): Verifier<null | T> {
-    return either(Null, verifier);
+    return either(null_, verifier);
 }

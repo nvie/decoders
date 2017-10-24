@@ -8,12 +8,12 @@ import type { Verifier } from './types';
 /**
  * Verifier that only returns Ok for `null` inputs.  Err otherwise.
  */
-export const Null: Verifier<null> = (blob: any) => (blob === null ? Ok(blob) : makeErr('Must be null'));
+export const null_: Verifier<null> = (blob: any) => (blob === null ? Ok(blob) : makeErr('Must be null'));
 
 /**
  * Verifier that only returns Ok for `undefined` inputs.  Err otherwise.
  */
-export const Undefined: Verifier<void> = (blob: any) => (blob === undefined ? Ok(blob) : makeErr('Must be undefined'));
+export const undefined_: Verifier<void> = (blob: any) => (blob === undefined ? Ok(blob) : makeErr('Must be undefined'));
 
 /**
  * Verifier that only returns Ok for the given value constant.  Err otherwise.

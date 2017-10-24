@@ -1,6 +1,6 @@
 // @flow
 
-import { Undefined } from './constants';
+import { undefined_ } from './constants';
 import { either } from './either';
 import type { Verifier } from './types';
 
@@ -9,5 +9,5 @@ import type { Verifier } from './types';
  * given a Verifier for `T`.  Err otherwise.
  */
 export function optional<T>(verifier: Verifier<T>): Verifier<void | T> {
-    return either(Undefined, verifier);
+    return either(undefined_, verifier);
 }
