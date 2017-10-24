@@ -18,23 +18,22 @@
  * type.  In our case, it's fine to fail with a runtime error.
  *
  */
-export type { Decoder, Verifier } from './types';
+import type { Decoder, Verifier } from './types';
 
+export { buildDecoder, compose, map, predicate } from './utils';
+
+export { array } from './array';
 export { boolean } from './boolean';
+export { constant, hardcoded, null_, undefined_ } from './constants';
+export { dispatch } from './dispatch';
+export { either, either3, either4 } from './either';
+export { fail } from './fail';
+export { mapping } from './mapping';
+export { nullable } from './nullable';
 export { number } from './number';
+export { field, object } from './object';
+export { optional } from './optional';
 export { string } from './string';
-export { buildDecoder } from './utils';
+export { tuple2 } from './tuple';
 
-/* export { andThen } from './andThen'; */
-/* export { decodeArray } from './array'; */
-/* export { decodeConstant, decodeNull, decodeUndefined, decodeValue } from './constants'; */
-/* export { fail } from './fail'; */
-/* export { map } from './map'; */
-/* export { decodeMap } from './mapping'; */
-/* export { decodeDate, decodeMoment, decodeTimestamp } from './moments'; */
-/* export { nullable } from './nullable'; */
-/* export { decodeField, decodeObject } from './object'; */
-/* export { oneOf, oneOf3, oneOf4 } from './oneOf'; */
-/* export { optional } from './optional'; */
-/* export { decodeString } from './string'; */
-/* export { decodeTuple2 } from './tuple'; */
+export type { Decoder, Verifier };
