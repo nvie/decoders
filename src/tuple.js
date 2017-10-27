@@ -12,11 +12,11 @@ import type { Decoder } from './types';
 export function tuple2<T, V>(verifier1: Decoder<T>, verifier2: Decoder<V>): Decoder<[T, V]> {
     return (blobs: any) => {
         if (!Array.isArray(blobs)) {
-            return makeErr('Must be an array', blobs);
+            return makeErr('Must be an array', blobs, []);
         }
 
         if (blobs.length !== 2) {
-            return makeErr('Must be a 2-tuple', blobs);
+            return makeErr('Must be a 2-tuple', blobs, []);
         }
 
         const [blob1, blob2] = blobs;

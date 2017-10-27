@@ -15,6 +15,6 @@ export function compose<T, V>(decoder: Decoder<T>, next: T => Result<DecodeError
 
 export function predicate<T>(predicate: T => boolean, msg: string): Decoder<T> {
     return (value: T) => {
-        return predicate(value) ? Ok(value) : makeErr(msg);
+        return predicate(value) ? Ok(value) : makeErr(msg, value, []);
     };
 }

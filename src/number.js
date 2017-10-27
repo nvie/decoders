@@ -7,7 +7,7 @@ import type { Decoder } from './types';
 import { compose, predicate } from './utils';
 
 export const anyNumber: Decoder<number> = (blob: any) => {
-    return typeof blob === 'number' && !Number.isNaN(blob) ? Ok(blob) : makeErr('Must be number');
+    return typeof blob === 'number' && !Number.isNaN(blob) ? Ok(blob) : makeErr('Must be number', blob, []);
 };
 
 export const number: Decoder<number> = compose(anyNumber, predicate(Number.isFinite, 'Number must be finite'));

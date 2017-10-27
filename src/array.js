@@ -33,7 +33,7 @@ function all<E, T>(iterable: Iterable<Result<E, T>>): Result<[number, E], Array<
 export function array<T>(decoder: Decoder<T>): Decoder<Array<T>> {
     return (blobs: any) => {
         if (!Array.isArray(blobs)) {
-            return makeErr('Must be an array', blobs);
+            return makeErr('Must be an array', blobs, []);
         }
 
         const results = blobs.map(decoder);

@@ -15,7 +15,7 @@ describe('compose', () => {
         // return Err, otherwise Ok
         s => {
             const n = parseInt(s, 16);
-            return !Number.isNaN(n) ? Ok(n) : makeErr('Nope');
+            return !Number.isNaN(n) ? Ok(n) : makeErr('Nope', n, []);
         }
     );
 

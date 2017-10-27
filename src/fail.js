@@ -7,5 +7,5 @@ import type { Decoder } from './types';
  * Decoder that always fails with the given error message, no matter what the input.
  */
 export function fail<T>(msg: string): Decoder<T> {
-    return (_: any) => makeErr(msg);
+    return (blob: any) => makeErr(msg, blob, []);
 }

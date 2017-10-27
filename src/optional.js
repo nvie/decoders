@@ -13,7 +13,7 @@ import type { Decoder } from './types';
  * `undefined` outputs.  Err otherwise.
  */
 export const undefined_or_null: Decoder<void> = (blob: any) =>
-    blob === undefined || blob === null ? Ok(undefined) : makeErr('Must be undefined or null', blob);
+    blob === undefined || blob === null ? Ok(undefined) : makeErr('Must be undefined or null', blob, []);
 
 /**
  * Builds a Decoder that returns Ok for either `undefined` or `T` values,
