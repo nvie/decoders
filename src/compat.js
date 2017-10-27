@@ -21,6 +21,7 @@ import {
     object,
     optional as optional_,
     string,
+    map as map_,
     tuple2,
     undefined_,
 } from './index';
@@ -89,5 +90,7 @@ export const oneOf4 = <T1, T2, T3, T4>(
     g3: Guard<T3>,
     g4: Guard<T4>
 ): Guard<T1 | T2 | T3 | T4> => guard(either4(g2d(g1), g2d(g2), g2d(g3), g2d(g4)));
+
+export const map = <T, V>(g: Guard<T>, f: T => V): Guard<V> => guard(map_(g2d(g), f));
 
 export type { Guard as Decoder };
