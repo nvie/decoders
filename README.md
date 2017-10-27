@@ -39,6 +39,8 @@ type Payload = {
 Here's a decoder that will work for this type:
 
 ```javascript
+import { guard, number, object } from 'decoders';
+
 const point = object({
     x: number,
     y: number,
@@ -48,15 +50,15 @@ const payload = object({
     points: array(point),
 });
 
-const payloadDecoder = decoder(payload);
+const payloadGuard = guard(payload);
 ```
 
 And then, you can use it to decode values:
 
 ```javascript
->>> payloadDecoder(1)      // throws!
->>> payloadDecoder('foo')  // throws!
->>> payloadDecoder({       // OK!
+>>> payloadGuard(1)      // throws!
+>>> payloadGuard('foo')  // throws!
+>>> payloadGuard({       // OK!
 ...     points: [
 ...         { x: 1, y: 2 },
 ...         { x: 3, y: 4 },
@@ -64,50 +66,6 @@ And then, you can use it to decode values:
 ... })                     
 ```
 
-
-## How do I use it?
-
-Take the payloads example above.  In order to "convert" the output of 
-
-```javascript
-const untyped: mixed = JSON.parse('{"points": [{"x": 1, "y": 2}, {"x": 3, "y": 4}]}');
-const typed: Payload = decodePayload(untyped);
-```
-
-Either `decodePayload()` will throw an error at runtime, or the output will be
-guaranteed to be a valid `Payload` object.  How do we build the `decodePayload`
-decoder?  By composing it out of prefab building blocks!
-
-First, build a `Point` decoder!  It'll be a building block:
-
-```javascript
-const decodePoint = decodeObject({
-    x: decodeNumber(),
-    y: decodeNumber(),
-});
-```
-
-Next, use it to define the `Payload` decoder:
-
-```javascript
-const decodePayload = decodeObject({
-    points: decodeArray(decodePoint);
-});
-```
-
-Notice how the result of this is a `Decoder<Payload>` type:
-
-```javascript
-(decodePayload: Decoder<Payload>);
-```
-
-A `Decoder<T>` is a verifier _function_ that, when called with an arbitrary
-value will verify that that value actually matches the desired type, or throw
-a runtime error:
-
-```javascript
-type Decoder<T> = (value: any) => T;
-```
 
 ## API
 
