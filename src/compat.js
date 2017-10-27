@@ -14,6 +14,7 @@ import {
     field as field_,
     guard,
     hardcoded,
+    map as map_,
     mapping,
     null_,
     nullable as nullable_,
@@ -21,7 +22,6 @@ import {
     object,
     optional as optional_,
     string,
-    map as map_,
     tuple2,
     undefined_,
 } from './index';
