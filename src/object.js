@@ -14,7 +14,7 @@ export const pojo: Verifier<Object> = (blob: any) => {
 
 /**
  * A "type function" which informs Flow about how a type will be modified at runtime.
- * Read this as "given a Decoder of type T, I can produce a value of type T".  This
+ * Read this as "given a Guard of type T, I can produce a value of type T".  This
  * definition helps construct $ObjMap types.
  */
 type UnwrapVerifier = <T>(Verifier<T>) => T;
@@ -29,14 +29,14 @@ type UnwrapVerifier = <T>(Verifier<T>) => T;
  *
  * Which is of type:
  *
- *   { id: Decoder<number>, name: Decoder<string> }
+ *   { id: Guard<number>, name: Guard<string> }
  *
  * Passing this to decodeObject() will produce the following return type:
  *
- *   Decoder<{ id: number, name: string }>
+ *   Guard<{ id: number, name: string }>
  *
  * Put simply: it'll "peel off" all of the nested Decoders, puts them together
- * in an object, and wraps it in a Decoder<...>.
+ * in an object, and wraps it in a Guard<...>.
  */
 export function object<O: { [field: string]: Verifier<any> }>(
     mapping: O,

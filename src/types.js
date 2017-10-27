@@ -9,6 +9,6 @@ export type DecodeErrorType = {
     format: (prefix?: string) => string,
 };
 
-export type Decoder<T> = any => T;
+export type Guard<T> = any => T;
 export type Predicate<T> = T => boolean;
 export type Verifier<T> = any => Result<DecodeErrorType, T>;

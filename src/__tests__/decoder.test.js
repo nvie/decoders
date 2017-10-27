@@ -1,11 +1,11 @@
 // @flow
 
-import { decoder } from '../decoder';
+import { guard } from '../guard';
 import { number } from '../number';
 import { object } from '../object';
 
-describe('decoder', () => {
-    const dec = decoder(number);
+describe('guard', () => {
+    const dec = guard(number);
 
     it('valid', () => {
         expect(dec(0)).toBe(0);

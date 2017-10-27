@@ -3,7 +3,7 @@
 import { Ok, Result } from 'lemons';
 
 import { makeErr } from './asserts';
-import type { DecodeErrorType, Decoder, Verifier } from './types';
+import type { DecodeErrorType, Guard, Verifier } from './types';
 
 export function map<T, V>(verifier: Verifier<T>, mapper: T => V): Verifier<V> {
     return compose(verifier, x => Ok(mapper(x)));
