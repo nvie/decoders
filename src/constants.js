@@ -18,13 +18,13 @@ export const undefined_: Decoder<void> = (blob: any) => (blob === undefined ? Ok
 /**
  * Decoder that only returns Ok for the given value constant.  Err otherwise.
  */
-export function constant<T>(value: T) {
+export function constant<T>(value: T): Decoder<T> {
     return (blob: any) => (blob === value ? Ok(blob) : makeErr(`Must be constant ${(value: any)}`, '', blob));
 }
 
 /**
  * Decoder that always returns Ok for the given hardcoded value, no matter what the input.
  */
-export function hardcoded<T>(value: T) {
+export function hardcoded<T>(value: T): Decoder<T> {
     return (_: any) => Ok(value);
 }

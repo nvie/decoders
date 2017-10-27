@@ -61,26 +61,32 @@ function convertGuardFactory<A, B>(dispatcher: A => Guard<B>): A => Decoder<B> {
     };
 }
 
-export const andThen = <A, B>(f: A => Guard<B>, g: Guard<A>) => guard(dispatch(g2d(g), convertGuardFactory(f)));
-export const decodeNumber = () => guard(number);
-export const decodeString = () => guard(string);
-export const decodeBoolean = () => guard(boolean);
-export const decodeNull = () => guard(null_);
-export const decodeUndefined = () => guard(undefined_);
-export const fail = (msg: string) => guard(fail_(msg));
-export const decodeConstant = <T>(value: T) => guard(constant(value));
-export const decodeField = <T>(field: string, g: Guard<T>) => guard(field_(field, g2d(g)));
-export const decodeValue = <T>(value: T) => guard(hardcoded(value));
-export const decodeArray = <T>(g: Guard<T>) => guard(array(g2d(g)));
-export const decodeMap = <T>(g: Guard<T>) => guard(mapping(g2d(g)));
-export const decodeObject = (o: { [field: string]: Guard<any> }) => guard(object(convertObject(o)));
-export const optional = <T>(g: Guard<T>) => guard(optional_(g2d(g)));
-export const nullable = <T>(g: Guard<T>) => guard(nullable_(g2d(g)));
-export const decodeTuple2 = <T1, T2>(g1: Guard<T1>, g2: Guard<T2>) => guard(tuple2(g2d(g1), g2d(g2)));
-export const oneOf = <T1, T2>(g1: Guard<T1>, g2: Guard<T2>) => guard(either(g2d(g1), g2d(g2)));
-export const oneOf3 = <T1, T2, T3>(g1: Guard<T1>, g2: Guard<T2>, g3: Guard<T3>) =>
+export const andThen = <A, B>(f: A => Guard<B>, g: Guard<A>): Guard<B> =>
+    guard(dispatch(g2d(g), convertGuardFactory(f)));
+export const decodeNumber = (): Guard<number> => guard(number);
+export const decodeString = (): Guard<string> => guard(string);
+export const decodeBoolean = (): Guard<boolean> => guard(boolean);
+export const decodeNull = (): Guard<null> => guard(null_);
+export const decodeUndefined = (): Guard<void> => guard(undefined_);
+export const fail = <T>(msg: string): Guard<T> => guard(fail_(msg));
+export const decodeConstant = <T>(value: T): Guard<T> => guard(constant(value));
+export const decodeField = <T>(field: string, g: Guard<T>): Guard<T> => guard(field_(field, g2d(g)));
+export const decodeValue = <T>(value: T): Guard<T> => guard(hardcoded(value));
+export const decodeArray = <T>(g: Guard<T>): Guard<Array<T>> => guard(array(g2d(g)));
+export const decodeMap = <T>(g: Guard<T>): Guard<Map<string, T>> => guard(mapping(g2d(g)));
+export const decodeObject = <O: { [field: string]: Guard<any> }>(o: O): Guard<$ObjMap<O, <T>(Guard<T>) => T>> =>
+    guard(object(convertObject(o)));
+export const optional = <T>(g: Guard<T>): Guard<void | T> => guard(optional_(g2d(g)));
+export const nullable = <T>(g: Guard<T>): Guard<null | T> => guard(nullable_(g2d(g)));
+export const decodeTuple2 = <T1, T2>(g1: Guard<T1>, g2: Guard<T2>): Guard<[T1, T2]> => guard(tuple2(g2d(g1), g2d(g2)));
+export const oneOf = <T1, T2>(g1: Guard<T1>, g2: Guard<T2>): Guard<T1 | T2> => guard(either(g2d(g1), g2d(g2)));
+export const oneOf3 = <T1, T2, T3>(g1: Guard<T1>, g2: Guard<T2>, g3: Guard<T3>): Guard<T1 | T2 | T3> =>
     guard(either3(g2d(g1), g2d(g2), g2d(g3)));
-export const oneOf4 = <T1, T2, T3, T4>(g1: Guard<T1>, g2: Guard<T2>, g3: Guard<T3>, g4: Guard<T4>) =>
-    guard(either4(g2d(g1), g2d(g2), g2d(g3), g2d(g4)));
+export const oneOf4 = <T1, T2, T3, T4>(
+    g1: Guard<T1>,
+    g2: Guard<T2>,
+    g3: Guard<T3>,
+    g4: Guard<T4>
+): Guard<T1 | T2 | T3 | T4> => guard(either4(g2d(g1), g2d(g2), g2d(g3), g2d(g4)));
 
 export type { Guard as Decoder };
