@@ -11,4 +11,4 @@ export type DecodeErrorType = {
 
 export type Guard<T> = any => T;
 export type Predicate<T> = T => boolean;
-export type Verifier<T> = any => Result<DecodeErrorType, T>;
+export type Decoder<T> = any => Result<DecodeErrorType, T>;

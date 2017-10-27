@@ -1,14 +1,15 @@
 // @flow
 
-import { makeErr } from './asserts';
 import { Ok } from 'lemons';
-import type { Verifier } from './types';
+
+import { makeErr } from './asserts';
+import type { Decoder } from './types';
 
 /**
- * Builds a Verifier that returns Ok for 2-tuples of `[T, V]`, given Verifiers
+ * Builds a Decoder that returns Ok for 2-tuples of `[T, V]`, given Verifiers
  * for `T` and `V`.  Err otherwise.
  */
-export function tuple2<T, V>(verifier1: Verifier<T>, verifier2: Verifier<V>): Verifier<[T, V]> {
+export function tuple2<T, V>(verifier1: Decoder<T>, verifier2: Decoder<V>): Decoder<[T, V]> {
     return (blobs: any) => {
         if (!Array.isArray(blobs)) {
             return makeErr('Must be an array', blobs);

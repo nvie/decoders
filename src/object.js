@@ -3,12 +3,12 @@
 import { Ok } from 'lemons';
 
 import { makeErr } from './asserts';
-import type { Verifier } from './types';
+import type { Decoder } from './types';
 import { compose } from './utils';
 
 // TODO: rename pojo => object
 // TODO: rename object => record
-export const pojo: Verifier<Object> = (blob: any) => {
+export const pojo: Decoder<Object> = (blob: any) => {
     return typeof blob === 'object' ? Ok(blob) : makeErr('Must be an object', blob);
 };
 
@@ -17,7 +17,7 @@ export const pojo: Verifier<Object> = (blob: any) => {
  * Read this as "given a Guard of type T, I can produce a value of type T".  This
  * definition helps construct $ObjMap types.
  */
-type UnwrapVerifier = <T>(Verifier<T>) => T;
+type UnwrapVerifier = <T>(Decoder<T>) => T;
 
 /**
  * Given a mapping of fields-to-decoders, builds a decoder for an object type.
@@ -38,10 +38,10 @@ type UnwrapVerifier = <T>(Verifier<T>) => T;
  * Put simply: it'll "peel off" all of the nested Decoders, puts them together
  * in an object, and wraps it in a Guard<...>.
  */
-export function object<O: { [field: string]: Verifier<any> }>(
+export function object<O: { [field: string]: Decoder<any> }>(
     mapping: O,
     msg: string = 'Unexpected object shape'
-): Verifier<$ObjMap<O, UnwrapVerifier>> {
+): Decoder<$ObjMap<O, UnwrapVerifier>> {
     return compose(pojo, (blob: Object) => {
         //
         // TODO:
@@ -55,9 +55,9 @@ export function object<O: { [field: string]: Verifier<any> }>(
         // NOTE: We're using .keys() here over .entries(), since .entries()
         // will type the value part as "mixed"for (const key of Object.keys(mapping)) {
         for (const key of Object.keys(mapping)) {
-            const verifier = mapping[key];
+            const decoder = mapping[key];
             const value = blob[key];
-            const result = verifier(value);
+            const result = decoder(value);
             try {
                 record[key] = result.unwrap();
             } catch (e) {
@@ -68,12 +68,12 @@ export function object<O: { [field: string]: Verifier<any> }>(
     });
 }
 
-export function field<T>(field: string, verifier: Verifier<T>): Verifier<T> {
+export function field<T>(field: string, decoder: Decoder<T>): Decoder<T> {
     // TODO: Optimize away the many calls to pojo() (one made for each field
     // like this, not efficient -- pull it out of this function)
     return compose(pojo, (blob: Object) => {
         const value = blob[field];
-        const result = verifier(value);
+        const result = decoder(value);
         try {
             return Ok(result.unwrap());
         } catch (e) {

@@ -1,11 +1,11 @@
 // @flow
 
 import { makeErr } from './asserts';
-import type { Verifier } from './types';
+import type { Decoder } from './types';
 
 /**
- * Verifier that always fails with the given error message, no matter what the input.
+ * Decoder that always fails with the given error message, no matter what the input.
  */
-export function fail<T>(msg: string): Verifier<T> {
+export function fail<T>(msg: string): Decoder<T> {
     return (_: any) => makeErr(msg);
 }

@@ -18,7 +18,7 @@
  * type.  In our case, it's fine to fail with a runtime error.
  *
  */
-import type { Guard, Verifier } from './types';
+import type { Decoder, Guard } from './types';
 
 export { guard } from './guard';
 export { compose, map, predicate } from './utils';
@@ -37,4 +37,4 @@ export { optional } from './optional';
 export { string } from './string';
 export { tuple2 } from './tuple';
 
-export type { Guard, Verifier };
+export type { Guard, Decoder };

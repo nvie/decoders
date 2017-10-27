@@ -1,9 +1,9 @@
 // @flow
 
-import { Err, Result, Ok } from 'lemons';
+import { Err, Ok, Result } from 'lemons';
 
 import { makeErr } from './asserts';
-import type { Verifier } from './types';
+import type { Decoder } from './types';
 
 /**
  * Given an iterable of Result instances, exhaust them all and return:
@@ -27,16 +27,16 @@ function all<E, T>(iterable: Iterable<Result<E, T>>): Result<[number, E], Array<
 }
 
 /**
- * Builds a Verifier that returns Ok for values of `Array<T>`, given a Verifier
+ * Builds a Decoder that returns Ok for values of `Array<T>`, given a Decoder
  * for `T`.  Err otherwise.
  */
-export function array<T>(verifier: Verifier<T>): Verifier<Array<T>> {
+export function array<T>(decoder: Decoder<T>): Decoder<Array<T>> {
     return (blobs: any) => {
         if (!Array.isArray(blobs)) {
             return makeErr('Must be an array', blobs);
         }
 
-        const results = blobs.map(verifier);
+        const results = blobs.map(decoder);
         const result = all(results);
         return result.dispatch(
             value => Ok(value),

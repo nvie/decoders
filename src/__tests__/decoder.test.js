@@ -2,7 +2,6 @@
 
 import { guard } from '../guard';
 import { number } from '../number';
-import { object } from '../object';
 
 describe('guard', () => {
     const dec = guard(number);

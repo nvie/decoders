@@ -2,119 +2,119 @@
 
 import { partition } from 'itertools';
 
-import { null_, undefined_, constant, hardcoded } from '../constants';
+import { constant, hardcoded, null_, undefined_ } from '../constants';
 import { INPUTS } from './fixtures';
 
 describe('null', () => {
-    const verifier = null_;
+    const decoder = null_;
     const [okay, not_okay] = partition(INPUTS, x => x === null);
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(verifier(value).unwrap()).toBe(value);
+            expect(decoder(value).unwrap()).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(verifier(value).isErr()).toBe(true);
+            expect(decoder(value).isErr()).toBe(true);
         }
     });
 });
 
 describe('undefined', () => {
-    const verifier = undefined_;
+    const decoder = undefined_;
     const [okay, not_okay] = partition(INPUTS, x => x === undefined);
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(verifier(value).unwrap()).toBe(value);
+            expect(decoder(value).unwrap()).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(verifier(value).isErr()).toBe(true);
+            expect(decoder(value).isErr()).toBe(true);
         }
     });
 });
 
 describe('string constants', () => {
-    const verifier = constant('foo');
+    const decoder = constant('foo');
     const [okay, not_okay] = partition(INPUTS, x => x === 'foo');
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(verifier(value).unwrap()).toBe(value);
+            expect(decoder(value).unwrap()).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(verifier(value).isErr()).toBe(true);
+            expect(decoder(value).isErr()).toBe(true);
         }
     });
 });
 
 describe('number constants', () => {
-    const verifier = constant(42);
+    const decoder = constant(42);
     const [okay, not_okay] = partition(INPUTS, x => x === 42);
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(verifier(value).unwrap()).toBe(value);
+            expect(decoder(value).unwrap()).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(verifier(value).isErr()).toBe(true);
+            expect(decoder(value).isErr()).toBe(true);
         }
     });
 });
 
 describe('boolean constants #1', () => {
-    const verifier = constant(true);
+    const decoder = constant(true);
     const [okay, not_okay] = partition(INPUTS, x => x === true);
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(verifier(value).unwrap()).toBe(value);
+            expect(decoder(value).unwrap()).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(verifier(value).isErr()).toBe(true);
+            expect(decoder(value).isErr()).toBe(true);
         }
     });
 });
 
 describe('boolean constants #2', () => {
-    const verifier = constant(false);
+    const decoder = constant(false);
     const [okay, not_okay] = partition(INPUTS, x => x === false);
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(verifier(value).unwrap()).toBe(value);
+            expect(decoder(value).unwrap()).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(verifier(value).isErr()).toBe(true);
+            expect(decoder(value).isErr()).toBe(true);
         }
     });
 });
@@ -128,11 +128,11 @@ describe('hardcoded value', () => {
                 continue;
             }
 
-            const verifier = hardcoded(hardcodedValue);
+            const decoder = hardcoded(hardcodedValue);
 
             // Against all inputs...
             for (const input of INPUTS) {
-                expect(verifier(input).unwrap()).toBe(hardcodedValue);
+                expect(decoder(input).unwrap()).toBe(hardcodedValue);
             }
         }
     });

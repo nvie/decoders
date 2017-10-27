@@ -23,16 +23,16 @@ describe('array', () => {
     });
 
     it('complex nesting decoding', () => {
-        const verifier = array(array(number));
-        expect(verifier([]).unwrap()).toEqual([]);
-        expect(verifier([[]]).unwrap()).toEqual([[]]);
-        expect(verifier([[1, 2], [], [3, 4, 5]]).unwrap()).toEqual([[1, 2], [], [3, 4, 5]]);
+        const decoder = array(array(number));
+        expect(decoder([]).unwrap()).toEqual([]);
+        expect(decoder([[]]).unwrap()).toEqual([[]]);
+        expect(decoder([[1, 2], [], [3, 4, 5]]).unwrap()).toEqual([[1, 2], [], [3, 4, 5]]);
     });
 
     it('failure to unpack', () => {
-        const verifier = array(string);
-        expect(() => verifier('boop').unwrap()).toThrow('Must be an array');
-        expect(() => verifier([42]).unwrap()).toThrow('Unexpected value at index 0');
-        expect(() => verifier(['foo', 'bar', 42]).unwrap()).toThrow('Unexpected value at index 2');
+        const decoder = array(string);
+        expect(() => decoder('boop').unwrap()).toThrow('Must be an array');
+        expect(() => decoder([42]).unwrap()).toThrow('Unexpected value at index 0');
+        expect(() => decoder(['foo', 'bar', 42]).unwrap()).toThrow('Unexpected value at index 2');
     });
 });

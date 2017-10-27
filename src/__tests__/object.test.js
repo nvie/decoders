@@ -7,51 +7,51 @@ import { string } from '../string';
 
 describe('objects', () => {
     it('decodes objects and fields', () => {
-        const verifier = object({
+        const decoder = object({
             id: number,
             name: string,
         });
 
-        expect(verifier({ id: 1, name: 'test' }).unwrap()).toEqual({ id: 1, name: 'test' });
+        expect(decoder({ id: 1, name: 'test' }).unwrap()).toEqual({ id: 1, name: 'test' });
 
         // Superfluous keys are just ignored
-        expect(verifier({ id: 1, name: 'test', superfluous: 'abundance' }).unwrap()).toEqual({ id: 1, name: 'test' });
+        expect(decoder({ id: 1, name: 'test', superfluous: 'abundance' }).unwrap()).toEqual({ id: 1, name: 'test' });
     });
 
     it('decodes objects and fields (ignore fields)', () => {
         // Extra (unwanted) keys are ignored
-        const verifier = object({
+        const decoder = object({
             id: number,
             name: string,
             extra: optional(string),
         });
 
-        expect(verifier({ id: 1, name: 'test' }).unwrap()).toEqual({ id: 1, name: 'test', extra: undefined });
-        expect(verifier({ id: 1, name: 'test', extra: 'foo' }).unwrap()).toEqual({ id: 1, name: 'test', extra: 'foo' });
-        expect(verifier({}).isErr()).toBe(true); // missing keys 'id' and 'name'
+        expect(decoder({ id: 1, name: 'test' }).unwrap()).toEqual({ id: 1, name: 'test', extra: undefined });
+        expect(decoder({ id: 1, name: 'test', extra: 'foo' }).unwrap()).toEqual({ id: 1, name: 'test', extra: 'foo' });
+        expect(decoder({}).isErr()).toBe(true); // missing keys 'id' and 'name'
     });
 
     it('decodes objects and fields (ignore fields)', () => {
-        const verifier = object({ id: string });
+        const decoder = object({ id: string });
 
-        expect(verifier('foo').isErr()).toBe(true);
-        expect(verifier(3.14).isErr()).toBe(true);
-        expect(verifier([]).isErr()).toBe(true);
-        expect(verifier(undefined).isErr()).toBe(true);
-        expect(verifier(NaN).isErr()).toBe(true);
+        expect(decoder('foo').isErr()).toBe(true);
+        expect(decoder(3.14).isErr()).toBe(true);
+        expect(decoder([]).isErr()).toBe(true);
+        expect(decoder(undefined).isErr()).toBe(true);
+        expect(decoder(NaN).isErr()).toBe(true);
     });
 });
 
 describe('fields', () => {
-    const verifier = field('type', string);
+    const decoder = field('type', string);
 
     it('valid', () => {
-        expect(verifier({ type: 'foo' }).unwrap()).toEqual('foo');
+        expect(decoder({ type: 'foo' }).unwrap()).toEqual('foo');
     });
 
     it('invalid', () => {
-        expect(() => verifier('foo').unwrap()).toThrow('Must be an object');
-        expect(() => verifier({}).unwrap()).toThrow('Missing field "type"');
-        expect(() => verifier({ type: 42 }).unwrap()).toThrow('Unexpected value for field "type"');
+        expect(() => decoder('foo').unwrap()).toThrow('Must be an object');
+        expect(() => decoder({}).unwrap()).toThrow('Missing field "type"');
+        expect(() => decoder({ type: 42 }).unwrap()).toThrow('Unexpected value for field "type"');
     });
 });

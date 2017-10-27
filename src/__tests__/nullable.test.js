@@ -7,14 +7,14 @@ import { string } from '../string';
 import { INPUTS } from './fixtures';
 
 describe('nullable', () => {
-    const verifier = nullable(string);
+    const decoder = nullable(string);
     const [okay, not_okay] = partition(INPUTS, x => typeof x === 'string');
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
-        expect(verifier(null).unwrap()).toBe(null);
+        expect(decoder(null).unwrap()).toBe(null);
         for (const value of okay) {
-            expect(verifier(value).unwrap()).toBe(value);
+            expect(decoder(value).unwrap()).toBe(value);
         }
     });
 
@@ -22,7 +22,7 @@ describe('nullable', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
             if (value === null) continue;
-            expect(verifier(value).isErr()).toBe(true);
+            expect(decoder(value).isErr()).toBe(true);
         }
     });
 });

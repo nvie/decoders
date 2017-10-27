@@ -2,8 +2,8 @@
 
 import { null_ } from './constants';
 import { either } from './either';
-import type { Verifier } from './types';
+import type { Decoder } from './types';
 
-export function nullable<T>(verifier: Verifier<T>): Verifier<null | T> {
-    return either(null_, verifier);
+export function nullable<T>(decoder: Decoder<T>): Decoder<null | T> {
+    return either(null_, decoder);
 }

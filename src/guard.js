@@ -1,7 +1,7 @@
 // @flow
 
-import type { Guard, Verifier } from './types';
+import type { Decoder, Guard } from './types';
 
-export function guard<T>(verifier: Verifier<T>): Guard<T> {
-    return (blob: any) => verifier(blob).unwrap();
+export function guard<T>(decoder: Decoder<T>): Guard<T> {
+    return (blob: any) => decoder(blob).unwrap();
 }
