@@ -4,7 +4,7 @@ import { Result } from 'lemons';
 
 export type DecodeErrorType = {
     message: string,
-    blob: any,
+    blob: mixed,
     parents: Array<DecodeErrorType>,
     format: (prefix?: string) => string,
 };

@@ -18,7 +18,7 @@ export function summarizer(key: string, value: mixed): mixed {
     return value;
 }
 
-export function DecodeError(message: string, blob: any, parents: Array<DecodeErrorType>): DecodeErrorType {
+export function DecodeError(message: string, blob: mixed, parents: Array<DecodeErrorType>): DecodeErrorType {
     let err = {
         message,
         blob,
@@ -40,6 +40,6 @@ export function DecodeError(message: string, blob: any, parents: Array<DecodeErr
     return err;
 }
 
-export function makeErr(message: string, blob: any, parents: Array<DecodeErrorType>) {
+export function makeErr(message: string, blob: mixed, parents: Array<DecodeErrorType>) {
     return Err(DecodeError(message, blob, parents));
 }
