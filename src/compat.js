@@ -76,7 +76,8 @@ export const decodeArray = <T>(g: Guard<T>): Guard<Array<T>> => guard(array(g2d(
 export const decodeMap = <T>(g: Guard<T>): Guard<Map<string, T>> => guard(mapping(g2d(g)));
 export const decodeObject = <O: { [field: string]: Guard<any> }>(o: O): Guard<$ObjMap<O, <T>(Guard<T>) => T>> =>
     guard(object(convertObject(o)));
-export const optional = <T>(g: Guard<T>): Guard<void | T> => guard(optional_(g2d(g)));
+export const optional = <T>(g: Guard<T>, allowNull: boolean = false): Guard<void | T> =>
+    guard(optional_(g2d(g), allowNull));
 export const nullable = <T>(g: Guard<T>): Guard<null | T> => guard(nullable_(g2d(g)));
 export const decodeTuple2 = <T1, T2>(g1: Guard<T1>, g2: Guard<T2>): Guard<[T1, T2]> => guard(tuple2(g2d(g1), g2d(g2)));
 export const oneOf = <T1, T2>(g1: Guard<T1>, g2: Guard<T2>): Guard<T1 | T2> => guard(either(g2d(g1), g2d(g2)));
