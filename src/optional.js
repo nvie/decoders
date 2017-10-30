@@ -1,17 +1,24 @@
 // @flow
 
-import { andThen } from './andThen';
-import { decodeNull, decodeUndefined, decodeValue } from './constants';
-import { oneOf, oneOf3 } from './oneOf';
+import { Ok } from 'lemons';
+
+import { undefined_ } from './constants';
+import { either } from './either';
+import { makeErr } from './error';
 import type { Decoder } from './types';
 
 /**
- * Will wrap the given decoder, making it accept undefined, too.
+ * Decoder that only returns Ok for `null` or `undefined` inputs.  In both
+ * cases, it will return `undefined`, so `null` inputs will get converted to
+ * `undefined` outputs.  Err otherwise.
+ */
+export const undefined_or_null: Decoder<void> = (blob: any) =>
+    blob === undefined || blob === null ? Ok(undefined) : makeErr('Must be undefined or null', blob, []);
+
+/**
+ * Builds a Decoder that returns Ok for either `undefined` or `T` values,
+ * given a Decoder for `T`.  Err otherwise.
  */
 export function optional<T>(decoder: Decoder<T>, allowNull: boolean = false): Decoder<void | T> {
-    if (allowNull) {
-        return oneOf3(decoder, decodeUndefined(), andThen(() => decodeValue(undefined), decodeNull()));
-    } else {
-        return oneOf(decoder, decodeUndefined());
-    }
+    return either(allowNull ? undefined_or_null : undefined_, decoder);
 }

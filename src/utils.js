@@ -1,27 +1,21 @@
 // @flow
 
-import { DecodeError } from './asserts';
+import { Ok, Result } from 'lemons';
 
-/**
- * Will verify that the passed-in arbitrary object indeed is an Array,
- * and return it.  Otherwise throws a runtime error.
- */
-export function asArray(blobs: any): Array<any> {
-    if (!Array.isArray(blobs)) {
-        throw DecodeError('Not an array', 'Expected an array', blobs);
-    }
+import { makeErr } from './error';
+import DecodeError from './error';
+import type { Decoder } from './types';
 
-    return (blobs: Array<any>);
+export function map<T, V>(decoder: Decoder<T>, mapper: T => V): Decoder<V> {
+    return compose(decoder, x => Ok(mapper(x)));
 }
 
-/**
- * Will verify that the passed-in arbitrary object indeed is an Object,
- * and return it.  Otherwise throws a runtime error.
- */
-export function asObject(blob: any): Object {
-    if (typeof blob !== 'object') {
-        throw DecodeError('Not an object', 'Expected an object', blob);
-    }
+export function compose<T, V>(decoder: Decoder<T>, next: T => Result<DecodeError, V>): Decoder<V> {
+    return (blob: any) => decoder(blob).andThen(next);
+}
 
-    return (blob: Object);
+export function predicate<T>(predicate: T => boolean, msg: string): Decoder<T> {
+    return (value: T) => {
+        return predicate(value) ? Ok(value) : makeErr(msg, value, []);
+    };
 }

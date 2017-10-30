@@ -1,30 +1,101 @@
 // @flow
 
-import { decodeNumber } from '../number';
+import { partition } from 'itertools';
 
-describe('decodes numbers from JSON', () => {
-    const decoder = decodeNumber();
+import { anyNumber, integer, number, positiveInteger, positiveNumber } from '../number';
+import { INPUTS } from './fixtures';
 
-    it('simply returns numbers if inputs are numbers', () => {
-        expect(decoder(0)).toBe(0);
-        expect(decoder(1)).toBe(1);
-        expect(decoder(3.14)).toBeCloseTo(3.14);
-        expect(decoder(-13)).toBe(-13);
+describe('number', () => {
+    const decoder = number;
+    const [okay, not_okay] = partition(INPUTS, Number.isFinite);
+
+    it('valid', () => {
+        expect(okay.length).not.toBe(0);
+        for (const value of okay) {
+            expect(decoder(value).unwrap()).toBe(value);
+        }
     });
 
-    it('throws runtime error if inputs are not numbers', () => {
-        expect(() => decoder('')).toThrow();
-        expect(() => decoder('1')).toThrow();
-        expect(() => decoder('not a number')).toThrow();
-        expect(() => decoder(true)).toThrow();
-        expect(() => decoder(null)).toThrow();
-        expect(() => decoder(undefined)).toThrow();
-        expect(() => decoder(1 / 0)).toThrow();
+    it('invalid', () => {
+        expect(not_okay.length).not.toBe(0);
+        for (const value of not_okay) {
+            expect(decoder(value).isErr()).toBe(true);
+        }
+    });
+});
+
+describe('anyNumber', () => {
+    const decoder = anyNumber;
+    const [okay, not_okay] = partition(INPUTS, x => typeof x === 'number' && !Number.isNaN(x));
+
+    it('valid', () => {
+        expect(okay.length).not.toBe(0);
+        for (const value of okay) {
+            expect(decoder(value).unwrap()).toBe(value);
+        }
     });
 
-    it('throws runtime error if inputs are not _finite_ numbers', () => {
-        expect(() => decoder(Number.NEGATIVE_INFINITY)).toThrow();
-        expect(() => decoder(Number.POSITIVE_INFINITY)).toThrow();
-        expect(() => decoder(NaN)).toThrow();
+    it('invalid', () => {
+        expect(not_okay.length).not.toBe(0);
+        for (const value of not_okay) {
+            expect(decoder(value).isErr()).toBe(true);
+        }
+    });
+});
+
+describe('positiveNumber', () => {
+    const decoder = positiveNumber;
+    const [okay, not_okay] = partition(INPUTS, n => typeof n === 'number' && Number.isFinite(n) && n >= 0);
+
+    it('valid', () => {
+        expect(okay.length).not.toBe(0);
+        for (const value of okay) {
+            expect(decoder(value).unwrap()).toBe(value);
+        }
+    });
+
+    it('invalid', () => {
+        expect(not_okay.length).not.toBe(0);
+        for (const value of not_okay) {
+            expect(decoder(value).isErr()).toBe(true);
+        }
+    });
+});
+
+describe('integer', () => {
+    const decoder = integer;
+    const [okay, not_okay] = partition(INPUTS, Number.isInteger);
+
+    it('valid', () => {
+        expect(okay.length).not.toBe(0);
+        for (const value of okay) {
+            expect(decoder(value).unwrap()).toBe(value);
+        }
+    });
+
+    it('invalid', () => {
+        expect(not_okay.length).not.toBe(0);
+        for (const value of not_okay) {
+            expect(decoder(value).isErr()).toBe(true);
+        }
+    });
+});
+
+describe('positiveInteger', () => {
+    const decoder = positiveInteger;
+    const [okay, not_okay] = partition(INPUTS, n => typeof n === 'number' && Number.isInteger(n) && n >= 0);
+
+    it('valid', () => {
+        expect(okay.length).not.toBe(0);
+        for (const value of okay) {
+            expect(decoder(value).unwrap()).toBe(value);
+        }
+    });
+
+    it('invalid', () => {
+        expect(not_okay.length).not.toBe(0);
+        for (const value of not_okay) {
+            expect(decoder(value).isErr()).toBe(true);
+        }
     });
 });

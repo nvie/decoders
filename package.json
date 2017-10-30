@@ -1,6 +1,6 @@
 {
   "name": "decoders",
-  "version": "0.0.7",
+  "version": "0.1.0-rc10",
   "description": "Elm-like decoders for when working with Flow types in JS",
   "main": "lib/index.js",
   "files": [
@@ -15,6 +15,7 @@
     "check:eslint": "eslint --report-unused-disable-directives src",
     "check:import-sort": "find src -iname '*.js' | xargs -n1 import-sort --diff",
     "check:prettier": "prettier --list-different 'src/**/*.js'",
+    "fix": "yarn run fix:prettier && yarn run fix:import-sort",
     "fix:import-sort": "find src -iname '*.js' | xargs -n1 import-sort -o",
     "fix:prettier": "prettier --write 'src/**/*.js'",
     "prepublish": "yarn run --silent in-publish && yarn run actually-prepublish || echo",
@@ -50,18 +51,26 @@
     "import-sort-style-eslint": "^3.0.0",
     "import-sort-style-module": "^3.0.0",
     "in-publish": "^2.0.0",
+    "itertools": "^1.0.0",
     "jest": "^21.2.1",
     "jest-cli": "^21.2.1",
     "prettier": "^1.7.4",
     "rimraf": "^2.6.2"
   },
   "dependencies": {
-    "moment": "2.x"
+    "lemons": "^0.0.4"
   },
   "importSort": {
     ".js": {
       "parser": "babylon",
       "style": "module"
     }
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "node_modules",
+      "fixtures.js",
+      ".skip.js"
+    ]
   }
 }

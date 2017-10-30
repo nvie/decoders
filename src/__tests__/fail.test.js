@@ -1,23 +1,20 @@
 // @flow
 
 import { fail } from '../fail';
+import { INPUTS } from './fixtures';
 
 describe('fail', () => {
-    const decoder = fail('Oops', 'I always fail');
+    const decoder = fail('I always fail');
+    const not_okay = INPUTS;
 
     it('valid', () => {
         // Nothing is valid for a failing decoder :)
     });
 
     it('throws runtime error if inputs are not strings', () => {
-        expect(() => decoder('foo')).toThrow();
-        expect(() => decoder(1)).toThrow();
-        expect(() => decoder(true)).toThrow();
-        expect(() => decoder(null)).toThrow();
-        expect(() => decoder(undefined)).toThrow();
-        expect(() => decoder(NaN)).toThrow();
-        expect(() => decoder(1 / 0)).toThrow();
-        expect(() => decoder([1, 2, 3])).toThrow();
-        expect(() => decoder({ x: 1, y: 2 })).toThrow();
+        expect(not_okay.length).not.toBe(0);
+        for (const value of not_okay) {
+            expect(decoder(value).isErr()).toBe(true);
+        }
     });
 });

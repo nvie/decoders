@@ -1,22 +1,25 @@
 // @flow
 
-import { decodeBoolean } from '../boolean';
+import { partition } from 'itertools';
+
+import { boolean } from '../boolean';
+import { INPUTS } from './fixtures';
 
 describe('boolean', () => {
-    const decoder = decodeBoolean();
+    const decoder = boolean;
+    const [okay, not_okay] = partition(INPUTS, x => x === true || x === false);
 
     it('valid', () => {
-        expect(decoder(false)).toBe(false);
-        expect(decoder(true)).toBe(true);
+        expect(okay.length).not.toBe(0);
+        for (const value of okay) {
+            expect(decoder(value).unwrap()).toBe(value);
+        }
     });
 
     it('invalid', () => {
-        expect(() => decoder('')).toThrow();
-        expect(() => decoder('1')).toThrow();
-        expect(() => decoder('not a number')).toThrow();
-        expect(() => decoder(null)).toThrow();
-        expect(() => decoder(undefined)).toThrow();
-        expect(() => decoder(NaN)).toThrow();
-        expect(() => decoder(1 / 0)).toThrow();
+        expect(not_okay.length).not.toBe(0);
+        for (const value of not_okay) {
+            expect(decoder(value).isErr()).toBe(true);
+        }
     });
 });

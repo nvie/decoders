@@ -1,13 +1,11 @@
 // @flow
 
-import { DecodeError } from './asserts';
+import { makeErr } from './error';
 import type { Decoder } from './types';
 
 /**
- * A decoder that will always fail when used.
+ * Decoder that always fails with the given error message, no matter what the input.
  */
-export function fail<T>(message: string, detail: string): Decoder<T> {
-    return (blob: any) => {
-        throw DecodeError(message, detail, blob);
-    };
+export function fail<T>(msg: string): Decoder<T> {
+    return (blob: any) => makeErr(msg, blob, []);
 }

@@ -1,40 +1,52 @@
 // @flow
 
-import { DecodeError } from './asserts';
+import { Ok } from 'lemons';
+
+import DecodeError, { isDecodeError, makeErr } from './error';
+import { pojo } from './object';
 import type { Decoder } from './types';
-import { asObject } from './utils';
+import { compose } from './utils';
 
 /**
- * Given a JSON object, will decode a Map of string keys to whatever values.
+ * Given an object, will decode a Map of string keys to whatever values.
  *
- * For example, given a decoder for a Person, we can decode a Person lookup table
- * structure (of type Map<string, Person>) like so:
+ * For example, given a decoder for a Person, we can verify a Person lookup
+ * table structure (of type Map<string, Person>) like so:
  *
- *   decodeMap(decodePerson())
+ *   mapping(person)
  *
  */
-export function decodeMap<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
-    return (blob: any) => {
-        // Verify that blob actually _is_ a POJO and it has all the fields
-        blob = asObject(blob);
+export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
+    return compose(pojo, (blob: Object) => {
+        let tuples: Array<[string, T]> = [];
+        let errors: Array<[string, DecodeError]> = [];
 
-        let result = new Map();
-        Object.entries(blob).forEach(([id: string, value: mixed]) => {
+        Object.keys(blob).forEach((key: string) => {
+            const value: T = blob[key];
+            const result = decoder(value);
             try {
-                result.set(id, decoder(value));
+                const okValue = result.unwrap();
+                if (errors.length === 0) {
+                    tuples.push([key, okValue]);
+                }
             } catch (e) {
-                if ('blob' in e) {
-                    throw DecodeError(
-                        'Unexpected value',
-                        `Expected value under key "${id}" to match its expected type`,
-                        blob,
-                        [e]
-                    );
+                if (isDecodeError(e)) {
+                    tuples.length = 0; // Clear the tuples array
+                    errors.push([key, ((e: any): DecodeError)]);
                 } else {
+                    // Otherwise, simply rethrow it
                     throw e;
                 }
             }
         });
-        return result;
-    };
+
+        if (errors.length > 0) {
+            let keys = errors.map(([key]) => key);
+            keys.sort();
+            keys = keys.map(s => `"${s}"`); // quote keys
+            return makeErr(`Unexpected value under keys ${keys.join(', ')}`, blob, errors.map(([, e]) => e));
+        } else {
+            return Ok(new Map(tuples));
+        }
+    });
 }

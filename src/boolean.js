@@ -1,17 +1,13 @@
 // @flow
 
-import { assertType } from './asserts';
+import { Ok } from 'lemons';
+
+import { makeErr } from './error';
 import type { Decoder } from './types';
 
-const booleanDecoder: Decoder<boolean> = blob => {
-    assertType(blob, 'boolean');
-    return (blob: boolean);
-};
-
 /**
- * Decodes a boolean value.
- * Will throw a DecodeError if anything other than a boolean value is found.
+ * Decoder that only returns Ok for boolean inputs.  Err otherwise.
  */
-export function decodeBoolean(): Decoder<boolean> {
-    return booleanDecoder;
-}
+export const boolean: Decoder<boolean> = (blob: any) => {
+    return typeof blob === 'boolean' ? Ok(blob) : makeErr('Must be boolean', blob, []);
+};

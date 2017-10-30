@@ -1,48 +1,31 @@
 // @flow
 
-import { assertTest, assertType } from './asserts';
+import { Ok } from 'lemons';
+
+import { makeErr } from './error';
 import type { Decoder } from './types';
 
-const nullDecoder: Decoder<null> = decodeConstant(null);
-const undefinedDecoder: Decoder<void> = blob => {
-    assertType(blob, 'undefined');
-    return undefined;
-};
+/**
+ * Decoder that only returns Ok for `null` inputs.  Err otherwise.
+ */
+export const null_: Decoder<null> = (blob: any) => (blob === null ? Ok(blob) : makeErr('Must be null', blob, []));
 
 /**
- * Decodes any hardcoded value, without looking at the input data.
+ * Decoder that only returns Ok for `undefined` inputs.  Err otherwise.
  */
-export function decodeValue<T>(value: T): Decoder<T> {
-    return () => {
-        return value;
-    };
+export const undefined_: Decoder<void> = (blob: any) =>
+    blob === undefined ? Ok(blob) : makeErr('Must be undefined', blob, []);
+
+/**
+ * Decoder that only returns Ok for the given value constant.  Err otherwise.
+ */
+export function constant<T>(value: T): Decoder<T> {
+    return (blob: any) => (blob === value ? Ok(blob) : makeErr(`Must be constant ${(value: any)}`, blob, []));
 }
 
 /**
- * Decodes any constant value.
+ * Decoder that always returns Ok for the given hardcoded value, no matter what the input.
  */
-export function decodeConstant<T>(value: T): Decoder<T> {
-    return (blob: any) => {
-        assertTest(
-            blob,
-            blob => blob === value,
-            `Not ${JSON.stringify(value)}`,
-            `Expected the constant value ${JSON.stringify(value)}`
-        );
-        return value;
-    };
-}
-
-/**
- * Decodes the null value.
- */
-export function decodeNull(): Decoder<null> {
-    return nullDecoder;
-}
-
-/**
- * Decodes the undefined value.
- */
-export function decodeUndefined(): Decoder<void> {
-    return undefinedDecoder;
+export function hardcoded<T>(value: T): Decoder<T> {
+    return (_: any) => Ok(value);
 }

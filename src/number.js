@@ -1,19 +1,21 @@
 // @flow
 
-import { assertTest } from './asserts';
-import type { Decoder } from './types';
+import { Ok } from 'lemons';
 
-const numberDecoder: Decoder<number> = blob => {
-    assertTest(blob, Number.isFinite, 'Not a number', 'Expected a finite number');
-    return (blob: number);
+import { makeErr } from './error';
+import type { Decoder } from './types';
+import { compose, predicate } from './utils';
+
+export const anyNumber: Decoder<number> = (blob: any) => {
+    return typeof blob === 'number' && !Number.isNaN(blob) ? Ok(blob) : makeErr('Must be number', blob, []);
 };
 
-/**
- * Decodes a finite (!) number (integer or float) value.  Will throw
- * a `DecodeError` if anything other than a finite number value is found.  This
- * means that values like `NaN`, or positive and negative `Infinity` are not
- * considered valid numbers.
- */
-export function decodeNumber(): Decoder<number> {
-    return numberDecoder;
-}
+export const number: Decoder<number> = compose(anyNumber, predicate(Number.isFinite, 'Number must be finite'));
+export const positiveNumber: Decoder<number> = compose(number, predicate(n => n >= 0, 'Number must be positive'));
+
+// Integers
+export const integer: Decoder<number> = compose(number, predicate(Number.isInteger, 'Number must be an integer'));
+export const positiveInteger: Decoder<number> = compose(
+    number,
+    predicate(n => n >= 0 && Number.isInteger(n), 'Number must be an integer')
+);

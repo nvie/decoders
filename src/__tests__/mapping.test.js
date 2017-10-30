@@ -1,20 +1,20 @@
 // @flow
 
-import { decodeMap } from '../mapping';
-import { decodeObject } from '../object';
-import { decodeString } from '../string';
+import { mapping } from '../mapping';
+import { object } from '../object';
+import { string } from '../string';
 
 describe('mappings', () => {
-    it('decodes json mappings (lookup tables)', () => {
-        const input = JSON.parse('{ "18": { "name": "foo" }, "23": { "name": "bar" }, "key": { "name": "value" } }');
-        const dec = decodeMap(
-            decodeObject({
-                name: decodeString(),
-            })
-        );
-        const output = new Map([['18', { name: 'foo' }], ['23', { name: 'bar' }], ['key', { name: 'value' }]]);
-        expect(dec(input)).toEqual(output);
+    const decoder = mapping(object({ name: string }));
 
-        expect(() => dec({ foo: 1, bar: 2 })).toThrow();
+    it('valid', () => {
+        const input = { '18': { name: 'foo' }, '23': { name: 'bar' }, key: { name: 'value' } };
+        const output = new Map([['18', { name: 'foo' }], ['23', { name: 'bar' }], ['key', { name: 'value' }]]);
+        expect(decoder(input).unwrap()).toEqual(output);
+    });
+
+    it('invalid', () => {
+        expect(() => decoder('foo').unwrap()).toThrow('Must be an object');
+        expect(() => decoder({ foo: 1 }).unwrap()).toThrow('Unexpected value');
     });
 });

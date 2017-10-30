@@ -1,22 +1,25 @@
 // @flow
 
-import { decodeString } from '../string';
+import { partition } from 'itertools';
 
-describe('strings', () => {
-    const decoder = decodeString();
+import { string } from '../string';
+import { INPUTS } from './fixtures';
+
+describe('string', () => {
+    const decoder = string;
+    const [okay, not_okay] = partition(INPUTS, x => typeof x === 'string');
 
     it('valid', () => {
-        expect(decoder('')).toBe('');
-        expect(decoder('foo')).toBe('foo');
-        expect(decoder(' 1 2 3 ')).toBe(' 1 2 3 ');
+        expect(okay.length).not.toBe(0);
+        for (const value of okay) {
+            expect(decoder(value).unwrap()).toBe(value);
+        }
     });
 
     it('invalid', () => {
-        expect(() => decoder(1)).toThrow();
-        expect(() => decoder(true)).toThrow();
-        expect(() => decoder(null)).toThrow();
-        expect(() => decoder(undefined)).toThrow();
-        expect(() => decoder(NaN)).toThrow();
-        expect(() => decoder(1 / 0)).toThrow();
+        expect(not_okay.length).not.toBe(0);
+        for (const value of not_okay) {
+            expect(decoder(value).isErr()).toBe(true);
+        }
     });
 });
