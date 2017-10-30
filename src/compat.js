@@ -31,7 +31,7 @@ import {
  * Converts a Guard, which used to be referred to as a Decoder 0.0.x, and
  * converts it, behaviourally, to a >=0.1 Decoder, so we can use it in decoder
  * composition. */
-function g2d<T>(g: Guard<T>): Decoder<T> {
+export function g2d<T>(g: Guard<T>): Decoder<T> {
     return (blob: any) => {
         try {
             const result: T = g(blob);
