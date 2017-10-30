@@ -33,9 +33,6 @@ export function DecodeError(message: string, blob: mixed, parents: Array<DecodeE
             }
             return msg;
         },
-        toString() {
-            return this.format();
-        },
     };
     return err;
 }
