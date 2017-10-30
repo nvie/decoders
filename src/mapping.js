@@ -2,7 +2,7 @@
 
 import { Ok } from 'lemons';
 
-import { makeErr } from './error';
+import DecodeError, { isDecodeError, makeErr } from './error';
 import { pojo } from './object';
 import type { Decoder } from './types';
 import { compose } from './utils';
@@ -18,17 +18,35 @@ import { compose } from './utils';
  */
 export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
     return compose(pojo, (blob: Object) => {
-        try {
-            return Ok(
-                new Map(
-                    Object.keys(blob).map((key: string) => {
-                        const value: T = blob[key];
-                        return [key, decoder(value).unwrap()];
-                    })
-                )
-            );
-        } catch (e) {
-            return makeErr('Unexpected value', blob, [e]);
+        let tuples: Array<[string, T]> = [];
+        let errors: Array<[string, DecodeError]> = [];
+
+        Object.keys(blob).forEach((key: string) => {
+            const value: T = blob[key];
+            const result = decoder(value);
+            try {
+                const okValue = result.unwrap();
+                if (errors.length === 0) {
+                    tuples.push([key, okValue]);
+                }
+            } catch (e) {
+                if (isDecodeError(e)) {
+                    tuples.length = 0; // Clear the tuples array
+                    errors.push([key, ((e: any): DecodeError)]);
+                } else {
+                    // Otherwise, simply rethrow it
+                    throw e;
+                }
+            }
+        });
+
+        if (errors.length > 0) {
+            let keys = errors.map(([key]) => key);
+            keys.sort();
+            keys = keys.map(s => `"${s}"`); // quote keys
+            return makeErr(`Unexpected value under keys ${keys.join(', ')}`, blob, errors.map(([, e]) => e));
+        } else {
+            return Ok(new Map(tuples));
         }
     });
 }
