@@ -2,7 +2,7 @@
 
 import { Ok } from 'lemons';
 
-import { makeErr } from '../asserts';
+import { makeErr } from '../error';
 import { string } from '../string';
 import { compose, map } from '../utils';
 

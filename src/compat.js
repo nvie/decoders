@@ -1,6 +1,7 @@
 // @flow
 import { Result } from 'lemons';
 
+import { isDecodeError } from './error';
 import type { Decoder, Guard } from './index';
 import {
     array,
@@ -36,8 +37,8 @@ function g2d<T>(g: Guard<T>): Decoder<T> {
             const result: T = g(blob);
             return Result.ok(result);
         } catch (err) {
-            if ('blob' in err) {
-                return Result.err(err.message);
+            if (isDecodeError(err)) {
+                return Result.err(err);
             }
 
             // Re-throw it, it's something else

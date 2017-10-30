@@ -2,14 +2,15 @@
 
 import { Ok, Result } from 'lemons';
 
-import { makeErr } from './asserts';
-import type { DecodeErrorType, Decoder } from './types';
+import { makeErr } from './error';
+import DecodeError from './error';
+import type { Decoder } from './types';
 
 export function map<T, V>(decoder: Decoder<T>, mapper: T => V): Decoder<V> {
     return compose(decoder, x => Ok(mapper(x)));
 }
 
-export function compose<T, V>(decoder: Decoder<T>, next: T => Result<DecodeErrorType, V>): Decoder<V> {
+export function compose<T, V>(decoder: Decoder<T>, next: T => Result<DecodeError, V>): Decoder<V> {
     return (blob: any) => decoder(blob).andThen(next);
 }
 

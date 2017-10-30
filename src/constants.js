@@ -2,7 +2,7 @@
 
 import { Ok } from 'lemons';
 
-import { makeErr } from './asserts';
+import { makeErr } from './error';
 import type { Decoder } from './types';
 
 /**

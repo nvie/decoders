@@ -2,9 +2,9 @@
 
 import { Ok } from 'lemons';
 
-import { makeErr } from './asserts';
 import { undefined_ } from './constants';
 import { either } from './either';
+import { makeErr } from './error';
 import type { Decoder } from './types';
 
 /**

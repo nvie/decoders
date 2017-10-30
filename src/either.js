@@ -2,7 +2,7 @@
 
 import { Ok } from 'lemons';
 
-import { makeErr } from './asserts';
+import { makeErr } from './error';
 import type { Decoder } from './types';
 
 export function either<T1, T2>(d1: Decoder<T1>, d2: Decoder<T2>): Decoder<T1 | T2> {

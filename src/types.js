@@ -2,13 +2,8 @@
 
 import { Result } from 'lemons';
 
-export type DecodeErrorType = {
-    message: string,
-    blob: mixed,
-    parents: Array<DecodeErrorType>,
-    format: (prefix?: string) => string,
-};
+import DecodeError from './error';
 
 export type Guard<T> = any => T;
 export type Predicate<T> = T => boolean;
-export type Decoder<T> = any => Result<DecodeErrorType, T>;
+export type Decoder<T> = any => Result<DecodeError, T>;
