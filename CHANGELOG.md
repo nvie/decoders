@@ -1,3 +1,9 @@
+v0.1.1
+------
+- Export `g2d()` helper function that can help adoption to new-style APIs by
+  converting old-style decoders (now called guards) to new-style decoders.
+
+
 v0.1.0
 ------
 - **Breaking change** New API: simplified names, split up decoders from guards.
