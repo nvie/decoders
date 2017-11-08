@@ -17,7 +17,7 @@ export const pojo: Decoder<Object> = (blob: any) => {
  * Read this as "given a Guard of type T, I can produce a value of type T".  This
  * definition helps construct $ObjMap types.
  */
-type UnwrapVerifier = <T>(Decoder<T>) => T;
+type UnwrapDecoder = <T>(Decoder<T>) => T;
 
 /**
  * Given a mapping of fields-to-decoders, builds a decoder for an object type.
@@ -41,7 +41,7 @@ type UnwrapVerifier = <T>(Decoder<T>) => T;
 export function object<O: { [field: string]: Decoder<any> }>(
     mapping: O,
     msg: string = 'Unexpected object shape'
-): Decoder<$ObjMap<O, UnwrapVerifier>> {
+): Decoder<$ObjMap<O, UnwrapDecoder>> {
     return compose(pojo, (blob: Object) => {
         //
         // TODO:
