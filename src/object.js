@@ -6,8 +6,6 @@ import { makeErr } from './error';
 import type { Decoder } from './types';
 import { compose } from './utils';
 
-// TODO: rename pojo => object
-// TODO: rename object => record
 export const pojo: Decoder<Object> = (blob: any) => {
     return typeof blob === 'object' ? Ok(blob) : makeErr('Must be an object', blob, []);
 };
