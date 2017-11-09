@@ -1,6 +1,7 @@
 [![npm](https://img.shields.io/npm/v/decoders.svg)](https://www.npmjs.com/package/decoders)
 [![Build Status](https://img.shields.io/travis/nvie/decoders/master.svg)](https://travis-ci.org/nvie/decoders)
 [![Coverage Status](https://img.shields.io/coveralls/nvie/decoders/master.svg)](https://coveralls.io/github/nvie/decoders?branch=master)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fnvie%2Fdecoders.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fnvie%2Fdecoders?ref=badge_shield)
 
 Elm-like decoders for use with Flow in JS.
 
@@ -296,3 +297,7 @@ mydecoder(123) === 123;
 mydecoder(false)     // DecodeError
 ```
  
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fnvie%2Fdecoders.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fnvie%2Fdecoders?ref=badge_large)
