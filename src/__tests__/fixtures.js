@@ -24,6 +24,14 @@ export const NUMBERS = [
 ];
 
 // prettier-ignore
+export const DATES = [
+    new Date('1996-3-17'),
+    new Date(1534521367000),
+    new Date('2017-11-28T15:56:07+0200'),
+    new Date(),
+];
+
+// prettier-ignore
 export const SPECIAL_NUMBERS = [
     NaN,
     Number.NEGATIVE_INFINITY,
@@ -46,6 +54,7 @@ export const CONSTANTS = [
 export const INPUTS = [
     ...STRINGS,
     ...NUMBERS,
+    ...DATES,
     ...SPECIAL_NUMBERS,
     ...BOOLS,
     ...CONSTANTS,
