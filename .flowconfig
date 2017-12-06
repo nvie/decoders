@@ -11,5 +11,10 @@ sketchy-null-bool=off
 sketchy-null-number=off
 sketchy-null-string=off
 
+# The purpose of this whole library is to be able to get around the use of
+# unclear types, but in order to add these safeguards we'll need to use those
+# unclear types at the frontier...
+unclear-type=off
+
 [options]
 include_warnings=true
