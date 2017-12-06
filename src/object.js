@@ -59,7 +59,7 @@ export function object<O: { [field: string]: Decoder<any> }>(
             try {
                 record[key] = result.unwrap();
             } catch (e) {
-                return makeErr(msg, blob, [e]);
+                return makeErr(msg + ` (first error in field ${key})`, blob, [e]);
             }
         }
         return Ok(record);

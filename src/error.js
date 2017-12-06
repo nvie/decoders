@@ -20,27 +20,37 @@ export function isDecodeError(e: any): boolean {
     return !!(e && e._isDecoderError);
 }
 
-export default class DecodeError extends Error {
+function indent(s: string, prefix: string = '    '): string {
+    return s
+        .split('\n')
+        .map(s => prefix + s)
+        .join('\n');
+}
+
+export default class DecodeError {
     _isDecoderError: true;
-    // message: string;
+    message: string;
     blob: mixed;
     parents: Array<DecodeError>;
 
     constructor(message: string, blob: mixed, parents: Array<DecodeError>) {
-        super(message);
-        // this.message = message;
+        this.message = message;
         this.blob = blob;
         this.parents = parents;
         this._isDecoderError = true;
+        this.message = this.format();
     }
 
-    format(prefix: string = '') {
+    format() {
         let msg = '';
-        msg += `${prefix}Error: ${this.message}\n`;
-        msg += `${prefix}Actual: ${JSON.stringify(this.blob, summarizer, 1)}\n`;
+        msg += `Error: ${this.message}\n`;
+        msg += `Value: (${typeof this.blob}):\n`;
+        msg += `${indent(JSON.stringify(this.blob, summarizer, 1))}\n`;
         if (this.parents.length > 0) {
-            msg += `${prefix}Parent errors:\n`;
-            msg += this.parents.map(e => e.format(prefix + '    ')).join('\n');
+            msg += `Parent errors (${this.parents.length} errors):\n`;
+            for (const parent of this.parents) {
+                msg += indent(parent.format()) + '\n';
+            }
         }
         return msg;
     }
