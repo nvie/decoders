@@ -1919,9 +1919,9 @@ import-sort-config@^3.2.0:
     minimatch "^3.0.4"
     resolve-from "^3.0.0"
 
-import-sort-parser-babylon@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/import-sort-parser-babylon/-/import-sort-parser-babylon-3.2.0.tgz#9a7ed2cc9ce6d8cb58415e514a288b075dfacff9"
+import-sort-parser-babylon@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/import-sort-parser-babylon/-/import-sort-parser-babylon-4.2.0.tgz#c4f65fee96010b07a2769b0a237b3dbc7559ff17"
   dependencies:
     babel-traverse "^6.25.0"
     babel-types "^6.25.0"
