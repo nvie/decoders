@@ -1,3 +1,9 @@
+???
+---
+- ...
+- Updated dev dependencies
+
+
 v0.1.2
 ------
 - Add `date` decoder, which decodes `Date` instances
