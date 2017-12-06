@@ -20,6 +20,11 @@ export function isDecodeError(e: any): boolean {
     return !!(e && e._isDecoderError);
 }
 
+function dumps(blob: any): string {
+    const value = JSON.stringify(blob, summarizer, 2);
+    return value !== undefined ? value : '(unserializable data)';
+}
+
 function indent(s: string, prefix: string = '    '): string {
     return s
         .split('\n')
@@ -45,7 +50,7 @@ export default class DecodeError {
         let msg = '';
         msg += `Error: ${this.message}\n`;
         msg += `Value: (${typeof this.blob}):\n`;
-        msg += `${indent(JSON.stringify(this.blob, summarizer, 1))}\n`;
+        msg += `${indent(dumps(this.blob))}\n`;
         if (this.parents.length > 0) {
             msg += `Parent errors (${this.parents.length} errors):\n`;
             for (const parent of this.parents) {
