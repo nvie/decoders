@@ -51,7 +51,7 @@ export function object<O: { [field: string]: Decoder<any> }>(
         let record = {};
 
         // NOTE: We're using .keys() here over .entries(), since .entries()
-        // will type the value part as "mixed"for (const key of Object.keys(mapping)) {
+        // will type the value part as "mixed"
         for (const key of Object.keys(mapping)) {
             const decoder = mapping[key];
             const value = blob[key];
