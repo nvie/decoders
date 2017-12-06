@@ -1,3 +1,9 @@
+v0.1.2
+------
+- Add `date` decoder, which decodes `Date` instances
+- Improve error output detail when throwing errors
+
+
 v0.1.1
 ------
 - Export `g2d()` helper function that can help adoption to new-style APIs by
