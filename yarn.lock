@@ -2007,16 +2007,16 @@ import-sort-parser@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/import-sort-parser/-/import-sort-parser-4.2.0.tgz#c8263e2c015e77a554e51b319e0006da488d2937"
 
-import-sort-style-eslint@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/import-sort-style-eslint/-/import-sort-style-eslint-3.0.0.tgz#1976952e3e49d3538e843c438328b8d13d2104ac"
+import-sort-style-eslint@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/import-sort-style-eslint/-/import-sort-style-eslint-4.2.0.tgz#382aa6edef7269d372f55481d275d553ca743fe6"
   dependencies:
     eslint "^4.0.0"
     lodash "^4.17.4"
 
-import-sort-style-module@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/import-sort-style-module/-/import-sort-style-module-3.0.0.tgz#fd7996754f582c2b5407cd31c13a88c433b20dd8"
+import-sort-style-module@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/import-sort-style-module/-/import-sort-style-module-4.2.0.tgz#96707b36395e87cf31229cf806887c6fe69d2d77"
 
 import-sort-style@^4.2.0:
   version "4.2.0"
