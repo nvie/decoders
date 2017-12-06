@@ -15,5 +15,5 @@ export const date: Decoder<Date> = compose(
     //     Object.prototype.toString.call(date) === '[object Date]'
     //
     // But in this case, I chose the faster check.
-    predicate(o => typeof o.getMonth === 'function', 'Must be a Date')
+    predicate(o => !!o && typeof o.getMonth === 'function', 'Must be a Date')
 );
