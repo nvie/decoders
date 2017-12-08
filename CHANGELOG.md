@@ -1,3 +1,8 @@
+v1.0.1
+------
+- Expose new "either" decoders at the too level
+
+
 v1.0.0
 ------
 - **BREAKING** Removes the old public ("compat") API
