@@ -1,6 +1,6 @@
-???
----
-- ...
+v0.1.3
+------
+- Add whole series for either, either3, either4, ..., either9
 - Updated dev dependencies
 
 
