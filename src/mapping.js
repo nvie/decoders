@@ -35,6 +35,7 @@ export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
                     errors.push([key, ((e: any): DecodeError)]);
                 } else {
                     // Otherwise, simply rethrow it
+                    /* istanbul ignore next */
                     throw e;
                 }
             }
