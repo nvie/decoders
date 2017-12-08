@@ -28,7 +28,16 @@ export { boolean } from './boolean';
 export { constant, hardcoded, null_, undefined_ } from './constants';
 export { date } from './date';
 export { dispatch } from './dispatch';
-export { either, either3, either4 } from './either';
+export {
+    either,
+    either3,
+    either4,
+    either5,
+    either6,
+    either7,
+    either8,
+    either9,
+} from './either';
 export { fail } from './fail';
 export { mapping } from './mapping';
 export { nullable } from './nullable';
