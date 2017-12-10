@@ -30,6 +30,7 @@ export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
                     tuples.push([key, okValue]);
                 }
             } catch (e) {
+                /* istanbul ignore else */
                 if (isDecodeError(e)) {
                     tuples.length = 0; // Clear the tuples array
                     errors.push([key, ((e: any): DecodeError)]);
