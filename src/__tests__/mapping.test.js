@@ -16,5 +16,11 @@ describe('mappings', () => {
     it('invalid', () => {
         expect(() => decoder('foo').unwrap()).toThrow('Must be an object');
         expect(() => decoder({ foo: 1 }).unwrap()).toThrow('Unexpected value');
+        expect(() =>
+            decoder({
+                '124': { invalid: true },
+                '125': { name: 'bar' },
+            }).unwrap()
+        ).toThrow('Unexpected value');
     });
 });
