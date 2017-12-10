@@ -39,6 +39,7 @@ describe('objects', () => {
         expect(decoder([]).isErr()).toBe(true);
         expect(decoder(undefined).isErr()).toBe(true);
         expect(decoder(NaN).isErr()).toBe(true);
+        expect(decoder({ foo: [1, 2, 3] }).isErr()).toBe(true);
     });
 });
 
