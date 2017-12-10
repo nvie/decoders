@@ -61,6 +61,7 @@ export default class DecodeError {
     }
 
     toString() {
+        /* istanbul ignore next */
         return this.format();
     }
 }
