@@ -1,3 +1,9 @@
+v1.1.0
+------
+- Expose pojo() decoder, for plain old objects (with mixed contents)
+- Expose poja() decoder, for plain old arrays (with mixed contents)
+
+
 v1.0.1
 ------
 - Expose new "either" decoders at the too level

@@ -287,7 +287,8 @@ mydecoder({
 ...
 
 Returns a decoder capable of decoding **either one of <i>T1</i> or <i>T2</i>**,
-provided that you already have decoders for <i>T1</i> and <i>T2</i>.
+provided that you already have decoders for <i>T1</i> and <i>T2</i>.  Eithers
+exist for arities up until 9 (either, either3, either4, ..., either9).
 
 ```javascript
 const mydecoder = guard(either(number, string));
