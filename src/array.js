@@ -4,6 +4,18 @@ import { Err, Ok, Result } from 'lemons';
 
 import { makeErr } from './error';
 import type { Decoder } from './types';
+import { compose } from './utils';
+
+/**
+ * Like a "Plain Old JavaScript Object", but for arrays: "Plain Old JavaScript
+ * Array" ^_^
+ */
+export const poja: Decoder<Array<mixed>> = (blob: any) => {
+    if (!Array.isArray(blob)) {
+        return makeErr('Must be an array', blob, []);
+    }
+    return Ok(blob);
+};
 
 /**
  * Given an iterable of Result instances, exhaust them all and return:
@@ -27,15 +39,11 @@ function all<E, T>(iterable: Iterable<Result<E, T>>): Result<[number, E], Array<
 }
 
 /**
- * Builds a Decoder that returns Ok for values of `Array<T>`, given a Decoder
- * for `T`.  Err otherwise.
+ * Given a T, builds a decoder that assumes an array input and returns an
+ * Array<T>.
  */
-export function array<T>(decoder: Decoder<T>): Decoder<Array<T>> {
-    return (blobs: any) => {
-        if (!Array.isArray(blobs)) {
-            return makeErr('Must be an array', blobs, []);
-        }
-
+function members<T>(decoder: Decoder<T>): Decoder<Array<T>, Array<mixed>> {
+    return (blobs: Array<mixed>) => {
         const results = blobs.map(decoder);
         const result = all(results);
         return result.dispatch(
@@ -43,4 +51,12 @@ export function array<T>(decoder: Decoder<T>): Decoder<Array<T>> {
             ([index, e]) => makeErr(`Unexpected value at index ${index}`, e.blob, [e])
         );
     };
+}
+
+/**
+ * Builds a Decoder that returns Ok for values of `Array<T>`, given a Decoder
+ * for `T`.  Err otherwise.
+ */
+export function array<T>(decoder: Decoder<T>): Decoder<Array<T>> {
+    return compose(poja, members(decoder));
 }
