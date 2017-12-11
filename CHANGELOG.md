@@ -2,6 +2,7 @@ v1.1.0
 ------
 - Expose pojo() decoder, for plain old objects (with mixed contents)
 - Expose poja() decoder, for plain old arrays (with mixed contents)
+- Perf: make `tuple2()` decoder lazier
 
 
 v1.0.1
