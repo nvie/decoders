@@ -58,7 +58,7 @@
     "rimraf": "^2.6.2"
   },
   "dependencies": {
-    "lemons": "^0.0.4"
+    "lemons": "^1.0.0"
   },
   "jest": {
     "testPathIgnorePatterns": [
