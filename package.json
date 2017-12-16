@@ -60,12 +60,6 @@
   "dependencies": {
     "lemons": "^0.0.4"
   },
-  "importSort": {
-    ".js": {
-      "parser": "babylon",
-      "style": "module"
-    }
-  },
   "jest": {
     "testPathIgnorePatterns": [
       "node_modules",
