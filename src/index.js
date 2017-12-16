@@ -35,7 +35,7 @@ export { nullable } from './nullable';
 export { number } from './number';
 export { field, object, pojo } from './object';
 export { optional } from './optional';
-export { string } from './string';
+export { regex, string } from './string';
 export { tuple2 } from './tuple';
 
 export type { Guard, Decoder };

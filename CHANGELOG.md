@@ -1,3 +1,8 @@
+v1.2.0
+------
+- **New feature** `regex()`, for building custom string decoders
+
+
 v1.1.0
 ------
 - Expose pojo() decoder, for plain old objects (with mixed contents)
