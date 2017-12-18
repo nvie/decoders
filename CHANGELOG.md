@@ -1,6 +1,8 @@
 v1.2.0
 ------
 - **New feature** `regex()`, for building custom string decoders
+- Tiny tweaks to improve error messages (more structural improvements are on
+  the roadmap)
 
 
 v1.1.0
