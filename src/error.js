@@ -8,7 +8,9 @@ function summarizer(key: string, value: mixed): mixed {
         return value;
     }
 
-    if (Array.isArray(value)) {
+    if (value === null) {
+        return null;
+    } else if (Array.isArray(value)) {
         return '[...]';
     } else if (typeof value === 'object') {
         return '{...}';
