@@ -39,7 +39,8 @@ describe('objects', () => {
         expect(decoder([]).isErr()).toBe(true);
         expect(decoder(undefined).isErr()).toBe(true);
         expect(decoder(NaN).isErr()).toBe(true);
-        expect(decoder({ foo: [1, 2, 3] }).isErr()).toBe(true);
+        expect(decoder({ foo: [1, 2, 3] }).isErr()).toBe(true); // Missing field "id"
+        expect(decoder({ id: 3 }).isErr()).toBe(true); // Invalid field value for "id"
     });
 });
 
@@ -54,5 +55,6 @@ describe('fields', () => {
         expect(() => decoder('foo').unwrap()).toThrow('Must be an object');
         expect(() => decoder({}).unwrap()).toThrow('Missing field "type"');
         expect(() => decoder({ type: 42 }).unwrap()).toThrow('Unexpected value for field "type"');
+        expect(() => decoder({ type: null }).unwrap()).toThrow('Unexpected value for field "type"');
     });
 });
