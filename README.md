@@ -107,6 +107,19 @@ mydecoder(123)             // DecodeError
 
 ---
 
+<a name="regex" href="#regex">#</a> <b>regex</b>(): <i>Decoder&lt;string&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/string.js "Source")
+
+Returns a decoder capable of decoding string values that match the given regular expression.
+
+```javascript
+const mydecoder = guard(regex(/^[0-9]+$/);
+mydecoder('12345') === '12345'
+mydecoder('foo')           // DecodeError
+```
+
+
+---
+
 <a name="boolean" href="#boolean">#</a> <b>boolean</b>(): <i>Decoder&lt;boolean&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/string.js "Source")
 
 Returns a decoder capable of decoding boolean values.
