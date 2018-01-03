@@ -3,7 +3,7 @@
 [include]
 
 [libs]
-decls/
+flow-typed/
 
 [lints]
 all=error
