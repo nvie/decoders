@@ -18,7 +18,7 @@
     "fix": "yarn run fix:prettier && yarn run fix:import-sort",
     "fix:import-sort": "import-sort --write 'src/**/*.js'",
     "fix:prettier": "prettier --write 'src/**/*.js'",
-    "prepublish": "yarn run --silent in-publish && yarn run actually-prepublish || echo",
+    "prepublish": "in-publish && yarn run actually-prepublish || not-in-publish",
     "actually-prepublish": "yarn run build:clean && yarn run test && yarn run build",
     "test": "yarn run test:flow && yarn run test:jest && yarn run check",
     "test:flow": "flow check",
