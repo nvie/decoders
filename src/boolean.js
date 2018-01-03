@@ -1,8 +1,8 @@
 // @flow
 
-import { Ok } from 'lemons';
+import { annotate } from 'debrief';
+import { Err, Ok } from 'lemons';
 
-import { makeErr } from './error';
 import { number } from './number';
 import type { Decoder } from './types';
 import { map } from './utils';
@@ -11,7 +11,7 @@ import { map } from './utils';
  * Decoder that only returns Ok for boolean inputs.  Err otherwise.
  */
 export const boolean: Decoder<boolean> = (blob: any) => {
-    return typeof blob === 'boolean' ? Ok(blob) : makeErr('Must be boolean', blob, []);
+    return typeof blob === 'boolean' ? Ok(blob) : Err(annotate(blob, 'Must be boolean'));
 };
 
 /**

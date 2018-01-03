@@ -1,8 +1,8 @@
 // @flow
 
-import { Ok } from 'lemons';
+import { annotate } from 'debrief';
+import { Err, Ok } from 'lemons';
 
-import { makeErr } from './error';
 import type { Decoder } from './types';
 
 export function either<T1, T2>(d1: Decoder<T1>, d2: Decoder<T2>): Decoder<T1 | T2> {
@@ -13,10 +13,11 @@ export function either<T1, T2>(d1: Decoder<T1>, d2: Decoder<T2>): Decoder<T1 | T
                 d2(blob).dispatch(
                     value2 => Ok(value2),
                     err2 =>
-                        makeErr(
-                            "None of the allowed alternatives matched.  I've tried to match the alternatives in their given order, but none of them could decode the input",
-                            blob,
-                            [err1, err2]
+                        Err(
+                            annotate(
+                                [err1, err2],
+                                "None of the allowed alternatives matched.  I've tried to match the alternatives in their given order, but none of them could decode the input"
+                            )
                         )
                 )
         );

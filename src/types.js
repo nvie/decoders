@@ -1,9 +1,9 @@
 // @flow
 
 import { Result } from 'lemons';
-
-import DecodeError from './error';
+import type { Annotation } from 'debrief';
 
 export type Guard<T> = any => T;
 export type Predicate<T> = T => boolean;
-export type Decoder<T, F = any> = F => Result<DecodeError, T>;
+export type DecodeResult<T> = Result<Annotation<mixed>, T>;
+export type Decoder<T, F = any> = F => DecodeResult<T>;

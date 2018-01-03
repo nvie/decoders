@@ -1,13 +1,13 @@
 // @flow
 
-import { Ok } from 'lemons';
+import { annotate } from 'debrief';
+import { Err, Ok } from 'lemons';
 
-import { makeErr } from './error';
 import type { Decoder } from './types';
 import { compose, predicate } from './utils';
 
 export const anyNumber: Decoder<number> = (blob: any) => {
-    return typeof blob === 'number' && !Number.isNaN(blob) ? Ok(blob) : makeErr('Must be number', blob, []);
+    return typeof blob === 'number' && !Number.isNaN(blob) ? Ok(blob) : Err(annotate(blob, 'Must be number'));
 };
 
 export const number: Decoder<number> = compose(anyNumber, predicate(Number.isFinite, 'Number must be finite'));

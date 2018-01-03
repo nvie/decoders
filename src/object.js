@@ -1,13 +1,13 @@
 // @flow
 
-import { Ok } from 'lemons';
+import { annotate } from 'debrief';
+import { Err, Ok } from 'lemons';
 
-import { makeErr } from './error';
 import type { Decoder } from './types';
 import { compose } from './utils';
 
 export const pojo: Decoder<Object> = (blob: any) => {
-    return typeof blob === 'object' ? Ok(blob) : makeErr('Must be an object', blob, []);
+    return typeof blob === 'object' ? Ok(blob) : Err(annotate(blob, 'Must be an object'));
 };
 
 /**
@@ -61,11 +61,9 @@ export function object<O: { [field: string]: Decoder<any> }>(
             } catch (e) {
                 const missing = value === undefined;
                 if (missing) {
-                    return makeErr(`${msg} (missing field "${key}")`, blob, [
-                        /* deliberately do not attach parent error */
-                    ]);
+                    return Err(annotate(blob, `${msg} (missing field "${key}")`));
                 } else {
-                    return makeErr(`${msg} (error in field "${key}")`, blob, [e]);
+                    return Err(annotate(blob, `${msg} (error in field "${key}")`));
                 }
             }
         }
@@ -83,7 +81,7 @@ export function field<T>(field: string, decoder: Decoder<T>): Decoder<T> {
             return Ok(result.unwrap());
         } catch (e) {
             const errText = value === undefined ? `Missing field "${field}"` : `Unexpected value for field "${field}"`;
-            return makeErr(errText, blob, [e]);
+            return Err(annotate(blob, errText));
         }
     });
 }

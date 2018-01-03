@@ -2,6 +2,7 @@
 
 import { mapping } from '../mapping';
 import { object } from '../object';
+import { guard } from '../guard';
 import { string } from '../string';
 
 describe('mappings', () => {
@@ -14,13 +15,13 @@ describe('mappings', () => {
     });
 
     it('invalid', () => {
-        expect(() => decoder('foo').unwrap()).toThrow('Must be an object');
-        expect(() => decoder({ foo: 1 }).unwrap()).toThrow('Unexpected value');
+        expect(() => guard(decoder)('foo')).toThrow('Must be an object');
+        expect(() => guard(decoder)({ foo: 1 })).toThrow('Unexpected value');
         expect(() =>
-            decoder({
+            guard(decoder)({
                 '124': { invalid: true },
                 '125': { name: 'bar' },
-            }).unwrap()
+            })
         ).toThrow('Unexpected value');
     });
 });

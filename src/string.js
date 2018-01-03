@@ -1,8 +1,8 @@
 // @flow
 
-import { Ok } from 'lemons';
+import { annotate } from 'debrief';
+import { Err, Ok } from 'lemons';
 
-import { makeErr } from './error';
 import type { Decoder } from './types';
 import { compose, predicate } from './utils';
 
@@ -10,7 +10,7 @@ import { compose, predicate } from './utils';
  * Decoder that only returns Ok for string inputs.  Err otherwise.
  */
 export const string: Decoder<string> = (blob: any) => {
-    return typeof blob === 'string' ? Ok(blob) : makeErr('Must be string', blob, []);
+    return typeof blob === 'string' ? Ok(blob) : Err(annotate(blob, 'Must be string'));
 };
 
 /**

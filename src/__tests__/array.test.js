@@ -1,6 +1,7 @@
 // @flow
 
 import { array } from '../array';
+import { guard } from '../guard';
 import { number } from '../number';
 import { string } from '../string';
 
@@ -30,9 +31,9 @@ describe('array', () => {
     });
 
     it('failure to unpack', () => {
-        const decoder = array(string);
-        expect(() => decoder('boop').unwrap()).toThrow('Must be an array');
-        expect(() => decoder([42]).unwrap()).toThrow('Unexpected value at index 0');
-        expect(() => decoder(['foo', 'bar', 42]).unwrap()).toThrow('Unexpected value at index 2');
+        const g = guard(array(string));
+        expect(() => g('boop')).toThrow('Must be an array');
+        expect(() => g([42])).toThrow('Must be string (at index 0)');
+        expect(() => g(['foo', 'bar', 42])).toThrow('Must be string (at index 2)');
     });
 });
