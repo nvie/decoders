@@ -1,3 +1,11 @@
+v1.2.1
+------
+- **Fix** Expose the following decoders publicly:
+  - `integer()`
+  - `positiveInteger()`
+  - `positiveNumber()`
+
+
 v1.2.0
 ------
 - **New feature** `regex()`, for building custom string decoders
