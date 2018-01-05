@@ -32,7 +32,7 @@ export { either, either3, either4, either5, either6, either7, either8, either9 }
 export { fail } from './fail';
 export { mapping } from './mapping';
 export { nullable } from './nullable';
-export { number } from './number';
+export { integer, number, positiveInteger, positiveNumber } from './number';
 export { field, object, pojo } from './object';
 export { optional } from './optional';
 export { regex, string } from './string';
