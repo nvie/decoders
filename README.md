@@ -194,6 +194,23 @@ mydecoder(undefined) === 2.1
 ```
 
 
+---
+
+<a name="mixed" href="#mixed">#</a> <b>mixed</b>(): <i>Decoder&lt;mixed&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/constants.js "Source")
+
+Returns a decoder that will simply pass through any input value, never fails.
+This effectively returns a `Decoder<mixed>`, which is not that useful.  **Use
+sparingly.**
+
+```javascript
+const mydecoder = guard(mixed);
+mydecoder('hello') === 'hello'
+mydecoder(false) === false
+mydecoder(undefined) === undefined
+mydecoder([1, 2]) === [1, 2]
+```
+
+
 ### Compositions
 
 Composite decoders are "higher order" decoders that can build new decoders from

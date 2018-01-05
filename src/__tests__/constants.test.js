@@ -2,7 +2,7 @@
 
 import { partition } from 'itertools';
 
-import { constant, hardcoded, null_, undefined_ } from '../constants';
+import { constant, hardcoded, mixed, null_, undefined_ } from '../constants';
 import { INPUTS } from './fixtures';
 
 describe('null', () => {
@@ -139,5 +139,21 @@ describe('hardcoded value', () => {
 
     it('invalid', () => {
         // hardcoded verifiers never fail
+    });
+});
+
+describe('mixed (pass-thru)', () => {
+    it('valid', () => {
+        // Test all hardcoded inputs...
+        const decoder = mixed;
+
+        // Against all inputs...
+        for (const input of INPUTS) {
+            expect(decoder(input).unwrap()).toBe(input);
+        }
+    });
+
+    it('mixed', () => {
+        // mixed verifiers never fail
     });
 });

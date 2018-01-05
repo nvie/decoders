@@ -29,3 +29,8 @@ export function constant<T>(value: T): Decoder<T> {
 export function hardcoded<T>(value: T): Decoder<T> {
     return (_: any) => Ok(value);
 }
+
+/**
+ * Decoder that always returns Ok for the given hardcoded value, no matter what the input.
+ */
+export const mixed: Decoder<mixed> = (blob: any) => Ok((blob: mixed));

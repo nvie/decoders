@@ -1,3 +1,8 @@
+v1.2.2
+------
+- **New feature** `mixed` decoder, for unverified pass-thru of any values
+
+
 v1.2.1
 ------
 - **Fix** Expose the following decoders publicly:
