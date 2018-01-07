@@ -1,6 +1,6 @@
 // @flow
 
-import { annotate } from 'debrief';
+import { annotate, annotateField, isAnnotation } from 'debrief';
 import { Err, Ok } from 'lemons';
 
 import type { Decoder } from './types';
@@ -38,8 +38,12 @@ type UnwrapDecoder = <T>(Decoder<T>) => T;
  */
 export function object<O: { [field: string]: Decoder<any> }>(
     mapping: O,
-    msg: string = 'Unexpected object shape'
+    msg: string = 'DEPRECATED'
 ): Decoder<$ObjMap<O, UnwrapDecoder>> {
+    if (msg !== 'DEPRECATED') {
+        console.log("warning: `msg` param to `object({}, 'my msg')` will be deprecated in a future version");
+    }
+
     return compose(pojo, (blob: Object) => {
         //
         // TODO:
@@ -58,12 +62,16 @@ export function object<O: { [field: string]: Decoder<any> }>(
             const result = decoder(value);
             try {
                 record[key] = result.unwrap();
-            } catch (e) {
+            } catch (ann) {
+                if (!isAnnotation(ann)) {
+                    throw ann;
+                }
+
                 const missing = value === undefined;
                 if (missing) {
-                    return Err(annotate(blob, `${msg} (missing field "${key}")`));
+                    return Err(annotate(blob, `Missing key "${key}"`));
                 } else {
-                    return Err(annotate(blob, `${msg} (error in field "${key}")`));
+                    return Err(annotateField(blob, key, ann));
                 }
             }
         }

@@ -1,7 +1,7 @@
 // @flow
 
 import type { Annotation } from 'debrief';
-import { annotate, isAnnotation } from 'debrief';
+import { annotateFields, isAnnotation } from 'debrief';
 import { Err, Ok } from 'lemons';
 
 import { pojo } from './object';
@@ -44,10 +44,7 @@ export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
         });
 
         if (errors.length > 0) {
-            let keys = errors.map(([key]) => key);
-            keys.sort();
-            keys = keys.map(s => `"${s}"`); // quote keys
-            return Err(annotate(blob, 'TODO: FIXME')); // `Unexpected value under keys ${keys.join(', ')}`, blob, errors.map(([, e]) => e));
+            return Err(annotateFields(blob, errors));
         } else {
             return Ok(new Map(tuples));
         }
