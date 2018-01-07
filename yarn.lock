@@ -2415,9 +2415,9 @@ isurl@^1.0.0-alpha5:
     has-to-string-tag-x "^1.2.0"
     is-object "^1.0.1"
 
-itertools@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/itertools/-/itertools-1.1.0.tgz#b5cb881b9cbd3b20c2e48a3fa5372f2724724a85"
+itertools@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/itertools/-/itertools-1.1.1.tgz#c4fa047948c3606b707b9357d14be5122c2d7350"
 
 jest-changed-files@^22.0.3:
   version "22.0.3"
