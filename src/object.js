@@ -40,6 +40,7 @@ export function object<O: { [field: string]: Decoder<any> }>(
     mapping: O,
     msg: string = 'DEPRECATED'
 ): Decoder<$ObjMap<O, UnwrapDecoder>> {
+    /* istanbul ignore next */
     if (msg !== 'DEPRECATED') {
         console.log("warning: `msg` param to `object({}, 'my msg')` will be deprecated in a future version");
     }
@@ -63,6 +64,7 @@ export function object<O: { [field: string]: Decoder<any> }>(
             try {
                 record[key] = result.unwrap();
             } catch (ann) {
+                /* istanbul ignore next */
                 if (!isAnnotation(ann)) {
                     throw ann;
                 }
