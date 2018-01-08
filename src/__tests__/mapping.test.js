@@ -1,8 +1,8 @@
 // @flow
 
+import { guard } from '../guard';
 import { mapping } from '../mapping';
 import { object } from '../object';
-import { guard } from '../guard';
 import { string } from '../string';
 
 describe('mappings', () => {

@@ -1,7 +1,7 @@
 // @flow
 
-import { Result } from 'lemons';
 import type { Annotation } from 'debrief';
+import { Result } from 'lemons';
 
 export type Guard<T> = any => T;
 export type Predicate<T> = T => boolean;
