@@ -1,9 +1,14 @@
 // @flow
 
-import { annotate } from 'debrief';
+import { annotate, indent } from 'debrief';
 import { Err, Ok } from 'lemons';
 
 import type { Decoder } from './types';
+
+function indentForEither(s: string = ''): string {
+    s = indent(s);
+    return '-' + s.substring(1);
+}
 
 export function either<T1, T2>(d1: Decoder<T1>, d2: Decoder<T2>): Decoder<T1 | T2> {
     return (blob: any) =>
@@ -15,8 +20,10 @@ export function either<T1, T2>(d1: Decoder<T1>, d2: Decoder<T2>): Decoder<T1 | T
                     err2 =>
                         Err(
                             annotate(
-                                [err1, err2],
-                                "None of the allowed alternatives matched.  I've tried to match the alternatives in their given order, but none of them could decode the input"
+                                blob,
+                                ['Either:', indentForEither(err1.annotation), indentForEither(err2.annotation)].join(
+                                    '\n'
+                                )
                             )
                         )
                 )
