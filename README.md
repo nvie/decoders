@@ -164,10 +164,10 @@ const mydecoder = guard(numericBoolean);
 mydecoder(-1) === true
 mydecoder(0) === false
 mydecoder(123) === true
-mydecoder(false) === false  // DecodeError
-mydecoder(true) === true    // DecodeError
-mydecoder(undefined)        // DecodeError
-mydecoder('hello world')    // DecodeError
+mydecoder(false)      // DecodeError
+mydecoder(true)       // DecodeError
+mydecoder(undefined)  // DecodeError
+mydecoder('hello')    // DecodeError
 ```
 
 
