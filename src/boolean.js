@@ -3,7 +3,9 @@
 import { Ok } from 'lemons';
 
 import { makeErr } from './error';
+import { number } from './number';
 import type { Decoder } from './types';
+import { map } from './utils';
 
 /**
  * Decoder that only returns Ok for boolean inputs.  Err otherwise.
@@ -11,3 +13,16 @@ import type { Decoder } from './types';
 export const boolean: Decoder<boolean> = (blob: any) => {
     return typeof blob === 'boolean' ? Ok(blob) : makeErr('Must be boolean', blob, []);
 };
+
+/**
+ * Decoder that returns true for all truthy values, and false otherwise.  Never fails.
+ */
+export const truthy: Decoder<boolean> = (blob: any) => {
+    return Ok(!!blob);
+};
+
+/**
+ * Decoder that only returns Ok for numeric input values representing booleans.
+ * Returns their boolean representation.  Err otherwise.
+ */
+export const numericBoolean: Decoder<boolean> = map(number, n => !!n);

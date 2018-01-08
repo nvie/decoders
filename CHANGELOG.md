@@ -1,3 +1,11 @@
+v1.2.4
+------
+- **New features**:
+  - `truthy()` takes any input and returns whether the value is truthy
+  - `numericBoolean()` takes only numbers as input, and returns their boolean
+    interpretation (0 = false, non-0 = true)
+
+
 v1.2.2, v1.2.3
 --------------
 - **New feature** `mixed` decoder, for unverified pass-thru of any values

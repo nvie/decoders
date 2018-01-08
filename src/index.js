@@ -24,7 +24,7 @@ export { guard } from './guard';
 export { compose, map, predicate } from './utils';
 
 export { array, poja } from './array';
-export { boolean } from './boolean';
+export { boolean, numericBoolean, truthy } from './boolean';
 export { constant, hardcoded, mixed, null_, undefined_ } from './constants';
 export { date } from './date';
 export { dispatch } from './dispatch';
