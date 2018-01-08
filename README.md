@@ -120,7 +120,7 @@ mydecoder('foo')           // DecodeError
 
 ---
 
-<a name="boolean" href="#boolean">#</a> <b>boolean</b>(): <i>Decoder&lt;boolean&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/string.js "Source")
+<a name="boolean" href="#boolean">#</a> <b>boolean</b>(): <i>Decoder&lt;boolean&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/boolean.js "Source")
 
 Returns a decoder capable of decoding boolean values.
 
@@ -131,6 +131,43 @@ mydecoder(true) === true
 mydecoder(undefined)       // DecodeError
 mydecoder('hello world')   // DecodeError
 mydecoder(123)             // DecodeError
+```
+
+
+---
+
+<a name="truthy" href="#truthy">#</a> <b>truthy</b>(): <i>Decoder&lt;boolean&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/boolean.js "Source")
+
+Returns a decoder capable of decoding any input value to its "truthy value".
+
+```javascript
+const mydecoder = guard(truthy);
+mydecoder(false) === false
+mydecoder(true) === true
+mydecoder(undefined) === false
+mydecoder('hello world') === true
+mydecoder('false') === true
+mydecoder(0) === false
+mydecoder(1) === true
+mydecoder(null) === false
+```
+
+
+---
+
+<a name="numericBoolean" href="#numericBoolean">#</a> <b>numericBoolean</b>(): <i>Decoder&lt;boolean&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/boolean.js "Source")
+
+Returns a decoder capable of decoding numbers to their boolean representation.
+
+```javascript
+const mydecoder = guard(numericBoolean);
+mydecoder(-1) === true
+mydecoder(0) === false
+mydecoder(123) === true
+mydecoder(false) === false  // DecodeError
+mydecoder(true) === true    // DecodeError
+mydecoder(undefined)        // DecodeError
+mydecoder('hello world')    // DecodeError
 ```
 
 
