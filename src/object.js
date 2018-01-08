@@ -42,6 +42,7 @@ export function object<O: { [field: string]: Decoder<any> }>(
 ): Decoder<$ObjMap<O, UnwrapDecoder>> {
     /* istanbul ignore next */
     if (msg !== 'DEPRECATED') {
+        // eslint-disable-next-line
         console.log("warning: `msg` param to `object({}, 'my msg')` will be deprecated in a future version");
     }
 

@@ -5,7 +5,11 @@ import { Err, Ok } from 'lemons';
 
 import type { Decoder } from './types';
 
-function indentForEither(s: string = ''): string {
+/**
+ * Indents and adds a dash in front of this (potentially multiline) string.
+ */
+// istanbul ignore next
+function itemize(s: string = ''): string {
     s = indent(s);
     return '-' + s.substring(1);
 }
@@ -18,14 +22,7 @@ export function either<T1, T2>(d1: Decoder<T1>, d2: Decoder<T2>): Decoder<T1 | T
                 d2(blob).dispatch(
                     value2 => Ok(value2),
                     err2 =>
-                        Err(
-                            annotate(
-                                blob,
-                                ['Either:', indentForEither(err1.annotation), indentForEither(err2.annotation)].join(
-                                    '\n'
-                                )
-                            )
-                        )
+                        Err(annotate(blob, ['Either:', itemize(err1.annotation), itemize(err2.annotation)].join('\n')))
                 )
         );
 }

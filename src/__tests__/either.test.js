@@ -27,6 +27,10 @@ describe('either', () => {
             expect(() => decoder(value)).toThrow();
         }
     });
+
+    it('errors nicely', () => {
+        expect(() => decoder(42)).toThrow('Either:');
+    });
 });
 
 describe('either3', () => {

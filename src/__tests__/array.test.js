@@ -3,6 +3,7 @@
 import { array } from '../array';
 import { guard } from '../guard';
 import { number } from '../number';
+import { object } from '../object';
 import { string } from '../string';
 
 describe('array', () => {
@@ -35,5 +36,8 @@ describe('array', () => {
         expect(() => g('boop')).toThrow('Must be an array');
         expect(() => g([42])).toThrow('Must be string (at index 0)');
         expect(() => g(['foo', 'bar', 42])).toThrow('Must be string (at index 2)');
+
+        const g2 = guard(array(object({ name: string })));
+        expect(() => g2([{ name: 123 }])).toThrow('^ index 0');
     });
 });
