@@ -1,8 +1,3 @@
-v1.3.1
-------
-- Upgrade runtime dependencies
-
-
 v1.3.0
 ------
 - Much improved error messages!  They were redesigned to look great in
