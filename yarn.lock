@@ -2412,9 +2412,11 @@ isurl@^1.0.0-alpha5:
     has-to-string-tag-x "^1.2.0"
     is-object "^1.0.1"
 
-itertools@^1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/itertools/-/itertools-1.1.3.tgz#6706d3f7af0427f5222177e4e26369dba90bf5df"
+itertools@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/itertools/-/itertools-1.1.5.tgz#dcc35c9328f1bcffd28b74435accdcce6b583d15"
+  dependencies:
+    babel-runtime "^6.26.0"
 
 jest-changed-files@^22.0.6:
   version "22.0.6"
