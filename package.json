@@ -52,8 +52,8 @@
     "import-sort-style-module": "^4.2.0",
     "in-publish": "^2.0.0",
     "itertools": "^1.1.5",
-    "jest": "^22.0.6",
-    "jest-cli": "^22.0.6",
+    "jest": "^22.1.1",
+    "jest-cli": "^22.1.1",
     "prettier": "^1.10.2",
     "rimraf": "^2.6.2"
   },
