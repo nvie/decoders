@@ -6,8 +6,12 @@ import { makeErr } from './error';
 import type { Decoder } from './types';
 import { compose } from './utils';
 
+function isObject(o: any): boolean %checks {
+    return o !== null && typeof o === 'object';
+}
+
 export const pojo: Decoder<Object> = (blob: any) => {
-    return typeof blob === 'object' ? Ok(blob) : makeErr('Must be an object', blob, []);
+    return isObject(blob) ? Ok(blob) : makeErr('Must be an object', blob, []);
 };
 
 /**

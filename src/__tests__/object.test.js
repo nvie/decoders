@@ -1,7 +1,8 @@
 // @flow
 
+import { guard } from '../guard';
 import { number } from '../number';
-import { field, object } from '../object';
+import { field, object, pojo } from '../object';
 import { optional } from '../optional';
 import { string } from '../string';
 
@@ -41,6 +42,19 @@ describe('objects', () => {
         expect(decoder(NaN).isErr()).toBe(true);
         expect(decoder({ foo: [1, 2, 3] }).isErr()).toBe(true); // Missing field "id"
         expect(decoder({ id: 3 }).isErr()).toBe(true); // Invalid field value for "id"
+    });
+});
+
+describe('pojo', () => {
+    it('decodes objects and fields', () => {
+        const decoder = guard(pojo);
+        expect(decoder({})).toEqual({});
+        expect(decoder({ a: 1 })).toEqual({ a: 1 });
+        expect(decoder(new String())).toEqual(new String());
+
+        // Not
+        expect(() => decoder(null)).toThrow();
+        expect(() => decoder(42)).toThrow();
     });
 });
 
