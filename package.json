@@ -1,6 +1,6 @@
 {
   "name": "decoders",
-  "version": "1.2.4",
+  "version": "1.3.0-beta.3",
   "description": "Elm-like decoders for when working with Flow types in JS",
   "main": "lib/index.js",
   "files": [
@@ -58,6 +58,7 @@
     "rimraf": "^2.6.2"
   },
   "dependencies": {
+    "debrief": "^0.0.9",
     "lemons": "^1.0.0"
   },
   "jest": {

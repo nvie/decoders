@@ -1,3 +1,10 @@
+v1.3.0
+------
+- Much improved error messages!  They were redesigned to look great in
+  terminals and to summarize only the relevant bits of the error message,
+  striking a balance between all the details and the high level summary.
+
+
 v1.2.4
 ------
 - **New features**:

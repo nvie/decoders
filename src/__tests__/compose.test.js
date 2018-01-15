@@ -1,8 +1,9 @@
 // @flow
 
-import { Ok } from 'lemons';
+import { annotate } from 'debrief';
+import { Err, Ok } from 'lemons';
 
-import { makeErr } from '../error';
+import { guard } from '../guard';
 import { string } from '../string';
 import { compose, map } from '../utils';
 
@@ -15,7 +16,7 @@ describe('compose', () => {
         // return Err, otherwise Ok
         s => {
             const n = parseInt(s, 16);
-            return !Number.isNaN(n) ? Ok(n) : makeErr('Nope', n, []);
+            return !Number.isNaN(n) ? Ok(n) : Err(annotate(n, 'Nope'));
         }
     );
 
@@ -25,7 +26,7 @@ describe('compose', () => {
     });
 
     it('invalid', () => {
-        expect(() => hex('no good hex value').unwrap()).toThrow('Nope');
+        expect(() => guard(hex)('no good hex value')).toThrow('Nope');
     });
 });
 

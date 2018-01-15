@@ -1,10 +1,10 @@
 // @flow
 
-import { Ok } from 'lemons';
+import { annotate } from 'debrief';
+import { Err, Ok } from 'lemons';
 
 import { undefined_ } from './constants';
 import { either } from './either';
-import { makeErr } from './error';
 import type { Decoder } from './types';
 
 /**
@@ -13,7 +13,7 @@ import type { Decoder } from './types';
  * `undefined` outputs.  Err otherwise.
  */
 export const undefined_or_null: Decoder<void> = (blob: any) =>
-    blob === undefined || blob === null ? Ok(undefined) : makeErr('Must be undefined or null', blob, []);
+    blob === undefined || blob === null ? Ok(undefined) : Err(annotate(blob, 'Must be undefined or null'));
 
 /**
  * Builds a Decoder that returns Ok for either `undefined` or `T` values,

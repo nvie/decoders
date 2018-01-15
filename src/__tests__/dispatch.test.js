@@ -3,30 +3,25 @@
 import { constant } from '../constants';
 import { dispatch } from '../dispatch';
 import { fail } from '../fail';
+import { guard } from '../guard';
 import { number } from '../number';
 import { field, object } from '../object';
 import { string } from '../string';
 
-const rectangle = object(
-    {
-        type: constant('rect'),
-        x: number,
-        y: number,
-        width: number,
-        height: number,
-    },
-    'Must be rectangle'
-);
+const rectangle = object({
+    type: constant('rect'),
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+});
 
-const circle = object(
-    {
-        type: constant('circle'),
-        x: number,
-        y: number,
-        r: number,
-    },
-    'Must be circle'
-);
+const circle = object({
+    type: constant('circle'),
+    x: number,
+    y: number,
+    r: number,
+});
 
 describe('dispatch', () => {
     // The "deciderer" ;) effectively dispatches the real decoding to
@@ -50,9 +45,9 @@ describe('dispatch', () => {
     });
 
     it('invalid', () => {
-        expect(() => decoder('foo').unwrap()).toThrow('Must be an object');
-        expect(() => decoder({}).unwrap()).toThrow('Missing field "type"');
-        expect(() => decoder({ type: 'blah' }).unwrap()).toThrow('Must be a valid shape');
-        expect(() => decoder({ type: 'rect' }).unwrap()).toThrow('Must be rectangle');
+        expect(() => guard(decoder)('foo')).toThrow('Must be an object');
+        expect(() => guard(decoder)({})).toThrow('Missing field "type"');
+        expect(() => guard(decoder)({ type: 'blah' })).toThrow('Must be a valid shape');
+        expect(() => guard(decoder)({ type: 'rect' })).toThrow('Missing key "x"');
     });
 });

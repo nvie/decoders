@@ -66,9 +66,9 @@ describe('fields', () => {
     });
 
     it('invalid', () => {
-        expect(() => decoder('foo').unwrap()).toThrow('Must be an object');
-        expect(() => decoder({}).unwrap()).toThrow('Missing field "type"');
-        expect(() => decoder({ type: 42 }).unwrap()).toThrow('Unexpected value for field "type"');
-        expect(() => decoder({ type: null }).unwrap()).toThrow('Unexpected value for field "type"');
+        expect(() => guard(decoder)('foo')).toThrow('Must be an object');
+        expect(() => guard(decoder)({})).toThrow('Missing field "type"');
+        expect(() => guard(decoder)({ type: 42 })).toThrow('Unexpected value for field "type"');
+        expect(() => guard(decoder)({ type: null })).toThrow('Unexpected value for field "type"');
     });
 });

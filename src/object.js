@@ -1,8 +1,8 @@
 // @flow
 
-import { Ok } from 'lemons';
+import { annotate, annotateField, isAnnotation } from 'debrief';
+import { Err, Ok } from 'lemons';
 
-import { makeErr } from './error';
 import type { Decoder } from './types';
 import { compose } from './utils';
 
@@ -11,7 +11,7 @@ function isObject(o: any): boolean %checks {
 }
 
 export const pojo: Decoder<Object> = (blob: any) => {
-    return isObject(blob) ? Ok(blob) : makeErr('Must be an object', blob, []);
+    return isObject(blob) ? Ok(blob) : Err(annotate(blob, 'Must be an object'));
 };
 
 /**
@@ -42,8 +42,14 @@ type UnwrapDecoder = <T>(Decoder<T>) => T;
  */
 export function object<O: { [field: string]: Decoder<any> }>(
     mapping: O,
-    msg: string = 'Unexpected object shape'
+    msg: string = 'DEPRECATED'
 ): Decoder<$ObjMap<O, UnwrapDecoder>> {
+    /* istanbul ignore next */
+    if (msg !== 'DEPRECATED') {
+        // eslint-disable-next-line
+        console.log("warning: `msg` param to `object({}, 'my msg')` will be deprecated in a future version");
+    }
+
     return compose(pojo, (blob: Object) => {
         //
         // TODO:
@@ -62,14 +68,17 @@ export function object<O: { [field: string]: Decoder<any> }>(
             const result = decoder(value);
             try {
                 record[key] = result.unwrap();
-            } catch (e) {
+            } catch (ann) {
+                /* istanbul ignore next */
+                if (!isAnnotation(ann)) {
+                    throw ann;
+                }
+
                 const missing = value === undefined;
                 if (missing) {
-                    return makeErr(`${msg} (missing field "${key}")`, blob, [
-                        /* deliberately do not attach parent error */
-                    ]);
+                    return Err(annotate(blob, `Missing key "${key}"`));
                 } else {
-                    return makeErr(`${msg} (error in field "${key}")`, blob, [e]);
+                    return Err(annotateField(blob, key, ann));
                 }
             }
         }
@@ -87,7 +96,7 @@ export function field<T>(field: string, decoder: Decoder<T>): Decoder<T> {
             return Ok(result.unwrap());
         } catch (e) {
             const errText = value === undefined ? `Missing field "${field}"` : `Unexpected value for field "${field}"`;
-            return makeErr(errText, blob, [e]);
+            return Err(annotate(blob, errText));
         }
     });
 }

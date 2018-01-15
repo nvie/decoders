@@ -1,8 +1,9 @@
 // @flow
 
-import { Ok } from 'lemons';
+import type { Annotation } from 'debrief';
+import { annotateFields, isAnnotation } from 'debrief';
+import { Err, Ok } from 'lemons';
 
-import DecodeError, { isDecodeError, makeErr } from './error';
 import { pojo } from './object';
 import type { Decoder } from './types';
 import { compose } from './utils';
@@ -19,7 +20,7 @@ import { compose } from './utils';
 export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
     return compose(pojo, (blob: Object) => {
         let tuples: Array<[string, T]> = [];
-        let errors: Array<[string, DecodeError]> = [];
+        let errors: Array<[string, Annotation<mixed>]> = [];
 
         Object.keys(blob).forEach((key: string) => {
             const value: T = blob[key];
@@ -31,9 +32,9 @@ export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
                 }
             } catch (e) {
                 /* istanbul ignore else */
-                if (isDecodeError(e)) {
+                if (isAnnotation(e)) {
                     tuples.length = 0; // Clear the tuples array
-                    errors.push([key, ((e: any): DecodeError)]);
+                    errors.push([key, ((e: any): Annotation<mixed>)]);
                 } else {
                     // Otherwise, simply rethrow it
                     /* istanbul ignore next */
@@ -43,10 +44,7 @@ export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
         });
 
         if (errors.length > 0) {
-            let keys = errors.map(([key]) => key);
-            keys.sort();
-            keys = keys.map(s => `"${s}"`); // quote keys
-            return makeErr(`Unexpected value under keys ${keys.join(', ')}`, blob, errors.map(([, e]) => e));
+            return Err(annotateFields(blob, errors));
         } else {
             return Ok(new Map(tuples));
         }

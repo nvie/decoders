@@ -1,9 +1,9 @@
 // @flow
 
-import { Err, Ok, Result } from 'lemons';
+import { annotate } from 'debrief';
+import { Err, Ok } from 'lemons';
 
-import { makeErr } from './error';
-import type { Decoder } from './types';
+import type { DecodeResult, Decoder } from './types';
 import { compose } from './utils';
 
 /**
@@ -12,7 +12,7 @@ import { compose } from './utils';
  */
 export const poja: Decoder<Array<mixed>> = (blob: any) => {
     if (!Array.isArray(blob)) {
-        return makeErr('Must be an array', blob, []);
+        return Err(annotate(blob, 'Must be an array'));
     }
     return Ok(blob);
 };
@@ -23,15 +23,32 @@ export const poja: Decoder<Array<mixed>> = (blob: any) => {
  *   encountered; or
  * - a new Ok with an array of all unwrapped Ok'ed values
  */
-function all<E, T>(iterable: Iterable<Result<E, T>>): Result<[number, E], Array<T>> {
+function all<T>(iterable: Array<DecodeResult<T>>, blobs: any): DecodeResult<Array<T>> {
     const results: Array<T> = [];
     let index = 0;
     for (const result of iterable) {
         try {
             const value = result.unwrap();
             results.push(value);
-        } catch (e) {
-            return Err([index, e]);
+        } catch (ann) {
+            // Rewrite the annotation to include the index information, and inject it into the original blob
+            const clone = [...blobs];
+            clone.splice(
+                index,
+                1,
+                annotate(ann, ann.annotation !== undefined ? `${ann.annotation} (at index ${index})` : `index ${index}`)
+            );
+
+            // const errValue = [];
+            // if (index > 0) {
+            //     errValue.push('...'); // TODO: make special mark, not string!
+            // }
+            // errValue.push(
+            // );
+            // if (index < iterable.length - 1) {
+            //     errValue.push('...'); // TODO: make special mark, not string!
+            // }
+            return Err(annotate(clone));
         }
         index++;
     }
@@ -45,11 +62,8 @@ function all<E, T>(iterable: Iterable<Result<E, T>>): Result<[number, E], Array<
 function members<T>(decoder: Decoder<T>): Decoder<Array<T>, Array<mixed>> {
     return (blobs: Array<mixed>) => {
         const results = blobs.map(decoder);
-        const result = all(results);
-        return result.dispatch(
-            value => Ok(value),
-            ([index, e]) => makeErr(`Unexpected value at index ${index}`, e.blob, [e])
-        );
+        const result = all(results, blobs);
+        return result;
     };
 }
 

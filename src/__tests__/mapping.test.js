@@ -1,5 +1,6 @@
 // @flow
 
+import { guard } from '../guard';
 import { mapping } from '../mapping';
 import { object } from '../object';
 import { string } from '../string';
@@ -14,13 +15,14 @@ describe('mappings', () => {
     });
 
     it('invalid', () => {
-        expect(() => decoder('foo').unwrap()).toThrow('Must be an object');
-        expect(() => decoder({ foo: 1 }).unwrap()).toThrow('Unexpected value');
+        expect(() => guard(decoder)('foo')).toThrow('Must be an object');
+        expect(() => guard(decoder)({ foo: 1 })).toThrow('Must be an object');
+        expect(() => guard(decoder)({ foo: {} })).toThrow('Missing key "name"');
         expect(() =>
-            decoder({
+            guard(decoder)({
                 '124': { invalid: true },
                 '125': { name: 'bar' },
-            }).unwrap()
-        ).toThrow('Unexpected value');
+            })
+        ).toThrow('Missing key "name"');
     });
 });

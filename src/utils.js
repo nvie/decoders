@@ -1,8 +1,8 @@
 // @flow
 
-import { Ok } from 'lemons';
+import { annotate } from 'debrief';
+import { Err, Ok } from 'lemons';
 
-import { makeErr } from './error';
 import type { Decoder } from './types';
 
 /**
@@ -33,6 +33,6 @@ export function compose<T, V>(decoder: Decoder<T>, next: Decoder<V, T>): Decoder
  */
 export function predicate<T>(predicate: T => boolean, msg: string): Decoder<T> {
     return (value: T) => {
-        return predicate(value) ? Ok(value) : makeErr(msg, value, []);
+        return predicate(value) ? Ok(value) : Err(annotate(value, msg));
     };
 }
