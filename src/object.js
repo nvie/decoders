@@ -4,10 +4,10 @@ import { annotate, annotateField, isAnnotation } from 'debrief';
 import { Err, Ok } from 'lemons';
 
 import type { Decoder } from './types';
-import { compose } from './utils';
+import { compose, isDate } from './utils';
 
 function isObject(o: any): boolean %checks {
-    return o !== null && typeof o === 'object';
+    return o !== null && typeof o === 'object' && !Array.isArray(o) && !isDate(o);
 }
 
 export const pojo: Decoder<Object> = (blob: any) => {

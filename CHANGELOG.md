@@ -1,3 +1,9 @@
+v1.3.1
+------
+- Fix bug where dates, or arrays (or any other Object subclass) could pass for
+  a record with merely optional fields.
+
+
 v1.3.0
 ------
 - Much improved error messages!  They were redesigned to look great in

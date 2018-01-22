@@ -72,3 +72,24 @@ describe('fields', () => {
         expect(() => guard(decoder)({ type: null })).toThrow('Unexpected value for field "type"');
     });
 });
+
+describe('arrays are not objects', () => {
+    const decoder1 = object({});
+    const decoder2 = object({
+        opt: optional(string),
+    });
+
+    it('valid', () => {
+        expect(guard(decoder1)({ what: 'ever' })).toEqual({});
+        expect(guard(decoder2)({ what: 'ever' })).toEqual({});
+    });
+
+    it('invalid', () => {
+        expect(() => guard(decoder1)([])).toThrow('Must be an object');
+        expect(() => guard(decoder2)([])).toThrow('Must be an object');
+        expect(() => guard(decoder1)('an string')).toThrow('Must be an object');
+        expect(() => guard(decoder2)('an string')).toThrow('Must be an object');
+        expect(() => guard(decoder1)(new Date())).toThrow('Must be an object');
+        expect(() => guard(decoder2)(new Date())).toThrow('Must be an object');
+    });
+});

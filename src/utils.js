@@ -6,6 +6,18 @@ import { Err, Ok } from 'lemons';
 import type { Decoder } from './types';
 
 /**
+ * This uses duck typing to check whether this is a Date instance.  Since
+ * `instanceof` checks are unreliable across stack frames (that information
+ * might get lost by the JS runtime), we'll have to reside to either this
+ * duck typing, or use something like:
+ *
+ *     Object.prototype.toString.call(date) === '[object Date]'
+ *
+ * But in this case, I chose the faster check.
+ */
+export const isDate = (value: any): boolean => !!value && typeof value.getMonth === 'function';
+
+/**
  * Given a decoder T and a mapping function from T's to V's, returns a decoder
  * for V's.  This is useful to change the original input data.
  */
