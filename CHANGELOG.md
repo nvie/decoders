@@ -14,8 +14,8 @@ v1.3.0
 v1.2.4
 ------
 - **New features**:
-  - `truthy()` takes any input and returns whether the value is truthy
-  - `numericBoolean()` takes only numbers as input, and returns their boolean
+  - `truthy` takes any input and returns whether the value is truthy
+  - `numericBoolean` takes only numbers as input, and returns their boolean
     interpretation (0 = false, non-0 = true)
 
 
@@ -27,9 +27,9 @@ v1.2.2, v1.2.3
 v1.2.1
 ------
 - **Fix** Expose the following decoders publicly:
-  - `integer()`
-  - `positiveInteger()`
-  - `positiveNumber()`
+  - `integer`
+  - `positiveInteger`
+  - `positiveNumber`
 
 
 v1.2.0
