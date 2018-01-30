@@ -3,7 +3,7 @@
 import { partition } from 'itertools';
 
 import { guard } from '../guard';
-import { regex, email, url, string } from '../string';
+import { email, regex, string, url } from '../string';
 import { INPUTS } from './fixtures';
 
 describe('string', () => {
