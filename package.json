@@ -45,7 +45,7 @@
     "eslint-plugin-flowtype": "^2.42.0",
     "flow-bin": "^0.64.0",
     "flow-copy-source": "^1.2.2",
-    "flow-typed": "^2.2.3",
+    "flow-typed": "^2.3.0",
     "import-sort-cli": "^4.2.0",
     "import-sort-parser-babylon": "^4.2.0",
     "import-sort-style-eslint": "^4.2.0",
@@ -58,7 +58,7 @@
     "rimraf": "^2.6.2"
   },
   "dependencies": {
-    "debrief": "^0.0.9",
+    "debrief": "^0.1.0",
     "lemons": "^1.0.0"
   },
   "jest": {
