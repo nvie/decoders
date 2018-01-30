@@ -1285,9 +1285,9 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
-debrief@^0.0.9:
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/debrief/-/debrief-0.0.9.tgz#c54111303cd119af76d69ac6fe6d4d4c5540c68d"
+debrief@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/debrief/-/debrief-0.1.0.tgz#68d261461a63bd3c1c4607e798d7d04bcfa33c27"
   dependencies:
     babel-runtime "^6.26.0"
 
