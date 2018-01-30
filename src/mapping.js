@@ -20,7 +20,7 @@ import { compose } from './utils';
 export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
     return compose(pojo, (blob: Object) => {
         let tuples: Array<[string, T]> = [];
-        let errors: Array<[string, Annotation<mixed>]> = [];
+        let errors: Array<[string, string | Annotation]> = [];
 
         Object.keys(blob).forEach((key: string) => {
             const value: T = blob[key];
@@ -34,7 +34,7 @@ export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
                 /* istanbul ignore else */
                 if (isAnnotation(e)) {
                     tuples.length = 0; // Clear the tuples array
-                    errors.push([key, ((e: any): Annotation<mixed>)]);
+                    errors.push([key, e]);
                 } else {
                     // Otherwise, simply rethrow it
                     /* istanbul ignore next */
