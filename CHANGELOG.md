@@ -1,3 +1,11 @@
+v1.4.0
+------
+- **New decoders!**
+  - `email` validator based on the [almost perfect email regex](http://emailregex.com/)
+  - `url` validator for validating HTTPS URLs (most common use case)
+  - `anyUrl` validator for validating any URL scheme
+
+
 v1.3.1
 ------
 - Fix bug where dates, or arrays (or any other Object subclass) could pass for
