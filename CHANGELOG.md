@@ -1,3 +1,8 @@
+v1.4.1
+------
+- Improve internals of the error message serializer (debrief)
+
+
 v1.4.0
 ------
 - **New decoders!**
