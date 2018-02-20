@@ -1,4 +1,4 @@
-v1.4.2
+v1.4.3
 ------
 - Declare library to be side effect free (to help optimize webpack v4 builds)
 
