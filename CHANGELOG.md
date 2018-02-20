@@ -1,3 +1,8 @@
+v1.4.2
+------
+- Declare library to be side effect free (to help optimize webpack v4 builds)
+
+
 v1.4.1
 ------
 - Improve internals of the error message serializer (debrief)
