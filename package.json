@@ -52,7 +52,7 @@
     "import-sort-style-eslint": "^4.2.0",
     "import-sort-style-module": "^4.2.0",
     "in-publish": "^2.0.0",
-    "itertools": "^1.1.5",
+    "itertools": "^1.1.6",
     "jest": "^22.4.0",
     "jest-cli": "^22.4.0",
     "prettier": "^1.10.2",

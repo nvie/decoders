@@ -2692,9 +2692,9 @@ isurl@^1.0.0-alpha5:
     has-to-string-tag-x "^1.2.0"
     is-object "^1.0.1"
 
-itertools@^1.1.5:
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/itertools/-/itertools-1.1.5.tgz#dcc35c9328f1bcffd28b74435accdcce6b583d15"
+itertools@^1.1.6:
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/itertools/-/itertools-1.1.6.tgz#b3582226ee7fd5f7645b4e7a08fdef6303cb99c9"
   dependencies:
     babel-runtime "^6.26.0"
 
