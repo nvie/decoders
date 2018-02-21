@@ -3109,9 +3109,9 @@ left-pad@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/left-pad/-/left-pad-1.2.0.tgz#d30a73c6b8201d8f7d8e7956ba9616087a68e0ee"
 
-lemons@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/lemons/-/lemons-1.0.0.tgz#b9f2adc44423d4971b389610e8ffbafa790218b4"
+lemons@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/lemons/-/lemons-1.0.1.tgz#eff7694a2729f47d66c0a06e8ea0097e24e15446"
 
 leven@^2.1.0:
   version "2.1.0"
