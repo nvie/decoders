@@ -1,3 +1,8 @@
+v1.4.5
+------
+- Upgrade second-level dependencies
+
+
 v1.4.4
 ------
 - Declare library to be side effect free (to help optimize webpack v4 builds)
