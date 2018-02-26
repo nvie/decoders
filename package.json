@@ -60,7 +60,7 @@
   },
   "dependencies": {
     "debrief": "^0.2.1",
-    "lemons": "^1.0.1"
+    "lemons": "^1.1.0"
   },
   "jest": {
     "testPathIgnorePatterns": [
