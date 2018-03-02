@@ -1,8 +1,8 @@
 {
     "printWidth": 120,
     "tabWidth": 4,
-    "parser": "babylon",
-    "single-quote": true,
+    "parser": "flow",
+    "singleQuote": true,
     "trailingComma": "es5",
     "jsxBracketSameLine": true
 }
