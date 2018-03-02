@@ -1,3 +1,11 @@
+v1.8.2
+------
+**Improved error reporting:**
+
+- Fix bug where empty error branches could be shown in complex either
+  expressions (fixes #83)
+
+
 v1.8.1
 ------
 - Fix: revert accidentally emitting $ReadOnlyArray types in array decoders

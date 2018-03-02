@@ -1,6 +1,7 @@
 // @flow strict
 
 import { annotate, indent } from 'debrief';
+import { summarize } from 'debrief';
 import { Err, Ok } from 'lemons';
 
 import type { Decoder, anything } from './types';
@@ -21,7 +22,16 @@ export function either<T1, T2>(d1: Decoder<T1>, d2: Decoder<T2>): Decoder<T1 | T
                 d2(blob).dispatch(
                     value2 => Ok(value2),
                     err2 =>
-                        Err(annotate(blob, ['Either:', itemize(err1.annotation), itemize(err2.annotation)].join('\n')))
+                        Err(
+                            annotate(
+                                blob,
+                                [
+                                    'Either:',
+                                    itemize(summarize(err1).join('\n')),
+                                    itemize(summarize(err2).join('\n')),
+                                ].join('\n')
+                            )
+                        )
                 )
         );
 }

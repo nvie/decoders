@@ -7,29 +7,56 @@ import { constant, undefined_ } from '../constants';
 import { either, either4, either9 } from '../either';
 import { guard } from '../guard';
 import { number } from '../number';
-import { string } from '../string';
+import { object } from '../object';
+import { regex, string } from '../string';
 import { INPUTS } from './fixtures';
 
 describe('either', () => {
-    const decoder = guard(either(string, boolean));
+    const stringOrBooleanDecoder = guard(either(string, boolean));
     const [okay, not_okay] = partition(INPUTS, x => typeof x === 'string' || typeof x === 'boolean');
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(decoder(value)).toBe(value);
+            expect(stringOrBooleanDecoder(value)).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(() => decoder(value)).toThrow();
+            expect(() => stringOrBooleanDecoder(value)).toThrow();
         }
     });
 
-    it('errors nicely', () => {
-        expect(() => decoder(42)).toThrow('Either:');
+    it('errors nicely in trivial eithers', () => {
+        expect(() => stringOrBooleanDecoder(42)).toThrow('Either:');
+    });
+
+    it('errors nicely in common, simple eithers (ie optional)', () => {
+        // Either undefined or string
+        const g1 = guard(either(undefined_, string));
+        expect(() => g1(42)).toThrow('Either:');
+        expect(() => g1({})).toThrow('Either:');
+
+        // Either undefined or object
+        const g2 = guard(either(undefined_, object({ name: string })));
+        expect(() => g2(42)).toThrow('Either:');
+        expect(() => g2({ name: 42 })).toThrow('Either');
+
+        const g3 = guard(either(regex(/1/, 'Must contain 1'), regex(/2/, 'Must contain 2')));
+        expect(() => g3(42)).toThrow('Either');
+        expect(() => g3('foobar')).toThrow('Either');
+    });
+
+    it.skip('errors nicely in complex eithers (with two wildly different branches)', () => {
+        const g = guard(either(object({ foo: string }), object({ bar: number })));
+        expect(() =>
+            g({
+                foo: 123,
+                bar: 'not a number',
+            })
+        ).toThrow('XXX FIXME - this Either: error looks horrendous');
     });
 });
 
