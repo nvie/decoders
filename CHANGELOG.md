@@ -1,3 +1,8 @@
+v1.4.6
+------
+- Add missing documentation
+
+
 v1.4.5
 ------
 - Upgrade second-level dependencies
