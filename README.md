@@ -94,6 +94,21 @@ mydecoder('not a number')  // DecodeError
 
 ---
 
+<a name="integer" href="#integer">#</a> <b>integer</b>(): <i>Decoder&lt;integer&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/number.js "Source")
+
+Like `number`, but only decodes values that are whole numbers.
+
+```javascript
+const mydecoder = guard(integer);
+mydecoder(123) === 123
+mydecoder(-3.14)            // DecodeError: floats aren't valid integers
+mydecoder(NaN)              // DecodeError
+mydecoder('not a integer')  // DecodeError
+```
+
+
+---
+
 <a name="string" href="#string">#</a> <b>string</b>(): <i>Decoder&lt;string&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/string.js "Source")
 
 Returns a decoder capable of decoding string values.
@@ -115,6 +130,19 @@ Returns a decoder capable of decoding string values that match the given regular
 const mydecoder = guard(regex(/^[0-9]+$/);
 mydecoder('12345') === '12345'
 mydecoder('foo')           // DecodeError
+```
+
+
+---
+
+<a name="email" href="#email">#</a> <b>email</b>(): <i>Decoder&lt;string&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/string.js "Source")
+
+Returns a decoder capable of decoding email addresses (using a regular expression).
+
+```javascript
+const mydecoder = guard(email);
+mydecoder('foo')           // DecodeError
+mydecoder('alice@acme.org') === 'alice@acme.org'
 ```
 
 
@@ -167,6 +195,21 @@ mydecoder(123) === true
 mydecoder(false)      // DecodeError
 mydecoder(true)       // DecodeError
 mydecoder(undefined)  // DecodeError
+mydecoder('hello')    // DecodeError
+```
+
+
+---
+
+<a name="date" href="#date">#</a> <b>date</b>(): <i>Decoder&lt;Date&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/date.js "Source")
+
+Returns a decoder capable of decoding [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) values.
+
+```javascript
+const now = new Date();
+const mydecoder = guard(date);
+mydecoder(now) === now
+mydecoder(123)        // DecodeError
 mydecoder('hello')    // DecodeError
 ```
 
@@ -257,6 +300,61 @@ already have a decoder for a `Point` (= `Decoder<Point>`), then you can use
 `array(pointDecoder)`, which will be of type `Decoder<Array<Point>>`.
 
 
+<a name="optional" href="#optional">#</a> <b>optional</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;T | void&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/optional.js "Source")
+
+Returns a decoder capable of decoding **either a value of type <i>T</i>, or
+`undefined`**, provided that you already have a decoder for <i>T</i>.
+
+```javascript
+const mydecoder = guard(optional(string));
+mydecoder('hello') === 'hello'
+mydecoder(undefined) === undefined
+mydecoder(null)  // DecodeError
+mydecoder(0)  // DecodeError
+mydecoder(42)  // DecodeError
+```
+
+A typical case where `optional` is useful is in decoding objects with optional
+fields:
+
+```javascript
+object({
+  id: number,
+  name: string,
+  address: optional(string),
+})
+```
+
+Which will decode to type:
+
+```javascript
+{
+  id: number,
+  name: string,
+  address?: string,
+}
+```
+
+
+---
+
+<a name="nullable" href="#nullable">#</a> <b>nullable</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;T | null&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/nullable.js "Source")
+
+Returns a decoder capable of decoding **either a value of type <i>T</i>, or
+`null`**, provided that you already have a decoder for <i>T</i>.
+
+```javascript
+const mydecoder = guard(nullable(string));
+mydecoder('hello') === 'hello'
+mydecoder(null) === null
+mydecoder(undefined)  // DecodeError
+mydecoder(0)  // DecodeError
+mydecoder(42)  // DecodeError
+```
+
+
+---
+
 <a name="array" href="#array">#</a> <b>array</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;Array&lt;T&gt;&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/array.js "Source")
 
 Returns a decoder capable of decoding **an array of <i>T</i>'s**, provided that
@@ -270,7 +368,6 @@ mydecoder(['hello', 1.2])  // DecodeError
 
 
 ---
-
 
 <a name="tuple2" href="#tuple2">#</a> <b>tuple2</b><i>&lt;T1, T2&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;[T1, T2]&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/tuple.js "Source")<br />
 <a name="tuple3" href="#tuple3">#</a> <b>tuple3</b><i>&lt;T1, T2, T3&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>, <i>Decoder&lt;T3&gt;</i>): <i>Decoder&lt;[T1, T2, T3]&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/tuple.js "Source")
@@ -288,7 +385,6 @@ mydecoder(['hello', 'world'])  // DecodeError
 
 
 ---
-
 
 <a name="object" href="#object">#</a> <b>object</b><i>&lt;O: { [field: string]: Decoder&lt;any&gt; }&gt;</i>(mapping: O): <i>Decoder&lt;{ ... }&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/object.js "Source")
 
