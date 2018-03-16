@@ -44,7 +44,7 @@
     "coveralls": "^3.0.0",
     "eslint": "^4.18.1",
     "eslint-plugin-flowtype": "^2.46.1",
-    "flow-bin": "^0.67.1",
+    "flow-bin": "^0.68.0",
     "flow-copy-source": "^1.3.0",
     "flow-typed": "^2.3.0",
     "import-sort-cli": "^4.2.0",
