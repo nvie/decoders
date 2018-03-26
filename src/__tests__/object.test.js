@@ -19,7 +19,7 @@ describe('objects', () => {
         expect(decoder({ id: 1, name: 'test', superfluous: 'abundance' }).unwrap()).toEqual({ id: 1, name: 'test' });
     });
 
-    it('decodes objects and fields (ignore fields)', () => {
+    it('decodes objects and fields (ignore superfluous fields)', () => {
         // Extra (unwanted) keys are ignored
         const decoder = object({
             id: number,
@@ -32,7 +32,7 @@ describe('objects', () => {
         expect(decoder({}).isErr()).toBe(true); // missing keys 'id' and 'name'
     });
 
-    it('decodes objects and fields (ignore fields)', () => {
+    it('errors on non-objects', () => {
         const decoder = object({ id: string });
 
         expect(decoder('foo').isErr()).toBe(true);
