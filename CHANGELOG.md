@@ -1,3 +1,13 @@
+v1.5.0
+------
+- Collect and report all nested errors in an object() at once (rather than
+  error on the first error).
+
+**Breaking:**
+
+- Remove deprecated `message` argument to `object()`
+
+
 v1.4.6
 ------
 - Add missing documentation
