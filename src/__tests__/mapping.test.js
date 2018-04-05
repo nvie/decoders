@@ -17,12 +17,12 @@ describe('mappings', () => {
     it('invalid', () => {
         expect(() => guard(decoder)('foo')).toThrow('Must be an object');
         expect(() => guard(decoder)({ foo: 1 })).toThrow('Must be an object');
-        expect(() => guard(decoder)({ foo: {} })).toThrow('Missing key "name"');
+        expect(() => guard(decoder)({ foo: {} })).toThrow('Missing key: "name"');
         expect(() =>
             guard(decoder)({
                 '124': { invalid: true },
                 '125': { name: 'bar' },
             })
-        ).toThrow('Missing key "name"');
+        ).toThrow('Missing key: "name"');
     });
 });

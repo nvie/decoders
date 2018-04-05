@@ -410,7 +410,7 @@ const mydecoder = guard(object({
 }));
 mydecoder({ x: 1, y: 2 }) === { x: 1, y: 2 };
 mydecoder({ x: 1, y: 2, z: 3 }) === { x: 1, y: 2 };  // ⚠️
-mydecoder({ x: 1 })  // DecodeError (missing field y)
+mydecoder({ x: 1 })  // DecodeError (Missing key: "y")
 ```
 
 

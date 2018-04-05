@@ -29,7 +29,39 @@ describe('objects', () => {
 
         expect(decoder({ id: 1, name: 'test' }).unwrap()).toEqual({ id: 1, name: 'test', extra: undefined });
         expect(decoder({ id: 1, name: 'test', extra: 'foo' }).unwrap()).toEqual({ id: 1, name: 'test', extra: 'foo' });
-        expect(decoder({}).isErr()).toBe(true); // missing keys 'id' and 'name'
+    });
+
+    it('reports all errors at once', () => {
+        const decoder = guard(
+            object({
+                id: number,
+                name: string,
+                extra: optional(string),
+            })
+        );
+
+        // All good (no missing/decoding errors)
+        expect(() => decoder({ id: 1, name: 'valid' })).not.toThrow('Must be string');
+        expect(() => decoder({ id: 1, name: 'valid' })).not.toThrow('Missing key');
+        expect(() => decoder({ id: 1, name: 'valid', extra: undefined })).not.toThrow('Must be string');
+        expect(() => decoder({ id: 1, name: 'valid', extra: undefined })).not.toThrow('Missing key');
+
+        // Test missing key errors
+        expect(() => decoder({ name: 'valid' })).toThrow('Missing key: "id"');
+        expect(() => decoder({ name: 'valid' })).not.toThrow('Must be string');
+        expect(() => decoder({ name: 'valid', extra: undefined })).toThrow('Missing key: "id"');
+        expect(() => decoder({ name: 'valid', extra: undefined })).not.toThrow('Must be string');
+        expect(() => decoder({ extra: 'valid' })).toThrow('Missing keys: "id", "name"');
+        expect(() => decoder({ extra: 'valid' })).not.toThrow('Must be string');
+        expect(() => decoder({ name: undefined, extra: 'valid' })).toThrow('Missing keys: "id", "name"');
+        expect(() => decoder({ name: undefined, extra: 'valid' })).not.toThrow('Must be string');
+
+        // Now test that both errors are part of the same error!
+        expect(() => decoder({ name: 42 })).toThrow('Must be string');
+        expect(() => decoder({ name: 42 })).toThrow('Missing key: "id"');
+
+        // Both of these messages are part of the same error!
+        expect(() => decoder({ extra: 42 })).toThrow('Must be string');
     });
 
     it('errors on non-objects', () => {
@@ -40,7 +72,7 @@ describe('objects', () => {
         expect(decoder([]).isErr()).toBe(true);
         expect(decoder(undefined).isErr()).toBe(true);
         expect(decoder(NaN).isErr()).toBe(true);
-        expect(decoder({ foo: [1, 2, 3] }).isErr()).toBe(true); // Missing field "id"
+        expect(decoder({ foo: [1, 2, 3] }).isErr()).toBe(true); // Missing key "id"
         expect(decoder({ id: 3 }).isErr()).toBe(true); // Invalid field value for "id"
     });
 });
@@ -67,7 +99,7 @@ describe('fields', () => {
 
     it('invalid', () => {
         expect(() => guard(decoder)('foo')).toThrow('Must be an object');
-        expect(() => guard(decoder)({})).toThrow('Missing field "type"');
+        expect(() => guard(decoder)({})).toThrow('Missing key: "type"');
         expect(() => guard(decoder)({ type: 42 })).toThrow('Unexpected value for field "type"');
         expect(() => guard(decoder)({ type: null })).toThrow('Unexpected value for field "type"');
     });

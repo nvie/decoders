@@ -1,6 +1,7 @@
 // @flow
 
-import { annotate, annotateField, isAnnotation } from 'debrief';
+import { annotate, annotateFields, isAnnotation } from 'debrief';
+import type { Annotation } from 'debrief';
 import { Err, Ok } from 'lemons';
 
 import type { Decoder } from './types';
@@ -8,6 +9,16 @@ import { compose, isDate } from './utils';
 
 function isObject(o: any): boolean %checks {
     return o !== null && typeof o === 'object' && !Array.isArray(o) && !isDate(o);
+}
+
+function subtract(xs: Set<string>, ys: Set<string>): Set<string> {
+    const result = new Set();
+    for (const x of xs) {
+        if (!ys.has(x)) {
+            result.add(x);
+        }
+    }
+    return result;
 }
 
 export const pojo: Decoder<Object> = (blob: any) => {
@@ -50,15 +61,18 @@ export function object<O: { [field: string]: Decoder<any> }>(
         console.log("warning: `msg` param to `object({}, 'my msg')` will be deprecated in a future version");
     }
 
+    const known = new Set(Object.keys(mapping));
     return compose(pojo, (blob: Object) => {
-        //
-        // TODO:
-        // Work on better error messages, like:
-        // missing keys 'id' and 'name' (report them all at once, don't even
-        // invoke nested verifiers before all required keys are present)
-        //
+        const actual = new Set(Object.keys(blob));
+
+        // At this point, "missing" will also include all fields that may
+        // validly be optional.  We'll let the underlying decoder decide and
+        // remove the key from this missing set if the decoder accepts the
+        // value.
+        const missing = subtract(known, actual);
 
         let record = {};
+        const fieldErrors: { [key: string]: Annotation } = {};
 
         // NOTE: We're using .keys() here over .entries(), since .entries()
         // will type the value part as "mixed"
@@ -68,20 +82,52 @@ export function object<O: { [field: string]: Decoder<any> }>(
             const result = decoder(value);
             try {
                 record[key] = result.unwrap();
+
+                // If this succeeded, remove the key from the missing keys
+                // tracker
+                missing.delete(key);
             } catch (ann) {
                 /* istanbul ignore next */
                 if (!isAnnotation(ann)) {
                     throw ann;
                 }
 
-                const missing = value === undefined;
-                if (missing) {
-                    return Err(annotate(blob, `Missing key "${key}"`));
+                // Keep track of the annotation, but don't return just yet. We
+                // want to collect more error information.
+                if (value === undefined) {
+                    // Explicitly add it to the missing set if the value is
+                    // undefined.  This covers explicit undefineds to be
+                    // treated the same as implicit undefineds (aka missing
+                    // keys).
+                    missing.add(key);
                 } else {
-                    return Err(annotateField(blob, key, ann));
+                    fieldErrors[key] = ann;
                 }
             }
         }
+
+        // Deal with errors now. There are two classes of errors we want to
+        // report.  First of all, we want to report any inline errors in this
+        // object.  Lastly, any fields that are missing should be annotated on
+        // the outer object itself.
+        const fieldsWithErrors = Object.keys(fieldErrors);
+        if (fieldsWithErrors.length > 0 || missing.size > 0) {
+            let err = blob;
+
+            if (fieldsWithErrors.length > 0) {
+                const errorlist = fieldsWithErrors.map(k => [k, fieldErrors[k]]);
+                err = annotateFields(err, errorlist);
+            }
+
+            if (missing.size > 0) {
+                const errMsg = [...missing].map(key => `"${key}"`).join(', ');
+                const pluralized = missing.size > 1 ? 'keys' : 'key';
+                err = annotate(err, `Missing ${pluralized}: ${errMsg}`);
+            }
+
+            return Err(err);
+        }
+
         return Ok(record);
     });
 }
@@ -95,7 +141,7 @@ export function field<T>(field: string, decoder: Decoder<T>): Decoder<T> {
         try {
             return Ok(result.unwrap());
         } catch (e) {
-            const errText = value === undefined ? `Missing field "${field}"` : `Unexpected value for field "${field}"`;
+            const errText = value === undefined ? `Missing key: "${field}"` : `Unexpected value for field "${field}"`;
             return Err(annotate(blob, errText));
         }
     });

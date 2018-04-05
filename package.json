@@ -60,7 +60,7 @@
     "rimraf": "^2.6.2"
   },
   "dependencies": {
-    "debrief": "^0.2.1",
+    "debrief": "^0.2.2",
     "lemons": "^1.1.0"
   },
   "jest": {

@@ -46,8 +46,8 @@ describe('dispatch', () => {
 
     it('invalid', () => {
         expect(() => guard(decoder)('foo')).toThrow('Must be an object');
-        expect(() => guard(decoder)({})).toThrow('Missing field "type"');
+        expect(() => guard(decoder)({})).toThrow('Missing key: "type"');
         expect(() => guard(decoder)({ type: 'blah' })).toThrow('Must be a valid shape');
-        expect(() => guard(decoder)({ type: 'rect' })).toThrow('Missing key "x"');
+        expect(() => guard(decoder)({ type: 'rect' })).toThrow('Missing keys: "x", "y", "width", "height"');
     });
 });
