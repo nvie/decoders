@@ -51,16 +51,7 @@ type UnwrapDecoder = <T>(Decoder<T>) => T;
  * Put simply: it'll "peel off" all of the nested Decoders, puts them together
  * in an object, and wraps it in a Guard<...>.
  */
-export function object<O: { [field: string]: Decoder<any> }>(
-    mapping: O,
-    msg: string = 'DEPRECATED'
-): Decoder<$ObjMap<O, UnwrapDecoder>> {
-    /* istanbul ignore next */
-    if (msg !== 'DEPRECATED') {
-        // eslint-disable-next-line
-        console.log("warning: `msg` param to `object({}, 'my msg')` will be deprecated in a future version");
-    }
-
+export function object<O: { [field: string]: Decoder<any> }>(mapping: O): Decoder<$ObjMap<O, UnwrapDecoder>> {
     const known = new Set(Object.keys(mapping));
     return compose(pojo, (blob: Object) => {
         const actual = new Set(Object.keys(blob));
