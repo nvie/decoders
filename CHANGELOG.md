@@ -1,6 +1,8 @@
 v1.5.1
 ------
-- ...
+- **New decoders!**
+  - `exact()` is like `object()`, but will fail if the inputted object contains
+    superfluous keys (keys that aren't in the object definition).
 
 
 v1.5.0

@@ -33,7 +33,7 @@ export { fail } from './fail';
 export { mapping } from './mapping';
 export { nullable } from './nullable';
 export { integer, number, positiveInteger, positiveNumber } from './number';
-export { field, object, pojo } from './object';
+export { exact, field, object, pojo } from './object';
 export { optional } from './optional';
 export { email, regex, string, url } from './string';
 export { tuple2 } from './tuple';

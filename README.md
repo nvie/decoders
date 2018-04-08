@@ -416,6 +416,23 @@ mydecoder({ x: 1 })  // DecodeError (Missing key: "y")
 
 ---
 
+<a name="exact" href="#exact">#</a> <b>exact</b><i>&lt;O: { [field: string]: Decoder&lt;any&gt; }&gt;</i>(mapping: O): <i>Decoder&lt;{ ... }&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/object.js "Source")
+
+Like `object()`, but will fail if there are superfluous keys in the input data.
+
+```javascript
+const mydecoder = guard(exact({
+    x: number,
+    y: number,
+}));
+mydecoder({ x: 1, y: 2 }) === { x: 1, y: 2 };
+mydecoder({ x: 1, y: 2, z: 3 })  // DecodeError (Superfluous keys: "z")
+mydecoder({ x: 1 })              // DecodeError (Missing key: "y")
+```
+
+
+---
+
 <a name="mapping" href="#mapping">#</a> <b>mapping</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;Map&lt;string, T&gt;&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/map.js "Source")
 
 Returns a decoder capable of decoding **Map instances of strings-to-T's**

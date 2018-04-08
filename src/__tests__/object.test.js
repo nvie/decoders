@@ -2,7 +2,7 @@
 
 import { guard } from '../guard';
 import { number } from '../number';
-import { field, object, pojo } from '../object';
+import { exact, field, object, pojo } from '../object';
 import { optional } from '../optional';
 import { string } from '../string';
 
@@ -66,6 +66,30 @@ describe('objects', () => {
 
     it('errors on non-objects', () => {
         const decoder = object({ id: string });
+
+        expect(decoder('foo').isErr()).toBe(true);
+        expect(decoder(3.14).isErr()).toBe(true);
+        expect(decoder([]).isErr()).toBe(true);
+        expect(decoder(undefined).isErr()).toBe(true);
+        expect(decoder(NaN).isErr()).toBe(true);
+        expect(decoder({ foo: [1, 2, 3] }).isErr()).toBe(true); // Missing key "id"
+        expect(decoder({ id: 3 }).isErr()).toBe(true); // Invalid field value for "id"
+    });
+});
+
+describe('exact objects', () => {
+    it('decodes objects and fields', () => {
+        const decoder = exact({ id: number, name: string });
+        expect(decoder({ id: 1, name: 'test' }).unwrap()).toEqual({ id: 1, name: 'test' });
+    });
+
+    it('fails on superfluous keys', () => {
+        const decoder = exact({ id: number, name: string });
+        expect(() => guard(decoder)({ id: 1, name: 'test', superfluous: 'abundance' })).toThrow('Superfluous keys');
+    });
+
+    it('errors on non-objects', () => {
+        const decoder = exact({ id: string });
 
         expect(decoder('foo').isErr()).toBe(true);
         expect(decoder(3.14).isErr()).toBe(true);

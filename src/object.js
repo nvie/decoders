@@ -7,6 +7,10 @@ import { Err, Ok } from 'lemons';
 import type { Decoder } from './types';
 import { compose, isDate } from './utils';
 
+// Helper to indicate we're deliberately using "any", telling Flow we know what
+// we're doing
+type cast = any;
+
 function isObject(o: any): boolean %checks {
     return o !== null && typeof o === 'object' && !Array.isArray(o) && !isDate(o);
 }
@@ -121,6 +125,25 @@ export function object<O: { [field: string]: Decoder<any> }>(mapping: O): Decode
 
         return Ok(record);
     });
+}
+
+export function exact<O: { [field: string]: Decoder<any> }>(mapping: O): Decoder<$Exact<$ObjMap<O, UnwrapDecoder>>> {
+    // Check the inputted object for any superfluous keys
+    const allowed = new Set(Object.keys(mapping));
+    const checked = compose(pojo, (blob: Object) => {
+        const actual = new Set(Object.keys(blob));
+        const superfluous = subtract(actual, allowed);
+        if (superfluous.size > 0) {
+            return Err(annotate(blob, `Superfluous keys: ${[...superfluous].join(', ')}`));
+        }
+        return Ok(blob);
+    });
+
+    // Defer to the "object" decoder for doing the real decoding work.  Since
+    // we made sure there are no superfluous keys in this structure, it's now
+    // safe to force-case it to an $Exact<> type.
+    const decoder = ((object(mapping): cast): Decoder<$Exact<$ObjMap<O, UnwrapDecoder>>>);
+    return compose(checked, decoder);
 }
 
 export function field<T>(field: string, decoder: Decoder<T>): Decoder<T> {
