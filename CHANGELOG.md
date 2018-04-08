@@ -1,3 +1,8 @@
+v1.5.1
+------
+- ...
+
+
 v1.5.0
 ------
 - Collect and report all nested errors in an object() at once (rather than
