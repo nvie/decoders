@@ -2691,8 +2691,8 @@ isurl@^1.0.0-alpha5:
     is-object "^1.0.1"
 
 itertools@^1.1.6:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/itertools/-/itertools-1.2.0.tgz#e3c453087355c7efe36bbda2766747d03622e331"
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/itertools/-/itertools-1.2.1.tgz#92fa84b3b04b4ea84550d6faa092966c8ae88966"
   dependencies:
     babel-runtime "^6.26.0"
 
