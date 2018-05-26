@@ -55,7 +55,7 @@
     "in-publish": "^2.0.0",
     "itertools": "^1.1.6",
     "jest": "^22.4.2",
-    "jest-cli": "^22.4.2",
+    "jest-cli": "^23.0.0",
     "prettier": "^1.11.0",
     "rimraf": "^2.6.2"
   },
