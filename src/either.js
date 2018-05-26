@@ -10,8 +10,7 @@ import type { Decoder } from './types';
  */
 // istanbul ignore next
 function itemize(s: string = ''): string {
-    s = indent(s);
-    return '-' + s.substring(1);
+    return '-' + indent(s).substring(1);
 }
 
 export function either<T1, T2>(d1: Decoder<T1>, d2: Decoder<T2>): Decoder<T1 | T2> {
