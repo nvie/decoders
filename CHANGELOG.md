@@ -1,3 +1,10 @@
+v1.6.1
+------
+- Upgraded debrief dependency
+- Behave better in projects that have Flow's `experimental.const_params`
+  setting turned on
+
+
 v1.6.0
 ------
 - **New decoders!**
