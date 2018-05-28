@@ -3,14 +3,14 @@
 import { annotate } from 'debrief';
 import { Err, Ok } from 'lemons';
 
-import type { Decoder } from './types';
+import type { Decoder, anything } from './types';
 
 /**
  * Builds a Decoder that returns Ok for 2-tuples of [T1, T2], given Decoders
  * for T1 and T2.  Err otherwise.
  */
 export function tuple2<T1, T2>(decoder1: Decoder<T1>, decoder2: Decoder<T2>): Decoder<[T1, T2]> {
-    return (blobs: mixed) => {
+    return (blobs: anything) => {
         if (!Array.isArray(blobs)) {
             return Err(annotate(blobs, 'Must be an array'));
         }

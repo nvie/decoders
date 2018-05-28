@@ -5,14 +5,14 @@ import { Err, Ok } from 'lemons';
 
 import { undefined_ } from './constants';
 import { either } from './either';
-import type { Decoder } from './types';
+import type { Decoder, anything } from './types';
 
 /**
  * Decoder that only returns Ok for `null` or `undefined` inputs.  In both
  * cases, it will return `undefined`, so `null` inputs will get converted to
  * `undefined` outputs.  Err otherwise.
  */
-export const undefined_or_null: Decoder<void> = (blob: mixed) =>
+export const undefined_or_null: Decoder<void> = (blob: anything) =>
     blob === undefined || blob === null ? Ok(undefined) : Err(annotate(blob, 'Must be undefined or null'));
 
 /**

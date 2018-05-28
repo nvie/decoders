@@ -3,14 +3,14 @@
 import { annotate } from 'debrief';
 import { Err, Ok } from 'lemons';
 
-import type { DecodeResult, Decoder } from './types';
+import type { DecodeResult, Decoder, anything } from './types';
 import { compose } from './utils';
 
 /**
  * Like a "Plain Old JavaScript Object", but for arrays: "Plain Old JavaScript
  * Array" ^_^
  */
-export const poja: Decoder<Array<mixed>> = (blob: mixed) => {
+export const poja: Decoder<Array<mixed>> = (blob: anything) => {
     if (!Array.isArray(blob)) {
         return Err(annotate(blob, 'Must be an array'));
     }
@@ -23,7 +23,7 @@ export const poja: Decoder<Array<mixed>> = (blob: mixed) => {
  *   encountered; or
  * - a new Ok with an array of all unwrapped Ok'ed values
  */
-function all<T>(iterable: Array<DecodeResult<T>>, blobs: Array<mixed>): DecodeResult<Array<T>> {
+function all<T>(iterable: Array<DecodeResult<T>>, blobs: anything): DecodeResult<Array<T>> {
     const results: Array<T> = [];
     let index = 0;
     for (const result of iterable) {
