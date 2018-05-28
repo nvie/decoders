@@ -1,4 +1,4 @@
-// @flow
+// @flow strict
 
 import { annotate, indent } from 'debrief';
 import { Err, Ok } from 'lemons';
@@ -14,7 +14,7 @@ function itemize(s: string = ''): string {
 }
 
 export function either<T1, T2>(d1: Decoder<T1>, d2: Decoder<T2>): Decoder<T1 | T2> {
-    return (blob: any) =>
+    return (blob: mixed) =>
         d1(blob).dispatch(
             value1 => Ok(value1),
             err1 =>

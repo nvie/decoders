@@ -1,4 +1,4 @@
-// @flow
+// @flow strict
 
 import { constant } from '../constants';
 import { dispatch } from '../dispatch';

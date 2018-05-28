@@ -1,4 +1,4 @@
-// @flow
+// @flow strict
 
 import { annotate, annotateFields, isAnnotation } from 'debrief';
 import type { Annotation } from 'debrief';
@@ -7,11 +7,10 @@ import { Err, Ok } from 'lemons';
 import type { Decoder } from './types';
 import { compose, isDate } from './utils';
 
-// Helper to indicate we're deliberately using "any", telling Flow we know what
-// we're doing
+// $FlowIgnore - helper to indicate we're deliberately using "any"
 type cast = any;
 
-function isObject(o: any): boolean %checks {
+function isObject(o: mixed): boolean %checks {
     return o !== null && typeof o === 'object' && !Array.isArray(o) && !isDate(o);
 }
 
@@ -25,7 +24,8 @@ function subtract(xs: Set<string>, ys: Set<string>): Set<string> {
     return result;
 }
 
-export const pojo: Decoder<Object> = (blob: any) => {
+// $FlowIgnore - deliberately using Object here
+export const pojo: Decoder<Object> = (blob: mixed) => {
     return isObject(blob) ? Ok(blob) : Err(annotate(blob, 'Must be an object'));
 };
 
@@ -55,10 +55,11 @@ type UnwrapDecoder = <T>(Decoder<T>) => T;
  * Put simply: it'll "peel off" all of the nested Decoders, puts them together
  * in an object, and wraps it in a Guard<...>.
  */
-export function object<O: { [field: string]: Decoder<any> }>(mapping: O): Decoder<$ObjMap<O, UnwrapDecoder>> {
+export function object<O: { +[field: string]: Decoder<mixed> }>(mapping: O): Decoder<$ObjMap<O, UnwrapDecoder>> {
     const known = new Set(Object.keys(mapping));
     return compose(
         pojo,
+        // $FlowIgnore - deliberately using Object here
         (blob: Object) => {
             const actual = new Set(Object.keys(blob));
 
@@ -130,11 +131,12 @@ export function object<O: { [field: string]: Decoder<any> }>(mapping: O): Decode
     );
 }
 
-export function exact<O: { [field: string]: Decoder<any> }>(mapping: O): Decoder<$Exact<$ObjMap<O, UnwrapDecoder>>> {
+export function exact<O: { +[field: string]: Decoder<mixed> }>(mapping: O): Decoder<$Exact<$ObjMap<O, UnwrapDecoder>>> {
     // Check the inputted object for any superfluous keys
     const allowed = new Set(Object.keys(mapping));
     const checked = compose(
         pojo,
+        // $FlowIgnore - deliberately using Object here
         (blob: Object) => {
             const actual = new Set(Object.keys(blob));
             const superfluous = subtract(actual, allowed);
@@ -160,6 +162,7 @@ export function field<T>(field: string, decoder: Decoder<T>): Decoder<T> {
     // like this, not efficient -- pull it out of this function)
     return compose(
         pojo,
+        // $FlowIgnore - deliberately using Object here
         (blob: Object) => {
             const value = blob[field];
             const result = decoder(value);

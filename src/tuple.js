@@ -1,4 +1,4 @@
-// @flow
+// @flow strict
 
 import { annotate } from 'debrief';
 import { Err, Ok } from 'lemons';
@@ -10,7 +10,7 @@ import type { Decoder } from './types';
  * for T1 and T2.  Err otherwise.
  */
 export function tuple2<T1, T2>(decoder1: Decoder<T1>, decoder2: Decoder<T2>): Decoder<[T1, T2]> {
-    return (blobs: any) => {
+    return (blobs: mixed) => {
         if (!Array.isArray(blobs)) {
             return Err(annotate(blobs, 'Must be an array'));
         }

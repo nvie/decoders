@@ -1,4 +1,4 @@
-// @flow
+// @flow strict
 
 import { annotate } from 'debrief';
 import { Err, Ok } from 'lemons';
@@ -6,7 +6,7 @@ import { Err, Ok } from 'lemons';
 import type { Decoder } from './types';
 import { compose, predicate } from './utils';
 
-export const anyNumber: Decoder<number> = (blob: any) => {
+export const anyNumber: Decoder<number> = (blob: mixed) => {
     return typeof blob === 'number' && !Number.isNaN(blob) ? Ok(blob) : Err(annotate(blob, 'Must be number'));
 };
 

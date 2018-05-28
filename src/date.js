@@ -1,4 +1,4 @@
-// @flow
+// @flow strict
 
 import type { Decoder } from './types';
 import { isDate, predicate } from './utils';

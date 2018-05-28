@@ -1,4 +1,4 @@
-// @flow
+// @flow strict
 
 import type { Annotation } from 'debrief';
 import { annotateFields, isAnnotation } from 'debrief';
@@ -20,6 +20,7 @@ import { compose } from './utils';
 export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
     return compose(
         pojo,
+        // $FlowIgnore - deliberately using Object here
         (blob: Object) => {
             let tuples: Array<[string, T]> = [];
             let errors: Array<[string, string | Annotation]> = [];

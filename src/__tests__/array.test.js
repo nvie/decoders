@@ -1,4 +1,4 @@
-// @flow
+// @flow strict
 
 import { array } from '../array';
 import { guard } from '../guard';

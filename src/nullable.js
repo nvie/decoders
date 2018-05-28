@@ -1,4 +1,4 @@
-// @flow
+// @flow strict
 
 import { null_ } from './constants';
 import { either } from './either';

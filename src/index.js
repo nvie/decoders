@@ -1,4 +1,4 @@
-// @flow
+// @flow strict
 
 /**
  * Elm-like JSON decoders, for use with Flow.

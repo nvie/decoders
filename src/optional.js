@@ -1,4 +1,4 @@
-// @flow
+// @flow strict
 
 import { annotate } from 'debrief';
 import { Err, Ok } from 'lemons';
@@ -12,7 +12,7 @@ import type { Decoder } from './types';
  * cases, it will return `undefined`, so `null` inputs will get converted to
  * `undefined` outputs.  Err otherwise.
  */
-export const undefined_or_null: Decoder<void> = (blob: any) =>
+export const undefined_or_null: Decoder<void> = (blob: mixed) =>
     blob === undefined || blob === null ? Ok(undefined) : Err(annotate(blob, 'Must be undefined or null'));
 
 /**

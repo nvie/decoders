@@ -1,4 +1,4 @@
-// @flow
+// @flow strict
 
 import { annotate } from 'debrief';
 import { Err, Ok } from 'lemons';
@@ -15,7 +15,8 @@ import type { Decoder } from './types';
  *
  * But in this case, I chose the faster check.
  */
-export const isDate = (value: any): boolean => !!value && typeof value.getMonth === 'function';
+export const isDate = (value: mixed): boolean =>
+    !!value && value.getMonth !== undefined && typeof value.getMonth === 'function';
 
 /**
  * Given a decoder T and a mapping function from T's to V's, returns a decoder
@@ -31,15 +32,15 @@ export function map<T, V>(decoder: Decoder<T>, mapper: T => V): Decoder<V> {
 /**
  * Compose two decoders by passing the result of the first into the second.
  * The second decoder may assume as its input type the output type of the first
- * decoder (so it's not necessary to accept the typical "any").  This is useful
- * for "narrowing down" the checks.  For example, if you want to write
+ * decoder (so it's not necessary to accept the typical "mixed").  This is
+ * useful for "narrowing down" the checks.  For example, if you want to write
  * a decoder for positive numbers, you can compose it from an existing decoder
  * for any number, and a decoder that, assuming a number, checks if it's
  * positive.  Very often combined with the predicate() helper as the second
  * argument.
  */
 export function compose<T, V>(decoder: Decoder<T>, next: Decoder<V, T>): Decoder<V> {
-    return (blob: any) => decoder(blob).andThen(next);
+    return (blob: mixed) => decoder(blob).andThen(next);
 }
 
 /**

@@ -1,4 +1,4 @@
-// @flow
+// @flow strict
 
 import { guard } from '../guard';
 import { mapping } from '../mapping';

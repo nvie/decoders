@@ -1,4 +1,4 @@
-// @flow
+// @flow strict
 
 import { fail } from '../fail';
 import { INPUTS } from './fixtures';

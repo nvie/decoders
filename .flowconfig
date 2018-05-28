@@ -10,6 +10,7 @@ all=error
 sketchy-null-bool=off
 sketchy-null-number=off
 sketchy-null-string=off
+sketchy-null-mixed=off
 
 # The purpose of this whole library is to be able to get around the use of
 # unclear types, but in order to add these safeguards we'll need to use those
@@ -18,3 +19,11 @@ unclear-type=off
 
 [options]
 include_warnings=true
+suppress_comment=\\(.\\|\n\\)*\\$Flow\\(Ignore\\|FixMe\\)
+
+[strict]
+nonstrict-import
+unclear-type
+unsafe-getters-setters
+untyped-import
+untyped-type-import

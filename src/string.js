@@ -1,4 +1,4 @@
-// @flow
+// @flow strict
 
 import { annotate } from 'debrief';
 import { Err, Ok } from 'lemons';
@@ -21,7 +21,7 @@ const DEFAULT_SCHEMES = ['https'];
 /**
  * Decoder that only returns Ok for string inputs.  Err otherwise.
  */
-export const string: Decoder<string> = (blob: any) => {
+export const string: Decoder<string> = (blob: mixed) => {
     return typeof blob === 'string' ? Ok(blob) : Err(annotate(blob, 'Must be string'));
 };
 

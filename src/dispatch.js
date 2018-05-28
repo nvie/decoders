@@ -1,4 +1,4 @@
-// @flow
+// @flow strict
 
 import type { Decoder } from './types';
 
@@ -41,7 +41,7 @@ import type { Decoder } from './types';
  *     );
  */
 export function dispatch<T, V>(base: Decoder<T>, next: T => Decoder<V>): Decoder<V> {
-    return (blob: any) =>
+    return (blob: mixed) =>
         // We'll dispatch on this value
         base(blob).andThen(value =>
             // Now dispatch on the value by passing in T, and then invoking

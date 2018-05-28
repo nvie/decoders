@@ -1,4 +1,4 @@
-// @flow
+// @flow strict
 
 import { number } from '../number';
 import { string } from '../string';

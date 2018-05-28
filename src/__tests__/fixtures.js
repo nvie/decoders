@@ -1,4 +1,4 @@
-// @flow
+// @flow strict
 
 // prettier-ignore
 export const STRINGS = [
