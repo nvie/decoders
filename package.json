@@ -53,15 +53,15 @@
     "import-sort-style-eslint": "^4.2.0",
     "import-sort-style-module": "^4.2.0",
     "in-publish": "^2.0.0",
-    "itertools": "^1.1.6",
+    "itertools": "^1.2.2",
     "jest": "^23.0.0",
     "jest-cli": "^23.0.0",
     "prettier": "^1.13.0",
     "rimraf": "^2.6.2"
   },
   "dependencies": {
-    "debrief": "^0.2.3",
-    "lemons": "^1.1.0"
+    "debrief": "^1.0.0",
+    "lemons": "^1.1.1"
   },
   "jest": {
     "testPathIgnorePatterns": [

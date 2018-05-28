@@ -1394,9 +1394,9 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
-debrief@^0.2.3:
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/debrief/-/debrief-0.2.3.tgz#8b134b774296fa840a9000eca745e90581b83fbd"
+debrief@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/debrief/-/debrief-1.0.0.tgz#cb6e5cb08e6d4362c7370e8092445c613e2b2957"
   dependencies:
     babel-runtime "^6.26.0"
 
@@ -2765,9 +2765,9 @@ isurl@^1.0.0-alpha5:
     has-to-string-tag-x "^1.2.0"
     is-object "^1.0.1"
 
-itertools@^1.1.6:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/itertools/-/itertools-1.2.1.tgz#92fa84b3b04b4ea84550d6faa092966c8ae88966"
+itertools@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/itertools/-/itertools-1.2.2.tgz#b65319c32318285e1002d1ffd85cb50c1c1be75f"
   dependencies:
     babel-runtime "^6.26.0"
 
@@ -3435,9 +3435,9 @@ left-pad@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/left-pad/-/left-pad-1.2.0.tgz#d30a73c6b8201d8f7d8e7956ba9616087a68e0ee"
 
-lemons@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/lemons/-/lemons-1.1.0.tgz#58e6098a53fd2801255eb1c61e1fec5c4fdc3b2e"
+lemons@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/lemons/-/lemons-1.1.1.tgz#d92c5f9887fd2c4ea0970f05e5c6893a5e9e6707"
 
 leven@^2.1.0:
   version "2.1.0"
