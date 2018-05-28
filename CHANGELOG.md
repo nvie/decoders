@@ -1,3 +1,8 @@
+v1.7.0-rc2
+----------
+- Fix type issues caused by too strict use of mixeds
+
+
 v1.7.0-rc1
 ----------
 - Make decoders fully [Flow Strict](https://flow.org/en/docs/strict/)
