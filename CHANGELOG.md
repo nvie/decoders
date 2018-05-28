@@ -1,3 +1,9 @@
+v1.7.0-rc1
+----------
+- Make decoders fully [Flow Strict](https://flow.org/en/docs/strict/)
+  compatible
+
+
 v1.6.1
 ------
 - Upgraded debrief dependency
