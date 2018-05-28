@@ -56,7 +56,7 @@
     "itertools": "^1.1.6",
     "jest": "^23.0.0",
     "jest-cli": "^23.0.0",
-    "prettier": "^1.11.0",
+    "prettier": "^1.13.0",
     "rimraf": "^2.6.2"
   },
   "dependencies": {

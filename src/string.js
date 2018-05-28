@@ -31,7 +31,10 @@ export const string: Decoder<string> = (blob: any) => {
  * before testing the regex.
  */
 export function regex(regex: RegExp, msg: string): Decoder<string> {
-    return compose(string, predicate(s => regex.test(s), msg));
+    return compose(
+        string,
+        predicate(s => regex.test(s), msg)
+    );
 }
 
 /**
@@ -55,16 +58,19 @@ export const email = regex(
  * - url(['https', 'git+ssh'])  accepts both https:// and git+ssh:// URLs
  */
 export const url = (schemes: Array<string> = DEFAULT_SCHEMES) =>
-    compose(string, (value: string) => {
-        const matches = value.match(url_re);
-        if (!matches) {
-            return Err(annotate(value, 'Must be URL'));
-        } else {
-            const scheme = matches[1];
-            if (schemes.length === 0 || schemes.includes(scheme.toLowerCase())) {
-                return Ok(value);
+    compose(
+        string,
+        (value: string) => {
+            const matches = value.match(url_re);
+            if (!matches) {
+                return Err(annotate(value, 'Must be URL'));
             } else {
-                return Err(annotate(value, `URL scheme must be any of: ${schemes.join(', ')}`));
+                const scheme = matches[1];
+                if (schemes.length === 0 || schemes.includes(scheme.toLowerCase())) {
+                    return Ok(value);
+                } else {
+                    return Err(annotate(value, `URL scheme must be any of: ${schemes.join(', ')}`));
+                }
             }
         }
-    });
+    );

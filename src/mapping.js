@@ -18,35 +18,38 @@ import { compose } from './utils';
  *
  */
 export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
-    return compose(pojo, (blob: Object) => {
-        let tuples: Array<[string, T]> = [];
-        let errors: Array<[string, string | Annotation]> = [];
+    return compose(
+        pojo,
+        (blob: Object) => {
+            let tuples: Array<[string, T]> = [];
+            let errors: Array<[string, string | Annotation]> = [];
 
-        Object.keys(blob).forEach((key: string) => {
-            const value: T = blob[key];
-            const result = decoder(value);
-            try {
-                const okValue = result.unwrap();
-                if (errors.length === 0) {
-                    tuples.push([key, okValue]);
+            Object.keys(blob).forEach((key: string) => {
+                const value: T = blob[key];
+                const result = decoder(value);
+                try {
+                    const okValue = result.unwrap();
+                    if (errors.length === 0) {
+                        tuples.push([key, okValue]);
+                    }
+                } catch (e) {
+                    /* istanbul ignore else */
+                    if (isAnnotation(e)) {
+                        tuples.length = 0; // Clear the tuples array
+                        errors.push([key, e]);
+                    } else {
+                        // Otherwise, simply rethrow it
+                        /* istanbul ignore next */
+                        throw e;
+                    }
                 }
-            } catch (e) {
-                /* istanbul ignore else */
-                if (isAnnotation(e)) {
-                    tuples.length = 0; // Clear the tuples array
-                    errors.push([key, e]);
-                } else {
-                    // Otherwise, simply rethrow it
-                    /* istanbul ignore next */
-                    throw e;
-                }
+            });
+
+            if (errors.length > 0) {
+                return Err(annotateFields(blob, errors));
+            } else {
+                return Ok(new Map(tuples));
             }
-        });
-
-        if (errors.length > 0) {
-            return Err(annotateFields(blob, errors));
-        } else {
-            return Ok(new Map(tuples));
         }
-    });
+    );
 }

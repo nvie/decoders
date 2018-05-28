@@ -72,5 +72,8 @@ function members<T>(decoder: Decoder<T>): Decoder<Array<T>, Array<mixed>> {
  * for `T`.  Err otherwise.
  */
 export function array<T>(decoder: Decoder<T>): Decoder<Array<T>> {
-    return compose(poja, members(decoder));
+    return compose(
+        poja,
+        members(decoder)
+    );
 }

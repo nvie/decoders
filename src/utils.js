@@ -22,7 +22,10 @@ export const isDate = (value: any): boolean => !!value && typeof value.getMonth 
  * for V's.  This is useful to change the original input data.
  */
 export function map<T, V>(decoder: Decoder<T>, mapper: T => V): Decoder<V> {
-    return compose(decoder, x => Ok(mapper(x)));
+    return compose(
+        decoder,
+        x => Ok(mapper(x))
+    );
 }
 
 /**
