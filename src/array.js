@@ -10,7 +10,7 @@ import { compose } from './utils';
  * Like a "Plain Old JavaScript Object", but for arrays: "Plain Old JavaScript
  * Array" ^_^
  */
-export const poja: Decoder<Array<mixed>> = (blob: anything) => {
+export const poja: Decoder<$ReadOnlyArray<mixed>> = (blob: anything) => {
     if (!Array.isArray(blob)) {
         return Err(annotate(blob, 'Must be an array'));
     }
@@ -23,7 +23,7 @@ export const poja: Decoder<Array<mixed>> = (blob: anything) => {
  *   encountered; or
  * - a new Ok with an array of all unwrapped Ok'ed values
  */
-function all<T>(iterable: Array<DecodeResult<T>>, blobs: anything): DecodeResult<Array<T>> {
+function all<T>(iterable: $ReadOnlyArray<DecodeResult<T>>, blobs: anything): DecodeResult<Array<T>> {
     const results: Array<T> = [];
     let index = 0;
     for (const result of iterable) {
@@ -59,8 +59,8 @@ function all<T>(iterable: Array<DecodeResult<T>>, blobs: anything): DecodeResult
  * Given a T, builds a decoder that assumes an array input and returns an
  * Array<T>.
  */
-function members<T>(decoder: Decoder<T>): Decoder<Array<T>, Array<mixed>> {
-    return (blobs: Array<mixed>) => {
+function members<T>(decoder: Decoder<T>): Decoder<Array<T>, $ReadOnlyArray<mixed>> {
+    return (blobs: $ReadOnlyArray<mixed>) => {
         const results = blobs.map(decoder);
         const result = all(results, blobs);
         return result;
