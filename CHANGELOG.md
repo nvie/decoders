@@ -1,10 +1,11 @@
-v1.7.1
-----------
+v1.8.0
+------
+- Drop support for Node 7
 - Declare inputted arrays will not be modified (treated as read-only)
 
 
 v1.7.0
-----------
+------
 - Make decoders fully [Flow Strict](https://flow.org/en/docs/strict/)
   compatible
 
