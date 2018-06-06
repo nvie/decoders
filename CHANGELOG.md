@@ -1,3 +1,8 @@
+v1.8.1
+------
+- Fix: revert accidentally emitting $ReadOnlyArray types in array decoders
+
+
 v1.8.0
 ------
 - Drop support for Node 7
