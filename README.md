@@ -355,6 +355,24 @@ mydecoder(42)  // DecodeError
 
 ---
 
+<a name="maybe" href="#maybe">#</a> <b>maybe</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;?T&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/maybe.js "Source")
+
+Returns a decoder capable of decoding **either a value of type <i>T</i>, or
+`null`, or `undefined`**, provided that you already have a decoder for
+<i>T</i>.
+
+```javascript
+const mydecoder = guard(nullable(string));
+mydecoder('hello') === 'hello'
+mydecoder(null) === null
+mydecoder(undefined) === undefined
+mydecoder(0)  // DecodeError
+mydecoder(42)  // DecodeError
+```
+
+
+---
+
 <a name="array" href="#array">#</a> <b>array</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;Array&lt;T&gt;&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/array.js "Source")
 
 Returns a decoder capable of decoding **an array of <i>T</i>'s**, provided that
