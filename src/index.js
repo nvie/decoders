@@ -31,6 +31,7 @@ export { dispatch } from './dispatch';
 export { either, either3, either4, either5, either6, either7, either8, either9 } from './either';
 export { fail } from './fail';
 export { mapping } from './mapping';
+export { maybe } from './maybe';
 export { nullable } from './nullable';
 export { integer, number, positiveInteger, positiveNumber } from './number';
 export { exact, field, object, pojo } from './object';

@@ -1,3 +1,14 @@
+v1.8.3
+------
+**New decoder:**
+
+- `maybe()` is like `optional(nullable(...))`, i.e. returns a "maybe type".
+
+**Deprecation warning:**
+
+- `optional(..., /* allowNull */ true)` is now deprecated in favor of `maybe(...)`
+
+
 v1.8.2
 ------
 **Improved error reporting:**

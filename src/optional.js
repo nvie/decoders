@@ -1,24 +1,20 @@
 // @flow strict
 
-import { annotate } from 'debrief';
-import { Err, Ok } from 'lemons';
-
 import { undefined_ } from './constants';
 import { either } from './either';
-import type { Decoder, anything } from './types';
-
-/**
- * Decoder that only returns Ok for `null` or `undefined` inputs.  In both
- * cases, it will return `undefined`, so `null` inputs will get converted to
- * `undefined` outputs.  Err otherwise.
- */
-export const undefined_or_null: Decoder<void> = (blob: anything) =>
-    blob === undefined || blob === null ? Ok(undefined) : Err(annotate(blob, 'Must be undefined or null'));
+import { maybe } from './maybe';
+import type { Decoder } from './types';
+import { map } from './utils';
 
 /**
  * Builds a Decoder that returns Ok for either `undefined` or `T` values,
  * given a Decoder for `T`.  Err otherwise.
  */
 export function optional<T>(decoder: Decoder<T>, allowNull: boolean = false): Decoder<void | T> {
-    return either(allowNull ? undefined_or_null : undefined_, decoder);
+    if (allowNull) {
+        // eslint-disable-next-line no-console
+        console.warn('allowNull optional param is deprecated.  Prefer using maybe(x) over optional(x, true)'); // eslint-disable-line no-undef
+        return map(maybe(decoder), x => (x === null || x === undefined ? undefined : x));
+    }
+    return either(undefined_, decoder);
 }
