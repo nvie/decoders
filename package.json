@@ -48,7 +48,7 @@
     "flow-bin": "^0.74.0",
     "flow-copy-source": "^2.0.0",
     "flow-typed": "^2.3.0",
-    "import-sort-cli": "^4.2.0",
+    "import-sort-cli": "^5.0.0",
     "import-sort-parser-babylon": "^4.2.0",
     "import-sort-style-eslint": "^4.2.0",
     "import-sort-style-module": "^4.2.0",
