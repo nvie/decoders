@@ -2327,9 +2327,9 @@ import-sort-style-eslint@^4.2.0:
     eslint "^4.0.0"
     lodash "^4.17.4"
 
-import-sort-style-module@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/import-sort-style-module/-/import-sort-style-module-4.2.0.tgz#96707b36395e87cf31229cf806887c6fe69d2d77"
+import-sort-style-module@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/import-sort-style-module/-/import-sort-style-module-5.0.0.tgz#fbf6fea18ca0a82421e79d56eed85d75a69bdd0e"
 
 import-sort-style@^4.2.0:
   version "4.2.0"
