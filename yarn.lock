@@ -2479,22 +2479,22 @@ import-local@^1.0.0:
     resolve-cwd "^2.0.0"
 
 import-sort-cli@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/import-sort-cli/-/import-sort-cli-5.0.0.tgz#ced80450d7c52d47cfed8926907c3f5a53266308"
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/import-sort-cli/-/import-sort-cli-5.2.0.tgz#8a36a2f029dfe81bd5569472143ede6b0c7ef13a"
   dependencies:
     diff "^3.5.0"
     file "^0.2.2"
     globby "^8.0.1"
-    import-sort "^5.0.0"
-    import-sort-config "^5.0.0"
+    import-sort "^5.2.0"
+    import-sort-config "^5.2.0"
     import-sort-parser "^5.0.0"
     import-sort-style "^5.0.0"
     mkdirp "^0.5.1"
     yargs "^11.0.0"
 
-import-sort-config@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/import-sort-config/-/import-sort-config-5.0.0.tgz#1370e6d240f886d855e20ef1baa9ff377bf0967e"
+import-sort-config@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/import-sort-config/-/import-sort-config-5.2.0.tgz#7023d348858f359465dfe843e1da62633049b1ba"
   dependencies:
     core-js "^2.5.7"
     cosmiconfig "^5.0.5"
@@ -2530,9 +2530,9 @@ import-sort-style@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/import-sort-style/-/import-sort-style-5.0.0.tgz#6547e3792b33994394dd86eeb6df6826838ad97b"
 
-import-sort@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/import-sort/-/import-sort-5.0.0.tgz#f313389586377e1c97d0ace2a6a79dc9fa033d79"
+import-sort@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/import-sort/-/import-sort-5.2.0.tgz#b12648452ef078a6842d5442e27071d479d91251"
   dependencies:
     detect-newline "^2.1.0"
     import-sort-parser "^5.0.0"
