@@ -5,6 +5,11 @@ v1.9.0
 - `dict()` is like `mapping()`, but will return an object rather than a Map
   instance, which may be more convenient to handle in most cases.
 
+**Breaking:**
+
+- `optional(..., /* allowNull */ true)` has been removed (was deprecated since
+  1.8.3)
+
 
 v1.8.3
 ------

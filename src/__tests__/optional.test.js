@@ -18,24 +18,6 @@ describe('optional', () => {
         }
     });
 
-    it('allowNull', () => {
-        const decoder2 = optional(string, /* allowNull */ true);
-
-        // No difference when decoding undefined
-        expect(decoder(undefined).unwrap()).toBeUndefined();
-        expect(decoder(undefined).unwrap()).toBeUndefined();
-
-        // No difference when string-decoding
-        expect(decoder('').unwrap()).toBe('');
-        expect(decoder('foo').unwrap()).toBe('foo');
-        expect(decoder2('').unwrap()).toBe('');
-        expect(decoder2('foo').unwrap()).toBe('foo');
-
-        // However, when decoding null, the default fails, but the other one succeeds
-        expect(() => decoder(null).unwrap()).toThrow();
-        expect(decoder2(null).unwrap()).toBeUndefined(); // Even though input is "null", output is "undefined"
-    });
-
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
