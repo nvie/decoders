@@ -6,7 +6,7 @@ import { Err, Ok } from 'lemons';
 
 import { pojo } from './object';
 import type { Decoder } from './types';
-import { compose } from './utils';
+import { compose, map } from './utils';
 
 /**
  * Given an object, will decode a Map of string keys to whatever values.
@@ -53,4 +53,19 @@ export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
             }
         }
     );
+}
+
+function mapToObject<T>(mapping: Map<string, T>): { [string]: T } {
+    const result: { [string]: T } = {};
+    for (const [k, v] of mapping.entries()) {
+        result[k] = v;
+    }
+    return result;
+}
+
+/**
+ * Like mapping(), but returns an object rather than a Map instance.
+ */
+export function dict<T>(decoder: Decoder<T>): Decoder<{ [string]: T }> {
+    return map(mapping(decoder), mapToObject);
 }

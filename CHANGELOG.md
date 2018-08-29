@@ -1,3 +1,11 @@
+v1.9.0
+------
+**New decoder:**
+
+- `dict()` is like `mapping()`, but will return an object rather than a Map
+  instance, which may be more convenient to handle in most cases.
+
+
 v1.8.3
 ------
 **New decoder:**

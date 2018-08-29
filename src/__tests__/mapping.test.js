@@ -1,7 +1,7 @@
 // @flow strict
 
 import { guard } from '../guard';
-import { mapping } from '../mapping';
+import { dict, mapping } from '../mapping';
 import { object } from '../object';
 import { string } from '../string';
 
@@ -12,6 +12,27 @@ describe('mappings', () => {
         const input = { '18': { name: 'foo' }, '23': { name: 'bar' }, key: { name: 'value' } };
         const output = new Map([['18', { name: 'foo' }], ['23', { name: 'bar' }], ['key', { name: 'value' }]]);
         expect(decoder(input).unwrap()).toEqual(output);
+    });
+
+    it('invalid', () => {
+        expect(() => guard(decoder)('foo')).toThrow('Must be an object');
+        expect(() => guard(decoder)({ foo: 1 })).toThrow('Must be an object');
+        expect(() => guard(decoder)({ foo: {} })).toThrow('Missing key: "name"');
+        expect(() =>
+            guard(decoder)({
+                '124': { invalid: true },
+                '125': { name: 'bar' },
+            })
+        ).toThrow('Missing key: "name"');
+    });
+});
+
+describe('dicts', () => {
+    const decoder = dict(object({ name: string }));
+
+    it('valid', () => {
+        const input = { '18': { name: 'foo' }, '23': { name: 'bar' }, key: { name: 'value' } };
+        expect(decoder(input).unwrap()).toEqual(input);
     });
 
     it('invalid', () => {
