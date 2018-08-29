@@ -451,7 +451,7 @@ mydecoder({ x: 1 })              // DecodeError (Missing key: "y")
 
 ---
 
-<a name="mapping" href="#mapping">#</a> <b>mapping</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;Map&lt;string, T&gt;&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/map.js "Source")
+<a name="mapping" href="#mapping">#</a> <b>mapping</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;Map&lt;string, T&gt;&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/mapping.js "Source")
 
 Returns a decoder capable of decoding **Map instances of strings-to-T's**
 , provided that you already have a decoder for <i>T</i>.
@@ -473,6 +473,32 @@ mydecoder({
     ['2', { name: "Bob" }],
     ['3', { name: "Charlie" }],
 ])
+```
+
+
+---
+
+<a name="dict" href="#dict">#</a> <b>dict</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;{ [string]: &lt;T&gt;}&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/mapping.js "Source")
+
+Like `mapping()`, but returns an object instead of a `Map` instance.
+
+```javascript
+const mydecoder = guard(mapping(person));  // Assume you have a "person" decoder already
+mydecoder({
+    "1": { name: "Alice" },
+    "2": { name: "Bob" },
+    "3": { name: "Charlie" },
+})
+```
+
+Would equal:
+
+```javascript
+{
+    "1": { name: "Alice" },
+    "2": { name: "Bob" },
+    "3": { name: "Charlie" },
+}
 ```
 
 
