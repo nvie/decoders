@@ -362,7 +362,7 @@ Returns a decoder capable of decoding **either a value of type <i>T</i>, or
 <i>T</i>.
 
 ```javascript
-const mydecoder = guard(nullable(string));
+const mydecoder = guard(maybe(string));
 mydecoder('hello') === 'hello'
 mydecoder(null) === null
 mydecoder(undefined) === undefined
