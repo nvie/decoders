@@ -1,6 +1,6 @@
 {
   "name": "decoders",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "description": "Elm-like decoders for when working with Flow types in JS",
   "main": "lib/index.js",
   "files": [
