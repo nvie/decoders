@@ -3,13 +3,15 @@
   "version": "1.10.0",
   "description": "Elm-like decoders for when working with Flow types in JS",
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "files": [
     "lib/"
   ],
   "scripts": {
-    "build": "yarn run build:clean && yarn run build:lib && yarn run build:flow",
+    "build": "yarn run build:clean && yarn run build:lib && yarn run build:typescript && yarn run build:flow",
     "build:clean": "rimraf lib",
     "build:flow": "flow-copy-source -v -i '**/__tests__/**' src lib",
+    "build:typescript": "find src -iname '*.d.ts' -exec cp -v '{}' lib ';'",
     "build:lib": "babel -d lib src --ignore '**/__tests__/**'",
     "check": "yarn run check:eslint && yarn run check:prettier && yarn run check:import-sort",
     "check:eslint": "eslint --report-unused-disable-directives src",

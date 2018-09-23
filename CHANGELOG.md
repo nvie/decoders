@@ -1,7 +1,11 @@
-v1.10.0
+v1.10.1
 -------
 
 - TypeScript support
+
+
+v1.10.0
+-------
 
 **Breaking:**
 
