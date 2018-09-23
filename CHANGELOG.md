@@ -1,7 +1,7 @@
-v?.??.?
+v1.10.0
 -------
 
-- TypeScript support?
+- TypeScript support
 
 **Breaking:**
 
