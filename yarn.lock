@@ -1493,9 +1493,9 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
-debrief@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/debrief/-/debrief-1.1.0.tgz#50920c8c47d850be37edd2a9413ec946bfbb9732"
+debrief@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/debrief/-/debrief-1.2.0.tgz#9b3716de8c29d1afb8507492beec4385a8f5b3ae"
   dependencies:
     babel-runtime "^6.26.0"
 
@@ -3408,9 +3408,9 @@ left-pad@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/left-pad/-/left-pad-1.2.0.tgz#d30a73c6b8201d8f7d8e7956ba9616087a68e0ee"
 
-lemons@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/lemons/-/lemons-1.2.0.tgz#06ed02e7622c03501c2fd088e05147ab7652fb47"
+lemons@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/lemons/-/lemons-1.3.1.tgz#c1415d05f6ab5321418d3f472819e4ba1ffcfb29"
 
 leven@^2.1.0:
   version "2.1.0"
