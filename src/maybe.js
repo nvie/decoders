@@ -11,7 +11,7 @@ import type { Decoder, anything } from './types';
  * This is equivalent to either(null_, undefined_), but combines their error
  * message output into a single line.
  */
-export const undefined_or_null: Decoder<null | void> = (blob: anything) =>
+const undefined_or_null: Decoder<null | void> = (blob: anything) =>
     blob === undefined || blob === null
         ? Ok(blob)
         : // Combine error message into a single line
