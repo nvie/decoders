@@ -1,3 +1,14 @@
+v?.??.?
+-------
+
+- TypeScript support?
+
+**Breaking:**
+
+- Private helper function `undefined_or_null` was accidentally exported in the
+  package.  This is a private API.
+
+
 v1.9.0
 ------
 **New decoder:**
