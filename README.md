@@ -277,10 +277,13 @@ mydecoder(undefined) === 2.1
 ---
 
 <a name="mixed" href="#mixed">#</a> <b>mixed</b>(): <i>Decoder&lt;mixed&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/constants.js "Source")
+<a name="unknown" href="#unknown">#</a> <b>unknown</b>(): <i>Decoder&lt;unknown&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/constants.js "Source")
 
 Returns a decoder that will simply pass through any input value, never fails.
 This effectively returns a `Decoder<mixed>`, which is not that useful.  **Use
 sparingly.**
+
+Same as `unknown` in TypeScript.
 
 ```javascript
 const mydecoder = guard(mixed);
