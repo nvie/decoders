@@ -1,3 +1,11 @@
+v1.10.2
+-------
+**New decoder:**
+
+- `unknown` decoder is an alias of `mixed`, which may be more recognizable for
+  TypeScript users.
+
+
 v1.10.1
 -------
 
