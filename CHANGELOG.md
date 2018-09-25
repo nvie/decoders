@@ -1,3 +1,9 @@
+v1.10.4
+-------
+
+- Drop dependency on babel-runtime to reduce bundle size
+
+
 v1.10.3
 -------
 
