@@ -1,3 +1,14 @@
+v1.10.3
+-------
+
+- Tuple decoder error messages now show decoder errors in all positions, not
+  just the first occurrence.
+
+**New decoders:**
+
+- New tuple decoders: `tuple3`, `tuple4`, `tuple5`, and `tuple6`
+
+
 v1.10.2
 -------
 **New decoder:**
