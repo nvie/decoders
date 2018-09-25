@@ -1,3 +1,9 @@
+v1.10.3
+-------
+
+- Fix minor declaration issue in TypeScript definitions
+
+
 v1.10.2
 -------
 
