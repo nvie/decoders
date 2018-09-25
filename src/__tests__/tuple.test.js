@@ -2,7 +2,7 @@
 
 import { number } from '../number';
 import { string } from '../string';
-import { tuple2 } from '../tuple';
+import { tuple2, tuple3, tuple4, tuple5, tuple6 } from '../tuple';
 
 describe('tuples', () => {
     it('tuple2', () => {
@@ -20,5 +20,61 @@ describe('tuples', () => {
         expect(decoder([]).isErr()).toBe(true);
         expect(decoder(['foo']).isErr()).toBe(true);
         expect(decoder(['foo', 42, true]).isErr()).toBe(true);
+    });
+
+    it('tuple3', () => {
+        const decoder = tuple3(number, number, number);
+        expect(decoder([1, 2, 3]).isOk()).toBe(true);
+        expect(decoder([]).isErr()).toBe(true);
+        expect(decoder([1]).isErr()).toBe(true);
+        expect(decoder([1, 2]).isErr()).toBe(true);
+        expect(decoder([1, 2, 'foo']).isErr()).toBe(true);
+        expect(decoder([1, 'foo', 2]).isErr()).toBe(true);
+        expect(decoder(['foo', 1, 2]).isErr()).toBe(true);
+    });
+
+    it('tuple4', () => {
+        const decoder = tuple4(number, number, number, number);
+        expect(decoder([1, 2, 3, 4]).isOk()).toBe(true);
+        expect(decoder([]).isErr()).toBe(true);
+        expect(decoder([1]).isErr()).toBe(true);
+        expect(decoder([1, 2]).isErr()).toBe(true);
+        expect(decoder([1, 2, 3]).isErr()).toBe(true);
+        expect(decoder([1, 2, 3, 'foo']).isErr()).toBe(true);
+        expect(decoder([1, 2, 'foo', 3]).isErr()).toBe(true);
+        expect(decoder([1, 'foo', 2, 3]).isErr()).toBe(true);
+        expect(decoder(['foo', 1, 2, 3]).isErr()).toBe(true);
+    });
+
+    it('tuple5', () => {
+        const decoder = tuple5(number, number, number, number, number);
+        expect(decoder([1, 2, 3, 4, 5]).isOk()).toBe(true);
+        expect(decoder([]).isErr()).toBe(true);
+        expect(decoder([1]).isErr()).toBe(true);
+        expect(decoder([1, 2]).isErr()).toBe(true);
+        expect(decoder([1, 2, 3]).isErr()).toBe(true);
+        expect(decoder([1, 2, 3, 4]).isErr()).toBe(true);
+        expect(decoder([1, 2, 3, 4, 'foo']).isErr()).toBe(true);
+        expect(decoder([1, 2, 3, 'foo', 4]).isErr()).toBe(true);
+        expect(decoder([1, 2, 'foo', 3, 4]).isErr()).toBe(true);
+        expect(decoder([1, 'foo', 2, 3, 4]).isErr()).toBe(true);
+        expect(decoder(['foo', 1, 2, 3, 4]).isErr()).toBe(true);
+    });
+
+    it('tuple6', () => {
+        const decoder = tuple6(number, number, number, number, number, number);
+        expect(decoder([1, 2, 3, 4, 5, 6]).isOk()).toBe(true);
+        expect(decoder([]).isErr()).toBe(true);
+        expect(decoder([1]).isErr()).toBe(true);
+        expect(decoder([1, 2]).isErr()).toBe(true);
+        expect(decoder([1, 2, 3]).isErr()).toBe(true);
+        expect(decoder([1, 2, 3, 4]).isErr()).toBe(true);
+        expect(decoder([1, 2, 3, 4, 5]).isErr()).toBe(true);
+        expect(decoder([1, 2, 3, 4, 5, 'foo']).isErr()).toBe(true);
+        expect(decoder([1, 2, 3, 4, 'foo', 5]).isErr()).toBe(true);
+        expect(decoder([1, 2, 3, 'foo', 4, 5]).isErr()).toBe(true);
+        expect(decoder([1, 2, 'foo', 3, 4, 5]).isErr()).toBe(true);
+        expect(decoder([1, 'foo', 2, 3, 4, 5]).isErr()).toBe(true);
+        expect(decoder(['foo', 1, 2, 3, 4, 5]).isErr()).toBe(true);
     });
 });

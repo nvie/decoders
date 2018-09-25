@@ -37,6 +37,6 @@ export { integer, number, positiveInteger, positiveNumber } from './number';
 export { exact, field, object, pojo } from './object';
 export { optional } from './optional';
 export { email, regex, string, url } from './string';
-export { tuple2 } from './tuple';
+export { tuple2, tuple3, tuple4, tuple5, tuple6 } from './tuple';
 
 export type { Guard, Decoder };
