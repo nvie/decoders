@@ -2,18 +2,20 @@
 [![Build Status](https://img.shields.io/travis/nvie/decoders/master.svg)](https://travis-ci.org/nvie/decoders)
 [![Coverage Status](https://img.shields.io/coveralls/nvie/decoders/master.svg)](https://coveralls.io/github/nvie/decoders?branch=master)
 
-Elm-like decoders for use with Flow in JS.
+Type-safe data verification (inspired by Elm’s decoders, hence the name) for
+use with Flow or TypeScript.
 
-See http://elmplayground.com/decoding-json-in-elm-1 for an introduction.
+See https://nvie.com/posts/introducing-decoders/ for an introduction.
 
 ## Why?
 
-If you're using Flow to statically typecheck your JavaScript, you'll know that
-any JSON data coming from the outside is essentially free-form and untyped.  In
-order to validate and enforce the correct shape of that data, you'll need
-"decoders".
+If you're using Flow or TypeScript to statically typecheck your JavaScript,
+you'll know that any data coming from outside your program’s boundaries is
+essentially untyped and unsafe.  "Decoders" can help to validate and enforce
+the correct shape of that data.
 
-For example, imagine your app expects a list of points in a JSON response:
+For example, imagine your app expects a list of points in an incoming HTTP
+request:
 
 ```javascript
 {
