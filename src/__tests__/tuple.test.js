@@ -10,6 +10,7 @@ describe('tuples', () => {
         expect(decoder(['foo', 42]).unwrap()).toEqual(['foo', 42]);
         expect(decoder(['foo', 'bar']).isErr()).toBe(true);
         expect(decoder([42, 'foo']).isErr()).toBe(true);
+        expect(decoder([42, 13]).isErr()).toBe(true);
 
         // Invalid
         expect(decoder('not an array').isErr()).toBe(true);
