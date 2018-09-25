@@ -1,4 +1,4 @@
-v1.10.3
+v1.10.2
 -------
 
 - Tuple decoder error messages now show decoder errors in all positions, not
@@ -7,12 +7,6 @@ v1.10.3
 **New decoders:**
 
 - New tuple decoders: `tuple3`, `tuple4`, `tuple5`, and `tuple6`
-
-
-v1.10.2
--------
-**New decoder:**
-
 - `unknown` decoder is an alias of `mixed`, which may be more recognizable for
   TypeScript users.
 
