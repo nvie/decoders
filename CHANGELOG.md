@@ -1,3 +1,9 @@
+v1.10.5
+-------
+
+- Update to latest debrief (which fixes a TypeScript bug)
+
+
 v1.10.4
 -------
 
