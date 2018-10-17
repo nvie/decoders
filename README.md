@@ -129,7 +129,7 @@ mydecoder(123)             // DecodeError
 Returns a decoder capable of decoding string values that match the given regular expression.
 
 ```javascript
-const mydecoder = guard(regex(/^[0-9]+$/);
+const mydecoder = guard(regex(/^[0-9]+$/));
 mydecoder('12345') === '12345'
 mydecoder('foo')           // DecodeError
 ```
