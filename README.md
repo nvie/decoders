@@ -1,6 +1,7 @@
 [![npm](https://img.shields.io/npm/v/decoders.svg)](https://www.npmjs.com/package/decoders)
 [![Build Status](https://img.shields.io/travis/nvie/decoders/master.svg)](https://travis-ci.org/nvie/decoders)
 [![Coverage Status](https://img.shields.io/coveralls/nvie/decoders/master.svg)](https://coveralls.io/github/nvie/decoders?branch=master)
+[![Minified Size](https://badgen.net/bundlephobia/minzip/decoders)](https://bundlephobia.com/result?p=decoders)
 
 Type-safe data verification (inspired by Elm’s decoders, hence the name) for
 use with Flow or TypeScript.
