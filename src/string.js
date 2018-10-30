@@ -57,7 +57,7 @@ export const email = regex(
  * - url(['http'])              accepts only HTTP
  * - url(['https', 'git+ssh'])  accepts both https:// and git+ssh:// URLs
  */
-export const url = (schemes: Array<string> = DEFAULT_SCHEMES) =>
+export const url = (schemes: Array<string> = DEFAULT_SCHEMES): Decoder<string> =>
     compose(
         string,
         (value: string) => {
