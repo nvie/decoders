@@ -1,6 +1,4 @@
-<div align="center">
-  <img alt="Decoders logo" src="./img/logo@2x.png" width="330" height="64"><br>
-</div>
+<img alt="Decoders logo" src="./img/logo@2x.png" width="330" height="64" /><br />
 
 [![npm](https://img.shields.io/npm/v/decoders.svg)](https://www.npmjs.com/package/decoders)
 [![Build Status](https://img.shields.io/travis/nvie/decoders/master.svg)](https://travis-ci.org/nvie/decoders)
