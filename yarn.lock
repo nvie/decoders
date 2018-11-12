@@ -5745,9 +5745,9 @@ unset-value@^1.0.0:
     isobject "^3.0.0"
 
 unzipper@^0.8.11:
-  version "0.8.11"
-  resolved "https://registry.yarnpkg.com/unzipper/-/unzipper-0.8.11.tgz#894383dc6b4bdab944e446f665a82d40d167fbd4"
-  integrity sha1-iUOD3GtL2rlE5Eb2ZagtQNFn+9Q=
+  version "0.8.14"
+  resolved "https://registry.yarnpkg.com/unzipper/-/unzipper-0.8.14.tgz#ade0524cd2fc14d11b8de258be22f9d247d3f79b"
+  integrity sha512-8rFtE7EP5ssOwGpN2dt1Q4njl0N1hUXJ7sSPz0leU2hRdq6+pra57z4YPBlVqm40vcgv6ooKZEAx48fMTv9x4w==
   dependencies:
     big-integer "^1.6.17"
     binary "~0.3.0"
