@@ -1709,7 +1709,7 @@ debug@3.1.0, debug@^3.1.0:
   dependencies:
     ms "2.0.0"
 
-debug@^2.2.0, debug@^2.3.3, debug@^2.6.9:
+debug@^2.2.0, debug@^2.3.3, debug@^2.6.8, debug@^2.6.9:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
   integrity sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==
@@ -1980,9 +1980,9 @@ eslint-visitor-keys@^1.0.0:
   integrity sha512-qzm/XxIbxm/FHyH341ZrbnMUpe+5Bocte9xkmFMzPMjRaZMcXww+MpBptFvtU+79L362nqiLhekCxCxDPaUMBQ==
 
 eslint@^5.0.0, eslint@^5.1.0:
-  version "5.10.0"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-5.10.0.tgz#24adcbe92bf5eb1fc2d2f2b1eebe0c5e0713903a"
-  integrity sha512-HpqzC+BHULKlnPwWae9MaVZ5AXJKpkxCVXQHrFaRw3hbDj26V/9ArYM4Rr/SQ8pi6qUPLXSSXC4RBJlyq2Z2OQ==
+  version "5.11.0"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-5.11.0.tgz#51a0e70f137a425fe044cd48273b96f28a774b1f"
+  integrity sha512-gbEg0ttToZPkZUv2yYjpipxuYrv/9aSSmgM4V6GkiO3u04QosHYBtduUCqLEulEg3YvNDAkk3OWzyQJ/heZ3Nw==
   dependencies:
     "@babel/code-frame" "^7.0.0"
     ajv "^6.5.3"
@@ -2554,6 +2554,11 @@ globals@^11.7.0:
   version "11.7.0"
   resolved "https://registry.yarnpkg.com/globals/-/globals-11.7.0.tgz#a583faa43055b1aca771914bf68258e2fc125673"
   integrity sha512-K8BNSPySfeShBQXsahYB/AbbWruVOTyVpgoIDnl8odPpeSfP2J5QO2oLFFdl2j7GfDCtZj2bMKar2T49itTPCg==
+
+globals@^9.18.0:
+  version "9.18.0"
+  resolved "https://registry.yarnpkg.com/globals/-/globals-9.18.0.tgz#aa3896b3e69b487f17e31ed2143d69a8e30c2d8a"
+  integrity sha512-S0nG3CLEQiY/ILxqtztTWH/3iRRdyBLw6KMDxnKMchrtbj2OFmehVh0WUCfW3DUrIgx/qFrJPICrq4Z4sTR9UQ==
 
 globby@^5.0.0:
   version "5.0.0"
