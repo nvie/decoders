@@ -2,10 +2,10 @@
 
 import { serialize } from 'debrief';
 
-import type { Decoder, Guard, anything } from './types';
+import type { Decoder, Guard } from './types';
 
 export function guard<T>(decoder: Decoder<T>): Guard<T> {
-    return (blob: anything) =>
+    return (blob: mixed) =>
         decoder(blob)
             .mapError(annotation => {
                 const err = new Error('\n' + serialize(annotation));

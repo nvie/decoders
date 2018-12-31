@@ -4,7 +4,7 @@ import { annotate, indent } from 'debrief';
 import { summarize } from 'debrief';
 import { Err, Ok } from 'lemons';
 
-import type { Decoder, anything } from './types';
+import type { Decoder } from './types';
 
 /**
  * Indents and adds a dash in front of this (potentially multiline) string.
@@ -15,7 +15,7 @@ function itemize(s: string = ''): string {
 }
 
 export function either<T1, T2>(d1: Decoder<T1>, d2: Decoder<T2>): Decoder<T1 | T2> {
-    return (blob: anything) =>
+    return (blob: mixed) =>
         d1(blob).dispatch(
             value1 => Ok(value1),
             err1 =>

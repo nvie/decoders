@@ -1,6 +1,6 @@
 // @flow strict
 
-import type { Decoder, anything } from './types';
+import type { Decoder } from './types';
 
 /**
  * Given a function that takes a base decoder whose value will be passed to
@@ -41,7 +41,7 @@ import type { Decoder, anything } from './types';
  *     );
  */
 export function dispatch<T, V>(base: Decoder<T>, next: T => Decoder<V>): Decoder<V> {
-    return (blob: anything) =>
+    return (blob: mixed) =>
         // We'll dispatch on this value
         base(blob).andThen(value =>
             // Now dispatch on the value by passing in T, and then invoking

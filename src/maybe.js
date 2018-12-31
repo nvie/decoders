@@ -4,14 +4,14 @@ import { annotate } from 'debrief';
 import { Err, Ok } from 'lemons';
 
 import { either } from './either';
-import type { Decoder, anything } from './types';
+import type { Decoder } from './types';
 
 /**
  * Decoder that only returns Ok for `null` or `undefined` inputs.
  * This is equivalent to either(null_, undefined_), but combines their error
  * message output into a single line.
  */
-const undefined_or_null: Decoder<null | void> = (blob: anything) =>
+const undefined_or_null: Decoder<null | void> = (blob: mixed) =>
     blob === undefined || blob === null
         ? Ok(blob)
         : // Combine error message into a single line

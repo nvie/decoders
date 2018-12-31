@@ -3,7 +3,7 @@
 import { annotate } from 'debrief';
 import { Err, Ok } from 'lemons';
 
-import type { Decoder, anything } from './types';
+import type { Decoder } from './types';
 import { compose, predicate } from './utils';
 
 /** Match groups in this regex:
@@ -21,7 +21,7 @@ const DEFAULT_SCHEMES = ['https'];
 /**
  * Decoder that only returns Ok for string inputs.  Err otherwise.
  */
-export const string: Decoder<string> = (blob: anything) => {
+export const string: Decoder<string> = (blob: mixed) => {
     return typeof blob === 'string' ? Ok(blob) : Err(annotate(blob, 'Must be string'));
 };
 

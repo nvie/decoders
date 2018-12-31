@@ -4,13 +4,16 @@ import { annotate, annotateFields, isAnnotation } from 'debrief';
 import type { Annotation } from 'debrief';
 import { Err, Ok } from 'lemons';
 
-import type { Decoder, anything } from './types';
+import type { Decoder } from './types';
 import { compose, isDate } from './utils';
+
+// $FlowIgnore - deliberate use of `any` - not sure how we should get rid of this
+type anything = any;
 
 // $FlowIgnore: we're deliberately casting
 type cast = any;
 
-function isObject(o: anything): boolean %checks {
+function isObject(o: mixed): boolean %checks {
     return o !== null && typeof o === 'object' && !Array.isArray(o) && !isDate(o);
 }
 
@@ -25,7 +28,7 @@ function subtract(xs: Set<string>, ys: Set<string>): Set<string> {
 }
 
 // $FlowIgnore: deliberate use of Object here
-export const pojo: Decoder<Object> = (blob: anything) => {
+export const pojo: Decoder<Object> = (blob: mixed) => {
     return isObject(blob) ? Ok(blob) : Err(annotate(blob, 'Must be an object'));
 };
 
