@@ -24,6 +24,13 @@ export const NUMBERS = [
 ];
 
 // prettier-ignore
+export const SPECIAL_NUMBERS = [
+    NaN,
+    Number.NEGATIVE_INFINITY,
+    Number.POSITIVE_INFINITY,
+];
+
+// prettier-ignore
 export const DATES = [
     new Date('1996-3-17'),
     new Date(1534521367000),
@@ -32,10 +39,8 @@ export const DATES = [
 ];
 
 // prettier-ignore
-export const SPECIAL_NUMBERS = [
-    NaN,
-    Number.NEGATIVE_INFINITY,
-    Number.POSITIVE_INFINITY,
+export const SPECIAL_DATES = [
+    new Date('not a date'),
 ];
 
 // prettier-ignore
@@ -54,8 +59,9 @@ export const CONSTANTS = [
 export const INPUTS = [
     ...STRINGS,
     ...NUMBERS,
-    ...DATES,
     ...SPECIAL_NUMBERS,
+    ...DATES,
+    ...SPECIAL_DATES,
     ...BOOLS,
     ...CONSTANTS,
 ];
