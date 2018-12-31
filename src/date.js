@@ -1,9 +1,10 @@
 // @flow strict
 
-import type { Decoder } from './types';
-import { isDate } from './utils';
 import { annotate } from 'debrief';
 import { Err, Ok } from 'lemons';
+
+import type { Decoder } from './types';
+import { isDate } from './utils';
 
 // $FlowIgnore - deliberate casting
 type cast = any;
