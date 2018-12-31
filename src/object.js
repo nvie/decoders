@@ -4,7 +4,7 @@ import { annotate, annotateFields, isAnnotation } from 'debrief';
 import type { Annotation } from 'debrief';
 import { Err, Ok } from 'lemons';
 
-import type { Decoder } from './types';
+import type { Decoder, $DecoderType } from './types';
 import { compose, isDate } from './utils';
 
 // $FlowIgnore - deliberate use of `any` - not sure how we should get rid of this
@@ -33,13 +33,6 @@ export const pojo: Decoder<Object> = (blob: mixed) => {
 };
 
 /**
- * A "type function" which informs Flow about how a type will be modified at runtime.
- * Read this as "given a Guard of type T, I can produce a value of type T".  This
- * definition helps construct $ObjMap types.
- */
-type UnwrapDecoder = <T>(Decoder<T>) => T;
-
-/**
  * Given a mapping of fields-to-decoders, builds a decoder for an object type.
  *
  * For example, given decoders for a number and a string, we can construct an
@@ -58,7 +51,7 @@ type UnwrapDecoder = <T>(Decoder<T>) => T;
  * Put simply: it'll "peel off" all of the nested Decoders, puts them together
  * in an object, and wraps it in a Guard<...>.
  */
-export function object<O: { +[field: string]: Decoder<anything> }>(mapping: O): Decoder<$ObjMap<O, UnwrapDecoder>> {
+export function object<O: { +[field: string]: Decoder<anything> }>(mapping: O): Decoder<$ObjMap<O, $DecoderType>> {
     const known = new Set(Object.keys(mapping));
     return compose(
         pojo,
@@ -136,7 +129,7 @@ export function object<O: { +[field: string]: Decoder<anything> }>(mapping: O): 
 
 export function exact<O: { +[field: string]: Decoder<anything> }>(
     mapping: O
-): Decoder<$Exact<$ObjMap<O, UnwrapDecoder>>> {
+): Decoder<$Exact<$ObjMap<O, $DecoderType>>> {
     // Check the inputted object for any superfluous keys
     const allowed = new Set(Object.keys(mapping));
     const checked = compose(
@@ -155,7 +148,7 @@ export function exact<O: { +[field: string]: Decoder<anything> }>(
     // Defer to the "object" decoder for doing the real decoding work.  Since
     // we made sure there are no superfluous keys in this structure, it's now
     // safe to force-cast it to an $Exact<> type.
-    const decoder = ((object(mapping): cast): Decoder<$Exact<$ObjMap<O, UnwrapDecoder>>>);
+    const decoder = ((object(mapping): cast): Decoder<$Exact<$ObjMap<O, $DecoderType>>>);
     return compose(
         checked,
         decoder

@@ -6,6 +6,8 @@ v1.11.0
 - Decoders now all take `mixed` (TypeScript: `unknown`) arguments, instead of
   `any`.  This ensures that the proper type refinements in the implementation
   of your decoder are made.  (See migration notes below.)
+- Export `$DecoderType` utility type so it can be used outside of the decoders
+  library.
 - Invalid dates (e.g. `new Date('not a date')`) won't be considered valid by
   the `date` decoder anymore.
 

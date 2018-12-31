@@ -1,4 +1,4 @@
-import { Decoder, Guard } from './types';
+import { $DecoderType, Decoder, Guard } from './types';
 
 export { guard } from './guard';
 export { compose, map, predicate } from './utils';
@@ -19,4 +19,4 @@ export { optional } from './optional';
 export { email, regex, string, url } from './string';
 export { tuple2, tuple3, tuple4, tuple5, tuple6 } from './tuple';
 
-export { Guard, Decoder };
+export { $DecoderType, Decoder, Guard };

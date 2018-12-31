@@ -1,6 +1,8 @@
 import { Annotation } from 'debrief';
 import { Result } from 'lemons';
 
+export type $DecoderType<T> = T extends Decoder<infer V> ? V : any;
+
 export interface Guard<T> {
   (blob: unknown): T;
 }

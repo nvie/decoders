@@ -3,6 +3,13 @@
 import type { Annotation } from 'debrief';
 import { Result } from 'lemons';
 
+/**
+ * A "type function" which informs Flow about how a type will be modified at runtime.
+ * Read this as "given a Guard of type T, I can produce a value of type T".  This
+ * definition helps construct $ObjMap types.
+ */
+export type $DecoderType = <T>(Decoder<T>) => T;
+
 // NOTE:
 // Normally, we should not be discarding Flow warnings about the use of the
 // "any" type.  But in the case of decoders, it's the very purpose of the
