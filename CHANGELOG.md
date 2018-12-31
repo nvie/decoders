@@ -1,3 +1,42 @@
+v1.11.0
+-------
+
+**Potentially breaking changes:**
+
+- Decoders now all take `mixed` (TypeScript: `unknown`) arguments, instead of
+  `any`.  This ensures that the proper type refinements in the implementation
+  of your decoder are made.  (See migration notes below.)
+- Invalid dates (e.g. `new Date('not a date')`) won't be considered valid by
+  the `date` decoder anymore.
+
+
+**Migration notes:**
+
+If you wrote any custom decoders of this form:
+
+```javascript
+const mydecoder = (blob: any) => ...
+```
+
+You should now convert those to:
+
+```javascript
+const mydecoder = (blob: mixed) => ...
+//                       ^^^^^ Decoder arguments must be `mixed` from now on
+```
+
+Or, for TypeScript:
+
+```javascript
+const mydecoder = (blob: unknown) => ...
+//                       ^^^^^^^ Decoder arguments must be `unknown` from now on
+```
+
+For certain edge cases where type refinement alone is not enough to make Flow
+checks pass, you can still manually force-cast the type of the blob.  (But use
+this sparingly -- you likely don't need this.)
+
+
 v1.10.6
 -------
 
