@@ -3,3 +3,7 @@
 /node_modules
 
 yarn-error.log
+
+# TypeScript test run output
+# TODO: Is there a way to avoid this file from being written and instead "just typecheck"?
+src/__tests__/typescript-tests.js
