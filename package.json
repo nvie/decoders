@@ -22,8 +22,9 @@
     "fix:prettier": "prettier --write 'src/**/*.js'",
     "prepublish": "in-publish && yarn run actually-prepublish || not-in-publish",
     "actually-prepublish": "yarn run build:clean && yarn run test && yarn run build",
-    "test": "yarn run test:flow && yarn run test:jest && yarn run check",
+    "test": "yarn run test:flow && yarn run test:typescript && yarn run test:jest && yarn run check",
     "test:flow": "flow check",
+    "test:typescript": "tsc --lib es6 src/__tests__/typescript-tests.ts",
     "test:jest": "jest --coverage",
     "watch": "jest --watch"
   },
@@ -85,7 +86,8 @@
     "jest": "^23.4.1",
     "jest-cli": "^23.4.1",
     "prettier": "^1.13.7",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "typescript": "^3.2.2"
   },
   "dependencies": {
     "debrief": "^1.2.4",
