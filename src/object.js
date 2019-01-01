@@ -4,7 +4,7 @@ import { annotate, annotateFields, isAnnotation } from 'debrief';
 import type { Annotation } from 'debrief';
 import { Err, Ok } from 'lemons';
 
-import type { Decoder, $DecoderType } from './types';
+import type { $DecoderType, Decoder } from './types';
 import { compose, isDate } from './utils';
 
 // $FlowIgnore - deliberate use of `any` - not sure how we should get rid of this
