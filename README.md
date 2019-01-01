@@ -281,6 +281,22 @@ mydecoder(undefined) === 2.1
 
 ---
 
+<a name="fail" href="#fail">#</a> <b>fail</b>(): <i>Decoder&lt;empty&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/fail.js "Source")
+
+Returns a decoder that will always fail with the given error messages, no
+matter what the input.  May be useful for explicitly disallowing keys, or for
+testing purposes.
+
+```javascript
+const mydecoder = guard(object({ a: string, b: optional(fail('Key b has been removed')) })));
+mydecoder({ a: 'foo' }) === { a: 'foo' }
+mydecoder({ a: 'foo', c: 'bar' }) === { a: 'foo' }
+mydecoder({ a: 'foo', b: 'bar' })  // DecodeError
+```
+
+
+---
+
 <a name="mixed" href="#mixed">#</a> <b>mixed</b>(): <i>Decoder&lt;mixed&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/constants.js "Source")
 <a name="unknown" href="#unknown">#</a> <b>unknown</b>(): <i>Decoder&lt;unknown&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/constants.js "Source")
 
