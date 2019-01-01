@@ -22,9 +22,10 @@
     "fix:prettier": "prettier --write 'src/**/*.js'",
     "prepublish": "in-publish && yarn run actually-prepublish || not-in-publish",
     "actually-prepublish": "yarn run build:clean && yarn run test && yarn run build",
-    "test": "yarn run test:flow && yarn run test:typescript && yarn run test:jest && yarn run check",
+    "test": "yarn run test:flow && yarn run test:typescript && yarn run test:typescript:cleanup && yarn run test:jest && yarn run check",
     "test:flow": "flow check",
     "test:typescript": "tsc --lib es6 src/__tests__/typescript-tests.ts",
+    "test:typescript:cleanup": "rm src/__tests__/typescript-tests.js",
     "test:jest": "jest --coverage",
     "watch": "jest --watch"
   },
@@ -97,7 +98,8 @@
     "testPathIgnorePatterns": [
       "node_modules",
       "fixtures.js",
-      ".skip.js"
+      ".skip.js",
+      "typescript-tests"
     ]
   }
 }
