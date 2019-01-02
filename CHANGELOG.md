@@ -1,4 +1,4 @@
-v1.11.0 (alpha1)
+v1.11.0 (alpha2)
 ----------------
 
 **Potentially breaking changes:**
@@ -6,7 +6,7 @@ v1.11.0 (alpha1)
 - Decoders now all take `mixed` (TypeScript: `unknown`) arguments, instead of
   `any` 🎉 !  This ensures that the proper type refinements in the
   implementation of your decoder are made.  (See migration notes below.)
-- Invalid dates (e.g. `new Date('not a date')`) won't be considered valid by
+- Invalid dates (e.g. `new Date('not a date')`) won’t be considered valid by
   the `date` decoder anymore.
 
 **New features:**
@@ -27,29 +27,56 @@ v1.11.0 (alpha1)
 
 **Migration notes:**
 
-If you wrote any custom decoders of this form:
+If your decoder code breaks after upgrading to 1.11.0, please take the
+following measures to upgrade:
 
-```javascript
-const mydecoder = (blob: any) => ...
-```
+1. If you wrote any custom decoders of this form yourself:
+   
+   ```javascript
+   const mydecoder = (blob: any) => ...
+   //                       ^^^ Decoder function taking `any`
+   ```
+   
+   You should now convert those to:
+   
+   ```javascript
+   const mydecoder = (blob: mixed) => ...
+   //                       ^^^^^ Decoders should take `mixed` from now on
+   ```
+   
+   Or, for TypeScript:
+   
+   ```javascript
+   const mydecoder = (blob: unknown) => ...
+   //                       ^^^^^^^ `unknown` for TypeScript
+   ```
+   
+   Then follow and fix type errors that pop up because you were making
+   assumptions that are now caught by the type checker.
 
-You should now convert those to:
-
-```javascript
-const mydecoder = (blob: mixed) => ...
-//                       ^^^^^ Decoder arguments must be `mixed` from now on
-```
-
-Or, for TypeScript:
-
-```javascript
-const mydecoder = (blob: unknown) => ...
-//                       ^^^^^^^ Decoder arguments must be `unknown` from now on
-```
-
-For certain edge cases where type refinement alone is not enough to make Flow
-checks pass, you can still manually force-cast the type of the blob.  (But use
-this sparingly -- you likely don't need this.)
+2. If you wrote any decoders based on `predicate()`, you may have code like
+   this:
+   
+   ```javascript
+   const mydecoder: Decoder<string> = predicate(
+     s => s.startsWith('x'),
+     'Must start with "x"'
+   );
+   ```
+   
+   You'll have to change the explicit Decoder type of those to take two type
+   arguments:
+   
+   ```javascript
+   const mydecoder: Decoder<string, string> = predicate(
+   //                               ^^^^^^ Provide the input type to predicate() decoders
+     s => s.startsWith('x'),
+     'Must start with "x"'
+   );
+   ```
+   
+   This now explicitly records that `predicate()` makes assumptions about its
+   input type—previously this wasn’t get caught correctly.
 
 
 v1.10.6
