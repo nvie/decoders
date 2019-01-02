@@ -11,6 +11,12 @@ v1.11.0 (alpha1)
 
 **New features:**
 
+- `guard()` now takes a config option to control how to format error
+  messages.  This is done via the `guard(..., { style: 'inline' })` parameter.
+
+  - `'inline'`: echoes back the input value and inlines errors (default);
+  - `'simple'`: just returns the decoder errors.  Useful for use in sensitive contexts.
+
 - Export `$DecoderType` utility type so it can be used outside of the decoders
   library.
 

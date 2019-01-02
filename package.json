@@ -24,7 +24,7 @@
     "actually-prepublish": "yarn run build:clean && yarn run test && yarn run build",
     "test": "yarn run test:flow && yarn run test:typescript && yarn run test:typescript:cleanup && yarn run test:jest && yarn run check",
     "test:flow": "flow check",
-    "test:typescript": "tsc --lib es6 src/__tests__/typescript-tests.ts",
+    "test:typescript": "tsc",
     "test:typescript:cleanup": "rm src/__tests__/typescript-tests.js",
     "test:jest": "jest --coverage",
     "watch": "jest --watch"

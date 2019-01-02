@@ -1,3 +1,7 @@
 import { Decoder, Guard } from './types';
 
-export function guard<T>(decoder: Decoder<T>): Guard<T>;
+type Options = {
+    style?: 'inline' | 'simple', // `inline` by default
+};
+
+export function guard<T>(decoder: Decoder<T>, options?: Options);

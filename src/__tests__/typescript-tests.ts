@@ -76,5 +76,6 @@ guard(
         b2: date,
         b3: dict(string),
         b4: mapping(string),
-    })
+    }),
+    { style: 'simple' }
 )('blah');
