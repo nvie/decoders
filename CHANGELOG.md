@@ -1,5 +1,5 @@
-v1.11.0 (alpha2)
-----------------
+v1.11.0
+-------
 
 **Potentially breaking changes:**
 
