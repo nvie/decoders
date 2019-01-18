@@ -1674,10 +1674,10 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
-debrief@^1.2.4:
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/debrief/-/debrief-1.2.4.tgz#d4d33aaaf7a250906a97b2acc5201e33b6390651"
-  integrity sha512-BPSSNAKid1xWAtaB5IciG5HqVeZz7EYde4BQnDt5qQ5ZABSjAkgQ7FV90bBsUdCLzTVlA446q1MHblht92Bbpw==
+debrief@^1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/debrief/-/debrief-1.2.5.tgz#8f08674f5aa6a8b9b6fcaccc67ea77ccc7d63479"
+  integrity sha512-NqAbusP5FaN9EGhNNzmXraE2S45jytAIr1eXdsy/uOjG3czwEYxt9R9xkxBVS1/vfAXLsSjAEmeOMa9yfsAXyg==
 
 debug@3.1.0, debug@^3.1.0:
   version "3.1.0"
@@ -3873,10 +3873,10 @@ left-pad@^1.2.0:
   resolved "https://registry.yarnpkg.com/left-pad/-/left-pad-1.2.0.tgz#d30a73c6b8201d8f7d8e7956ba9616087a68e0ee"
   integrity sha1-0wpzxrggHY99jnlWupYWCHpo4O4=
 
-lemons@^1.3.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/lemons/-/lemons-1.3.1.tgz#c1415d05f6ab5321418d3f472819e4ba1ffcfb29"
-  integrity sha512-y33wVNr5+4lZV0cen9JJgrqxXfCmjvVrfOqmy07boz07EN8qy371k6thpkHaLjvlruDNkvOfyIoDNN32xS1PHw==
+lemons@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/lemons/-/lemons-1.4.0.tgz#78b16e975b20242d382a6d11826ddda6a3d275c9"
+  integrity sha512-e4+Pk4xLxzLBcEFb8vMNyCDW72vlDXyScbEK/kemiDzSbjZZtgGuUCmcK9PY1vYajT5inGAEPYqA66tAwTwJgg==
 
 leven@^2.1.0:
   version "2.1.0"

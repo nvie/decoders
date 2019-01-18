@@ -2,7 +2,7 @@
 
 import { annotate, annotateFields, isAnnotation } from 'debrief';
 import type { Annotation } from 'debrief';
-import { Err, Ok } from 'lemons';
+import { Err, Ok } from 'lemons/Result';
 
 import type { $DecoderType, Decoder } from './types';
 import { compose, isDate } from './utils';

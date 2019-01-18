@@ -1,7 +1,7 @@
 // @flow strict
 
 import type { Annotation } from 'debrief';
-import { Result } from 'lemons';
+import Result from 'lemons/Result';
 
 /**
  * A "type function" which informs Flow about how a type will be modified at runtime.

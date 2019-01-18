@@ -1,7 +1,7 @@
 // @flow strict
 
 import { annotate } from 'debrief';
-import { Err, Ok } from 'lemons';
+import { Err, Ok } from 'lemons/Result';
 
 import { guard } from '../guard';
 import { string } from '../string';

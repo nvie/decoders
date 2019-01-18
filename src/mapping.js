@@ -2,7 +2,7 @@
 
 import type { Annotation } from 'debrief';
 import { annotateFields, isAnnotation } from 'debrief';
-import { Err, Ok } from 'lemons';
+import { Err, Ok } from 'lemons/Result';
 
 import { pojo } from './object';
 import type { Decoder } from './types';
