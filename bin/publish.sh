@@ -40,7 +40,7 @@ if [ -n "$(GITHUB_URL)" ]; then
 fi
 
 if git is-dirty; then
-    git commit -m "Bump to $VERSION"
+    git commit -m "Bump to $VERSION" package.json
     git tag "v$VERSION"
     git push-current
     git push --tags
