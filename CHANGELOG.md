@@ -1,3 +1,11 @@
+v1.11.1
+-------
+
+- Reduce bundle size for web builds
+- New build system
+- Cleaner package output
+
+
 v1.11.0
 -------
 
