@@ -1,18 +1,16 @@
+
 {
   "name": "decoders",
   "version": "1.11.0",
   "description": "Elm-like decoders for when working with Flow types in JS",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
-    "lib/"
+    "dist/"
   ],
   "scripts": {
-    "build": "yarn run build:clean && yarn run build:lib && yarn run build:typescript && yarn run build:flow",
-    "build:clean": "rimraf lib",
-    "build:flow": "flow-copy-source -v -i '**/__tests__/**' src lib",
-    "build:typescript": "find src -iname '*.d.ts' -exec cp -v '{}' lib ';'",
-    "build:lib": "babel -d lib src --ignore '**/__tests__/**'",
+    "clean": "rimraf dist",
+    "build": "./bin/build.sh",
     "check": "yarn run check:eslint && yarn run check:prettier && yarn run check:import-sort",
     "check:eslint": "eslint --report-unused-disable-directives src",
     "check:import-sort": "import-sort --list-different 'src/**/*.js'",
@@ -21,8 +19,8 @@
     "fix:import-sort": "import-sort --write 'src/**/*.js'",
     "fix:prettier": "prettier --write 'src/**/*.js'",
     "prepublish": "in-publish && yarn run actually-prepublish || not-in-publish",
-    "actually-prepublish": "yarn run build:clean && yarn run test && yarn run build",
-    "test": "yarn run test:flow && yarn run test:typescript && yarn run test:typescript:cleanup && yarn run test:jest && yarn run check",
+    "actually-prepublish": "echo \"\\n\\nPlease run \\`bin/publish.sh <options>\\` instead.\\n\\n\" && exit 2",
+    "test": "yarn run clean && yarn run test:flow && yarn run test:typescript && yarn run test:typescript:cleanup && yarn run test:jest && yarn run check",
     "test:flow": "flow check",
     "test:typescript": "tsc",
     "test:typescript:cleanup": "rm src/__tests__/typescript-tests.js",
