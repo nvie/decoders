@@ -76,7 +76,7 @@
     "flow-bin": "^0.92.0",
     "flow-copy-source": "^2.0.1",
     "flow-typed": "^2.5.1",
-    "import-sort-cli": "^5.0.0",
+    "import-sort-cli": "^6.0.0",
     "import-sort-parser-babylon": "^5.0.0",
     "import-sort-style-eslint": "^5.0.0",
     "import-sort-style-module": "^5.0.0",
