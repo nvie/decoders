@@ -547,4 +547,30 @@ mydecoder('hello world') === 'hello world';
 mydecoder(123) === 123;
 mydecoder(false)     // DecodeError
 ```
- 
+
+
+
+<a name="oneOf" href="#oneOf">#</a> <b>oneOf</b><i>&lt;T&gt;</i>(<i>Array&lt;T&gt;</i>): <i>Decoder&lt;T&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/either.js "Source")<br />
+
+Returns a decoder capable of decoding values that are equal to any of the given
+constants.  The returned value will always be one of the given constants at
+runtime, but the return _type_ of this decoder will not be a union of
+constants, but a union of types, typically.
+
+```javascript
+const mydecoder = guard(oneOf(['foo', 'bar', 3]));
+mydecoder('foo') === 'foo';
+mydecoder(3) === 3;
+mydecoder('hello')   // DecodeError
+mydecoder(4)         // DecodeError
+mydecoder(false)     // DecodeError
+```
+
+For example, given an array of strings, like so:
+
+```javascript
+oneOf(['foo', 'bar'])
+```
+
+The return type here will be `Decoder<string>`, not `Decoder<('foo' | 'bar')>`.
+(To obtain the latter, use `either(constant('foo'), constant('bar'))` instead.)
