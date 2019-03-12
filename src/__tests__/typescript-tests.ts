@@ -24,6 +24,7 @@ import {
     number,
     numericBoolean,
     object,
+    oneOf,
     optional,
     poja,
     pojo,
@@ -76,6 +77,7 @@ guard(
         b2: date,
         b3: dict(string),
         b4: mapping(string),
+        b5: oneOf(['foo', 'bar']),
     }),
     { style: 'simple' }
 )('blah');

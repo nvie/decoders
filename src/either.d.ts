@@ -9,3 +9,4 @@ export function either6<T1, T2, T3, T4, T5, T6>(d1: Decoder<T1>, d2: Decoder<T2>
 export function either7<T1, T2, T3, T4, T5, T6, T7>(d1: Decoder<T1>, d2: Decoder<T2>, d3: Decoder<T3>, d4: Decoder<T4>, d5: Decoder<T5>, d6: Decoder<T6>, d7: Decoder<T7>): Decoder<T1 | T2 | T3 | T4 | T5 | T6 | T7>;
 export function either8<T1, T2, T3, T4, T5, T6, T7, T8>(d1: Decoder<T1>, d2: Decoder<T2>, d3: Decoder<T3>, d4: Decoder<T4>, d5: Decoder<T5>, d6: Decoder<T6>, d7: Decoder<T7>, d8: Decoder<T8>): Decoder<T1 | T2 | T3 | T4 | T5 | T6 | T7 | T8>;
 export function either9<T1, T2, T3, T4, T5, T6, T7, T8, T9>(d1: Decoder<T1>, d2: Decoder<T2>, d3: Decoder<T3>, d4: Decoder<T4>, d5: Decoder<T5>, d6: Decoder<T6>, d7: Decoder<T7>, d8: Decoder<T8>, d9: Decoder<T9>): Decoder<T1 | T2 | T3 | T4 | T5 | T6 | T7 | T8 | T9>;
+export function oneOf<T>(constants: Array<T>): Decoder<T>;

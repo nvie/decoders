@@ -4,7 +4,7 @@ import { partition } from 'itertools';
 
 import { boolean } from '../boolean';
 import { constant, undefined_ } from '../constants';
-import { either, either4, either9 } from '../either';
+import { either, either4, either9, oneOf } from '../either';
 import { guard } from '../guard';
 import { number } from '../number';
 import { object } from '../object';
@@ -97,6 +97,26 @@ describe('either9', () => {
     );
     const okay = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
     const not_okay = INPUTS;
+
+    it('valid', () => {
+        expect(okay.length).not.toBe(0);
+        for (const value of okay) {
+            expect(decoder(value).unwrap()).toBe(value);
+        }
+    });
+
+    it('invalid', () => {
+        expect(not_okay.length).not.toBe(0);
+        for (const value of not_okay) {
+            expect(decoder(value).isErr()).toBe(true);
+        }
+    });
+});
+
+describe('oneOf', () => {
+    const decoder = oneOf([3, true, null, '1', 'foo']);
+    const okay = [3, true, null, '1', 'foo'];
+    const not_okay = INPUTS.filter(x => !okay.includes(x));
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
