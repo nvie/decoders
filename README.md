@@ -574,3 +574,17 @@ oneOf(['foo', 'bar'])
 
 The return type here will be `Decoder<string>`, not `Decoder<('foo' | 'bar')>`.
 (To obtain the latter, use `either(constant('foo'), constant('bar'))` instead.)
+
+
+
+<a name="instanceOf" href="#instanceOf">#</a> <b>instanceOf</b><i>&lt;T&gt;</i>(<i>Class&lt;T&gt;</i>): <i>Decoder&lt;T&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/instanceOf.js "Source")<br />
+
+Returns a decoder capable of decoding values that are instances of the given class.
+
+```javascript
+const mydecoder = guard(instanceOf(Error));
+const value = new Error('foo')
+mydecoder(value) === value
+mydecoder('foo')   // DecodeError
+mydecoder(3)       // DecodeError
+```
