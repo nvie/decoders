@@ -1,3 +1,13 @@
+v1.12.0
+-------
+
+**New decoders:**
+
+- `oneOf(['foo', 'bar'])` will return only values matching the given values
+- `instanceOf(...)` will return only values that are instances of the given
+  class. For example: `instanceOf(TypeError)`.
+
+
 v1.11.1
 -------
 
