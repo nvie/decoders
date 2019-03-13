@@ -30,6 +30,7 @@ export { date } from './date';
 export { dispatch } from './dispatch';
 export { either, either3, either4, either5, either6, either7, either8, either9, oneOf } from './either';
 export { fail } from './fail';
+export { instanceOf } from './instanceOf';
 export { mapping, dict } from './mapping';
 export { maybe } from './maybe';
 export { nullable } from './nullable';

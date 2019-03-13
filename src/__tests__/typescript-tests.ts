@@ -14,6 +14,7 @@ import {
     fail,
     guard,
     hardcoded,
+    instanceOf,
     integer,
     map,
     mapping,
@@ -78,6 +79,7 @@ guard(
         b3: dict(string),
         b4: mapping(string),
         b5: oneOf(['foo', 'bar']),
+        b6: instanceOf(TypeError),
     }),
     { style: 'simple' }
 )('blah');
