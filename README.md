@@ -549,6 +549,7 @@ mydecoder(false)     // DecodeError
 ```
 
 
+---
 
 <a name="oneOf" href="#oneOf">#</a> <b>oneOf</b><i>&lt;T&gt;</i>(<i>Array&lt;T&gt;</i>): <i>Decoder&lt;T&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/either.js "Source")<br />
 
@@ -576,6 +577,7 @@ The return type here will be `Decoder<string>`, not `Decoder<('foo' | 'bar')>`.
 (To obtain the latter, use `either(constant('foo'), constant('bar'))` instead.)
 
 
+---
 
 <a name="instanceOf" href="#instanceOf">#</a> <b>instanceOf</b><i>&lt;T&gt;</i>(<i>Class&lt;T&gt;</i>): <i>Decoder&lt;T&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/instanceOf.js "Source")<br />
 
