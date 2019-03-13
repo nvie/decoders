@@ -581,6 +581,10 @@ The return type here will be `Decoder<string>`, not `Decoder<('foo' | 'bar')>`.
 
 Returns a decoder capable of decoding values that are instances of the given class.
 
+> **NOTE: Help wanted!** The TypeScript annotation for this decoder needs help!
+> If you know how to express it, please submit a PR.  See
+> https://github.com/nvie/decoders/blob/master/src/instanceOf.d.ts
+
 ```javascript
 const mydecoder = guard(instanceOf(Error));
 const value = new Error('foo')

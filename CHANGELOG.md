@@ -5,7 +5,8 @@ v1.12.0
 
 - `oneOf(['foo', 'bar'])` will return only values matching the given values
 - `instanceOf(...)` will return only values that are instances of the given
-  class. For example: `instanceOf(TypeError)`.
+  class. For example: `instanceOf(TypeError)`. (Does not fully work in
+  TypeScript yet, help wanted!)
 
 
 v1.11.1
