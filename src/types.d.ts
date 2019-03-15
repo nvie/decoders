@@ -1,7 +1,7 @@
 import { Annotation } from 'debrief';
 import Result from 'lemons/Result';
 
-export type $DecoderType<T> = T extends Decoder<infer V> ? V : any;
+export type $DecoderType<T> = T extends Decoder<infer V> ? V : never;
 
 export interface Guard<T> {
   (blob: unknown): T;
