@@ -1,5 +1,10 @@
 {
   "compilerOptions": {
-    "lib": ["es6"]
-  }
+    "lib": ["es6"],
+    "baseUrl": "./src/",
+    "typeRoots": ["./src/"]
+  },
+  "files": [
+    "index.d.ts"
+  ]
 }

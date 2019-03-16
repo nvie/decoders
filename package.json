@@ -4,7 +4,7 @@
   "description": "Elm-like decoders for when working with Flow types in JS",
   "githubUrl": "https://github.com/nvie/decoders",
   "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/types/index.d.ts",
   "files": [
     "dist/"
   ],
@@ -22,7 +22,7 @@
     "actually-prepublish": "echo \"\\n\\nPlease run \\`bin/publish.sh <options>\\` instead.\\n\\n\" && exit 2",
     "test": "yarn run clean && yarn run test:flow && yarn run test:typescript && yarn run test:jest && yarn run check",
     "test:flow": "flow check",
-    "test:typescript": "dtslint src/__tests__/typescript-tests.js",
+    "test:typescript": "dtslint --onlyTestTsNext src/types",
     "test:jest": "jest --coverage",
     "watch": "jest --watch"
   },
@@ -85,8 +85,7 @@
     "jest": "^24.1.0",
     "jest-cli": "^24.1.0",
     "prettier": "^1.13.7",
-    "rimraf": "^2.6.2",
-    "typescript": "^3.2.2"
+    "rimraf": "^2.6.2"
   },
   "dependencies": {
     "debrief": "^1.2.5",
@@ -96,8 +95,7 @@
     "testPathIgnorePatterns": [
       "node_modules",
       "fixtures.js",
-      ".skip.js",
-      "typescript-tests"
+      ".skip.js"
     ]
   }
 }

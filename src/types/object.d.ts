@@ -1,6 +1,6 @@
 import { $DecoderType, Decoder } from './types';
 
-export const pojo: Decoder<Object>;
+export const pojo: Decoder<object>;
 export function object<O extends {[key: string]: Decoder<any>}>(mapping: O): Decoder<{
   [key in keyof O]: $DecoderType<O[key]>
 }>;

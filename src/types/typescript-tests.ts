@@ -1,3 +1,7 @@
+//
+// TODO: Split up this file into pieces
+//
+
 import {
     array,
     boolean,
@@ -41,7 +45,7 @@ import {
     field,
     unknown,
     url,
-} from '..';
+} from 'decoders';
 
 const rect = object({ type: constant('rect') });
 const circle = object({ type: constant('circle') });
