@@ -10,7 +10,7 @@ cd "$ROOT"
 
 # Check we're on the master branch
 if [ "$(git current-branch)" != "master" ]; then
-    echo "Not on `master` branch." >&2
+    echo "Not on \"master\" branch." >&2
     exit 2
 fi
 
