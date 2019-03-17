@@ -32,11 +32,9 @@ export { either, either3, either4, either5, either6, either7, either8, either9, 
 export { fail } from './fail';
 export { instanceOf } from './instanceOf';
 export { mapping, dict } from './mapping';
-export { maybe } from './maybe';
-export { nullable } from './nullable';
 export { integer, number, positiveInteger, positiveNumber } from './number';
 export { exact, field, object, pojo } from './object';
-export { optional } from './optional';
+export { maybe, nullable, optional } from './optional';
 export { email, regex, string, url } from './string';
 export { tuple2, tuple3, tuple4, tuple5, tuple6 } from './tuple';
 

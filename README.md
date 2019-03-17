@@ -362,7 +362,7 @@ Which will decode to type:
 
 ---
 
-<a name="nullable" href="#nullable">#</a> <b>nullable</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;T | null&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/nullable.js "Source")
+<a name="nullable" href="#nullable">#</a> <b>nullable</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;T | null&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/optional.js "Source")
 
 Returns a decoder capable of decoding **either a value of type <i>T</i>, or
 `null`**, provided that you already have a decoder for <i>T</i>.
@@ -379,7 +379,7 @@ mydecoder(42)  // DecodeError
 
 ---
 
-<a name="maybe" href="#maybe">#</a> <b>maybe</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;?T&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/maybe.js "Source")
+<a name="maybe" href="#maybe">#</a> <b>maybe</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;?T&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/optional.js "Source")
 
 Returns a decoder capable of decoding **either a value of type <i>T</i>, or
 `null`, or `undefined`**, provided that you already have a decoder for
