@@ -12,5 +12,5 @@ exact({
     bar: object({ qux: string }),
 });
 
-// $ExpectType Decoder<object, unknown>
+// $ExpectType Decoder<{ [key: string]: unknown; }, unknown>
 pojo;

@@ -27,7 +27,7 @@ function subtract(xs: Set<string>, ys: Set<string>): Set<string> {
     return result;
 }
 
-export const pojo: Decoder<{}> = (blob: mixed) => {
+export const pojo: Decoder<{ [string]: mixed }> = (blob: mixed) => {
     return isObject(blob) ? Ok(blob) : Err(annotate(blob, 'Must be an object'));
 };
 
@@ -54,7 +54,7 @@ export function object<O: { +[field: string]: Decoder<anything> }>(mapping: O): 
     const known = new Set(Object.keys(mapping));
     return compose(
         pojo,
-        (blob: {}) => {
+        (blob: { [string]: mixed }) => {
             const actual = new Set(Object.keys(blob));
 
             // At this point, "missing" will also include all fields that may
@@ -104,11 +104,13 @@ export function object<O: { +[field: string]: Decoder<anything> }>(mapping: O): 
             // the outer object itself.
             const fieldsWithErrors = Object.keys(fieldErrors);
             if (fieldsWithErrors.length > 0 || missing.size > 0) {
-                let err = blob;
+                let err;
 
                 if (fieldsWithErrors.length > 0) {
                     const errorlist = fieldsWithErrors.map(k => [k, fieldErrors[k]]);
-                    err = annotateFields(err, errorlist);
+                    err = annotateFields(blob, errorlist);
+                } else {
+                    err = annotate(blob);
                 }
 
                 if (missing.size > 0) {
@@ -132,7 +134,7 @@ export function exact<O: { +[field: string]: Decoder<anything> }>(
     const allowed = new Set(Object.keys(mapping));
     const checked = compose(
         pojo,
-        (blob: {}) => {
+        (blob: { [string]: mixed }) => {
             const actual = new Set(Object.keys(blob));
             const superfluous = subtract(actual, allowed);
             if (superfluous.size > 0) {
@@ -157,7 +159,7 @@ export function field<T>(field: string, decoder: Decoder<T>): Decoder<T> {
     // like this, not efficient -- pull it out of this function)
     return compose(
         pojo,
-        (blob: {}) => {
+        (blob: { [string]: mixed }) => {
             const value = blob[field];
             const result = decoder(value);
             try {
