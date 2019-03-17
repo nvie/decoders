@@ -27,8 +27,7 @@ function subtract(xs: Set<string>, ys: Set<string>): Set<string> {
     return result;
 }
 
-// $FlowIgnore: deliberate use of Object here
-export const pojo: Decoder<Object> = (blob: mixed) => {
+export const pojo: Decoder<{}> = (blob: mixed) => {
     return isObject(blob) ? Ok(blob) : Err(annotate(blob, 'Must be an object'));
 };
 
@@ -55,8 +54,7 @@ export function object<O: { +[field: string]: Decoder<anything> }>(mapping: O): 
     const known = new Set(Object.keys(mapping));
     return compose(
         pojo,
-        // $FlowIgnore: deliberate use of Object here
-        (blob: Object) => {
+        (blob: {}) => {
             const actual = new Set(Object.keys(blob));
 
             // At this point, "missing" will also include all fields that may
@@ -134,8 +132,7 @@ export function exact<O: { +[field: string]: Decoder<anything> }>(
     const allowed = new Set(Object.keys(mapping));
     const checked = compose(
         pojo,
-        // $FlowIgnore: deliberate use of Object here
-        (blob: Object) => {
+        (blob: {}) => {
             const actual = new Set(Object.keys(blob));
             const superfluous = subtract(actual, allowed);
             if (superfluous.size > 0) {
@@ -160,8 +157,7 @@ export function field<T>(field: string, decoder: Decoder<T>): Decoder<T> {
     // like this, not efficient -- pull it out of this function)
     return compose(
         pojo,
-        // $FlowIgnore: deliberate use of Object here
-        (blob: Object) => {
+        (blob: {}) => {
             const value = blob[field];
             const result = decoder(value);
             try {
