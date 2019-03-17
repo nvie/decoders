@@ -1,3 +1,13 @@
+v1.12.1
+-------
+
+- Internal reorganization of modules
+- Improve TypeScript support
+  - Reorganization of TypeScript declarations
+  - More robust test suite for TypeScript
+  - 100% TypeScript test coverage
+
+
 v1.12.0
 -------
 
@@ -5,8 +15,7 @@ v1.12.0
 
 - `oneOf(['foo', 'bar'])` will return only values matching the given values
 - `instanceOf(...)` will return only values that are instances of the given
-  class. For example: `instanceOf(TypeError)`. (Does not fully work in
-  TypeScript yet, help wanted!)
+  class. For example: `instanceOf(TypeError)`.
 
 
 v1.11.1
