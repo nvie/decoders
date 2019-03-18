@@ -551,6 +551,31 @@ mydecoder(false)     // DecodeError
 
 ---
 
+<a name="dispatch" href="#dispatch">#</a> <b>dispatch</b><i>&lt;O: { [field: string]: (Decoder&lt;T&gt; | Decoder&lt;V&gt; | ...) }&gt;</i>(field: string, mapping: O): <i>Decoder&lt;T | V | ...&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/dispatch.js "Source")
+
+Like the `either` family, but only for building unions of object types with
+a common field (like a `type` field) that lets you distinguish members.
+
+The following two decoders are effectively equivalent:
+
+```javascript
+const d1: Decoder<Foo | Bar> = dispatch('type', { foo, bar });
+const d2: Decoder<Foo | Bar> = either(foo, bar);
+```
+
+But using `dispatch()` will typically be more runtime-efficient than using
+`either()`.  The reason is that `dispatch()` will first do minimal work to
+"look ahead" into the `type` field here, and based on that value, pick which
+decoder to invoke.  Error messages will then also be tailored to the specific
+decoder.
+
+The `either()` version will instead try each decoder in turn until it finds one
+that matches.  If none of the alternatives match, it needs to report all
+errors, which is sometimes confusing.
+
+
+---
+
 <a name="oneOf" href="#oneOf">#</a> <b>oneOf</b><i>&lt;T&gt;</i>(<i>Array&lt;T&gt;</i>): <i>Decoder&lt;T&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/either.js "Source")<br />
 
 Returns a decoder capable of decoding values that are equal to any of the given
