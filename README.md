@@ -559,8 +559,13 @@ a common field (like a `type` field) that lets you distinguish members.
 The following two decoders are effectively equivalent:
 
 ```javascript
-const d1: Decoder<Foo | Bar> = dispatch('type', { foo, bar });
-const d2: Decoder<Foo | Bar> = either(foo, bar);
+type Rect   = {| __type: 'rect', x: number, y: number, width: number, height: number |};
+type Circle = {| __type: 'circle', cx: number, cy: number, r: number |};
+//               ^^^^^^
+//               Field that defines which decoder to pick
+//                                               vvvvvv
+const shape1: Decoder<Rect | Circle> = dispatch('__type', { rect, circle });
+const shape2: Decoder<Rect | Circle> = either(rect, circle);
 ```
 
 But using `dispatch()` will typically be more runtime-efficient than using
