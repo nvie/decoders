@@ -1,5 +1,39 @@
-v1.12.1
+v1.13.0
 -------
+
+**Breaking changes:**
+
+* Changed the API interface of `dispatch()`.  The previous version was too
+  complicated and was hardly used. The new version is easier to use in
+  practice, and has better type inference support in TypeScript and Flow.
+  
+  **Previous usage:**
+  ```
+  const shape = dispatch(
+      field('type', string),
+      type => {
+          switch (type) {
+              case 'rect': return rectangle;
+              case 'circle': return circle;
+          }
+          return fail('Must be a valid shape');
+      }
+  );
+  ```
+  
+  **New usage:**
+  ```
+  const shape = dispatch('type', { rectangle, circle });
+  ```
+  
+  Where `rectangle` and `circle` are decoders of which exactly one will be
+  invoked.
+  
+- Removed the `field()` decoder.  It was not generic enough to stay part of the
+  standard decoder library. (It was typically used in combination with
+  `dispatch()`, which now isn't needed anymore, see above.)
+
+**Fixes and cleanup:**
 
 - Internal reorganization of modules
 - Improve TypeScript support
