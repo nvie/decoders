@@ -33,6 +33,9 @@ v1.13.0
   standard decoder library. (It was typically used in combination with
   `dispatch()`, which now isn't needed anymore, see above.)
 
+- `pojo` decoder now returns `Decoder<{[string]: mixed}>` instead of the unsafe
+  `Decoder<Object>`.
+
 **Fixes and cleanup:**
 
 - Internal reorganization of modules
