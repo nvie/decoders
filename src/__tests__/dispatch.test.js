@@ -2,52 +2,56 @@
 
 import { constant } from '../constants';
 import { dispatch } from '../dispatch';
-import { fail } from '../fail';
 import { guard } from '../guard';
 import { number } from '../number';
-import { field, object } from '../object';
-import { string } from '../string';
+import { object } from '../object';
+import type { Decoder } from '../types';
 
-const rectangle = object({
-    type: constant('rect'),
+type Rectangle = {|
+    type: 'rectangle',
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+|};
+
+type Circle = {|
+    type: 'circle',
+    cx: number,
+    cy: number,
+    r: number,
+|};
+
+const rectangle: Decoder<Rectangle> = object({
+    type: constant('rectangle'),
     x: number,
     y: number,
     width: number,
     height: number,
 });
 
-const circle = object({
+const circle: Decoder<Circle> = object({
     type: constant('circle'),
-    x: number,
-    y: number,
+    cx: number,
+    cy: number,
     r: number,
 });
 
 describe('dispatch', () => {
-    // The "deciderer" ;) effectively dispatches the real decoding to
-    // a specific decoder, after detecting the value of the type field.
-    const decoder = dispatch(field('type', string), type => {
-        switch (type) {
-            case 'rect':
-                return rectangle;
-            case 'circle':
-                return circle;
-        }
-        return fail('Must be a valid shape');
-    });
+    const decoder = dispatch('type', { rectangle, circle });
 
     it('allows conditional decoding', () => {
-        const r = { type: 'rect', x: 3, y: 5, width: 80, height: 100 };
-        expect(decoder(r).unwrap()).toEqual(r);
+        const r = { type: 'rectangle', x: 3, y: 5, width: 80, height: 100 };
+        expect(guard(decoder)(r)).toEqual(r);
 
-        const c = { type: 'circle', x: 3, y: 5, r: 7 };
+        const c = { type: 'circle', cx: 3, cy: 5, r: 7 };
         expect(decoder(c).unwrap()).toEqual(c);
     });
 
     it('invalid', () => {
         expect(() => guard(decoder)('foo')).toThrow('Must be an object');
         expect(() => guard(decoder)({})).toThrow('Missing key: "type"');
-        expect(() => guard(decoder)({ type: 'blah' })).toThrow('Must be a valid shape');
-        expect(() => guard(decoder)({ type: 'rect' })).toThrow('Missing keys: "x", "y", "width", "height"');
+        expect(() => guard(decoder)({ type: 'blah' })).toThrow(/Must be one of.*rectangle.*circle/);
+        expect(() => guard(decoder)({ type: 'rectangle', x: 1 })).toThrow(/Missing keys: "y", "width", "height"/);
     });
 });

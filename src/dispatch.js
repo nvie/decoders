@@ -1,18 +1,15 @@
 // @flow strict
 
-import type { Decoder } from './types';
+import { oneOf } from './either';
+import { object } from './object';
+import type { $DecoderType, Decoder } from './types';
+
+// $FlowIgnore - deliberate use of `any` - not sure how we should get rid of this
+type anything = any;
 
 /**
- * Given a function that takes a base decoder whose value will be passed to
- * a dispatching function that should return another decoder for a detailed
- * branch.  This operation can be thought of as a "union type" but without
- * trying to invoke all of the members one by one.  Instead, there's one
- * decoder that runs first and its result can be passed to a dispatching
- * function that can decide which (sub)decoder to use to verify the input
- * object.  The typical usage of this is to have a base decoder that will look
- * at a specific field of the input object and then decide on which concrete
- * decoder to use.  For example, consider you can distinguish shapes of type
- * "rect" and "circle" based on the value of their "type" field:
+ * Dispatches to one of several given decoders, based on the value found at
+ * runtime in the given field.  For example, suppose you have these decoders:
  *
  *     const rectangle = object({
  *         type: constant('rect'),
@@ -29,23 +26,32 @@ import type { Decoder } from './types';
  *         r: number,
  *      });
  *
- *     const shape = dispatch(
- *         field('type', string),
- *         type => {
- *              switch (type) {
- *                  case 'rect': return rectangle;
- *                  case 'circle': return circle;
- *              }
- *              return fail('Must be a valid shape');
- *         }
- *     );
+ * Then these two decoders are equivalent:
+ *
+ *     const shape = either(rectangle, circle)
+ *     const shape = dispatch('type', { rectangle, circle })
+ *
+ * Will be of type Decoder<Rectangle | Circle>.
+ *
+ * But the dispatch version will typically be more runtime-efficient.  The
+ * reason is that it will first do minimal work to "look ahead" into the `type`
+ * field here, and based on that value, pick the decoder to invoke.
+ *
+ * The `either` version will simply try to invoke each decoder, until it finds
+ * one that matches.
+ *
+ * Also, the error messages will be less ambiguous using `dispatch()`.
  */
-export function dispatch<T, V>(base: Decoder<T>, next: T => Decoder<V>): Decoder<V> {
-    return (blob: mixed) =>
-        // We'll dispatch on this value
-        base(blob).andThen(value =>
-            // Now dispatch on the value by passing in T, and then invoking
-            // that decoder on the original input
-            next(value)(blob)
-        );
+export function dispatch<O: { +[field: string]: Decoder<anything> }>(
+    field: string,
+    mapping: O
+): Decoder<$Values<$ObjMap<O, $DecoderType>>> {
+    const base = object({ [field]: oneOf(Object.keys(mapping)) });
+    return (blob: mixed) => {
+        return base(blob).andThen(baseObj => {
+            const decoderName = baseObj[field];
+            const decoder = mapping[decoderName];
+            return decoder(blob);
+        });
+    };
 }
