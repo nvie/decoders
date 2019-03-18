@@ -2,7 +2,7 @@
 
 import { guard } from '../guard';
 import { number } from '../number';
-import { exact, field, object, pojo } from '../object';
+import { exact, object, pojo } from '../object';
 import { optional } from '../optional';
 import { string } from '../string';
 
@@ -111,21 +111,6 @@ describe('pojo', () => {
         // Not
         expect(() => decoder(null)).toThrow();
         expect(() => decoder(42)).toThrow();
-    });
-});
-
-describe('fields', () => {
-    const decoder = field('type', string);
-
-    it('valid', () => {
-        expect(decoder({ type: 'foo' }).unwrap()).toEqual('foo');
-    });
-
-    it('invalid', () => {
-        expect(() => guard(decoder)('foo')).toThrow('Must be an object');
-        expect(() => guard(decoder)({})).toThrow('Missing key: "type"');
-        expect(() => guard(decoder)({ type: 42 })).toThrow('Unexpected value for field "type"');
-        expect(() => guard(decoder)({ type: null })).toThrow('Unexpected value for field "type"');
     });
 });
 

@@ -153,22 +153,3 @@ export function exact<O: { +[field: string]: Decoder<anything> }>(
         decoder
     );
 }
-
-export function field<T>(field: string, decoder: Decoder<T>): Decoder<T> {
-    // TODO: Optimize away the many calls to pojo() (one made for each field
-    // like this, not efficient -- pull it out of this function)
-    return compose(
-        pojo,
-        (blob: { [string]: mixed }) => {
-            const value = blob[field];
-            const result = decoder(value);
-            try {
-                return Ok(result.unwrap());
-            } catch (e) {
-                const errText =
-                    value === undefined ? `Missing key: "${field}"` : `Unexpected value for field "${field}"`;
-                return Err(annotate(blob, errText));
-            }
-        }
-    );
-}
