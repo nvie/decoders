@@ -1,3 +1,11 @@
+v1.13.1
+-------
+
+**Fixes:**
+
+- Don't reject URLs that contains commas (`,`)
+
+
 v1.13.0
 -------
 
