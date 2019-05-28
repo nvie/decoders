@@ -5,7 +5,7 @@ import type { Annotation } from 'debrief';
 import { Err, Ok } from 'lemons/Result';
 
 import type { $DecoderType, Decoder } from './types';
-import { compose, isDate } from './utils';
+import { compose } from './utils';
 
 // $FlowIgnore - deliberate use of `any` - not sure how we should get rid of this
 type anything = any;
@@ -13,8 +13,15 @@ type anything = any;
 // $FlowIgnore: we're deliberately casting
 type cast = any;
 
-function isObject(o: mixed): boolean %checks {
-    return o !== null && typeof o === 'object' && !Array.isArray(o) && !isDate(o);
+function isPojo(o: mixed): boolean %checks {
+    return (
+        o !== null &&
+        o !== undefined &&
+        typeof o === 'object' &&
+        // This still seems to be the only reliable way to determine whether
+        // something is a pojo... ¯\_(ツ)_/¯
+        Object.prototype.toString.call(o) === '[object Object]'
+    );
 }
 
 function subtract(xs: Set<string>, ys: Set<string>): Set<string> {
@@ -28,7 +35,7 @@ function subtract(xs: Set<string>, ys: Set<string>): Set<string> {
 }
 
 export const pojo: Decoder<{| [string]: mixed |}> = (blob: mixed) => {
-    return isObject(blob)
+    return isPojo(blob)
         ? Ok(
               // NOTE:
               // Since Flow 0.98, typeof o === 'object' refines to

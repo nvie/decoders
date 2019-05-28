@@ -106,7 +106,6 @@ describe('pojo', () => {
         const decoder = guard(pojo);
         expect(decoder({})).toEqual({});
         expect(decoder({ a: 1 })).toEqual({ a: 1 });
-        expect(decoder(new String())).toEqual(new String());
 
         // Not
         expect(() => decoder(null)).toThrow();
@@ -130,6 +129,8 @@ describe('arrays are not objects', () => {
         expect(() => guard(decoder2)([])).toThrow('Must be an object');
         expect(() => guard(decoder1)('an string')).toThrow('Must be an object');
         expect(() => guard(decoder2)('an string')).toThrow('Must be an object');
+        expect(() => guard(decoder1)(new String())).toThrow('Must be an object');
+        expect(() => guard(decoder2)(new String())).toThrow('Must be an object');
         expect(() => guard(decoder1)(new Date())).toThrow('Must be an object');
         expect(() => guard(decoder2)(new Date())).toThrow('Must be an object');
     });
