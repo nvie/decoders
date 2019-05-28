@@ -27,8 +27,26 @@ function subtract(xs: Set<string>, ys: Set<string>): Set<string> {
     return result;
 }
 
-export const pojo: Decoder<{ [string]: mixed }> = (blob: mixed) => {
-    return isObject(blob) ? Ok(blob) : Err(annotate(blob, 'Must be an object'));
+export const pojo: Decoder<{| [string]: mixed |}> = (blob: mixed) => {
+    return isObject(blob)
+        ? Ok(
+              // NOTE:
+              // Since Flow 0.98, typeof o === 'object' refines to
+              //     {| +[string]: mixed |}
+              // instead of
+              //     {| [string]: mixed |}
+              //
+              // For rationale, see https://github.com/facebook/flow/issues/7685.
+              // In this case, we don't want to output a read-only version of
+              // the object because it's up to the user of decoders to
+              // determine what they want to do with the decoded output.  If they
+              // want to write items into the array, that's fine!  The fastest
+              // way to turn a read-only Object to a writeable one in ES6 seems
+              // to be to use object-spread. (Going off this benchmark:
+              // https://thecodebarbarian.com/object-assign-vs-object-spread.html)
+              { ...blob }
+          )
+        : Err(annotate(blob, 'Must be an object'));
 };
 
 /**
@@ -54,7 +72,7 @@ export function object<O: { +[field: string]: Decoder<anything> }>(mapping: O): 
     const known = new Set(Object.keys(mapping));
     return compose(
         pojo,
-        (blob: { [string]: mixed }) => {
+        (blob: {| [string]: mixed |}) => {
             const actual = new Set(Object.keys(blob));
 
             // At this point, "missing" will also include all fields that may
