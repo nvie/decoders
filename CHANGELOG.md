@@ -1,5 +1,11 @@
-v1.13.2
+v1.14.0
 -------
+
+**Potential breaking changes:**
+
+- Stricten `pojo` criteria.  Now, custom classes like `new String()` or
+  `new Error()` will not be accepted as a plain old Javascript object (= pojo)
+  anymore.
 
 **Fixes:**
 
