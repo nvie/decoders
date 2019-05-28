@@ -124,13 +124,18 @@ describe('arrays are not objects', () => {
         expect(guard(decoder2)({ what: 'ever' })).toEqual({});
     });
 
-    it('invalid', () => {
+    it('invalid (basic types)', () => {
         expect(() => guard(decoder1)([])).toThrow('Must be an object');
         expect(() => guard(decoder2)([])).toThrow('Must be an object');
         expect(() => guard(decoder1)('an string')).toThrow('Must be an object');
         expect(() => guard(decoder2)('an string')).toThrow('Must be an object');
+    });
+
+    it('invalid (custom classes)', () => {
         expect(() => guard(decoder1)(new String())).toThrow('Must be an object');
         expect(() => guard(decoder2)(new String())).toThrow('Must be an object');
+        expect(() => guard(decoder1)(new Error('foo'))).toThrow('Must be an object');
+        expect(() => guard(decoder2)(new Error('foo'))).toThrow('Must be an object');
         expect(() => guard(decoder1)(new Date())).toThrow('Must be an object');
         expect(() => guard(decoder2)(new Date())).toThrow('Must be an object');
     });
