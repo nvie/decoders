@@ -62,18 +62,18 @@ export const pojo: Decoder<{| [string]: mixed |}> = (blob: mixed) => {
  * For example, given decoders for a number and a string, we can construct an
  * "object description" like so:
  *
- *   { id: decodeNumber(), name: decodeString() }
+ *   { id: number, name: string }
  *
  * Which is of type:
  *
- *   { id: Guard<number>, name: Guard<string> }
+ *   { id: Decoder<number>, name: Decoder<string> }
  *
- * Passing this to decodeObject() will produce the following return type:
+ * Passing this to object() will produce the following return type:
  *
- *   Guard<{ id: number, name: string }>
+ *   Decoder<{ id: number, name: string }>
  *
  * Put simply: it'll "peel off" all of the nested Decoders, puts them together
- * in an object, and wraps it in a Guard<...>.
+ * in an object, and wraps it in a Decoder<...>.
  */
 export function object<O: { +[field: string]: Decoder<anything> }>(mapping: O): Decoder<$ObjMap<O, $DecoderType>> {
     const known = new Set(Object.keys(mapping));
