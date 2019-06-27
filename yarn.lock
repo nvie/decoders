@@ -1770,10 +1770,10 @@ data-urls@^1.0.0:
     whatwg-mimetype "^2.2.0"
     whatwg-url "^7.0.0"
 
-debrief@^1.2.5:
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/debrief/-/debrief-1.2.5.tgz#8f08674f5aa6a8b9b6fcaccc67ea77ccc7d63479"
-  integrity sha512-NqAbusP5FaN9EGhNNzmXraE2S45jytAIr1eXdsy/uOjG3czwEYxt9R9xkxBVS1/vfAXLsSjAEmeOMa9yfsAXyg==
+debrief@^1.2.6:
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/debrief/-/debrief-1.2.6.tgz#f19ee2d5ad99884947a142434e69dfa0e66225e0"
+  integrity sha512-t6t5+tvovdccYH0xkuwylpYpN0/E0xOWhcUI+bg6BSLabp4QgECdurhNx1MONNMEBtA+5vjG6kC4p9c+OalSIw==
 
 debug@3.1.0:
   version "3.1.0"
