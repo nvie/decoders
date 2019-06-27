@@ -1,3 +1,13 @@
+v1.14.1
+-------
+
+**Fixes:**
+
+- Add support for Flow >= 0.101.0
+- Support constructors that have required arguments in `instanceOf` decoders in
+  TypeScript (thanks @Jessidhia!)
+
+
 v1.14.0
 -------
 
