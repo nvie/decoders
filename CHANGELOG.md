@@ -1,11 +1,16 @@
-v1.14.1
+v1.15.0
 -------
+
+**New features:**
+
+- Support constructors that have required arguments in `instanceOf` decoders in
+  TypeScript (see #308, thanks @Jessidhia!)
+- Add support for type predicates in `predicate()` in TypeScript (see #310,
+  thanks @Jessidhia!)
 
 **Fixes:**
 
 - Add support for Flow >= 0.101.0
-- Support constructors that have required arguments in `instanceOf` decoders in
-  TypeScript (thanks @Jessidhia!)
 
 
 v1.14.0
