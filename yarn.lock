@@ -2434,12 +2434,12 @@ flow-bin@^0.102.0:
   integrity sha512-mYon6noeLO0Q5SbiWULLQeM1L96iuXnRtYMd47j3bEWXAwUW9EnwNWcn+cZg/jC/Dg4Wj/jnkdTDEuFtbeu1ww==
 
 flow-copy-source@^2.0.1:
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/flow-copy-source/-/flow-copy-source-2.0.6.tgz#9049401cfb14f8080adfc753791c98117f49a0d1"
-  integrity sha512-RRlMcDNIznV7KUm944joZ84l2/fso/dxAxXAMehDPpEPX59CBUk+3VwT7LvQqxzyiJlZqOZpGP696VOm3QIdEg==
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/flow-copy-source/-/flow-copy-source-2.0.7.tgz#3b5634ac552c539a40093ed09d9e645e67f95212"
+  integrity sha512-/9oYivwSRgIyRMWqRkzJgulUCRPqMA8JSt7l0uoW0Xmtp8ItJpURnBczJUvnAKnHp0TNttNILCeuqW2w9cwTFg==
   dependencies:
     chokidar "^3.0.0"
-    fs-extra "^7.0.0"
+    fs-extra "^8.1.0"
     glob "^7.0.0"
     kefir "^3.7.3"
     yargs "^13.1.0"
@@ -2514,6 +2514,15 @@ fs-extra@^7.0.0:
   integrity sha512-YJDaCJZEnBmcbw13fvdAM9AwNOJwOzrE4pqMqBq5nFiEqXUqHwlK4B+3pUw6JNvfSPtX05xFHtYy/1ni01eGCw==
   dependencies:
     graceful-fs "^4.1.2"
+    jsonfile "^4.0.0"
+    universalify "^0.1.0"
+
+fs-extra@^8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-8.1.0.tgz#49d43c45a88cd9677668cb7be1b46efdb8d2e1c0"
+  integrity sha512-yhlQgA6mnOJUKOsRUFsgJdQCvkKhcz8tlZG5HBQfReYZy46OwLcY+Zia0mtdHsOo9y/hP+CxMN0TU9QxoOtG4g==
+  dependencies:
+    graceful-fs "^4.2.0"
     jsonfile "^4.0.0"
     universalify "^0.1.0"
 
@@ -2692,6 +2701,11 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6
   version "4.1.15"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.15.tgz#ffb703e1066e8a0eeaa4c8b80ba9253eeefbfb00"
   integrity sha512-6uHUhOPEBgQ24HM+r6b/QwWfZq+yiFcipKFrOFiBEnWdy5sdzYoi+pJeQaPI5qOLRFqWmAXUPQNsielzdLoecA==
+
+graceful-fs@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.0.tgz#8d8fdc73977cb04104721cb53666c1ca64cd328b"
+  integrity sha512-jpSvDPV4Cq/bgtpndIWbI5hmYxhQGHPC4d4cqBPb4DLniCfhJokdXhwhaDuLBGLQdvvRum/UiX6ECVIPvDXqdg==
 
 "growl@~> 1.10.0":
   version "1.10.5"
