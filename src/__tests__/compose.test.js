@@ -4,6 +4,7 @@ import { annotate } from 'debrief';
 import { Err, Ok } from 'lemons/Result';
 
 import { guard } from '../guard';
+import { number } from '../number';
 import { string } from '../string';
 import { compose, map } from '../utils';
 
@@ -43,5 +44,24 @@ describe('map', () => {
         const upcase = map(string, s => s.toUpperCase());
         expect(upcase('123').unwrap()).toEqual('123');
         expect(upcase('I am Hulk').unwrap()).toEqual('I AM HULK');
+    });
+
+    it('a failing mapper will fail the decoder', () => {
+        const odd = map(number, n => {
+            if (n % 2 !== 0) return n;
+            throw new Error('Must be odd');
+        });
+        expect(odd(13).unwrap()).toEqual(13);
+        expect(() => guard(odd)(4)).toThrow('^ Must be odd');
+        expect(odd(3).isErr()).toBe(false);
+        expect(odd(4).isErr()).toBe(true);
+
+        const weirdEven = map(number, n => {
+            if (n % 2 === 0) return n;
+            throw 'Must be even'; // Throwing a string, not an Error is non-conventional, but won't break anything
+        });
+        expect(weirdEven(3).isErr()).toBe(true);
+        expect(() => guard(weirdEven)(3)).toThrow('^ Must be even');
+        expect(weirdEven(4).unwrap()).toEqual(4);
     });
 });

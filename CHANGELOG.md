@@ -1,3 +1,13 @@
+v1.16.0
+-------
+
+**New feature:**
+
+- Allow `map()` calls to throw an exception in the mapper function to reject
+  the decoder.  Previously, these mapper functions were not expected to ever
+  throw.
+
+
 v1.15.0
 -------
 
