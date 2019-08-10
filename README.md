@@ -44,7 +44,7 @@ type Payload = {
 Here's a decoder that will work for this type:
 
 ```javascript
-import { guard, number, object } from 'decoders';
+import { array, guard, number, object } from 'decoders';
 
 const point = object({
     x: number,
