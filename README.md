@@ -78,6 +78,7 @@ The decoders package consists of a few building blocks:
 
 * [Primitives](#primitives)
 * [Compositions](#compositions)
+* [Building custom decoders](#building-custom-decoders)
 
 
 ### Primitives
@@ -623,4 +624,93 @@ const value = new Error('foo')
 mydecoder(value) === value
 mydecoder('foo')   // DecodeError
 mydecoder(3)       // DecodeError
+```
+
+
+---
+
+<a name="map" href="#map">#</a> <b>map</b><i>&lt;T, V&gt;</i>(<i>Decoder&lt;T&gt;</i>, <i>&lt;T&gt;</i> =&gt; <i>&lt;V&gt;</i>): <i>Decoder&lt;V&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/utils.js "Source")<br />
+
+Given a decoder and a mapper function, will first decode the value using the
+given decoder, and on success, will call the mapper function **on the decoded
+value**.  If the mapper function throws an error, the whole decoder will fail
+using the error message as the failure reason.
+
+```javascript
+const upper = map(string, s => s.toUpperCase());
+
+const mydecoder = guard(upper);
+mydecoder(4)       // DecodeError
+mydecoder('foo') === 'FOO'
+```
+
+
+---
+
+<a name="compose" href="#compose">#</a> <b>compose</b><i>&lt;T, V&gt;</i>(<i>Decoder&lt;T&gt;</i>, <i>Decoder&lt;V, T&gt;</i>): <i>Decoder&lt;V&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/utils.js "Source")<br />
+
+Given a decoder for _T_ and another one for _V_, will first decode using _T_,
+and then call the _V_ decoder **on the original value**.  This differs from
+`map()` in that it was access to the original value, but may assume the type
+value is already refined by the first decoder.
+
+Although the `compose()` function is essentially more low-level and powerful
+then the `map()` function, it's mostly useful in combination with the
+`predicate()` helper function, which allows you to rely on an existing decoder,
+but add extra checks on the specific values that will be allowed at runtime.
+
+
+
+### Building custom decoders
+
+There are two main building blocks for defining your own custom decoders:
+`map()` and `compose()`.
+
+There are roughly 3 use cases that you will want to use:
+
+1. **[Transformation](#transformation)** (i.e. read one type, but return
+   another, or read a type but change its value before returning)
+1. **[Adding extra value requirements](#adding-predicates)** (i.e. decode using
+   an existing decoder, but require an extra value check)
+1. **Chaining** multiple decoders (less common, more advanced)
+
+
+#### Transformation
+
+To read one type from the input, but return another, use:
+
+```js
+const numericString: Decoder<number> = map(
+  // At runtime, expect to read a string...
+  string,
+  // ...but return it as a number
+  s => Number(s)
+);
+```
+
+To read one type, but change its value before returning:
+
+```js
+const upperCase: Decoder<string> = map(string, s => s.toUpperCase());
+```
+
+**WARNING:** While you can map anything to anything, it's typically **NOT
+A GOOD IDEA to put too much transformation logic inside decoders**.  It's
+recommended to keep them minimal and only try to use them for the most basic
+use cases, like in the examples above.  Keeping business logic outside decoders
+makes them more reusable and composable.
+
+
+#### Adding predicates
+
+The easiest way to decode using an existing decoder, but enforcing extra
+runtime checks on their values is by using the `compose(..., predicate(...))`
+construction:
+
+```js
+const odd = compose(integer, predicate(n => n % 2 !== 0, 'Must be odd'));
+const shortString = compose(
+  string,
+  predicate(s => s.length < 8, 'Must be less than 8 chars')
+);
 ```
