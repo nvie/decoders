@@ -1945,22 +1945,23 @@ download-file-sync@^1.0.4:
   resolved "https://registry.yarnpkg.com/download-file-sync/-/download-file-sync-1.0.4.tgz#d3e3c543f836f41039455b9034c72e355b036019"
   integrity sha1-0+PFQ/g29BA5RVuQNMcuNVsDYBk=
 
-dts-critic@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/dts-critic/-/dts-critic-1.2.0.tgz#fc358cad7461180ad426438ab88b249fedebd5c0"
-  integrity sha512-z6VI1Sz7xxy0BgN6YsWuG9hbRIfph3U9hwrfNHLnLzsq865VYyjo5xKKUgXPuqMgJ04BUF1LGYQJ+kWyWwvUvQ==
+dts-critic@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/dts-critic/-/dts-critic-2.0.0.tgz#9d52943326d57df0691aa0479010a73ccb855a4f"
+  integrity sha512-oYo69B8NcjUoDhKh8oUl58ljMsgyWnPR0Qf3QKJmKjm5LvkQ21v4SW+QCOleI1Cs0HRN6zEYllvQEORGd45wOQ==
   dependencies:
     definitelytyped-header-parser "^1.2.0"
     download-file-sync "^1.0.4"
+    semver "^6.2.0"
     yargs "^12.0.5"
 
-dtslint@^0.8.0:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/dtslint/-/dtslint-0.8.0.tgz#250c1ae384faca36d9136c46b41f848436d1980b"
-  integrity sha512-uDIPC2UPgVM1QXceRBZiTwX3uCb1jzo3Z8rU9ycTSl0p/dkFi7GGNR/MDO4SxSeHw9HaubetafqFZK1l3oKNrw==
+dtslint@^0.9.1:
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/dtslint/-/dtslint-0.9.1.tgz#11c139a817649422c4fd6580f82814123b00b1c6"
+  integrity sha512-IxGanh+u1psQscSHX30cDqV6oQaSs5bhCIRhE4VriRFPOvqOR3vZPq/N6238ft5rS9P64z+oCZ+8kktXc2uCbQ==
   dependencies:
     definitelytyped-header-parser "1.2.0"
-    dts-critic "^1.2.0"
+    dts-critic "^2.0.0"
     fs-extra "^6.0.1"
     request "^2.88.0"
     strip-json-comments "^2.0.1"
@@ -5103,6 +5104,11 @@ semver@^6.1.0, semver@^6.1.2:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-6.2.0.tgz#4d813d9590aaf8a9192693d6c85b9344de5901db"
   integrity sha512-jdFC1VdUGT/2Scgbimf7FSx9iJLXoqfglSF+gJeuNWVpiE37OIbc1jywR/GJyFdz3mnkz2/id0L0J/cr0izR5A==
+
+semver@^6.2.0:
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.0.tgz#ee0a64c8af5e8ceea67687b133761e1becbd1d3d"
+  integrity sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==
 
 set-blocking@^2.0.0, set-blocking@~2.0.0:
   version "2.0.0"
