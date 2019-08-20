@@ -85,7 +85,7 @@
     "jest": "^24.1.0",
     "jest-cli": "^24.1.0",
     "prettier": "^1.13.7",
-    "rimraf": "^2.6.2"
+    "rimraf": "^3.0.0"
   },
   "dependencies": {
     "debrief": "^1.2.6",
