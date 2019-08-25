@@ -1823,9 +1823,9 @@ data-urls@^1.0.0:
     whatwg-url "^7.0.0"
 
 debrief@^1.2.6:
-  version "1.2.6"
-  resolved "https://registry.yarnpkg.com/debrief/-/debrief-1.2.6.tgz#f19ee2d5ad99884947a142434e69dfa0e66225e0"
-  integrity sha512-t6t5+tvovdccYH0xkuwylpYpN0/E0xOWhcUI+bg6BSLabp4QgECdurhNx1MONNMEBtA+5vjG6kC4p9c+OalSIw==
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/debrief/-/debrief-1.2.7.tgz#e67f0f6944db52bf96e6a794fded0973ef854be4"
+  integrity sha512-sXHzKdyLxYFTmS+bc2Jl1EPww76RompR3vLgEr4R6tABO2VazO277eX19T/7KfMgHGIE0A6uYZi8dE4QH+GVLg==
 
 debug@3.1.0:
   version "3.1.0"
