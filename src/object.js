@@ -139,7 +139,9 @@ export function object<O: { +[field: string]: Decoder<anything> }>(mapping: O): 
                 }
 
                 if (missing.size > 0) {
-                    const errMsg = [...missing].map(key => `"${key}"`).join(', ');
+                    const errMsg = Array.from(missing)
+                        .map(key => `"${key}"`)
+                        .join(', ');
                     const pluralized = missing.size > 1 ? 'keys' : 'key';
                     err = annotate(err, `Missing ${pluralized}: ${errMsg}`);
                 }
@@ -163,7 +165,7 @@ export function exact<O: { +[field: string]: Decoder<anything> }>(
             const actual = new Set(Object.keys(blob));
             const superfluous = subtract(actual, allowed);
             if (superfluous.size > 0) {
-                return Err(annotate(blob, `Superfluous keys: ${[...superfluous].join(', ')}`));
+                return Err(annotate(blob, `Superfluous keys: ${Array.from(superfluous).join(', ')}`));
             }
             return Ok(blob);
         }
