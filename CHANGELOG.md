@@ -1,3 +1,10 @@
+v1.16.1
+-------
+
+- Internal change to make the code Flow 0.105.x compatible.  Basically stops
+  using array spreads (`[...things]`) in favor of `Array.from()`.
+
+
 v1.16.0
 -------
 
