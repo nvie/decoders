@@ -21,6 +21,8 @@ build_code() {
 copy_typescript_defs() {
     mkdir -p "$DIST_TYPES"
     find "$SRC" -iname '*.d.ts' -a '!' -iname '*-tests.d.ts' -exec cp -v '{}' "$DIST_TYPES" ';'
+    # Remove the types directory if its empty
+    rmdir "$DIST_TYPES" 2>/dev/null || true
 }
 
 copy_flow_defs() {
@@ -31,6 +33,18 @@ copy_metadata() {
     cp LICENSE README.md CHANGELOG.md "$DIST"
 }
 
+add_entrypoint() {
+    jq '. + { main: "./index.js" }'
+}
+
+add_types_entrypoint() {
+    if [ -f "$DIST_TYPES/index.d.ts" ]; then
+        jq '. + { types: "./types/index.d.ts" }'
+    else
+        cat  # no-op, pass-thru
+    fi
+}
+
 build_package_json() {
     cat package.json                | \
         jq 'del(.devDependencies)'  | \
@@ -38,10 +52,8 @@ build_package_json() {
         jq 'del(.importSort)'       | \
         jq 'del(.jest)'             | \
         jq 'del(.scripts)'          | \
-        jq '. + {
-            types: "./types/index.d.ts",
-            main: "./index.js"
-        }'                            \
+        add_types_entrypoint        | \
+        add_entrypoint                \
         > dist/package.json
 }
 
