@@ -1,6 +1,6 @@
 {
   "name": "decoders",
-  "version": "1.16.0",
+  "version": "1.16.1",
   "description": "Elm-like decoders for when working with Flow types in JS",
   "githubUrl": "https://github.com/nvie/decoders",
   "main": "./dist/index.js",
