@@ -1,102 +1,102 @@
 {
-  "name": "decoders",
-  "version": "1.16.1",
-  "description": "Elm-like decoders for when working with Flow types in JS",
-  "githubUrl": "https://github.com/nvie/decoders",
-  "main": "./dist/index.js",
-  "types": "./dist/types/index.d.ts",
-  "files": [
-    "dist/"
-  ],
-  "scripts": {
-    "clean": "rimraf dist",
-    "build": "./bin/build.sh",
-    "check": "yarn run check:eslint && yarn run check:prettier && yarn run check:import-sort",
-    "check:eslint": "eslint --report-unused-disable-directives src",
-    "check:import-sort": "import-sort --list-different 'src/**/*.js'",
-    "check:prettier": "prettier --list-different 'src/**/*.js'",
-    "fix": "yarn run fix:prettier && yarn run fix:import-sort",
-    "fix:import-sort": "import-sort --write 'src/**/*.js'",
-    "fix:prettier": "prettier --write 'src/**/*.js'",
-    "prepublish": "in-publish && yarn run actually-prepublish || not-in-publish",
-    "actually-prepublish": "echo \"\\n\\nPlease run \\`bin/publish.sh <options>\\` instead.\\n\\n\" && exit 2",
-    "test": "yarn run clean && yarn run test:flow && yarn run test:typescript && yarn run test:jest && yarn run check",
-    "test:flow": "flow check",
-    "test:typescript": "dtslint --onlyTestTsNext src/types",
-    "test:jest": "jest --coverage",
-    "watch": "jest --watch"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/nvie/decoders.git"
-  },
-  "author": "Vincent Driessen",
-  "license": "MIT",
-  "keywords": [
-    "decoder",
-    "decoders",
-    "guard",
-    "object",
-    "array",
-    "string",
-    "email",
-    "regex",
-    "number",
-    "integer",
-    "boolean",
-    "truthy",
-    "date",
-    "mapping",
-    "dict",
-    "mixed",
-    "tuple2",
-    "unknown",
-    "optional",
-    "nullable",
-    "maybe",
-    "compose",
-    "map",
-    "predicate"
-  ],
-  "bugs": {
-    "url": "https://github.com/nvie/decoders/issues"
-  },
-  "homepage": "https://github.com/nvie/decoders#readme",
-  "sideEffects": false,
-  "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.2.2",
-    "@babel/preset-env": "^7.3.1",
-    "@babel/preset-flow": "^7.0.0",
-    "babel-eslint": "^10.0.1",
-    "coveralls": "^3.0.2",
-    "dtslint": "^0.9.6",
-    "eslint": "^6.0.1",
-    "eslint-plugin-flowtype": "^4.2.0",
-    "flow-bin": "^0.107.0",
-    "flow-copy-source": "^2.0.1",
-    "flow-typed": "^2.5.1",
-    "import-sort-cli": "^6.0.0",
-    "import-sort-parser-babylon": "^6.0.0",
-    "import-sort-style-eslint": "^6.0.0",
-    "import-sort-style-module": "^6.0.0",
-    "in-publish": "^2.0.0",
-    "itertools": "^1.3.0",
-    "jest": "^24.1.0",
-    "jest-cli": "^24.1.0",
-    "prettier": "^1.18.2",
-    "prettier-plugin-package": "^0.3.1",
-    "rimraf": "^3.0.0"
-  },
-  "dependencies": {
-    "debrief": "^1.2.6",
-    "lemons": "^1.4.0"
-  },
-  "jest": {
-    "testPathIgnorePatterns": [
-      "node_modules",
-      "fixtures.js",
-      ".skip.js"
-    ]
-  }
+    "name": "decoders",
+    "version": "1.16.1",
+    "description": "Elm-like decoders for when working with Flow types in JS",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nvie/decoders.git"
+    },
+    "author": "Vincent Driessen",
+    "homepage": "https://github.com/nvie/decoders#readme",
+    "bugs": {
+        "url": "https://github.com/nvie/decoders/issues"
+    },
+    "main": "./dist/index.js",
+    "scripts": {
+        "actually-prepublish": "echo \"\\n\\nPlease run \\`bin/publish.sh <options>\\` instead.\\n\\n\" && exit 2",
+        "build": "./bin/build.sh",
+        "check": "yarn run check:eslint && yarn run check:prettier && yarn run check:import-sort",
+        "check:eslint": "eslint --report-unused-disable-directives src",
+        "check:import-sort": "import-sort --list-different 'src/**/*.js'",
+        "check:prettier": "prettier --list-different 'src/**/*.js'",
+        "clean": "rimraf dist",
+        "fix": "yarn run fix:prettier && yarn run fix:import-sort",
+        "fix:import-sort": "import-sort --write 'src/**/*.js'",
+        "fix:prettier": "prettier --write 'src/**/*.js'",
+        "prepublish": "in-publish && yarn run actually-prepublish || not-in-publish",
+        "test": "yarn run clean && yarn run test:flow && yarn run test:typescript && yarn run test:jest && yarn run check",
+        "test:flow": "flow check",
+        "test:jest": "jest --coverage",
+        "test:typescript": "dtslint --onlyTestTsNext src/types",
+        "watch": "jest --watch"
+    },
+    "files": [
+        "dist/"
+    ],
+    "keywords": [
+        "decoder",
+        "decoders",
+        "guard",
+        "object",
+        "array",
+        "string",
+        "email",
+        "regex",
+        "number",
+        "integer",
+        "boolean",
+        "truthy",
+        "date",
+        "mapping",
+        "dict",
+        "mixed",
+        "tuple2",
+        "unknown",
+        "optional",
+        "nullable",
+        "maybe",
+        "compose",
+        "map",
+        "predicate"
+    ],
+    "dependencies": {
+        "debrief": "^1.2.6",
+        "lemons": "^1.4.0"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.2.3",
+        "@babel/core": "^7.2.2",
+        "@babel/preset-env": "^7.3.1",
+        "@babel/preset-flow": "^7.0.0",
+        "babel-eslint": "^10.0.1",
+        "coveralls": "^3.0.2",
+        "dtslint": "^0.9.6",
+        "eslint": "^6.0.1",
+        "eslint-plugin-flowtype": "^4.2.0",
+        "flow-bin": "^0.107.0",
+        "flow-copy-source": "^2.0.1",
+        "flow-typed": "^2.5.1",
+        "import-sort-cli": "^6.0.0",
+        "import-sort-parser-babylon": "^6.0.0",
+        "import-sort-style-eslint": "^6.0.0",
+        "import-sort-style-module": "^6.0.0",
+        "in-publish": "^2.0.0",
+        "itertools": "^1.3.0",
+        "jest": "^24.1.0",
+        "jest-cli": "^24.1.0",
+        "prettier": "^1.18.2",
+        "prettier-plugin-package": "^0.3.1",
+        "rimraf": "^3.0.0"
+    },
+    "githubUrl": "https://github.com/nvie/decoders",
+    "jest": {
+        "testPathIgnorePatterns": [
+            "node_modules",
+            "fixtures.js",
+            ".skip.js"
+        ]
+    },
+    "sideEffects": false,
+    "types": "./dist/types/index.d.ts"
 }
