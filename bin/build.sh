@@ -55,6 +55,7 @@ build_package_json() {
         add_types_entrypoint        | \
         add_entrypoint                \
         > dist/package.json
+    prettier --write dist/package.json
 }
 
 build() {
