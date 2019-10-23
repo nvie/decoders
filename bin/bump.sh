@@ -19,5 +19,6 @@ else
     # Write the new version to the top-level package.json
     mv package.json package.json.orig
     cat package.json.orig | jq ". + { \"version\": \"${NEW_VERSION}\" }" > package.json
+    prettier --write package.json
     rm package.json.orig
 fi
