@@ -1,6 +1,6 @@
 import { guard, object, string, array } from 'decoders';
 
-// $ExpectType { name: string; tags: string[]; }
+// $ExpectType { name: string; tags: string[]; } & {}
 guard(
     object({
         name: string,
