@@ -5,7 +5,7 @@ set -e
 ROOT="$(git rev-parse --show-toplevel)"
 SRC="${ROOT}/src"
 DIST="${ROOT}/dist"
-DIST_TYPES="${ROOT}/dist/types"
+DIST_TYPES="${ROOT}/dist"
 
 # Work from the project root, independently from where this script is run
 cd "$ROOT"
@@ -39,7 +39,7 @@ add_entrypoint() {
 
 add_types_entrypoint() {
     if [ -f "$DIST_TYPES/index.d.ts" ]; then
-        jq '. + { types: "./types/index.d.ts" }'
+        jq '. + { types: "./index.d.ts" }'
     else
         cat  # no-op, pass-thru
     fi
