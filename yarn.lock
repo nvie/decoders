@@ -3911,9 +3911,9 @@ left-pad@^1.3.0:
   integrity sha512-XI5MPzVNApjAyhQzphX8BkmKsKUxD4LdyK24iZeQGinBN9yTQT3bFlCBy/aVx2HrNcqQGsdot8ghrjyrvMCoEA==
 
 lemons@^1.4.0:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/lemons/-/lemons-1.4.1.tgz#89683c4e3d90421e3625a2b9ec48f1d313474798"
-  integrity sha512-3+hikYN+NGVaGMT9lAq/rJeqhN0cdp/IZF6V9SSJCU89OH372x80/resNS9152QzD8tVvEDf21lWWrDwQdQtDA==
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/lemons/-/lemons-1.4.2.tgz#096fb903eaad2a96c0ce8a63fb697101891864f2"
+  integrity sha512-edgrTshwPHJcWlKhGJ9q19y846kyp/CtbVfa2wFX9rCyiQwX4fFLIjXsv1KX3mb7Ne0WAWVo541m3h0Ol3OZyw==
 
 leven@^3.1.0:
   version "3.1.0"
