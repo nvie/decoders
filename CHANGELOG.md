@@ -1,3 +1,12 @@
+v1.17.0
+-------
+
+May cause breakage for Flow users:
+
+- Fix subtle bug in `object()` and `exact()` Flow type definitions that could
+  cause Flow to leak `any` under rare circumstances.
+
+
 v1.16.1
 -------
 
