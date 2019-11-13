@@ -18,27 +18,24 @@ const ntuple = (n: number) =>
  * for T1 and T2.  Err otherwise.
  */
 export function tuple2<T1, T2>(decoder1: Decoder<T1>, decoder2: Decoder<T2>): Decoder<[T1, T2]> {
-    return compose(
-        ntuple(2),
-        (blobs: Array<mixed>) => {
-            const [blob1, blob2] = blobs;
+    return compose(ntuple(2), (blobs: Array<mixed>) => {
+        const [blob1, blob2] = blobs;
 
-            const result1 = decoder1(blob1);
-            const result2 = decoder2(blob2);
-            try {
-                return Ok([result1.unwrap(), result2.unwrap()]);
-            } catch (e) {
-                // If a decoder error has happened while unwrapping all the
-                // results, try to construct a good error message
-                return Err(
-                    annotate([
-                        result1.isErr() ? result1.errValue() : result1.value(),
-                        result2.isErr() ? result2.errValue() : result2.value(),
-                    ])
-                );
-            }
+        const result1 = decoder1(blob1);
+        const result2 = decoder2(blob2);
+        try {
+            return Ok([result1.unwrap(), result2.unwrap()]);
+        } catch (e) {
+            // If a decoder error has happened while unwrapping all the
+            // results, try to construct a good error message
+            return Err(
+                annotate([
+                    result1.isErr() ? result1.errValue() : result1.value(),
+                    result2.isErr() ? result2.errValue() : result2.value(),
+                ])
+            );
         }
-    );
+    });
 }
 
 /**
@@ -50,29 +47,26 @@ export function tuple3<T1, T2, T3>(
     decoder2: Decoder<T2>,
     decoder3: Decoder<T3>
 ): Decoder<[T1, T2, T3]> {
-    return compose(
-        ntuple(3),
-        (blobs: Array<mixed>) => {
-            const [blob1, blob2, blob3] = blobs;
+    return compose(ntuple(3), (blobs: Array<mixed>) => {
+        const [blob1, blob2, blob3] = blobs;
 
-            const result1 = decoder1(blob1);
-            const result2 = decoder2(blob2);
-            const result3 = decoder3(blob3);
-            try {
-                return Ok([result1.unwrap(), result2.unwrap(), result3.unwrap()]);
-            } catch (e) {
-                // If a decoder error has happened while unwrapping all the
-                // results, try to construct a good error message
-                return Err(
-                    annotate([
-                        result1.isErr() ? result1.errValue() : result1.value(),
-                        result2.isErr() ? result2.errValue() : result2.value(),
-                        result3.isErr() ? result3.errValue() : result3.value(),
-                    ])
-                );
-            }
+        const result1 = decoder1(blob1);
+        const result2 = decoder2(blob2);
+        const result3 = decoder3(blob3);
+        try {
+            return Ok([result1.unwrap(), result2.unwrap(), result3.unwrap()]);
+        } catch (e) {
+            // If a decoder error has happened while unwrapping all the
+            // results, try to construct a good error message
+            return Err(
+                annotate([
+                    result1.isErr() ? result1.errValue() : result1.value(),
+                    result2.isErr() ? result2.errValue() : result2.value(),
+                    result3.isErr() ? result3.errValue() : result3.value(),
+                ])
+            );
         }
-    );
+    });
 }
 
 /**
@@ -85,31 +79,28 @@ export function tuple4<T1, T2, T3, T4>(
     decoder3: Decoder<T3>,
     decoder4: Decoder<T4>
 ): Decoder<[T1, T2, T3, T4]> {
-    return compose(
-        ntuple(4),
-        (blobs: Array<mixed>) => {
-            const [blob1, blob2, blob3, blob4] = blobs;
+    return compose(ntuple(4), (blobs: Array<mixed>) => {
+        const [blob1, blob2, blob3, blob4] = blobs;
 
-            const result1 = decoder1(blob1);
-            const result2 = decoder2(blob2);
-            const result3 = decoder3(blob3);
-            const result4 = decoder4(blob4);
-            try {
-                return Ok([result1.unwrap(), result2.unwrap(), result3.unwrap(), result4.unwrap()]);
-            } catch (e) {
-                // If a decoder error has happened while unwrapping all the
-                // results, try to construct a good error message
-                return Err(
-                    annotate([
-                        result1.isErr() ? result1.errValue() : result1.value(),
-                        result2.isErr() ? result2.errValue() : result2.value(),
-                        result3.isErr() ? result3.errValue() : result3.value(),
-                        result4.isErr() ? result4.errValue() : result4.value(),
-                    ])
-                );
-            }
+        const result1 = decoder1(blob1);
+        const result2 = decoder2(blob2);
+        const result3 = decoder3(blob3);
+        const result4 = decoder4(blob4);
+        try {
+            return Ok([result1.unwrap(), result2.unwrap(), result3.unwrap(), result4.unwrap()]);
+        } catch (e) {
+            // If a decoder error has happened while unwrapping all the
+            // results, try to construct a good error message
+            return Err(
+                annotate([
+                    result1.isErr() ? result1.errValue() : result1.value(),
+                    result2.isErr() ? result2.errValue() : result2.value(),
+                    result3.isErr() ? result3.errValue() : result3.value(),
+                    result4.isErr() ? result4.errValue() : result4.value(),
+                ])
+            );
         }
-    );
+    });
 }
 
 /**
@@ -123,33 +114,30 @@ export function tuple5<T1, T2, T3, T4, T5>(
     decoder4: Decoder<T4>,
     decoder5: Decoder<T5>
 ): Decoder<[T1, T2, T3, T4, T5]> {
-    return compose(
-        ntuple(5),
-        (blobs: Array<mixed>) => {
-            const [blob1, blob2, blob3, blob4, blob5] = blobs;
+    return compose(ntuple(5), (blobs: Array<mixed>) => {
+        const [blob1, blob2, blob3, blob4, blob5] = blobs;
 
-            const result1 = decoder1(blob1);
-            const result2 = decoder2(blob2);
-            const result3 = decoder3(blob3);
-            const result4 = decoder4(blob4);
-            const result5 = decoder5(blob5);
-            try {
-                return Ok([result1.unwrap(), result2.unwrap(), result3.unwrap(), result4.unwrap(), result5.unwrap()]);
-            } catch (e) {
-                // If a decoder error has happened while unwrapping all the
-                // results, try to construct a good error message
-                return Err(
-                    annotate([
-                        result1.isErr() ? result1.errValue() : result1.value(),
-                        result2.isErr() ? result2.errValue() : result2.value(),
-                        result3.isErr() ? result3.errValue() : result3.value(),
-                        result4.isErr() ? result4.errValue() : result4.value(),
-                        result5.isErr() ? result5.errValue() : result5.value(),
-                    ])
-                );
-            }
+        const result1 = decoder1(blob1);
+        const result2 = decoder2(blob2);
+        const result3 = decoder3(blob3);
+        const result4 = decoder4(blob4);
+        const result5 = decoder5(blob5);
+        try {
+            return Ok([result1.unwrap(), result2.unwrap(), result3.unwrap(), result4.unwrap(), result5.unwrap()]);
+        } catch (e) {
+            // If a decoder error has happened while unwrapping all the
+            // results, try to construct a good error message
+            return Err(
+                annotate([
+                    result1.isErr() ? result1.errValue() : result1.value(),
+                    result2.isErr() ? result2.errValue() : result2.value(),
+                    result3.isErr() ? result3.errValue() : result3.value(),
+                    result4.isErr() ? result4.errValue() : result4.value(),
+                    result5.isErr() ? result5.errValue() : result5.value(),
+                ])
+            );
         }
-    );
+    });
 }
 
 /**
@@ -164,40 +152,37 @@ export function tuple6<T1, T2, T3, T4, T5, T6>(
     decoder5: Decoder<T5>,
     decoder6: Decoder<T6>
 ): Decoder<[T1, T2, T3, T4, T5, T6]> {
-    return compose(
-        ntuple(6),
-        (blobs: Array<mixed>) => {
-            const [blob1, blob2, blob3, blob4, blob5, blob6] = blobs;
+    return compose(ntuple(6), (blobs: Array<mixed>) => {
+        const [blob1, blob2, blob3, blob4, blob5, blob6] = blobs;
 
-            const result1 = decoder1(blob1);
-            const result2 = decoder2(blob2);
-            const result3 = decoder3(blob3);
-            const result4 = decoder4(blob4);
-            const result5 = decoder5(blob5);
-            const result6 = decoder6(blob6);
-            try {
-                return Ok([
-                    result1.unwrap(),
-                    result2.unwrap(),
-                    result3.unwrap(),
-                    result4.unwrap(),
-                    result5.unwrap(),
-                    result6.unwrap(),
-                ]);
-            } catch (e) {
-                // If a decoder error has happened while unwrapping all the
-                // results, try to construct a good error message
-                return Err(
-                    annotate([
-                        result1.isErr() ? result1.errValue() : result1.value(),
-                        result2.isErr() ? result2.errValue() : result2.value(),
-                        result3.isErr() ? result3.errValue() : result3.value(),
-                        result4.isErr() ? result4.errValue() : result4.value(),
-                        result5.isErr() ? result5.errValue() : result5.value(),
-                        result6.isErr() ? result6.errValue() : result6.value(),
-                    ])
-                );
-            }
+        const result1 = decoder1(blob1);
+        const result2 = decoder2(blob2);
+        const result3 = decoder3(blob3);
+        const result4 = decoder4(blob4);
+        const result5 = decoder5(blob5);
+        const result6 = decoder6(blob6);
+        try {
+            return Ok([
+                result1.unwrap(),
+                result2.unwrap(),
+                result3.unwrap(),
+                result4.unwrap(),
+                result5.unwrap(),
+                result6.unwrap(),
+            ]);
+        } catch (e) {
+            // If a decoder error has happened while unwrapping all the
+            // results, try to construct a good error message
+            return Err(
+                annotate([
+                    result1.isErr() ? result1.errValue() : result1.value(),
+                    result2.isErr() ? result2.errValue() : result2.value(),
+                    result3.isErr() ? result3.errValue() : result3.value(),
+                    result4.isErr() ? result4.errValue() : result4.value(),
+                    result5.isErr() ? result5.errValue() : result5.value(),
+                    result6.isErr() ? result6.errValue() : result6.value(),
+                ])
+            );
         }
-    );
+    });
 }

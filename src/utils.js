@@ -20,16 +20,13 @@ export const isDate = (value: mixed): boolean %checks =>
  * for V's.  This is useful to change the original input data.
  */
 export function map<T, V>(decoder: Decoder<T>, mapper: T => V): Decoder<V> {
-    return compose(
-        decoder,
-        x => {
-            try {
-                return Ok(mapper(x));
-            } catch (e) {
-                return Err(annotate(x, e instanceof Error ? e.message : String(e)));
-            }
+    return compose(decoder, x => {
+        try {
+            return Ok(mapper(x));
+        } catch (e) {
+            return Err(annotate(x, e instanceof Error ? e.message : String(e)));
         }
-    );
+    });
 }
 
 /**
