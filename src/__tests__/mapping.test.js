@@ -10,7 +10,11 @@ describe('mappings', () => {
 
     it('valid', () => {
         const input = { '18': { name: 'foo' }, '23': { name: 'bar' }, key: { name: 'value' } };
-        const output = new Map([['18', { name: 'foo' }], ['23', { name: 'bar' }], ['key', { name: 'value' }]]);
+        const output = new Map([
+            ['18', { name: 'foo' }],
+            ['23', { name: 'bar' }],
+            ['key', { name: 'value' }],
+        ]);
         expect(decoder(input).unwrap()).toEqual(output);
     });
 
