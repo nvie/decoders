@@ -8,7 +8,7 @@ import type { $DecoderType, Decoder } from './types';
 import { compose } from './utils';
 
 // $FlowIgnore - deliberate use of `any` - not sure how we should get rid of this
-type anything = any;
+type AnyDecoder = any;
 
 // $FlowIgnore: we're deliberately casting
 type cast = any;
@@ -75,7 +75,7 @@ export const pojo: Decoder<{| [string]: mixed |}> = (blob: mixed) => {
  * Put simply: it'll "peel off" all of the nested Decoders, puts them together
  * in an object, and wraps it in a Decoder<...>.
  */
-export function object<O: { +[field: string]: Decoder<anything> }>(mapping: O): Decoder<$ObjMap<O, $DecoderType>> {
+export function object<O: { +[field: string]: AnyDecoder }>(mapping: O): Decoder<$ObjMap<O, $DecoderType>> {
     const known = new Set(Object.keys(mapping));
     return compose(
         pojo,
@@ -154,9 +154,7 @@ export function object<O: { +[field: string]: Decoder<anything> }>(mapping: O): 
     );
 }
 
-export function exact<O: { +[field: string]: Decoder<anything> }>(
-    mapping: O
-): Decoder<$Exact<$ObjMap<O, $DecoderType>>> {
+export function exact<O: { +[field: string]: AnyDecoder }>(mapping: O): Decoder<$Exact<$ObjMap<O, $DecoderType>>> {
     // Check the inputted object for any superfluous keys
     const allowed = new Set(Object.keys(mapping));
     const checked = compose(
