@@ -34,7 +34,7 @@ yarn run test
 VERSION="$(cat package.json | jq -r .version)"
 GITHUB_URL="$(cat package.json | jq -r .githubUrl)"
 
-if [ -z "$GITHUB_URL" ]; then
+if [ -z "$GITHUB_URL" -o "$GITHUB_URL" = "null" ]; then
     echo 'Please specify `githubUrl` in package.json.' >&2
     exit 5
 fi
@@ -50,4 +50,4 @@ cd "$DIST" && yarn publish --new-version "$VERSION" "$@"
 
 # Open browser tab to create new release
 open "${GITHUB_URL}/blob/v${VERSION}/CHANGELOG.md"
-open "${GITHUB_URL}/releases/new?tag=v${VERSION}&body=TODO%3A%20Copy%20release%20notes%20from%20CHANGELOG."
+open "${GITHUB_URL}/releases/new?tag=v${VERSION}&title=v${VERSION}&body=TODO%3A%20Copy%20release%20notes%20from%20CHANGELOG."
