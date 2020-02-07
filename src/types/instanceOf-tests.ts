@@ -3,7 +3,7 @@ import { instanceOf } from 'decoders';
 // $ExpectType Decoder<Error, unknown>
 instanceOf(Error);
 
-// $ExpectType Decoder<TypeError, unknown>
+// $ ExpectType Decoder<TypeError, unknown>
 instanceOf(TypeError);
 
 // $ExpectType Decoder<RegExp, unknown>
