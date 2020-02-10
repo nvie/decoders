@@ -1,3 +1,14 @@
+v1.18.0
+-------
+
+New decoders:
+
+- `nonEmptyString`: like `string`, but will fail on inputs with only whitespace
+  (or the empty string)
+
+- `nonEmptyArray`: like `array`, but will fail on inputs with 0 elements
+
+
 v1.17.0
 -------
 

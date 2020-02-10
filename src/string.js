@@ -26,6 +26,11 @@ export const string: Decoder<string> = (blob: mixed) => {
 };
 
 /**
+ * Decoder that only returns Ok for non-empty string inputs.  Err otherwise.
+ */
+export const nonEmptyString = regex(/\S/, 'Must be non-empty string');
+
+/**
  * Decoder that only returns Ok for string inputs that match the regular
  * expression.  Err otherwise.  Will always validate that the input is a string
  * before testing the regex.

@@ -4,7 +4,7 @@ import { annotate } from 'debrief';
 import { Err, Ok } from 'lemons/Result';
 
 import type { DecodeResult, Decoder } from './types';
-import { compose } from './utils';
+import { compose, predicate } from './utils';
 
 /**
  * Like a "Plain Old JavaScript Object", but for arrays: "Plain Old JavaScript
@@ -84,4 +84,15 @@ function members<T>(decoder: Decoder<T>): Decoder<Array<T>, Array<mixed>> {
  */
 export function array<T>(decoder: Decoder<T>): Decoder<Array<T>> {
     return compose(poja, members(decoder));
+}
+
+/**
+ * Builds a Decoder that returns Ok for values of `Array<T>`, but will reject
+ * empty arrays.
+ */
+export function nonEmptyArray<T>(decoder: Decoder<T>): Decoder<Array<T>> {
+    return compose(
+        array(decoder),
+        predicate(arr => arr.length > 0, 'Must be non-empty array')
+    );
 }

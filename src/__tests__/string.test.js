@@ -3,7 +3,7 @@
 import { partition } from 'itertools';
 
 import { guard } from '../guard';
-import { email, regex, string, url } from '../string';
+import { email, nonEmptyString, regex, string, url } from '../string';
 import { INPUTS } from './fixtures';
 
 describe('string', () => {
@@ -25,7 +25,7 @@ describe('string', () => {
     });
 });
 
-describe('string', () => {
+describe('regex', () => {
     const decoder = guard(regex(/[0-9]{4}-[0-9]{2}-[0-9]{2}/, 'Must be YYYY-MM-DD'));
 
     it('valid', () => {
@@ -99,5 +99,27 @@ describe('url', () => {
         expect(() => decoder('foo')).toThrow('Must be URL');
         expect(() => decoder('me@nvie.com ')).toThrow('Must be URL');
         expect(() => decoder(123)).toThrow('Must be string');
+    });
+});
+
+describe('nonEmptyString', () => {
+    const decoder = guard(nonEmptyString);
+
+    it('valid', () => {
+        expect(decoder('x')).toBe('x');
+        expect(decoder(' x')).toBe(' x');
+        expect(decoder('x ')).toBe('x ');
+        expect(decoder('hi')).toBe('hi');
+        expect(decoder('hi ')).toBe('hi ');
+        expect(decoder(' hi')).toBe(' hi');
+        expect(decoder(' hi   ')).toBe(' hi   ');
+    });
+
+    it('invalid', () => {
+        expect(() => decoder('')).toThrow();
+        expect(() => decoder(' ')).toThrow();
+        expect(() => decoder('	')).toThrow();
+        expect(() => decoder('\n')).toThrow();
+        expect(() => decoder('     \n ')).toThrow();
     });
 });

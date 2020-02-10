@@ -23,7 +23,7 @@ import type { $DecoderType, Decoder, Guard } from './types';
 export { guard } from './guard';
 export { compose, map, predicate } from './utils';
 
-export { array, poja } from './array';
+export { array, nonEmptyArray, poja } from './array';
 export { boolean, numericBoolean, truthy } from './boolean';
 export { constant, hardcoded, mixed, null_, undefined_, unknown } from './constants';
 export { date } from './date';
@@ -35,7 +35,7 @@ export { mapping, dict } from './mapping';
 export { integer, number, positiveInteger, positiveNumber } from './number';
 export { exact, object, pojo } from './object';
 export { maybe, nullable, optional } from './optional';
-export { email, regex, string, url } from './string';
+export { email, nonEmptyString, regex, string, url } from './string';
 export { tuple2, tuple3, tuple4, tuple5, tuple6 } from './tuple';
 
 export type { $DecoderType, Decoder, Guard };
