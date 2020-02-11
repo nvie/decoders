@@ -2036,10 +2036,10 @@ data-urls@^1.1.0:
     whatwg-mimetype "^2.2.0"
     whatwg-url "^7.0.0"
 
-debrief@^1.2.6:
-  version "1.2.9"
-  resolved "https://registry.yarnpkg.com/debrief/-/debrief-1.2.9.tgz#680ff945b5c1c79216d8c82be426843c7bfde8e6"
-  integrity sha512-Hj74iI6xtcQi4O8lfZE2HBuknGnRdMHrNptCsXfH5728hmA4axtzQWNcoSnmMSCGqrro2n8QvqfySCCxQORUMA==
+debrief@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/debrief/-/debrief-1.3.0.tgz#6ff5d2c60c9f86f7ff82d7b9ada65e3e5008fb47"
+  integrity sha512-8qH7T6KVkJp9WbZLFC3rO1uAVJCngAT2C1LJOZzYFnUZmgogVD7p396ygO5PAyzJd801g1j/VuZM2M+U74BEdw==
 
 debug@^2.2.0, debug@^2.3.3:
   version "2.6.9"

@@ -1,3 +1,10 @@
+v1.18.1
+-------
+
+- Also fix Flow type bugs when Flow option `exact_by_default=true` in `debrief`
+  dependency
+
+
 v1.18.0
 -------
 

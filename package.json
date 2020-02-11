@@ -61,7 +61,7 @@
         "predicate"
     ],
     "dependencies": {
-        "debrief": "^1.2.6",
+        "debrief": "^1.3.0",
         "lemons": "^1.4.0"
     },
     "devDependencies": {
