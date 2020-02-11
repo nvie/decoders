@@ -1,12 +1,17 @@
 v1.18.0
 -------
 
-New decoders:
+**New decoders:**
 
 - `nonEmptyString`: like `string`, but will fail on inputs with only whitespace
   (or the empty string)
 
 - `nonEmptyArray`: like `array`, but will fail on inputs with 0 elements
+
+
+**Fixes:**
+
+- Fix Flow type bugs when Flow option `exact_by_default=true` is enabled
 
 
 v1.17.0

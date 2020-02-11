@@ -42,7 +42,7 @@ type anything = any;
  *
  * Also, the error messages will be less ambiguous using `dispatch()`.
  */
-export function dispatch<O: { +[field: string]: Decoder<anything> }>(
+export function dispatch<O: { +[field: string]: Decoder<anything>, ... }>(
     field: string,
     mapping: O
 ): Decoder<$Values<$ObjMap<O, $DecoderType>>> {

@@ -56,7 +56,7 @@ export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
 }
 
 function mapToObject<T>(mapping: Map<string, T>): { [string]: T } {
-    const result: { [string]: T } = {};
+    const result: { [string]: T } = { ...null };
     for (const [k, v] of mapping.entries()) {
         result[k] = v;
     }
