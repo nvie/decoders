@@ -4221,9 +4221,9 @@ lcov-parse@^1.0.0:
   integrity sha1-6w1GtUER68VhrLTECO+TY73I9+A=
 
 lemons@^1.4.0:
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/lemons/-/lemons-1.4.3.tgz#0cc9bb7c6f4aeda95fdae746c18efebd7888eebf"
-  integrity sha512-iDdtxPJLwfM6Tkf1DoWzWSjZLjv4ukG4mu1Foz48YIPifb5ewiLa+SDCl1y6NNAoroJOj7jwqGoZa/Cp9iZ28A==
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/lemons/-/lemons-1.5.0.tgz#ce7032064ce40dd555f9320a467b7842b8c6d61c"
+  integrity sha512-B9SAzbdnJNKNTPfpxecm9HJ68gMsXSxo2m9SWDlTVc9s2mY8S4/HHhiO6WRhH5d/hnNoX1LQDThh9iXGPkcGcA==
 
 leven@^3.1.0:
   version "3.1.0"
