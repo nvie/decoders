@@ -17,6 +17,25 @@ const ntuple = (n: number) =>
  * Builds a Decoder that returns Ok for 2-tuples of [T1, T2], given Decoders
  * for T1 and T2.  Err otherwise.
  */
+export function tuple1<T>(decoder1: Decoder<T>): Decoder<[T]> {
+    return compose(ntuple(1), (blobs: Array<mixed>) => {
+        const [blob1] = blobs;
+
+        const result1 = decoder1(blob1);
+        try {
+            return Ok([result1.unwrap()]);
+        } catch (e) {
+            // If a decoder error has happened while unwrapping all the
+            // results, try to construct a good error message
+            return Err(annotate([result1.isErr() ? result1.errValue() : result1.value()]));
+        }
+    });
+}
+
+/**
+ * Builds a Decoder that returns Ok for 2-tuples of [T1, T2], given Decoders
+ * for T1 and T2.  Err otherwise.
+ */
 export function tuple2<T1, T2>(decoder1: Decoder<T1>, decoder2: Decoder<T2>): Decoder<[T1, T2]> {
     return compose(ntuple(2), (blobs: Array<mixed>) => {
         const [blob1, blob2] = blobs;

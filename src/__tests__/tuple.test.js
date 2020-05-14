@@ -2,9 +2,25 @@
 
 import { number } from '../number';
 import { string } from '../string';
-import { tuple2, tuple3, tuple4, tuple5, tuple6 } from '../tuple';
+import { tuple1, tuple2, tuple3, tuple4, tuple5, tuple6 } from '../tuple';
 
 describe('tuples', () => {
+    it('tuple1', () => {
+        const decoder = tuple1(string);
+        expect(decoder(['foo']).unwrap()).toEqual(['foo']);
+        expect(decoder(['foo', 'bar']).isErr()).toBe(true);
+        expect(decoder([42]).isErr()).toBe(true);
+        expect(decoder([42, 13]).isErr()).toBe(true);
+
+        // Invalid
+        expect(decoder('not an array').isErr()).toBe(true);
+        expect(decoder(undefined).isErr()).toBe(true);
+
+        // Wrong arity (not a 1-tuple)
+        expect(decoder([]).isErr()).toBe(true);
+        expect(decoder(['foo', 42, true]).isErr()).toBe(true);
+    });
+
     it('tuple2', () => {
         const decoder = tuple2(string, number);
         expect(decoder(['foo', 42]).unwrap()).toEqual(['foo', 42]);
