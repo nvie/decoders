@@ -13,7 +13,7 @@ import { INPUTS } from './fixtures';
 
 describe('either', () => {
     const stringOrBooleanDecoder = guard(either(string, boolean));
-    const [okay, not_okay] = partition(INPUTS, x => typeof x === 'string' || typeof x === 'boolean');
+    const [okay, not_okay] = partition(INPUTS, (x) => typeof x === 'string' || typeof x === 'boolean');
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
@@ -64,7 +64,7 @@ describe('either3', () => {
     const decoder = guard(either4(string, boolean, number, undefined_));
     const [okay, not_okay] = partition(
         INPUTS,
-        x => x === undefined || typeof x === 'string' || typeof x === 'boolean' || Number.isFinite(x)
+        (x) => x === undefined || typeof x === 'string' || typeof x === 'boolean' || Number.isFinite(x)
     );
 
     it('valid', () => {
@@ -116,7 +116,7 @@ describe('either9', () => {
 describe('oneOf', () => {
     const decoder = oneOf([3, true, null, '1', 'foo']);
     const okay = [3, true, null, '1', 'foo'];
-    const not_okay = INPUTS.filter(x => !okay.includes(x));
+    const not_okay = INPUTS.filter((x) => !okay.includes(x));
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);

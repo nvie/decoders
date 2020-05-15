@@ -27,7 +27,7 @@ export function guard<T>(decoder: Decoder<T>, options?: Options): Guard<T> {
 
     return (blob: mixed) =>
         decoder(blob)
-            .mapError(annotation => {
+            .mapError((annotation) => {
                 const err = new Error('\n' + serializer(annotation));
                 err.name = 'Decoding error';
                 return err;

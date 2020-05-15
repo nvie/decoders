@@ -48,7 +48,7 @@ export function dispatch<O: { +[field: string]: Decoder<anything>, ... }>(
 ): Decoder<$Values<$ObjMap<O, $DecoderType>>> {
     const base = object({ [field]: oneOf(Object.keys(mapping)) });
     return (blob: mixed) => {
-        return base(blob).andThen(baseObj => {
+        return base(blob).andThen((baseObj) => {
             const decoderName = baseObj[field];
             const decoder = mapping[decoderName];
             return decoder(blob);

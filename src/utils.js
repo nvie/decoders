@@ -19,8 +19,8 @@ export const isDate = (value: mixed): boolean %checks =>
  * Given a decoder T and a mapping function from T's to V's, returns a decoder
  * for V's.  This is useful to change the original input data.
  */
-export function map<T, V>(decoder: Decoder<T>, mapper: T => V): Decoder<V> {
-    return compose(decoder, x => {
+export function map<T, V>(decoder: Decoder<T>, mapper: (T) => V): Decoder<V> {
+    return compose(decoder, (x) => {
         try {
             return Ok(mapper(x));
         } catch (e) {
@@ -47,7 +47,7 @@ export function compose<T, V>(decoder: Decoder<T>, next: Decoder<V, T>): Decoder
  * Factory function returning a Decoder<T>, given a predicate function that
  * accepts/rejects the input of type T.
  */
-export function predicate<T>(predicate: T => boolean, msg: string): Decoder<T, T> {
+export function predicate<T>(predicate: (T) => boolean, msg: string): Decoder<T, T> {
     return (value: T) => {
         return predicate(value) ? Ok(value) : Err(annotate(value, msg));
     };

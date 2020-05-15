@@ -15,7 +15,7 @@ describe('compose', () => {
 
         // We'll try to parse it as an hex int, but if it fails, we'll
         // return Err, otherwise Ok
-        s => {
+        (s) => {
             const n = parseInt(s, 16);
             return !Number.isNaN(n) ? Ok(n) : Err(annotate(n, 'Nope'));
         }
@@ -35,19 +35,19 @@ describe('map', () => {
     it('change type of decode result', () => {
         // s.length can never fail, so this is a good candidate for map() over
         // compose()
-        const len = map(string, s => s.length);
+        const len = map(string, (s) => s.length);
         expect(len('foo').unwrap()).toEqual(3);
         expect(len('Lorem ipsum dolor sit amet.').unwrap()).toEqual(27);
     });
 
     it('change value, not type, of decoded results', () => {
-        const upcase = map(string, s => s.toUpperCase());
+        const upcase = map(string, (s) => s.toUpperCase());
         expect(upcase('123').unwrap()).toEqual('123');
         expect(upcase('I am Hulk').unwrap()).toEqual('I AM HULK');
     });
 
     it('a failing mapper will fail the decoder', () => {
-        const odd = map(number, n => {
+        const odd = map(number, (n) => {
             if (n % 2 !== 0) return n;
             throw new Error('Must be odd');
         });
@@ -56,7 +56,7 @@ describe('map', () => {
         expect(odd(3).isErr()).toBe(false);
         expect(odd(4).isErr()).toBe(true);
 
-        const weirdEven = map(number, n => {
+        const weirdEven = map(number, (n) => {
             if (n % 2 === 0) return n;
             throw 'Must be even'; // Throwing a string, not an Error is non-conventional, but won't break anything
         });

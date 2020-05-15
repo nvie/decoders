@@ -17,11 +17,11 @@ function itemize(s: string = ''): string {
 export function either<T1, T2>(d1: Decoder<T1>, d2: Decoder<T2>): Decoder<T1 | T2> {
     return (blob: mixed) =>
         d1(blob).dispatch(
-            value1 => Ok(value1),
-            err1 =>
+            (value1) => Ok(value1),
+            (err1) =>
                 d2(blob).dispatch(
-                    value2 => Ok(value2),
-                    err2 =>
+                    (value2) => Ok(value2),
+                    (err2) =>
                         Err(
                             annotate(
                                 blob,
@@ -116,6 +116,6 @@ export function oneOf<T>(constants: Array<T>): Decoder<T> {
                 return Ok(c);
             }
         }
-        return Err(annotate(blob, `Must be one of ${constants.map(value => JSON.stringify(value)).join(', ')}`));
+        return Err(annotate(blob, `Must be one of ${constants.map((value) => JSON.stringify(value)).join(', ')}`));
     };
 }

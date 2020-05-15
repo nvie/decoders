@@ -10,7 +10,7 @@ import { compose, predicate } from './utils';
 const ntuple = (n: number) =>
     compose(
         poja,
-        predicate(arr => arr.length === n, `Must be a ${n}-tuple`)
+        predicate((arr) => arr.length === n, `Must be a ${n}-tuple`)
     );
 
 /**

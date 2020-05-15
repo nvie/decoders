@@ -13,12 +13,12 @@ const anyNumber: Decoder<number> = (blob: mixed) => {
 export const number: Decoder<number> = compose(anyNumber, predicate(Number.isFinite, 'Number must be finite'));
 export const positiveNumber: Decoder<number> = compose(
     number,
-    predicate(n => n >= 0, 'Number must be positive')
+    predicate((n) => n >= 0, 'Number must be positive')
 );
 
 // Integers
 export const integer: Decoder<number> = compose(number, predicate(Number.isInteger, 'Number must be an integer'));
 export const positiveInteger: Decoder<number> = compose(
     number,
-    predicate(n => n >= 0 && Number.isInteger(n), 'Number must be an integer')
+    predicate((n) => n >= 0 && Number.isInteger(n), 'Number must be an integer')
 );

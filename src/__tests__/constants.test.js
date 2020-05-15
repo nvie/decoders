@@ -7,7 +7,7 @@ import { INPUTS } from './fixtures';
 
 describe('null', () => {
     const decoder = null_;
-    const [okay, not_okay] = partition(INPUTS, x => x === null);
+    const [okay, not_okay] = partition(INPUTS, (x) => x === null);
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
@@ -26,7 +26,7 @@ describe('null', () => {
 
 describe('undefined', () => {
     const decoder = undefined_;
-    const [okay, not_okay] = partition(INPUTS, x => x === undefined);
+    const [okay, not_okay] = partition(INPUTS, (x) => x === undefined);
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
@@ -45,7 +45,7 @@ describe('undefined', () => {
 
 describe('string constants', () => {
     const decoder = constant('foo');
-    const [okay, not_okay] = partition(INPUTS, x => x === 'foo');
+    const [okay, not_okay] = partition(INPUTS, (x) => x === 'foo');
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
@@ -64,7 +64,7 @@ describe('string constants', () => {
 
 describe('number constants', () => {
     const decoder = constant(42);
-    const [okay, not_okay] = partition(INPUTS, x => x === 42);
+    const [okay, not_okay] = partition(INPUTS, (x) => x === 42);
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
@@ -83,7 +83,7 @@ describe('number constants', () => {
 
 describe('boolean constants #1', () => {
     const decoder = constant(true);
-    const [okay, not_okay] = partition(INPUTS, x => x === true);
+    const [okay, not_okay] = partition(INPUTS, (x) => x === true);
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
@@ -102,7 +102,7 @@ describe('boolean constants #1', () => {
 
 describe('boolean constants #2', () => {
     const decoder = constant(false);
-    const [okay, not_okay] = partition(INPUTS, x => x === false);
+    const [okay, not_okay] = partition(INPUTS, (x) => x === false);
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);

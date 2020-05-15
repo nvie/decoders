@@ -130,7 +130,7 @@ export function object<O: { +[field: string]: AnyDecoder, ... }>(mapping: O): De
             let err;
 
             if (fieldsWithErrors.length > 0) {
-                const errorlist = fieldsWithErrors.map(k => [k, fieldErrors[k]]);
+                const errorlist = fieldsWithErrors.map((k) => [k, fieldErrors[k]]);
                 err = annotateFields(blob, errorlist);
             } else {
                 err = annotate(blob);
@@ -138,7 +138,7 @@ export function object<O: { +[field: string]: AnyDecoder, ... }>(mapping: O): De
 
             if (missing.size > 0) {
                 const errMsg = Array.from(missing)
-                    .map(key => `"${key}"`)
+                    .map((key) => `"${key}"`)
                     .join(', ');
                 const pluralized = missing.size > 1 ? 'keys' : 'key';
                 err = annotate(err, `Missing ${pluralized}: ${errMsg}`);

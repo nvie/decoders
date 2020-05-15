@@ -93,6 +93,6 @@ export function array<T>(decoder: Decoder<T>): Decoder<Array<T>> {
 export function nonEmptyArray<T>(decoder: Decoder<T>): Decoder<Array<T>> {
     return compose(
         array(decoder),
-        predicate(arr => arr.length > 0, 'Must be non-empty array')
+        predicate((arr) => arr.length > 0, 'Must be non-empty array')
     );
 }
