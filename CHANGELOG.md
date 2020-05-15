@@ -1,3 +1,9 @@
+v1.19.1
+-------
+
+- Republish due to an NPM outage
+
+
 v1.19.0
 -------
 
