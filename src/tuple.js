@@ -14,8 +14,8 @@ const ntuple = (n: number) =>
     );
 
 /**
- * Builds a Decoder that returns Ok for 1-tuple of [T1], given Decoder
- * T.  Err otherwise.
+ * Builds a Decoder that returns Ok for 1-tuple of [T], given a Decoder for T.
+ * Err otherwise.
  */
 export function tuple1<T>(decoder1: Decoder<T>): Decoder<[T]> {
     return compose(ntuple(1), (blobs: Array<mixed>) => {
