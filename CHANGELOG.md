@@ -1,3 +1,12 @@
+v1.19.0
+-------
+
+**New decoders:**
+
+- To complement the tuple family of decoders, there's now also `tuple1` (thanks
+  @sfarthin!)
+
+
 v1.18.1
 -------
 
