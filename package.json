@@ -1,6 +1,6 @@
 {
     "name": "decoders",
-    "version": "1.18.1",
+    "version": "1.19.0",
     "description": "Elm-like decoders for when working with Flow types in JS",
     "license": "MIT",
     "repository": {
