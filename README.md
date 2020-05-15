@@ -5,7 +5,7 @@
 [![Coverage Status](https://img.shields.io/coveralls/nvie/decoders/master.svg)](https://coveralls.io/github/nvie/decoders?branch=master)
 [![Minified Size](https://badgen.net/bundlephobia/minzip/decoders)](https://bundlephobia.com/result?p=decoders)
 
-Elegant battle-tested validation library for type-safe input data for
+Elegant and battle-tested validation library for type-safe input data for
 TypeScript and Flow. The API is inspired by Elm’s JSON decoders, hence the
 name.
 
