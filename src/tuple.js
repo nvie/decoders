@@ -27,7 +27,7 @@ export function tuple1<T>(decoder1: Decoder<T>): Decoder<[T]> {
         } catch (e) {
             // If a decoder error has happened while unwrapping all the
             // results, try to construct a good error message
-            return Err(annotate([result1.isErr() ? result1.errValue() : result1.value()]));
+            return Err(annotate(result1.errValue()));
         }
     });
 }
