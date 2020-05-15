@@ -1,6 +1,6 @@
 {
     "name": "decoders",
-    "version": "1.19.0",
+    "version": "1.19.1",
     "description": "Elegant and battle-tested validation library for type-safe input data (for TypeScript and Flow)",
     "license": "MIT",
     "repository": {
@@ -89,6 +89,7 @@
         "prettier-plugin-package": "^1.0.0",
         "rimraf": "^3.0.0"
     },
+    "types": "./dist/types/index.d.ts",
     "githubUrl": "https://github.com/nvie/decoders",
     "jest": {
         "testPathIgnorePatterns": [
@@ -97,6 +98,5 @@
             ".skip.js"
         ]
     },
-    "sideEffects": false,
-    "types": "./dist/types/index.d.ts"
+    "sideEffects": false
 }
