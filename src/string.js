@@ -38,7 +38,7 @@ export const nonEmptyString = regex(/\S/, 'Must be non-empty string');
 export function regex(regex: RegExp, msg: string): Decoder<string> {
     return compose(
         string,
-        predicate(s => regex.test(s), msg)
+        predicate((s) => regex.test(s), msg)
     );
 }
 

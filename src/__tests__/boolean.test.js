@@ -7,7 +7,7 @@ import { INPUTS } from './fixtures';
 
 describe('booleans', () => {
     const decoder = boolean;
-    const [okay, not_okay] = partition(INPUTS, x => x === true || x === false);
+    const [okay, not_okay] = partition(INPUTS, (x) => x === true || x === false);
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
@@ -42,7 +42,7 @@ describe('truthy', () => {
 
 describe('numeric booleans', () => {
     const decoder = numericBoolean;
-    const [okay, not_okay] = partition(INPUTS, x => Number.isFinite(x));
+    const [okay, not_okay] = partition(INPUTS, (x) => Number.isFinite(x));
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);

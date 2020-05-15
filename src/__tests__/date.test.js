@@ -8,7 +8,10 @@ import { INPUTS } from './fixtures';
 
 describe('dates', () => {
     const decoder = guard(date);
-    const [okay, not_okay] = partition(INPUTS, o => Object.prototype.toString.call(o) === '[object Date]' && !isNaN(o));
+    const [okay, not_okay] = partition(
+        INPUTS,
+        (o) => Object.prototype.toString.call(o) === '[object Date]' && !isNaN(o)
+    );
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);

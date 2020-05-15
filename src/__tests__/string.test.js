@@ -8,7 +8,7 @@ import { INPUTS } from './fixtures';
 
 describe('string', () => {
     const decoder = guard(string);
-    const [okay, not_okay] = partition(INPUTS, x => typeof x === 'string');
+    const [okay, not_okay] = partition(INPUTS, (x) => typeof x === 'string');
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);

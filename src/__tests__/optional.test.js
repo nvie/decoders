@@ -8,7 +8,7 @@ import { INPUTS } from './fixtures';
 
 describe('optional', () => {
     const decoder = optional(string);
-    const [okay, not_okay] = partition(INPUTS, x => typeof x === 'string');
+    const [okay, not_okay] = partition(INPUTS, (x) => typeof x === 'string');
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
@@ -29,7 +29,7 @@ describe('optional', () => {
 
 describe('nullable', () => {
     const decoder = nullable(string);
-    const [okay, not_okay] = partition(INPUTS, x => typeof x === 'string');
+    const [okay, not_okay] = partition(INPUTS, (x) => typeof x === 'string');
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
@@ -50,7 +50,7 @@ describe('nullable', () => {
 
 describe('maybe', () => {
     const decoder = maybe(string);
-    const [okay, not_okay] = partition(INPUTS, x => typeof x === 'string');
+    const [okay, not_okay] = partition(INPUTS, (x) => typeof x === 'string');
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);

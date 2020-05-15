@@ -17,7 +17,7 @@ export type $DecoderType = <T>(Decoder<T>) => T;
 // warnings everywhere throughout this library, we'll suppress it here once,
 // and use this re-aliased version of "any" elsewhere.
 
-export type Guard<T> = mixed => T;
-export type Predicate<T> = T => boolean;
+export type Guard<T> = (mixed) => T;
+export type Predicate<T> = (T) => boolean;
 export type DecodeResult<T> = Result<Annotation, T>;
-export type Decoder<T, F = mixed> = F => DecodeResult<T>;
+export type Decoder<T, F = mixed> = (F) => DecodeResult<T>;
