@@ -1,3 +1,9 @@
+v1.20.1
+-------
+
+- Upgrade debrief to correct (final) version
+
+
 v1.20.0
 -------
 
