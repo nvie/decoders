@@ -1,3 +1,10 @@
+v1.20.0-rc1
+-----------
+
+- Fix issue where infinite recursion occurs when input object (the object being
+  validated) contains a circular reference
+
+
 v1.19.1
 -------
 
