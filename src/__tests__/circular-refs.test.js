@@ -1,9 +1,9 @@
 // @flow strict
 
+import { mixed } from '../constants';
 import { guard } from '../guard';
 import { number } from '../number';
 import { object, pojo } from '../object';
-import { mixed } from '../constants';
 import { string } from '../string';
 
 describe('objects w/ circular refs', () => {
