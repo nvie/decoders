@@ -2,9 +2,8 @@
 
 import { guard } from '../guard';
 import { number } from '../number';
-import { exact, object, pojo } from '../object';
+import { object, pojo } from '../object';
 import { mixed } from '../constants';
-import { optional } from '../optional';
 import { string } from '../string';
 
 describe('objects w/ circular refs', () => {
