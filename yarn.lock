@@ -2322,9 +2322,9 @@ data-urls@^2.0.0:
     whatwg-url "^8.0.0"
 
 debrief@^1.4.0-rc1:
-  version "1.4.0-rc1"
-  resolved "https://registry.yarnpkg.com/debrief/-/debrief-1.4.0-rc1.tgz#21d1164097c5d386bbd4b7b3da5e2fa9ab4f5adb"
-  integrity sha512-UUQGv3HXVJDhE1ITTwvv1gYSl7qyQJN4VOpLOrbllTwvXUliIQzyLRVXNqt6pCVYoVyjS2uG0QIAKbdr9uh+Ww==
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/debrief/-/debrief-1.4.0.tgz#902eca1b0b352b72c58036d84da803f74777533b"
+  integrity sha512-EBhwkutJ2T8xbjjElv3lkA6w4kgTmpDBlYU4howGoqfzpDbCp5cLdwWhkMGosnpz+ZJzJchriWjXCz9vOMH88A==
 
 debug@^2.2.0, debug@^2.3.3:
   version "2.6.9"
