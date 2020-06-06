@@ -9,6 +9,10 @@ jobs:
       matrix:
         node-version: [10.x, 12.x, 13.x, 14.x]
 
+        # Some key Flow versions that have seen syntax or semantic changes that
+        # required updates to decoders
+        flow-version: [0.103.0, 0.124.0, 0.125.1, latest]
+
     steps:
     - uses: actions/checkout@v1
 
@@ -17,10 +21,14 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
+    - name: Install dependencies
+      run: yarn install
+
+    - name: Install flow version
+      run: yarn add flow-bin@${{ matrix.flow-version }}
+
     - name: Run tests
-      run: |
-        yarn install
-        yarn test
+      run: yarn test
       env:
         CI: true
 
