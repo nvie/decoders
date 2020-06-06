@@ -151,7 +151,7 @@ export function object<O: { +[field: string]: AnyDecoder, ... }>(mapping: O): De
     });
 }
 
-export function exact<O: { +[field: string]: AnyDecoder, ... }>(mapping: O): Decoder<$Exact<$ObjMap<O, $DecoderType>>> {
+export function exact<O: { +[field: string]: AnyDecoder, ... }>(mapping: O): Decoder<$ObjMap<$Exact<O>, $DecoderType>> {
     // Check the inputted object for any superfluous keys
     const allowed = new Set(Object.keys(mapping));
     const checked = compose(pojo, (blob: { [string]: mixed }) => {
@@ -166,6 +166,6 @@ export function exact<O: { +[field: string]: AnyDecoder, ... }>(mapping: O): Dec
     // Defer to the "object" decoder for doing the real decoding work.  Since
     // we made sure there are no superfluous keys in this structure, it's now
     // safe to force-cast it to an $Exact<> type.
-    const decoder = ((object(mapping): cast): Decoder<$Exact<$ObjMap<O, $DecoderType>>>);
+    const decoder = ((object(mapping): cast): Decoder<$ObjMap<$Exact<O>, $DecoderType>>);
     return compose(checked, decoder);
 }
