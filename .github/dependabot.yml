@@ -1,0 +1,9 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: weekly
+    day: tuesday
+    time: '04:45'
+  open-pull-requests-limit: 10
