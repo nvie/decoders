@@ -1,3 +1,9 @@
+v1.20.2
+-------
+
+- Fix compatibility with Flow 0.126.0+
+
+
 v1.20.1
 -------
 
