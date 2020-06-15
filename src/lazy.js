@@ -1,13 +1,6 @@
 // @flow strict
 
-import type { Annotation } from 'debrief';
-import { annotateFields, isAnnotation } from 'debrief';
-import { Err, Ok } from 'lemons/Result';
-
-import { pojo } from './object';
-import { number } from './number';
 import type { Decoder } from './types';
-import { compose, map } from './utils';
 
 /**
  * Given an function returning a Decoder, will use that decoder to decode the

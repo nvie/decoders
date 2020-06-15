@@ -1,7 +1,5 @@
 // @flow strict
 
-import { partition } from 'itertools';
-
 import { lazy } from '../lazy';
 import { array } from '../array';
 import { string } from '../string';
