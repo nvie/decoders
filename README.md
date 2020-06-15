@@ -662,6 +662,30 @@ then the `map()` function, it's mostly useful in combination with the
 but add extra checks on the specific values that will be allowed at runtime.
 
 
+---
+
+<a name="lazy" href="#lazy">#</a> <b>lazy</b><i>&lt;T&gt;</i>(() => <i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;T&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/lazy.js "Source")<br />
+
+Lazily evaluate the given decoder.  This is useful to build self-referential
+types for recursive data structures.  Example:
+
+```js
+type Tree = {
+  value: string,
+  children: Array<Tree>,
+  //              ^^^^
+  //              Self-reference defining a recursive type
+};
+
+const treeDecoder: Decoder<Tree> = object({
+  value: string,
+  children: array(lazy(() => treeDecoder)),
+  //              ^^^^^^^^^^^^^^^^^^^^^^^
+  //              Use lazy() like this to refer to the treeDecoder which is
+  //              getting defined here
+});
+```
+
 
 ### Building custom decoders
 

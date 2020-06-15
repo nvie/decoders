@@ -11,6 +11,7 @@ export { dispatch } from './dispatch';
 export { either, either3, either4, either5, either6, either7, either8, either9, oneOf } from './either';
 export { fail } from './fail';
 export { instanceOf } from './instanceOf';
+export { lazy } from './lazy';
 export { mapping, dict } from './mapping';
 export { integer, number, positiveInteger, positiveNumber } from './number';
 export { exact, object, pojo } from './object';
