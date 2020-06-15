@@ -1,7 +1,7 @@
 import { lazy, string, number } from 'decoders';
 
-// $ExpectType Decoder<string>
+// $ExpectType Decoder<string, unknown>
 lazy(() => string);
 
-// $ExpectType Decoder<number>
+// $ExpectType Decoder<number, unknown>
 lazy(() => number);
