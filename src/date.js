@@ -6,7 +6,7 @@ import { Err, Ok } from 'lemons/Result';
 import type { Decoder } from './types';
 import { isDate } from './utils';
 
-// $FlowIgnore - deliberate casting
+// $FlowFixMe (not really an issue) - deliberate casting
 type cast = any;
 
 export const date: Decoder<Date> = (value: mixed) =>
