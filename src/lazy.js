@@ -7,9 +7,9 @@ import type { Decoder } from './types';
  * value. This is typically used to build decoders for recursive or
  * self-referential types.
  */
-export function lazy<T>(decoderFactory: () => Decoder<T>): Decoder<T> {
+export function lazy<T>(decoderFn: () => Decoder<T>): Decoder<T> {
     return (blob: mixed) => {
-        const decoder = decoderFactory();
+        const decoder = decoderFn();
         return decoder(blob);
     };
 }
