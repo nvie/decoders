@@ -46,7 +46,12 @@ if git is-dirty; then
     git push --tags
 fi
 
-cd "$DIST" && yarn publish --new-version "$VERSION" "$@"
+read -p "OTP token? " OTP
+if [ -z "$OTP" ]; then
+    exit 2
+fi
+
+cd "$DIST" && yarn publish --new-version "$VERSION" --otp "$OTP" "$@"
 
 # Open browser tab to create new release
 open "${GITHUB_URL}/blob/v${VERSION}/CHANGELOG.md"
