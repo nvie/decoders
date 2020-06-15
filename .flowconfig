@@ -19,7 +19,6 @@ unclear-type=off
 
 [options]
 include_warnings=true
-suppress_comment=\\(.\\|\n\\)*\\$Flow\\(Ignore\\|FixMe\\)
 
 [strict]
 nonstrict-import
