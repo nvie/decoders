@@ -1,3 +1,12 @@
+vNEXT
+-----
+
+**New decoders:**
+
+- `lazy`: lazily-evaluated decoder, suitable to define self-referential types
+
+
+
 v1.20.2
 -------
 
