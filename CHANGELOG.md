@@ -1,8 +1,6 @@
 ## v1.21.0
 
-**New decoders:**
-
--   `lazy`: lazily-evaluated decoder, suitable to define self-referential types
+-   **New decoder:** `lazy`: lazily-evaluated decoder, suitable to define self-referential types
 
 -   Fix compatibility with Flow 0.127.0
 
