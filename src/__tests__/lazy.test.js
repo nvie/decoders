@@ -1,13 +1,13 @@
 // @flow strict
 
-import { lazy } from '../lazy';
 import { array } from '../array';
-import { string } from '../string';
+import { lazy } from '../lazy';
 import { number } from '../number';
 import { object } from '../object';
 import { optional } from '../optional';
-import { INPUTS } from './fixtures';
+import { string } from '../string';
 import type { Decoder } from '../types';
+import { INPUTS } from './fixtures';
 
 describe('lazy', () => {
     it('lazy(() => string) is same as string', () => {
