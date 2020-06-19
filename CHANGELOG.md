@@ -1,7 +1,7 @@
 ## v1.21.0
 
--   **New decoder** [`lazy()`](https://github.com/nvie/decoders#lazy): lazily-evaluated decoder, suitable to define
-    self-referential types.
+-   **New decoder** [`lazy()`](https://github.com/nvie/decoders#lazy): lazily-evaluated
+    decoder, suitable to define self-referential types.
 
 -   Fix compatibility with Flow 0.127.0
 
@@ -15,8 +15,8 @@
 
 ## v1.20.0
 
--   Fix issue where infinite recursion occurs when input object (the object being validated) contains a circular
-    reference
+-   Fix issue where infinite recursion occurs when input object (the object being
+    validated) contains a circular reference
 
 ## v1.19.1
 
@@ -26,17 +26,20 @@
 
 **New decoders:**
 
--   To complement the tuple family of decoders, there's now also `tuple1` (thanks @sfarthin!)
+-   To complement the tuple family of decoders, there's now also `tuple1` (thanks
+    @sfarthin!)
 
 ## v1.18.1
 
--   Also fix Flow type bugs when Flow option `exact_by_default=true` in `debrief` dependency
+-   Also fix Flow type bugs when Flow option `exact_by_default=true` in `debrief`
+    dependency
 
 ## v1.18.0
 
 **New decoders:**
 
--   `nonEmptyString`: like `string`, but will fail on inputs with only whitespace (or the empty string)
+-   `nonEmptyString`: like `string`, but will fail on inputs with only whitespace (or the
+    empty string)
 
 -   `nonEmptyArray`: like `array`, but will fail on inputs with 0 elements
 
@@ -48,28 +51,29 @@
 
 May cause breakage for Flow users:
 
--   Fix subtle bug in `object()` and `exact()` Flow type definitions that could cause Flow to leak `any` under rare
-    circumstances.
+-   Fix subtle bug in `object()` and `exact()` Flow type definitions that could cause Flow
+    to leak `any` under rare circumstances.
 
 ## v1.16.1
 
--   Internal change to make the code Flow 0.105.x compatible. Basically stops using array spreads (`[...things]`) in
-    favor of `Array.from()`.
+-   Internal change to make the code Flow 0.105.x compatible. Basically stops using array
+    spreads (`[...things]`) in favor of `Array.from()`.
 
 ## v1.16.0
 
 **New feature:**
 
--   Allow `map()` calls to throw an exception in the mapper function to reject the decoder. Previously, these mapper
-    functions were not expected to ever throw.
+-   Allow `map()` calls to throw an exception in the mapper function to reject the
+    decoder. Previously, these mapper functions were not expected to ever throw.
 
 ## v1.15.0
 
 **New features:**
 
--   Support constructors that have required arguments in `instanceOf` decoders in TypeScript (see #308, thanks
+-   Support constructors that have required arguments in `instanceOf` decoders in
+    TypeScript (see #308, thanks @Jessidhia!)
+-   Add support for type predicates in `predicate()` in TypeScript (see #310, thanks
     @Jessidhia!)
--   Add support for type predicates in `predicate()` in TypeScript (see #310, thanks @Jessidhia!)
 
 **Fixes:**
 
@@ -79,8 +83,8 @@ May cause breakage for Flow users:
 
 **Potential breaking changes:**
 
--   Stricten `pojo` criteria. Now, custom classes like `new String()` or `new Error()` will not be accepted as a plain
-    old Javascript object (= pojo) anymore.
+-   Stricten `pojo` criteria. Now, custom classes like `new String()` or `new Error()`
+    will not be accepted as a plain old Javascript object (= pojo) anymore.
 
 **Fixes:**
 
@@ -96,8 +100,9 @@ May cause breakage for Flow users:
 
 **Breaking changes:**
 
--   Changed the API interface of `dispatch()`. The previous version was too complicated and was hardly used. The new
-    version is easier to use in practice, and has better type inference support in TypeScript and Flow.
+-   Changed the API interface of `dispatch()`. The previous version was too complicated
+    and was hardly used. The new version is easier to use in practice, and has better type
+    inference support in TypeScript and Flow.
 
     **Previous usage:**
 
@@ -122,10 +127,12 @@ May cause breakage for Flow users:
 
     Where `rectangle` and `circle` are decoders of which exactly one will be invoked.
 
-*   Removed the `field()` decoder. It was not generic enough to stay part of the standard decoder library. (It was
-    typically used in combination with `dispatch()`, which now isn't needed anymore, see above.)
+*   Removed the `field()` decoder. It was not generic enough to stay part of the standard
+    decoder library. (It was typically used in combination with `dispatch()`, which now
+    isn't needed anymore, see above.)
 
-*   `pojo` decoder now returns `Decoder<{[string]: mixed}>` instead of the unsafe `Decoder<Object>`.
+*   `pojo` decoder now returns `Decoder<{[string]: mixed}>` instead of the unsafe
+    `Decoder<Object>`.
 
 **Fixes and cleanup:**
 
@@ -140,8 +147,8 @@ May cause breakage for Flow users:
 **New decoders:**
 
 -   `oneOf(['foo', 'bar'])` will return only values matching the given values
--   `instanceOf(...)` will return only values that are instances of the given class. For example:
-    `instanceOf(TypeError)`.
+-   `instanceOf(...)` will return only values that are instances of the given class. For
+    example: `instanceOf(TypeError)`.
 
 ## v1.11.1
 
@@ -153,14 +160,16 @@ May cause breakage for Flow users:
 
 **Potentially breaking changes:**
 
--   Decoders now all take `mixed` (TypeScript: `unknown`) arguments, instead of `any` 🎉 ! This ensures that the proper
-    type refinements in the implementation of your decoder are made. (See migration notes below.)
--   Invalid dates (e.g. `new Date('not a date')`) won’t be considered valid by the `date` decoder anymore.
+-   Decoders now all take `mixed` (TypeScript: `unknown`) arguments, instead of `any` 🎉 !
+    This ensures that the proper type refinements in the implementation of your decoder
+    are made. (See migration notes below.)
+-   Invalid dates (e.g. `new Date('not a date')`) won’t be considered valid by the `date`
+    decoder anymore.
 
 **New features:**
 
--   `guard()` now takes a config option to control how to format error messages. This is done via the
-    `guard(..., { style: 'inline' })` parameter.
+-   `guard()` now takes a config option to control how to format error messages. This is
+    done via the `guard(..., { style: 'inline' })` parameter.
 
     -   `'inline'`: echoes back the input value and inlines errors (default);
     -   `'simple'`: just returns the decoder errors. Useful for use in sensitive contexts.
@@ -174,7 +183,8 @@ May cause breakage for Flow users:
 
 **Migration notes:**
 
-If your decoder code breaks after upgrading to 1.11.0, please take the following measures to upgrade:
+If your decoder code breaks after upgrading to 1.11.0, please take the following measures
+to upgrade:
 
 1. If you wrote any custom decoders of this form yourself:
 
@@ -197,13 +207,16 @@ If your decoder code breaks after upgrading to 1.11.0, please take the following
     //                       ^^^^^^^ `unknown` for TypeScript
     ```
 
-    Then follow and fix type errors that pop up because you were making assumptions that are now caught by the type
-    checker.
+    Then follow and fix type errors that pop up because you were making assumptions that
+    are now caught by the type checker.
 
 2. If you wrote any decoders based on `predicate()`, you may have code like this:
 
     ```javascript
-    const mydecoder: Decoder<string> = predicate((s) => s.startsWith('x'), 'Must start with "x"');
+    const mydecoder: Decoder<string> = predicate(
+        (s) => s.startsWith('x'),
+        'Must start with "x"'
+    );
     ```
 
     You'll have to change the explicit Decoder type of those to take two type arguments:
@@ -216,8 +229,8 @@ If your decoder code breaks after upgrading to 1.11.0, please take the following
     );
     ```
 
-    This now explicitly records that `predicate()` makes assumptions about its input type—previously this wasn’t get
-    caught correctly.
+    This now explicitly records that `predicate()` makes assumptions about its input
+    type—previously this wasn’t get caught correctly.
 
 ## v1.10.6
 
@@ -237,12 +250,14 @@ If your decoder code breaks after upgrading to 1.11.0, please take the following
 
 ## v1.10.2
 
--   Tuple decoder error messages now show decoder errors in all positions, not just the first occurrence.
+-   Tuple decoder error messages now show decoder errors in all positions, not just the
+    first occurrence.
 
 **New decoders:**
 
 -   New tuple decoders: `tuple3`, `tuple4`, `tuple5`, and `tuple6`
--   `unknown` decoder is an alias of `mixed`, which may be more recognizable for TypeScript users.
+-   `unknown` decoder is an alias of `mixed`, which may be more recognizable for
+    TypeScript users.
 
 ## v1.10.1
 
@@ -252,14 +267,15 @@ If your decoder code breaks after upgrading to 1.11.0, please take the following
 
 **Breaking:**
 
--   Private helper function `undefined_or_null` was accidentally exported in the package. This is a private API.
+-   Private helper function `undefined_or_null` was accidentally exported in the package.
+    This is a private API.
 
 ## v1.9.0
 
 **New decoder:**
 
--   `dict()` is like `mapping()`, but will return an object rather than a Map instance, which may be more convenient to
-    handle in most cases.
+-   `dict()` is like `mapping()`, but will return an object rather than a Map instance,
+    which may be more convenient to handle in most cases.
 
 **Breaking:**
 
@@ -279,7 +295,8 @@ If your decoder code breaks after upgrading to 1.11.0, please take the following
 
 **Improved error reporting:**
 
--   Fix bug where empty error branches could be shown in complex either expressions (fixes #83)
+-   Fix bug where empty error branches could be shown in complex either expressions (fixes
+    #83)
 
 ## v1.8.1
 
@@ -297,17 +314,19 @@ If your decoder code breaks after upgrading to 1.11.0, please take the following
 ## v1.6.1
 
 -   Upgraded debrief dependency
--   Behave better in projects that have Flow's `experimental.const_params` setting turned on
+-   Behave better in projects that have Flow's `experimental.const_params` setting turned
+    on
 
 ## v1.6.0
 
 -   **New decoders!**
-    -   `exact()` is like `object()`, but will fail if the inputted object contains superfluous keys (keys that aren't
-        in the object definition).
+    -   `exact()` is like `object()`, but will fail if the inputted object contains
+        superfluous keys (keys that aren't in the object definition).
 
 ## v1.5.0
 
--   Collect and report all nested errors in an object() at once (rather than error on the first error).
+-   Collect and report all nested errors in an object() at once (rather than error on the
+    first error).
 
 **Breaking:**
 
@@ -333,24 +352,28 @@ If your decoder code breaks after upgrading to 1.11.0, please take the following
 ## v1.4.0
 
 -   **New decoders!**
-    -   `email` validator based on the [almost perfect email regex](http://emailregex.com/)
+    -   `email` validator based on the
+        [almost perfect email regex](http://emailregex.com/)
     -   `url` validator for validating HTTPS URLs (most common use case)
     -   `anyUrl` validator for validating any URL scheme
 
 ## v1.3.1
 
--   Fix bug where dates, or arrays (or any other Object subclass) could pass for a record with merely optional fields.
+-   Fix bug where dates, or arrays (or any other Object subclass) could pass for a record
+    with merely optional fields.
 
 ## v1.3.0
 
--   Much improved error messages! They were redesigned to look great in terminals and to summarize only the relevant
-    bits of the error message, striking a balance between all the details and the high level summary.
+-   Much improved error messages! They were redesigned to look great in terminals and to
+    summarize only the relevant bits of the error message, striking a balance between all
+    the details and the high level summary.
 
 ## v1.2.4
 
 -   **New features**:
     -   `truthy` takes any input and returns whether the value is truthy
-    -   `numericBoolean` takes only numbers as input, and returns their boolean interpretation (0 = false, non-0 = true)
+    -   `numericBoolean` takes only numbers as input, and returns their boolean
+        interpretation (0 = false, non-0 = true)
 
 ## v1.2.2, v1.2.3
 
@@ -366,7 +389,8 @@ If your decoder code breaks after upgrading to 1.11.0, please take the following
 ## v1.2.0
 
 -   **New feature** `regex()`, for building custom string decoders
--   Tiny tweaks to improve error messages (more structural improvements are on the roadmap)
+-   Tiny tweaks to improve error messages (more structural improvements are on the
+    roadmap)
 
 ## v1.1.0
 
@@ -395,14 +419,15 @@ If your decoder code breaks after upgrading to 1.11.0, please take the following
 
 ## v0.1.1
 
--   Export `g2d()` helper function that can help adoption to new-style APIs by converting old-style decoders (now called
-    guards) to new-style decoders.
+-   Export `g2d()` helper function that can help adoption to new-style APIs by converting
+    old-style decoders (now called guards) to new-style decoders.
 
 ## v0.1.0
 
--   **Breaking change** New API: simplified names, split up decoders from guards. What used to be called "decoders" in
-    0.0.x ("things that either return a value or throw a runtime error") are now called "guards" in 0.1.0. The meaning
-    of the term "decoders" is now changed to a thing that either is an "Ok" value or an "Err" value.
+-   **Breaking change** New API: simplified names, split up decoders from guards. What
+    used to be called "decoders" in 0.0.x ("things that either return a value or throw a
+    runtime error") are now called "guards" in 0.1.0. The meaning of the term "decoders"
+    is now changed to a thing that either is an "Ok" value or an "Err" value.
 
     To convert to the new API, do this:
 
