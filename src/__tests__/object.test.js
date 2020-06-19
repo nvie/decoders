@@ -13,10 +13,15 @@ describe('objects', () => {
             name: string,
         });
 
-        expect(decoder({ id: 1, name: 'test' }).unwrap()).toEqual({ id: 1, name: 'test' });
+        expect(decoder({ id: 1, name: 'test' }).unwrap()).toEqual({
+            id: 1,
+            name: 'test',
+        });
 
         // Superfluous keys are just ignored
-        expect(decoder({ id: 1, name: 'test', superfluous: 'abundance' }).unwrap()).toEqual({ id: 1, name: 'test' });
+        expect(
+            decoder({ id: 1, name: 'test', superfluous: 'abundance' }).unwrap()
+        ).toEqual({ id: 1, name: 'test' });
     });
 
     it('decodes objects and fields (ignore superfluous fields)', () => {
@@ -27,8 +32,16 @@ describe('objects', () => {
             extra: optional(string),
         });
 
-        expect(decoder({ id: 1, name: 'test' }).unwrap()).toEqual({ id: 1, name: 'test', extra: undefined });
-        expect(decoder({ id: 1, name: 'test', extra: 'foo' }).unwrap()).toEqual({ id: 1, name: 'test', extra: 'foo' });
+        expect(decoder({ id: 1, name: 'test' }).unwrap()).toEqual({
+            id: 1,
+            name: 'test',
+            extra: undefined,
+        });
+        expect(decoder({ id: 1, name: 'test', extra: 'foo' }).unwrap()).toEqual({
+            id: 1,
+            name: 'test',
+            extra: 'foo',
+        });
     });
 
     it('reports all errors at once', () => {
@@ -43,18 +56,30 @@ describe('objects', () => {
         // All good (no missing/decoding errors)
         expect(() => decoder({ id: 1, name: 'valid' })).not.toThrow('Must be string');
         expect(() => decoder({ id: 1, name: 'valid' })).not.toThrow('Missing key');
-        expect(() => decoder({ id: 1, name: 'valid', extra: undefined })).not.toThrow('Must be string');
-        expect(() => decoder({ id: 1, name: 'valid', extra: undefined })).not.toThrow('Missing key');
+        expect(() => decoder({ id: 1, name: 'valid', extra: undefined })).not.toThrow(
+            'Must be string'
+        );
+        expect(() => decoder({ id: 1, name: 'valid', extra: undefined })).not.toThrow(
+            'Missing key'
+        );
 
         // Test missing key errors
         expect(() => decoder({ name: 'valid' })).toThrow('Missing key: "id"');
         expect(() => decoder({ name: 'valid' })).not.toThrow('Must be string');
-        expect(() => decoder({ name: 'valid', extra: undefined })).toThrow('Missing key: "id"');
-        expect(() => decoder({ name: 'valid', extra: undefined })).not.toThrow('Must be string');
+        expect(() => decoder({ name: 'valid', extra: undefined })).toThrow(
+            'Missing key: "id"'
+        );
+        expect(() => decoder({ name: 'valid', extra: undefined })).not.toThrow(
+            'Must be string'
+        );
         expect(() => decoder({ extra: 'valid' })).toThrow('Missing keys: "id", "name"');
         expect(() => decoder({ extra: 'valid' })).not.toThrow('Must be string');
-        expect(() => decoder({ name: undefined, extra: 'valid' })).toThrow('Missing keys: "id", "name"');
-        expect(() => decoder({ name: undefined, extra: 'valid' })).not.toThrow('Must be string');
+        expect(() => decoder({ name: undefined, extra: 'valid' })).toThrow(
+            'Missing keys: "id", "name"'
+        );
+        expect(() => decoder({ name: undefined, extra: 'valid' })).not.toThrow(
+            'Must be string'
+        );
 
         // Now test that both errors are part of the same error!
         expect(() => decoder({ name: 42 })).toThrow('Must be string');
@@ -80,12 +105,17 @@ describe('objects', () => {
 describe('exact objects', () => {
     it('decodes objects and fields', () => {
         const decoder = exact({ id: number, name: string });
-        expect(decoder({ id: 1, name: 'test' }).unwrap()).toEqual({ id: 1, name: 'test' });
+        expect(decoder({ id: 1, name: 'test' }).unwrap()).toEqual({
+            id: 1,
+            name: 'test',
+        });
     });
 
     it('fails on superfluous keys', () => {
         const decoder = exact({ id: number, name: string });
-        expect(() => guard(decoder)({ id: 1, name: 'test', superfluous: 'abundance' })).toThrow('Superfluous keys');
+        expect(() =>
+            guard(decoder)({ id: 1, name: 'test', superfluous: 'abundance' })
+        ).toThrow('Superfluous keys');
     });
 
     it('errors on non-objects', () => {

@@ -28,7 +28,17 @@ export { boolean, numericBoolean, truthy } from './boolean';
 export { constant, hardcoded, mixed, null_, undefined_, unknown } from './constants';
 export { date } from './date';
 export { dispatch } from './dispatch';
-export { either, either3, either4, either5, either6, either7, either8, either9, oneOf } from './either';
+export {
+    either,
+    either3,
+    either4,
+    either5,
+    either6,
+    either7,
+    either8,
+    either9,
+    oneOf,
+} from './either';
 export { fail } from './fail';
 export { instanceOf } from './instanceOf';
 export { lazy } from './lazy';

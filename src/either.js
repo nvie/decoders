@@ -36,7 +36,11 @@ export function either<T1, T2>(d1: Decoder<T1>, d2: Decoder<T2>): Decoder<T1 | T
         );
 }
 
-export function either3<T1, T2, T3>(d1: Decoder<T1>, d2: Decoder<T2>, d3: Decoder<T3>): Decoder<T1 | T2 | T3> {
+export function either3<T1, T2, T3>(
+    d1: Decoder<T1>,
+    d2: Decoder<T2>,
+    d3: Decoder<T3>
+): Decoder<T1 | T2 | T3> {
     return either(d1, either(d2, d3));
 }
 
@@ -116,6 +120,13 @@ export function oneOf<T>(constants: Array<T>): Decoder<T> {
                 return Ok(c);
             }
         }
-        return Err(annotate(blob, `Must be one of ${constants.map((value) => JSON.stringify(value)).join(', ')}`));
+        return Err(
+            annotate(
+                blob,
+                `Must be one of ${constants
+                    .map((value) => JSON.stringify(value))
+                    .join(', ')}`
+            )
+        );
     };
 }

@@ -28,7 +28,11 @@ describe('array', () => {
         const decoder = array(array(number));
         expect(decoder([]).unwrap()).toEqual([]);
         expect(decoder([[]]).unwrap()).toEqual([[]]);
-        expect(decoder([[1, 2], [], [3, 4, 5]]).unwrap()).toEqual([[1, 2], [], [3, 4, 5]]);
+        expect(decoder([[1, 2], [], [3, 4, 5]]).unwrap()).toEqual([
+            [1, 2],
+            [],
+            [3, 4, 5],
+        ]);
     });
 
     it('failure to unpack', () => {

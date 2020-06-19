@@ -13,7 +13,10 @@ const a = predicate((foo): foo is string => typeof foo === 'string', 'Is string'
 // $ExpectType Decoder<string, unknown>
 a;
 
-const b = predicate((foo: string): foo is 'a' | 'b' => foo === 'a' || foo === 'b', 'Is a or b');
+const b = predicate(
+    (foo: string): foo is 'a' | 'b' => foo === 'a' || foo === 'b',
+    'Is a or b'
+);
 // $ExpectType Decoder<"a" | "b", string>
 b;
 

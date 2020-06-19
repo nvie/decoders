@@ -2,7 +2,11 @@ import { Decoder } from './types';
 
 export function tuple1<T1>(d1: Decoder<T1>): Decoder<[T1]>;
 export function tuple2<T1, T2>(d1: Decoder<T1>, d2: Decoder<T2>): Decoder<[T1, T2]>;
-export function tuple3<T1, T2, T3>(d1: Decoder<T1>, d2: Decoder<T2>, d3: Decoder<T3>): Decoder<[T1, T2, T3]>;
+export function tuple3<T1, T2, T3>(
+    d1: Decoder<T1>,
+    d2: Decoder<T2>,
+    d3: Decoder<T3>
+): Decoder<[T1, T2, T3]>;
 export function tuple4<T1, T2, T3, T4>(
     d1: Decoder<T1>,
     d2: Decoder<T2>,

@@ -13,7 +13,10 @@ import type { Decoder } from './types';
  * Taken from https://stackoverflow.com/a/44198641
  */
 export const isDate = (value: mixed): boolean %checks =>
-    value !== undefined && value !== null && Object.prototype.toString.call(value) === '[object Date]' && !isNaN(value);
+    value !== undefined &&
+    value !== null &&
+    Object.prototype.toString.call(value) === '[object Date]' &&
+    !isNaN(value);
 
 /**
  * Given a decoder T and a mapping function from T's to V's, returns a decoder

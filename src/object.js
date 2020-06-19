@@ -75,7 +75,9 @@ export const pojo: Decoder<{| [string]: mixed |}> = (blob: mixed) => {
  * Put simply: it'll "peel off" all of the nested Decoders, puts them together
  * in an object, and wraps it in a Decoder<...>.
  */
-export function object<O: { +[field: string]: AnyDecoder, ... }>(mapping: O): Decoder<$ObjMap<O, $DecoderType>> {
+export function object<O: { +[field: string]: AnyDecoder, ... }>(
+    mapping: O
+): Decoder<$ObjMap<O, $DecoderType>> {
     const known = new Set(Object.keys(mapping));
     return compose(pojo, (blob: {| [string]: mixed |}) => {
         const actual = new Set(Object.keys(blob));
@@ -151,14 +153,18 @@ export function object<O: { +[field: string]: AnyDecoder, ... }>(mapping: O): De
     });
 }
 
-export function exact<O: { +[field: string]: AnyDecoder, ... }>(mapping: O): Decoder<$ObjMap<$Exact<O>, $DecoderType>> {
+export function exact<O: { +[field: string]: AnyDecoder, ... }>(
+    mapping: O
+): Decoder<$ObjMap<$Exact<O>, $DecoderType>> {
     // Check the inputted object for any superfluous keys
     const allowed = new Set(Object.keys(mapping));
     const checked = compose(pojo, (blob: { [string]: mixed }) => {
         const actual = new Set(Object.keys(blob));
         const superfluous = subtract(actual, allowed);
         if (superfluous.size > 0) {
-            return Err(annotate(blob, `Superfluous keys: ${Array.from(superfluous).join(', ')}`));
+            return Err(
+                annotate(blob, `Superfluous keys: ${Array.from(superfluous).join(', ')}`)
+            );
         }
         return Ok(blob);
     });

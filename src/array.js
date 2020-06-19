@@ -34,7 +34,10 @@ export const poja: Decoder<Array<mixed>> = (blob: mixed) => {
  *   encountered; or
  * - a new Ok with an array of all unwrapped Ok'ed values
  */
-function all<T>(iterable: Array<DecodeResult<T>>, blobs: Array<mixed>): DecodeResult<Array<T>> {
+function all<T>(
+    iterable: Array<DecodeResult<T>>,
+    blobs: Array<mixed>
+): DecodeResult<Array<T>> {
     const results: Array<T> = [];
     let index = 0;
     for (const result of iterable) {
@@ -47,7 +50,12 @@ function all<T>(iterable: Array<DecodeResult<T>>, blobs: Array<mixed>): DecodeRe
             clone.splice(
                 index,
                 1,
-                annotate(ann, ann.annotation !== undefined ? `${ann.annotation} (at index ${index})` : `index ${index}`)
+                annotate(
+                    ann,
+                    ann.annotation !== undefined
+                        ? `${ann.annotation} (at index ${index})`
+                        : `index ${index}`
+                )
             );
 
             // const errValue = [];

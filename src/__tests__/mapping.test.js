@@ -9,7 +9,11 @@ describe('mappings', () => {
     const decoder = mapping(object({ name: string }));
 
     it('valid', () => {
-        const input = { '18': { name: 'foo' }, '23': { name: 'bar' }, key: { name: 'value' } };
+        const input = {
+            '18': { name: 'foo' },
+            '23': { name: 'bar' },
+            key: { name: 'value' },
+        };
         const output = new Map([
             ['18', { name: 'foo' }],
             ['23', { name: 'bar' }],
@@ -35,7 +39,11 @@ describe('dicts', () => {
     const decoder = dict(object({ name: string }));
 
     it('valid', () => {
-        const input = { '18': { name: 'foo' }, '23': { name: 'bar' }, key: { name: 'value' } };
+        const input = {
+            '18': { name: 'foo' },
+            '23': { name: 'bar' },
+            key: { name: 'value' },
+        };
         expect(decoder(input).unwrap()).toEqual(input);
     });
 

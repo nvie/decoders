@@ -36,7 +36,10 @@ export function tuple1<T>(decoder1: Decoder<T>): Decoder<[T]> {
  * Builds a Decoder that returns Ok for 2-tuples of [T1, T2], given Decoders
  * for T1 and T2.  Err otherwise.
  */
-export function tuple2<T1, T2>(decoder1: Decoder<T1>, decoder2: Decoder<T2>): Decoder<[T1, T2]> {
+export function tuple2<T1, T2>(
+    decoder1: Decoder<T1>,
+    decoder2: Decoder<T2>
+): Decoder<[T1, T2]> {
     return compose(ntuple(2), (blobs: Array<mixed>) => {
         const [blob1, blob2] = blobs;
 
@@ -106,7 +109,12 @@ export function tuple4<T1, T2, T3, T4>(
         const result3 = decoder3(blob3);
         const result4 = decoder4(blob4);
         try {
-            return Ok([result1.unwrap(), result2.unwrap(), result3.unwrap(), result4.unwrap()]);
+            return Ok([
+                result1.unwrap(),
+                result2.unwrap(),
+                result3.unwrap(),
+                result4.unwrap(),
+            ]);
         } catch (e) {
             // If a decoder error has happened while unwrapping all the
             // results, try to construct a good error message
@@ -142,7 +150,13 @@ export function tuple5<T1, T2, T3, T4, T5>(
         const result4 = decoder4(blob4);
         const result5 = decoder5(blob5);
         try {
-            return Ok([result1.unwrap(), result2.unwrap(), result3.unwrap(), result4.unwrap(), result5.unwrap()]);
+            return Ok([
+                result1.unwrap(),
+                result2.unwrap(),
+                result3.unwrap(),
+                result4.unwrap(),
+                result5.unwrap(),
+            ]);
         } catch (e) {
             // If a decoder error has happened while unwrapping all the
             // results, try to construct a good error message

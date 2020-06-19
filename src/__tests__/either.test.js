@@ -13,7 +13,10 @@ import { INPUTS } from './fixtures';
 
 describe('either', () => {
     const stringOrBooleanDecoder = guard(either(string, boolean));
-    const [okay, not_okay] = partition(INPUTS, (x) => typeof x === 'string' || typeof x === 'boolean');
+    const [okay, not_okay] = partition(
+        INPUTS,
+        (x) => typeof x === 'string' || typeof x === 'boolean'
+    );
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
@@ -44,7 +47,9 @@ describe('either', () => {
         expect(() => g2(42)).toThrow('Either:');
         expect(() => g2({ name: 42 })).toThrow('Either');
 
-        const g3 = guard(either(regex(/1/, 'Must contain 1'), regex(/2/, 'Must contain 2')));
+        const g3 = guard(
+            either(regex(/1/, 'Must contain 1'), regex(/2/, 'Must contain 2'))
+        );
         expect(() => g3(42)).toThrow('Either');
         expect(() => g3('foobar')).toThrow('Either');
     });
@@ -64,7 +69,11 @@ describe('either3', () => {
     const decoder = guard(either4(string, boolean, number, undefined_));
     const [okay, not_okay] = partition(
         INPUTS,
-        (x) => x === undefined || typeof x === 'string' || typeof x === 'boolean' || Number.isFinite(x)
+        (x) =>
+            x === undefined ||
+            typeof x === 'string' ||
+            typeof x === 'boolean' ||
+            Number.isFinite(x)
     );
 
     it('valid', () => {

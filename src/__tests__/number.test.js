@@ -26,7 +26,10 @@ describe('number', () => {
 
 describe('positiveNumber', () => {
     const decoder = positiveNumber;
-    const [okay, not_okay] = partition(INPUTS, (n) => typeof n === 'number' && Number.isFinite(n) && n >= 0);
+    const [okay, not_okay] = partition(
+        INPUTS,
+        (n) => typeof n === 'number' && Number.isFinite(n) && n >= 0
+    );
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
@@ -64,7 +67,10 @@ describe('integer', () => {
 
 describe('positiveInteger', () => {
     const decoder = positiveInteger;
-    const [okay, not_okay] = partition(INPUTS, (n) => typeof n === 'number' && Number.isInteger(n) && n >= 0);
+    const [okay, not_okay] = partition(
+        INPUTS,
+        (n) => typeof n === 'number' && Number.isInteger(n) && n >= 0
+    );
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);

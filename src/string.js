@@ -72,7 +72,9 @@ export const url = (schemes: Array<string> = DEFAULT_SCHEMES): Decoder<string> =
             if (schemes.length === 0 || schemes.includes(scheme.toLowerCase())) {
                 return Ok(value);
             } else {
-                return Err(annotate(value, `URL scheme must be any of: ${schemes.join(', ')}`));
+                return Err(
+                    annotate(value, `URL scheme must be any of: ${schemes.join(', ')}`)
+                );
             }
         }
     });

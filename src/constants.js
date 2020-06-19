@@ -8,7 +8,8 @@ import type { Decoder } from './types';
 /**
  * Decoder that only returns Ok for `null` inputs.  Err otherwise.
  */
-export const null_: Decoder<null> = (blob: mixed) => (blob === null ? Ok(blob) : Err(annotate(blob, 'Must be null')));
+export const null_: Decoder<null> = (blob: mixed) =>
+    blob === null ? Ok(blob) : Err(annotate(blob, 'Must be null'));
 
 /**
  * Decoder that only returns Ok for `undefined` inputs.  Err otherwise.
@@ -20,7 +21,10 @@ export const undefined_: Decoder<void> = (blob: mixed) =>
  * Decoder that only returns Ok for the given value constant.  Err otherwise.
  */
 export function constant<T>(value: T): Decoder<T> {
-    return (blob: mixed) => (blob === value ? Ok(value) : Err(annotate(blob, `Must be constant ${String(value)}`)));
+    return (blob: mixed) =>
+        blob === value
+            ? Ok(value)
+            : Err(annotate(blob, `Must be constant ${String(value)}`));
 }
 
 /**
