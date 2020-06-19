@@ -1,4 +1,4 @@
- {
+{
     "compilerOptions": {
         "lib": ["es6"],
         "noImplicitAny": true,
