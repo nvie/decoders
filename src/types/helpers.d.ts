@@ -19,13 +19,9 @@
  *   }
  *
  */
-type Compact<T> = RealCompact<keyof T, T>;
+type Compact<T> = { [K in IsDefined<T, keyof T>]: T[K] };
 
-type RealCompact<K extends keyof T, T> = {
-    [S in IsSet<T, K>]: T[S];
-};
-
-type IsSet<T, K extends keyof T> = K extends any
+type IsDefined<T, K extends keyof T> = K extends any
     ? T[K] extends undefined
         ? never
         : K
