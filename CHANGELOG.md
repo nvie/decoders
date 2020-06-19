@@ -1,3 +1,8 @@
+## Upcoming
+
+-   **Better type inference** for `object()` and `exact()` decoders (see #515,
+    thanks @dimfeld)
+
 ## v1.21.0
 
 -   **New decoder** [`lazy()`](https://github.com/nvie/decoders#lazy): lazily-evaluated decoder, suitable to define
