@@ -459,16 +459,6 @@ Decoder&lt;any&gt; }&gt;</i>(mapping: O): <i>Decoder&lt;{ ... }&gt;</i>
 Returns a decoder capable of decoding **objects of the given shape** corresponding
 decoders, provided that you already have decoders for all values in the mapping.
 
-> **NOTE:** 🙀 OMG, that type signature! **Don't panic.** Here's what it says with an
-> example. Given this mapping of field-to-decoder instances:
->
->     {
->       name: Decoder<string>,
->       age: Decoder<number>,
->     }
->
-> compose a decoder of this type: `Decoder<{ name: string, age: number }>`.
-
 ```javascript
 const mydecoder = guard(
     object({
@@ -480,6 +470,9 @@ mydecoder({ x: 1, y: 2 }) === { x: 1, y: 2 };
 mydecoder({ x: 1, y: 2, z: 3 }) === { x: 1, y: 2 }; // ⚠️
 mydecoder({ x: 1 }); // DecodeError (Missing key: "y")
 ```
+
+For more information, see also
+[The difference between `object`, `exact`, and `inexact`](#the-difference-between-object-exact-and-inexact).
 
 ---
 
@@ -500,6 +493,33 @@ mydecoder({ x: 1, y: 2 }) === { x: 1, y: 2 };
 mydecoder({ x: 1, y: 2, z: 3 }); // DecodeError (Superfluous keys: "z")
 mydecoder({ x: 1 }); // DecodeError (Missing key: "y")
 ```
+
+For more information, see also
+[The difference between `object`, `exact`, and `inexact`](#the-difference-between-object-exact-and-inexact).
+
+---
+
+<a name="inexact" href="#inexact">#</a> <b>inexact</b><i>&lt;O: { [field: string]:
+Decoder&lt;any&gt; }&gt;</i>(mapping: O): <i>Decoder&lt;{ ... }&gt;</i>
+[&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/object.js 'Source')
+
+Like `object()`, but will retain any extra properties on the input type unvalidated that
+are not part of the decoder definition.
+
+```javascript
+const mydecoder = guard(
+    inexact({
+        x: number,
+    })
+);
+
+mydecoder({ x: 1, y: 2 }) === { x: 1, y: 2 };
+mydecoder({ x: 1, y: 2, z: 3 }) === { x: 1, y: 2, z: 3 };
+mydecoder({ x: 1 }); // DecodeError (Missing key: "y")
+```
+
+For more information, see also
+[The difference between `object`, `exact`, and `inexact`](#the-difference-between-object-exact-and-inexact).
 
 ---
 
@@ -722,6 +742,38 @@ const treeDecoder: Decoder<Tree> = object({
     //              getting defined here
 });
 ```
+
+### The difference between `object`, `exact`, and `inexact`
+
+The three decoders in the "object" family of decoders only differ in how they treat extra
+properties on input values.
+
+For example, for a definition like:
+
+```js
+import { exact, inexact, number, object, string } from 'decoders';
+
+const thing = {
+    a: string,
+    b: number,
+};
+```
+
+And a runtime input of:
+
+```js
+{
+  a: "hi",
+  b: 42,
+  c: "extra",  // Note "c" is not a known field
+}
+```
+
+|                  | Extra properties | Output value                   | Inferred type                              |
+| ---------------- | ---------------- | ------------------------------ | ------------------------------------------ |
+| `object(thing)`  | discarded        | `{a: "hi", b: 42}`             | `{a: string, b?: number}`                  |
+| `exact(thing)`   | not allowed      | ⚡️ Runtime error              | `{a: string, b?: number}`                  |
+| `inexact(thing)` | retained         | `{a: "hi", b: 42, c: "extra"}` | `{a: string, b?: number, [string]: mixed}` |
 
 ### Building custom decoders
 

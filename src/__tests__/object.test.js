@@ -2,7 +2,7 @@
 
 import { guard } from '../guard';
 import { number } from '../number';
-import { exact, object, pojo } from '../object';
+import { exact, inexact, object, pojo } from '../object';
 import { optional } from '../optional';
 import { string } from '../string';
 
@@ -116,6 +116,38 @@ describe('exact objects', () => {
         expect(() =>
             guard(decoder)({ id: 1, name: 'test', superfluous: 'abundance' })
         ).toThrow('Superfluous keys');
+    });
+
+    it('errors on non-objects', () => {
+        const decoder = exact({ id: string });
+
+        expect(decoder('foo').isErr()).toBe(true);
+        expect(decoder(3.14).isErr()).toBe(true);
+        expect(decoder([]).isErr()).toBe(true);
+        expect(decoder(undefined).isErr()).toBe(true);
+        expect(decoder(NaN).isErr()).toBe(true);
+        expect(decoder({ foo: [1, 2, 3] }).isErr()).toBe(true); // Missing key "id"
+        expect(decoder({ id: 3 }).isErr()).toBe(true); // Invalid field value for "id"
+    });
+});
+
+describe('inexact objects', () => {
+    it('decodes objects and fields', () => {
+        const decoder = inexact({ id: number, name: string });
+        expect(decoder({ id: 1, name: 'test' }).unwrap()).toEqual({
+            id: 1,
+            name: 'test',
+        });
+
+        // Extra properties will be retained, but "unknown"
+        expect(
+            decoder({ id: 1, name: 'test', extra1: 123, extra2: 'hey' }).unwrap()
+        ).toEqual({
+            id: 1,
+            name: 'test',
+            extra1: 123,
+            extra2: 'hey',
+        });
     });
 
     it('errors on non-objects', () => {

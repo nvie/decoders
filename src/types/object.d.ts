@@ -23,3 +23,11 @@ export function exact<O extends { [key: string]: Decoder<any> }>(
 ): Decoder<{ [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] }>;
 //         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 //         Ditto (see above)
+
+export function inexact<O extends { [key: string]: Decoder<any> }>(
+    mapping: O
+): Decoder<
+    { [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] } & {
+        [extra: string]: unknown;
+    }
+>;

@@ -35,8 +35,8 @@ export function map<T, V>(decoder: Decoder<T>, mapper: (T) => V): Decoder<V> {
 /**
  * Compose two decoders by passing the result of the first into the second.
  * The second decoder may assume as its input type the output type of the first
- * decoder (so it's not necessary to accept the typical "any").  This is useful
- * for "narrowing down" the checks.  For example, if you want to write
+ * decoder (so it's not necessary to accept the typical "mixed").  This is
+ * useful for "narrowing down" the checks.  For example, if you want to write
  * a decoder for positive numbers, you can compose it from an existing decoder
  * for any number, and a decoder that, assuming a number, checks if it's
  * positive.  Very often combined with the predicate() helper as the second

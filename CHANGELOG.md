@@ -1,5 +1,8 @@
 ## Upcoming
 
+-   **New decoder** [`inexact()`](https://github.com/nvie/decoders#inexact): like object,
+    but retain any extra fields on the input value as `unknown`
+
 -   **Improved type inference** for `object()` and `exact()` decoders (see #515, thanks
     @dimfeld)
 
