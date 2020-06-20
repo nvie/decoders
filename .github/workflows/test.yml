@@ -28,8 +28,28 @@ jobs:
       run: yarn add flow-bin@${{ matrix.flow-version }}
       if: matrix.flow-version != 'current'
 
-    - name: Run tests
-      run: yarn test
+    - name: Clean things
+      run: yarn run -s clean
+      env:
+        CI: true
+
+    - name: Test Flow
+      run: yarn run -s test:flow
+      env:
+        CI: true
+
+    - name: Test TypeScript
+      run: yarn run -s test:typescript
+      env:
+        CI: true
+
+    - name: Unit tests
+      run: yarn run -s test:jest
+      env:
+        CI: true
+
+    - name: Lints
+      run: yarn run -s check
       env:
         CI: true
 
