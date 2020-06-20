@@ -300,7 +300,7 @@ mydecoder({ a: 'foo', b: 'bar' })  // DecodeError
 ---
 
 <a name="mixed" href="#mixed">#</a> <b>mixed</b>(): <i>Decoder&lt;mixed&gt;</i>
-[&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/constants.js 'Source')
+[&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/constants.js 'Source')<br />
 <a name="unknown" href="#unknown">#</a> <b>unknown</b>(): <i>Decoder&lt;unknown&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/constants.js 'Source')
 
@@ -561,16 +561,16 @@ Would equal:
 
 <a name="either" href="#either">#</a> <b>either</b><i>&lt;T1,
 T2&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;T1 |
-T2&gt;</i>
+T2&gt;</i><br />
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/either.js 'Source')<br />
 <a name="either2" href="#either2">#</a> <b>either2</b><i>&lt;T1,
 T2&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;T1 |
-T2&gt;</i>
+T2&gt;</i><br />
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/either.js 'Source')<br />
 <a name="either3" href="#either3">#</a> <b>either3</b><i>&lt;T1, T2,
 T3&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>, <i>Decoder&lt;T3&gt;</i>):
 <i>Decoder&lt;T1 | T2 | T3&gt;</i>
-[&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/either.js 'Source') ...
+[&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/either.js 'Source')<br /> ...
 
 Returns a decoder capable of decoding **either one of <i>T1</i> or <i>T2</i>**, provided
 that you already have decoders for <i>T1</i> and <i>T2</i>. Eithers exist for arities up
