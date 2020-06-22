@@ -1,5 +1,6 @@
 // @flow strict
 
+import { hardcoded } from '../constants';
 import { guard } from '../guard';
 import { number } from '../number';
 import { exact, inexact, object, pojo } from '../object';
@@ -118,6 +119,30 @@ describe('exact objects', () => {
         ).toThrow('Superfluous keys');
     });
 
+    it('retains extra hardcoded fields', () => {
+        const decoder = exact({
+            id: number,
+            name: string,
+            extra: hardcoded('extra'),
+        });
+        expect(decoder({ id: 1, name: 'test' }).unwrap()).toEqual({
+            id: 1,
+            name: 'test',
+            extra: 'extra',
+        });
+        expect(decoder({ id: 1, name: 'test', extra: 42 }).unwrap()).toEqual({
+            id: 1,
+            name: 'test',
+            extra: 'extra',
+        });
+        expect(() =>
+            guard(decoder)({ id: 1, name: 'test', superfluous: 'abundance' })
+        ).toThrow('Superfluous keys');
+        expect(() =>
+            guard(decoder)({ id: 1, name: 'test', extra: 42, superfluous: 'abundance' })
+        ).toThrow('Superfluous keys');
+    });
+
     it('errors on non-objects', () => {
         const decoder = exact({ id: string });
 
@@ -150,8 +175,33 @@ describe('inexact objects', () => {
         });
     });
 
+    it('retains extra hardcoded fields', () => {
+        const decoder = inexact({ id: number, name: string, extra: hardcoded('extra') });
+        expect(decoder({ id: 1, name: 'test', extra: 42 }).unwrap()).toEqual({
+            id: 1,
+            name: 'test',
+            extra: 'extra',
+        });
+        expect(decoder({ id: 1, name: 'test' }).unwrap()).toEqual({
+            id: 1,
+            name: 'test',
+            extra: 'extra',
+        });
+
+        // Extra properties will be retained, but "unknown"
+        expect(
+            decoder({ id: 1, name: 'test', extra1: 123, extra2: 'hey' }).unwrap()
+        ).toEqual({
+            id: 1,
+            name: 'test',
+            extra: 'extra',
+            extra1: 123,
+            extra2: 'hey',
+        });
+    });
+
     it('errors on non-objects', () => {
-        const decoder = exact({ id: string });
+        const decoder = inexact({ id: string });
 
         expect(decoder('foo').isErr()).toBe(true);
         expect(decoder(3.14).isErr()).toBe(true);
