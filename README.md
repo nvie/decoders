@@ -221,6 +221,26 @@ mydecoder('hello'); // DecodeError
 
 ---
 
+<a name="iso8601" href="#iso8601">#</a> <b>iso8601</b>(): <i>Decoder&lt;Date&gt;</i>
+[&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/date.js 'Source')
+
+Returns a decoder capable of decoding
+[ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted date strings. This is very
+useful for working with dates in APIs: serialize them as `.toISOString()` when sending,
+decode them as `iso8601` when receiving.
+
+**NOTE:** This decoder reads a _string_, but returns a _Date_ instance.
+
+```javascript
+const mydecoder = guard(iso8601);
+mydecoder('2020-06-01T12:00:00Z'); // new Date('2020-06-01T12:00:00Z')
+mydecoder('2020-06-01'); // DecodeError
+mydecoder('hello'); // DecodeError
+mydecoder(123); // DecodeError
+```
+
+---
+
 <a name="null_" href="#null_">#</a> <b>null\_</b>(): <i>Decoder&lt;null&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/constants.js 'Source')
 

@@ -1,7 +1,12 @@
 ## Upcoming
 
--   **New decoder** [`inexact()`](https://github.com/nvie/decoders#inexact): like object,
-    but retain any extra fields on the input value as `unknown`
+-   **New decoders:**
+
+    -   [`inexact()`](https://github.com/nvie/decoders#inexact): like object, but retain
+        any extra fields on the input value as `unknown`
+
+    -   [`iso8601`](https://github.com/nvie/decoders#iso8601): for decoding
+        ISO8601-formatted date strings
 
 -   **Improved type inference** for `object()` and `exact()` decoders (see #515, thanks
     @dimfeld)

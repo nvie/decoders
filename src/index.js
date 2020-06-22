@@ -26,7 +26,7 @@ export { compose, map, predicate } from './utils';
 export { array, nonEmptyArray, poja } from './array';
 export { boolean, numericBoolean, truthy } from './boolean';
 export { constant, hardcoded, mixed, null_, undefined_, unknown } from './constants';
-export { date } from './date';
+export { date, iso8601 } from './date';
 export { dispatch } from './dispatch';
 export {
     either,
