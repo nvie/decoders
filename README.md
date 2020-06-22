@@ -78,7 +78,7 @@ The decoders package consists of a few building blocks:
 
 ### Primitives
 
-<a name="number" href="#number">#</a> <b>number</b>(): <i>Decoder&lt;number&gt;</i>
+<a name="number" href="#number">#</a> <b>number</b>: <i>Decoder&lt;number&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/number.js 'Source')
 
 Returns a decoder capable of decoding finite (!) numbers (integer or float values). This
@@ -95,7 +95,7 @@ mydecoder('not a number'); // DecodeError
 
 ---
 
-<a name="integer" href="#integer">#</a> <b>integer</b>(): <i>Decoder&lt;integer&gt;</i>
+<a name="integer" href="#integer">#</a> <b>integer</b>: <i>Decoder&lt;integer&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/number.js 'Source')
 
 Like `number`, but only decodes values that are whole numbers.
@@ -110,7 +110,7 @@ mydecoder('not a integer'); // DecodeError
 
 ---
 
-<a name="string" href="#string">#</a> <b>string</b>(): <i>Decoder&lt;string&gt;</i>
+<a name="string" href="#string">#</a> <b>string</b>: <i>Decoder&lt;string&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/string.js 'Source')
 
 Returns a decoder capable of decoding string values.
@@ -137,7 +137,7 @@ mydecoder('foo'); // DecodeError
 
 ---
 
-<a name="email" href="#email">#</a> <b>email</b>(): <i>Decoder&lt;string&gt;</i>
+<a name="email" href="#email">#</a> <b>email</b>: <i>Decoder&lt;string&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/string.js 'Source')
 
 Returns a decoder capable of decoding email addresses (using a regular expression).
@@ -150,7 +150,7 @@ mydecoder('alice@acme.org') === 'alice@acme.org';
 
 ---
 
-<a name="boolean" href="#boolean">#</a> <b>boolean</b>(): <i>Decoder&lt;boolean&gt;</i>
+<a name="boolean" href="#boolean">#</a> <b>boolean</b>: <i>Decoder&lt;boolean&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/boolean.js 'Source')
 
 Returns a decoder capable of decoding boolean values.
@@ -166,7 +166,7 @@ mydecoder(123); // DecodeError
 
 ---
 
-<a name="truthy" href="#truthy">#</a> <b>truthy</b>(): <i>Decoder&lt;boolean&gt;</i>
+<a name="truthy" href="#truthy">#</a> <b>truthy</b>: <i>Decoder&lt;boolean&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/boolean.js 'Source')
 
 Returns a decoder capable of decoding any input value to its "truthy value".
@@ -185,7 +185,7 @@ mydecoder(null) === false;
 
 ---
 
-<a name="numericBoolean" href="#numericBoolean">#</a> <b>numericBoolean</b>():
+<a name="numericBoolean" href="#numericBoolean">#</a> <b>numericBoolean</b>:
 <i>Decoder&lt;boolean&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/boolean.js 'Source')
 
@@ -204,7 +204,7 @@ mydecoder('hello'); // DecodeError
 
 ---
 
-<a name="date" href="#date">#</a> <b>date</b>(): <i>Decoder&lt;Date&gt;</i>
+<a name="date" href="#date">#</a> <b>date</b>: <i>Decoder&lt;Date&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/date.js 'Source')
 
 Returns a decoder capable of decoding
@@ -221,7 +221,7 @@ mydecoder('hello'); // DecodeError
 
 ---
 
-<a name="iso8601" href="#iso8601">#</a> <b>iso8601</b>(): <i>Decoder&lt;Date&gt;</i>
+<a name="iso8601" href="#iso8601">#</a> <b>iso8601</b>: <i>Decoder&lt;Date&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/date.js 'Source')
 
 Returns a decoder capable of decoding
@@ -241,7 +241,7 @@ mydecoder(123); // DecodeError
 
 ---
 
-<a name="null_" href="#null_">#</a> <b>null\_</b>(): <i>Decoder&lt;null&gt;</i>
+<a name="null_" href="#null_">#</a> <b>null\_</b>: <i>Decoder&lt;null&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/constants.js 'Source')
 
 Returns a decoder capable of decoding the constant value `null`.
@@ -256,7 +256,7 @@ mydecoder('hello world'); // DecodeError
 
 ---
 
-<a name="undefined_" href="#undefined_">#</a> <b>undefined\_</b>():
+<a name="undefined_" href="#undefined_">#</a> <b>undefined\_</b>:
 <i>Decoder&lt;void&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/constants.js 'Source')
 
@@ -319,9 +319,9 @@ mydecoder({ a: 'foo', b: 'bar' })  // DecodeError
 
 ---
 
-<a name="mixed" href="#mixed">#</a> <b>mixed</b>(): <i>Decoder&lt;mixed&gt;</i>
+<a name="mixed" href="#mixed">#</a> <b>mixed</b>: <i>Decoder&lt;mixed&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/constants.js 'Source')<br />
-<a name="unknown" href="#unknown">#</a> <b>unknown</b>(): <i>Decoder&lt;unknown&gt;</i>
+<a name="unknown" href="#unknown">#</a> <b>unknown</b>: <i>Decoder&lt;unknown&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/constants.js 'Source')
 
 Returns a decoder that will simply pass through any input value, never fails. This
