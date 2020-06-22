@@ -5,16 +5,16 @@
 [![Coverage Status](https://img.shields.io/coveralls/nvie/decoders/master.svg)](https://coveralls.io/github/nvie/decoders?branch=master)
 [![Minified Size](https://badgen.net/bundlephobia/minzip/decoders)](https://bundlephobia.com/result?p=decoders)
 
-Elegant and battle-tested validation library for type-safe input data for TypeScript and Flow. The API is inspired by
-Elm’s JSON decoders, hence the name.
+Elegant and battle-tested validation library for type-safe input data for TypeScript and
+Flow. The API is inspired by Elm’s JSON decoders, hence the name.
 
 See https://nvie.com/posts/introducing-decoders/ for an introduction.
 
 ## Why?
 
-If you're using Flow or TypeScript to statically typecheck your JavaScript, you'll know that any data coming from
-outside your program’s boundaries is essentially untyped and unsafe. "Decoders" can help to validate and enforce the
-correct shape of that data.
+If you're using Flow or TypeScript to statically typecheck your JavaScript, you'll know
+that any data coming from outside your program’s boundaries is essentially untyped and
+unsafe. "Decoders" can help to validate and enforce the correct shape of that data.
 
 For example, imagine your app expects a list of points in an incoming HTTP request:
 
@@ -27,8 +27,8 @@ For example, imagine your app expects a list of points in an incoming HTTP reque
 }
 ```
 
-In order to decode this, you'll have to tell Flow about the expected structure, and use the decoders to validate at
-runtime that the free-form data will be in the expected shape.
+In order to decode this, you'll have to tell Flow about the expected structure, and use
+the decoders to validate at runtime that the free-form data will be in the expected shape.
 
 ```javascript
 type Point = { x: number, y: number };
@@ -81,8 +81,9 @@ The decoders package consists of a few building blocks:
 <a name="number" href="#number">#</a> <b>number</b>(): <i>Decoder&lt;number&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/number.js 'Source')
 
-Returns a decoder capable of decoding finite (!) numbers (integer or float values). This means that values like `NaN`,
-or positive and negative `Infinity` are not considered valid numbers.
+Returns a decoder capable of decoding finite (!) numbers (integer or float values). This
+means that values like `NaN`, or positive and negative `Infinity` are not considered valid
+numbers.
 
 ```javascript
 const mydecoder = guard(number);
@@ -125,7 +126,8 @@ mydecoder(123); // DecodeError
 <a name="regex" href="#regex">#</a> <b>regex</b>(): <i>Decoder&lt;string&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/string.js 'Source')
 
-Returns a decoder capable of decoding string values that match the given regular expression.
+Returns a decoder capable of decoding string values that match the given regular
+expression.
 
 ```javascript
 const mydecoder = guard(regex(/^[0-9]+$/));
@@ -183,7 +185,8 @@ mydecoder(null) === false;
 
 ---
 
-<a name="numericBoolean" href="#numericBoolean">#</a> <b>numericBoolean</b>(): <i>Decoder&lt;boolean&gt;</i>
+<a name="numericBoolean" href="#numericBoolean">#</a> <b>numericBoolean</b>():
+<i>Decoder&lt;boolean&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/boolean.js 'Source')
 
 Returns a decoder capable of decoding numbers to their boolean representation.
@@ -205,7 +208,8 @@ mydecoder('hello'); // DecodeError
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/date.js 'Source')
 
 Returns a decoder capable of decoding
-[Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) values.
+[Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date)
+values.
 
 ```javascript
 const now = new Date();
@@ -232,7 +236,8 @@ mydecoder('hello world'); // DecodeError
 
 ---
 
-<a name="undefined_" href="#undefined_">#</a> <b>undefined\_</b>(): <i>Decoder&lt;void&gt;</i>
+<a name="undefined_" href="#undefined_">#</a> <b>undefined\_</b>():
+<i>Decoder&lt;void&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/constants.js 'Source')
 
 Returns a decoder capable of decoding the constant value `undefined`.
@@ -247,7 +252,8 @@ mydecoder('hello world'); // DecodeError
 
 ---
 
-<a name="constant" href="#constant">#</a> <b>constant</b><i>&lt;T&gt;</i>(value: T): <i>Decoder&lt;T&gt;</i>
+<a name="constant" href="#constant">#</a> <b>constant</b><i>&lt;T&gt;</i>(value: T):
+<i>Decoder&lt;T&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/constants.js 'Source')
 
 Returns a decoder capable of decoding just the given constant value.
@@ -262,11 +268,12 @@ mydecoder(undefined); // DecodeError
 
 ---
 
-<a name="hardcoded" href="#hardcoded">#</a> <b>hardcoded</b><i>&lt;T&gt;</i>(value: T): <i>Decoder&lt;T&gt;</i>
+<a name="hardcoded" href="#hardcoded">#</a> <b>hardcoded</b><i>&lt;T&gt;</i>(value: T):
+<i>Decoder&lt;T&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/constants.js 'Source')
 
-Returns a decoder that will always return the provided value **without looking at the input**. This is useful to
-manually add extra fields.
+Returns a decoder that will always return the provided value **without looking at the
+input**. This is useful to manually add extra fields.
 
 ```javascript
 const mydecoder = guard(hardcoded(2.1));
@@ -280,8 +287,8 @@ mydecoder(undefined) === 2.1;
 <a name="fail" href="#fail">#</a> <b>fail</b>(): <i>Decoder&lt;empty&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/fail.js 'Source')
 
-Returns a decoder that will always fail with the given error messages, no matter what the input. May be useful for
-explicitly disallowing keys, or for testing purposes.
+Returns a decoder that will always fail with the given error messages, no matter what the
+input. May be useful for explicitly disallowing keys, or for testing purposes.
 
 ```javascript
 const mydecoder = guard(object({ a: string, b: optional(fail('Key b has been removed')) })));
@@ -293,12 +300,12 @@ mydecoder({ a: 'foo', b: 'bar' })  // DecodeError
 ---
 
 <a name="mixed" href="#mixed">#</a> <b>mixed</b>(): <i>Decoder&lt;mixed&gt;</i>
-[&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/constants.js 'Source')
+[&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/constants.js 'Source')<br />
 <a name="unknown" href="#unknown">#</a> <b>unknown</b>(): <i>Decoder&lt;unknown&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/constants.js 'Source')
 
-Returns a decoder that will simply pass through any input value, never fails. This effectively returns a
-`Decoder<mixed>`, which is not that useful. **Use sparingly.**
+Returns a decoder that will simply pass through any input value, never fails. This
+effectively returns a `Decoder<mixed>`, which is not that useful. **Use sparingly.**
 
 Same as `unknown` in TypeScript.
 
@@ -312,16 +319,18 @@ mydecoder([1, 2]) === [1, 2];
 
 ### Compositions
 
-Composite decoders are "higher order" decoders that can build new decoders from existing decoders that can already
-decode a "subtype". Examples are: if you already have a decoder for a `Point` (= `Decoder<Point>`), then you can use
-`array()` to automatically build a decoder for arrays of points: `array(pointDecoder)`, which will be of type
+Composite decoders are "higher order" decoders that can build new decoders from existing
+decoders that can already decode a "subtype". Examples are: if you already have a decoder
+for a `Point` (= `Decoder<Point>`), then you can use `array()` to automatically build a
+decoder for arrays of points: `array(pointDecoder)`, which will be of type
 `Decoder<Array<Point>>`.
 
-<a name="optional" href="#optional">#</a> <b>optional</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;T |
-void&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/optional.js 'Source')
+<a name="optional" href="#optional">#</a>
+<b>optional</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;T | void&gt;</i>
+[&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/optional.js 'Source')
 
-Returns a decoder capable of decoding **either a value of type <i>T</i>, or `undefined`**, provided that you already
-have a decoder for <i>T</i>.
+Returns a decoder capable of decoding **either a value of type <i>T</i>, or `undefined`**,
+provided that you already have a decoder for <i>T</i>.
 
 ```javascript
 const mydecoder = guard(optional(string));
@@ -354,11 +363,12 @@ Which will decode to type:
 
 ---
 
-<a name="nullable" href="#nullable">#</a> <b>nullable</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;T |
-null&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/optional.js 'Source')
+<a name="nullable" href="#nullable">#</a>
+<b>nullable</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;T | null&gt;</i>
+[&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/optional.js 'Source')
 
-Returns a decoder capable of decoding **either a value of type <i>T</i>, or `null`**, provided that you already have a
-decoder for <i>T</i>.
+Returns a decoder capable of decoding **either a value of type <i>T</i>, or `null`**,
+provided that you already have a decoder for <i>T</i>.
 
 ```javascript
 const mydecoder = guard(nullable(string));
@@ -371,11 +381,12 @@ mydecoder(42); // DecodeError
 
 ---
 
-<a name="maybe" href="#maybe">#</a> <b>maybe</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;?T&gt;</i>
+<a name="maybe" href="#maybe">#</a> <b>maybe</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>):
+<i>Decoder&lt;?T&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/optional.js 'Source')
 
-Returns a decoder capable of decoding **either a value of type <i>T</i>, or `null`, or `undefined`**, provided that you
-already have a decoder for <i>T</i>.
+Returns a decoder capable of decoding **either a value of type <i>T</i>, or `null`, or
+`undefined`**, provided that you already have a decoder for <i>T</i>.
 
 ```javascript
 const mydecoder = guard(maybe(string));
@@ -389,9 +400,11 @@ mydecoder(42); // DecodeError
 ---
 
 <a name="array" href="#array">#</a> <b>array</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>):
-<i>Decoder&lt;Array&lt;T&gt;&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/array.js 'Source')
+<i>Decoder&lt;Array&lt;T&gt;&gt;</i>
+[&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/array.js 'Source')
 
-Returns a decoder capable of decoding **an array of <i>T</i>'s**, provided that you already have a decoder for <i>T</i>.
+Returns a decoder capable of decoding **an array of <i>T</i>'s**, provided that you
+already have a decoder for <i>T</i>.
 
 ```javascript
 const mydecoder = guard(array(string));
@@ -401,29 +414,35 @@ mydecoder(['hello', 1.2]); // DecodeError
 
 ---
 
-<a name="tuple1" href="#tuple1">#</a> <b>tuple1</b><i>&lt;T1&gt;</i>(<i>Decoder&lt;T1&gt;</i>):
-<i>Decoder&lt;[T1]&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/tuple.js 'Source')<br />
-<a name="tuple2" href="#tuple2">#</a> <b>tuple2</b><i>&lt;T1, T2&gt;</i>(<i>Decoder&lt;T1&gt;</i>,
-<i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;[T1, T2]&gt;</i>
+<a name="tuple1" href="#tuple1">#</a>
+<b>tuple1</b><i>&lt;T1&gt;</i>(<i>Decoder&lt;T1&gt;</i>): <i>Decoder&lt;[T1]&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/tuple.js 'Source')<br />
-<a name="tuple3" href="#tuple3">#</a> <b>tuple3</b><i>&lt;T1, T2, T3&gt;</i>(<i>Decoder&lt;T1&gt;</i>,
-<i>Decoder&lt;T2&gt;</i>, <i>Decoder&lt;T3&gt;</i>): <i>Decoder&lt;[T1, T2, T3]&gt;</i>
+<a name="tuple2" href="#tuple2">#</a> <b>tuple2</b><i>&lt;T1,
+T2&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;[T1,
+T2]&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/tuple.js 'Source')<br />
-<a name="tuple4" href="#tuple4">#</a> <b>tuple4</b><i>&lt;T1, T2, T3, T4&gt;</i>(<i>Decoder&lt;T1&gt;</i>,
-<i>Decoder&lt;T2&gt;</i>, <i>Decoder&lt;T3&gt;</i>, <i>Decoder&lt;T4&gt;</i>): <i>Decoder&lt;[T1, T2, T3, T4]&gt;</i>
+<a name="tuple3" href="#tuple3">#</a> <b>tuple3</b><i>&lt;T1, T2,
+T3&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>, <i>Decoder&lt;T3&gt;</i>):
+<i>Decoder&lt;[T1, T2, T3]&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/tuple.js 'Source')<br />
-<a name="tuple5" href="#tuple5">#</a> <b>tuple5</b><i>&lt;T1, T2, T3, T4, T5&gt;</i>(<i>Decoder&lt;T1&gt;</i>,
-<i>Decoder&lt;T2&gt;</i>, <i>Decoder&lt;T3&gt;</i>, <i>Decoder&lt;T3&gt;</i>, <i>Decoder&lt;T4&gt;</i>,
-<i>Decoder&lt;T5&gt;</i>): <i>Decoder&lt;[T1, T2, T3, T4, T5]&gt;</i>
+<a name="tuple4" href="#tuple4">#</a> <b>tuple4</b><i>&lt;T1, T2, T3,
+T4&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>, <i>Decoder&lt;T3&gt;</i>,
+<i>Decoder&lt;T4&gt;</i>): <i>Decoder&lt;[T1, T2, T3, T4]&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/tuple.js 'Source')<br />
-<a name="tuple6" href="#tuple6">#</a> <b>tuple6</b><i>&lt;T1, T2, T3, T4, T5, T6&gt;</i>(<i>Decoder&lt;T1&gt;</i>,
-<i>Decoder&lt;T2&gt;</i>, <i>Decoder&lt;T3&gt;</i>, <i>Decoder&lt;T4&gt;</i>, <i>Decoder&lt;T5&gt;</i>,
-<i>Decoder&lt;T6&gt;</i>): <i>Decoder&lt;[T1, T2, T3, T4, T5, T6]&gt;</i>
+<a name="tuple5" href="#tuple5">#</a> <b>tuple5</b><i>&lt;T1, T2, T3, T4,
+T5&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>, <i>Decoder&lt;T3&gt;</i>,
+<i>Decoder&lt;T3&gt;</i>, <i>Decoder&lt;T4&gt;</i>, <i>Decoder&lt;T5&gt;</i>):
+<i>Decoder&lt;[T1, T2, T3, T4, T5]&gt;</i>
+[&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/tuple.js 'Source')<br />
+<a name="tuple6" href="#tuple6">#</a> <b>tuple6</b><i>&lt;T1, T2, T3, T4, T5,
+T6&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>, <i>Decoder&lt;T3&gt;</i>,
+<i>Decoder&lt;T4&gt;</i>, <i>Decoder&lt;T5&gt;</i>, <i>Decoder&lt;T6&gt;</i>):
+<i>Decoder&lt;[T1, T2, T3, T4, T5, T6]&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/tuple.js 'Source')
 
-Returns a decoder capable of decoding **a 2-tuple of <i>(T1, T2)</i>'s**, provided that you already have a decoder for
-<i>T1</i> and <i>T2</i>. A tuple is like an Array, but the number of items in the array is fixed (two) and their types
-don't have to be homogeneous.
+Returns a decoder capable of decoding **a 2-tuple of <i>(T1, T2)</i>'s**, provided that
+you already have a decoder for <i>T1</i> and <i>T2</i>. A tuple is like an Array, but the
+number of items in the array is fixed (two) and their types don't have to be homogeneous.
 
 ```javascript
 const mydecoder = guard(tuple2(string, number));
@@ -433,14 +452,15 @@ mydecoder(['hello', 'world']); // DecodeError
 
 ---
 
-<a name="object" href="#object">#</a> <b>object</b><i>&lt;O: { [field: string]: Decoder&lt;any&gt; }&gt;</i>(mapping:
-O): <i>Decoder&lt;{ ... }&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/object.js 'Source')
+<a name="object" href="#object">#</a> <b>object</b><i>&lt;O: { [field: string]:
+Decoder&lt;any&gt; }&gt;</i>(mapping: O): <i>Decoder&lt;{ ... }&gt;</i>
+[&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/object.js 'Source')
 
-Returns a decoder capable of decoding **objects of the given shape** corresponding decoders, provided that you already
-have decoders for all values in the mapping.
+Returns a decoder capable of decoding **objects of the given shape** corresponding
+decoders, provided that you already have decoders for all values in the mapping.
 
-> **NOTE:** 🙀 OMG, that type signature! **Don't panic.** Here's what it says with an example. Given this mapping of
-> field-to-decoder instances:
+> **NOTE:** 🙀 OMG, that type signature! **Don't panic.** Here's what it says with an
+> example. Given this mapping of field-to-decoder instances:
 >
 >     {
 >       name: Decoder<string>,
@@ -463,8 +483,9 @@ mydecoder({ x: 1 }); // DecodeError (Missing key: "y")
 
 ---
 
-<a name="exact" href="#exact">#</a> <b>exact</b><i>&lt;O: { [field: string]: Decoder&lt;any&gt; }&gt;</i>(mapping: O):
-<i>Decoder&lt;{ ... }&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/object.js 'Source')
+<a name="exact" href="#exact">#</a> <b>exact</b><i>&lt;O: { [field: string]:
+Decoder&lt;any&gt; }&gt;</i>(mapping: O): <i>Decoder&lt;{ ... }&gt;</i>
+[&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/object.js 'Source')
 
 Like `object()`, but will fail if there are superfluous keys in the input data.
 
@@ -482,16 +503,18 @@ mydecoder({ x: 1 }); // DecodeError (Missing key: "y")
 
 ---
 
-<a name="mapping" href="#mapping">#</a> <b>mapping</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>):
-<i>Decoder&lt;Map&lt;string, T&gt;&gt;</i>
+<a name="mapping" href="#mapping">#</a>
+<b>mapping</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;Map&lt;string,
+T&gt;&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/mapping.js 'Source')
 
-Returns a decoder capable of decoding **Map instances of strings-to-T's** , provided that you already have a decoder for
-<i>T</i>.
+Returns a decoder capable of decoding **Map instances of strings-to-T's** , provided that
+you already have a decoder for <i>T</i>.
 
-The main difference between `object()` and `mapping()` is that you'd typically use `object()` if this is a record-like
-object, where you know all the field names and the values are heterogeneous. Whereas with Mappings the keys are
-typically unknown and the values homogeneous.
+The main difference between `object()` and `mapping()` is that you'd typically use
+`object()` if this is a record-like object, where you know all the field names and the
+values are heterogeneous. Whereas with Mappings the keys are typically unknown and the
+values homogeneous.
 
 ```javascript
 const mydecoder = guard(mapping(person)); // Assume you have a "person" decoder already
@@ -509,8 +532,9 @@ mydecoder({
 
 ---
 
-<a name="dict" href="#dict">#</a> <b>dict</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;{ [string]:
-&lt;T&gt;}&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/mapping.js 'Source')
+<a name="dict" href="#dict">#</a> <b>dict</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>):
+<i>Decoder&lt;{ [string]: &lt;T&gt;}&gt;</i>
+[&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/mapping.js 'Source')
 
 Like `mapping()`, but returns an object instead of a `Map` instance.
 
@@ -535,18 +559,22 @@ Would equal:
 
 ---
 
-<a name="either" href="#either">#</a> <b>either</b><i>&lt;T1, T2&gt;</i>(<i>Decoder&lt;T1&gt;</i>,
-<i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;T1 | T2&gt;</i>
+<a name="either" href="#either">#</a> <b>either</b><i>&lt;T1,
+T2&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;T1 |
+T2&gt;</i><br />
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/either.js 'Source')<br />
-<a name="either2" href="#either2">#</a> <b>either2</b><i>&lt;T1, T2&gt;</i>(<i>Decoder&lt;T1&gt;</i>,
-<i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;T1 | T2&gt;</i>
+<a name="either2" href="#either2">#</a> <b>either2</b><i>&lt;T1,
+T2&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;T1 |
+T2&gt;</i><br />
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/either.js 'Source')<br />
-<a name="either3" href="#either3">#</a> <b>either3</b><i>&lt;T1, T2, T3&gt;</i>(<i>Decoder&lt;T1&gt;</i>,
-<i>Decoder&lt;T2&gt;</i>, <i>Decoder&lt;T3&gt;</i>): <i>Decoder&lt;T1 | T2 | T3&gt;</i>
-[&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/either.js 'Source') ...
+<a name="either3" href="#either3">#</a> <b>either3</b><i>&lt;T1, T2,
+T3&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>, <i>Decoder&lt;T3&gt;</i>):
+<i>Decoder&lt;T1 | T2 | T3&gt;</i>
+[&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/either.js 'Source')<br /> ...
 
-Returns a decoder capable of decoding **either one of <i>T1</i> or <i>T2</i>**, provided that you already have decoders
-for <i>T1</i> and <i>T2</i>. Eithers exist for arities up until 9 (either, either3, either4, ..., either9).
+Returns a decoder capable of decoding **either one of <i>T1</i> or <i>T2</i>**, provided
+that you already have decoders for <i>T1</i> and <i>T2</i>. Eithers exist for arities up
+until 9 (either, either3, either4, ..., either9).
 
 ```javascript
 const mydecoder = guard(either(number, string));
@@ -557,12 +585,13 @@ mydecoder(false); // DecodeError
 
 ---
 
-<a name="dispatch" href="#dispatch">#</a> <b>dispatch</b><i>&lt;O: { [field: string]: (Decoder&lt;T&gt; |
-Decoder&lt;V&gt; | ...) }&gt;</i>(field: string, mapping: O): <i>Decoder&lt;T | V | ...&gt;</i>
+<a name="dispatch" href="#dispatch">#</a> <b>dispatch</b><i>&lt;O: { [field: string]:
+(Decoder&lt;T&gt; | Decoder&lt;V&gt; | ...) }&gt;</i>(field: string, mapping: O):
+<i>Decoder&lt;T | V | ...&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/dispatch.js 'Source')
 
-Like the `either` family, but only for building unions of object types with a common field (like a `type` field) that
-lets you distinguish members.
+Like the `either` family, but only for building unions of object types with a common field
+(like a `type` field) that lets you distinguish members.
 
 The following two decoders are effectively equivalent:
 
@@ -576,21 +605,24 @@ const shape1: Decoder<Rect | Circle> = dispatch('__type', { rect, circle });
 const shape2: Decoder<Rect | Circle> = either(rect, circle);
 ```
 
-But using `dispatch()` will typically be more runtime-efficient than using `either()`. The reason is that `dispatch()`
-will first do minimal work to "look ahead" into the `type` field here, and based on that value, pick which decoder to
-invoke. Error messages will then also be tailored to the specific decoder.
+But using `dispatch()` will typically be more runtime-efficient than using `either()`. The
+reason is that `dispatch()` will first do minimal work to "look ahead" into the `type`
+field here, and based on that value, pick which decoder to invoke. Error messages will
+then also be tailored to the specific decoder.
 
-The `either()` version will instead try each decoder in turn until it finds one that matches. If none of the
-alternatives match, it needs to report all errors, which is sometimes confusing.
+The `either()` version will instead try each decoder in turn until it finds one that
+matches. If none of the alternatives match, it needs to report all errors, which is
+sometimes confusing.
 
 ---
 
-<a name="oneOf" href="#oneOf">#</a> <b>oneOf</b><i>&lt;T&gt;</i>(<i>Array&lt;T&gt;</i>): <i>Decoder&lt;T&gt;</i>
+<a name="oneOf" href="#oneOf">#</a> <b>oneOf</b><i>&lt;T&gt;</i>(<i>Array&lt;T&gt;</i>):
+<i>Decoder&lt;T&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/either.js 'Source')<br />
 
-Returns a decoder capable of decoding values that are equal to any of the given constants. The returned value will
-always be one of the given constants at runtime, but the return _type_ of this decoder will not be a union of constants,
-but a union of types, typically.
+Returns a decoder capable of decoding values that are equal to any of the given constants.
+The returned value will always be one of the given constants at runtime, but the return
+_type_ of this decoder will not be a union of constants, but a union of types, typically.
 
 ```javascript
 const mydecoder = guard(oneOf(['foo', 'bar', 3]));
@@ -607,18 +639,20 @@ For example, given an array of strings, like so:
 oneOf(['foo', 'bar']);
 ```
 
-The return type here will be `Decoder<string>`, not `Decoder<('foo' | 'bar')>`. (To obtain the latter, use
-`either(constant('foo'), constant('bar'))` instead.)
+The return type here will be `Decoder<string>`, not `Decoder<('foo' | 'bar')>`. (To obtain
+the latter, use `either(constant('foo'), constant('bar'))` instead.)
 
 ---
 
-<a name="instanceOf" href="#instanceOf">#</a> <b>instanceOf</b><i>&lt;T&gt;</i>(<i>Class&lt;T&gt;</i>):
-<i>Decoder&lt;T&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/instanceOf.js 'Source')<br />
+<a name="instanceOf" href="#instanceOf">#</a>
+<b>instanceOf</b><i>&lt;T&gt;</i>(<i>Class&lt;T&gt;</i>): <i>Decoder&lt;T&gt;</i>
+[&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/instanceOf.js 'Source')<br />
 
 Returns a decoder capable of decoding values that are instances of the given class.
 
-> **NOTE: Help wanted!** The TypeScript annotation for this decoder needs help! If you know how to express it, please
-> submit a PR. See https://github.com/nvie/decoders/blob/master/src/instanceOf.d.ts
+> **NOTE: Help wanted!** The TypeScript annotation for this decoder needs help! If you
+> know how to express it, please submit a PR. See
+> https://github.com/nvie/decoders/blob/master/src/instanceOf.d.ts
 
 ```javascript
 const mydecoder = guard(instanceOf(Error));
@@ -630,13 +664,14 @@ mydecoder(3); // DecodeError
 
 ---
 
-<a name="map" href="#map">#</a> <b>map</b><i>&lt;T, V&gt;</i>(<i>Decoder&lt;T&gt;</i>, <i>&lt;T&gt;</i> =&gt;
-<i>&lt;V&gt;</i>): <i>Decoder&lt;V&gt;</i>
+<a name="map" href="#map">#</a> <b>map</b><i>&lt;T, V&gt;</i>(<i>Decoder&lt;T&gt;</i>,
+<i>&lt;T&gt;</i> =&gt; <i>&lt;V&gt;</i>): <i>Decoder&lt;V&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/utils.js 'Source')<br />
 
-Given a decoder and a mapper function, will first decode the value using the given decoder, and on success, will call
-the mapper function **on the decoded value**. If the mapper function throws an error, the whole decoder will fail using
-the error message as the failure reason.
+Given a decoder and a mapper function, will first decode the value using the given
+decoder, and on success, will call the mapper function **on the decoded value**. If the
+mapper function throws an error, the whole decoder will fail using the error message as
+the failure reason.
 
 ```javascript
 const upper = map(string, (s) => s.toUpperCase());
@@ -648,24 +683,28 @@ mydecoder('foo') === 'FOO';
 
 ---
 
-<a name="compose" href="#compose">#</a> <b>compose</b><i>&lt;T, V&gt;</i>(<i>Decoder&lt;T&gt;</i>, <i>Decoder&lt;V,
-T&gt;</i>): <i>Decoder&lt;V&gt;</i> [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/utils.js 'Source')<br />
+<a name="compose" href="#compose">#</a> <b>compose</b><i>&lt;T,
+V&gt;</i>(<i>Decoder&lt;T&gt;</i>, <i>Decoder&lt;V, T&gt;</i>): <i>Decoder&lt;V&gt;</i>
+[&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/utils.js 'Source')<br />
 
-Given a decoder for _T_ and another one for _V_, will first decode using _T_, and then call the _V_ decoder **on the
-original value**. This differs from `map()` in that it was access to the original value, but may assume the type value
-is already refined by the first decoder.
+Given a decoder for _T_ and another one for _V_, will first decode using _T_, and then
+call the _V_ decoder **on the original value**. This differs from `map()` in that it was
+access to the original value, but may assume the type value is already refined by the
+first decoder.
 
-Although the `compose()` function is essentially more low-level and powerful then the `map()` function, it's mostly
-useful in combination with the `predicate()` helper function, which allows you to rely on an existing decoder, but add
-extra checks on the specific values that will be allowed at runtime.
+Although the `compose()` function is essentially more low-level and powerful then the
+`map()` function, it's mostly useful in combination with the `predicate()` helper
+function, which allows you to rely on an existing decoder, but add extra checks on the
+specific values that will be allowed at runtime.
 
 ---
 
-<a name="lazy" href="#lazy">#</a> <b>lazy</b><i>&lt;T&gt;</i>(() => <i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;T&gt;</i>
+<a name="lazy" href="#lazy">#</a> <b>lazy</b><i>&lt;T&gt;</i>(() =>
+<i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;T&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/lazy.js 'Source')<br />
 
-Lazily evaluate the given decoder. This is useful to build self-referential types for recursive data structures.
-Example:
+Lazily evaluate the given decoder. This is useful to build self-referential types for
+recursive data structures. Example:
 
 ```js
 type Tree = {
@@ -686,14 +725,15 @@ const treeDecoder: Decoder<Tree> = object({
 
 ### Building custom decoders
 
-There are two main building blocks for defining your own custom decoders: `map()` and `compose()`.
+There are two main building blocks for defining your own custom decoders: `map()` and
+`compose()`.
 
 There are roughly 3 use cases that you will want to use:
 
-1. **[Transformation](#transformation)** (i.e. read one type, but return another, or read a type but change its value
-   before returning)
-1. **[Adding extra value requirements](#adding-predicates)** (i.e. decode using an existing decoder, but require an
-   extra value check)
+1. **[Transformation](#transformation)** (i.e. read one type, but return another, or read
+   a type but change its value before returning)
+1. **[Adding extra value requirements](#adding-predicates)** (i.e. decode using an
+   existing decoder, but require an extra value check)
 1. **Chaining** multiple decoders (less common, more advanced)
 
 #### Transformation
@@ -715,14 +755,15 @@ To read one type, but change its value before returning:
 const upperCase: Decoder<string> = map(string, (s) => s.toUpperCase());
 ```
 
-**WARNING:** While you can map anything to anything, it's typically **NOT A GOOD IDEA to put too much transformation
-logic inside decoders**. It's recommended to keep them minimal and only try to use them for the most basic use cases,
-like in the examples above. Keeping business logic outside decoders makes them more reusable and composable.
+**WARNING:** While you can map anything to anything, it's typically **NOT A GOOD IDEA to
+put too much transformation logic inside decoders**. It's recommended to keep them minimal
+and only try to use them for the most basic use cases, like in the examples above. Keeping
+business logic outside decoders makes them more reusable and composable.
 
 #### Adding predicates
 
-The easiest way to decode using an existing decoder, but enforcing extra runtime checks on their values is by using the
-`compose(..., predicate(...))` construction:
+The easiest way to decode using an existing decoder, but enforcing extra runtime checks on
+their values is by using the `compose(..., predicate(...))` construction:
 
 ```js
 const odd = compose(

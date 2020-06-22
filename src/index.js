@@ -18,7 +18,7 @@
  * type.  In our case, it's fine to fail with a runtime error.
  *
  */
-import type { $DecoderType, Decoder, Guard } from './types';
+import type { $DecoderType, $GuardType, Decoder, Guard } from './types';
 
 export { guard } from './guard';
 export { compose, map, predicate } from './utils';
@@ -49,4 +49,5 @@ export { maybe, nullable, optional } from './optional';
 export { email, nonEmptyString, regex, string, url } from './string';
 export { tuple1, tuple2, tuple3, tuple4, tuple5, tuple6 } from './tuple';
 
-export type { $DecoderType, Decoder, Guard };
+export type { Decoder, Guard };
+export type { $DecoderType, $GuardType };

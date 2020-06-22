@@ -1,4 +1,4 @@
-import { $DecoderType, Decoder, Guard } from './types';
+import { Decoder, DecoderType, Guard, GuardType } from './types';
 
 export { guard } from './guard';
 export { compose, map, predicate } from './utils';
@@ -29,4 +29,7 @@ export { maybe, nullable, optional } from './optional';
 export { email, regex, string, url } from './string';
 export { tuple2, tuple3, tuple4, tuple5, tuple6 } from './tuple';
 
-export { $DecoderType, Decoder, Guard };
+export { Decoder, Guard };
+export { DecoderType, GuardType };
+
+export type $DecoderType<T> = DecoderType<T>; // Alias for backward compatibility
