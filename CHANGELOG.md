@@ -3,6 +3,9 @@
 -   `DecoderType` is now an alias for `$DecoderType` (to support both TypeScript and Flow
     conventional naming)
 
+-   `GuardType` (and `$GuardType`) is a new type function to extract the type
+    of a guard instance
+
 ## v1.21.0
 
 -   **New decoder** [`lazy()`](https://github.com/nvie/decoders#lazy): lazily-evaluated
