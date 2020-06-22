@@ -85,7 +85,7 @@ export function object<O: { +[field: string]: AnyDecoder, ... }>(
         // value.
         const missing = subtract(known, actual);
 
-        let record = {};
+        let record = { ...null };
         const fieldErrors: { [key: string]: Annotation } = { ...null };
 
         // NOTE: We're using .keys() here over .entries(), since .entries()
