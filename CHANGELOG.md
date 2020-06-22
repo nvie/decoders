@@ -1,4 +1,4 @@
-## Upcoming
+## v1.22.0
 
 -   **New decoders:**
 
