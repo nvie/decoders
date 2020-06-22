@@ -44,19 +44,19 @@ export type OptionalKeys<T> = keyof Compact<
  *
  *   type User = {
  *     name: string;
- *     age: number | undefined;
+ *     age: number | null | undefined;
  *   }
  *
  * Then AllowImplicit<User> will become equivalent to:
  *
  *   {
  *     name: string;
- *     age?: number | undefined;
+ *     age?: number | null;
  *        ^
  *        Note the question mark
  *   }
  */
 type AllowImplicit<T> = { [K in RequiredKeys<T>]-?: T[K] } &
-    { [K in OptionalKeys<T>]+?: T[K] };
+    { [K in OptionalKeys<T>]+?: Exclude<T[K], undefined> };
 
 export { AllowImplicit };
