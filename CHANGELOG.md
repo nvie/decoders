@@ -1,5 +1,8 @@
 ## Upcoming
 
+-   **Better type inference** for `object()` and `exact()` decoders (see #515,
+    thanks @dimfeld)
+
 -   `DecoderType` is now an alias for `$DecoderType` (to support both TypeScript and Flow
     conventional naming)
 
