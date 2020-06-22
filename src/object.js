@@ -10,6 +10,9 @@ import { compose, map } from './utils';
 // $FlowFixMe (not really an issue) - deliberate use of `any` - not sure how we should get rid of this
 type AnyDecoder = any;
 
+// $FlowFixMe (not really an issue) - deliberately casting
+type cast = any;
+
 function isPojo(o: mixed): boolean %checks {
     return (
         o !== null &&
@@ -74,7 +77,7 @@ export const pojo: Decoder<{| [string]: mixed |}> = (blob: mixed) => {
  */
 export function object<O: { +[field: string]: AnyDecoder, ... }>(
     mapping: O
-): Decoder<$ObjMap<$Exact<O>, $DecoderType>> {
+): Decoder<$ObjMap<O, $DecoderType>> {
     const known = new Set(Object.keys(mapping));
     return compose(pojo, (blob: {| [string]: mixed |}) => {
         const actual = new Set(Object.keys(blob));
@@ -85,7 +88,7 @@ export function object<O: { +[field: string]: AnyDecoder, ... }>(
         // value.
         const missing = subtract(known, actual);
 
-        let record = { ...null };
+        let record = {};
         const fieldErrors: { [key: string]: Annotation } = { ...null };
 
         // NOTE: We're using .keys() here over .entries(), since .entries()
@@ -166,7 +169,11 @@ export function exact<O: { +[field: string]: AnyDecoder, ... }>(
         return Ok(blob);
     });
 
-    return compose(checked, object(mapping));
+    // Defer to the "object" decoder for doing the real decoding work.  Since
+    // we made sure there are no superfluous keys in this structure, it's now
+    // safe to force-cast it to an $Exact<> type.
+    const decoder = ((object(mapping): cast): Decoder<$ObjMap<$Exact<O>, $DecoderType>>);
+    return compose(checked, decoder);
 }
 
 export function inexact<O: { +[field: string]: AnyDecoder }>(
