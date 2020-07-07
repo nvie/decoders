@@ -28,7 +28,7 @@ export const string: Decoder<string> = (blob: mixed) => {
 /**
  * Decoder that only returns Ok for non-empty string inputs.  Err otherwise.
  */
-export const nonEmptyString = regex(/\S/, 'Must be non-empty string');
+export const nonEmptyString: Decoder<string> = regex(/\S/, 'Must be non-empty string');
 
 /**
  * Decoder that only returns Ok for string inputs that match the regular
@@ -46,7 +46,7 @@ export function regex(regex: RegExp, msg: string): Decoder<string> {
  * Decoder that only returns Ok for string inputs that match the almost perfect
  * email regex, taken from http://emailregex.com.  Err otherwise.
  */
-export const email = regex(
+export const email: Decoder<string> = regex(
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
     'Must be email'
 );
