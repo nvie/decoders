@@ -32,5 +32,5 @@ const circle: Decoder<Circle> = object({
     radius: number,
 });
 
-// $ExpectType Decoder<Rect | Circle, unknown>
+// $ExpectType Decoder<$Values<{ rect: Rect; circle: Circle; }>, unknown>
 const shape = dispatch('_type', { rect, circle });
