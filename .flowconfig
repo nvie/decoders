@@ -19,7 +19,6 @@ unclear-type=off
 
 [options]
 include_warnings=true
-well_formed_exports=true
 
 [strict]
 nonstrict-import
