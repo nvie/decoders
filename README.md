@@ -789,11 +789,11 @@ And a runtime input of:
 }
 ```
 
-|                  | Extra properties | Output value                   | Inferred type                              |
-| ---------------- | ---------------- | ------------------------------ | ------------------------------------------ |
-| `object(thing)`  | discarded        | `{a: "hi", b: 42}`             | `{a: string, b?: number}`                  |
-| `exact(thing)`   | not allowed      | ⚡️ Runtime error              | `{a: string, b?: number}`                  |
-| `inexact(thing)` | retained         | `{a: "hi", b: 42, c: "extra"}` | `{a: string, b?: number, [string]: mixed}` |
+|                  | Extra properties | Output value                   | Inferred type                             |
+| ---------------- | ---------------- | ------------------------------ | ----------------------------------------- |
+| `object(thing)`  | discarded        | `{a: "hi", b: 42}`             | `{a: string, b: number}`                  |
+| `exact(thing)`   | not allowed      | ⚡️ Runtime error                | `{a: string, b: number}`                  |
+| `inexact(thing)` | retained         | `{a: "hi", b: 42, c: "extra"}` | `{a: string, b: number, [string]: mixed}` |
 
 ### Building custom decoders
 
