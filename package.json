@@ -71,7 +71,7 @@
         "@babel/preset-flow": "^7.10.4",
         "babel-eslint": "^10.1.0",
         "coveralls": "^3.1.0",
-        "dtslint": "^3.6.12",
+        "dtslint": "^4.0.0",
         "eslint": "^7.4.0",
         "eslint-plugin-flowtype": "^5.2.0",
         "flow-bin": "^0.128.0",
