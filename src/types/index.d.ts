@@ -21,6 +21,7 @@ export {
 } from './either';
 export { fail } from './fail';
 export { instanceOf } from './instanceOf';
+export { json, jsonArray, jsonObject } from './json';
 export { lazy } from './lazy';
 export { mapping, dict } from './mapping';
 export { integer, number, positiveInteger, positiveNumber } from './number';
@@ -31,5 +32,6 @@ export { tuple2, tuple3, tuple4, tuple5, tuple6 } from './tuple';
 
 export { Decoder, Guard };
 export { DecoderType, GuardType };
+export { JSONArray, JSONObject, JSONValue } from './json';
 
 export type $DecoderType<T> = DecoderType<T>; // Alias for backward compatibility
