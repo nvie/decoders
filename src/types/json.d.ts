@@ -1,9 +1,11 @@
 import { Decoder } from './types';
 
 export type JSONValue = null | string | number | boolean | JSONObject | JSONArray;
-export type JSONObject = { [key: string]: JSONValue };
-export type JSONArray = Array<JSONValue>;
+export interface JSONObject {
+    [key: string]: JSONValue;
+}
+export type JSONArray = JSONValue[];
 
-export function json: Decoder<JSONValue>;
-export function jsonArray: Decoder<JSONArray>;
-export function jsonObject: Decoder<JSONObject>;
+export const json: Decoder<JSONValue>;
+export const jsonArray: Decoder<JSONArray>;
+export const jsonObject: Decoder<JSONObject>;
