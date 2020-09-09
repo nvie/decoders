@@ -599,6 +599,73 @@ Would equal:
 
 ---
 
+<a name="json" href="#json">#</a> <b>json</b>: <i>Decoder&lt;JSONValue&gt;</i>
+[&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/json.js 'Source')
+
+Returns a decoder capable of decoding **any valid JSON value**:
+
+-   `null`
+-   `string`
+-   `number`
+-   `boolean`
+-   `{ [string]: JSONValue }`
+-   `Array<JSONValue>`
+
+```javascript
+const mydecoder = guard(json);
+mydecoder({
+    name: 'Amir',
+    age: 27,
+    admin: true,
+    image: null,
+    tags: ['vip', 'staff'],
+});
+```
+
+Any value returned by `JSON.parse()` should decode without failure.
+
+---
+
+<a name="jsonObject" href="#jsonObject">#</a> <b>jsonObject</b>:
+<i>Decoder&lt;JSONObject&gt;</i>
+[&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/json.js 'Source')
+
+Like `json`, but will only decode when the JSON value is an object.
+
+```javascript
+const mydecoder = guard(json);
+mydecoder({}); // OK
+mydecoder({ name: 'Amir' }); // OK
+
+// Error: the following values are valid JSON values, but not Objects
+mydecoder([]); // Error
+mydecoder([{ name: 'Alice' }, { name: 'Bob' }]); // Error
+mydecoder('hello'); // Error
+mydecoder(null); // Error
+```
+
+---
+
+<a name="jsonArray" href="#jsonArray">#</a> <b>jsonArray</b>:
+<i>Decoder&lt;JSONArray&gt;</i>
+[&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/json.js 'Source')
+
+Like `json`, but will only decode when the JSON value is an array.
+
+```javascript
+const mydecoder = guard(json);
+mydecoder([]); // OK
+mydecoder([{ name: 'Amir' }]); // OK
+
+// Error: the following values are valid JSON values, but not Objects
+mydecoder({}); // Error
+mydecoder({ name: 'Alice' }); // Error
+mydecoder('hello'); // Error
+mydecoder(null); // Error
+```
+
+---
+
 <a name="either" href="#either">#</a> <b>either</b><i>&lt;T1,
 T2&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;T1 |
 T2&gt;</i><br />
