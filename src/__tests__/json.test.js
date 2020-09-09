@@ -1,7 +1,7 @@
 // @flow strict
 
-import { jsonArray, jsonObject, json } from '../json';
 import { guard } from '../guard';
+import { json, jsonArray, jsonObject } from '../json';
 
 describe('decoder', () => {
     const decoder = json;
