@@ -1,3 +1,15 @@
+## v1.23.0
+
+-   **New decoders:**
+
+    -   [`json`](https://github.com/nvie/decoders#json): decodes any valid JSON value
+
+    -   [`jsonObject`](https://github.com/nvie/decoders#jsonObject): decodes any valid
+        JSON object
+
+    -   [`jsonArray`](https://github.com/nvie/decoders#jsonArray): decodes any valid JSON
+        array
+
 ## v1.22.2
 
 -   **New decoders:**
