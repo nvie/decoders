@@ -41,6 +41,7 @@ export {
 } from './either';
 export { fail } from './fail';
 export { instanceOf } from './instanceOf';
+export { json, jsonObject, jsonArray } from './json';
 export { lazy } from './lazy';
 export { mapping, dict } from './mapping';
 export { integer, number, positiveInteger, positiveNumber } from './number';
@@ -51,3 +52,4 @@ export { tuple1, tuple2, tuple3, tuple4, tuple5, tuple6 } from './tuple';
 
 export type { Decoder, Guard };
 export type { $DecoderType, $GuardType };
+export type { JSONValue, JSONObject, JSONArray } from './json';
