@@ -82,7 +82,7 @@
         "import-sort-style-eslint": "^6.0.0",
         "import-sort-style-module": "^6.0.0",
         "in-publish": "^2.0.1",
-        "itertools": "^1.6.0",
+        "itertools": "^1.6.1",
         "jest-cli": "^26.1.0",
         "prettier": "^2.0.5",
         "prettier-plugin-package": "^1.0.0",

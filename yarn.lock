@@ -3843,10 +3843,10 @@ istanbul-reports@^3.0.2:
     html-escaper "^2.0.0"
     istanbul-lib-report "^3.0.0"
 
-itertools@^1.6.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/itertools/-/itertools-1.6.0.tgz#7ee01788ea440b6cee05dfa43153d9d26eb2539d"
-  integrity sha512-50Z9NnYzSkKTZCmlxAaEZVrcolRafiPZ9e37fllYe5GL0aqQ64aoP2s/HT7chhtMQjX4GvyulLzSBM7iBW3wig==
+itertools@^1.6.1:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/itertools/-/itertools-1.6.1.tgz#fda1ee6d7e150888c7a9db1f141924cf868ec68b"
+  integrity sha512-V4/0OGqJNtDatQnRdG1/WH4EmHSOMr/o9Zh58DggeQjsHlCLPJe8KECGjb00uv4lAUGfZw2znBskFMxy+EPdxw==
   dependencies:
     "@babel/runtime" "^7.6.0"
 
