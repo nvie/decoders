@@ -876,14 +876,7 @@
     core-js-pure "^3.0.0"
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.6.0":
-  version "7.10.4"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.10.4.tgz#a6724f1a6b8d2f6ea5236dbfe58c7d7ea9c5eb99"
-  integrity sha512-UpTN5yUJr9b4EX2CnGNWIvER7Ab83ibv0pcvvHc4UOdrBI5jb8bj+32cCwPX6xu0mt2daFNjYhoi+X7beH0RSw==
-  dependencies:
-    regenerator-runtime "^0.13.4"
-
-"@babel/runtime@^7.8.4":
+"@babel/runtime@^7.6.0", "@babel/runtime@^7.8.4":
   version "7.11.2"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.11.2.tgz#f549c13c754cc40b87644b9fa9f09a6a95fe0736"
   integrity sha512-TeWkU52so0mPtDcaCTxNBI/IHiz0pZgr8VEFqXFtZWpYD08ZB6FaSwVAS8MKRQAP3bYKiVjwysOJgMFY28o6Tw==
@@ -2449,9 +2442,9 @@ data-urls@^2.0.0:
     whatwg-url "^8.0.0"
 
 debrief@^1.4.0:
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/debrief/-/debrief-1.4.2.tgz#cc86c82e1697df55f3659743a3cb72423e0cf29e"
-  integrity sha512-C5yVhTCAB60BxJFLXCh34GYx6WcA+5aWM8Mm6S4dr78mWoedh2HEvwF7rcxArW7x+tiHdstU1myQCW9mQ1KlcA==
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/debrief/-/debrief-1.4.3.tgz#7361fee3dd837344040c9587ca889ac3c7effc29"
+  integrity sha512-0p5XoiUs2kgiU9cZ86Y9cHVrcG7NVR6Bkk1pHKxgTK44UEC1NmfU2msyRF0WhsEHQWoIvdXL8VJjcuSXVwQvGg==
 
 debug@^2.2.0, debug@^2.3.3:
   version "2.6.9"
@@ -4050,9 +4043,9 @@ istanbul-reports@^3.0.2:
     istanbul-lib-report "^3.0.0"
 
 itertools@^1.6.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/itertools/-/itertools-1.6.0.tgz#7ee01788ea440b6cee05dfa43153d9d26eb2539d"
-  integrity sha512-50Z9NnYzSkKTZCmlxAaEZVrcolRafiPZ9e37fllYe5GL0aqQ64aoP2s/HT7chhtMQjX4GvyulLzSBM7iBW3wig==
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/itertools/-/itertools-1.6.1.tgz#fda1ee6d7e150888c7a9db1f141924cf868ec68b"
+  integrity sha512-V4/0OGqJNtDatQnRdG1/WH4EmHSOMr/o9Zh58DggeQjsHlCLPJe8KECGjb00uv4lAUGfZw2znBskFMxy+EPdxw==
   dependencies:
     "@babel/runtime" "^7.6.0"
 
