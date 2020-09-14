@@ -1,3 +1,7 @@
+## v1.23.1
+
+-   Include an error code with every FlowFixMe suppression (Flow 0.132.x compatibility)
+
 ## v1.23.0
 
 -   **New decoders:**
