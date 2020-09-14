@@ -4,7 +4,7 @@ import { oneOf } from './either';
 import { object } from './object';
 import type { $DecoderType, Decoder } from './types';
 
-// $FlowFixMe (not really an issue) - deliberate use of `any` - not sure how we should get rid of this
+// $FlowFixMe[unclear-type] (not really an issue) - deliberate use of `any` - not sure how we should get rid of this
 type anything = any;
 
 /**

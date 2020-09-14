@@ -13,7 +13,7 @@ export function instanceOf<T>(klass: Class<T>): Decoder<T> {
                   annotate(
                       blob,
                       `Must be ${
-                          // $FlowFixMe - klass.name is fine?
+                          // $FlowFixMe[incompatible-use] - klass.name is fine?
                           klass.name
                       } instance`
                   )

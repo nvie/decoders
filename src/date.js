@@ -7,7 +7,7 @@ import { regex } from './string';
 import type { Decoder } from './types';
 import { isDate, map } from './utils';
 
-// $FlowFixMe (not really an issue) - deliberate casting
+// $FlowFixMe[unclear-type] (not really an issue) - deliberate casting
 type cast = any;
 
 // Only matches the shape.  This "over-matches" some values that still aren't

@@ -20,7 +20,7 @@ import { compose, map } from './utils';
 export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
     return compose(
         pojo,
-        // $FlowFixMe (not really an issue) - deliberate use of Object here
+        // $FlowFixMe[unclear-type] (not really an issue) - deliberate use of Object here
         (blob: Object) => {
             let tuples: Array<[string, T]> = [];
             let errors: Array<[string, string | Annotation]> = [];

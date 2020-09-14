@@ -7,10 +7,10 @@ import { Err, Ok } from 'lemons/Result';
 import type { $DecoderType, Decoder } from './types';
 import { compose, map } from './utils';
 
-// $FlowFixMe (not really an issue) - deliberate use of `any` - not sure how we should get rid of this
+// $FlowFixMe[unclear-type] (not really an issue) - deliberate use of `any` - not sure how we should get rid of this
 type AnyDecoder = any;
 
-// $FlowFixMe (not really an issue) - deliberately casting
+// $FlowFixMe[unclear-type] (not really an issue) - deliberately casting
 type cast = any;
 
 function isPojo(o: mixed): boolean %checks {

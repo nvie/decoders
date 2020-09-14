@@ -10,7 +10,7 @@ describe('objects w/ circular refs', () => {
     // Take any decoder and pass in some self-referential object
     const value = { foo: 42 };
     const self = value;
-    // $FlowFixMe - let's create a self-referential object
+    // $FlowFixMe[prop-missing] - let's create a self-referential object
     value.self = self;
     it('valid', () => {
         expect(guard(object({ foo: number }))(value)).toEqual({ foo: 42 });
