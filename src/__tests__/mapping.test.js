@@ -10,8 +10,8 @@ describe('mappings', () => {
 
     it('valid', () => {
         const input = {
-            '18': { name: 'foo' },
-            '23': { name: 'bar' },
+            18: { name: 'foo' },
+            23: { name: 'bar' },
             key: { name: 'value' },
         };
         const output = new Map([
@@ -28,8 +28,8 @@ describe('mappings', () => {
         expect(() => guard(decoder)({ foo: {} })).toThrow('Missing key: "name"');
         expect(() =>
             guard(decoder)({
-                '124': { invalid: true },
-                '125': { name: 'bar' },
+                124: { invalid: true },
+                125: { name: 'bar' },
             })
         ).toThrow('Missing key: "name"');
     });
@@ -40,8 +40,8 @@ describe('dicts', () => {
 
     it('valid', () => {
         const input = {
-            '18': { name: 'foo' },
-            '23': { name: 'bar' },
+            18: { name: 'foo' },
+            23: { name: 'bar' },
             key: { name: 'value' },
         };
         expect(decoder(input).unwrap()).toEqual(input);
@@ -53,8 +53,8 @@ describe('dicts', () => {
         expect(() => guard(decoder)({ foo: {} })).toThrow('Missing key: "name"');
         expect(() =>
             guard(decoder)({
-                '124': { invalid: true },
-                '125': { name: 'bar' },
+                124: { invalid: true },
+                125: { name: 'bar' },
             })
         ).toThrow('Missing key: "name"');
     });
