@@ -434,6 +434,22 @@ mydecoder(['hello', 1.2]); // DecodeError
 
 ---
 
+<a name="nonEmptyArray" href="#nonEmptyArray">#</a>
+<b>nonEmptyArray</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>):
+<i>Decoder&lt;Array&lt;T&gt;&gt;</i>
+[&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/array.js 'Source')
+
+Like `array()`, but will fail on inputs with 0 elements.
+
+```javascript
+const mydecoder = guard(array(string));
+mydecoder(['hello', 'world']) === ['hello', 'world'];
+mydecoder(['hello', 1.2]); // DecodeError
+mydecoder([]); // DecodeError
+```
+
+---
+
 <a name="tuple1" href="#tuple1">#</a>
 <b>tuple1</b><i>&lt;T1&gt;</i>(<i>Decoder&lt;T1&gt;</i>): <i>Decoder&lt;[T1]&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/tuple.js 'Source')<br />
