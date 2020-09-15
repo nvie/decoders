@@ -123,6 +123,22 @@ mydecoder(123); // DecodeError
 
 ---
 
+<a name="nonEmptyString" href="#nonEmptyString">#</a> <b>nonEmptyString</b>:
+<i>Decoder&lt;string&gt;</i>
+[&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/string.js 'Source')
+
+Like `string`, but will fail on inputs with only whitespace (or the empty string).
+
+```javascript
+const mydecoder = guard(string);
+mydecoder('hello world') === 'hello world';
+mydecoder(123); // DecodeError
+mydecoder('  '); // DecodeError
+mydecoder(''); // DecodeError
+```
+
+---
+
 <a name="regex" href="#regex">#</a> <b>regex</b>(): <i>Decoder&lt;string&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/string.js 'Source')
 
