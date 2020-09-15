@@ -130,7 +130,7 @@ mydecoder(123); // DecodeError
 Like `string`, but will fail on inputs with only whitespace (or the empty string).
 
 ```javascript
-const mydecoder = guard(string);
+const mydecoder = guard(nonEmptyString);
 mydecoder('hello world') === 'hello world';
 mydecoder(123); // DecodeError
 mydecoder('  '); // DecodeError
@@ -458,7 +458,7 @@ mydecoder(['hello', 1.2]); // DecodeError
 Like `array()`, but will fail on inputs with 0 elements.
 
 ```javascript
-const mydecoder = guard(array(string));
+const mydecoder = guard(nonEmptyArray(string));
 mydecoder(['hello', 'world']) === ['hello', 'world'];
 mydecoder(['hello', 1.2]); // DecodeError
 mydecoder([]); // DecodeError
