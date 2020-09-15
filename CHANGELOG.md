@@ -1,3 +1,7 @@
+## v1.23.2
+
+-   Add missing exports for `nonEmptyArray` and `nonEmptyString` (for TypeScript)
+
 ## v1.23.1
 
 -   Include an error code with every FlowFixMe suppression (Flow 0.132.x compatibility)
