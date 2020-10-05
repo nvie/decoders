@@ -185,7 +185,7 @@ export function inexact<O: { +[field: string]: AnyDecoder }>(
     return compose(pojo, (blob: {| [string]: mixed |}) => {
         const allkeys = new Set(Object.keys(blob));
         const decoder = map(object(mapping), (safepart: $ObjMap<O, $DecoderType>) => {
-            const safekeys = new Set(Object.keys(safepart));
+            const safekeys = new Set(Object.keys(mapping));
 
             // To account for hard-coded keys that aren't part of the input
             for (const k of safekeys) {
@@ -194,7 +194,14 @@ export function inexact<O: { +[field: string]: AnyDecoder }>(
 
             const rv = {};
             for (const k of allkeys) {
-                rv[k] = safekeys.has(k) ? safepart[k] : blob[k];
+                if (safekeys.has(k)) {
+                    const value = safepart[k];
+                    if (value !== undefined) {
+                        rv[k] = value;
+                    }
+                } else {
+                    rv[k] = blob[k];
+                }
             }
             return rv;
         });
