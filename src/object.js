@@ -95,10 +95,13 @@ export function object<O: { +[field: string]: AnyDecoder, ... }>(
         // will type the value part as "mixed"
         for (const key of Object.keys(mapping)) {
             const decoder = mapping[key];
-            const value = blob[key];
-            const result = decoder(value);
+            const rawValue = blob[key];
+            const result = decoder(rawValue);
             try {
-                record[key] = result.unwrap();
+                const value = result.unwrap();
+                if (value !== undefined) {
+                    record[key] = value;
+                }
 
                 // If this succeeded, remove the key from the missing keys
                 // tracker
@@ -111,7 +114,7 @@ export function object<O: { +[field: string]: AnyDecoder, ... }>(
 
                 // Keep track of the annotation, but don't return just yet. We
                 // want to collect more error information.
-                if (value === undefined) {
+                if (rawValue === undefined) {
                     // Explicitly add it to the missing set if the value is
                     // undefined.  This covers explicit undefineds to be
                     // treated the same as implicit undefineds (aka missing
