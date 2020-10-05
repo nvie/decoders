@@ -1,3 +1,9 @@
+## v1.23.3-pre1
+
+-   The returned values from `object()`, `inexact()`, and `exact()` decoders
+    will now return implicit-`undefined` rather than explicit-`undefined` for
+    fields that are optional (#574, thanks @w01fgang!)
+
 ## v1.23.2
 
 -   Add missing exports for `nonEmptyArray` and `nonEmptyString` (for TypeScript)
