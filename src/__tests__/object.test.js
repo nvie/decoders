@@ -36,12 +36,32 @@ describe('objects', () => {
         expect(decoder({ id: 1, name: 'test' }).unwrap()).toEqual({
             id: 1,
             name: 'test',
-            extra: undefined,
         });
         expect(decoder({ id: 1, name: 'test', extra: 'foo' }).unwrap()).toEqual({
             id: 1,
             name: 'test',
             extra: 'foo',
+        });
+    });
+
+    it('objects with optional fields will be implicit-undefined', () => {
+        const defaults = {
+            extra: 'default',
+        };
+
+        const decoder = object({
+            id: number,
+            name: string,
+            extra: optional(string),
+        });
+
+        expect({
+            ...defaults,
+            ...decoder({ id: 1, name: 'test' }).unwrap(),
+        }).toEqual({
+            id: 1,
+            name: 'test',
+            extra: 'default',
         });
     });
 
@@ -154,6 +174,27 @@ describe('exact objects', () => {
         expect(decoder({ foo: [1, 2, 3] }).isErr()).toBe(true); // Missing key "id"
         expect(decoder({ id: 3 }).isErr()).toBe(true); // Invalid field value for "id"
     });
+
+    it('exact objects with optional fields will be implicit-undefined', () => {
+        const defaults = {
+            extra: 'default',
+        };
+
+        const decoder = exact({
+            id: number,
+            name: string,
+            extra: optional(string),
+        });
+
+        expect({
+            ...defaults,
+            ...decoder({ id: 1, name: 'test' }).unwrap(),
+        }).toEqual({
+            id: 1,
+            name: 'test',
+            extra: 'default',
+        });
+    });
 });
 
 describe('inexact objects', () => {
@@ -210,6 +251,31 @@ describe('inexact objects', () => {
         expect(decoder(NaN).isErr()).toBe(true);
         expect(decoder({ foo: [1, 2, 3] }).isErr()).toBe(true); // Missing key "id"
         expect(decoder({ id: 3 }).isErr()).toBe(true); // Invalid field value for "id"
+    });
+
+    it('inexact objects with optional fields will be implicit-undefined', () => {
+        const defaults = {
+            extra: 'default',
+        };
+
+        const decoder = inexact({
+            id: number,
+            name: string,
+            extra: optional(string),
+        });
+
+        expect(
+            // $FlowFixMe[cannot-spread-indexer]
+            {
+                ...defaults,
+                ...decoder({ id: 1, name: 'test', more: 42 }).unwrap(),
+            }
+        ).toEqual({
+            id: 1,
+            name: 'test',
+            extra: 'default',
+            more: 42,
+        });
     });
 });
 
