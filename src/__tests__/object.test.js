@@ -255,26 +255,26 @@ describe('inexact objects', () => {
 
     it('inexact objects with optional fields will be implicit-undefined', () => {
         const defaults = {
-            extra: 'default',
+            foo: 'default',
+            bar: 'default',
         };
 
         const decoder = inexact({
-            id: number,
-            name: string,
-            extra: optional(string),
+            foo: optional(string),
         });
 
         expect(
             // $FlowFixMe[cannot-spread-indexer]
             {
                 ...defaults,
-                ...decoder({ id: 1, name: 'test', more: 42 }).unwrap(),
+                ...decoder({
+                    foo: undefined,
+                    bar: undefined,
+                }).unwrap(),
             }
         ).toEqual({
-            id: 1,
-            name: 'test',
-            extra: 'default',
-            more: 42,
+            foo: 'default', // 'foo' is known and allowed-optional, so this will be implicit-undefined
+            bar: undefined, // 'bar' is ignored so the explicit-undefined will override here
         });
     });
 });
