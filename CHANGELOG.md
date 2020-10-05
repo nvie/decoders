@@ -1,8 +1,9 @@
-## v1.23.3-pre1
+## v1.23.3
 
--   The returned values from `object()`, `inexact()`, and `exact()` decoders
-    will now return implicit-`undefined` rather than explicit-`undefined` for
-    fields that are optional (#574, thanks @w01fgang!)
+-   Returned objects that are the result from `object()`, `inexact()`, and
+    `exact()` decoders will no longer contain explicit `undefined` values for
+    optional keys, but instead those keys will be missing in the returned
+    object entirely. (#574, thanks @w01fgang!)
 
 ## v1.23.2
 
