@@ -5333,9 +5333,9 @@ prelude-ls@~1.1.2:
   integrity sha1-IZMqVJ9eUv/ZqCf1cOBL5iqX2lQ=
 
 prettier-plugin-package@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/prettier-plugin-package/-/prettier-plugin-package-1.0.0.tgz#164a400f5b695246835b94c7e1b65ea253d67bdc"
-  integrity sha512-flbKuLB7ftrW2zQYJjb0mF6zY7R0jDrYatpr0BBNj04Eb+g1RLbquOQSJE1LffDZfzU03fwJQ74grqQjQjYa3Q==
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-package/-/prettier-plugin-package-1.1.0.tgz#d38bae100dc41fd61e607509ef0755e28c113570"
+  integrity sha512-gwOcAUcNohvQ01wF5sggktseJS2RG1VLYhsxkhVPgo48ZEc3nOyEWKBjqc0TrVjVliK/bTYqKr5mgbp1mGmruQ==
 
 prettier@^1.19.1:
   version "1.19.1"
