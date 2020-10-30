@@ -294,8 +294,29 @@ mydecoder('hello world'); // DecodeError
 
 Returns a decoder capable of decoding just the given constant value.
 
+**NOTE:** In TypeScript, it is important to always use the following:
+
+```typescript
+// ❌ Do NOT do this
+constant('hello')           // will infer: Decoder<string>
+constant(42)                // will infer: Decoder<number>
+
+// ✅ Do this
+constant('hello' as 'hello')  // will infer: Decoder<'hello'>
+constant(42 as 42)            // will infer: Decoder<42>
+```
+
+For Flow, use this syntax:
+
 ```javascript
-const mydecoder = guard(constant('hello'));
+constant(('something': 'something'))
+constant((42: 42))
+```
+
+Example:
+
+```typescript
+const mydecoder = guard(constant('hello' as 'hello'));
 mydecoder('hello') === 'hello';
 mydecoder('this breaks'); // DecodeError
 mydecoder(false); // DecodeError
