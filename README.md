@@ -632,7 +632,7 @@ mydecoder({
 Like `mapping()`, but returns an object instead of a `Map` instance.
 
 ```javascript
-const mydecoder = guard(mapping(person)); // Assume you have a "person" decoder already
+const mydecoder = guard(dict(person)); // Assume you have a "person" decoder already
 mydecoder({
     '1': { name: 'Alice' },
     '2': { name: 'Bob' },
