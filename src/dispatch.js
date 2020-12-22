@@ -1,12 +1,12 @@
 // @flow strict
 
 import { oneOf } from './either';
+import { either } from './either';
+import { number } from './number';
 import { object } from './object';
 import { string } from './string';
-import { number } from './number';
-import { either } from './either';
-import { compose, map } from './utils';
 import type { $DecoderType, Decoder } from './types';
+import { compose, map } from './utils';
 
 // $FlowFixMe[unclear-type] (not really an issue) - deliberate use of `any` - not sure how we should get rid of this
 type anything = any;
