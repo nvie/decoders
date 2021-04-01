@@ -1,3 +1,9 @@
+## v1.23.5
+
+TypeScript types:
+
+-   Add missing export for `tuple1`
+
 ## v1.23.4
 
 TypeScript types:
