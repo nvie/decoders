@@ -316,7 +316,7 @@ constant((42: 42))
 Example:
 
 ```typescript
-const mydecoder = guard(constant('hello' as 'hello'));
+const mydecoder = guard(constant('hello' as const));
 mydecoder('hello') === 'hello';
 mydecoder('this breaks'); // DecodeError
 mydecoder(false); // DecodeError
