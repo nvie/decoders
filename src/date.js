@@ -13,7 +13,8 @@ type cast = any;
 // Only matches the shape.  This "over-matches" some values that still aren't
 // valid dates (like 9999-99-99), but those will be caught by JS Date's
 // internal validations
-const iso8601_re = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:[.]\d+)?(?:Z|[+-]\d{2}:?\d{2})$/;
+const iso8601_re =
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:[.]\d+)?(?:Z|[+-]\d{2}:?\d{2})$/;
 
 export const date: Decoder<Date> = (value: mixed) =>
     isDate(value) ? Ok(((value: cast): Date)) : Err(annotate(value, 'Must be a Date'));
