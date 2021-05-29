@@ -65,10 +65,10 @@
         "lemons": "^1.4.0"
     },
     "devDependencies": {
-        "@babel/cli": "^7.10.4",
-        "@babel/core": "^7.10.4",
-        "@babel/preset-env": "^7.10.4",
-        "@babel/preset-flow": "^7.10.4",
+        "@babel/cli": "^7.14.3",
+        "@babel/core": "^7.14.3",
+        "@babel/preset-env": "^7.14.4",
+        "@babel/preset-flow": "^7.13.13",
         "babel-eslint": "^10.1.0",
         "coveralls": "^3.1.0",
         "dtslint": "^4.1.0",
