@@ -15,6 +15,7 @@ import type { Decoder } from './types';
 export const isDate = (value: mixed): boolean %checks =>
     value !== undefined &&
     value !== null &&
+    // $FlowFixMe[method-unbinding]
     Object.prototype.toString.call(value) === '[object Date]' &&
     !isNaN(value);
 

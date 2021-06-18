@@ -10,7 +10,9 @@ describe('dates', () => {
     const verify = guard(date);
     const [okay, not_okay] = partition(
         INPUTS,
-        (o) => Object.prototype.toString.call(o) === '[object Date]' && !isNaN(o)
+        (o) =>
+            // $FlowFixMe[method-unbinding]
+            Object.prototype.toString.call(o) === '[object Date]' && !isNaN(o)
     );
 
     it('valid', () => {

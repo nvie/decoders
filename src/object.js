@@ -20,6 +20,7 @@ function isPojo(o: mixed): boolean %checks {
         typeof o === 'object' &&
         // This still seems to be the only reliable way to determine whether
         // something is a pojo... ¯\_(ツ)_/¯
+        // $FlowFixMe[method-unbinding]
         Object.prototype.toString.call(o) === '[object Object]'
     );
 }
