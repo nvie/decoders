@@ -1,4 +1,4 @@
-## v1.25.0
+## v1.24.0
 
 -   **New decoders:**
 
@@ -6,8 +6,6 @@
         for an existing decoder
 
 -   Add support for Flow 0.153.x
-
-## v1.24.0
 
 -   Drop support for Node 13.x (unstable)
 
