@@ -1,3 +1,9 @@
+## v1.25.0
+
+-   **New decoders:**
+    -   [`describe`](https://github.com/nvie/decoders#describe): change the error message
+        for an existing decoder
+
 ## v1.24.0
 
 -   Drop support for Node 13.x (unstable)

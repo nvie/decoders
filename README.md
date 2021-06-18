@@ -859,6 +859,24 @@ specific values that will be allowed at runtime.
 
 ---
 
+<a name="describe" href="#describe">#</a>
+<b>describe</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>, <i>string</i>):
+<i>Decoder&lt;T&gt;</i>
+[&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/describe.js 'Source')<br />
+
+Defers to the given decoder, but when a decoding error happens, replace the error message
+with the given one. This can be used to simplify or shorten otherwise long or
+low-level/technical errors.
+
+```javascript
+const vowel = describe(
+    either5(constant('a'), constant('e'), constant('i'), constant('o'), constant('u')),
+    'Must be vowel'
+);
+```
+
+---
+
 <a name="lazy" href="#lazy">#</a> <b>lazy</b><i>&lt;T&gt;</i>(() =>
 <i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;T&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/lazy.js 'Source')<br />
