@@ -7,6 +7,7 @@ export { array, poja } from './array';
 export { boolean, numericBoolean, truthy } from './boolean';
 export { constant, hardcoded, mixed, null_, undefined_, unknown } from './constants';
 export { date, iso8601 } from './date';
+export { describe } from './describe';
 export { dispatch } from './dispatch';
 export {
     either,
