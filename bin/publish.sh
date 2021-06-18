@@ -8,16 +8,16 @@ DIST="${ROOT}/dist"
 # Work from the root folder, build the dist/ folder
 cd "$ROOT"
 
-# Check we're on the master branch
-if [ "$(git current-branch)" != "master" ]; then
-    echo "Not on \"master\" branch." >&2
+# Check we're on the main branch
+if [ "$(git current-branch)" != "main" ]; then
+    echo "Not on \"main\" branch." >&2
     exit 2
 fi
 
 # Update to latest version
 git fetch
 
-if [ "$(git sha master)" != "$(git sha origin/master)" ]; then
+if [ "$(git sha main)" != "$(git sha origin/main)" ]; then
     echo "Not up to date with origin.  Please pull/push latest changes before publishing." >&2
     exit 3
 fi
