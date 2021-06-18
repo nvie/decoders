@@ -1,9 +1,7 @@
 // @flow strict
 
 import { constant } from '../constants';
-import {
-    describe as describe_,
-} from '../describe';
+import { describe as describe_ } from '../describe';
 import { either3 } from '../either';
 import { guard } from '../guard';
 
