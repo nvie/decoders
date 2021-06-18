@@ -1,8 +1,11 @@
 ## v1.25.0
 
 -   **New decoders:**
+
     -   [`describe`](https://github.com/nvie/decoders#describe): change the error message
         for an existing decoder
+
+-   Add support for Flow 0.153.x
 
 ## v1.24.0
 
