@@ -18,7 +18,7 @@ const ntuple = (n: number) =>
  * Err otherwise.
  */
 export function tuple1<T>(decoder1: Decoder<T>): Decoder<[T]> {
-    return compose(ntuple(1), (blobs: Array<mixed>) => {
+    return compose(ntuple(1), (blobs: $ReadOnlyArray<mixed>) => {
         const [blob1] = blobs;
 
         const result1 = decoder1(blob1);
@@ -40,7 +40,7 @@ export function tuple2<T1, T2>(
     decoder1: Decoder<T1>,
     decoder2: Decoder<T2>
 ): Decoder<[T1, T2]> {
-    return compose(ntuple(2), (blobs: Array<mixed>) => {
+    return compose(ntuple(2), (blobs: $ReadOnlyArray<mixed>) => {
         const [blob1, blob2] = blobs;
 
         const result1 = decoder1(blob1);
@@ -69,7 +69,7 @@ export function tuple3<T1, T2, T3>(
     decoder2: Decoder<T2>,
     decoder3: Decoder<T3>
 ): Decoder<[T1, T2, T3]> {
-    return compose(ntuple(3), (blobs: Array<mixed>) => {
+    return compose(ntuple(3), (blobs: $ReadOnlyArray<mixed>) => {
         const [blob1, blob2, blob3] = blobs;
 
         const result1 = decoder1(blob1);
@@ -101,7 +101,7 @@ export function tuple4<T1, T2, T3, T4>(
     decoder3: Decoder<T3>,
     decoder4: Decoder<T4>
 ): Decoder<[T1, T2, T3, T4]> {
-    return compose(ntuple(4), (blobs: Array<mixed>) => {
+    return compose(ntuple(4), (blobs: $ReadOnlyArray<mixed>) => {
         const [blob1, blob2, blob3, blob4] = blobs;
 
         const result1 = decoder1(blob1);
@@ -141,7 +141,7 @@ export function tuple5<T1, T2, T3, T4, T5>(
     decoder4: Decoder<T4>,
     decoder5: Decoder<T5>
 ): Decoder<[T1, T2, T3, T4, T5]> {
-    return compose(ntuple(5), (blobs: Array<mixed>) => {
+    return compose(ntuple(5), (blobs: $ReadOnlyArray<mixed>) => {
         const [blob1, blob2, blob3, blob4, blob5] = blobs;
 
         const result1 = decoder1(blob1);
@@ -185,7 +185,7 @@ export function tuple6<T1, T2, T3, T4, T5, T6>(
     decoder5: Decoder<T5>,
     decoder6: Decoder<T6>
 ): Decoder<[T1, T2, T3, T4, T5, T6]> {
-    return compose(ntuple(6), (blobs: Array<mixed>) => {
+    return compose(ntuple(6), (blobs: $ReadOnlyArray<mixed>) => {
         const [blob1, blob2, blob3, blob4, blob5, blob6] = blobs;
 
         const result1 = decoder1(blob1);
