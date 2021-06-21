@@ -1,3 +1,7 @@
+## v1.24.1
+
+-   Tighten up signature types to indicate that incoming arrays won't get mutated
+
 ## v1.24.0
 
 -   **New decoders:**
