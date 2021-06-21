@@ -35,8 +35,8 @@ export const poja: Decoder<Array<mixed>> = (blob: mixed) => {
  * - a new Ok with an array of all unwrapped Ok'ed values
  */
 function all<T>(
-    iterable: Array<DecodeResult<T>>,
-    blobs: Array<mixed>
+    iterable: $ReadOnlyArray<DecodeResult<T>>,
+    blobs: $ReadOnlyArray<mixed>
 ): DecodeResult<Array<T>> {
     const results: Array<T> = [];
     let index = 0;
@@ -79,7 +79,7 @@ function all<T>(
  * Array<T>.
  */
 function members<T>(decoder: Decoder<T>): Decoder<Array<T>, Array<mixed>> {
-    return (blobs: Array<mixed>) => {
+    return (blobs: $ReadOnlyArray<mixed>) => {
         const results = blobs.map(decoder);
         const result = all(results, blobs);
         return result;

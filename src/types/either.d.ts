@@ -58,4 +58,4 @@ export function either9<T1, T2, T3, T4, T5, T6, T7, T8, T9>(
     d8: Decoder<T8>,
     d9: Decoder<T9>
 ): Decoder<T1 | T2 | T3 | T4 | T5 | T6 | T7 | T8 | T9>;
-export function oneOf<T>(constants: T[]): Decoder<T>;
+export function oneOf<T>(constants: readonly T[]): Decoder<T>;
