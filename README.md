@@ -780,9 +780,8 @@ sometimes confusing.
 <i>Decoder&lt;T&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/either.js 'Source')<br />
 
-Returns a decoder capable of decoding values that are equal to any of the given constants.
-The returned value will always be one of the given constants at runtime, but the return
-_type_ of this decoder will not be a union of constants, but a union of types, typically.
+Returns a decoder capable of decoding values that are equal (using `===`) to any of the
+given constants. The returned value will always be one of the given constants at runtime.
 
 ```javascript
 const mydecoder = guard(oneOf(['foo', 'bar', 3]));
@@ -799,8 +798,10 @@ For example, given an array of strings, like so:
 oneOf(['foo', 'bar']);
 ```
 
-The return type here will be `Decoder<string>`, not `Decoder<('foo' | 'bar')>`. (To obtain
-the latter, use `either(constant('foo'), constant('bar'))` instead.)
+TypeScript is capable of inferring the return type as `Decoder<('foo' | 'bar')>`, but in
+Flow it will (unfortunately) be `Decoder<string>`. So in Flow, be sure to explicitly
+annotate the type. Either by doing `oneOf([('foo': 'foo'), ('bar': 'bar')])`, or as
+`oneOf<'foo' | 'bar'>(['foo', 'bar'])`.
 
 ---
 
