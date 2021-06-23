@@ -14,5 +14,5 @@ either(string, number); // $ExpectType Decoder<string | number, unknown>
 either3(string, string, number); // $ExpectType Decoder<string | number, unknown>
 either4(string, boolean, number, array(number)); // $ExpectType Decoder<string | number | boolean | number[], unknown>
 
-// $ExpectType Decoder<string, unknown>
+// $ExpectType Decoder<"foo" | "bar" | "qux", unknown>
 oneOf(['foo', 'bar', 'qux']);

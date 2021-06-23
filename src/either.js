@@ -6,6 +6,8 @@ import { Err, Ok } from 'lemons/Result';
 
 import type { Decoder } from './types';
 
+export type Scalar = string | number | boolean | symbol | void | null;
+
 /**
  * Indents and adds a dash in front of this (potentially multiline) string.
  */
@@ -113,12 +115,11 @@ export function either9<T1, T2, T3, T4, T5, T6, T7, T8, T9>(
     return either(d1, either8(d2, d3, d4, d5, d6, d7, d8, d9));
 }
 
-export function oneOf<T>(constants: $ReadOnlyArray<T>): Decoder<T> {
+export function oneOf<T: Scalar>(constants: $ReadOnlyArray<T>): Decoder<T> {
     return (blob: mixed) => {
-        for (const c of constants) {
-            if (c === blob) {
-                return Ok(c);
-            }
+        const winner = constants.find((c) => c === blob);
+        if (winner !== undefined) {
+            return Ok(winner);
         }
         return Err(
             annotate(

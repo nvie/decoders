@@ -1,3 +1,7 @@
+## v1.24.2
+
+-   Fix signature of `oneOf()` to reflect it can only be used with scalar values
+
 ## v1.24.1
 
 -   Tighten up signature types to indicate that incoming arrays won't get mutated

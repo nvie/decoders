@@ -1,5 +1,7 @@
 import { Decoder } from './types';
 
+export type Scalar = string | number | boolean | symbol | undefined | null;
+
 export function either<T1, T2>(d1: Decoder<T1>, d2: Decoder<T2>): Decoder<T1 | T2>;
 export function either2<T1, T2>(d1: Decoder<T1>, d2: Decoder<T2>): Decoder<T1 | T2>;
 export function either3<T1, T2, T3>(
@@ -58,4 +60,4 @@ export function either9<T1, T2, T3, T4, T5, T6, T7, T8, T9>(
     d8: Decoder<T8>,
     d9: Decoder<T9>
 ): Decoder<T1 | T2 | T3 | T4 | T5 | T6 | T7 | T8 | T9>;
-export function oneOf<T>(constants: readonly T[]): Decoder<T>;
+export function oneOf<T extends Scalar>(constants: readonly T[]): Decoder<T>;
