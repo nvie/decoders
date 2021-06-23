@@ -798,7 +798,7 @@ For example, given an array of strings, like so:
 oneOf(['foo', 'bar']);
 ```
 
-TypeScript is capable of inferring the return type as `Decoder<('foo' | 'bar')>`, but in
+TypeScript is capable of inferring the return type as `Decoder<'foo' | 'bar'>`, but in
 Flow it will (unfortunately) be `Decoder<string>`. So in Flow, be sure to explicitly
 annotate the type. Either by doing `oneOf([('foo': 'foo'), ('bar': 'bar')])`, or as
 `oneOf<'foo' | 'bar'>(['foo', 'bar'])`.
