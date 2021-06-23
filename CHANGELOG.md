@@ -1,6 +1,11 @@
-## v1.24.2
+## v1.25.0
 
--   Fix signature of `oneOf()` to reflect it can only be used with scalar values
+-   Fix signature of `oneOf()` to reflect it can only be used with scalar/constant values
+
+-   In TypeScript, the inferred type for `oneOf(['foo', 'bar'])` will now be
+    `Decoder<'foo' | 'bar'>` instead of `Decoder<string>` 🎉
+
+-   Drop support for Flow versions < 0.115.0
 
 ## v1.24.1
 
