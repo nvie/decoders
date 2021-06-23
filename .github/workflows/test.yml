@@ -11,7 +11,7 @@ jobs:
 
         # Some key Flow versions that have seen syntax or semantic changes that
         # required updates to decoders
-        flow-version: [0.103.0, 0.123.0, current]
+        flow-version: [0.115.0, 0.123.0, current]
 
     steps:
     - uses: actions/checkout@v1
