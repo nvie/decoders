@@ -7,7 +7,7 @@ import { INPUTS } from './fixtures';
 
 describe('number', () => {
     const decoder = number;
-    const [okay, not_okay] = partition(INPUTS, Number.isFinite);
+    const [okay, not_okay] = partition(INPUTS, (n) => Number.isFinite(n));
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
@@ -48,7 +48,7 @@ describe('positiveNumber', () => {
 
 describe('integer', () => {
     const decoder = integer;
-    const [okay, not_okay] = partition(INPUTS, Number.isInteger);
+    const [okay, not_okay] = partition(INPUTS, (n) => Number.isInteger(n));
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
