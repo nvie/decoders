@@ -1,3 +1,7 @@
+## v1.25.1
+
+-   Add support for Flow 0.154.0
+
 ## v1.25.0
 
 -   Fix signature of `oneOf()` to reflect it can only be used with scalar/constant values
