@@ -18,7 +18,7 @@ interface Circle {
 type Shape = Rect | Circle;
 
 const rect: Decoder<Rect> = object({
-    _type: constant('rect' as 'rect'),
+    _type: constant('rect' as const);
     x: number,
     y: number,
     width: number,
@@ -26,7 +26,7 @@ const rect: Decoder<Rect> = object({
 });
 
 const circle: Decoder<Circle> = object({
-    _type: constant('circle' as 'circle'),
+    _type: constant('circle' as const);
     cx: number,
     cy: number,
     radius: number,
