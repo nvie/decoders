@@ -1,8 +1,12 @@
 // @flow strict
 
 import { oneOf } from './either';
+import { either } from './either';
+import { number } from './number';
 import { object } from './object';
+import { string } from './string';
 import type { $DecoderType, Decoder } from './types';
+import { compose, map } from './utils';
 
 // $FlowFixMe[unclear-type] (not really an issue) - deliberate use of `any` - not sure how we should get rid of this
 type anything = any;
@@ -46,7 +50,23 @@ export function dispatch<O: { +[field: string]: Decoder<anything>, ... }>(
     field: string,
     mapping: O
 ): Decoder<$Values<$ObjMap<O, $DecoderType>>> {
-    const base = object({ [field]: oneOf(Object.keys(mapping)) });
+    const base = object({
+        [field]: compose(
+            // We are using the "keys" of the mapping object to reconcile
+            // the field type. Property names are strings by definition,
+            // numbers are automatically converted to strings via toString().
+            // For Example below, keys equals ['0'], not [0].
+            //
+            // const obj = { [0]: 'foo' };
+            // const keys = Object.keys(obj);
+            //
+            // oneOf will fail unless we run toString to the field in
+            // the decoded object also.
+            //
+            map(either(string, number), (value) => value.toString()),
+            oneOf(Object.keys(mapping))
+        ),
+    });
     return (blob: mixed) => {
         return base(blob).andThen((baseObj) => {
             const decoderName = baseObj[field];

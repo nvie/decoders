@@ -38,9 +38,9 @@ const circle: Decoder<Circle> = object({
 });
 
 describe('dispatch', () => {
-    const decoder = dispatch('type', { rectangle, circle });
-
     it('allows conditional decoding', () => {
+        const decoder = dispatch('type', { rectangle, circle });
+
         const r = { type: 'rectangle', x: 3, y: 5, width: 80, height: 100 };
         expect(guard(decoder)(r)).toEqual(r);
 
@@ -49,6 +49,8 @@ describe('dispatch', () => {
     });
 
     it('invalid', () => {
+        const decoder = dispatch('type', { rectangle, circle });
+
         expect(() => guard(decoder)('foo')).toThrow('Must be an object');
         expect(() => guard(decoder)({})).toThrow('Missing key: "type"');
         expect(() => guard(decoder)({ type: 'blah' })).toThrow(
@@ -57,5 +59,21 @@ describe('dispatch', () => {
         expect(() => guard(decoder)({ type: 'rectangle', x: 1 })).toThrow(
             /Missing keys: "y", "width", "height"/
         );
+    });
+
+    it('allows using numbers as keys', () => {
+        const FooType = 0;
+        const BarType = 1;
+
+        const decoder = dispatch('type', {
+            [FooType]: object({ type: constant(FooType) }),
+            [BarType]: object({ type: constant(BarType) }),
+        });
+
+        const f = { type: FooType };
+        expect(guard(decoder)(f)).toEqual({ type: FooType });
+
+        const b = { type: BarType };
+        expect(guard(decoder)(b)).toEqual({ type: BarType });
     });
 });
