@@ -1,14 +1,7 @@
 import { constant, hardcoded, mixed, null_, undefined_, unknown } from 'decoders';
 
-constant('foo' as const); // $ExpectType Decoder<"foo", unknown>
-// NOTE!       ^^^^^^^^
-//             This should _NOT_ be necessary!
-//             I want to get rid of this, but I'm not sure how to!
-
-hardcoded('foo' as const); // $ExpectType Decoder<"foo", unknown>
-// NOTE!        ^^^^^^^^
-//              This should _NOT_ be necessary!
-//              I want to get rid of this, but I'm not sure how to!
+constant('foo'); // $ExpectType Decoder<"foo", unknown>
+hardcoded('foo'); // $ExpectType Decoder<"foo", unknown>
 
 null_; // $ExpectType Decoder<null, unknown>
 undefined_; // $ExpectType Decoder<undefined, unknown>
