@@ -1,3 +1,8 @@
+## v1.25.3
+
+-   Argument to `constant(...)` now has to be scalar value in both Flow and TypeScript,
+    which matches its intended purpose.
+
 ## v1.25.2
 
 -   Avoid the need for having to manually specify "as const" in TypeScript when using
