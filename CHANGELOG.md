@@ -1,3 +1,8 @@
+## v1.25.2
+
+-   Avoid the need for having to manually specify "as const" in TypeScript when using
+    `constant()`. (Thanks, @schmod!)
+
 ## v1.25.1
 
 -   Add support for Flow 0.154.0
