@@ -3,6 +3,8 @@
 import type { Annotation } from 'debrief';
 import Result from 'lemons/Result';
 
+export type Scalar = string | number | boolean | symbol | void | null;
+
 // NOTE:
 // Normally, we should not be discarding Flow warnings about the use of the
 // "any" type.  But in the case of decoders, it's the very purpose of the

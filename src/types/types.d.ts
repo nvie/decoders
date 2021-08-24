@@ -1,6 +1,8 @@
 import { Annotation } from 'debrief';
 import Result from 'lemons/Result';
 
+export type Scalar = string | number | boolean | symbol | undefined | null;
+
 export interface Guard<T> {
     (blob: unknown): T;
 }
