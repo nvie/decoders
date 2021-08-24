@@ -3,7 +3,7 @@
 import { annotate } from 'debrief';
 import { Err, Ok } from 'lemons/Result';
 
-import type { Decoder } from './types';
+import type { Decoder, Scalar } from './types';
 
 /**
  * Decoder that only returns Ok for `null` inputs.  Err otherwise.
@@ -20,7 +20,7 @@ export const undefined_: Decoder<void> = (blob: mixed) =>
 /**
  * Decoder that only returns Ok for the given value constant.  Err otherwise.
  */
-export function constant<T>(value: T): Decoder<T> {
+export function constant<T: Scalar>(value: T): Decoder<T> {
     return (blob: mixed) =>
         blob === value
             ? Ok(value)
