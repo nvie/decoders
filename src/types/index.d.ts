@@ -3,7 +3,7 @@ import { Decoder, DecoderType, Guard, GuardType } from './types';
 export { guard } from './guard';
 export { compose, map, predicate } from './utils';
 
-export { array, poja } from './array';
+export { array, nonEmptyArray, poja } from './array';
 export { boolean, numericBoolean, truthy } from './boolean';
 export { constant, hardcoded, mixed, null_, undefined_, unknown } from './constants';
 export { date, iso8601 } from './date';
