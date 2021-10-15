@@ -74,7 +74,7 @@
         "dtslint": "^4.1.6",
         "eslint": "^7.32.0",
         "eslint-plugin-flowtype": "^6.1.0",
-        "flow-bin": "^0.161.0",
+        "flow-bin": "^0.162.0",
         "flow-copy-source": "^2.0.9",
         "flow-typed": "^3.3.1",
         "import-sort-cli": "^6.0.0",
