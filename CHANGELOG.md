@@ -1,3 +1,7 @@
+## v1.25.4
+
+-   Expose `nonEmptyArray` function in TypeScript (Thanks, @mszczepanczyk!)
+
 ## v1.25.3
 
 -   Argument to `constant(...)` now has to be scalar value in both Flow and TypeScript,
