@@ -3179,9 +3179,9 @@ flow-copy-source@^2.0.9:
     yargs "^15.0.1"
 
 flow-typed@^3.3.1:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/flow-typed/-/flow-typed-3.3.1.tgz#538bbcf13098916a09731f06ed6c0e5b8aee7303"
-  integrity sha512-svxMNRJNTeKfOwBt/bPZvOrgkjpYH1nXC2v7dgbq4sZgZu/Slna6kAPD45fnOJ4D0TCS2B4yp6Nhc32AV1sxpQ==
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/flow-typed/-/flow-typed-3.4.0.tgz#fc87f17a23b1592f03bc680f2f25112fa1fff622"
+  integrity sha512-Vsf005L4GnGwMheIg7Y//wCSZrcTBovn5+vuB6uhAbMDPhxx8UpAB56YMm5GLj4OJupqOLiZ/bMXtdsm7/f8vg==
   dependencies:
     "@octokit/rest" "^16.43.1"
     colors "^1.4.0"
@@ -3195,7 +3195,6 @@ flow-typed@^3.3.1:
     rimraf "^3.0.2"
     semver "7.3.2"
     table "^5.4.6"
-    through "^2.3.8"
     unzipper "^0.10.8"
     which "^2.0.2"
     yargs "^15.1.0"
@@ -6184,7 +6183,7 @@ throat@^6.0.1:
   resolved "https://registry.yarnpkg.com/throat/-/throat-6.0.1.tgz#d514fedad95740c12c2d7fc70ea863eb51ade375"
   integrity sha512-8hmiGIJMDlwjg7dlJ4yKGLK8EsYqKgPWbG3b4wjJddKNwc7N7Dpn08Df4szr/sZdMVeOstrdYSsqzX6BYbcB+w==
 
-through@^2.3.6, through@^2.3.8:
+through@^2.3.6:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
   integrity sha1-DdTJ/6q8NXlgsbckEV1+Doai4fU=
