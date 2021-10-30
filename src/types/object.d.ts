@@ -1,9 +1,9 @@
 import { $DecoderType, Decoder } from './types';
 import { AllowImplicit } from './helpers';
 
-export type ObjectDecoderType<T> = AllowImplicit<
-    { [key in keyof T]: $DecoderType<T[key]> }
->;
+export type ObjectDecoderType<T> = AllowImplicit<{
+    [key in keyof T]: $DecoderType<T[key]>;
+}>;
 
 export const pojo: Decoder<{ [key: string]: unknown }>;
 

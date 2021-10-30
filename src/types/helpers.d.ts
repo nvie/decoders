@@ -27,13 +27,13 @@ type IsDefined<T, K extends keyof T> = K extends any
         : K
     : never;
 
-export type RequiredKeys<T> = keyof Compact<
-    { [K in keyof T]: undefined extends T[K] ? undefined : 1 }
->;
+export type RequiredKeys<T> = keyof Compact<{
+    [K in keyof T]: undefined extends T[K] ? undefined : 1;
+}>;
 
-export type OptionalKeys<T> = keyof Compact<
-    { [K in keyof T]: undefined extends T[K] ? 1 : undefined }
->;
+export type OptionalKeys<T> = keyof Compact<{
+    [K in keyof T]: undefined extends T[K] ? 1 : undefined;
+}>;
 
 /**
  * Transforms an object type, by marking all fields that contain "undefined"
@@ -56,7 +56,8 @@ export type OptionalKeys<T> = keyof Compact<
  *        Note the question mark
  *   }
  */
-type AllowImplicit<T> = { [K in RequiredKeys<T>]-?: T[K] } &
-    { [K in OptionalKeys<T>]+?: Exclude<T[K], undefined> };
+type AllowImplicit<T> = { [K in RequiredKeys<T>]-?: T[K] } & {
+    [K in OptionalKeys<T>]+?: Exclude<T[K], undefined>;
+};
 
 export { AllowImplicit };
