@@ -61,8 +61,8 @@
         "predicate"
     ],
     "dependencies": {
-        "debrief": "^1.5.0",
-        "lemons": "^1.4.0"
+        "debrief": "^1.6.0-beta1",
+        "lemons": "^1.7.0-beta1"
     },
     "devDependencies": {
         "@babel/cli": "^7.16.0",

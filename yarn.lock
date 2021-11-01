@@ -2728,10 +2728,10 @@ data-urls@^2.0.0:
     whatwg-mimetype "^2.3.0"
     whatwg-url "^8.0.0"
 
-debrief@^1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/debrief/-/debrief-1.5.0.tgz#9ee31c4caba651ce87c3a286c455df24f9803f49"
-  integrity sha512-3QaFxhEGguXBmBWbnqYOcgdfC7BUu2VQfnT25fs4g9VBHxug+echFCBeVoRw4Nk85GyBkwlKmAS6VzTZEAVnAw==
+debrief@^1.6.0-beta1:
+  version "1.6.0-beta1"
+  resolved "https://registry.yarnpkg.com/debrief/-/debrief-1.6.0-beta1.tgz#e43161a35d08d85d1fa186967bbb07328e546c37"
+  integrity sha512-mXk/FXXIzmYxTiw1cwyHqbjZBgIAe/F5DSeNWKVfoAmP8pycx6FKjsqoXO/iLsKWM8IZoNCOwl9iWB10ywzZmQ==
 
 debug@4, debug@^4.0.1, debug@^4.1.0, debug@^4.1.1:
   version "4.3.2"
@@ -4897,10 +4897,10 @@ lcov-parse@^1.0.0:
   resolved "https://registry.yarnpkg.com/lcov-parse/-/lcov-parse-1.0.0.tgz#eb0d46b54111ebc561acb4c408ef9363bdc8f7e0"
   integrity sha1-6w1GtUER68VhrLTECO+TY73I9+A=
 
-lemons@^1.4.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/lemons/-/lemons-1.6.0.tgz#49c187e08f9675a1ef3e0f077b4192805531d1bf"
-  integrity sha512-nMnKQjqWp2G3odsHtwZD//WStAYnqCA6bM3JXLTLsQ1Mwkj2iLuaNQTJ6axt7wGqrZHMSt6tKDlHdjjJt9Cgxg==
+lemons@^1.7.0-beta1:
+  version "1.7.0-beta1"
+  resolved "https://registry.yarnpkg.com/lemons/-/lemons-1.7.0-beta1.tgz#1aacf6336c7ffe10ea60d17bc980d42c64a4c06c"
+  integrity sha512-htMP6M8ZAMtuVbkIRE/Xn3xs+SuTxrZrIQ2gfZZHBWQRkOim66X6KHV43cDi8yfg6TxRIKQnDMkso6akWWi2ig==
 
 leven@^3.1.0:
   version "3.1.0"
