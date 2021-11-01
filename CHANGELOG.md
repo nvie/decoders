@@ -1,3 +1,8 @@
+## v1.25.5
+
+-   Fix compatibility issue with TypeScript projects configured with
+    `strictNullChecks: false` (or `strict: false`)
+
 ## v1.25.4
 
 -   Expose `nonEmptyArray` function in TypeScript (Thanks, @mszczepanczyk!)
