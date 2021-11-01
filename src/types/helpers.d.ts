@@ -39,7 +39,9 @@ type IsDefined<T, K extends keyof T> = K extends any
 // in that mode anyway.
 //
 type NoStrictNullChecks = undefined extends string ? 1 : undefined;
+//                        ^^^^^^^^^^^^^^^^^^^^^^^^
 type StrictNullChecks = undefined extends string ? undefined : 1;
+//                      ^^^^^^^^^^^^^^^^^^^^^^^^
 
 export type RequiredKeys<T> = keyof Compact<{
     [K in keyof T]: undefined extends T[K] ? NoStrictNullChecks : 1;
