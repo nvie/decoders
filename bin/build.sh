@@ -23,7 +23,12 @@ build_code() {
 
     # Build ES module output
     mkdir -p "$DIST_ES"
-    rollup --format es --plugin @rollup/plugin-babel src/index.js > "$DIST_ES/index.js"
+    rollup \
+        --failAfterWarnings \
+        --format es \
+        --plugin '@rollup/plugin-babel={babelHelpers: "bundled"}' \
+        --external debrief,lemons/Result \
+        src/index.js > "$DIST_ES/index.js"
 }
 
 copy_typescript_defs() {
