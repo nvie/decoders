@@ -25,10 +25,7 @@ build_code() {
     mkdir -p "$DIST_ES"
     rollup \
         --failAfterWarnings \
-        --format es \
-        --plugin '@rollup/plugin-babel={babelHelpers: "bundled"}' \
-        --external debrief,lemons/Result \
-        src/index.js > "$DIST_ES/index.js"
+        --config
 }
 
 copy_typescript_defs() {
