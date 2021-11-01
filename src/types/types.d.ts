@@ -1,5 +1,5 @@
 import { Annotation } from 'debrief';
-import Result from 'lemons';
+import { Result } from 'lemons';
 
 export type Scalar = string | number | boolean | symbol | undefined | null;
 
