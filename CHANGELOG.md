@@ -1,3 +1,7 @@
+## v1.26.0-beta1
+
+-   Include ES modules in published NPM builds
+
 ## v1.25.5
 
 -   Fix compatibility issue with TypeScript projects configured with
