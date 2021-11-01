@@ -27,12 +27,26 @@ type IsDefined<T, K extends keyof T> = K extends any
         : K
     : never;
 
+//
+// HACK:
+// These weird conditionals test whether TypeScript is configured with the
+// `strictNullChecks` compiler option. We use these definitions to influence
+// what's considered a "required" vs an "optional" key for the AllowImplicit
+// type.
+//
+// If strictNullChecks is false, then we should not be emitting any `?` fields
+// and consider all fields "required" because everything is optional by default
+// in that mode anyway.
+//
+type NoStrictNullChecks = undefined extends string ? 1 : undefined;
+type StrictNullChecks = undefined extends string ? undefined : 1;
+
 export type RequiredKeys<T> = keyof Compact<{
-    [K in keyof T]: undefined extends T[K] ? undefined : 1;
+    [K in keyof T]: undefined extends T[K] ? NoStrictNullChecks : 1;
 }>;
 
 export type OptionalKeys<T> = keyof Compact<{
-    [K in keyof T]: undefined extends T[K] ? 1 : undefined;
+    [K in keyof T]: undefined extends T[K] ? 1 : StrictNullChecks;
 }>;
 
 /**
