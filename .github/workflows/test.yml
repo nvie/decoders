@@ -3,69 +3,69 @@ name: test
 on: [push]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [10.x, 12.x, 14.x]
+    build:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-version: [10.x, 12.x, 14.x]
 
-        # Some key Flow versions that have seen syntax or semantic changes that
-        # required updates to decoders
-        flow-version: [0.115.0, 0.123.0, current]
+                # Some key Flow versions that have seen syntax or semantic changes that
+                # required updates to decoders
+                flow-version: [0.115.0, 0.123.0, current]
 
-    steps:
-    - uses: actions/checkout@v1
+        steps:
+            - uses: actions/checkout@v1
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v1
+              with:
+                  node-version: ${{ matrix.node-version }}
 
-    - name: Install dependencies
-      run: yarn install
+            - name: Install dependencies
+              run: yarn install
 
-    - name: Install flow version
-      run: yarn add flow-bin@${{ matrix.flow-version }}
-      if: matrix.flow-version != 'current'
+            - name: Install flow version
+              run: yarn add flow-bin@${{ matrix.flow-version }}
+              if: matrix.flow-version != 'current'
 
-    - name: Clean things
-      run: yarn run -s clean
-      env:
-        CI: true
+            - name: Clean things
+              run: yarn run -s clean
+              env:
+                  CI: true
 
-    - name: Test Flow
-      run: yarn run -s test:flow
-      env:
-        CI: true
+            - name: Test Flow
+              run: yarn run -s test:flow
+              env:
+                  CI: true
 
-    - name: Test TypeScript
-      run: yarn run -s test:typescript
-      env:
-        CI: true
+            - name: Test TypeScript
+              run: yarn run -s test:typescript
+              env:
+                  CI: true
 
-    - name: Unit tests
-      run: yarn run -s test:jest
-      env:
-        CI: true
+            - name: Unit tests
+              run: yarn run -s test:jest
+              env:
+                  CI: true
 
-    - name: Lints
-      run: yarn run -s check
-      env:
-        CI: true
+            - name: Lints
+              run: yarn run -s check
+              env:
+                  CI: true
 
-    - name: Upload coverage report to Coveralls
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.github_token }}
-        parallel: true
+            - name: Upload coverage report to Coveralls
+              uses: coverallsapp/github-action@master
+              with:
+                  github-token: ${{ secrets.github_token }}
+                  parallel: true
 
-  coveralls:
-    needs: build
-    runs-on: ubuntu-latest
+    coveralls:
+        needs: build
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Coveralls finished
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.github_token }}
-          parallel-finished: true
+        steps:
+            - name: Coveralls finished
+              uses: coverallsapp/github-action@master
+              with:
+                  github-token: ${{ secrets.github_token }}
+                  parallel-finished: true
