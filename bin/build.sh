@@ -5,7 +5,9 @@ set -e
 ROOT="$(git rev-parse --show-toplevel)"
 SRC="${ROOT}/src"
 DIST="${ROOT}/dist"
-DIST_TYPES="${ROOT}/dist"
+DIST_TYPES="$DIST/ts"
+DIST_CJS="$DIST/cjs"
+DIST_ES="$DIST/es"
 
 # Work from the project root, independently from where this script is run
 cd "$ROOT"
@@ -15,7 +17,13 @@ clean() {
 }
 
 build_code() {
-    babel -d "$DIST" "$SRC" --ignore '**/__tests__/**'
+    # Build CJS module output
+    mkdir -p "$DIST_CJS"
+    babel -d "$DIST_CJS" "$SRC" --ignore '**/__tests__/**'
+
+    # Build ES module output
+    mkdir -p "$DIST_ES"
+    rollup --format es --plugin @rollup/plugin-babel src/index.js > "$DIST_ES/index.js"
 }
 
 copy_typescript_defs() {
@@ -26,7 +34,7 @@ copy_typescript_defs() {
 }
 
 copy_flow_defs() {
-    flow-copy-source -v -i '**/__tests__/**' -i '**/types/**' "$SRC" "$DIST"
+    flow-copy-source -v -i '**/__tests__/**' -i '**/types/**' "$SRC" "$DIST_CJS"
 }
 
 copy_metadata() {
@@ -34,12 +42,15 @@ copy_metadata() {
 }
 
 add_entrypoint() {
-    jq '. + { main: "./index.js" }'
+    jq ". + { \
+        main: \"./cjs/index.js\", \
+        module: \"./es/index.js\" \
+    }"
 }
 
 add_types_entrypoint() {
     if [ -f "$DIST_TYPES/index.d.ts" ]; then
-        jq '. + { types: "./index.d.ts" }'
+        jq '. + { types: "./ts/index.d.ts" }'
     else
         cat  # no-op, pass-thru
     fi
@@ -54,8 +65,8 @@ build_package_json() {
         jq 'del(.scripts)'          | \
         add_types_entrypoint        | \
         add_entrypoint                \
-        > dist/package.json
-    prettier --write dist/package.json
+        > "$DIST/package.json"
+    prettier --write "$DIST/package.json"
 }
 
 build() {
