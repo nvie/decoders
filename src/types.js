@@ -1,7 +1,7 @@
 // @flow strict
 
 import type { Annotation } from 'debrief';
-import Result from 'lemons/Result';
+import Result from 'lemons';
 
 export type Scalar = string | number | boolean | symbol | void | null;
 
