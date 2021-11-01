@@ -1,7 +1,9 @@
 ## v1.25.5
 
 -   Fix compatibility issue with TypeScript projects configured with
-    `strictNullChecks: false` (or `strict: false`)
+    `strictNullChecks: false` (or `strict: false`) (Thanks, @stevekrouse and @djlauk!)
+
+-   Officially support Node 16.x
 
 ## v1.25.4
 
