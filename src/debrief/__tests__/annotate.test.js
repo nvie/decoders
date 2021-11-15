@@ -78,22 +78,19 @@ describe('parsing (composite)', () => {
     it('objects', () => {
         const obj = { name: 'Frank' };
         expect(annotate(obj)).toEqual(
-            Ann.object([
-                {
-                    key: 'name',
-                    value: Ann.scalar('Frank'),
-                },
-            ]),
+            Ann.object({
+                name: Ann.scalar('Frank'),
+            }),
         );
     });
 
     it('objects (values annotated)', () => {
         const obj = { name: annotate('nvie', 'Vincent'), age: 36 };
         expect(annotate(obj)).toEqual(
-            Ann.object([
-                { key: 'name', value: Ann.scalar('nvie', 'Vincent') },
-                { key: 'age', value: Ann.scalar(36) },
-            ]),
+            Ann.object({
+                name: Ann.scalar('nvie', 'Vincent'),
+                age: Ann.scalar(36),
+            }),
         );
     });
 
@@ -101,12 +98,9 @@ describe('parsing (composite)', () => {
         // Annotate with a simple string
         const obj = { name: null };
         expect(annotateFields(obj, [['name', 'Missing!']])).toEqual(
-            Ann.object([
-                {
-                    key: 'name',
-                    value: Ann.scalar(null, 'Missing!'),
-                },
-            ]),
+            Ann.object({
+                name: Ann.scalar(null, 'Missing!'),
+            }),
         );
 
         // Annotate with a full annotation object (able to change the annotate value itself)
@@ -114,16 +108,10 @@ describe('parsing (composite)', () => {
         expect(
             annotateFields(obj2, [['name', annotate('example', 'An example value')]]),
         ).toEqual(
-            Ann.object([
-                {
-                    key: 'name',
-                    value: Ann.scalar('example', 'An example value'),
-                },
-                {
-                    key: 'age',
-                    value: Ann.scalar(20),
-                },
-            ]),
+            Ann.object({
+                name: Ann.scalar('example', 'An example value'),
+                age: Ann.scalar(20),
+            }),
         );
     });
 
@@ -131,10 +119,10 @@ describe('parsing (composite)', () => {
         // Annotate with a simple string
         const obj = { foo: 'hello' };
         expect(annotateFields(obj, [['bar', 'Missing']])).toEqual(
-            Ann.object([
-                { key: 'foo', value: Ann.scalar('hello') },
-                { key: 'bar', value: Ann.scalar(undefined, 'Missing') },
-            ]),
+            Ann.object({
+                foo: Ann.scalar('hello'),
+                bar: Ann.scalar(undefined, 'Missing'),
+            }),
         );
     });
 });
@@ -173,17 +161,14 @@ describe('annotating circular objects', () => {
         // $FlowFixMe[prop-missing]
         circularObject.self = circularObject;
         expect(annotateFields(circularObject, [['self', 'Example']])).toEqual(
-            Ann.object([
-                { key: 'foo', value: Ann.scalar(42) },
-                {
-                    key: 'bar',
-                    value: Ann.object([
-                        { key: 'qux', value: Ann.scalar('hello') },
-                        { key: 'self', value: Ann.circularRef() },
-                    ]),
-                },
-                { key: 'self', value: Ann.circularRef('Example') },
-            ]),
+            Ann.object({
+                foo: Ann.scalar(42),
+                bar: Ann.object({
+                    qux: Ann.scalar('hello'),
+                    self: Ann.circularRef(),
+                }),
+                self: Ann.circularRef('Example'),
+            }),
         );
     });
 

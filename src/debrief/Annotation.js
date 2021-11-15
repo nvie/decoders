@@ -4,10 +4,7 @@ type cast = $FlowFixMe;
 
 export type ObjectAnnotation = {|
     +_type: 'object',
-    +pairs: $ReadOnlyArray<{|
-        +key: string,
-        +value: Annotation,
-    |}>,
+    +fields: {| +[key: string]: Annotation |},
     +text?: string,
 |};
 
@@ -44,13 +41,10 @@ export type Annotation =
 export type __LEGACY_FieldAnnotation = CircularRefAnnotation | ObjectAnnotation;
 
 export function object(
-    pairs: $ReadOnlyArray<{|
-        +key: string,
-        +value: Annotation,
-    |}>,
+    fields: {| +[key: string]: Annotation |},
     text?: string,
 ): ObjectAnnotation {
-    return { _type: 'object', pairs, text };
+    return { _type: 'object', fields, text };
 }
 
 export function array(items: $ReadOnlyArray<Annotation>, text?: string): ArrayAnnotation {

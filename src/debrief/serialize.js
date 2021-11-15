@@ -35,19 +35,20 @@ function serializeArray(annotation: ArrayAnnotation, prefix: string): string {
 }
 
 function serializeObject(annotation: ObjectAnnotation, prefix: string): string {
-    const { pairs } = annotation;
-    if (pairs.length === 0) {
+    const { fields } = annotation;
+
+    const fieldNames = Object.keys(fields);
+    if (fieldNames.length === 0) {
         return '{}';
     }
 
     const result = [];
-    pairs.forEach((pair) => {
-        const key: string = pair.key;
-        const value: Annotation = pair.value;
+    fieldNames.forEach((key) => {
+        const valueAnnotation = fields[key];
         const kser = serializeValue(key);
 
         const valPrefix = prefix + INDENT + ' '.repeat(kser.length + 2);
-        const [vser, vann] = serializeAnnotation(value, prefix + INDENT);
+        const [vser, vann] = serializeAnnotation(valueAnnotation, prefix + INDENT);
 
         result.push(prefix + INDENT + kser + ': ' + vser + ',');
         if (vann !== undefined) {

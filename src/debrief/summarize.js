@@ -16,12 +16,17 @@ export default function summarize(
         const items = ann.items;
         let index = 0;
         items.forEach((ann) => {
-            summarize(ann, [...keypath, index++]).forEach((item) => result.push(item));
+            summarize(ann, [...keypath, index++]).forEach((item) =>
+                // Collect to results
+                result.push(item),
+            );
         });
     } else if (ann._type === 'object') {
-        const pairs = ann.pairs;
-        pairs.forEach((pair) => {
-            summarize(pair.value, [...keypath, pair.key]).forEach((item) =>
+        const fields = ann.fields;
+        Object.keys(fields).forEach((key) => {
+            const value = fields[key];
+            summarize(value, [...keypath, key]).forEach((item) =>
+                // Collect to results
                 result.push(item),
             );
         });

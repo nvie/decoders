@@ -52,14 +52,16 @@ export function annotateFields(
 }
 
 function _annotatePairs(
-    value: Array<[string, mixed]>,
+    pairs: Array<[string, mixed]>,
     text?: string,
     seen: RefSet,
 ): ObjectAnnotation {
-    const pairs = value.map(([key, v]) => {
-        return { key, value: _annotate(v, undefined, seen) };
+    const fields = {};
+    pairs.forEach((pair) => {
+        const [key, value] = pair;
+        fields[key] = _annotate(value, undefined, seen);
     });
-    return Ann.object(pairs, text);
+    return Ann.object(fields, text);
 }
 
 function _annotate(value: mixed, text?: string, seen: RefSet): Annotation {
@@ -80,7 +82,7 @@ function _annotate(value: mixed, text?: string, seen: RefSet): Annotation {
         if (text === undefined) {
             return ann;
         } else if (ann._type === 'object') {
-            return Ann.object(ann.pairs, text);
+            return Ann.object(ann.fields, text);
         } else if (ann._type === 'array') {
             return Ann.array(ann.items, text);
         } else if (ann._type === 'function') {
