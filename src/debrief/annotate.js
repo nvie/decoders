@@ -5,12 +5,11 @@ import type { Annotation, CircularRefAnnotation, ObjectAnnotation } from './ast'
 
 type RefSet = WeakSet<{ ... } | $ReadOnlyArray<mixed>>;
 
-export function annotateFields(
+function _annotateFields(
     object: { +[string]: mixed, ... },
     fields: $ReadOnlyArray<[/* key */ string, string | Annotation]>,
-    _seen?: RefSet,
+    seen: RefSet,
 ): ObjectAnnotation | CircularRefAnnotation {
-    const seen = _seen ?? new WeakSet();
     if (seen.has(object)) {
         return { type: 'CircularRefAnnotation', annotation: undefined };
     }
@@ -32,30 +31,33 @@ export function annotateFields(
     fields.forEach(([fieldName, ann]) => {
         pairs = pairs.map(([key, value]) =>
             fieldName === key
-                ? [key, typeof ann === 'string' ? annotate(value, ann, seen) : ann]
+                ? [key, typeof ann === 'string' ? _annotate(value, ann, seen) : ann]
                 : [key, value],
         );
     });
 
-    return annotatePairs(pairs, undefined, seen);
+    return _annotatePairs(pairs, undefined, seen);
 }
 
-function annotatePairs(
+export function annotateFields(
+    object: { +[string]: mixed, ... },
+    fields: $ReadOnlyArray<[/* key */ string, string | Annotation]>,
+): ObjectAnnotation | CircularRefAnnotation {
+    return _annotateFields(object, fields, new WeakSet());
+}
+
+function _annotatePairs(
     value: Array<[string, mixed]>,
     annotation?: string,
-    seen?: RefSet,
+    seen: RefSet,
 ): ObjectAnnotation {
     const pairs = value.map(([key, v]) => {
-        return { key, value: annotate(v, undefined, seen) };
+        return { key, value: _annotate(v, undefined, seen) };
     });
     return { type: 'ObjectAnnotation', pairs, annotation };
 }
 
-export default function annotate(
-    value: mixed,
-    annotation?: string,
-    _seen?: RefSet,
-): Annotation {
+function _annotate(value: mixed, annotation?: string, seen: RefSet): Annotation {
     if (
         value === null ||
         value === undefined ||
@@ -84,25 +86,31 @@ export default function annotate(
             return { type: 'ScalarAnnotation', value: ann.value, annotation };
         }
     } else if (Array.isArray(value)) {
-        const seen = _seen ?? new WeakSet();
         if (seen.has(value)) {
             return { type: 'CircularRefAnnotation', annotation };
         } else {
             seen.add(value);
         }
-        const items = value.map((v) => annotate(v, undefined, seen));
+        const items = value.map((v) => _annotate(v, undefined, seen));
         return { type: 'ArrayAnnotation', items, annotation };
     } else if (typeof value === 'object') {
-        const seen = _seen ?? new WeakSet();
         if (seen.has(value)) {
             return { type: 'CircularRefAnnotation', annotation };
         } else {
             seen.add(value);
         }
-        return annotatePairs(Object.entries(value), annotation, seen);
+        return _annotatePairs(Object.entries(value), annotation, seen);
     } else if (typeof value === 'function') {
         return { type: 'FunctionAnnotation', annotation };
     } else {
         throw new Error('Unknown annotation');
     }
 }
+
+export default function annotate(value: mixed, annotation?: string): Annotation {
+    return _annotate(value, annotation, new WeakSet());
+}
+
+// NOTE: Don't acces theses private APIs directly. They are only exported here
+// to better enable unit testing.
+export { _annotate as __private_annotate, _annotateFields as __private_annotateFields };

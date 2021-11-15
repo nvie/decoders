@@ -2,7 +2,11 @@
 /* eslint-disable no-restricted-syntax */
 
 import { isAnnotation } from '../ast';
-import annotate, { annotateFields } from '../annotate';
+import annotate, {
+    __private_annotate,
+    __private_annotateFields,
+    annotateFields,
+} from '../annotate';
 
 describe('annotation detection', () => {
     it('detects annotation instances', () => {
@@ -380,7 +384,9 @@ describe('annotating circular objects', () => {
 
         const seen = new WeakSet();
         seen.add(circularObject);
-        expect(annotateFields(circularObject, [['self', 'Example']], seen)).toEqual({
+        expect(
+            __private_annotateFields(circularObject, [['self', 'Example']], seen),
+        ).toEqual({
             type: 'CircularRefAnnotation',
             annotation: undefined,
         });
@@ -394,7 +400,11 @@ describe('annotating circular objects', () => {
         const seen = new WeakSet();
         seen.add(circularObject);
         expect(
-            annotate(annotate(circularObject, undefined, seen), 'Example', seen),
+            __private_annotate(
+                __private_annotate(circularObject, undefined, seen),
+                'Example',
+                seen,
+            ),
         ).toEqual({
             type: 'CircularRefAnnotation',
             annotation: 'Example',

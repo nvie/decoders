@@ -1,7 +1,7 @@
 // @flow strict
 
 import { dedent } from './helpers';
-import annotate from '../annotate';
+import annotate, { __private_annotate } from '../annotate';
 import serialize from '../serialize';
 
 function debrief(input, expected) {
@@ -96,7 +96,7 @@ describe('serialize', () => {
         const seen = new WeakSet();
         seen.add(value);
         debrief(
-            annotate(value, 'xxx', seen),
+            __private_annotate(value, 'xxx', seen),
             `
               <circular ref>
               ^^^^^^^^^^^^^^ xxx
