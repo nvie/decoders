@@ -3,15 +3,11 @@
 import { asAnnotation } from './ast';
 import type { Annotation, CircularRefAnnotation, ObjectAnnotation } from './ast';
 
-// NOTE: Deliberate use of `any` here, to match the Flow stdlib for WeakSet's
-// T condition from /private/tmp/flow/flowlib_381b77f4/core.js, which says:
-// declare class WeakSet<T: {...} | $ReadOnlyArray<any>> extends $ReadOnlyWeakSet<T> {
-// $FlowFixMe[unclear-type]
-type RefSet = WeakSet<{ ... } | $ReadOnlyArray<any>>;
+type RefSet = WeakSet<{ ... } | $ReadOnlyArray<mixed>>;
 
 export function annotateFields(
-    object: { [string]: mixed, ... },
-    fields: Array<[/* key */ string, string | Annotation]>,
+    object: { +[string]: mixed, ... },
+    fields: $ReadOnlyArray<[/* key */ string, string | Annotation]>,
     _seen?: RefSet,
 ): ObjectAnnotation | CircularRefAnnotation {
     const seen = _seen ?? new WeakSet();
