@@ -55,17 +55,9 @@ export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
     );
 }
 
-function mapToObject<T>(mapping: Map<string, T>): { [string]: T } {
-    const result: { [string]: T } = { ...null };
-    for (const [k, v] of mapping.entries()) {
-        result[k] = v;
-    }
-    return result;
-}
-
 /**
  * Like mapping(), but returns an object rather than a Map instance.
  */
 export function dict<T>(decoder: Decoder<T>): Decoder<{ [string]: T }> {
-    return map(mapping(decoder), mapToObject);
+    return map(mapping(decoder), (m) => Object.fromEntries(m));
 }
