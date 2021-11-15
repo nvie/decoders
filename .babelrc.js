@@ -11,7 +11,10 @@ module.exports = {
         [
             '@babel/preset-env',
             {
-                modules: BABEL_ENV === 'esmodules',
+                modules:
+                    BABEL_ENV === 'esmodules'
+                        ? false // e.g. "don't do module processing"
+                        : 'commonjs',
             },
         ],
         '@babel/preset-flow',
