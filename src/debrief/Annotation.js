@@ -37,9 +37,6 @@ export type Annotation =
     | FunctionAnnotation
     | CircularRefAnnotation;
 
-// TODO: Refactor this away
-export type __LEGACY_FieldAnnotation = CircularRefAnnotation | ObjectAnnotation;
-
 export function object(
     fields: {| +[key: string]: Annotation |},
     text?: string,
