@@ -6,18 +6,22 @@ import { annotate } from '../annotate';
 
 describe('annotation detection', () => {
     it('detects annotation instances', () => {
-        expect(Ann.isAnnotation(undefined)).toBe(false);
-        expect(Ann.isAnnotation(null)).toBe(false);
-        expect(Ann.isAnnotation(42)).toBe(false);
-        expect(Ann.isAnnotation('foo')).toBe(false);
-        expect(Ann.isAnnotation([])).toBe(false);
-        expect(Ann.isAnnotation({})).toBe(false);
-        expect(Ann.isAnnotation({ _type: 'foo' })).toBe(false);
-        expect(Ann.isAnnotation({ _type: 'object' })).toBe(true);
-        expect(Ann.isAnnotation({ _type: 'array' })).toBe(true);
-        expect(Ann.isAnnotation({ _type: 'scalar' })).toBe(true);
-        expect(Ann.isAnnotation({ _type: 'function' })).toBe(true);
-        expect(Ann.isAnnotation({ _type: 'circular-ref' })).toBe(true);
+        function isAnnotation(value: mixed): boolean {
+            return Ann.asAnnotation(value) !== undefined;
+        }
+
+        expect(isAnnotation(undefined)).toBe(false);
+        expect(isAnnotation(null)).toBe(false);
+        expect(isAnnotation(42)).toBe(false);
+        expect(isAnnotation('foo')).toBe(false);
+        expect(isAnnotation([])).toBe(false);
+        expect(isAnnotation({})).toBe(false);
+        expect(isAnnotation({ _type: 'foo' })).toBe(false);
+        expect(isAnnotation({ _type: 'object' })).toBe(true);
+        expect(isAnnotation({ _type: 'array' })).toBe(true);
+        expect(isAnnotation({ _type: 'scalar' })).toBe(true);
+        expect(isAnnotation({ _type: 'function' })).toBe(true);
+        expect(isAnnotation({ _type: 'circular-ref' })).toBe(true);
     });
 });
 

@@ -112,8 +112,3 @@ export function asAnnotation(thing: mixed): Annotation | void {
     }
     return undefined;
 }
-
-// TODO: How is this used? Is this still needed?
-export function isAnnotation(thing: mixed): boolean {
-    return asAnnotation(thing) !== undefined;
-}
