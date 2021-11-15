@@ -1,4 +1,5 @@
 // @flow strict
+/* eslint-disable no-restricted-syntax */
 
 import { array, nonEmptyArray } from '../array';
 import { guard } from '../guard';

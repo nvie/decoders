@@ -1,4 +1,5 @@
 // @flow strict
+/* eslint-disable no-restricted-syntax */
 
 import { partition } from 'itertools';
 

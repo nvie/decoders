@@ -1,4 +1,5 @@
 // @flow strict
+/* eslint-disable no-restricted-syntax */
 
 import { constant } from '../constants';
 import { dispatch } from '../dispatch';

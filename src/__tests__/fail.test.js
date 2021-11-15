@@ -1,4 +1,5 @@
 // @flow strict
+/* eslint-disable no-restricted-syntax */
 
 import { fail } from '../fail';
 import { INPUTS } from './fixtures';

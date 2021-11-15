@@ -1,4 +1,5 @@
 // @flow strict
+/* eslint-disable no-restricted-syntax */
 
 import { isErr, isOk, unwrap } from '../Result';
 import { number } from '../number';

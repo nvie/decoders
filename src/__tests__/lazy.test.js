@@ -1,4 +1,5 @@
 // @flow strict
+/* eslint-disable no-restricted-syntax */
 
 import { array } from '../array';
 import { errValue, isErr, value } from '../Result';

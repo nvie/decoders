@@ -1,4 +1,5 @@
 // @flow strict
+/* eslint-disable no-restricted-syntax */
 
 import { hardcoded } from '../constants';
 import { isErr, unwrap } from '../Result';

@@ -1,4 +1,5 @@
 // @flow strict
+/* eslint-disable no-restricted-syntax */
 
 import { guard } from '../guard';
 import { dict, mapping } from '../mapping';

@@ -1,4 +1,5 @@
 // @flow strict
+/* eslint-disable no-restricted-syntax */
 
 import { annotate } from 'debrief';
 import { Err, Ok, isErr, unwrap } from '../Result';
