@@ -28,7 +28,7 @@ describe('positiveNumber', () => {
     const decoder = positiveNumber;
     const [okay, not_okay] = partition(
         INPUTS,
-        (n) => typeof n === 'number' && Number.isFinite(n) && n >= 0
+        (n) => typeof n === 'number' && Number.isFinite(n) && n >= 0,
     );
 
     it('valid', () => {
@@ -69,7 +69,7 @@ describe('positiveInteger', () => {
     const decoder = positiveInteger;
     const [okay, not_okay] = partition(
         INPUTS,
-        (n) => typeof n === 'number' && Number.isInteger(n) && n >= 0
+        (n) => typeof n === 'number' && Number.isInteger(n) && n >= 0,
     );
 
     it('valid', () => {

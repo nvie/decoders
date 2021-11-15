@@ -15,7 +15,7 @@ export function instanceOf<T>(klass: Class<T>): Decoder<T> {
                       `Must be ${
                           // $FlowFixMe[incompatible-use] - klass.name is fine?
                           klass.name
-                      } instance`
-                  )
+                      } instance`,
+                  ),
               );
 }

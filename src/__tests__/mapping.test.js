@@ -34,7 +34,7 @@ describe('mappings', () => {
                 '124': { invalid: true },
                 // prettier-ignore
                 '125': { name: 'bar' },
-            })
+            }),
         ).toThrow('Missing key: "name"');
     });
 });
@@ -63,7 +63,7 @@ describe('dicts', () => {
                 '124': { invalid: true },
                 // prettier-ignore
                 '125': { name: 'bar' },
-            })
+            }),
         ).toThrow('Missing key: "name"');
     });
 });

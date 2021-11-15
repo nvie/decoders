@@ -76,10 +76,10 @@ describe('url', () => {
     it('valid', () => {
         expect(decoder('https://nvie.com')).toBe('https://nvie.com');
         expect(decoder('https://user:pass@nvie.com:443/foo?q=bar&b=baz#qux')).toBe(
-            'https://user:pass@nvie.com:443/foo?q=bar&b=baz#qux'
+            'https://user:pass@nvie.com:443/foo?q=bar&b=baz#qux',
         );
         expect(decoder('https://res.example.com/a_b,c_1d/foo.svg')).toBe(
-            'https://res.example.com/a_b,c_1d/foo.svg'
+            'https://res.example.com/a_b,c_1d/foo.svg',
         );
     });
 
@@ -88,7 +88,7 @@ describe('url', () => {
         expect(decoder('http://nvie.com')).toBe('http://nvie.com');
         expect(decoder('ftp://nvie.com:80/')).toBe('ftp://nvie.com:80/');
         expect(decoder('git+ssh://foo@nvie.com/blah.git')).toBe(
-            'git+ssh://foo@nvie.com/blah.git'
+            'git+ssh://foo@nvie.com/blah.git',
         );
     });
 

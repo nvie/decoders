@@ -52,10 +52,10 @@ describe('dispatch', () => {
         expect(() => guard(decoder)('foo')).toThrow('Must be an object');
         expect(() => guard(decoder)({})).toThrow('Missing key: "type"');
         expect(() => guard(decoder)({ type: 'blah' })).toThrow(
-            /Must be one of.*rectangle.*circle/
+            /Must be one of.*rectangle.*circle/,
         );
         expect(() => guard(decoder)({ type: 'rectangle', x: 1 })).toThrow(
-            /Missing keys: "y", "width", "height"/
+            /Missing keys: "y", "width", "height"/,
         );
     });
 });

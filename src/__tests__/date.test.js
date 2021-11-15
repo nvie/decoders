@@ -12,7 +12,7 @@ describe('dates', () => {
         INPUTS,
         (o) =>
             // $FlowFixMe[method-unbinding]
-            Object.prototype.toString.call(o) === '[object Date]' && !isNaN(o)
+            Object.prototype.toString.call(o) === '[object Date]' && !isNaN(o),
     );
 
     it('valid', () => {
@@ -44,12 +44,12 @@ describe('iso8601 dates', () => {
     it('decodes ISO dates', () => {
         expect(verify('2020-06-22T10:57:33Z')).toEqual(new Date('2020-06-22T10:57:33Z'));
         expect(verify('2020-06-22T10:57:33+02:00')).toEqual(
-            new Date('2020-06-22T08:57:33Z')
+            new Date('2020-06-22T08:57:33Z'),
         );
 
         // Note: Feb 30 does not exist, but the Date constructor "fixes" that
         expect(verify('2020-02-30T10:57:33+02:00')).toEqual(
-            new Date('2020-03-01T08:57:33Z')
+            new Date('2020-03-01T08:57:33Z'),
         );
     });
 

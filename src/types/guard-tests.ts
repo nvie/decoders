@@ -5,7 +5,7 @@ guard(
     object({
         name: string,
         tags: array(string),
-    })
+    }),
 )('dummy');
 
 // Style argument

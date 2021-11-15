@@ -15,7 +15,7 @@ describe('either', () => {
     const stringOrBooleanDecoder = guard(either(string, boolean));
     const [okay, not_okay] = partition(
         INPUTS,
-        (x) => typeof x === 'string' || typeof x === 'boolean'
+        (x) => typeof x === 'string' || typeof x === 'boolean',
     );
 
     it('valid', () => {
@@ -48,7 +48,7 @@ describe('either', () => {
         expect(() => g2({ name: 42 })).toThrow('Either');
 
         const g3 = guard(
-            either(regex(/1/, 'Must contain 1'), regex(/2/, 'Must contain 2'))
+            either(regex(/1/, 'Must contain 1'), regex(/2/, 'Must contain 2')),
         );
         expect(() => g3(42)).toThrow('Either');
         expect(() => g3('foobar')).toThrow('Either');
@@ -60,7 +60,7 @@ describe('either', () => {
             g({
                 foo: 123,
                 bar: 'not a number',
-            })
+            }),
         ).toThrow('XXX FIXME - this Either: error looks horrendous');
     });
 });
@@ -73,7 +73,7 @@ describe('either3', () => {
             x === undefined ||
             typeof x === 'string' ||
             typeof x === 'boolean' ||
-            Number.isFinite(x)
+            Number.isFinite(x),
     );
 
     it('valid', () => {
@@ -102,7 +102,7 @@ describe('either9', () => {
         constant('six'),
         constant('seven'),
         constant('eight'),
-        constant('nine')
+        constant('nine'),
     );
     const okay = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
     const not_okay = INPUTS;

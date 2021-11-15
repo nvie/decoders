@@ -17,19 +17,19 @@ const isFinite = (n: number) => Number.isFinite(n);
 
 export const number: Decoder<number> = compose(
     anyNumber,
-    predicate(isFinite, 'Number must be finite')
+    predicate(isFinite, 'Number must be finite'),
 );
 export const positiveNumber: Decoder<number> = compose(
     number,
-    predicate((n) => n >= 0, 'Number must be positive')
+    predicate((n) => n >= 0, 'Number must be positive'),
 );
 
 // Integers
 export const integer: Decoder<number> = compose(
     number,
-    predicate(isInteger, 'Number must be an integer')
+    predicate(isInteger, 'Number must be an integer'),
 );
 export const positiveInteger: Decoder<number> = compose(
     integer,
-    predicate((n) => n >= 0, 'Number must be positive')
+    predicate((n) => n >= 0, 'Number must be positive'),
 );

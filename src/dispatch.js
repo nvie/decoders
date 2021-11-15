@@ -44,7 +44,7 @@ type anything = any;
  */
 export function dispatch<O: { +[field: string]: Decoder<anything>, ... }>(
     field: string,
-    mapping: O
+    mapping: O,
 ): Decoder<$Values<$ObjMap<O, $DecoderType>>> {
     const base = object({ [field]: oneOf(Object.keys(mapping)) });
     return (blob: mixed) => {

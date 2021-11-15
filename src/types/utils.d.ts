@@ -5,9 +5,9 @@ export function map<T, V>(decoder: Decoder<T>, mapper: (value: T) => V): Decoder
 export function compose<T, V>(decoder: Decoder<T>, next: Decoder<V, T>): Decoder<V>;
 export function predicate<T extends F, F = unknown>(
     predicate: (value: F) => value is T,
-    msg: string
+    msg: string,
 ): Decoder<T, F>;
 export function predicate<T>(
     predicate: (value: T) => boolean,
-    msg: string
+    msg: string,
 ): Decoder<T, T>;

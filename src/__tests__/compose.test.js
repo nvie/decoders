@@ -18,7 +18,7 @@ describe('compose', () => {
         (s) => {
             const n = parseInt(s, 16);
             return !Number.isNaN(n) ? Ok(n) : Err(annotate(n, 'Nope'));
-        }
+        },
     );
 
     it('valid type of decode result', () => {

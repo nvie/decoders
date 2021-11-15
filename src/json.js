@@ -24,5 +24,5 @@ export const json: Decoder<JSONValue> = either6(
     number,
     boolean,
     jsonObject,
-    jsonArray
+    jsonArray,
 );

@@ -52,7 +52,7 @@ export const pojo: Decoder<{| [string]: mixed |}> = (blob: mixed) => {
               // way to turn a read-only Object to a writeable one in ES6 seems
               // to be to use object-spread. (Going off this benchmark:
               // https://thecodebarbarian.com/object-assign-vs-object-spread.html)
-              { ...blob }
+              { ...blob },
           )
         : Err(annotate(blob, 'Must be an object'));
 };
@@ -77,7 +77,7 @@ export const pojo: Decoder<{| [string]: mixed |}> = (blob: mixed) => {
  * in an object, and wraps it in a Decoder<...>.
  */
 export function object<O: { +[field: string]: AnyDecoder, ... }>(
-    mapping: O
+    mapping: O,
 ): Decoder<$ObjMap<O, $DecoderType>> {
     const known = new Set(Object.keys(mapping));
     return compose(pojo, (blob: {| [string]: mixed |}) => {
@@ -158,7 +158,7 @@ export function object<O: { +[field: string]: AnyDecoder, ... }>(
 }
 
 export function exact<O: { +[field: string]: AnyDecoder, ... }>(
-    mapping: O
+    mapping: O,
 ): Decoder<$ObjMap<$Exact<O>, $DecoderType>> {
     // Check the inputted object for any superfluous keys
     const allowed = new Set(Object.keys(mapping));
@@ -167,7 +167,7 @@ export function exact<O: { +[field: string]: AnyDecoder, ... }>(
         const superfluous = subtract(actual, allowed);
         if (superfluous.size > 0) {
             return Err(
-                annotate(blob, `Superfluous keys: ${Array.from(superfluous).join(', ')}`)
+                annotate(blob, `Superfluous keys: ${Array.from(superfluous).join(', ')}`),
             );
         }
         return Ok(blob);
@@ -181,7 +181,7 @@ export function exact<O: { +[field: string]: AnyDecoder, ... }>(
 }
 
 export function inexact<O: { +[field: string]: AnyDecoder }>(
-    mapping: O
+    mapping: O,
 ): Decoder<$ObjMap<O, $DecoderType> & { +[string]: mixed }> {
     return compose(pojo, (blob: {| [string]: mixed |}) => {
         const allkeys = new Set(Object.keys(blob));

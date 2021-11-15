@@ -23,7 +23,7 @@ describe('objects w/ circular refs', () => {
             self,
         });
         expect(
-            guard(object({ foo: number, self: object({ foo: number }) }))(value)
+            guard(object({ foo: number, self: object({ foo: number }) }))(value),
         ).toEqual({
             foo: 42,
             self: { foo: 42 },
@@ -36,8 +36,8 @@ describe('objects w/ circular refs', () => {
                         foo: number,
                         self: object({ self: object({ foo: number }) }),
                     }),
-                })
-            )(value)
+                }),
+            )(value),
         ).toEqual({
             foo: 42,
             self: {
@@ -56,7 +56,7 @@ describe('objects w/ circular refs', () => {
         expect(object({ foo: string, self: mixed })(value).isErr()).toBe(true);
         expect(object({ foo: string, self: pojo })(value).isErr()).toBe(true);
         expect(
-            object({ foo: number, self: object({ foo: string }) })(value).isErr()
+            object({ foo: number, self: object({ foo: string }) })(value).isErr(),
         ).toBe(true);
         expect(
             object({
@@ -65,7 +65,7 @@ describe('objects w/ circular refs', () => {
                     foo: number,
                     self: object({ self: object({ foo: string }) }),
                 }),
-            })(value).isErr()
+            })(value).isErr(),
         ).toBe(true);
     });
 });

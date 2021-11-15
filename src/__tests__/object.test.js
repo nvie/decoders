@@ -21,7 +21,7 @@ describe('objects', () => {
 
         // Superfluous keys are just ignored
         expect(
-            decoder({ id: 1, name: 'test', superfluous: 'abundance' }).unwrap()
+            decoder({ id: 1, name: 'test', superfluous: 'abundance' }).unwrap(),
         ).toEqual({ id: 1, name: 'test' });
     });
 
@@ -71,35 +71,35 @@ describe('objects', () => {
                 id: number,
                 name: string,
                 extra: optional(string),
-            })
+            }),
         );
 
         // All good (no missing/decoding errors)
         expect(() => decoder({ id: 1, name: 'valid' })).not.toThrow('Must be string');
         expect(() => decoder({ id: 1, name: 'valid' })).not.toThrow('Missing key');
         expect(() => decoder({ id: 1, name: 'valid', extra: undefined })).not.toThrow(
-            'Must be string'
+            'Must be string',
         );
         expect(() => decoder({ id: 1, name: 'valid', extra: undefined })).not.toThrow(
-            'Missing key'
+            'Missing key',
         );
 
         // Test missing key errors
         expect(() => decoder({ name: 'valid' })).toThrow('Missing key: "id"');
         expect(() => decoder({ name: 'valid' })).not.toThrow('Must be string');
         expect(() => decoder({ name: 'valid', extra: undefined })).toThrow(
-            'Missing key: "id"'
+            'Missing key: "id"',
         );
         expect(() => decoder({ name: 'valid', extra: undefined })).not.toThrow(
-            'Must be string'
+            'Must be string',
         );
         expect(() => decoder({ extra: 'valid' })).toThrow('Missing keys: "id", "name"');
         expect(() => decoder({ extra: 'valid' })).not.toThrow('Must be string');
         expect(() => decoder({ name: undefined, extra: 'valid' })).toThrow(
-            'Missing keys: "id", "name"'
+            'Missing keys: "id", "name"',
         );
         expect(() => decoder({ name: undefined, extra: 'valid' })).not.toThrow(
-            'Must be string'
+            'Must be string',
         );
 
         // Now test that both errors are part of the same error!
@@ -135,7 +135,7 @@ describe('exact objects', () => {
     it('fails on superfluous keys', () => {
         const decoder = exact({ id: number, name: string });
         expect(() =>
-            guard(decoder)({ id: 1, name: 'test', superfluous: 'abundance' })
+            guard(decoder)({ id: 1, name: 'test', superfluous: 'abundance' }),
         ).toThrow('Superfluous keys');
     });
 
@@ -156,10 +156,10 @@ describe('exact objects', () => {
             extra: 'extra',
         });
         expect(() =>
-            guard(decoder)({ id: 1, name: 'test', superfluous: 'abundance' })
+            guard(decoder)({ id: 1, name: 'test', superfluous: 'abundance' }),
         ).toThrow('Superfluous keys');
         expect(() =>
-            guard(decoder)({ id: 1, name: 'test', extra: 42, superfluous: 'abundance' })
+            guard(decoder)({ id: 1, name: 'test', extra: 42, superfluous: 'abundance' }),
         ).toThrow('Superfluous keys');
     });
 
@@ -207,7 +207,7 @@ describe('inexact objects', () => {
 
         // Extra properties will be retained, but "unknown"
         expect(
-            decoder({ id: 1, name: 'test', extra1: 123, extra2: 'hey' }).unwrap()
+            decoder({ id: 1, name: 'test', extra1: 123, extra2: 'hey' }).unwrap(),
         ).toEqual({
             id: 1,
             name: 'test',
@@ -231,7 +231,7 @@ describe('inexact objects', () => {
 
         // Extra properties will be retained, but "unknown"
         expect(
-            decoder({ id: 1, name: 'test', extra1: 123, extra2: 'hey' }).unwrap()
+            decoder({ id: 1, name: 'test', extra1: 123, extra2: 'hey' }).unwrap(),
         ).toEqual({
             id: 1,
             name: 'test',
@@ -271,7 +271,7 @@ describe('inexact objects', () => {
                     foo: undefined,
                     bar: undefined,
                 }).unwrap(),
-            }
+            },
         ).toEqual({
             foo: 'default', // 'foo' is known and allowed-optional, so this will be implicit-undefined
             bar: undefined, // 'bar' is ignored so the explicit-undefined will override here

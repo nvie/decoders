@@ -7,7 +7,7 @@ import { guard } from '../guard';
 
 describe('describe', () => {
     const verify = guard(
-        describe_(either3(constant('a'), constant('b'), constant('c')), 'Must be ABC')
+        describe_(either3(constant('a'), constant('b'), constant('c')), 'Must be ABC'),
     );
 
     it('valid', () => {

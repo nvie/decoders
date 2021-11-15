@@ -10,7 +10,7 @@ import { compose, predicate } from './utils';
 const ntuple = (n: number) =>
     compose(
         poja,
-        predicate((arr) => arr.length === n, `Must be a ${n}-tuple`)
+        predicate((arr) => arr.length === n, `Must be a ${n}-tuple`),
     );
 
 /**
@@ -38,7 +38,7 @@ export function tuple1<T>(decoder1: Decoder<T>): Decoder<[T]> {
  */
 export function tuple2<T1, T2>(
     decoder1: Decoder<T1>,
-    decoder2: Decoder<T2>
+    decoder2: Decoder<T2>,
 ): Decoder<[T1, T2]> {
     return compose(ntuple(2), (blobs: $ReadOnlyArray<mixed>) => {
         const [blob1, blob2] = blobs;
@@ -54,7 +54,7 @@ export function tuple2<T1, T2>(
                 annotate([
                     result1.isErr() ? result1.errValue() : result1.value(),
                     result2.isErr() ? result2.errValue() : result2.value(),
-                ])
+                ]),
             );
         }
     });
@@ -67,7 +67,7 @@ export function tuple2<T1, T2>(
 export function tuple3<T1, T2, T3>(
     decoder1: Decoder<T1>,
     decoder2: Decoder<T2>,
-    decoder3: Decoder<T3>
+    decoder3: Decoder<T3>,
 ): Decoder<[T1, T2, T3]> {
     return compose(ntuple(3), (blobs: $ReadOnlyArray<mixed>) => {
         const [blob1, blob2, blob3] = blobs;
@@ -85,7 +85,7 @@ export function tuple3<T1, T2, T3>(
                     result1.isErr() ? result1.errValue() : result1.value(),
                     result2.isErr() ? result2.errValue() : result2.value(),
                     result3.isErr() ? result3.errValue() : result3.value(),
-                ])
+                ]),
             );
         }
     });
@@ -99,7 +99,7 @@ export function tuple4<T1, T2, T3, T4>(
     decoder1: Decoder<T1>,
     decoder2: Decoder<T2>,
     decoder3: Decoder<T3>,
-    decoder4: Decoder<T4>
+    decoder4: Decoder<T4>,
 ): Decoder<[T1, T2, T3, T4]> {
     return compose(ntuple(4), (blobs: $ReadOnlyArray<mixed>) => {
         const [blob1, blob2, blob3, blob4] = blobs;
@@ -124,7 +124,7 @@ export function tuple4<T1, T2, T3, T4>(
                     result2.isErr() ? result2.errValue() : result2.value(),
                     result3.isErr() ? result3.errValue() : result3.value(),
                     result4.isErr() ? result4.errValue() : result4.value(),
-                ])
+                ]),
             );
         }
     });
@@ -139,7 +139,7 @@ export function tuple5<T1, T2, T3, T4, T5>(
     decoder2: Decoder<T2>,
     decoder3: Decoder<T3>,
     decoder4: Decoder<T4>,
-    decoder5: Decoder<T5>
+    decoder5: Decoder<T5>,
 ): Decoder<[T1, T2, T3, T4, T5]> {
     return compose(ntuple(5), (blobs: $ReadOnlyArray<mixed>) => {
         const [blob1, blob2, blob3, blob4, blob5] = blobs;
@@ -167,7 +167,7 @@ export function tuple5<T1, T2, T3, T4, T5>(
                     result3.isErr() ? result3.errValue() : result3.value(),
                     result4.isErr() ? result4.errValue() : result4.value(),
                     result5.isErr() ? result5.errValue() : result5.value(),
-                ])
+                ]),
             );
         }
     });
@@ -183,7 +183,7 @@ export function tuple6<T1, T2, T3, T4, T5, T6>(
     decoder3: Decoder<T3>,
     decoder4: Decoder<T4>,
     decoder5: Decoder<T5>,
-    decoder6: Decoder<T6>
+    decoder6: Decoder<T6>,
 ): Decoder<[T1, T2, T3, T4, T5, T6]> {
     return compose(ntuple(6), (blobs: $ReadOnlyArray<mixed>) => {
         const [blob1, blob2, blob3, blob4, blob5, blob6] = blobs;
@@ -214,7 +214,7 @@ export function tuple6<T1, T2, T3, T4, T5, T6>(
                     result4.isErr() ? result4.errValue() : result4.value(),
                     result5.isErr() ? result5.errValue() : result5.value(),
                     result6.isErr() ? result6.errValue() : result6.value(),
-                ])
+                ]),
             );
         }
     });

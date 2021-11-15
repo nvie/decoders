@@ -24,7 +24,7 @@ export const poja: Decoder<Array<mixed>> = (blob: mixed) => {
         // The fastest way to turn a read-only array into a normal array in
         // Javascript is to use .slice() on it, see this benchmark:
         // http://jsben.ch/lO6C5
-        blob.slice()
+        blob.slice(),
     );
 };
 
@@ -36,7 +36,7 @@ export const poja: Decoder<Array<mixed>> = (blob: mixed) => {
  */
 function all<T>(
     iterable: $ReadOnlyArray<DecodeResult<T>>,
-    blobs: $ReadOnlyArray<mixed>
+    blobs: $ReadOnlyArray<mixed>,
 ): DecodeResult<Array<T>> {
     const results: Array<T> = [];
     let index = 0;
@@ -54,8 +54,8 @@ function all<T>(
                     ann,
                     ann.annotation !== undefined
                         ? `${ann.annotation} (at index ${index})`
-                        : `index ${index}`
-                )
+                        : `index ${index}`,
+                ),
             );
 
             // const errValue = [];
@@ -101,6 +101,6 @@ export function array<T>(decoder: Decoder<T>): Decoder<Array<T>> {
 export function nonEmptyArray<T>(decoder: Decoder<T>): Decoder<Array<T>> {
     return compose(
         array(decoder),
-        predicate((arr) => arr.length > 0, 'Must be non-empty array')
+        predicate((arr) => arr.length > 0, 'Must be non-empty array'),
     );
 }

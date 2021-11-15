@@ -39,7 +39,7 @@ export const nonEmptyString: Decoder<string> = regex(/\S/, 'Must be non-empty st
 export function regex(regex: RegExp, msg: string): Decoder<string> {
     return compose(
         string,
-        predicate((s) => regex.test(s), msg)
+        predicate((s) => regex.test(s), msg),
     );
 }
 
@@ -49,7 +49,7 @@ export function regex(regex: RegExp, msg: string): Decoder<string> {
  */
 export const email: Decoder<string> = regex(
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-    'Must be email'
+    'Must be email',
 );
 
 /**
@@ -74,7 +74,7 @@ export const url = (schemes: $ReadOnlyArray<string> = DEFAULT_SCHEMES): Decoder<
                 return Ok(value);
             } else {
                 return Err(
-                    annotate(value, `URL scheme must be any of: ${schemes.join(', ')}`)
+                    annotate(value, `URL scheme must be any of: ${schemes.join(', ')}`),
                 );
             }
         }

@@ -34,5 +34,5 @@ export const iso8601: Decoder<Date> = map(
             throw new Error('Must be valid date/time value');
         }
         return date;
-    }
+    },
 );

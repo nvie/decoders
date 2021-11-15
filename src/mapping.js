@@ -51,7 +51,7 @@ export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
             } else {
                 return Ok(new Map(tuples));
             }
-        }
+        },
     );
 }
 
