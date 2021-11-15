@@ -1,8 +1,8 @@
 // @flow strict
 
+import { dedent } from './helpers';
 import annotate from '../annotate';
 import serialize from '../serialize';
-import { dedent } from './helpers';
 
 function debrief(input, expected) {
     expect(serialize(annotate(input))).toEqual(dedent(expected));

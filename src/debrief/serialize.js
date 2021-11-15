@@ -1,7 +1,7 @@
 // @flow strict
 
-import type { AnnPair, Annotation } from './ast';
-import { INDENT, asDate, indent, isMultiline } from './utils';
+import { asDate, indent, INDENT, isMultiline } from './utils';
+import type { Annotation, AnnPair } from './ast';
 
 function serializeString(s: string, width: number = 80) {
     // Full string

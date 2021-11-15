@@ -1,10 +1,10 @@
 // @flow strict
 
-import annotate, { annotateFields } from './annotate';
+import { indent } from './utils';
 import { isAnnotation } from './ast';
+import annotate, { annotateFields } from './annotate';
 import serialize from './serialize';
 import summarize from './summarize';
-import { indent } from './utils';
 import type { Annotation } from './ast';
 
 export type { Annotation };

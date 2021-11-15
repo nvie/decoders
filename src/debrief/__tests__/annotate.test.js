@@ -1,7 +1,8 @@
 // @flow strict
+/* eslint-disable no-restricted-syntax */
 
-import annotate, { annotateFields } from '../annotate';
 import { isAnnotation } from '../ast';
+import annotate, { annotateFields } from '../annotate';
 
 describe('annotation detection', () => {
     it('detects annotation instances', () => {
