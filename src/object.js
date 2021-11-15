@@ -2,7 +2,7 @@
 
 import { annotate, annotateFields, isAnnotation } from 'debrief';
 import type { Annotation } from 'debrief';
-import { Err, Ok } from './Result';
+import { Err, Ok, unwrap } from './Result';
 
 import type { $DecoderType, Decoder } from './types';
 import { compose, map } from './utils';
@@ -99,7 +99,7 @@ export function object<O: { +[field: string]: AnyDecoder, ... }>(
             const rawValue = blob[key];
             const result = decoder(rawValue);
             try {
-                const value = result.unwrap();
+                const value = unwrap(result);
                 if (value !== undefined) {
                     record[key] = value;
                 }
