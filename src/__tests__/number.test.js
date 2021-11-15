@@ -3,6 +3,7 @@
 import { partition } from 'itertools';
 
 import { integer, number, positiveInteger, positiveNumber } from '../number';
+import { isErr, unwrap } from '../Result';
 import { INPUTS } from './fixtures';
 
 describe('number', () => {
@@ -12,14 +13,14 @@ describe('number', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(decoder(value).unwrap()).toBe(value);
+            expect(unwrap(decoder(value))).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).isErr()).toBe(true);
+            expect(isErr(decoder(value))).toBe(true);
         }
     });
 });
@@ -34,14 +35,14 @@ describe('positiveNumber', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(decoder(value).unwrap()).toBe(value);
+            expect(unwrap(decoder(value))).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).isErr()).toBe(true);
+            expect(isErr(decoder(value))).toBe(true);
         }
     });
 });
@@ -53,14 +54,14 @@ describe('integer', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(decoder(value).unwrap()).toBe(value);
+            expect(unwrap(decoder(value))).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).isErr()).toBe(true);
+            expect(isErr(decoder(value))).toBe(true);
         }
     });
 });
@@ -75,14 +76,14 @@ describe('positiveInteger', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(decoder(value).unwrap()).toBe(value);
+            expect(unwrap(decoder(value))).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).isErr()).toBe(true);
+            expect(isErr(decoder(value))).toBe(true);
         }
     });
 });

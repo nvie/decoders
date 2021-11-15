@@ -2,6 +2,7 @@
 
 import { partition } from 'itertools';
 
+import { isErr, unwrap } from '../Result';
 import { maybe, nullable, optional } from '../optional';
 import { string } from '../string';
 import { INPUTS } from './fixtures';
@@ -12,9 +13,9 @@ describe('optional', () => {
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
-        expect(decoder(undefined).unwrap()).toBe(undefined);
+        expect(unwrap(decoder(undefined))).toBe(undefined);
         for (const value of okay) {
-            expect(decoder(value).unwrap()).toBe(value);
+            expect(unwrap(decoder(value))).toBe(value);
         }
     });
 
@@ -22,7 +23,7 @@ describe('optional', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
             if (value === undefined) continue;
-            expect(decoder(value).isErr()).toBe(true);
+            expect(isErr(decoder(value))).toBe(true);
         }
     });
 });
@@ -33,9 +34,9 @@ describe('nullable', () => {
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
-        expect(decoder(null).unwrap()).toBe(null);
+        expect(unwrap(decoder(null))).toBe(null);
         for (const value of okay) {
-            expect(decoder(value).unwrap()).toBe(value);
+            expect(unwrap(decoder(value))).toBe(value);
         }
     });
 
@@ -43,7 +44,7 @@ describe('nullable', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
             if (value === null) continue;
-            expect(decoder(value).isErr()).toBe(true);
+            expect(isErr(decoder(value))).toBe(true);
         }
     });
 });
@@ -54,21 +55,21 @@ describe('maybe', () => {
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
-        expect(decoder(null).unwrap()).toBe(null);
-        expect(decoder(undefined).unwrap()).toBe(undefined);
+        expect(unwrap(decoder(null))).toBe(null);
+        expect(unwrap(decoder(undefined))).toBe(undefined);
         for (const value of okay) {
-            expect(decoder(value).unwrap()).toBe(value);
+            expect(unwrap(decoder(value))).toBe(value);
         }
     });
 
     it('allowNull', () => {
         // No difference when decoding undefined
-        expect(decoder(undefined).unwrap()).toBeUndefined();
-        expect(decoder(null).unwrap()).toBeNull();
+        expect(unwrap(decoder(undefined))).toBeUndefined();
+        expect(unwrap(decoder(null))).toBeNull();
 
         // No difference when string-decoding
-        expect(decoder('').unwrap()).toBe('');
-        expect(decoder('foo').unwrap()).toBe('foo');
+        expect(unwrap(decoder(''))).toBe('');
+        expect(unwrap(decoder('foo'))).toBe('foo');
     });
 
     it('invalid', () => {
@@ -76,7 +77,7 @@ describe('maybe', () => {
         for (const value of not_okay) {
             if (value === undefined) continue;
             if (value === null) continue;
-            expect(decoder(value).isErr()).toBe(true);
+            expect(isErr(decoder(value))).toBe(true);
         }
     });
 });

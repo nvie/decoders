@@ -1,7 +1,7 @@
 // @flow strict
 
 import { annotate } from 'debrief';
-import { Err, Ok } from './Result';
+import { Err, Ok, unwrap } from './Result';
 
 import type { DecodeResult, Decoder } from './types';
 import { compose, predicate } from './utils';
@@ -42,7 +42,7 @@ function all<T>(
     let index = 0;
     for (const result of iterable) {
         try {
-            const value = result.unwrap();
+            const value = unwrap(result);
             results.push(value);
         } catch (ann) {
             // Rewrite the annotation to include the index information, and inject it into the original blob

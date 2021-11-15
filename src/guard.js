@@ -1,8 +1,10 @@
 // @flow strict
 
 import { serialize as serializeInline, summarize } from 'debrief';
-import type { Annotation } from 'debrief';
 
+import { mapError, unwrap } from './Result';
+
+import type { Annotation } from 'debrief';
 import type { Decoder, Guard } from './types';
 
 type Options = {|
@@ -26,11 +28,11 @@ export function guard<T>(decoder: Decoder<T>, options?: Options): Guard<T> {
             : serializeSimple; // Only returns error messages, without echoing back input
 
     return (blob: mixed) =>
-        decoder(blob)
-            .mapError((annotation) => {
+        unwrap(
+            mapError(decoder(blob), (annotation) => {
                 const err = new Error('\n' + serializer(annotation));
                 err.name = 'Decoding error';
                 return err;
-            })
-            .unwrap();
+            }),
+        );
 }

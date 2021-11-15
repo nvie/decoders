@@ -4,6 +4,7 @@ import { guard } from '../guard';
 import { dict, mapping } from '../mapping';
 import { object } from '../object';
 import { string } from '../string';
+import { unwrap } from '../Result';
 
 describe('mappings', () => {
     const decoder = mapping(object({ name: string }));
@@ -21,7 +22,7 @@ describe('mappings', () => {
             ['23', { name: 'bar' }],
             ['key', { name: 'value' }],
         ]);
-        expect(decoder(input).unwrap()).toEqual(output);
+        expect(unwrap(decoder(input))).toEqual(output);
     });
 
     it('invalid', () => {
@@ -50,7 +51,7 @@ describe('dicts', () => {
             '23': { name: 'bar' },
             key: { name: 'value' },
         };
-        expect(decoder(input).unwrap()).toEqual(input);
+        expect(unwrap(decoder(input))).toEqual(input);
     });
 
     it('invalid', () => {

@@ -8,7 +8,7 @@ const plugins = [
 ];
 
 export default {
-    external: [/@babel\/runtime/, 'debrief', 'lemons'],
+    external: [/@babel\/runtime/, 'debrief'],
     input: 'src/index.js',
     plugins,
     output: {

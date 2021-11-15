@@ -1,5 +1,8 @@
 import { Decoder, DecoderType, Guard, GuardType } from './types';
 
+// Exports to help build your own decoders
+export { Ok, Err } from './Result';
+
 export { guard } from './guard';
 export { compose, map, predicate } from './utils';
 

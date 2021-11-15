@@ -1,7 +1,7 @@
 // @flow strict
 
 import { annotate } from 'debrief';
-import { Err, Ok } from '../Result';
+import { Err, Ok, isErr, unwrap } from '../Result';
 
 import { guard } from '../guard';
 import { number } from '../number';
@@ -22,8 +22,8 @@ describe('compose', () => {
     );
 
     it('valid type of decode result', () => {
-        expect(hex('100').unwrap()).toEqual(256);
-        expect(hex('DEADC0DE').unwrap()).toEqual(0xdeadc0de);
+        expect(unwrap(hex('100'))).toEqual(256);
+        expect(unwrap(hex('DEADC0DE'))).toEqual(0xdeadc0de);
     });
 
     it('invalid', () => {
@@ -36,14 +36,14 @@ describe('map', () => {
         // s.length can never fail, so this is a good candidate for map() over
         // compose()
         const len = map(string, (s) => s.length);
-        expect(len('foo').unwrap()).toEqual(3);
-        expect(len('Lorem ipsum dolor sit amet.').unwrap()).toEqual(27);
+        expect(unwrap(len('foo'))).toEqual(3);
+        expect(unwrap(len('Lorem ipsum dolor sit amet.'))).toEqual(27);
     });
 
     it('change value, not type, of decoded results', () => {
         const upcase = map(string, (s) => s.toUpperCase());
-        expect(upcase('123').unwrap()).toEqual('123');
-        expect(upcase('I am Hulk').unwrap()).toEqual('I AM HULK');
+        expect(unwrap(upcase('123'))).toEqual('123');
+        expect(unwrap(upcase('I am Hulk'))).toEqual('I AM HULK');
     });
 
     it('a failing mapper will fail the decoder', () => {
@@ -51,17 +51,17 @@ describe('map', () => {
             if (n % 2 !== 0) return n;
             throw new Error('Must be odd');
         });
-        expect(odd(13).unwrap()).toEqual(13);
+        expect(unwrap(odd(13))).toEqual(13);
         expect(() => guard(odd)(4)).toThrow('^ Must be odd');
-        expect(odd(3).isErr()).toBe(false);
-        expect(odd(4).isErr()).toBe(true);
+        expect(isErr(odd(3))).toBe(false);
+        expect(isErr(odd(4))).toBe(true);
 
         const weirdEven = map(number, (n) => {
             if (n % 2 === 0) return n;
             throw 'Must be even'; // Throwing a string, not an Error is non-conventional, but won't break anything
         });
-        expect(weirdEven(3).isErr()).toBe(true);
+        expect(isErr(weirdEven(3))).toBe(true);
         expect(() => guard(weirdEven)(3)).toThrow('^ Must be even');
-        expect(weirdEven(4).unwrap()).toEqual(4);
+        expect(unwrap(weirdEven(4))).toEqual(4);
     });
 });

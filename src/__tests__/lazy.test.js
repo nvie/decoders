@@ -1,13 +1,14 @@
 // @flow strict
 
 import { array } from '../array';
+import { errValue, isErr, value } from '../Result';
+import { INPUTS } from './fixtures';
 import { lazy } from '../lazy';
 import { number } from '../number';
 import { object } from '../object';
 import { optional } from '../optional';
 import { string } from '../string';
 import type { Decoder } from '../types';
-import { INPUTS } from './fixtures';
 
 describe('lazy', () => {
     it('lazy(() => string) is same as string', () => {
@@ -16,8 +17,8 @@ describe('lazy', () => {
         for (const input of INPUTS) {
             const eagerResult = eagerDecoder(input);
             const lazyResult = lazyDecoder(input);
-            expect(eagerResult.value()).toEqual(lazyResult.value());
-            expect(eagerResult.errValue()).toEqual(lazyResult.errValue());
+            expect(value(eagerResult)).toEqual(value(lazyResult));
+            expect(errValue(eagerResult)).toEqual(errValue(lazyResult));
         }
     });
 
@@ -32,15 +33,15 @@ describe('lazy', () => {
             next: optional(lazy(() => llist)),
         });
 
-        expect(llist(123).isErr()).toBe(true);
-        expect(llist('string').isErr()).toBe(true);
-        expect(llist({ curr: 123 }).isErr()).toBe(true);
-        expect(llist({ curr: 'string', next: true }).isErr()).toBe(true);
+        expect(isErr(llist(123))).toBe(true);
+        expect(isErr(llist('string'))).toBe(true);
+        expect(isErr(llist({ curr: 123 }))).toBe(true);
+        expect(isErr(llist({ curr: 'string', next: true }))).toBe(true);
 
         const v1 = { curr: 'i am a string' };
         const v2 = { curr: 'i am a string', next: { curr: 'another' } };
-        expect(llist(v1).value()).toEqual(v1);
-        expect(llist(v2).value()).toEqual(v2);
+        expect(value(llist(v1))).toEqual(v1);
+        expect(value(llist(v2))).toEqual(v2);
     });
 
     it('build self-referential types with variables', () => {
@@ -58,19 +59,19 @@ describe('lazy', () => {
 
         const stringTree = tree(string);
 
-        expect(stringTree(123).isErr()).toBe(true);
-        expect(stringTree('string').isErr()).toBe(true);
-        expect(stringTree({ node: 123 }).isErr()).toBe(true);
-        expect(stringTree({ node: 'string', children: false }).isErr()).toBe(true);
+        expect(isErr(stringTree(123))).toBe(true);
+        expect(isErr(stringTree('string'))).toBe(true);
+        expect(isErr(stringTree({ node: 123 }))).toBe(true);
+        expect(isErr(stringTree({ node: 'string', children: false }))).toBe(true);
 
         const s1 = { node: 'string', children: [] };
         const s2 = { node: 'string', children: [{ node: 'another', children: [] }] };
-        expect(stringTree(s1).value()).toEqual(s1);
-        expect(stringTree(s2).value()).toEqual(s2);
+        expect(value(stringTree(s1))).toEqual(s1);
+        expect(value(stringTree(s2))).toEqual(s2);
 
         const n1 = { node: 123, children: [] };
         const n2 = { node: 123, children: [{ node: 456, children: [] }] };
-        expect(tree(number)(n1).value()).toEqual(n1);
-        expect(tree(number)(n2).value()).toEqual(n2);
+        expect(value(tree(number)(n1))).toEqual(n1);
+        expect(value(tree(number)(n2))).toEqual(n2);
     });
 });

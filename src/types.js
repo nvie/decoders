@@ -1,7 +1,7 @@
 // @flow strict
 
 import type { Annotation } from 'debrief';
-import { Result } from './Result';
+import type { Result } from './Result';
 
 export type Scalar = string | number | boolean | symbol | void | null;
 
@@ -14,7 +14,7 @@ export type Scalar = string | number | boolean | symbol | void | null;
 
 export type Guard<T> = (mixed) => T;
 export type Predicate<T> = (T) => boolean;
-export type DecodeResult<T> = Result<Annotation, T>;
+export type DecodeResult<T> = Result<T, Annotation>;
 export type Decoder<T, F = mixed> = (F) => DecodeResult<T>;
 
 /**

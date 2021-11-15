@@ -5,6 +5,7 @@ import { dispatch } from '../dispatch';
 import { guard } from '../guard';
 import { number } from '../number';
 import { object } from '../object';
+import { unwrap } from '../Result';
 import type { Decoder } from '../types';
 
 type Rectangle = {|
@@ -45,7 +46,7 @@ describe('dispatch', () => {
         expect(guard(decoder)(r)).toEqual(r);
 
         const c = { type: 'circle', cx: 3, cy: 5, r: 7 };
-        expect(decoder(c).unwrap()).toEqual(c);
+        expect(unwrap(decoder(c))).toEqual(c);
     });
 
     it('invalid', () => {

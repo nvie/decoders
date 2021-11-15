@@ -6,6 +6,7 @@ import { boolean } from '../boolean';
 import { constant, undefined_ } from '../constants';
 import { either, either4, either9, oneOf } from '../either';
 import { guard } from '../guard';
+import { isErr, unwrap } from '../Result';
 import { number } from '../number';
 import { object } from '../object';
 import { regex, string } from '../string';
@@ -110,14 +111,14 @@ describe('either9', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(decoder(value).unwrap()).toBe(value);
+            expect(unwrap(decoder(value))).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).isErr()).toBe(true);
+            expect(isErr(decoder(value))).toBe(true);
         }
     });
 });
@@ -130,14 +131,14 @@ describe('oneOf', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(decoder(value).unwrap()).toBe(value);
+            expect(unwrap(decoder(value))).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).isErr()).toBe(true);
+            expect(isErr(decoder(value))).toBe(true);
         }
     });
 });

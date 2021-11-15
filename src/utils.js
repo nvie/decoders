@@ -1,7 +1,8 @@
 // @flow strict
 
 import { annotate } from 'debrief';
-import { Err, Ok } from './Result';
+
+import { andThen, Err, Ok } from './Result';
 
 import type { Decoder } from './types';
 
@@ -44,7 +45,7 @@ export function map<T, V>(decoder: Decoder<T>, mapper: (T) => V): Decoder<V> {
  * argument.
  */
 export function compose<T, V>(decoder: Decoder<T>, next: Decoder<V, T>): Decoder<V> {
-    return (blob: mixed) => decoder(blob).andThen(next);
+    return (blob: mixed) => andThen(decoder(blob), next);
 }
 
 /**

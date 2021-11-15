@@ -20,6 +20,9 @@
  */
 import type { $DecoderType, $GuardType, Decoder, Guard } from './types';
 
+// Exports to help build your own decoders
+export { Ok, Err } from './Result';
+
 export { guard } from './guard';
 export { compose, map, predicate } from './utils';
 

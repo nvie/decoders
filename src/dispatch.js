@@ -1,7 +1,8 @@
 // @flow strict
 
-import { oneOf } from './either';
+import { andThen } from './Result';
 import { object } from './object';
+import { oneOf } from './either';
 import type { $DecoderType, Decoder } from './types';
 
 // $FlowFixMe[unclear-type] (not really an issue) - deliberate use of `any` - not sure how we should get rid of this
@@ -48,7 +49,7 @@ export function dispatch<O: { +[field: string]: Decoder<anything>, ... }>(
 ): Decoder<$Values<$ObjMap<O, $DecoderType>>> {
     const base = object({ [field]: oneOf(Object.keys(mapping)) });
     return (blob: mixed) => {
-        return base(blob).andThen((baseObj) => {
+        return andThen(base(blob), (baseObj) => {
             const decoderName = baseObj[field];
             const decoder = mapping[decoderName];
             return decoder(blob);

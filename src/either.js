@@ -2,7 +2,7 @@
 
 import { annotate, indent } from 'debrief';
 import { summarize } from 'debrief';
-import { Err, Ok } from './Result';
+import { Err, Ok, dispatch } from './Result';
 
 import type { Decoder, Scalar } from './types';
 
@@ -16,10 +16,12 @@ function itemize(s: string = ''): string {
 
 export function either<T1, T2>(d1: Decoder<T1>, d2: Decoder<T2>): Decoder<T1 | T2> {
     return (blob: mixed) =>
-        d1(blob).dispatch(
+        dispatch(
+            d1(blob),
             (value1) => Ok(value1),
             (err1) =>
-                d2(blob).dispatch(
+                dispatch(
+                    d2(blob),
                     (value2) => Ok(value2),
                     (err2) =>
                         Err(

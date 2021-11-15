@@ -2,6 +2,7 @@
 
 import { fail } from '../fail';
 import { INPUTS } from './fixtures';
+import { isErr } from '../Result';
 
 describe('fail', () => {
     const decoder = fail('I always fail');
@@ -14,7 +15,7 @@ describe('fail', () => {
     it('throws runtime error if inputs are not strings', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).isErr()).toBe(true);
+            expect(isErr(decoder(value))).toBe(true);
         }
     });
 });

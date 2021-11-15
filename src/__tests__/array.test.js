@@ -5,34 +5,31 @@ import { guard } from '../guard';
 import { number } from '../number';
 import { object } from '../object';
 import { string } from '../string';
+import { unwrap } from '../Result';
 
 describe('array', () => {
     it('empty array', () => {
         // What type it is does not matter if the array is empty
-        expect(array(string)([]).unwrap()).toEqual([]);
-        expect(array(number)([]).unwrap()).toEqual([]);
-        expect(array(array(array(array(number))))([]).unwrap()).toEqual([]);
+        expect(unwrap(array(string)([]))).toEqual([]);
+        expect(unwrap(array(number)([]))).toEqual([]);
+        expect(unwrap(array(array(array(array(number))))([]))).toEqual([]);
     });
 
     it('simple nesting', () => {
         const verifier1 = array(string);
-        expect(verifier1([]).unwrap()).toEqual([]);
-        expect(verifier1(['foo', 'bar']).unwrap()).toEqual(['foo', 'bar']);
+        expect(unwrap(verifier1([]))).toEqual([]);
+        expect(unwrap(verifier1(['foo', 'bar']))).toEqual(['foo', 'bar']);
 
         const verifier2 = array(number);
-        expect(verifier2([]).unwrap()).toEqual([]);
-        expect(verifier2([0, 1, 2, Math.PI]).unwrap()).toEqual([0, 1, 2, Math.PI]);
+        expect(unwrap(verifier2([]))).toEqual([]);
+        expect(unwrap(verifier2([0, 1, 2, Math.PI]))).toEqual([0, 1, 2, Math.PI]);
     });
 
     it('complex nesting decoding', () => {
         const decoder = array(array(number));
-        expect(decoder([]).unwrap()).toEqual([]);
-        expect(decoder([[]]).unwrap()).toEqual([[]]);
-        expect(decoder([[1, 2], [], [3, 4, 5]]).unwrap()).toEqual([
-            [1, 2],
-            [],
-            [3, 4, 5],
-        ]);
+        expect(unwrap(decoder([]))).toEqual([]);
+        expect(unwrap(decoder([[]]))).toEqual([[]]);
+        expect(unwrap(decoder([[1, 2], [], [3, 4, 5]]))).toEqual([[1, 2], [], [3, 4, 5]]);
     });
 
     it('failure to unpack', () => {
