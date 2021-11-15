@@ -2,7 +2,7 @@
 /* eslint-disable no-restricted-syntax */
 
 import * as Ann from '../Annotation';
-import { __private_annotate, annotate } from '../annotate';
+import { __private_annotate, annotate, annotateObject } from '../annotate';
 
 describe('annotation detection', () => {
     it('detects annotation instances', () => {
@@ -149,15 +149,17 @@ describe('annotating circular objects', () => {
     });
 
     it('circular objects', () => {
-        var circularObject = Ann.object({
-            foo: Ann.scalar(42),
-            bar: Ann.object({ qux: Ann.scalar('hello') }),
-        });
+        var circularObject = {
+            foo: 42,
+            bar: { qux: 'hello' },
+        };
         // $FlowFixMe[prop-missing]
         circularObject.bar.self = circularObject;
         // $FlowFixMe[prop-missing]
         circularObject.self = circularObject;
-        expect(Ann.updateField(circularObject, 'self', 'Example')).toEqual(
+        expect(
+            Ann.updateField(annotateObject(circularObject), 'self', 'Example'),
+        ).toEqual(
             Ann.object({
                 foo: Ann.scalar(42),
                 bar: Ann.object({

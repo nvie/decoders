@@ -20,20 +20,19 @@ function annotateArray(
     text?: string,
     seen: RefSet,
 ): ArrayAnnotation | CircularRefAnnotation {
-    if (seen.has(value)) {
-        return Ann.circularRef(text);
-    } else {
-        seen.add(value);
-    }
+    seen.add(value);
+
     const items = value.map((v) => annotate(v, undefined, seen));
     return Ann.array(items, text);
 }
 
-export function annotateObject(
+function annotateObject(
     object: {| +[string]: mixed |},
     text?: string,
     seen: RefSet,
 ): ObjectAnnotation {
+    seen.add(object);
+
     const fields = {};
     Object.keys(object).forEach((key) => {
         const value = object[key];
@@ -64,7 +63,6 @@ function annotate(value: mixed, text?: string, seen: RefSet): Annotation {
         if (seen.has(value)) {
             return Ann.circularRef(text);
         } else {
-            seen.add(value);
             return annotateArray(value, text, seen);
         }
     }
@@ -74,7 +72,6 @@ function annotate(value: mixed, text?: string, seen: RefSet): Annotation {
         if (seen.has(value)) {
             return Ann.circularRef(text);
         } else {
-            seen.add(value);
             return annotateObject(value, text, seen);
         }
     }
@@ -90,6 +87,13 @@ function public_annotate(value: mixed, text?: string): Annotation {
     return annotate(value, text, new WeakSet());
 }
 
+function public_annotateObject(
+    value: { +[string]: mixed },
+    text?: string,
+): ObjectAnnotation {
+    return annotateObject(value, text, new WeakSet());
+}
+
 // NOTE: Don't acces theses private APIs directly. They are only exported here
 // to better enable unit testing.
 export {
@@ -97,4 +101,5 @@ export {
     // reference detection) isn't made part of the public API.
     public_annotate as annotate,
     annotate as __private_annotate,
+    public_annotateObject as annotateObject,
 };

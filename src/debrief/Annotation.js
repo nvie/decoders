@@ -68,7 +68,7 @@ export function updateField(
 ): ObjectAnnotation {
     const valueAnnotation =
         typeof textOrAnnotation === 'string'
-            ? updateText(objAnnotation[key] ?? scalar(undefined))
+            ? updateText(objAnnotation.fields[key] ?? scalar(undefined), textOrAnnotation)
             : textOrAnnotation;
     return {
         _type: 'object',
