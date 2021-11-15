@@ -15,12 +15,14 @@ export default function summarize(ann: Annotation, keypath: Keypath = []): Array
         const items = ann.items;
         let index = 0;
         items.forEach((ann) => {
-            result.push(...summarize(ann, [...keypath, index++]));
+            summarize(ann, [...keypath, index++]).forEach((item) => result.push(item));
         });
     } else if (ann.type === 'ObjectAnnotation') {
         const pairs = ann.pairs;
         pairs.forEach((pair) => {
-            result.push(...summarize(pair.value, [...keypath, pair.key]));
+            summarize(pair.value, [...keypath, pair.key]).forEach((item) =>
+                result.push(item),
+            );
         });
     }
 
@@ -40,5 +42,5 @@ export default function summarize(ann: Annotation, keypath: Keypath = []): Array
     } else {
         prefix = `Value at keypath ${keypath.map((x) => x.toString()).join('.')}: `;
     }
-    return [...result, `${prefix}${annotation}`];
+    return [...result, prefix + annotation];
 }
