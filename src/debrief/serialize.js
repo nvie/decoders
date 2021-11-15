@@ -23,13 +23,13 @@ function serializeArray(value: Array<Annotation>, prefix: string) {
     }
 
     const result = [];
-    for (const item of value) {
+    value.forEach((item) => {
         const [ser, ann] = serializeAnnotation(item, prefix + INDENT);
         result.push(prefix + INDENT + ser + ',');
         if (ann !== undefined) {
             result.push(indent(ann, prefix + INDENT));
         }
-    }
+    });
     return ['[', ...result, prefix + ']'].join('\n');
 }
 
@@ -39,7 +39,7 @@ function serializeObject(pairs: Array<AnnPair>, prefix: string) {
     }
 
     const result = [];
-    for (const pair of pairs) {
+    pairs.forEach((pair) => {
         const key: string = pair.key;
         const value: Annotation = pair.value;
         const kser = serializeValue(key);
@@ -51,7 +51,7 @@ function serializeObject(pairs: Array<AnnPair>, prefix: string) {
         if (vann !== undefined) {
             result.push(indent(vann, valPrefix));
         }
-    }
+    });
     return ['{', ...result, prefix + '}'].join('\n');
 }
 

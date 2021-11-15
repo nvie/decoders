@@ -14,14 +14,14 @@ export default function summarize(ann: Annotation, keypath: Keypath = []): Array
     if (ann.type === 'ArrayAnnotation') {
         const items = ann.items;
         let index = 0;
-        for (const ann of items) {
+        items.forEach((ann) => {
             result.push(...summarize(ann, [...keypath, index++]));
-        }
+        });
     } else if (ann.type === 'ObjectAnnotation') {
         const pairs = ann.pairs;
-        for (const pair of pairs) {
+        pairs.forEach((pair) => {
             result.push(...summarize(pair.value, [...keypath, pair.key]));
-        }
+        });
     }
 
     const annotation = ann.annotation;

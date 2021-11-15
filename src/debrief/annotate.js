@@ -27,23 +27,20 @@ export function annotateFields(
     // explicit "undefined" value for those now, so we have a place in the
     // object to annotate
     const existingKeys = new Set(Object.keys(object));
-    for (const [field] of fields) {
-        if (!existingKeys.has(field)) {
-            pairs.push([field, undefined]);
+    fields.forEach(([fieldName]) => {
+        if (!existingKeys.has(fieldName)) {
+            pairs.push([fieldName, undefined]);
         }
-    }
+    });
 
-    for (const [field, ann] of fields) {
-        // prettier-ignore
-        pairs = pairs.map(([k, v]) => (
-            field === k
-                ? [
-                    k,
-                    typeof ann === 'string' ? annotate(v, ann, seen) : ann,
-                ]
-                : [k, v]
-        ));
-    }
+    fields.forEach(([fieldName, ann]) => {
+        pairs = pairs.map(([key, value]) =>
+            fieldName === key
+                ? [key, typeof ann === 'string' ? annotate(value, ann, seen) : ann]
+                : [key, value],
+        );
+    });
+
     return annotatePairs(pairs, undefined, seen);
 }
 
