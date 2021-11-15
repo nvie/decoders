@@ -28,8 +28,7 @@ export function asDate(value: mixed): Date | null {
 }
 
 export function isMultiline(s: string): boolean {
-    const linecount = s.split('\n').length;
-    return linecount > 1;
+    return s.indexOf('\n') >= 0;
 }
 
 export function indent(s: string, prefix: string = INDENT): string {
