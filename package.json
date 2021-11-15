@@ -13,6 +13,9 @@
         "url": "https://github.com/nvie/decoders/issues"
     },
     "main": "./dist/index.js",
+    "engines": {
+        "node": ">=12"
+    },
     "scripts": {
         "actually-prepublish": "echo \"\\n\\nPlease run \\`bin/publish.sh <options>\\` instead.\\n\\n\" && exit 2",
         "build": "./bin/build.sh",

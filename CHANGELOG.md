@@ -1,6 +1,7 @@
 ## v2.0.0-beta1
 
 -   Include ES modules in published NPM builds
+-   Drop support for all Node versions below 12.x
 -   Vendor in Result (from lemons)
 -   Vendor in Annotation (from debrief)
 
