@@ -1,5 +1,4 @@
 // @flow strict
-/* eslint-disable no-restricted-syntax */
 
 import * as Result from '../Result';
 import { number } from '../number';

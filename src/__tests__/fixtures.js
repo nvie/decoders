@@ -1,5 +1,4 @@
 // @flow strict
-/* eslint-disable no-restricted-syntax */
 
 // prettier-ignore
 export const STRINGS: Array<string> = [
