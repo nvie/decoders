@@ -72,29 +72,22 @@ function annotate(value: mixed, text?: string, seen: RefSet): Annotation {
         }
     }
 
+    // istanbul ignore else
     if (typeof value === 'function') {
         return Ann.func(text);
+    } else {
+        throw new Error('Unknown annotation');
     }
-
-    throw new Error('Unknown annotation');
 }
 
 function public_annotate(value: mixed, text?: string): Annotation {
     return annotate(value, text, new WeakSet());
 }
 
-function public_annotateObject(
-    value: { +[string]: mixed },
-    text?: string,
-): ObjectAnnotation {
-    return annotateObject(value, text, new WeakSet());
-}
-
 export {
     // This construct just ensures the "seen" weakmap (used for circular
     // reference detection) isn't made part of the public API.
     public_annotate as annotate,
-    public_annotateObject as annotateObject,
     //
     // NOTE: Don't acces theses private APIs directly. They are only exported here
     // to better enable unit testing.
