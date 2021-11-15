@@ -4,27 +4,6 @@
 import * as Ann from '../Annotation';
 import { annotate } from '../annotate';
 
-describe('annotation detection', () => {
-    it('detects annotation instances', () => {
-        function isAnnotation(value: mixed): boolean {
-            return Ann.asAnnotation(value) !== undefined;
-        }
-
-        expect(isAnnotation(undefined)).toBe(false);
-        expect(isAnnotation(null)).toBe(false);
-        expect(isAnnotation(42)).toBe(false);
-        expect(isAnnotation('foo')).toBe(false);
-        expect(isAnnotation([])).toBe(false);
-        expect(isAnnotation({})).toBe(false);
-        expect(isAnnotation({ _type: 'foo' })).toBe(false);
-        expect(isAnnotation({ _type: 'object' })).toBe(true);
-        expect(isAnnotation({ _type: 'array' })).toBe(true);
-        expect(isAnnotation({ _type: 'scalar' })).toBe(true);
-        expect(isAnnotation({ _type: 'function' })).toBe(true);
-        expect(isAnnotation({ _type: 'circular-ref' })).toBe(true);
-    });
-});
-
 describe('parsing (scalars)', () => {
     it('strings', () => {
         expect(annotate('foo')).toEqual(Ann.scalar('foo'));
