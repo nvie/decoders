@@ -1,6 +1,6 @@
 // @flow strict
 
-import { annotate } from '../annotate';
+import { __private_annotate, annotate } from '../annotate';
 import { dedent } from './helpers';
 import serialize from '../serialize';
 

@@ -94,11 +94,13 @@ function public_annotateObject(
     return annotateObject(value, text, new WeakSet());
 }
 
-// NOTE: Don't acces theses private APIs directly. They are only exported here
-// to better enable unit testing.
 export {
     // This construct just ensures the "seen" weakmap (used for circular
     // reference detection) isn't made part of the public API.
     public_annotate as annotate,
     public_annotateObject as annotateObject,
+    //
+    // NOTE: Don't acces theses private APIs directly. They are only exported here
+    // to better enable unit testing.
+    annotate as __private_annotate,
 };
