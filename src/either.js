@@ -1,9 +1,8 @@
 // @flow strict
 
+import * as Result from './Result';
 import { annotate, indent } from 'debrief';
 import { summarize } from 'debrief';
-
-import * as Result from './Result';
 import type { Decoder, Scalar } from './types';
 
 /**

@@ -1,8 +1,7 @@
 // @flow strict
 
-import { annotate } from 'debrief';
-
 import * as Result from './Result';
+import { annotate } from 'debrief';
 import type { Decoder } from './types';
 
 export function instanceOf<T>(klass: Class<T>): Decoder<T> {

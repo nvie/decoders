@@ -1,11 +1,10 @@
 // @flow strict
 /* eslint-disable no-restricted-syntax */
 
-import { partition } from 'itertools';
-
 import * as Result from '../Result';
-import { integer, number, positiveInteger, positiveNumber } from '../number';
 import { INPUTS } from './fixtures';
+import { integer, number, positiveInteger, positiveNumber } from '../number';
+import { partition } from 'itertools';
 
 describe('number', () => {
     const decoder = number;

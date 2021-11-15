@@ -1,12 +1,11 @@
 // @flow strict
 
-import { annotate } from 'debrief';
-
 import * as Result from '../Result';
+import { annotate } from 'debrief';
+import { compose, map } from '../utils';
 import { guard } from '../guard';
 import { number } from '../number';
 import { string } from '../string';
-import { compose, map } from '../utils';
 
 describe('compose', () => {
     const hex = compose(

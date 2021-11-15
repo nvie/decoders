@@ -1,11 +1,10 @@
 // @flow strict
 /* eslint-disable no-restricted-syntax */
 
-import { partition } from 'itertools';
-
 import { date, iso8601 } from '../date';
 import { guard } from '../guard';
 import { INPUTS } from './fixtures';
+import { partition } from 'itertools';
 
 describe('dates', () => {
     const verify = guard(date);

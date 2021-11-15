@@ -1,11 +1,10 @@
 // @flow strict
 /* eslint-disable no-restricted-syntax */
 
-import { partition } from 'itertools';
-
 import * as Result from '../Result';
 import { constant, hardcoded, mixed, null_, undefined_ } from '../constants';
 import { INPUTS } from './fixtures';
+import { partition } from 'itertools';
 
 describe('null', () => {
     const decoder = null_;

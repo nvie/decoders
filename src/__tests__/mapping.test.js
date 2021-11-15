@@ -1,8 +1,8 @@
 // @flow strict
 
 import * as Result from '../Result';
-import { guard } from '../guard';
 import { dict, mapping } from '../mapping';
+import { guard } from '../guard';
 import { object } from '../object';
 import { string } from '../string';
 

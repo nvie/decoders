@@ -1,10 +1,9 @@
 // @flow strict
 
-import { annotate } from 'debrief';
-
 import * as Result from './Result';
-import type { Decoder } from './types';
+import { annotate } from 'debrief';
 import { compose, predicate } from './utils';
+import type { Decoder } from './types';
 
 /** Match groups in this regex:
  * \1 - the scheme

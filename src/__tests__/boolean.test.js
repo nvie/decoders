@@ -1,11 +1,10 @@
 // @flow strict
 /* eslint-disable no-restricted-syntax */
 
-import { partition } from 'itertools';
-
 import * as Result from '../Result';
 import { boolean, numericBoolean, truthy } from '../boolean';
 import { INPUTS } from './fixtures';
+import { partition } from 'itertools';
 
 describe('booleans', () => {
     const decoder = boolean;

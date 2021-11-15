@@ -1,12 +1,11 @@
 // @flow strict
 
-import type { Annotation } from 'debrief';
-import { annotateFields, isAnnotation } from 'debrief';
-
 import * as Result from './Result';
-import { pojo } from './object';
-import type { Decoder } from './types';
+import { annotateFields, isAnnotation } from 'debrief';
 import { compose, map } from './utils';
+import { pojo } from './object';
+import type { Annotation } from 'debrief';
+import type { Decoder } from './types';
 
 /**
  * Given an object, will decode a Map of string keys to whatever values.

@@ -1,10 +1,10 @@
 // @flow strict
 
 import * as Result from '../Result';
-import { hardcoded } from '../constants';
-import { guard } from '../guard';
-import { number } from '../number';
 import { exact, inexact, object, pojo } from '../object';
+import { guard } from '../guard';
+import { hardcoded } from '../constants';
+import { number } from '../number';
 import { optional } from '../optional';
 import { string } from '../string';
 

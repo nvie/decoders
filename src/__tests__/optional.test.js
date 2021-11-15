@@ -1,12 +1,11 @@
 // @flow strict
 /* eslint-disable no-restricted-syntax */
 
-import { partition } from 'itertools';
-
 import * as Result from '../Result';
-import { maybe, nullable, optional } from '../optional';
-import { string } from '../string';
 import { INPUTS } from './fixtures';
+import { maybe, nullable, optional } from '../optional';
+import { partition } from 'itertools';
+import { string } from '../string';
 
 describe('optional', () => {
     const decoder = optional(string);

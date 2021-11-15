@@ -1,8 +1,7 @@
 // @flow strict
 
-import { annotate } from 'debrief';
-
 import * as Result from './Result';
+import { annotate } from 'debrief';
 import { compose, predicate } from './utils';
 import type { Decoder } from './types';
 

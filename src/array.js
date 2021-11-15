@@ -1,10 +1,9 @@
 // @flow strict
 
-import { annotate } from 'debrief';
 import * as Result from './Result';
-
-import type { DecodeResult, Decoder } from './types';
+import { annotate } from 'debrief';
 import { compose, predicate } from './utils';
+import type { Decoder, DecodeResult } from './types';
 
 /**
  * Like a "Plain Old JavaScript Object", but for arrays: "Plain Old JavaScript

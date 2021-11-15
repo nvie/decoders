@@ -1,11 +1,10 @@
 // @flow strict
 
 import { annotate } from 'debrief';
-
+import { compose, predicate } from './utils';
 import { err, errValue, isErr, ok, unwrap, value } from './Result';
 import { poja } from './array';
 import type { Decoder } from './types';
-import { compose, predicate } from './utils';
 
 const ntuple = (n: number) =>
     compose(

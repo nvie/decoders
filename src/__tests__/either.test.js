@@ -1,17 +1,16 @@
 // @flow strict
 /* eslint-disable no-restricted-syntax */
 
-import { partition } from 'itertools';
-
 import * as Result from '../Result';
 import { boolean } from '../boolean';
 import { constant, undefined_ } from '../constants';
 import { either, either4, either9, oneOf } from '../either';
 import { guard } from '../guard';
+import { INPUTS } from './fixtures';
 import { number } from '../number';
 import { object } from '../object';
+import { partition } from 'itertools';
 import { regex, string } from '../string';
-import { INPUTS } from './fixtures';
 
 describe('either', () => {
     const stringOrBooleanDecoder = guard(either(string, boolean));

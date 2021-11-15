@@ -1,11 +1,10 @@
 // @flow strict
 /* eslint-disable no-restricted-syntax */
 
-import { partition } from 'itertools';
-
-import { guard } from '../guard';
 import { email, nonEmptyString, regex, string, url } from '../string';
+import { guard } from '../guard';
 import { INPUTS } from './fixtures';
+import { partition } from 'itertools';
 
 describe('string', () => {
     const decoder = guard(string);

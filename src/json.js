@@ -2,10 +2,10 @@
 
 import { array } from './array';
 import { boolean } from './boolean';
-import { null_ } from './constants';
+import { dict } from './mapping';
 import { either6 } from './either';
 import { lazy } from './lazy';
-import { dict } from './mapping';
+import { null_ } from './constants';
 import { number } from './number';
 import { string } from './string';
 import type { Decoder } from './types';

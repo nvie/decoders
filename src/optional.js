@@ -1,10 +1,9 @@
 // @flow strict
 
-import { annotate } from 'debrief';
-
 import * as Result from './Result';
-import { null_, undefined_ } from './constants';
+import { annotate } from 'debrief';
 import { either } from './either';
+import { null_, undefined_ } from './constants';
 import type { Decoder } from './types';
 
 /**
