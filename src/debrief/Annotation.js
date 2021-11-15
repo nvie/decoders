@@ -5,30 +5,30 @@ type cast = $FlowFixMe;
 const _register: WeakSet<{ ... }> = new WeakSet();
 
 export type ObjectAnnotation = {|
-    +_type: 'object',
+    +type: 'object',
     +fields: {| +[key: string]: Annotation |},
     +text?: string,
 |};
 
 export type ArrayAnnotation = {|
-    +_type: 'array',
+    +type: 'array',
     +items: $ReadOnlyArray<Annotation>,
     +text?: string,
 |};
 
 export type ScalarAnnotation = {|
-    +_type: 'scalar',
+    +type: 'scalar',
     +value: mixed,
     +text?: string,
 |};
 
 export type FunctionAnnotation = {|
-    +_type: 'function',
+    +type: 'function',
     +text?: string,
 |};
 
 export type CircularRefAnnotation = {|
-    +_type: 'circular-ref',
+    +type: 'circular-ref',
     +text?: string,
 |};
 
@@ -48,7 +48,7 @@ export function object(
     fields: {| +[key: string]: Annotation |},
     text?: string,
 ): ObjectAnnotation {
-    return brand({ _type: 'object', fields, text });
+    return brand({ type: 'object', fields, text });
 }
 
 /**
@@ -76,7 +76,7 @@ export function updateField(
             ? updateText(objAnnotation.fields[key] ?? scalar(undefined), textOrAnnotation)
             : textOrAnnotation;
     return brand({
-        _type: 'object',
+        type: 'object',
         fields: {
             ...objAnnotation.fields,
             [key]: valueAnnotation,
@@ -87,7 +87,7 @@ export function updateField(
 
 export function array(items: $ReadOnlyArray<Annotation>, text?: string): ArrayAnnotation {
     return brand({
-        _type: 'array',
+        type: 'array',
         items,
         text,
     });
@@ -95,14 +95,14 @@ export function array(items: $ReadOnlyArray<Annotation>, text?: string): ArrayAn
 
 export function func(text?: string): FunctionAnnotation {
     return brand({
-        _type: 'function',
+        type: 'function',
         text,
     });
 }
 
 export function scalar(value: mixed, text?: string): ScalarAnnotation {
     return brand({
-        _type: 'scalar',
+        type: 'scalar',
         value,
         text,
     });
@@ -110,7 +110,7 @@ export function scalar(value: mixed, text?: string): ScalarAnnotation {
 
 export function circularRef(text?: string): CircularRefAnnotation {
     return brand({
-        _type: 'circular-ref',
+        type: 'circular-ref',
         text,
     });
 }

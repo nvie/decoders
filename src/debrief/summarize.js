@@ -12,7 +12,7 @@ function summarize(
 ): Array<string> {
     const result: Array<string> = [];
 
-    if (ann._type === 'array') {
+    if (ann.type === 'array') {
         const items = ann.items;
         let index = 0;
         items.forEach((ann) => {
@@ -21,7 +21,7 @@ function summarize(
                 result.push(item),
             );
         });
-    } else if (ann._type === 'object') {
+    } else if (ann.type === 'object') {
         const fields = ann.fields;
         Object.keys(fields).forEach((key) => {
             const value = fields[key];

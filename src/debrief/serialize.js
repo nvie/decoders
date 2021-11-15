@@ -89,13 +89,13 @@ export function serializeAnnotation(
 ): [string, string | void] {
     // The serialized data (the input object echoed back)
     let serialized;
-    if (ann._type === 'array') {
+    if (ann.type === 'array') {
         serialized = serializeArray(ann, prefix);
-    } else if (ann._type === 'object') {
+    } else if (ann.type === 'object') {
         serialized = serializeObject(ann, prefix);
-    } else if (ann._type === 'function') {
+    } else if (ann.type === 'function') {
         serialized = 'function() {}';
-    } else if (ann._type === 'circular-ref') {
+    } else if (ann.type === 'circular-ref') {
         serialized = '<circular ref>';
     } else {
         serialized = serializeValue(ann.value);
