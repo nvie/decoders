@@ -11,7 +11,7 @@ module.exports = {
         [
             '@babel/preset-env',
             {
-                // loose: true,
+                loose: true,
                 // targets: '> 5%',
                 modules:
                     BABEL_ENV === 'esmodules'
