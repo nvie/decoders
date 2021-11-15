@@ -27,11 +27,11 @@ function isPojo(o: mixed): boolean %checks {
 
 function subtract(xs: Set<string>, ys: Set<string>): Set<string> {
     const result = new Set();
-    for (const x of xs) {
+    xs.forEach((x) => {
         if (!ys.has(x)) {
             result.add(x);
         }
-    }
+    });
     return result;
 }
 
@@ -94,7 +94,7 @@ export function object<O: { +[field: string]: AnyDecoder, ... }>(
 
         // NOTE: We're using .keys() here over .entries(), since .entries()
         // will type the value part as "mixed"
-        for (const key of Object.keys(mapping)) {
+        Object.keys(mapping).forEach((key) => {
             const decoder = mapping[key];
             const rawValue = blob[key];
             const result = decoder(rawValue);
@@ -125,7 +125,7 @@ export function object<O: { +[field: string]: AnyDecoder, ... }>(
                     fieldErrors[key] = ann;
                 }
             }
-        }
+        });
 
         // Deal with errors now. There are two classes of errors we want to
         // report.  First of all, we want to report any inline errors in this
@@ -189,12 +189,10 @@ export function inexact<O: { +[field: string]: AnyDecoder }>(
             const safekeys = new Set(Object.keys(mapping));
 
             // To account for hard-coded keys that aren't part of the input
-            for (const k of safekeys) {
-                allkeys.add(k);
-            }
+            safekeys.forEach((k) => allkeys.add(k));
 
             const rv = {};
-            for (const k of allkeys) {
+            allkeys.forEach((k) => {
                 if (safekeys.has(k)) {
                     const value = safepart[k];
                     if (value !== undefined) {
@@ -203,7 +201,7 @@ export function inexact<O: { +[field: string]: AnyDecoder }>(
                 } else {
                     rv[k] = blob[k];
                 }
-            }
+            });
             return rv;
         });
         return decoder(blob);

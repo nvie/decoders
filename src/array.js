@@ -29,18 +29,18 @@ export const poja: Decoder<Array<mixed>> = (blob: mixed) => {
 };
 
 /**
- * Given an iterable of Result instances, exhaust them all and return:
+ * Given an array of Result instances, loop over them all and return:
  * - An [index, err] tuple, indicating the (index of the) first Err instance
  *   encountered; or
  * - a new Ok with an array of all unwrapped Ok'ed values
  */
 function all<T>(
-    iterable: $ReadOnlyArray<DecodeResult<T>>,
+    items: $ReadOnlyArray<DecodeResult<T>>,
     blobs: $ReadOnlyArray<mixed>,
 ): DecodeResult<Array<T>> {
     const results: Array<T> = [];
-    let index = 0;
-    for (const result of iterable) {
+    for (let index = 0; index < items.length; ++index) {
+        const result = items[index];
         try {
             const value = unwrap(result);
             results.push(value);
@@ -69,7 +69,6 @@ function all<T>(
             // }
             return Err(annotate(clone));
         }
-        index++;
     }
     return Ok(results);
 }
