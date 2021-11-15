@@ -1,4 +1,4 @@
-import { AnnPair, Annotation } from './ast';
+import { AnnPair, Annotation } from './types';
 import { INDENT, indent, isMultiline } from './utils';
 
 export function serializeValue(value: unknown): string;

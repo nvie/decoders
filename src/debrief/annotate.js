@@ -1,7 +1,7 @@
 // @flow strict
 
-import { asAnnotation } from './ast';
-import type { Annotation, CircularRefAnnotation, ObjectAnnotation } from './ast';
+import { asAnnotation } from './types';
+import type { Annotation, CircularRefAnnotation, ObjectAnnotation } from './types';
 
 type RefSet = WeakSet<{ ... } | $ReadOnlyArray<mixed>>;
 

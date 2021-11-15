@@ -1,6 +1,6 @@
 // @flow strict
 
-import type { Annotation } from './ast';
+import type { Annotation } from './types';
 
 type Keypath = Array<number | string>;
 

@@ -1,7 +1,7 @@
 // @flow strict
 /* eslint-disable no-restricted-syntax */
 
-import { isAnnotation } from '../ast';
+import { isAnnotation } from '../types';
 import annotate, {
     __private_annotate,
     __private_annotateFields,

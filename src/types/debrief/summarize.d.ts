@@ -1,4 +1,4 @@
-import { Annotation } from './ast';
+import { Annotation } from './types';
 
 export type Keypath = Array<number | string>;
 

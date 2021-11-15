@@ -1,4 +1,4 @@
-import { asAnnotation, Annotation, ObjectAnnotation } from './ast';
+import { asAnnotation, Annotation, ObjectAnnotation } from './types';
 
 export function annotateFields(
     obj: { [field: string]: unknown },
