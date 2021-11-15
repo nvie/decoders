@@ -26,8 +26,8 @@ describe('serialize', () => {
     });
 
     it('serializes functions', () => {
-        debrief(function () {}, 'function() {}');
-        debrief(() => {}, 'function() {}');
+        debrief(function () {}, '<function>');
+        debrief(() => {}, '<function>');
     });
 
     it('serializes annotated primitives', () => {
@@ -83,8 +83,8 @@ describe('serialize', () => {
         debrief(
             annotate(() => {}, 'xxx'),
             `
-              function() {}
-              ^^^^^^^^^^^^^ xxx
+              <function>
+              ^^^^^^^^^^ xxx
             `,
         );
     });

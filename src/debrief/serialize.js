@@ -94,7 +94,7 @@ export function serializeAnnotation(
     } else if (ann.type === 'object') {
         serialized = serializeObject(ann, prefix);
     } else if (ann.type === 'function') {
-        serialized = 'function() {}';
+        serialized = '<function>';
     } else if (ann.type === 'circular-ref') {
         serialized = '<circular ref>';
     } else {
