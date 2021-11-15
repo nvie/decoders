@@ -1,10 +1,16 @@
 // @flow strict
 
-const { BABEL_ENV } = process.env;
+const { NODE_ENV, BABEL_ENV } = process.env;
 
-if (BABEL_ENV !== 'esmodules' && BABEL_ENV !== 'commonjs') {
+if (BABEL_ENV !== 'esmodules' && BABEL_ENV !== 'commonjs' && !NODE_ENV) {
     throw new Error('Please specify BABEL_ENV as either "esmodules" or "commonjs"');
 }
+
+const modules =
+    NODE_ENV === 'test' || BABEL_ENV !== 'esmodules'
+        ? 'commonjs'
+        : // e.g. "don't do module processing"
+          false;
 
 module.exports = {
     presets: [
@@ -12,16 +18,7 @@ module.exports = {
             '@babel/preset-env',
             {
                 loose: true,
-                // targets: '> 5%',
-                modules:
-                    BABEL_ENV === 'esmodules'
-                        ? false // e.g. "don't do module processing"
-                        : 'commonjs',
-                // exclude: [
-                //     '@babel/plugin-transform-regenerator',
-                //     '@babel/plugin-transform-spread',
-                //     '@babel/plugin-transform-spread',
-                // ],
+                modules,
             },
         ],
         '@babel/preset-flow',
