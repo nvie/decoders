@@ -11,9 +11,7 @@ describe('mappings', () => {
 
     it('valid', () => {
         const input = {
-            // prettier-ignore
             '18': { name: 'foo' },
-            // prettier-ignore
             '23': { name: 'bar' },
             key: { name: 'value' },
         };
@@ -31,9 +29,7 @@ describe('mappings', () => {
         expect(() => guard(decoder)({ foo: {} })).toThrow('Missing key: "name"');
         expect(() =>
             guard(decoder)({
-                // prettier-ignore
                 '124': { invalid: true },
-                // prettier-ignore
                 '125': { name: 'bar' },
             }),
         ).toThrow('Missing key: "name"');
@@ -45,9 +41,7 @@ describe('dicts', () => {
 
     it('valid', () => {
         const input = {
-            // prettier-ignore
             '18': { name: 'foo' },
-            // prettier-ignore
             '23': { name: 'bar' },
             key: { name: 'value' },
         };
@@ -60,9 +54,7 @@ describe('dicts', () => {
         expect(() => guard(decoder)({ foo: {} })).toThrow('Missing key: "name"');
         expect(() =>
             guard(decoder)({
-                // prettier-ignore
                 '124': { invalid: true },
-                // prettier-ignore
                 '125': { name: 'bar' },
             }),
         ).toThrow('Missing key: "name"');
