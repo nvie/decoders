@@ -4,6 +4,9 @@
         "strict": true,
         "noEmit": true,
         "baseUrl": ".",
-        "paths": { "decoders": ["."] }
+        "paths": {
+            "decoders": ["."],
+            "decoders/Result": ["./Result"]
+        }
     }
 }

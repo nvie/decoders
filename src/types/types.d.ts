@@ -7,7 +7,7 @@ export interface Guard<T> {
     (blob: unknown): T;
 }
 export type Predicate<T> = (value: T) => boolean;
-export type DecodeResult<T> = Result<Annotation, T>;
+export type DecodeResult<T> = Result<T, Annotation>;
 export interface Decoder<T, F = unknown> {
     (blob: F): DecodeResult<T>;
 }
