@@ -1,6 +1,8 @@
-## v1.26.0-beta1
+## v2.0.0-beta1
 
 -   Include ES modules in published NPM builds
+-   Vendor in Result (from lemons)
+-   Vendor in Annotation (from debrief)
 
 ## v1.25.5
 
