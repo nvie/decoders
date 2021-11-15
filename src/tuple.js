@@ -1,8 +1,8 @@
 // @flow strict
 
 import { annotate } from 'debrief';
-import { Err, errValue, isErr, Ok, unwrap, value } from './Result';
 
+import { err, errValue, isErr, ok, unwrap, value } from './Result';
 import { poja } from './array';
 import type { Decoder } from './types';
 import { compose, predicate } from './utils';
@@ -23,11 +23,11 @@ export function tuple1<T>(decoder1: Decoder<T>): Decoder<[T]> {
 
         const result1 = decoder1(blob1);
         try {
-            return Ok([unwrap(result1)]);
+            return ok([unwrap(result1)]);
         } catch (e) {
             // If a decoder error has happened while unwrapping all the
             // results, try to construct a good error message
-            return Err(annotate(errValue(result1)));
+            return err(annotate(errValue(result1)));
         }
     });
 }
@@ -46,11 +46,11 @@ export function tuple2<T1, T2>(
         const result1 = decoder1(blob1);
         const result2 = decoder2(blob2);
         try {
-            return Ok([unwrap(result1), unwrap(result2)]);
+            return ok([unwrap(result1), unwrap(result2)]);
         } catch (e) {
             // If a decoder error has happened while unwrapping all the
             // results, try to construct a good error message
-            return Err(
+            return err(
                 annotate([
                     isErr(result1) ? errValue(result1) : value(result1),
                     isErr(result2) ? errValue(result2) : value(result2),
@@ -76,11 +76,11 @@ export function tuple3<T1, T2, T3>(
         const result2 = decoder2(blob2);
         const result3 = decoder3(blob3);
         try {
-            return Ok([unwrap(result1), unwrap(result2), unwrap(result3)]);
+            return ok([unwrap(result1), unwrap(result2), unwrap(result3)]);
         } catch (e) {
             // If a decoder error has happened while unwrapping all the
             // results, try to construct a good error message
-            return Err(
+            return err(
                 annotate([
                     isErr(result1) ? errValue(result1) : value(result1),
                     isErr(result2) ? errValue(result2) : value(result2),
@@ -109,7 +109,7 @@ export function tuple4<T1, T2, T3, T4>(
         const result3 = decoder3(blob3);
         const result4 = decoder4(blob4);
         try {
-            return Ok([
+            return ok([
                 unwrap(result1),
                 unwrap(result2),
                 unwrap(result3),
@@ -118,7 +118,7 @@ export function tuple4<T1, T2, T3, T4>(
         } catch (e) {
             // If a decoder error has happened while unwrapping all the
             // results, try to construct a good error message
-            return Err(
+            return err(
                 annotate([
                     isErr(result1) ? errValue(result1) : value(result1),
                     isErr(result2) ? errValue(result2) : value(result2),
@@ -150,7 +150,7 @@ export function tuple5<T1, T2, T3, T4, T5>(
         const result4 = decoder4(blob4);
         const result5 = decoder5(blob5);
         try {
-            return Ok([
+            return ok([
                 unwrap(result1),
                 unwrap(result2),
                 unwrap(result3),
@@ -160,7 +160,7 @@ export function tuple5<T1, T2, T3, T4, T5>(
         } catch (e) {
             // If a decoder error has happened while unwrapping all the
             // results, try to construct a good error message
-            return Err(
+            return err(
                 annotate([
                     isErr(result1) ? errValue(result1) : value(result1),
                     isErr(result2) ? errValue(result2) : value(result2),
@@ -195,7 +195,7 @@ export function tuple6<T1, T2, T3, T4, T5, T6>(
         const result5 = decoder5(blob5);
         const result6 = decoder6(blob6);
         try {
-            return Ok([
+            return ok([
                 unwrap(result1),
                 unwrap(result2),
                 unwrap(result3),
@@ -206,7 +206,7 @@ export function tuple6<T1, T2, T3, T4, T5, T6>(
         } catch (e) {
             // If a decoder error has happened while unwrapping all the
             // results, try to construct a good error message
-            return Err(
+            return err(
                 annotate([
                     isErr(result1) ? errValue(result1) : value(result1),
                     isErr(result2) ? errValue(result2) : value(result2),

@@ -6,22 +6,22 @@
  *     | Err <error>
  */
 
-type OkResult<+T> = {| +type: 'ok', +value: T |};
-type ErrResult<+E> = {| +type: 'err', +error: E |};
+type Ok<+T> = {| +type: 'ok', +value: T |};
+type Err<+E> = {| +type: 'err', +error: E |};
 
-export type Result<+T, +E> = OkResult<T> | ErrResult<E>;
+export type Result<+T, +E> = Ok<T> | Err<E>;
 
 /**
  * Create a new Result instance representing a successful computation.
  */
-export function Ok<T>(value: T): OkResult<T> {
+export function ok<T>(value: T): Ok<T> {
     return { type: 'ok', value };
 }
 
 /**
  * Create a new Result instance representing a failed computation.
  */
-export function Err<E>(error: E): ErrResult<E> {
+export function err<E>(error: E): Err<E> {
     return { type: 'err', error };
 }
 
@@ -86,7 +86,7 @@ export function andThen<T, E, V>(
     result: Result<T, E>,
     callback: (value: T) => Result<V, E>,
 ): Result<V, E> {
-    return result.type === 'ok' ? callback(result.value) : Err(result.error);
+    return result.type === 'ok' ? callback(result.value) : err(result.error);
 }
 
 /**
@@ -97,7 +97,7 @@ export function map<T, E, T2>(
     result: Result<T, E>,
     mapper: (value: T) => T2,
 ): Result<T2, E> {
-    return result.type === 'ok' ? Ok(mapper(result.value)) : Err(result.error);
+    return result.type === 'ok' ? ok(mapper(result.value)) : err(result.error);
 }
 
 /**
@@ -108,5 +108,5 @@ export function mapError<T, E, E2>(
     result: Result<T, E>,
     mapper: (error: E) => E2,
 ): Result<T, E2> {
-    return result.type === 'ok' ? Ok(result.value) : Err(mapper(result.error));
+    return result.type === 'ok' ? ok(result.value) : err(mapper(result.error));
 }

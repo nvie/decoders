@@ -2,7 +2,7 @@
 
 import { annotate } from 'debrief';
 
-import { mapError } from './Result';
+import * as Result from './Result';
 import type { Decoder } from './types';
 
 /**
@@ -13,6 +13,6 @@ import type { Decoder } from './types';
  */
 export function describe<T>(decoder: Decoder<T>, message: string): Decoder<T> {
     return (blob: mixed) => {
-        return mapError(decoder(blob), (err) => annotate(err, message));
+        return Result.mapError(decoder(blob), (err) => annotate(err, message));
     };
 }

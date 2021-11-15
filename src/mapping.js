@@ -2,8 +2,8 @@
 
 import type { Annotation } from 'debrief';
 import { annotateFields, isAnnotation } from 'debrief';
-import { Err, Ok, unwrap } from './Result';
 
+import * as Result from './Result';
 import { pojo } from './object';
 import type { Decoder } from './types';
 import { compose, map } from './utils';
@@ -29,7 +29,7 @@ export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
                 const value: T = blob[key];
                 const result = decoder(value);
                 try {
-                    const okValue = unwrap(result);
+                    const okValue = Result.unwrap(result);
                     if (errors.length === 0) {
                         tuples.push([key, okValue]);
                     }
@@ -47,9 +47,9 @@ export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
             });
 
             if (errors.length > 0) {
-                return Err(annotateFields(blob, errors));
+                return Result.err(annotateFields(blob, errors));
             } else {
-                return Ok(new Map(tuples));
+                return Result.ok(new Map(tuples));
             }
         },
     );

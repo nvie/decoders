@@ -1,24 +1,26 @@
 // @flow strict
 
 import { annotate } from 'debrief';
-import { Err, Ok } from './Result';
 
+import * as Result from './Result';
+import { map } from './utils';
 import { number } from './number';
 import type { Decoder } from './types';
-import { map } from './utils';
 
 /**
  * Decoder that only returns Ok for boolean inputs.  Err otherwise.
  */
 export const boolean: Decoder<boolean> = (blob: mixed) => {
-    return typeof blob === 'boolean' ? Ok(blob) : Err(annotate(blob, 'Must be boolean'));
+    return typeof blob === 'boolean'
+        ? Result.ok(blob)
+        : Result.err(annotate(blob, 'Must be boolean'));
 };
 
 /**
  * Decoder that returns true for all truthy values, and false otherwise.  Never fails.
  */
 export const truthy: Decoder<boolean> = (blob: mixed) => {
-    return Ok(!!blob);
+    return Result.ok(!!blob);
 };
 
 /**

@@ -2,8 +2,8 @@
 
 import { annotate, annotateFields, isAnnotation } from 'debrief';
 import type { Annotation } from 'debrief';
-import { Err, Ok, unwrap } from './Result';
 
+import * as Result from './Result';
 import type { $DecoderType, Decoder } from './types';
 import { compose, map } from './utils';
 
@@ -37,7 +37,7 @@ function subtract(xs: Set<string>, ys: Set<string>): Set<string> {
 
 export const pojo: Decoder<{| [string]: mixed |}> = (blob: mixed) => {
     return isPojo(blob)
-        ? Ok(
+        ? Result.ok(
               // NOTE:
               // Since Flow 0.98, typeof o === 'object' refines to
               //     {| +[string]: mixed |}
@@ -54,7 +54,7 @@ export const pojo: Decoder<{| [string]: mixed |}> = (blob: mixed) => {
               // https://thecodebarbarian.com/object-assign-vs-object-spread.html)
               { ...blob },
           )
-        : Err(annotate(blob, 'Must be an object'));
+        : Result.err(annotate(blob, 'Must be an object'));
 };
 
 /**
@@ -99,7 +99,7 @@ export function object<O: { +[field: string]: AnyDecoder, ... }>(
             const rawValue = blob[key];
             const result = decoder(rawValue);
             try {
-                const value = unwrap(result);
+                const value = Result.unwrap(result);
                 if (value !== undefined) {
                     record[key] = value;
                 }
@@ -150,10 +150,10 @@ export function object<O: { +[field: string]: AnyDecoder, ... }>(
                 err = annotate(err, `Missing ${pluralized}: ${errMsg}`);
             }
 
-            return Err(err);
+            return Result.err(err);
         }
 
-        return Ok(record);
+        return Result.ok(record);
     });
 }
 
@@ -166,11 +166,11 @@ export function exact<O: { +[field: string]: AnyDecoder, ... }>(
         const actual = new Set(Object.keys(blob));
         const superfluous = subtract(actual, allowed);
         if (superfluous.size > 0) {
-            return Err(
+            return Result.err(
                 annotate(blob, `Superfluous keys: ${Array.from(superfluous).join(', ')}`),
             );
         }
-        return Ok(blob);
+        return Result.ok(blob);
     });
 
     // Defer to the "object" decoder for doing the real decoding work.  Since

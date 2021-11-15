@@ -1,11 +1,11 @@
 // @flow strict
 /* eslint-disable no-restricted-syntax */
 
+import * as Result from '../Result';
 import { guard } from '../guard';
 import { dict, mapping } from '../mapping';
 import { object } from '../object';
 import { string } from '../string';
-import { unwrap } from '../Result';
 
 describe('mappings', () => {
     const decoder = mapping(object({ name: string }));
@@ -23,7 +23,7 @@ describe('mappings', () => {
             ['23', { name: 'bar' }],
             ['key', { name: 'value' }],
         ]);
-        expect(unwrap(decoder(input))).toEqual(output);
+        expect(Result.unwrap(decoder(input))).toEqual(output);
     });
 
     it('invalid', () => {
@@ -52,7 +52,7 @@ describe('dicts', () => {
             '23': { name: 'bar' },
             key: { name: 'value' },
         };
-        expect(unwrap(decoder(input))).toEqual(input);
+        expect(Result.unwrap(decoder(input))).toEqual(input);
     });
 
     it('invalid', () => {

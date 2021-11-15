@@ -1,15 +1,15 @@
 // @flow strict
 
 import { annotate } from 'debrief';
-import { Err, Ok } from './Result';
 
-import type { Decoder } from './types';
+import * as Result from './Result';
 import { compose, predicate } from './utils';
+import type { Decoder } from './types';
 
 const anyNumber: Decoder<number> = (blob: mixed) => {
     return typeof blob === 'number' && !Number.isNaN(blob)
-        ? Ok(blob)
-        : Err(annotate(blob, 'Must be number'));
+        ? Result.ok(blob)
+        : Result.err(annotate(blob, 'Must be number'));
 };
 
 const isInteger = (n: number) => Number.isInteger(n);

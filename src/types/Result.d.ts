@@ -1,18 +1,18 @@
-export interface OkResult<T> {
+interface Ok<T> {
     readonly type: 'ok';
     readonly value: T;
 }
 
-export interface ErrResult<E> {
+interface Err<E> {
     readonly type: 'err';
     readonly error: E;
 }
 
-export type Result<T, E> = OkResult<T> | ErrResult<E>;
+export type Result<T, E> = Ok<T> | Err<E>;
 
-export function Ok<T>(value: T): { type: 'ok'; value: T };
-export function Err<E>(error: E): { type: 'err'; error: E };
-export function toString<T, E>(result: Result<T, E>): string;
+export function ok<T>(value: T): Ok<T>;
+export function err<E>(error: E): Err<E>;
+export function toString(result: Result<unknown, unknown>): string;
 export function isOk(result: Result<unknown, unknown>): boolean;
 export function isErr(result: Result<unknown, unknown>): boolean;
 export function withDefault<T>(result: Result<T, unknown>, defaultValue: T): T;

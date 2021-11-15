@@ -3,9 +3,9 @@
 
 import { partition } from 'itertools';
 
+import * as Result from '../Result';
 import { constant, hardcoded, mixed, null_, undefined_ } from '../constants';
 import { INPUTS } from './fixtures';
-import { isErr, unwrap } from '../Result';
 
 describe('null', () => {
     const decoder = null_;
@@ -14,14 +14,14 @@ describe('null', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(unwrap(decoder(value))).toBe(value);
+            expect(Result.unwrap(decoder(value))).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(isErr(decoder(value))).toBe(true);
+            expect(Result.isErr(decoder(value))).toBe(true);
         }
     });
 });
@@ -33,14 +33,14 @@ describe('undefined', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(unwrap(decoder(value))).toBe(value);
+            expect(Result.unwrap(decoder(value))).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(isErr(decoder(value))).toBe(true);
+            expect(Result.isErr(decoder(value))).toBe(true);
         }
     });
 });
@@ -52,14 +52,14 @@ describe('string constants', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(unwrap(decoder(value))).toBe(value);
+            expect(Result.unwrap(decoder(value))).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(isErr(decoder(value))).toBe(true);
+            expect(Result.isErr(decoder(value))).toBe(true);
         }
     });
 });
@@ -71,14 +71,14 @@ describe('number constants', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(unwrap(decoder(value))).toBe(value);
+            expect(Result.unwrap(decoder(value))).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(isErr(decoder(value))).toBe(true);
+            expect(Result.isErr(decoder(value))).toBe(true);
         }
     });
 });
@@ -90,14 +90,14 @@ describe('boolean constants #1', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(unwrap(decoder(value))).toBe(value);
+            expect(Result.unwrap(decoder(value))).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(isErr(decoder(value))).toBe(true);
+            expect(Result.isErr(decoder(value))).toBe(true);
         }
     });
 });
@@ -109,14 +109,14 @@ describe('boolean constants #2', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(unwrap(decoder(value))).toBe(value);
+            expect(Result.unwrap(decoder(value))).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(isErr(decoder(value))).toBe(true);
+            expect(Result.isErr(decoder(value))).toBe(true);
         }
     });
 });
@@ -134,7 +134,7 @@ describe('hardcoded value', () => {
 
             // Against all inputs...
             for (const input of INPUTS) {
-                expect(unwrap(decoder(input))).toBe(hardcodedValue);
+                expect(Result.unwrap(decoder(input))).toBe(hardcodedValue);
             }
         }
     });
@@ -151,7 +151,7 @@ describe('mixed (pass-thru)', () => {
 
         // Against all inputs...
         for (const input of INPUTS) {
-            expect(unwrap(decoder(input))).toBe(input);
+            expect(Result.unwrap(decoder(input))).toBe(input);
         }
     });
 

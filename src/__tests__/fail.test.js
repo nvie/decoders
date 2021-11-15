@@ -1,9 +1,9 @@
 // @flow strict
 /* eslint-disable no-restricted-syntax */
 
+import * as Result from '../Result';
 import { fail } from '../fail';
 import { INPUTS } from './fixtures';
-import { isErr } from '../Result';
 
 describe('fail', () => {
     const decoder = fail('I always fail');
@@ -16,7 +16,7 @@ describe('fail', () => {
     it('throws runtime error if inputs are not strings', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(isErr(decoder(value))).toBe(true);
+            expect(Result.isErr(decoder(value))).toBe(true);
         }
     });
 });

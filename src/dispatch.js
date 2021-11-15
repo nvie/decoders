@@ -1,6 +1,6 @@
 // @flow strict
 
-import { andThen } from './Result';
+import * as Result from './Result';
 import { object } from './object';
 import { oneOf } from './either';
 import type { $DecoderType, Decoder } from './types';
@@ -49,7 +49,7 @@ export function dispatch<O: { +[field: string]: Decoder<anything>, ... }>(
 ): Decoder<$Values<$ObjMap<O, $DecoderType>>> {
     const base = object({ [field]: oneOf(Object.keys(mapping)) });
     return (blob: mixed) => {
-        return andThen(base(blob), (baseObj) => {
+        return Result.andThen(base(blob), (baseObj) => {
             const decoderName = baseObj[field];
             const decoder = mapping[decoderName];
             return decoder(blob);

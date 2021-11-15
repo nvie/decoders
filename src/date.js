@@ -1,11 +1,11 @@
 // @flow strict
 
 import { annotate } from 'debrief';
-import { Err, Ok } from './Result';
 
+import * as Result from './Result';
+import { isDate, map } from './utils';
 import { regex } from './string';
 import type { Decoder } from './types';
-import { isDate, map } from './utils';
 
 // $FlowFixMe[unclear-type] (not really an issue) - deliberate casting
 type cast = any;
@@ -17,7 +17,9 @@ const iso8601_re =
     /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:[.]\d+)?(?:Z|[+-]\d{2}:?\d{2})$/;
 
 export const date: Decoder<Date> = (value: mixed) =>
-    isDate(value) ? Ok(((value: cast): Date)) : Err(annotate(value, 'Must be a Date'));
+    isDate(value)
+        ? Result.ok(((value: cast): Date))
+        : Result.err(annotate(value, 'Must be a Date'));
 
 /**
  * Decoder that only returns Ok for strings that are valid ISO8601 date

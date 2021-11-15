@@ -1,12 +1,12 @@
 // @flow strict
 /* eslint-disable no-restricted-syntax */
 
+import * as Result from '../Result';
 import { constant } from '../constants';
 import { dispatch } from '../dispatch';
 import { guard } from '../guard';
 import { number } from '../number';
 import { object } from '../object';
-import { unwrap } from '../Result';
 import type { Decoder } from '../types';
 
 type Rectangle = {|
@@ -47,7 +47,7 @@ describe('dispatch', () => {
         expect(guard(decoder)(r)).toEqual(r);
 
         const c = { type: 'circle', cx: 3, cy: 5, r: 7 };
-        expect(unwrap(decoder(c))).toEqual(c);
+        expect(Result.unwrap(decoder(c))).toEqual(c);
     });
 
     it('invalid', () => {

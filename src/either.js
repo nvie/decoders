@@ -2,8 +2,8 @@
 
 import { annotate, indent } from 'debrief';
 import { summarize } from 'debrief';
-import { Err, Ok, dispatch } from './Result';
 
+import * as Result from './Result';
 import type { Decoder, Scalar } from './types';
 
 /**
@@ -16,15 +16,15 @@ function itemize(s: string = ''): string {
 
 export function either<T1, T2>(d1: Decoder<T1>, d2: Decoder<T2>): Decoder<T1 | T2> {
     return (blob: mixed) =>
-        dispatch(
+        Result.dispatch(
             d1(blob),
-            (value1) => Ok(value1),
+            (value1) => Result.ok(value1),
             (err1) =>
-                dispatch(
+                Result.dispatch(
                     d2(blob),
-                    (value2) => Ok(value2),
+                    (value2) => Result.ok(value2),
                     (err2) =>
-                        Err(
+                        Result.err(
                             annotate(
                                 blob,
                                 [
@@ -119,9 +119,9 @@ export function oneOf<T: Scalar>(constants: $ReadOnlyArray<T>): Decoder<T> {
     return (blob: mixed) => {
         const winner = constants.find((c) => c === blob);
         if (winner !== undefined) {
-            return Ok(winner);
+            return Result.ok(winner);
         }
-        return Err(
+        return Result.err(
             annotate(
                 blob,
                 `Must be one of ${constants

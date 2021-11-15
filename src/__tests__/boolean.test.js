@@ -3,9 +3,9 @@
 
 import { partition } from 'itertools';
 
+import * as Result from '../Result';
 import { boolean, numericBoolean, truthy } from '../boolean';
 import { INPUTS } from './fixtures';
-import { isErr, unwrap } from '../Result';
 
 describe('booleans', () => {
     const decoder = boolean;
@@ -14,14 +14,14 @@ describe('booleans', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(unwrap(decoder(value))).toBe(value);
+            expect(Result.unwrap(decoder(value))).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(isErr(decoder(value))).toBe(true);
+            expect(Result.isErr(decoder(value))).toBe(true);
         }
     });
 });
@@ -33,7 +33,7 @@ describe('truthy', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(unwrap(decoder(value))).toBe(!!value);
+            expect(Result.unwrap(decoder(value))).toBe(!!value);
         }
     });
 
@@ -49,14 +49,14 @@ describe('numeric booleans', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(unwrap(decoder(value))).toBe(!!value);
+            expect(Result.unwrap(decoder(value))).toBe(!!value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(isErr(decoder(value))).toBe(true);
+            expect(Result.isErr(decoder(value))).toBe(true);
         }
     });
 });

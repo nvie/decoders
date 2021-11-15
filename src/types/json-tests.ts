@@ -1,10 +1,11 @@
 import { json, jsonObject, jsonArray } from 'decoders';
+import * as Result from 'decoders/Result';
 
 // $ExpectType JSONValue
-json('hi').unwrap();
+Result.unwrap(json('hi'));
 
 // $ExpectType JSONObject
-jsonObject({}).unwrap();
+Result.unwrap(jsonObject({}));
 
 // $ExpectType JSONArray
-jsonArray([]).unwrap();
+Result.unwrap(jsonArray([]));

@@ -2,8 +2,7 @@
 
 import { annotate } from 'debrief';
 
-import { andThen, Err, Ok } from './Result';
-
+import * as Result from './Result';
 import type { Decoder } from './types';
 
 /**
@@ -27,9 +26,9 @@ export const isDate = (value: mixed): boolean %checks =>
 export function map<T, V>(decoder: Decoder<T>, mapper: (T) => V): Decoder<V> {
     return compose(decoder, (x) => {
         try {
-            return Ok(mapper(x));
+            return Result.ok(mapper(x));
         } catch (e) {
-            return Err(annotate(x, e instanceof Error ? e.message : String(e)));
+            return Result.err(annotate(x, e instanceof Error ? e.message : String(e)));
         }
     });
 }
@@ -45,7 +44,7 @@ export function map<T, V>(decoder: Decoder<T>, mapper: (T) => V): Decoder<V> {
  * argument.
  */
 export function compose<T, V>(decoder: Decoder<T>, next: Decoder<V, T>): Decoder<V> {
-    return (blob: mixed) => andThen(decoder(blob), next);
+    return (blob: mixed) => Result.andThen(decoder(blob), next);
 }
 
 /**
@@ -54,6 +53,6 @@ export function compose<T, V>(decoder: Decoder<T>, next: Decoder<V, T>): Decoder
  */
 export function predicate<T>(predicate: (T) => boolean, msg: string): Decoder<T, T> {
     return (value: T) => {
-        return predicate(value) ? Ok(value) : Err(annotate(value, msg));
+        return predicate(value) ? Result.ok(value) : Result.err(annotate(value, msg));
     };
 }

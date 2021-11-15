@@ -1,8 +1,8 @@
 // @flow strict
 /* eslint-disable no-restricted-syntax */
 
+import * as Result from '../Result';
 import { guard } from '../guard';
-import { isErr } from '../Result';
 import { mixed } from '../constants';
 import { number } from '../number';
 import { object, pojo } from '../object';
@@ -54,14 +54,14 @@ describe('objects w/ circular refs', () => {
     });
 
     it('invalid', () => {
-        expect(isErr(object({ foo: string })(value))).toBe(true);
-        expect(isErr(object({ foo: string, self: mixed })(value))).toBe(true);
-        expect(isErr(object({ foo: string, self: pojo })(value))).toBe(true);
-        expect(isErr(object({ foo: number, self: object({ foo: string }) })(value))).toBe(
-            true,
-        );
+        expect(Result.isErr(object({ foo: string })(value))).toBe(true);
+        expect(Result.isErr(object({ foo: string, self: mixed })(value))).toBe(true);
+        expect(Result.isErr(object({ foo: string, self: pojo })(value))).toBe(true);
         expect(
-            isErr(
+            Result.isErr(object({ foo: number, self: object({ foo: string }) })(value)),
+        ).toBe(true);
+        expect(
+            Result.isErr(
                 object({
                     foo: number,
                     self: object({
