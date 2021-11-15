@@ -1,35 +1,42 @@
 export interface ScalarAnnotation {
-    type: 'ScalarAnnotation';
-    value: unknown;
-    annotation?: string;
+    readonly type: 'ScalarAnnotation';
+    readonly value: unknown;
+    readonly annotation?: string;
 }
+
 export interface AnnPair {
-    key: string;
-    value: Annotation;
+    readonly key: string;
+    readonly value: Annotation;
 }
+
 export interface ObjectAnnotation {
-    type: 'ObjectAnnotation';
-    pairs: AnnPair[];
-    annotation?: string;
+    readonly type: 'ObjectAnnotation';
+    readonly pairs: AnnPair[];
+    readonly annotation?: string;
 }
+
 export interface ArrayAnnotation {
-    type: 'ArrayAnnotation';
-    items: Annotation[];
-    annotation?: string;
+    readonly type: 'ArrayAnnotation';
+    readonly items: Annotation[];
+    readonly annotation?: string;
 }
+
 export interface FunctionAnnotation {
-    type: 'FunctionAnnotation';
-    annotation?: string;
+    readonly type: 'FunctionAnnotation';
+    readonly annotation?: string;
 }
+
 export interface CircularRefAnnotation {
-    type: 'CircularRefAnnotation';
-    annotation?: string;
+    readonly type: 'CircularRefAnnotation';
+    readonly annotation?: string;
 }
+
 export type Annotation =
     | ObjectAnnotation
     | ArrayAnnotation
     | ScalarAnnotation
     | FunctionAnnotation
     | CircularRefAnnotation;
+
 export function asAnnotation(thing: unknown): Annotation | undefined;
 export function isAnnotation(thing: unknown): boolean;

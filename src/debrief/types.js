@@ -2,38 +2,41 @@
 
 type cast = $FlowFixMe;
 
-type ScalarAnnotation = {
-    type: 'ScalarAnnotation',
-    value: mixed,
-    annotation?: string,
-};
+type ScalarAnnotation = {|
+    +type: 'ScalarAnnotation',
+    +value: mixed,
+    +annotation?: string,
+|};
 
-type FunctionAnnotation = {
-    type: 'FunctionAnnotation',
-    annotation?: string,
-};
-
-// TODO: Remove this export - it should be an implementation detail!
-export type CircularRefAnnotation = {
-    type: 'CircularRefAnnotation',
-    annotation?: string,
-};
+type FunctionAnnotation = {|
+    +type: 'FunctionAnnotation',
+    +annotation?: string,
+|};
 
 // TODO: Remove this export - it should be an implementation detail!
-export type AnnPair = { key: string, value: Annotation };
+export type CircularRefAnnotation = {|
+    +type: 'CircularRefAnnotation',
+    +annotation?: string,
+|};
 
 // TODO: Remove this export - it should be an implementation detail!
-export type ObjectAnnotation = {
-    type: 'ObjectAnnotation',
-    pairs: Array<AnnPair>,
-    annotation?: string,
-};
+export type AnnPair = {|
+    +key: string,
+    +value: Annotation,
+|};
 
-type ArrayAnnotation = {
-    type: 'ArrayAnnotation',
-    items: Array<Annotation>,
-    annotation?: string,
-};
+// TODO: Remove this export - it should be an implementation detail!
+export type ObjectAnnotation = {|
+    +type: 'ObjectAnnotation',
+    +pairs: Array<AnnPair>,
+    +annotation?: string,
+|};
+
+type ArrayAnnotation = {|
+    +type: 'ArrayAnnotation',
+    +items: Array<Annotation>,
+    +annotation?: string,
+|};
 
 export type Annotation =
     | ObjectAnnotation
