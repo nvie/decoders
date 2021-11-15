@@ -50,26 +50,35 @@ export function object(
 /**
  * Given an existing Annotation, set the annotation's text to a new value.
  */
-// export function updateText<A: Annotation>(annotation: A, text: string): A {
-//     return { ...annotation, text };
-// }
+export function updateText<A: Annotation>(annotation: A, text?: string): A {
+    return text !== undefined
+        ? { ...annotation, text }
+        : // no-op
+          annotation;
+}
 
 /**
  * Given an existing ObjectAnnotation, set the given field's annotation to
  * a new value. If the field does not exist, it is inserted.
  */
-// export function updateField(
-//     annotation: ObjectAnnotation,
-//     key: string,
-//     value: Annotation
-// ): ObjectAnnotation {
-//     const { text } = annotation;
-//     return {
-//         _type: 'object',
-//         fields: { ...annotation.fields, [key]: value },
-//         text,
-//     };
-// }
+export function updateField(
+    objAnnotation: ObjectAnnotation,
+    key: string,
+    textOrAnnotation: string | Annotation,
+): ObjectAnnotation {
+    const valueAnnotation =
+        typeof textOrAnnotation === 'string'
+            ? updateText(objAnnotation[key] ?? scalar(undefined))
+            : textOrAnnotation;
+    return {
+        _type: 'object',
+        fields: {
+            ...objAnnotation.fields,
+            [key]: valueAnnotation,
+        },
+        text: objAnnotation.text,
+    };
+}
 
 export function array(items: $ReadOnlyArray<Annotation>, text?: string): ArrayAnnotation {
     return { _type: 'array', items, text };

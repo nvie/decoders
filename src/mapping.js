@@ -2,10 +2,10 @@
 
 import * as Ann from './debrief/Annotation';
 import * as Result from './Result';
-import { annotateFields } from './debrief';
+import { annotate } from './debrief';
 import { compose, map } from './utils';
 import { pojo } from './object';
-import type { Annotation } from './debrief';
+import type { Annotation, ObjectAnnotation } from './debrief/Annotation';
 import type { Decoder } from './types';
 
 /**
@@ -23,7 +23,7 @@ export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
         // $FlowFixMe[unclear-type] (not really an issue) - deliberate use of Object here
         (blob: Object) => {
             let tuples: Array<[string, T]> = [];
-            let errors: Array<[string, string | Annotation]> = [];
+            let errors: Array<[string, Annotation]> = [];
 
             Object.keys(blob).forEach((key: string) => {
                 const value: T = blob[key];
@@ -35,9 +35,10 @@ export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
                     }
                 } catch (e) {
                     /* istanbul ignore else */
-                    if (Ann.isAnnotation(e)) {
+                    const errAnn = Ann.asAnnotation(e);
+                    if (errAnn) {
                         tuples.length = 0; // Clear the tuples array
-                        errors.push([key, e]);
+                        errors.push([key, errAnn]);
                     } else {
                         // Otherwise, simply rethrow it
                         /* istanbul ignore next */
@@ -47,7 +48,16 @@ export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
             });
 
             if (errors.length > 0) {
-                return Result.err(annotateFields(blob, errors));
+                // NOTE: We know `blob` is an object, so the result here will
+                // definitely be an ObjectAnnotation. Figure out how to fix
+                // this at the Flow level, though.
+                // $FlowFixMe[incompatible-type]
+                // $FlowFixMe[prop-missing]
+                let objAnn: ObjectAnnotation = annotate(blob);
+                errors.forEach(([key, errAnn]) => {
+                    objAnn = Ann.updateField(objAnn, key, errAnn);
+                });
+                return Result.err(objAnn);
             } else {
                 return Result.ok(new Map(tuples));
             }

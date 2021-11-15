@@ -1,7 +1,7 @@
 // @flow strict
 
+import { __private_annotate, annotate } from '../annotate';
 import { dedent } from './helpers';
-import annotate, { __private_annotate } from '../annotate';
 import serialize from '../serialize';
 
 function debrief(input, expected) {

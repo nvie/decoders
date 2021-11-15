@@ -2,10 +2,10 @@
 
 import * as Ann from './debrief/Annotation';
 import * as Result from './Result';
-import { annotate, annotateFields } from './debrief';
+import { annotate } from './debrief';
 import { compose, map } from './utils';
 import type { $DecoderType, Decoder } from './types';
-import type { Annotation } from './debrief';
+import type { Annotation, ObjectAnnotation } from './debrief/Annotation';
 
 // $FlowFixMe[unclear-type] (not really an issue) - deliberate use of `any` - not sure how we should get rid of this
 type AnyDecoder = any;
@@ -137,7 +137,17 @@ export function object<O: { +[field: string]: AnyDecoder, ... }>(
 
             if (fieldsWithErrors.length > 0) {
                 const errorlist = fieldsWithErrors.map((k) => [k, fieldErrors[k]]);
-                err = annotateFields(blob, errorlist);
+
+                // NOTE: We know `blob` is an object, so the result here will
+                // definitely be an ObjectAnnotation. Figure out how to fix
+                // this at the Flow level, though.
+                // $FlowFixMe[incompatible-type]
+                // $FlowFixMe[prop-missing]
+                let objAnn: ObjectAnnotation = annotate(blob);
+                errorlist.forEach(([key, errAnn]) => {
+                    objAnn = Ann.updateField(objAnn, key, errAnn);
+                });
+                err = objAnn;
             } else {
                 err = annotate(blob);
             }
