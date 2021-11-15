@@ -6,99 +6,107 @@
  *     | Err <error>
  */
 
-// prettier-ignore
-export type Result<T, E> =
-    | {| type: 'ok',  value: T |}
-    | {| type: 'err', error: E |}
+type OkResult<+T> = {| +type: 'ok', +value: T |};
+type ErrResult<+E> = {| +type: 'err', +error: E |};
+
+export type Result<+T, +E> = OkResult<T> | ErrResult<E>;
 
 /**
  * Create a new Result instance representing a successful computation.
  */
-export function Ok<T, E>(value: T): Result<T, E> {
+export function Ok<T>(value: T): OkResult<T> {
     return { type: 'ok', value };
 }
 
 /**
  * Create a new Result instance representing a failed computation.
  */
-export function Err<T, E>(error: E): Result<T, E> {
+export function Err<E>(error: E): ErrResult<E> {
     return { type: 'err', error };
 }
 
-export function toString<T, E>(r: Result<T, E>): string {
-    return r.type === 'ok' ? `Ok(${String(r.value)})` : `Err(${String(r.error)})`;
+export function toString(result: Result<mixed, mixed>): string {
+    return result.type === 'ok'
+        ? `Ok(${String(result.value)})`
+        : `Err(${String(result.error)})`;
 }
 
-export function isOk<T, E>(r: Result<T, E>): boolean {
-    return r.type === 'ok';
+export function isOk(result: Result<mixed, mixed>): boolean {
+    return result.type === 'ok';
 }
 
-export function isErr<T, E>(r: Result<T, E>): boolean {
-    return r.type === 'err';
+export function isErr(result: Result<mixed, mixed>): boolean {
+    return result.type === 'err';
 }
 
-export function withDefault<T, E>(r: Result<T, E>, defaultValue: T): T {
-    return r.type === 'ok' ? r.value : defaultValue;
+export function withDefault<T>(result: Result<T, mixed>, defaultValue: T): T {
+    return result.type === 'ok' ? result.value : defaultValue;
 }
 
-export function value<T, E>(r: Result<T, E>): void | T {
-    return r.type === 'ok' ? r.value : undefined;
+export function value<T>(result: Result<T, mixed>): void | T {
+    return result.type === 'ok' ? result.value : undefined;
 }
 
-export function errValue<T, E>(r: Result<T, E>): void | E {
-    return r.type === 'err' ? r.error : undefined;
+export function errValue<E>(result: Result<mixed, E>): void | E {
+    return result.type === 'err' ? result.error : undefined;
 }
 
 /**
  * Unwrap the value from this Result instance if this is an "Ok" result.
  * Otherwise, will throw the "Err" error via a runtime exception.
  */
-export function unwrap<T, E>(r: Result<T, E>): T {
-    if (r.type === 'ok') {
-        return r.value;
+export function unwrap<T>(result: Result<T, mixed>): T {
+    if (result.type === 'ok') {
+        return result.value;
     } else {
-        throw r.error;
+        throw result.error;
     }
 }
 
-export function expect<T, E>(r: Result<T, E>, message: string | Error): T {
-    if (r.type === 'ok') {
-        return r.value;
+export function expect<T>(result: Result<T, mixed>, message: string | Error): T {
+    if (result.type === 'ok') {
+        return result.value;
     } else {
         throw message instanceof Error ? message : new Error(message);
     }
 }
 
 export function dispatch<T, E, O>(
-    r: Result<T, E>,
-    okCallback: (T) => O,
-    errCallback: (E) => O,
+    result: Result<T, E>,
+    okCallback: (value: T) => O,
+    errCallback: (error: E) => O,
 ): O {
-    return r.type === 'ok' ? okCallback(r.value) : errCallback(r.error);
+    return result.type === 'ok' ? okCallback(result.value) : errCallback(result.error);
 }
 
 /**
  * Chain together a sequence of computations that may fail.
  */
 export function andThen<T, E, V>(
-    r: Result<T, E>,
-    callback: (T) => Result<V, E>,
+    result: Result<T, E>,
+    callback: (value: T) => Result<V, E>,
 ): Result<V, E> {
-    return r.type === 'ok' ? callback(r.value) : Err(r.error);
+    return result.type === 'ok' ? callback(result.value) : Err(result.error);
 }
 
 /**
  * Transform an Ok result.  If the result is an Err, the same error value
  * will propagate through.
  */
-export function map<T, E, T2>(r: Result<T, E>, mapper: (T) => T2): Result<T2, E> {
-    return r.type === 'ok' ? Ok(mapper(r.value)) : Err(r.error);
+export function map<T, E, T2>(
+    result: Result<T, E>,
+    mapper: (value: T) => T2,
+): Result<T2, E> {
+    return result.type === 'ok' ? Ok(mapper(result.value)) : Err(result.error);
 }
 
 /**
  * Transform an Err value.  If the result is an Ok, this is a no-op.
  * Useful when for example the errors has too much information.
  */
-export function mapError<T, E, E2>(r: Result<T, E>, mapper: (E) => E2): Result<T, E2> {
-    return r.type === 'ok' ? Ok(r.value) : Err(mapper(r.error));
+export function mapError<T, E, E2>(
+    result: Result<T, E>,
+    mapper: (error: E) => E2,
+): Result<T, E2> {
+    return result.type === 'ok' ? Ok(result.value) : Err(mapper(result.error));
 }
