@@ -6,9 +6,9 @@ import type { Annotation } from './Annotation';
  * Walks the annotation tree and emits the annotation's key path within the
  * object tree, and the message as a series of messages (array of strings).
  */
-export default function summarize(
+function summarize(
     ann: Annotation,
-    keypath: $ReadOnlyArray<number | string> = [],
+    keypath: $ReadOnlyArray<number | string>,
 ): Array<string> {
     const result: Array<string> = [];
 
@@ -49,4 +49,8 @@ export default function summarize(
         prefix = `Value at keypath ${keypath.map((x) => x.toString()).join('.')}: `;
     }
     return [...result, prefix + text];
+}
+
+export default function public_summarize(ann: Annotation): Array<string> {
+    return summarize(ann, []);
 }
