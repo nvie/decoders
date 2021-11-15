@@ -2,7 +2,7 @@
 
 import { annotate, indent } from 'debrief';
 import { summarize } from 'debrief';
-import { Err, Ok } from 'lemons';
+import { Err, Ok } from './Result';
 
 import type { Decoder, Scalar } from './types';
 

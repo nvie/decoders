@@ -1,7 +1,7 @@
 // @flow strict
 
 import { annotate } from 'debrief';
-import { Err } from 'lemons';
+import { Err } from './Result';
 
 import type { Decoder } from './types';
 

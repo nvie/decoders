@@ -4909,11 +4909,6 @@ lcov-parse@^1.0.0:
   resolved "https://registry.yarnpkg.com/lcov-parse/-/lcov-parse-1.0.0.tgz#eb0d46b54111ebc561acb4c408ef9363bdc8f7e0"
   integrity sha1-6w1GtUER68VhrLTECO+TY73I9+A=
 
-lemons@^1.7.0-beta2:
-  version "1.7.0-beta2"
-  resolved "https://registry.yarnpkg.com/lemons/-/lemons-1.7.0-beta2.tgz#f56b533d228bd49a91c5f1f7b0d1158a3419f180"
-  integrity sha512-QNvpnP5W/gUSdZd/cgmH01u4xC2vtK7231WhW+8m1eyNPtrELxdAJSjm1+T5sySkPhwy+Zk+hUKGSD89YLFxjA==
-
 leven@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/leven/-/leven-3.1.0.tgz#77891de834064cccba82ae7842bb6b14a13ed7f2"

@@ -1,7 +1,7 @@
 // @flow strict
 
 import { annotate } from 'debrief';
-import { Err, Ok } from 'lemons';
+import { Err, Ok } from './Result';
 
 import { null_, undefined_ } from './constants';
 import { either } from './either';
