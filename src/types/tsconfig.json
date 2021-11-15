@@ -6,7 +6,8 @@
         "baseUrl": ".",
         "paths": {
             "decoders": ["."],
-            "decoders/Result": ["./Result"]
+            "decoders/Result": ["./Result"],
+            "decoders/debrief": ["./debrief"]
         }
     }
 }

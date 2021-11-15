@@ -1,6 +1,6 @@
 // @flow strict
 
-import { annotate } from 'debrief';
+import { annotate } from './debrief';
 import { compose, predicate } from './utils';
 import { err, errValue, isErr, ok, unwrap, value } from './Result';
 import { poja } from './array';

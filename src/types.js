@@ -1,6 +1,6 @@
 // @flow strict
 
-import type { Annotation } from 'debrief';
+import type { Annotation } from './debrief';
 import type { Result } from './Result';
 
 export type Scalar = string | number | boolean | symbol | void | null;

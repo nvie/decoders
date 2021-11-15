@@ -1,10 +1,10 @@
 // @flow strict
 
 import * as Result from './Result';
-import { annotateFields, isAnnotation } from 'debrief';
+import { annotateFields, isAnnotation } from './debrief';
 import { compose, map } from './utils';
 import { pojo } from './object';
-import type { Annotation } from 'debrief';
+import type { Annotation } from './debrief';
 import type { Decoder } from './types';
 
 /**

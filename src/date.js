@@ -1,7 +1,7 @@
 // @flow strict
 
 import * as Result from './Result';
-import { annotate } from 'debrief';
+import { annotate } from './debrief';
 import { isDate, map } from './utils';
 import { regex } from './string';
 import type { Decoder } from './types';

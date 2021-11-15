@@ -1,7 +1,7 @@
 // @flow strict
 
 import * as Result from '../Result';
-import { annotate } from 'debrief';
+import { annotate } from '../debrief';
 import { compose, map } from '../utils';
 import { guard } from '../guard';
 import { number } from '../number';
