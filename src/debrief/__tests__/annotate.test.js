@@ -138,14 +138,18 @@ describe('parsing is idempotent', () => {
 
 describe('annotating circular objects', () => {
     it('circular arrays', () => {
-        var circularArray = ['foo'];
-        circularArray.push(circularArray);
-        expect(annotate(circularArray)).toEqual(
-            Ann.array([Ann.scalar('foo'), Ann.circularRef()]),
-        );
-        expect(annotate(annotate(annotate(circularArray)))).toEqual(
-            Ann.array([Ann.scalar('foo'), Ann.circularRef()]),
-        );
+        var circularArray = ['foo', [42 /* circular ref will go here */]];
+        circularArray[1].push(circularArray);
+
+        const expected = Ann.array([
+            Ann.scalar('foo'),
+            Ann.array([Ann.scalar(42), Ann.circularRef()]),
+        ]);
+
+        expect(annotate(circularArray)).toEqual(expected);
+
+        // Annotations are idempotent
+        expect(annotate(annotate(annotate(circularArray)))).toEqual(expected);
     });
 
     it('circular objects', () => {
@@ -157,48 +161,19 @@ describe('annotating circular objects', () => {
         circularObject.bar.self = circularObject;
         // $FlowFixMe[prop-missing]
         circularObject.self = circularObject;
-        expect(
-            Ann.updateField(annotateObject(circularObject), 'self', 'Example'),
-        ).toEqual(
-            Ann.object({
-                foo: Ann.scalar(42),
-                bar: Ann.object({
-                    qux: Ann.scalar('hello'),
-                    self: Ann.circularRef(),
-                }),
-                self: Ann.circularRef('Example'),
+
+        const expected = Ann.object({
+            foo: Ann.scalar(42),
+            bar: Ann.object({
+                qux: Ann.scalar('hello'),
+                self: Ann.circularRef(),
             }),
-        );
-    });
+            self: Ann.circularRef(),
+        });
 
-    // TODO REENABLE THIS TEST AGAIN AFTER THE WEEKEND!!!!!!!!!!!!!!!!!!!
-    // xit('circular objects (w/ explicit seen)', () => {
-    //     var circularObject = { foo: 42, bar: { qux: 'hello' } };
-    //     // $FlowFixMe[prop-missing]
-    //     circularObject.bar.self = circularObject;
-    //     // $FlowFixMe[prop-missing]
-    //     circularObject.self = circularObject;
+        expect(annotate(circularObject)).toEqual(expected);
 
-    //     const seen = new WeakSet();
-    //     seen.add(circularObject);
-    //     expect(
-    //         __private_annotateFields(circularObject, [['self', 'Example']], seen),
-    //     ).toEqual(Ann.circularRef());
-    // });
-
-    it('circular objects (w/ explicit annotation)', () => {
-        var circularObject = { foo: 42 };
-        // $FlowFixMe[prop-missing]
-        circularObject.self = circularObject;
-
-        const seen = new WeakSet();
-        seen.add(circularObject);
-        expect(
-            __private_annotate(
-                __private_annotate(circularObject, undefined, seen),
-                'Example',
-                seen,
-            ),
-        ).toEqual(Ann.circularRef('Example'));
+        // Annotations are idempotent
+        expect(annotate(annotate(annotate(circularObject)))).toEqual(expected);
     });
 });
