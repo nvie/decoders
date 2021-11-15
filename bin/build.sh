@@ -44,7 +44,12 @@ copy_metadata() {
 add_entrypoint() {
     jq ". + { \
         main: \"./cjs/index.js\", \
-        module: \"./es/index.js\" \
+        module: \"./es/index.js\",
+        exports: { \
+            \"require\": \"./cjs/index.js\", \
+            \"import\": \"./es/index.js\" \
+        },
+        type: \"module\" \
     }"
 }
 
