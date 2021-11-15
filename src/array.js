@@ -40,10 +40,11 @@ function all<T>(
     const results: Array<T> = [];
     for (let index = 0; index < items.length; ++index) {
         const result = items[index];
-        try {
-            const value = Result.unwrap(result);
-            results.push(value);
-        } catch (ann) {
+        if (result.type === 'ok') {
+            results.push(result.value);
+        } else {
+            const ann = result.error;
+
             // Rewrite the annotation to include the index information, and inject it into the original blob
             const clone = [...blobs];
             clone.splice(

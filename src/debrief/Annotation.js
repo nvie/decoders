@@ -96,15 +96,6 @@ export function circularRef(text?: string): CircularRefAnnotation {
     return { _type: 'circular-ref', text };
 }
 
-//
-// TODO: This is used in cases where we "throw" an Annotation instance, which
-// will make it "mixed". We then need this message to "decode" the mixed value
-// back to an Annotation instance. Of course... we cannot use decoder here
-// because, well, we're building the decoders library here ;)
-//
-// TODO: The solution is most likely to stop throwing those and just use Result
-// semantics instead? Look into whether that is possible.
-//
 export function asAnnotation(thing: mixed): Annotation | void {
     if (typeof thing === 'object' && thing !== null) {
         if (thing._type === 'object') {

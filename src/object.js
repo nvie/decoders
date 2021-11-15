@@ -92,14 +92,13 @@ export function object<O: { +[field: string]: AnyDecoder, ... }>(
         let record = {};
         const fieldErrors: { [key: string]: Annotation } = { ...null };
 
-        // NOTE: We're using .keys() here over .entries(), since .entries()
-        // will type the value part as "mixed"
         Object.keys(mapping).forEach((key) => {
             const decoder = mapping[key];
             const rawValue = blob[key];
             const result = decoder(rawValue);
-            try {
-                const value = Result.unwrap(result);
+
+            if (result.type === 'ok') {
+                const value = result.value;
                 if (value !== undefined) {
                     record[key] = value;
                 }
@@ -107,11 +106,8 @@ export function object<O: { +[field: string]: AnyDecoder, ... }>(
                 // If this succeeded, remove the key from the missing keys
                 // tracker
                 missing.delete(key);
-            } catch (ann) {
-                /* istanbul ignore next */
-                if (!Ann.isAnnotation(ann)) {
-                    throw ann;
-                }
+            } else {
+                const ann = result.error;
 
                 // Keep track of the annotation, but don't return just yet. We
                 // want to collect more error information.

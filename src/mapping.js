@@ -28,22 +28,13 @@ export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
             Object.keys(blob).forEach((key: string) => {
                 const value: T = blob[key];
                 const result = decoder(value);
-                try {
-                    const okValue = Result.unwrap(result);
+                if (result.type === 'ok') {
                     if (errors.length === 0) {
-                        tuples.push([key, okValue]);
+                        tuples.push([key, result.value]);
                     }
-                } catch (e) {
-                    /* istanbul ignore else */
-                    const errAnn = Ann.asAnnotation(e);
-                    if (errAnn) {
-                        tuples.length = 0; // Clear the tuples array
-                        errors.push([key, errAnn]);
-                    } else {
-                        // Otherwise, simply rethrow it
-                        /* istanbul ignore next */
-                        throw e;
-                    }
+                } else {
+                    tuples.length = 0; // Clear the tuples array
+                    errors.push([key, result.error]);
                 }
             });
 
