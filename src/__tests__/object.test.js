@@ -265,16 +265,16 @@ describe('inexact objects', () => {
         });
 
         expect(
+            //
+            // NOTE: We'll have to prettier-ignore this line, because the
+            // suppression location of this [cannot-spread-indexer] error has
+            // moved between Flow versions we want to support. By putting this
+            // expression on a single line, we avoid CI from failing when
+            // running Flow checks between old and new versions ;)
+            //
+            // prettier-ignore
             // $FlowFixMe[cannot-spread-indexer]
-            {
-                ...defaults,
-                ...Result.unwrap(
-                    decoder({
-                        foo: undefined,
-                        bar: undefined,
-                    }),
-                ),
-            },
+            { ...defaults, ...Result.unwrap(decoder({ foo: undefined, bar: undefined })) },
         ).toEqual({
             foo: 'default', // 'foo' is known and allowed-optional, so this will be implicit-undefined
             bar: undefined, // 'bar' is ignored so the explicit-undefined will override here
