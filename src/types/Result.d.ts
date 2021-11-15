@@ -1,9 +1,9 @@
-interface Ok<T> {
+export interface Ok<T> {
     readonly type: 'ok';
     readonly value: T;
 }
 
-interface Err<E> {
+export interface Err<E> {
     readonly type: 'err';
     readonly error: E;
 }
@@ -19,7 +19,7 @@ export function withDefault<T>(result: Result<T, unknown>, defaultValue: T): T;
 export function value<T>(result: Result<T, unknown>): void | T;
 export function errValue<E>(result: Result<unknown, E>): void | E;
 export function unwrap<T>(result: Result<T, unknown>): T;
-export function expect<T, E>(result: Result<T, E>, message: string | Error): T;
+export function expect<T>(result: Result<T, unknown>, message: string | Error): T;
 export function dispatch<T, E, O>(
     result: Result<T, E>,
     okCallback: (value: T) => O,
@@ -29,7 +29,10 @@ export function andThen<T, E, V>(
     result: Result<T, E>,
     callback: (value: T) => Result<V, E>,
 ): Result<V, E>;
-export function map<T, E, T2>(result: Result<T, E>, mapper: (T) => T2): Result<T2, E>;
+export function map<T, E, T2>(
+    result: Result<T, E>,
+    mapper: (value: T) => T2,
+): Result<T2, E>;
 export function mapError<T, E, E2>(
     result: Result<T, E>,
     mapper: (error: E) => E2,
