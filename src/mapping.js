@@ -1,7 +1,8 @@
 // @flow strict
 
+import * as Ann from './debrief/Annotation';
 import * as Result from './Result';
-import { annotateFields, isAnnotation } from './debrief';
+import { annotateFields } from './debrief';
 import { compose, map } from './utils';
 import { pojo } from './object';
 import type { Annotation } from './debrief';
@@ -34,7 +35,7 @@ export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
                     }
                 } catch (e) {
                     /* istanbul ignore else */
-                    if (isAnnotation(e)) {
+                    if (Ann.isAnnotation(e)) {
                         tuples.length = 0; // Clear the tuples array
                         errors.push([key, e]);
                     } else {

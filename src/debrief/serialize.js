@@ -1,7 +1,7 @@
 // @flow strict
 
 import { asDate, indent, INDENT, isMultiline } from './utils';
-import type { Annotation, AnnPair } from './types';
+import type { Annotation, ArrayAnnotation, ObjectAnnotation } from './Annotation';
 
 function serializeString(s: string, width: number = 80): string {
     // Full string
@@ -17,13 +17,14 @@ function serializeString(s: string, width: number = 80): string {
     return ser;
 }
 
-function serializeArray(value: Array<Annotation>, prefix: string): string {
-    if (value.length === 0) {
+function serializeArray(annotation: ArrayAnnotation, prefix: string): string {
+    const { items } = annotation;
+    if (items.length === 0) {
         return '[]';
     }
 
     const result = [];
-    value.forEach((item) => {
+    items.forEach((item) => {
         const [ser, ann] = serializeAnnotation(item, prefix + INDENT);
         result.push(prefix + INDENT + ser + ',');
         if (ann !== undefined) {
@@ -33,7 +34,8 @@ function serializeArray(value: Array<Annotation>, prefix: string): string {
     return ['[', ...result, prefix + ']'].join('\n');
 }
 
-function serializeObject(pairs: Array<AnnPair>, prefix: string): string {
+function serializeObject(annotation: ObjectAnnotation, prefix: string): string {
+    const { pairs } = annotation;
     if (pairs.length === 0) {
         return '{}';
     }
@@ -86,13 +88,13 @@ export function serializeAnnotation(
 ): [string, string | void] {
     // The serialized data (the input object echoed back)
     let serialized;
-    if (ann.type === 'ArrayAnnotation') {
-        serialized = serializeArray(ann.items, prefix);
-    } else if (ann.type === 'ObjectAnnotation') {
-        serialized = serializeObject(ann.pairs, prefix);
-    } else if (ann.type === 'FunctionAnnotation') {
+    if (ann._type === 'array') {
+        serialized = serializeArray(ann, prefix);
+    } else if (ann._type === 'object') {
+        serialized = serializeObject(ann, prefix);
+    } else if (ann._type === 'function') {
         serialized = 'function() {}';
-    } else if (ann.type === 'CircularRefAnnotation') {
+    } else if (ann._type === 'circular-ref') {
         serialized = '<circular ref>';
     } else {
         serialized = serializeValue(ann.value);
@@ -110,8 +112,8 @@ export function serializeAnnotation(
 export default function serialize(ann: Annotation): string {
     const [serialized, annotation] = serializeAnnotation(ann);
     if (annotation !== undefined) {
-        return `${serialized}\n${annotation}`;
+        return serialized + '\n' + annotation;
     } else {
-        return `${serialized}`;
+        return serialized;
     }
 }

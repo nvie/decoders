@@ -32,15 +32,15 @@ export function constant<T: Scalar>(value: T): Decoder<T> {
  * Decoder that always returns Ok for the given hardcoded value, no matter what the input.
  */
 export function hardcoded<T>(value: T): Decoder<T> {
-    return (_: mixed) => Result.ok(value);
+    return () => Result.ok(value);
 }
 
 /**
  * Decoder that always returns Ok for the given hardcoded value, no matter what the input.
  */
-export const mixed: Decoder<mixed> = (blob: mixed) => Result.ok((blob: mixed));
+export const unknown: Decoder<mixed> = (blob: mixed) => Result.ok(blob);
 
 /**
- * Alias of mixed.
+ * Alias of unknown.
  */
-export const unknown = mixed;
+export const mixed: Decoder<mixed> = unknown;

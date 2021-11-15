@@ -51,9 +51,7 @@ function all<T>(
                 1,
                 annotate(
                     ann,
-                    ann.annotation !== undefined
-                        ? `${ann.annotation} (at index ${index})`
-                        : `index ${index}`,
+                    ann.text ? `${ann.text} (at index ${index})` : `index ${index}`,
                 ),
             );
 

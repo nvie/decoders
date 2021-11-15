@@ -1,7 +1,11 @@
 // @flow strict
 
-import { asAnnotation } from './types';
-import type { Annotation, CircularRefAnnotation, ObjectAnnotation } from './types';
+import * as Ann from './Annotation';
+import type {
+    __LEGACY_FieldAnnotation,
+    Annotation,
+    ObjectAnnotation,
+} from './Annotation';
 
 type RefSet = WeakSet<{ ... } | $ReadOnlyArray<mixed>>;
 
@@ -9,9 +13,9 @@ function _annotateFields(
     object: { +[string]: mixed, ... },
     fields: $ReadOnlyArray<[/* key */ string, string | Annotation]>,
     seen: RefSet,
-): ObjectAnnotation | CircularRefAnnotation {
+): __LEGACY_FieldAnnotation {
     if (seen.has(object)) {
-        return { type: 'CircularRefAnnotation', text: undefined };
+        return Ann.circularRef();
     }
     seen.add(object);
 
@@ -39,10 +43,11 @@ function _annotateFields(
     return _annotatePairs(pairs, undefined, seen);
 }
 
+// TODO: This should not be a public API
 export function annotateFields(
     object: { +[string]: mixed, ... },
     fields: $ReadOnlyArray<[/* key */ string, string | Annotation]>,
-): ObjectAnnotation | CircularRefAnnotation {
+): __LEGACY_FieldAnnotation {
     return _annotateFields(object, fields, new WeakSet());
 }
 
@@ -54,7 +59,7 @@ function _annotatePairs(
     const pairs = value.map(([key, v]) => {
         return { key, value: _annotate(v, undefined, seen) };
     });
-    return { type: 'ObjectAnnotation', pairs, text };
+    return Ann.object(pairs, text);
 }
 
 function _annotate(value: mixed, text?: string, seen: RefSet): Annotation {
@@ -66,42 +71,42 @@ function _annotate(value: mixed, text?: string, seen: RefSet): Annotation {
         typeof value === 'boolean' ||
         typeof value.getMonth === 'function'
     ) {
-        return { type: 'ScalarAnnotation', value, text };
+        return Ann.scalar(value, text);
     }
 
-    const ann = asAnnotation(value);
+    const ann = Ann.asAnnotation(value);
     // istanbul ignore else
     if (ann) {
         if (text === undefined) {
             return ann;
-        } else if (ann.type === 'ObjectAnnotation') {
-            return { type: 'ObjectAnnotation', pairs: ann.pairs, text };
-        } else if (ann.type === 'ArrayAnnotation') {
-            return { type: 'ArrayAnnotation', items: ann.items, text };
-        } else if (ann.type === 'FunctionAnnotation') {
-            return { type: 'FunctionAnnotation', text };
-        } else if (ann.type === 'CircularRefAnnotation') {
-            return { type: 'CircularRefAnnotation', text };
+        } else if (ann._type === 'object') {
+            return Ann.object(ann.pairs, text);
+        } else if (ann._type === 'array') {
+            return Ann.array(ann.items, text);
+        } else if (ann._type === 'function') {
+            return Ann.func(text);
+        } else if (ann._type === 'circular-ref') {
+            return Ann.circularRef(text);
         } else {
-            return { type: 'ScalarAnnotation', value: ann.value, text };
+            return Ann.scalar(ann.value, text);
         }
     } else if (Array.isArray(value)) {
         if (seen.has(value)) {
-            return { type: 'CircularRefAnnotation', text };
+            return Ann.circularRef(text);
         } else {
             seen.add(value);
         }
         const items = value.map((v) => _annotate(v, undefined, seen));
-        return { type: 'ArrayAnnotation', items, text };
+        return Ann.array(items, text);
     } else if (typeof value === 'object') {
         if (seen.has(value)) {
-            return { type: 'CircularRefAnnotation', text };
+            return Ann.circularRef(text);
         } else {
             seen.add(value);
         }
         return _annotatePairs(Object.entries(value), text, seen);
     } else if (typeof value === 'function') {
-        return { type: 'FunctionAnnotation', text };
+        return Ann.func(text);
     } else {
         throw new Error('Unknown annotation');
     }

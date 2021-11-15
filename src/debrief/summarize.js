@@ -1,6 +1,6 @@
 // @flow strict
 
-import type { Annotation } from './types';
+import type { Annotation } from './Annotation';
 
 /**
  * Walks the annotation tree and emits the annotation's key path within the
@@ -12,13 +12,13 @@ export default function summarize(
 ): Array<string> {
     const result: Array<string> = [];
 
-    if (ann.type === 'ArrayAnnotation') {
+    if (ann._type === 'array') {
         const items = ann.items;
         let index = 0;
         items.forEach((ann) => {
             summarize(ann, [...keypath, index++]).forEach((item) => result.push(item));
         });
-    } else if (ann.type === 'ObjectAnnotation') {
+    } else if (ann._type === 'object') {
         const pairs = ann.pairs;
         pairs.forEach((pair) => {
             summarize(pair.value, [...keypath, pair.key]).forEach((item) =>

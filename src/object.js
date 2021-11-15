@@ -1,7 +1,8 @@
 // @flow strict
 
+import * as Ann from './debrief/Annotation';
 import * as Result from './Result';
-import { annotate, annotateFields, isAnnotation } from './debrief';
+import { annotate, annotateFields } from './debrief';
 import { compose, map } from './utils';
 import type { $DecoderType, Decoder } from './types';
 import type { Annotation } from './debrief';
@@ -108,7 +109,7 @@ export function object<O: { +[field: string]: AnyDecoder, ... }>(
                 missing.delete(key);
             } catch (ann) {
                 /* istanbul ignore next */
-                if (!isAnnotation(ann)) {
+                if (!Ann.isAnnotation(ann)) {
                     throw ann;
                 }
 
