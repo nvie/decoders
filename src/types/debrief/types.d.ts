@@ -1,7 +1,7 @@
 export interface ScalarAnnotation {
     readonly type: 'ScalarAnnotation';
     readonly value: unknown;
-    readonly annotation?: string;
+    readonly text?: string;
 }
 
 export interface AnnPair {
@@ -12,23 +12,23 @@ export interface AnnPair {
 export interface ObjectAnnotation {
     readonly type: 'ObjectAnnotation';
     readonly pairs: AnnPair[];
-    readonly annotation?: string;
+    readonly text?: string;
 }
 
 export interface ArrayAnnotation {
     readonly type: 'ArrayAnnotation';
     readonly items: Annotation[];
-    readonly annotation?: string;
+    readonly text?: string;
 }
 
 export interface FunctionAnnotation {
     readonly type: 'FunctionAnnotation';
-    readonly annotation?: string;
+    readonly text?: string;
 }
 
 export interface CircularRefAnnotation {
     readonly type: 'CircularRefAnnotation';
-    readonly annotation?: string;
+    readonly text?: string;
 }
 
 export type Annotation =

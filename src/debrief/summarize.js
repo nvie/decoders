@@ -2,13 +2,14 @@
 
 import type { Annotation } from './types';
 
-type Keypath = Array<number | string>;
-
 /**
  * Walks the annotation tree and emits the annotation's key path within the
  * object tree, and the message as a series of messages (array of strings).
  */
-export default function summarize(ann: Annotation, keypath: Keypath = []): Array<string> {
+export default function summarize(
+    ann: Annotation,
+    keypath: $ReadOnlyArray<number | string> = [],
+): Array<string> {
     const result: Array<string> = [];
 
     if (ann.type === 'ArrayAnnotation') {
@@ -26,8 +27,8 @@ export default function summarize(ann: Annotation, keypath: Keypath = []): Array
         });
     }
 
-    const annotation = ann.annotation;
-    if (!annotation) {
+    const text = ann.text;
+    if (!text) {
         return result;
     }
 
@@ -42,5 +43,5 @@ export default function summarize(ann: Annotation, keypath: Keypath = []): Array
     } else {
         prefix = `Value at keypath ${keypath.map((x) => x.toString()).join('.')}: `;
     }
-    return [...result, prefix + annotation];
+    return [...result, prefix + text];
 }

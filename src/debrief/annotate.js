@@ -11,7 +11,7 @@ function _annotateFields(
     seen: RefSet,
 ): ObjectAnnotation | CircularRefAnnotation {
     if (seen.has(object)) {
-        return { type: 'CircularRefAnnotation', annotation: undefined };
+        return { type: 'CircularRefAnnotation', text: undefined };
     }
     seen.add(object);
 
@@ -48,16 +48,16 @@ export function annotateFields(
 
 function _annotatePairs(
     value: Array<[string, mixed]>,
-    annotation?: string,
+    text?: string,
     seen: RefSet,
 ): ObjectAnnotation {
     const pairs = value.map(([key, v]) => {
         return { key, value: _annotate(v, undefined, seen) };
     });
-    return { type: 'ObjectAnnotation', pairs, annotation };
+    return { type: 'ObjectAnnotation', pairs, text };
 }
 
-function _annotate(value: mixed, annotation?: string, seen: RefSet): Annotation {
+function _annotate(value: mixed, text?: string, seen: RefSet): Annotation {
     if (
         value === null ||
         value === undefined ||
@@ -66,42 +66,42 @@ function _annotate(value: mixed, annotation?: string, seen: RefSet): Annotation 
         typeof value === 'boolean' ||
         typeof value.getMonth === 'function'
     ) {
-        return { type: 'ScalarAnnotation', value, annotation };
+        return { type: 'ScalarAnnotation', value, text };
     }
 
     const ann = asAnnotation(value);
     // istanbul ignore else
     if (ann) {
-        if (annotation === undefined) {
+        if (text === undefined) {
             return ann;
         } else if (ann.type === 'ObjectAnnotation') {
-            return { type: 'ObjectAnnotation', pairs: ann.pairs, annotation };
+            return { type: 'ObjectAnnotation', pairs: ann.pairs, text };
         } else if (ann.type === 'ArrayAnnotation') {
-            return { type: 'ArrayAnnotation', items: ann.items, annotation };
+            return { type: 'ArrayAnnotation', items: ann.items, text };
         } else if (ann.type === 'FunctionAnnotation') {
-            return { type: 'FunctionAnnotation', annotation };
+            return { type: 'FunctionAnnotation', text };
         } else if (ann.type === 'CircularRefAnnotation') {
-            return { type: 'CircularRefAnnotation', annotation };
+            return { type: 'CircularRefAnnotation', text };
         } else {
-            return { type: 'ScalarAnnotation', value: ann.value, annotation };
+            return { type: 'ScalarAnnotation', value: ann.value, text };
         }
     } else if (Array.isArray(value)) {
         if (seen.has(value)) {
-            return { type: 'CircularRefAnnotation', annotation };
+            return { type: 'CircularRefAnnotation', text };
         } else {
             seen.add(value);
         }
         const items = value.map((v) => _annotate(v, undefined, seen));
-        return { type: 'ArrayAnnotation', items, annotation };
+        return { type: 'ArrayAnnotation', items, text };
     } else if (typeof value === 'object') {
         if (seen.has(value)) {
-            return { type: 'CircularRefAnnotation', annotation };
+            return { type: 'CircularRefAnnotation', text };
         } else {
             seen.add(value);
         }
-        return _annotatePairs(Object.entries(value), annotation, seen);
+        return _annotatePairs(Object.entries(value), text, seen);
     } else if (typeof value === 'function') {
-        return { type: 'FunctionAnnotation', annotation };
+        return { type: 'FunctionAnnotation', text };
     } else {
         throw new Error('Unknown annotation');
     }

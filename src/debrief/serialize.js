@@ -3,7 +3,7 @@
 import { asDate, indent, INDENT, isMultiline } from './utils';
 import type { Annotation, AnnPair } from './types';
 
-function serializeString(s: string, width: number = 80) {
+function serializeString(s: string, width: number = 80): string {
     // Full string
     // Abbreviated to $maxlen i.e. "Vincent Driess..." [truncated]
     let ser = JSON.stringify(s);
@@ -17,7 +17,7 @@ function serializeString(s: string, width: number = 80) {
     return ser;
 }
 
-function serializeArray(value: Array<Annotation>, prefix: string) {
+function serializeArray(value: Array<Annotation>, prefix: string): string {
     if (value.length === 0) {
         return '[]';
     }
@@ -33,7 +33,7 @@ function serializeArray(value: Array<Annotation>, prefix: string) {
     return ['[', ...result, prefix + ']'].join('\n');
 }
 
-function serializeObject(pairs: Array<AnnPair>, prefix: string) {
+function serializeObject(pairs: Array<AnnPair>, prefix: string): string {
     if (pairs.length === 0) {
         return '{}';
     }
@@ -84,6 +84,7 @@ export function serializeAnnotation(
     ann: Annotation,
     prefix: string = '',
 ): [string, string | void] {
+    // The serialized data (the input object echoed back)
     let serialized;
     if (ann.type === 'ArrayAnnotation') {
         serialized = serializeArray(ann.items, prefix);
@@ -97,10 +98,10 @@ export function serializeAnnotation(
         serialized = serializeValue(ann.value);
     }
 
-    const annotation = ann.annotation;
-    if (annotation !== undefined) {
+    const text = ann.text;
+    if (text !== undefined) {
         const sep = '^'.repeat(isMultiline(serialized) ? 1 : serialized.length);
-        return [serialized, [sep, annotation].join(isMultiline(annotation) ? '\n' : ' ')];
+        return [serialized, [sep, text].join(isMultiline(text) ? '\n' : ' ')];
     } else {
         return [serialized, undefined];
     }

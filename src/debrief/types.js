@@ -5,18 +5,18 @@ type cast = $FlowFixMe;
 type ScalarAnnotation = {|
     +type: 'ScalarAnnotation',
     +value: mixed,
-    +annotation?: string,
+    +text?: string,
 |};
 
 type FunctionAnnotation = {|
     +type: 'FunctionAnnotation',
-    +annotation?: string,
+    +text?: string,
 |};
 
 // TODO: Remove this export - it should be an implementation detail!
 export type CircularRefAnnotation = {|
     +type: 'CircularRefAnnotation',
-    +annotation?: string,
+    +text?: string,
 |};
 
 // TODO: Remove this export - it should be an implementation detail!
@@ -29,13 +29,13 @@ export type AnnPair = {|
 export type ObjectAnnotation = {|
     +type: 'ObjectAnnotation',
     +pairs: Array<AnnPair>,
-    +annotation?: string,
+    +text?: string,
 |};
 
 type ArrayAnnotation = {|
     +type: 'ArrayAnnotation',
     +items: Array<Annotation>,
-    +annotation?: string,
+    +text?: string,
 |};
 
 export type Annotation =
