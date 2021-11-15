@@ -9,7 +9,9 @@ if (BABEL_ENV !== 'esmodules' && BABEL_ENV !== 'commonjs' && !NODE_ENV) {
 const modules =
     NODE_ENV === 'test' || BABEL_ENV !== 'esmodules'
         ? 'commonjs'
-        : // e.g. "don't do module processing"
+        : // NOTE: This value confused me forever. False here does NOT mean
+          // "don't use modules", but instead it means "don't _transpile_
+          // modules (to another format)". Quite the opposite!
           false;
 
 module.exports = {
@@ -23,5 +25,4 @@ module.exports = {
         ],
         '@babel/preset-flow',
     ],
-    // plugins: ['@babel/plugin-transform-runtime'],
 };
