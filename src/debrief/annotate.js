@@ -100,6 +100,5 @@ export {
     // This construct just ensures the "seen" weakmap (used for circular
     // reference detection) isn't made part of the public API.
     public_annotate as annotate,
-    annotate as __private_annotate,
     public_annotateObject as annotateObject,
 };

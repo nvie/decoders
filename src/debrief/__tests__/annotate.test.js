@@ -2,7 +2,7 @@
 /* eslint-disable no-restricted-syntax */
 
 import * as Ann from '../Annotation';
-import { __private_annotate, annotate, annotateObject } from '../annotate';
+import { annotate } from '../annotate';
 
 describe('annotation detection', () => {
     it('detects annotation instances', () => {
