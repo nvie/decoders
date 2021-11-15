@@ -58,6 +58,16 @@ describe('parsing (scalars)', () => {
         expect(annotate(undefined)).toEqual(Ann.scalar(undefined));
         expect(annotate(undefined, 'foo')).toEqual(Ann.scalar(undefined, 'foo'));
     });
+
+    it('symbols', () => {
+        const sym1 = Symbol.for('xyz');
+        const sym2 = Symbol();
+        const sym3 = Symbol('hi');
+
+        expect(annotate(sym1)).toEqual(Ann.scalar(sym1));
+        expect(annotate(sym2)).toEqual(Ann.scalar(sym2));
+        expect(annotate(sym3)).toEqual(Ann.scalar(sym3));
+    });
 });
 
 describe('parsing (composite)', () => {

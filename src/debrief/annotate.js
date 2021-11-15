@@ -6,14 +6,9 @@ import type {
     ArrayAnnotation,
     CircularRefAnnotation,
     ObjectAnnotation,
-    ScalarAnnotation,
 } from './Annotation';
 
 type RefSet = WeakSet<{ ... } | $ReadOnlyArray<mixed>>;
-
-function annotateScalar(value: mixed, text?: string): ScalarAnnotation {
-    return Ann.scalar(value, text);
-}
 
 function annotateArray(
     value: $ReadOnlyArray<mixed>,
@@ -48,9 +43,10 @@ function annotate(value: mixed, text?: string, seen: RefSet): Annotation {
         typeof value === 'string' ||
         typeof value === 'number' ||
         typeof value === 'boolean' ||
+        typeof value === 'symbol' ||
         typeof value.getMonth === 'function'
     ) {
-        return annotateScalar(value, text);
+        return Ann.scalar(value, text);
     }
 
     const ann = Ann.asAnnotation(value);
