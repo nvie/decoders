@@ -99,32 +99,32 @@ describe('Result', () => {
         expect(Result.errValue(r4)).toEqual('a reason');
     });
 
-    it('and (&&)', () => {
-        const ok1 = Result.ok(42);
-        const ok2 = Result.ok('hi');
-        const err1 = Result.err('boo');
-        const err2 = Result.err('bleh');
+    // it('and (&&)', () => {
+    //     const ok1 = Result.ok(42);
+    //     const ok2 = Result.ok('hi');
+    //     const err1 = Result.err('boo');
+    //     const err2 = Result.err('bleh');
 
-        expect(Result.and(ok1, ok2)).toBe(ok2);
-        expect(Result.and(ok1, err1)).toBe(err1);
-        expect(Result.and(err1, ok1)).toBe(err1);
-        expect(Result.and(err1, err2)).toBe(err1);
-        expect(Result.and(err2, err1)).toBe(err2);
-    });
+    //     expect(Result.and(ok1, ok2)).toBe(ok2);
+    //     expect(Result.and(ok1, err1)).toBe(err1);
+    //     expect(Result.and(err1, ok1)).toBe(err1);
+    //     expect(Result.and(err1, err2)).toBe(err1);
+    //     expect(Result.and(err2, err1)).toBe(err2);
+    // });
 
-    it('or (||)', () => {
-        const ok1 = Result.ok(42);
-        const ok2 = Result.ok('hi');
-        const err1 = Result.err('boo');
-        const err2 = Result.err('bleh');
+    // it('or (||)', () => {
+    //     const ok1 = Result.ok(42);
+    //     const ok2 = Result.ok('hi');
+    //     const err1 = Result.err('boo');
+    //     const err2 = Result.err('bleh');
 
-        expect(Result.or(ok1, ok2)).toBe(ok1);
-        expect(Result.or(ok2, ok1)).toBe(ok2);
-        expect(Result.or(ok1, err1)).toBe(ok1);
-        expect(Result.or(err1, ok1)).toBe(ok1);
-        expect(Result.or(err1, err2)).toBe(err2);
-        expect(Result.or(err2, err1)).toBe(err1);
-    });
+    //     expect(Result.or(ok1, ok2)).toBe(ok1);
+    //     expect(Result.or(ok2, ok1)).toBe(ok2);
+    //     expect(Result.or(ok1, err1)).toBe(ok1);
+    //     expect(Result.or(err1, ok1)).toBe(ok1);
+    //     expect(Result.or(err1, err2)).toBe(err2);
+    //     expect(Result.or(err2, err1)).toBe(err1);
+    // });
 
     it('andThen', () => {
         const [v1, v2, v3, v4] = [r1, r2, r3, r4].map((r) =>

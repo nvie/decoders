@@ -93,12 +93,12 @@ export function dispatch<T, E, O>(
  *     Result.err('boo') && Result.err('boo')  // => Err('boo')
  *
  */
-export function and<T, E, T2>(
-    result1: Result<T, E>,
-    result2: Result<T2, E>,
-): Result<T2, E> {
-    return result1.type === 'ok' ? result2 : result1;
-}
+// export function and<T, E, T2>(
+//     result1: Result<T, E>,
+//     result2: Result<T2, E>,
+// ): Result<T2, E> {
+//     return result1.type === 'ok' ? result2 : result1;
+// }
 
 /**
  * If the given result is OK, return that result. Otherwise, defers to the
@@ -114,12 +114,12 @@ export function and<T, E, T2>(
  *     Result.err('bleh') || Result.err('boo')  // => Err('boo')
  *
  */
-export function or<T, E, E2>(
-    result1: Result<T, E>,
-    result2: Result<T, E2>,
-): Result<T, E2> {
-    return result1.type === 'ok' ? result1 : result2;
-}
+// export function or<T, E, E2>(
+//     result1: Result<T, E>,
+//     result2: Result<T, E2>,
+// ): Result<T, E2> {
+//     return result1.type === 'ok' ? result1 : result2;
+// }
 
 /**
  * Like .and(), aka &&, but the second argument gets evaluated lazily only if
