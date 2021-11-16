@@ -1,7 +1,7 @@
 // @flow strict
 
-import { annotate } from '../annotate';
-import summarize from '../summarize';
+import { annotate } from '../Annotation';
+import { summarize } from '../summarize';
 
 function check(input, expected) {
     expect(summarize(annotate(input))).toEqual(expected);

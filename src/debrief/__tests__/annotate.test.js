@@ -2,7 +2,7 @@
 /* eslint-disable no-restricted-syntax */
 
 import * as Ann from '../Annotation';
-import { annotate } from '../annotate';
+import { annotate } from '../Annotation';
 
 describe('parsing (scalars)', () => {
     it('strings', () => {

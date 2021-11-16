@@ -110,7 +110,7 @@ export function serializeAnnotation(
     }
 }
 
-export default function serialize(ann: Annotation): string {
+export function serialize(ann: Annotation): string {
     const [serialized, annotation] = serializeAnnotation(ann);
     if (annotation !== undefined) {
         return serialized + '\n' + annotation;

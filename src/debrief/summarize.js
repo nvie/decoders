@@ -51,6 +51,8 @@ function summarize(
     return [...result, prefix + text];
 }
 
-export default function public_summarize(ann: Annotation): Array<string> {
+function public_summarize(ann: Annotation): Array<string> {
     return summarize(ann, []);
 }
+
+export { public_summarize as summarize };

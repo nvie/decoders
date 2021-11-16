@@ -1,8 +1,8 @@
 // @flow strict
 
-import { __private_annotate, annotate } from '../annotate';
+import { __private_annotate, annotate } from '../Annotation';
 import { dedent } from './helpers';
-import serialize from '../serialize';
+import { serialize } from '../serialize';
 
 function debrief(input, expected) {
     expect(serialize(annotate(input))).toEqual(dedent(expected));
