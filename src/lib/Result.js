@@ -97,7 +97,7 @@ export function map<T, E, T2>(
     result: Result<T, E>,
     mapper: (value: T) => T2,
 ): Result<T2, E> {
-    return result.type === 'ok' ? ok(mapper(result.value)) : err(result.error);
+    return result.type === 'ok' ? ok(mapper(result.value)) : result;
 }
 
 /**
@@ -108,5 +108,5 @@ export function mapError<T, E, E2>(
     result: Result<T, E>,
     mapper: (error: E) => E2,
 ): Result<T, E2> {
-    return result.type === 'ok' ? ok(result.value) : err(mapper(result.error));
+    return result.type === 'ok' ? result : err(mapper(result.error));
 }
