@@ -1,7 +1,7 @@
 // @flow strict
 /* eslint-disable no-restricted-syntax */
 
-import * as Result from '../Result';
+import * as Result from '../lib/Result';
 import { boolean } from '../boolean';
 import { constant, undefined_ } from '../constants';
 import { either, either4, either9, oneOf } from '../either';

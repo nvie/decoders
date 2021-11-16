@@ -1,6 +1,6 @@
 // @flow strict
 
-import * as Result from '../Result';
+import * as Result from '../lib/Result';
 import { constant } from '../constants';
 import { dispatch } from '../dispatch';
 import { guard } from '../guard';

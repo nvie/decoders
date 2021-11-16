@@ -5,9 +5,7 @@
         "noEmit": true,
         "baseUrl": ".",
         "paths": {
-            "decoders": ["."],
-            "decoders/Result": ["./Result"],
-            "decoders/debrief": ["./debrief"]
+            "decoders": ["."]
         }
     }
 }

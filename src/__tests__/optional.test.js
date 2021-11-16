@@ -1,7 +1,7 @@
 // @flow strict
 /* eslint-disable no-restricted-syntax */
 
-import * as Result from '../Result';
+import * as Result from '../lib/Result';
 import { INPUTS } from './fixtures';
 import { maybe, nullable, optional } from '../optional';
 import { partition } from 'itertools';

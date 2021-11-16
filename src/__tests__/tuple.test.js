@@ -1,6 +1,6 @@
 // @flow strict
 
-import * as Result from '../Result';
+import * as Result from '../lib/Result';
 import { number } from '../number';
 import { string } from '../string';
 import { tuple1, tuple2, tuple3, tuple4, tuple5, tuple6 } from '../tuple';

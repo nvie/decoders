@@ -1,8 +1,22 @@
 // @flow strict
 
-import { __private_annotate, annotate } from '../Annotation';
-import { dedent } from './helpers';
+import { __private_annotate, annotate } from '../../lib/Annotation';
 import { serialize } from '../serialize';
+
+const whitespace_re = /^\s*$/;
+
+export function dedent(value: string): string {
+    let lines = value.split('\n');
+    if (lines.length > 0 && whitespace_re.test(lines[0])) {
+        lines.shift();
+    }
+    if (lines.length > 0 && whitespace_re.test(lines[lines.length - 1])) {
+        lines.pop();
+    }
+    const level = Math.min(...lines.filter((s) => !!s).map((s) => s.search(/\S/)));
+    const dedented = lines.map((value) => (value ? value.substring(level) : ''));
+    return dedented.join('\n');
+}
 
 function debrief(input, expected) {
     expect(serialize(annotate(input))).toEqual(dedent(expected));

@@ -1,7 +1,7 @@
 // @flow strict
 
-import * as Result from './Result';
-import { annotate } from './debrief';
+import * as Result from './lib/Result';
+import { annotate } from './lib/Annotation';
 import { map } from './utils';
 import { number } from './number';
 import type { Decoder } from './types';

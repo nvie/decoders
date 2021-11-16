@@ -1,11 +1,11 @@
 // @flow strict
 
-import * as Ann from './debrief/Annotation';
-import * as Result from './Result';
-import { annotate } from './debrief';
+import * as Ann from './lib/Annotation';
+import * as Result from './lib/Result';
+import { annotate } from './lib/Annotation';
 import { compose, map } from './utils';
 import { pojo } from './object';
-import type { Annotation, ObjectAnnotation } from './debrief/Annotation';
+import type { Annotation, ObjectAnnotation } from './lib/Annotation';
 import type { Decoder } from './types';
 
 /**

@@ -1,6 +1,6 @@
 // @flow strict
 
-import * as Result from './Result';
+import * as Result from './lib/Result';
 import { object } from './object';
 import { oneOf } from './either';
 import type { $DecoderType, Decoder } from './types';

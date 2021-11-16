@@ -1,11 +1,11 @@
 // @flow strict
 
-import * as Ann from './debrief/Annotation';
-import * as Result from './Result';
-import { annotate } from './debrief';
+import * as Ann from './lib/Annotation';
+import * as Result from './lib/Result';
+import { annotate } from './lib/Annotation';
 import { compose, map } from './utils';
 import type { $DecoderType, Decoder } from './types';
-import type { Annotation, ObjectAnnotation } from './debrief/Annotation';
+import type { Annotation, ObjectAnnotation } from './lib/Annotation';
 
 // $FlowFixMe[unclear-type] (not really an issue) - deliberate use of `any` - not sure how we should get rid of this
 type AnyDecoder = any;

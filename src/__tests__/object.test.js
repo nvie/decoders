@@ -1,6 +1,6 @@
 // @flow strict
 
-import * as Result from '../Result';
+import * as Result from '../lib/Result';
 import { exact, inexact, object, pojo } from '../object';
 import { guard } from '../guard';
 import { hardcoded } from '../constants';

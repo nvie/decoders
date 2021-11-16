@@ -1,6 +1,6 @@
 // @flow strict
 
-import { annotate } from '../Annotation';
+import { annotate } from '../../lib/Annotation';
 import { summarize } from '../summarize';
 
 function check(input, expected) {
