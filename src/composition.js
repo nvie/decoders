@@ -5,20 +5,6 @@ import { annotate } from './lib/Annotation';
 import type { Decoder } from './types';
 
 /**
- * `x instanceof Date` checks are unreliable across stack frames (that information
- * might get lost by the JS runtime), so we'll have to reside to more runtime
- * inspection checks.
- *
- * Taken from https://stackoverflow.com/a/44198641
- */
-export const isDate = (value: mixed): boolean %checks =>
-    value !== undefined &&
-    value !== null &&
-    // $FlowFixMe[method-unbinding]
-    Object.prototype.toString.call(value) === '[object Date]' &&
-    !isNaN(value);
-
-/**
  * Given a decoder T and a mapping function from T's to V's, returns a decoder
  * for V's.  This is useful to change the original input data.
  */

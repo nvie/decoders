@@ -2,7 +2,7 @@
 
 import * as Result from './lib/Result';
 import { annotate } from './lib/Annotation';
-import { compose, predicate } from './utils';
+import { compose, predicate } from './composition';
 import type { Decoder } from './types';
 
 const anyNumber: Decoder<number> = (blob: mixed) => {

@@ -21,7 +21,7 @@
 import type { $DecoderType, $GuardType, Decoder, Guard } from './types';
 
 export { guard } from './guard';
-export { compose, map, predicate } from './utils';
+export { compose, map, predicate } from './composition';
 
 export { array, nonEmptyArray, poja } from './array';
 export { boolean, numericBoolean, truthy } from './boolean';

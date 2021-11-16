@@ -2,7 +2,8 @@
 
 import * as Result from './lib/Result';
 import { annotate } from './lib/Annotation';
-import { isDate, map } from './utils';
+import { isDate } from './lib/utils';
+import { map } from './composition';
 import { regex } from './string';
 import type { Decoder } from './types';
 

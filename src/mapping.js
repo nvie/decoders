@@ -3,7 +3,7 @@
 import * as Ann from './lib/Annotation';
 import * as Result from './lib/Result';
 import { annotate } from './lib/Annotation';
-import { compose, map } from './utils';
+import { compose, map } from './composition';
 import { pojo } from './object';
 import type { Annotation, ObjectAnnotation } from './lib/Annotation';
 import type { Decoder } from './types';

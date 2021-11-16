@@ -2,7 +2,7 @@
 
 import * as Result from '../lib/Result';
 import { annotate } from '../lib/Annotation';
-import { compose, map } from '../utils';
+import { compose, map } from '../composition';
 import { guard } from '../guard';
 import { number } from '../number';
 import { string } from '../string';

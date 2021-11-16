@@ -2,7 +2,7 @@
 
 import * as Result from './lib/Result';
 import { annotate } from './lib/Annotation';
-import { map } from './utils';
+import { map } from './composition';
 import { number } from './number';
 import type { Decoder } from './types';
 
