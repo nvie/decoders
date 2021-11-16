@@ -86,7 +86,17 @@ export function andThen<T, E, V>(
     result: Result<T, E>,
     callback: (value: T) => Result<V, E>,
 ): Result<V, E> {
-    return result.type === 'ok' ? callback(result.value) : err(result.error);
+    return result.type === 'ok' ? callback(result.value) : result;
+}
+
+/**
+ * Chain together a sequence of computations that may fail.
+ */
+export function orElse<T, E, E2>(
+    result: Result<T, E>,
+    errCallback: (errValue: E) => Result<T, E2>,
+): Result<T, E2> {
+    return result.type === 'ok' ? result : errCallback(result.error);
 }
 
 /**

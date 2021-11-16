@@ -15,25 +15,19 @@ function itemize(s: string): string {
 
 export function either<T1, T2>(d1: Decoder<T1>, d2: Decoder<T2>): Decoder<T1 | T2> {
     return (blob: mixed) =>
-        Result.dispatch(
-            d1(blob),
-            (value1) => Result.ok(value1),
-            (err1) =>
-                Result.dispatch(
-                    d2(blob),
-                    (value2) => Result.ok(value2),
-                    (err2) =>
-                        Result.err(
-                            annotate(
-                                blob,
-                                [
-                                    'Either:',
-                                    itemize(summarize(err1).join('\n')),
-                                    itemize(summarize(err2).join('\n')),
-                                ].join('\n'),
-                            ),
-                        ),
+        Result.orElse(d1(blob), (err1) =>
+            Result.orElse(d2(blob), (err2) =>
+                Result.err(
+                    annotate(
+                        blob,
+                        [
+                            'Either:',
+                            itemize(summarize(err1).join('\n')),
+                            itemize(summarize(err2).join('\n')),
+                        ].join('\n'),
+                    ),
                 ),
+            ),
         );
 }
 
