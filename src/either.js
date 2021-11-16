@@ -9,8 +9,7 @@ import type { Decoder, Scalar } from './types';
 /**
  * Indents and adds a dash in front of this (potentially multiline) string.
  */
-// istanbul ignore next
-function itemize(s: string = ''): string {
+function itemize(s: string): string {
     return '-' + indent(s).substring(1);
 }
 
