@@ -80,28 +80,73 @@ export function dispatch<T, E, O>(
 }
 
 /**
- * Chain together a sequence of computations that may fail.
+ * If the given result is OK, defers to the other result. Otherwise returns the
+ * error result.
+ *
+ * It's like saying A && B, but on Result.
+ *
+ * Examples:
+ *
+ *     Result.ok(42)     && Result.ok('hi')    // => Ok('hi')
+ *     Result.err('boo') && Result.ok('hi')    // => Err('boo')
+ *     Result.ok(42)     && Result.err('boo')  // => Err('boo')
+ *     Result.err('boo') && Result.err('boo')  // => Err('boo')
+ *
  */
-export function andThen<T, E, V>(
-    result: Result<T, E>,
-    callback: (value: T) => Result<V, E>,
-): Result<V, E> {
-    return result.type === 'ok' ? callback(result.value) : result;
+export function and<T, E, T2>(
+    result1: Result<T, E>,
+    result2: Result<T2, E>,
+): Result<T2, E> {
+    return result1.type === 'ok' ? result2 : result1;
 }
 
 /**
- * Chain together a sequence of computations that may fail.
+ * If the given result is OK, return that result. Otherwise, defers to the
+ * other result.
+ *
+ * It's like saying A || B, but on Result.
+ *
+ * Examples:
+ *
+ *     Result.ok(42)      || Result.ok('hi')    // => Ok(42)
+ *     Result.err('boo')  || Result.ok('hi')    // => Ok('hi')
+ *     Result.ok(42)      || Result.err('boo')  // => Ok(42)
+ *     Result.err('bleh') || Result.err('boo')  // => Err('boo')
+ *
+ */
+export function or<T, E, E2>(
+    result1: Result<T, E>,
+    result2: Result<T, E2>,
+): Result<T, E2> {
+    return result1.type === 'ok' ? result1 : result2;
+}
+
+/**
+ * Like .and(), aka &&, but the second argument gets evaluated lazily only if
+ * the first result is an Ok result. If so, it has access to the Ok value from
+ * the first argument.
+ */
+export function andThen<T, E, T2>(
+    result1: Result<T, E>,
+    lazyResult2: (value: T) => Result<T2, E>,
+): Result<T2, E> {
+    return result1.type === 'ok' ? lazyResult2(result1.value) : result1;
+}
+
+/**
+ * Like .or(), aka ||, but the second argument gets evaluated lazily only if
+ * the first result is an Err result. If so, it has access to the Err value
+ * from the first argument.
  */
 export function orElse<T, E, E2>(
-    result: Result<T, E>,
-    errCallback: (errValue: E) => Result<T, E2>,
+    result1: Result<T, E>,
+    lazyResult2: (errValue: E) => Result<T, E2>,
 ): Result<T, E2> {
-    return result.type === 'ok' ? result : errCallback(result.error);
+    return result1.type === 'ok' ? result1 : lazyResult2(result1.error);
 }
 
 /**
- * Transform an Ok result.  If the result is an Err, the same error value
- * will propagate through.
+ * Transform an Ok result. Will not touch Err results.
  */
 export function map<T, E, T2>(
     result: Result<T, E>,
@@ -111,8 +156,7 @@ export function map<T, E, T2>(
 }
 
 /**
- * Transform an Err value.  If the result is an Ok, this is a no-op.
- * Useful when for example the errors has too much information.
+ * Transform an Err value. Will not touch Ok results.
  */
 export function mapError<T, E, E2>(
     result: Result<T, E>,

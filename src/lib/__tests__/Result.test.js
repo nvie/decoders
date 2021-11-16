@@ -99,18 +99,58 @@ describe('Result', () => {
         expect(Result.errValue(r4)).toEqual('a reason');
     });
 
+    it('and (&&)', () => {
+        const ok1 = Result.ok(42);
+        const ok2 = Result.ok('hi');
+        const err1 = Result.err('boo');
+        const err2 = Result.err('bleh');
+
+        expect(Result.and(ok1, ok2)).toBe(ok2);
+        expect(Result.and(ok1, err1)).toBe(err1);
+        expect(Result.and(err1, ok1)).toBe(err1);
+        expect(Result.and(err1, err2)).toBe(err1);
+        expect(Result.and(err2, err1)).toBe(err2);
+    });
+
+    it('or (||)', () => {
+        const ok1 = Result.ok(42);
+        const ok2 = Result.ok('hi');
+        const err1 = Result.err('boo');
+        const err2 = Result.err('bleh');
+
+        expect(Result.or(ok1, ok2)).toBe(ok1);
+        expect(Result.or(ok2, ok1)).toBe(ok2);
+        expect(Result.or(ok1, err1)).toBe(ok1);
+        expect(Result.or(err1, ok1)).toBe(ok1);
+        expect(Result.or(err1, err2)).toBe(err2);
+        expect(Result.or(err2, err1)).toBe(err1);
+    });
+
     it('andThen', () => {
         const [v1, v2, v3, v4] = [r1, r2, r3, r4].map((r) =>
             // prettier-ignore
             Result.andThen(r, (n) =>
                 typeof n === 'number'
-                ? Result.ok(n * 2)
-                : Result.err('not a number')
+                    ? Result.ok(n * 2)
+                    : Result.err('not a number')
             ),
         );
         expect(Result.value(v1)).toBe(84);
         expect(Result.isErr(v2)).toBe(true);
         expect(Result.isErr(v3)).toBe(true);
         expect(Result.isErr(v4)).toBe(true);
+    });
+
+    it('orElse', () => {
+        const [v1, v2, v3, v4] = [r1, r2, r3, r4].map((r) =>
+            // prettier-ignore
+            Result.orElse(r,
+                (e) => Result.ok('lesson learned: ' + e.toString())
+            ),
+        );
+        expect(Result.value(v1)).toBe(42);
+        expect(Result.value(v2)).toBe("I'm a string");
+        expect(Result.value(v3)).toBe('lesson learned: Error: Proper JS error');
+        expect(Result.value(v4)).toBe('lesson learned: a reason');
     });
 });
