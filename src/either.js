@@ -13,21 +13,47 @@ function itemize(s: string): string {
     return '-' + indent(s).substring(1);
 }
 
+/**
+ * Nests another error as an item under a new-to-be-created "Either error". If
+ * the given subitem already is an "Either error" of itself, don't indent, but
+ * just "inject" its items at the same error level, for nicely flattened either
+ * expressions.
+ *
+ * Avoids:
+ *
+ *     Either:
+ *     - Either:
+ *       - Must be P
+ *       - Either:
+ *         - Must be Q
+ *         - Must be R
+ *     - Must be S
+ *
+ * And "flattens" these to:
+ *
+ *     Either:
+ *     - Must be P
+ *     - Must be Q
+ *     - Must be R
+ *     - Must be S
+ *
+ */
+function nest(errText: string): string {
+    const EITHER_PREFIX = 'Either:\n';
+    return errText.startsWith(EITHER_PREFIX)
+        ? errText.substr(EITHER_PREFIX.length)
+        : itemize(errText);
+}
+
 export function either<T1, T2>(d1: Decoder<T1>, d2: Decoder<T2>): Decoder<T1 | T2> {
     return (blob: mixed) =>
         Result.orElse(d1(blob), (err1) =>
-            Result.orElse(d2(blob), (err2) =>
-                Result.err(
-                    annotate(
-                        blob,
-                        [
-                            'Either:',
-                            itemize(summarize(err1).join('\n')),
-                            itemize(summarize(err2).join('\n')),
-                        ].join('\n'),
-                    ),
-                ),
-            ),
+            Result.orElse(d2(blob), (err2) => {
+                const serr1 = summarize(err1).join('\n');
+                const serr2 = summarize(err2).join('\n');
+                const text = ['Either:', nest(serr1), nest(serr2)].join('\n');
+                return Result.err(annotate(blob, text));
+            }),
         );
 }
 

@@ -4,6 +4,7 @@
 -   Drop support for all Node versions below 12.x
 -   Vendor in Result (from lemons)
 -   Vendor in Annotation (from debrief)
+-   Nested either expressions will not lead to nested error messages
 
 ## v1.25.5
 

@@ -40,12 +40,12 @@ describe('either', () => {
     it('errors nicely in common, simple eithers (ie optional)', () => {
         // Either undefined or string
         const g1 = guard(either(undefined_, string));
-        expect(() => g1(42)).toThrow('Either:');
-        expect(() => g1({})).toThrow('Either:');
+        expect(() => g1(42)).toThrow('Either:\n- Must be undefined\n- Must be string');
+        expect(() => g1({})).toThrow('Either:\n- Must be undefined\n- Must be string');
 
         // Either undefined or object
         const g2 = guard(either(undefined_, object({ name: string })));
-        expect(() => g2(42)).toThrow('Either:');
+        expect(() => g2(42)).toThrow('Either:\n- Must be undefined\n- Must be an object');
         expect(() => g2({ name: 42 })).toThrow('Either');
 
         const g3 = guard(
@@ -64,6 +64,13 @@ describe('either', () => {
             }),
         ).toThrow('XXX FIXME - this Either: error looks horrendous');
     });
+});
+
+describe('nested eithers', () => {
+    const decoder = guard(either(either(string, boolean), either(number, undefined_)));
+    expect(() => decoder(null)).toThrow(
+        'Either:\n- Must be string\n- Must be boolean\n- Must be number\n- Must be undefined',
+    );
 });
 
 describe('either3', () => {
