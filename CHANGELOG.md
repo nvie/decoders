@@ -329,7 +329,7 @@ to upgrade:
     ```javascript
     const mydecoder: Decoder<string> = predicate(
         (s) => s.startsWith('x'),
-        'Must start with "x"'
+        'Must start with "x"',
     );
     ```
 
@@ -339,7 +339,7 @@ to upgrade:
     const mydecoder: Decoder<string, string> = predicate(
         //                               ^^^^^^ Provide the input type to predicate() decoders
         (s) => s.startsWith('x'),
-        'Must start with "x"'
+        'Must start with "x"',
     );
     ```
 
@@ -563,6 +563,6 @@ to upgrade:
         object({
             name: string,
             age: number,
-        })
+        }),
     );
     ```
