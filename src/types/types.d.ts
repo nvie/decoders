@@ -1,5 +1,5 @@
-import { Annotation } from './core/Annotation';
-import { Result } from './core/Result';
+import { Annotation } from '../annotate';
+import { Result } from '../result';
 
 export type Scalar = string | number | boolean | symbol | undefined | null;
 

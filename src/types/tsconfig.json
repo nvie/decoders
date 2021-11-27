@@ -6,8 +6,7 @@
         "baseUrl": ".",
         "paths": {
             "decoders": ["."],
-            "decoders/core/Annotation": ["./core/Annotation"],
-            "decoders/core/Result": ["./core/Result"]
+            "decoders/core": ["./core"]
         }
     }
 }

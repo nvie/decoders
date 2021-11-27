@@ -18,17 +18,28 @@
  * type.  In our case, it's fine to fail with a runtime error.
  *
  */
-import type { $DecoderType, $GuardType, Decoder, Guard } from './types';
+export type { Decoder, Guard } from './_types';
+export type { DecoderType, GuardType } from './_types';
 
-export { guard } from './guard';
-export { compose, map, predicate } from './composition';
+export type { JSONValue, JSONObject, JSONArray } from './stdlib/json';
 
-export { array, nonEmptyArray, poja } from './array';
-export { boolean, numericBoolean, truthy } from './boolean';
-export { constant, hardcoded, mixed, null_, undefined_, unknown } from './constants';
-export { date, iso8601 } from './date';
-export { describe } from './describe';
-export { dispatch } from './dispatch';
+export { guard } from './_guard';
+
+export { compose, map, predicate } from './stdlib/composition';
+
+export { array, nonEmptyArray, poja } from './stdlib/array';
+export { boolean, numericBoolean, truthy } from './stdlib/boolean';
+export {
+    constant,
+    hardcoded,
+    mixed,
+    null_,
+    undefined_,
+    unknown,
+} from './stdlib/constants';
+export { date, iso8601 } from './stdlib/date';
+export { describe } from './stdlib/describe';
+export { dispatch } from './stdlib/dispatch';
 export {
     either,
     either3,
@@ -39,18 +50,14 @@ export {
     either8,
     either9,
     oneOf,
-} from './either';
-export { fail } from './fail';
-export { instanceOf } from './instanceOf';
-export { json, jsonObject, jsonArray } from './json';
-export { lazy } from './lazy';
-export { mapping, dict } from './mapping';
-export { integer, number, positiveInteger, positiveNumber } from './number';
-export { exact, inexact, object, pojo } from './object';
-export { maybe, nullable, optional } from './optional';
-export { email, nonEmptyString, regex, string, url } from './string';
-export { tuple1, tuple2, tuple3, tuple4, tuple5, tuple6 } from './tuple';
-
-export type { Decoder, Guard };
-export type { $DecoderType, $GuardType };
-export type { JSONValue, JSONObject, JSONArray } from './json';
+} from './stdlib/either';
+export { fail } from './stdlib/fail';
+export { instanceOf } from './stdlib/instanceOf';
+export { json, jsonObject, jsonArray } from './stdlib/json';
+export { lazy } from './stdlib/lazy';
+export { mapping, dict } from './stdlib/mapping';
+export { integer, number, positiveInteger, positiveNumber } from './stdlib/number';
+export { exact, inexact, object, pojo } from './stdlib/object';
+export { maybe, nullable, optional } from './stdlib/optional';
+export { email, nonEmptyString, regex, string, url } from './stdlib/string';
+export { tuple1, tuple2, tuple3, tuple4, tuple5, tuple6 } from './stdlib/tuple';
