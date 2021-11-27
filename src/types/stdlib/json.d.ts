@@ -1,4 +1,4 @@
-import { Decoder } from './types';
+import { Decoder } from '../_types';
 
 export type JSONValue = null | string | number | boolean | JSONObject | JSONArray;
 export interface JSONObject {

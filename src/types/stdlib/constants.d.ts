@@ -1,4 +1,4 @@
-import { Decoder, Scalar } from './types';
+import { Decoder, Scalar } from '../_types';
 
 // Constants
 

@@ -1,4 +1,4 @@
-import { Decoder } from './types';
+import { Decoder } from './_types';
 
 export function isDate(value: unknown): boolean;
 export function map<T, V>(decoder: Decoder<T>, mapper: (value: T) => V): Decoder<V>;

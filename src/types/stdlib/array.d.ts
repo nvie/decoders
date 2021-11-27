@@ -1,4 +1,4 @@
-import { Decoder } from './types';
+import { Decoder } from '../_types';
 
 export const poja: Decoder<unknown[]>;
 export function array<T>(decoder: Decoder<T>): Decoder<T[]>;

@@ -1,4 +1,4 @@
-import { Decoder } from './types';
+import { Decoder } from '../_types';
 
 export function tuple1<T1>(d1: Decoder<T1>): Decoder<[T1]>;
 export function tuple2<T1, T2>(d1: Decoder<T1>, d2: Decoder<T2>): Decoder<[T1, T2]>;

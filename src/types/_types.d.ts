@@ -1,5 +1,5 @@
-import { Annotation } from '../annotate';
-import { Result } from '../result';
+import { Annotation } from './annotate';
+import { Result } from './result';
 
 export type Scalar = string | number | boolean | symbol | undefined | null;
 
@@ -13,6 +13,4 @@ export interface Decoder<T, F = unknown> {
 }
 
 export type DecoderType<T> = T extends Decoder<infer V> ? V : never;
-export type $DecoderType<T> = DecoderType<T>; // Alias for backward compatibility
-
 export type GuardType<T> = T extends Guard<infer V> ? V : never;

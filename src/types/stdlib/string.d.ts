@@ -1,4 +1,4 @@
-import { Decoder } from './types';
+import { Decoder } from '../_types';
 
 export const string: Decoder<string>;
 export const nonEmptyString: Decoder<string>;

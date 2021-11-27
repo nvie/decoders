@@ -1,4 +1,4 @@
-import { Decoder, Guard } from './types';
+import { Decoder, Guard } from './_types';
 
 export interface Options {
     style?: 'inline' | 'simple';
