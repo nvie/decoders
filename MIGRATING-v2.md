@@ -23,18 +23,19 @@ longer the case in v2.
 
 ### Remove dependency on `debrief`
 
-If you have an import like:
+The following `debrief` APIs have been moved. If you have them, rewrite your imports as
+follows:
 
-```js
-import { serialize } from 'debrief'; // ❌
-import { serialize } from 'decoders/format'; // ✅
+```typescript
+import { serialize, summarize } from 'debrief'; // ❌
+import { serialize, summarize } from 'decoders/format'; // ✅
 ```
 
-or
+Or:
 
-```js
-import { summarize } from 'debrief'; // ❌
-import { summarize } from 'decoders/format'; // ✅
+```typescript
+import { annotate, Annotation } from 'debrief'; // ❌
+import { annotate, Annotation } from 'decoders/annotate'; // ✅
 ```
 
 ### Remove dependency on `lemons`
@@ -71,6 +72,10 @@ Result<T, E>  // ✅ ...to this
 
 The helper type `$DecoderType` has been renamed to `DecoderType`. Just remove the `$`
 prefix.
+
+## Change `$GuardType` to `GuardType` (without the `$`)
+
+The helper type `$GuardType` has been renamed to `GuardType`. Just remove the `$` prefix.
 
 [^1]:
     Only do this if you included them to write decoders. If you use them for other use
