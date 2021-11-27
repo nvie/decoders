@@ -6,7 +6,7 @@ const _register: WeakSet<{ ... }> = new WeakSet();
 
 export type ObjectAnnotation = {|
     +type: 'object',
-    +fields: {| +[key: string]: Annotation |},
+    +fields: { +[key: string]: Annotation },
     +text?: string,
 |};
 
@@ -45,7 +45,7 @@ function brand<A: Annotation>(ann: A): A {
 }
 
 export function object(
-    fields: {| +[key: string]: Annotation |},
+    fields: { +[key: string]: Annotation },
     text?: string,
 ): ObjectAnnotation {
     return brand({ type: 'object', fields, text });
@@ -135,7 +135,7 @@ function annotateArray(
 }
 
 function annotateObject(
-    obj: {| +[string]: mixed |},
+    obj: { +[string]: mixed },
     text?: string,
     seen: RefSet,
 ): ObjectAnnotation {
