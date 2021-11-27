@@ -1,9 +1,9 @@
 // @flow strict
 
-import * as Result from './lib/Result';
-import { annotate } from './lib/Annotation';
-import { indent } from './lib/utils';
-import { summarize } from './formatters/summarize';
+import * as Result from './core/Result';
+import { annotate } from './core/Annotation';
+import { indent } from './_utils';
+import { summarize } from './format/summarize';
 import type { Decoder, Scalar } from './types';
 
 /**

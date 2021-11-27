@@ -1,7 +1,7 @@
 // @flow strict
 /* eslint-disable no-restricted-syntax */
 
-import * as Result from '../lib/Result';
+import * as Result from '../core/Result';
 import { fail } from '../fail';
 import { INPUTS } from './fixtures';
 

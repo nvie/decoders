@@ -1,6 +1,6 @@
 // @flow strict
 
-import * as Result from '../lib/Result';
+import * as Result from '../core/Result';
 import { guard } from '../guard';
 import { mixed } from '../constants';
 import { number } from '../number';

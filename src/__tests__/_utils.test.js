@@ -1,6 +1,6 @@
 // @flow strict
 
-import { indent } from '../utils';
+import { indent } from '../_utils';
 
 describe('indent', () => {
     it('simple', () => {

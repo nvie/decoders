@@ -1,9 +1,8 @@
 // @flow strict
 
-import * as Result from './lib/Result';
-import { serialize as serializeInline } from './formatters/serialize';
-import { summarize } from './formatters/summarize';
-import type { Annotation } from './lib/Annotation';
+import * as Result from './core/Result';
+import { serialize as serializeInline, summarize } from './format';
+import type { Annotation } from './core/Annotation';
 import type { Decoder, Guard } from './types';
 
 type Options = {|

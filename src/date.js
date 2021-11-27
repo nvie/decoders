@@ -1,8 +1,8 @@
 // @flow strict
 
-import * as Result from './lib/Result';
-import { annotate } from './lib/Annotation';
-import { isDate } from './lib/utils';
+import * as Result from './core/Result';
+import { annotate } from './core/Annotation';
+import { isDate } from './_utils';
 import { map } from './composition';
 import { regex } from './string';
 import type { Decoder } from './types';

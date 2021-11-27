@@ -1,6 +1,6 @@
 // @flow strict
 
-import type { Annotation } from '../lib/Annotation';
+import type { Annotation } from '../core/Annotation';
 
 /**
  * Walks the annotation tree and emits the annotation's key path within the

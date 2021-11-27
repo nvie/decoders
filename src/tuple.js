@@ -1,8 +1,8 @@
 // @flow strict
 
-import { annotate } from './lib/Annotation';
+import { annotate } from './core/Annotation';
 import { compose, predicate } from './composition';
-import { err, errValue, isErr, ok, unwrap, value } from './lib/Result';
+import { err, errValue, isErr, ok, unwrap, value } from './core/Result';
 import { poja } from './array';
 import type { Decoder } from './types';
 

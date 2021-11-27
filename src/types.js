@@ -1,7 +1,7 @@
 // @flow strict
 
-import type { Annotation } from './lib/Annotation';
-import type { Result } from './lib/Result';
+import type { Annotation } from './core/Annotation';
+import type { Result } from './core/Result';
 
 export type Scalar = string | number | boolean | symbol | void | null;
 

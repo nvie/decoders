@@ -1,6 +1,6 @@
 // @flow strict
 
-import { __private_annotate, annotate } from '../../lib/Annotation';
+import { __private_annotate, annotate } from '../../core/Annotation';
 import { serialize } from '../serialize';
 
 const whitespace_re = /^\s*$/;
