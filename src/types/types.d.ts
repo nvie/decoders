@@ -1,6 +1,5 @@
-import { Annotation } from 'debrief';
-
-import { Result } from './Result';
+import { Annotation } from './lib/Annotation';
+import { Result } from './lib/Result';
 
 export type Scalar = string | number | boolean | symbol | undefined | null;
 
