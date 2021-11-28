@@ -55,14 +55,23 @@ describe('either', () => {
         expect(() => g3('foobar')).toThrow('Either');
     });
 
-    it.skip('errors nicely in complex eithers (with two wildly different branches)', () => {
+    it('errors in complex eithers (with two wildly different branches)', () => {
         const g = guard(either(object({ foo: string }), object({ bar: number })));
         expect(() =>
             g({
                 foo: 123,
                 bar: 'not a number',
             }),
-        ).toThrow('XXX FIXME - this Either: error looks horrendous');
+        ).toThrow(
+            `{
+  "foo": 123,
+  "bar": "not a number",
+}
+^
+Either:
+- Value at key "foo": Must be string
+- Value at key "bar": Must be number`,
+        );
     });
 });
 
