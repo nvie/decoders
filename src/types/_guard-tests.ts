@@ -1,4 +1,5 @@
-import { guard, object, string, array } from 'decoders';
+import { array, guard, object, string } from 'decoders';
+import { formatInline, formatShort } from 'decoders/format';
 
 // $ExpectType { name: string; tags: string[]; }
 guard(
@@ -9,5 +10,5 @@ guard(
 )('dummy');
 
 // Style argument
-guard(string, { style: 'inline' });
-guard(string, { style: 'simple' });
+guard(string, formatInline);
+guard(string, formatShort);

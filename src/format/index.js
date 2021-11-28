@@ -1,4 +1,4 @@
 // @flow strict
 
-export { serialize } from './serialize';
-export { summarize } from './summarize';
+export { formatInline } from './inline';
+export { formatShort } from './short';

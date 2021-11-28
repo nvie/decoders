@@ -1,11 +1,11 @@
 ## v2.0.0-beta1
 
--   Include ES modules in published NPM builds
 -   Drop support for all Node versions below 12.x
 -   Drop support for Flow versions below 0.142.0
--   Vendor in Result (from lemons)
--   Vendor in Annotation (from debrief)
+-   Drop all package depedencies
+-   Include ES modules in published NPM builds
 -   Nested either expressions will not lead to nested error messages
+-   Guard API has a simpler way to specify formatters
 
 ## v1.25.5
 

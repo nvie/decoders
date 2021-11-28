@@ -1,7 +1,7 @@
 // @flow strict
 
 import { __private_annotate, annotate } from '../../annotate';
-import { serialize } from '../serialize';
+import { formatInline } from '../inline';
 
 const whitespace_re = /^\s*$/;
 
@@ -19,10 +19,10 @@ export function dedent(value: string): string {
 }
 
 function debrief(input, expected) {
-    expect(serialize(annotate(input))).toEqual(dedent(expected));
+    expect(formatInline(annotate(input))).toEqual(dedent(expected));
 }
 
-describe('serialize', () => {
+describe('formatInline', () => {
     it('serializes scalar values', () => {
         debrief(undefined, 'undefined');
         debrief(null, 'null');
@@ -118,7 +118,7 @@ describe('serialize', () => {
         );
     });
 
-    it('cannot serialize custom objects out of the box', () => {
+    it('cannot format custom objects out of the box', () => {
         debrief(
             annotate(Number.NEGATIVE_INFINITY, 'Not finite'),
             `

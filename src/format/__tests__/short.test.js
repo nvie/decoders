@@ -1,10 +1,10 @@
 // @flow strict
 
 import { annotate } from '../../annotate';
-import { summarize } from '../summarize';
+import { formatShort } from '../short';
 
 function check(input, expected) {
-    expect(summarize(annotate(input))).toEqual(expected);
+    expect(formatShort(annotate(input))).toEqual(expected);
 }
 
 describe('summarize', () => {

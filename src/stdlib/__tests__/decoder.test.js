@@ -2,6 +2,7 @@
 
 import { guard } from '../../_guard';
 import { number } from '../number';
+import { formatInline, formatShort } from '../../format';
 
 describe('guard', () => {
     it('valid', () => {
@@ -21,22 +22,19 @@ describe('guard', () => {
     it('different erroring styles', () => {
         // These are all the same and echo back the original input
         const dec0 = guard(number);
-        const dec1 = guard(number, {});
-        const dec2 = guard(number, { style: 'inline' });
+        const dec1 = guard(number, formatInline);
 
         // These are all the same and echo back the original input
         expect(() => dec0('xyz')).toThrow('xyz');
         expect(() => dec0('xyz')).toThrow('Must be number');
         expect(() => dec1('xyz')).toThrow('xyz');
         expect(() => dec1('xyz')).toThrow('Must be number');
-        expect(() => dec2('xyz')).toThrow('xyz');
-        expect(() => dec2('xyz')).toThrow('Must be number');
 
         // These are all the same and echo back the original input
-        const dec3 = guard(number, { style: 'simple' });
+        const dec2 = guard(number, formatShort);
 
         // These are all the same and echo back the original input
-        expect(() => dec3('xyz')).not.toThrow('xyz');
-        expect(() => dec3('xyz')).toThrow(/Must be number/);
+        expect(() => dec2('xyz')).not.toThrow('xyz');
+        expect(() => dec2('xyz')).toThrow(/Must be number/);
     });
 });

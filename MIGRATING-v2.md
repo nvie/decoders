@@ -45,7 +45,7 @@ Only change the instances where you're using them for decoders.
 
 Rewrite imports as follows:
 
-```js
+```typescript
 import Result, { Ok, Err } from 'lemons/Result'; // ❌ Stop doing this
 import { Result, Ok, Err } from 'lemons'; //        ❌ or this
 
@@ -63,7 +63,7 @@ these should now be flipped.
 
 Change:
 
-```js
+```typescript
 Result<E, T>  // ❌ Change this...
 Result<T, E>  // ✅ ...to this
 ```
@@ -76,6 +76,19 @@ prefix.
 ## Change `$GuardType` to `GuardType` (without the `$`)
 
 The helper type `$GuardType` has been renamed to `GuardType`. Just remove the `$` prefix.
+
+## Changes to the Guard API
+
+If you use the (undocumented) second argument to the Guard API, rewrite it as follows:
+
+```typescript
+guard(mydecoder, { style: 'simple' });
+//               ^^^^^^^^^^^^^^^^^^^ ❌
+
+import { formatShort } from 'decoders/format';
+guard(mydecoder, formatShort);
+//               ^^^^^^^^^^^ ✅
+```
 
 [^1]:
     Only do this if you included them to write decoders. If you use them for other use
