@@ -97,6 +97,8 @@ export function serializeAnnotation(
         serialized = '<function>';
     } else if (ann.type === 'circular-ref') {
         serialized = '<circular ref>';
+    } else if (ann.type === 'unknown') {
+        serialized = '???';
     } else {
         serialized = serializeValue(ann.value);
     }

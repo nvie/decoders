@@ -32,12 +32,19 @@ export type CircularRefAnnotation = {|
     +text?: string,
 |};
 
+export type UnknownAnnotation = {|
+    +type: 'unknown',
+    +value: mixed,
+    +text?: string,
+|};
+
 export type Annotation =
     | ObjectAnnotation
     | ArrayAnnotation
     | ScalarAnnotation
     | FunctionAnnotation
-    | CircularRefAnnotation;
+    | CircularRefAnnotation
+    | UnknownAnnotation;
 
 function brand<A: Annotation>(ann: A): A {
     _register.add(ann);
@@ -62,6 +69,14 @@ export function array(items: $ReadOnlyArray<Annotation>, text?: string): ArrayAn
 export function func(text?: string): FunctionAnnotation {
     return brand({
         type: 'function',
+        text,
+    });
+}
+
+export function unknown(value: mixed, text?: string): UnknownAnnotation {
+    return brand({
+        type: 'unknown',
+        value,
         text,
     });
 }
@@ -185,12 +200,11 @@ function annotate(value: mixed, text?: string, seen: RefSet): Annotation {
         }
     }
 
-    // istanbul ignore else
     if (typeof value === 'function') {
         return func(text);
-    } else {
-        throw new Error('Unknown annotation');
     }
+
+    return unknown(value, text);
 }
 
 function public_annotate(value: mixed, text?: string): Annotation {
