@@ -118,6 +118,20 @@ describe('formatInline', () => {
         );
     });
 
+    it('serializes w/ unknown values', () => {
+        const value =
+            // $FlowFixMe[bigint-unsupported] - Flow does not support bigint literals yet
+            0n;
+
+        debrief(
+            annotate(value, 'xxx'),
+            `
+              ???
+              ^^^ xxx
+            `,
+        );
+    });
+
     it('cannot format custom objects out of the box', () => {
         debrief(
             annotate(Number.NEGATIVE_INFINITY, 'Not finite'),
