@@ -5,7 +5,7 @@ lot to migrate.
 
 The simplest way to upgrade is to run:
 
-    $ npm install decoders@^2.0.0
+    $ npm install decoders@beta
 
 You can also unintall `lemons` and `debrief`, since they are no longer needed as
 dependencies[^1]:
@@ -23,15 +23,22 @@ longer the case in v2.
 
 ### Remove dependency on `debrief`
 
-The following `debrief` APIs have been moved. If you have them, rewrite your imports as
-follows:
+Some `debrief` APIs have been moved and renamed to `decoders/format`. Some have been moved
+to `decoders/annotate`. If you have them, rewrite your imports as follows:
 
 ```typescript
-import { serialize, summarize } from 'debrief'; // ❌
-import { serialize, summarize } from 'decoders/format'; // ✅
+import { serialize } from 'debrief'; // ❌
+import { formatInline } from 'decoders/format'; // ✅
 ```
 
-Or:
+Simply rename `serialize` to `formatInline`.
+
+```typescript
+import { summarize } from 'debrief'; // ❌
+import { formatShort } from 'decoders/format'; // ✅
+```
+
+Lastly:
 
 ```typescript
 import { annotate, Annotation } from 'debrief'; // ❌
@@ -46,14 +53,22 @@ Only change the instances where you're using them for decoders.
 Rewrite imports as follows:
 
 ```typescript
-import Result, { Ok, Err } from 'lemons/Result'; // ❌ Stop doing this
-import { Result, Ok, Err } from 'lemons'; //        ❌ or this
+// ❌ Stop doing this
+import Result, { Ok, Err } from 'lemons/Result';
+import { Result, Ok, Err } from 'lemons';
 
-import * as Result from 'decoders/lib/Result'; //   ✅ Do this instead
+// Old usage
+Ok(42);
+Err('oops');
 
-// Change usage like so:
-Ok(42); // ❌
-Result.ok(42); // ✅
+// ----------------------------------------------
+
+// ✅ Do this instead
+import * as Result from 'decoders/lib/Result';
+
+// New usage
+Result.ok(42);
+Result.err('oops');
 ```
 
 ### Changes to the `Result` type
@@ -66,6 +81,34 @@ Change:
 ```typescript
 Result<E, T>  // ❌ Change this...
 Result<T, E>  // ✅ ...to this
+```
+
+### `Result` is no longer a class
+
+`Result` is no longer a class. As such, methods previously available on instances no
+longer exist. These have been moved to function calls. This helps with tree-shaking unused
+functions.
+
+Change:
+
+```typescript
+const result = mydecoder(...);
+
+// ❌ These methods no longer exist
+result.unwrap();
+result.value();
+result.errValue();
+result.withDefault(...);
+result.youGetThePoint();
+
+// ✅ Instead, use functions
+import * as Result from 'decoders/result';
+
+Result.unwrap(result);
+Result.value(result);
+Result.errValue(errValue);
+Result.withDefault(...);
+Result.youGetThePoint(errValue);
 ```
 
 ## Change `$DecoderType` to `DecoderType` (without the `$`)
