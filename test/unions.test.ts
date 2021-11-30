@@ -1,6 +1,8 @@
-import { describe, expect, test } from 'vitest';
+import * as fc from 'fast-check';
+import type { Decoder } from '~/Decoder';
 import { boolean } from '~/lib/booleans';
 import { constant, undefined_ } from '~/lib/basics';
+import { describe, expect, test } from 'vitest';
 import { either, oneOf } from '~/lib/unions';
 import { INPUTS } from './_fixtures';
 import { number } from '~/lib/numbers';
@@ -8,7 +10,25 @@ import { object } from '~/lib/objects';
 import { partition } from 'itertools';
 import { regex, string } from '~/lib/strings';
 import { taggedUnion } from '~/lib/unions';
-import type { Decoder } from '~/Decoder';
+
+function fuzz(testFn: (blob: unknown) => void) {
+  return fc.assert(
+    fc.property(
+      fc.anything({
+        withBigInt: true,
+        withBoxedValues: true,
+        withDate: true,
+        withMap: true,
+        withNullPrototype: true,
+        withObjectString: true,
+        withSet: true,
+        withTypedArray: true,
+        withSparseArray: true,
+      }),
+      testFn,
+    ),
+  );
+}
 
 describe('either', () => {
   const stringOrBooleanDecoder = either(string, boolean);
@@ -71,6 +91,12 @@ Either:
 - Value at key "bar": Must be number`,
     );
   });
+
+  test('fuzz', () =>
+    fuzz((blob) => {
+      const expected = typeof blob === 'string' || typeof blob === 'boolean';
+      expect(either(string, boolean).decode(blob).ok).toBe(expected);
+    }));
 });
 
 test('nested eithers', () => {
@@ -138,6 +164,12 @@ describe('either9', () => {
       expect(decoder.decode(value).ok).toBe(false);
     }
   });
+
+  test('fuzz', () =>
+    fuzz((blob) => {
+      const expected = okay.includes(blob as never);
+      expect(decoder.decode(blob).ok).toBe(expected);
+    }));
 });
 
 describe('oneOf', () => {
@@ -158,6 +190,12 @@ describe('oneOf', () => {
       expect(decoder.decode(value).ok).toBe(false);
     }
   });
+
+  test('fuzz', () =>
+    fuzz((blob) => {
+      const expected = okay.includes(blob as never);
+      expect(decoder.decode(blob).ok).toBe(expected);
+    }));
 });
 
 type Rectangle = {
