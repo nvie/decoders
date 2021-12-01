@@ -58,17 +58,17 @@ import Result, { Ok, Err } from 'lemons/Result';
 import { Result, Ok, Err } from 'lemons';
 
 // Old usage
-Ok(42);
-Err('oops');
+Ok(...);
+Err(...);
 
 // ----------------------------------------------
 
 // ✅ Do this instead
-import * as Result from 'decoders/lib/Result';
+import * as Result from 'decoders/result';
 
 // New usage
-Result.ok(42);
-Result.err('oops');
+Result.ok(...);
+Result.err(...);
 ```
 
 ### Changes to the `Result` type
@@ -86,8 +86,8 @@ Result<T, E>  // ✅ ...to this
 ### `Result` is no longer a class
 
 `Result` is no longer a class. As such, methods previously available on instances no
-longer exist. These have been moved to function calls. This helps with tree-shaking unused
-functions.
+longer exist. These have been moved to function calls, to support tree-shaking unused
+methods from your bundle.
 
 Change:
 
