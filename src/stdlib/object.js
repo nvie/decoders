@@ -1,10 +1,9 @@
 // @flow strict
 
-import * as Ann from '../annotate';
 import * as Result from '../result';
-import { annotate } from '../annotate';
+import { annotate, annotateObject, merge, updateText } from '../annotate';
 import { compose, map } from './composition';
-import type { Annotation, ObjectAnnotation } from '../annotate';
+import type { Annotation } from '../annotate';
 import type { Decoder, DecoderType } from '../_types';
 
 // $FlowFixMe[unclear-type] (not really an issue) - deliberate use of `any` - not sure how we should get rid of this
@@ -80,7 +79,7 @@ export function object<O: { +[field: string]: AnyDecoder, ... }>(
     mapping: O,
 ): Decoder<$ObjMap<O, DecoderType>> {
     const known = new Set(Object.keys(mapping));
-    return compose(pojo, (blob: {| [string]: mixed |}) => {
+    return compose(pojo, (blob: { +[string]: mixed }) => {
         const actual = new Set(Object.keys(blob));
 
         // At this point, "missing" will also include all fields that may
@@ -90,7 +89,7 @@ export function object<O: { +[field: string]: AnyDecoder, ... }>(
         const missing = subtract(known, actual);
 
         let record = {};
-        const fieldErrors: { [key: string]: Annotation } = { ...null };
+        let errors: { [key: string]: Annotation } | null = null;
 
         Object.keys(mapping).forEach((key) => {
             const decoder = mapping[key];
@@ -118,7 +117,10 @@ export function object<O: { +[field: string]: AnyDecoder, ... }>(
                     // keys).
                     missing.add(key);
                 } else {
-                    fieldErrors[key] = ann;
+                    if (errors === null) {
+                        errors = {};
+                    }
+                    errors[key] = ann;
                 }
             }
         });
@@ -127,25 +129,11 @@ export function object<O: { +[field: string]: AnyDecoder, ... }>(
         // report.  First of all, we want to report any inline errors in this
         // object.  Lastly, any fields that are missing should be annotated on
         // the outer object itself.
-        const fieldsWithErrors = Object.keys(fieldErrors);
-        if (fieldsWithErrors.length > 0 || missing.size > 0) {
-            let err;
+        if (errors || missing.size > 0) {
+            let objAnn = annotateObject(blob);
 
-            if (fieldsWithErrors.length > 0) {
-                const errorlist = fieldsWithErrors.map((k) => [k, fieldErrors[k]]);
-
-                // NOTE: We know `blob` is an object, so the result here will
-                // definitely be an ObjectAnnotation. Figure out how to fix
-                // this at the Flow level, though.
-                // $FlowFixMe[incompatible-type]
-                // $FlowFixMe[prop-missing]
-                let objAnn: ObjectAnnotation = annotate(blob);
-                errorlist.forEach(([key, errAnn]) => {
-                    objAnn = Ann.updateField(objAnn, key, errAnn);
-                });
-                err = objAnn;
-            } else {
-                err = annotate(blob);
+            if (errors) {
+                objAnn = merge(objAnn, errors);
             }
 
             if (missing.size > 0) {
@@ -153,10 +141,10 @@ export function object<O: { +[field: string]: AnyDecoder, ... }>(
                     .map((key) => `"${key}"`)
                     .join(', ');
                 const pluralized = missing.size > 1 ? 'keys' : 'key';
-                err = annotate(err, `Missing ${pluralized}: ${errMsg}`);
+                objAnn = updateText(objAnn, `Missing ${pluralized}: ${errMsg}`);
             }
 
-            return Result.err(err);
+            return Result.err(objAnn);
         }
 
         return Result.ok(record);

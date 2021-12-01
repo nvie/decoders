@@ -86,7 +86,7 @@ describe('parsing (composite)', () => {
     it('annotates fields in object', () => {
         // Annotate with a simple string
         const objAnn = Ann.object({ name: Ann.scalar(null) });
-        expect(Ann.updateField(objAnn, 'name', Ann.scalar(null, 'Missing!'))).toEqual(
+        expect(Ann.merge(objAnn, { name: Ann.scalar(null, 'Missing!') })).toEqual(
             Ann.object({
                 name: Ann.scalar(null, 'Missing!'),
             }),
@@ -94,9 +94,7 @@ describe('parsing (composite)', () => {
 
         // Annotate with a full annotation object (able to change the annotate value itself)
         const obj2 = Ann.object({ name: Ann.scalar(null), age: Ann.scalar(20) });
-        expect(
-            Ann.updateField(obj2, 'name', Ann.scalar(null, 'An example value')),
-        ).toEqual(
+        expect(Ann.merge(obj2, { name: Ann.scalar(null, 'An example value') })).toEqual(
             Ann.object({
                 name: Ann.scalar(null, 'An example value'),
                 age: Ann.scalar(20),
@@ -107,7 +105,7 @@ describe('parsing (composite)', () => {
     it('annotates missing fields in object', () => {
         // Annotate with a simple string
         const obj = Ann.object({ foo: Ann.scalar('hello') });
-        expect(Ann.updateField(obj, 'bar', Ann.scalar(undefined, 'Missing'))).toEqual(
+        expect(Ann.merge(obj, { bar: Ann.scalar(undefined, 'Missing') })).toEqual(
             Ann.object({
                 foo: Ann.scalar('hello'),
                 bar: Ann.scalar(undefined, 'Missing'),

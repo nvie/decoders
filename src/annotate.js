@@ -110,24 +110,12 @@ export function updateText<A: Annotation>(annotation: A, text?: string): A {
 /**
  * Given an existing ObjectAnnotation, merges new Annotations in there.
  */
-function merge(
+export function merge(
     objAnnotation: ObjectAnnotation,
     fields: { +[key: string]: Annotation },
 ): ObjectAnnotation {
     const newFields = { ...objAnnotation.fields, ...fields };
     return object(newFields, objAnnotation.text);
-}
-
-/**
- * Given an existing ObjectAnnotation, set the given field's annotation to
- * a new value. If the field does not exist, it is inserted.
- */
-export function updateField(
-    objAnnotation: ObjectAnnotation,
-    key: string,
-    annotation: Annotation,
-): ObjectAnnotation {
-    return merge(objAnnotation, { [key]: annotation });
 }
 
 export function asAnnotation(thing: mixed): Annotation | void {
@@ -211,10 +199,18 @@ function public_annotate(value: mixed, text?: string): Annotation {
     return annotate(value, text, new WeakSet());
 }
 
+function public_annotateObject(
+    obj: { +[string]: mixed },
+    text?: string,
+): ObjectAnnotation {
+    return annotateObject(obj, text, new WeakSet());
+}
+
 export {
     // This construct just ensures the "seen" weakmap (used for circular
     // reference detection) isn't made part of the public API.
     public_annotate as annotate,
+    public_annotateObject as annotateObject,
     //
     // NOTE: Don't acces theses private APIs directly. They are only exported here
     // to better enable unit testing.
