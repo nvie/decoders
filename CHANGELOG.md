@@ -1,11 +1,22 @@
 ## v2.0.0-beta1
 
+Potentially breaking changes:
+
 -   Drop support for all Node versions below 12.x
 -   Drop support for Flow versions below 0.142.0
--   Drop all package depedencies
--   Include ES modules in published NPM builds
--   Nested either expressions will not lead to nested error messages
--   Guard API has a simpler way to specify formatters
+-   Drop all package dependencies
+
+New features:
+
+-   Include ES modules in published NPM builds (yay tree-shaking! 🍃)
+-   Much smaller total bundle size
+-   Better error messages for nested `either`s
+-   Guard API now has a simpler way to specify formatters
+
+Implementation changes:
+
+-   Major reorganization of internal module structure
+-   Various simplification of internals
 
 ## v1.25.5
 
