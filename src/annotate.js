@@ -108,26 +108,26 @@ export function updateText<A: Annotation>(annotation: A, text?: string): A {
 }
 
 /**
+ * Given an existing ObjectAnnotation, merges new Annotations in there.
+ */
+function merge(
+    objAnnotation: ObjectAnnotation,
+    fields: { +[key: string]: Annotation },
+): ObjectAnnotation {
+    const newFields = { ...objAnnotation.fields, ...fields };
+    return object(newFields, objAnnotation.text);
+}
+
+/**
  * Given an existing ObjectAnnotation, set the given field's annotation to
  * a new value. If the field does not exist, it is inserted.
  */
 export function updateField(
     objAnnotation: ObjectAnnotation,
     key: string,
-    textOrAnnotation: string | Annotation,
+    annotation: Annotation,
 ): ObjectAnnotation {
-    const valueAnnotation =
-        typeof textOrAnnotation === 'string'
-            ? updateText(objAnnotation.fields[key] ?? scalar(undefined), textOrAnnotation)
-            : textOrAnnotation;
-    return brand({
-        type: 'object',
-        fields: {
-            ...objAnnotation.fields,
-            [key]: valueAnnotation,
-        },
-        text: objAnnotation.text,
-    });
+    return merge(objAnnotation, { [key]: annotation });
 }
 
 export function asAnnotation(thing: mixed): Annotation | void {
