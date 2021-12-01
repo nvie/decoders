@@ -33,6 +33,9 @@ describe('mappings', () => {
                 '125': { name: 'bar' },
             }),
         ).toThrow('Missing key: "name"');
+
+        // More than one error
+        expect(() => guard(decoder)({ foo: 42, bar: 42 })).toThrow();
     });
 });
 

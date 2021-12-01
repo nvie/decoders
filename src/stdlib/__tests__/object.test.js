@@ -109,6 +109,9 @@ describe('objects', () => {
 
         // Both of these messages are part of the same error!
         expect(() => decoder({ extra: 42 })).toThrow('Must be string');
+
+        // More than one error
+        expect(() => decoder({ name: 42, id: 'hi' })).toThrow();
     });
 
     it('errors on non-objects', () => {
