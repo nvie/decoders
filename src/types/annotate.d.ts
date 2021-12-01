@@ -44,12 +44,15 @@ export function circularRef(text?: string): CircularRefAnnotation;
 
 export function updateText<A extends Annotation>(annotation: A, text?: string): A;
 
-export function updateField(
+export function merge(
     objAnnotation: ObjectAnnotation,
-    key: string,
-    textOrAnnotation: string | Annotation,
+    fields: { [key: string]: Annotation },
 ): ObjectAnnotation;
 
 export function asAnnotation(thing: unknown): Annotation | void;
 
 export function annotate(value: unknown, text?: string): Annotation;
+export function annotateObject(
+    obj: { [key: string]: unknown },
+    text?: string,
+): ObjectAnnotation;
