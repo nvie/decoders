@@ -42,9 +42,8 @@ build_code() {
 
 copy_typescript_defs() {
     mkdir -p "$DIST_TYPES"
-    find "$SRC" -iname '*.d.ts' -a '!' -iname '*-tests.d.ts' -exec cp -v '{}' "$DIST_TYPES" ';'
-    # Remove the types directory if its empty
-    rmdir "$DIST_TYPES" 2>/dev/null || true
+    (cd "$SRC/types" && find . -iname '*.d.ts' -a '!' -iname '*-tests.d.ts' | xargs tar -cf - ) \
+        | (cd "$DIST_TYPES" && tar -xvf -)
 }
 
 copy_flow_defs() {
@@ -57,11 +56,7 @@ copy_metadata() {
 }
 
 add_types_entrypoint() {
-    if [ -f "$DIST_TYPES/index.d.ts" ]; then
-        jq '. + { types: "./_typescript/index.d.ts" }'
-    else
-        cat  # no-op, pass-thru
-    fi
+    jq '. + { types: "./_typescript" }'
 }
 
 build_package_json() {

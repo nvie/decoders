@@ -1,3 +1,5 @@
+/// <reference lib="es6" />
+
 import { Decoder } from '../_types';
 
 export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>>;
