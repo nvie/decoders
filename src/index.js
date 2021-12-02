@@ -29,14 +29,7 @@ export { compose, map, predicate } from './core/composition';
 
 export { array, nonEmptyArray, poja } from './core/array';
 export { boolean, numericBoolean, truthy } from './core/boolean';
-export {
-    constant,
-    hardcoded,
-    mixed,
-    null_,
-    undefined_,
-    unknown,
-} from './core/constants';
+export { constant, hardcoded, mixed, null_, undefined_, unknown } from './core/constants';
 export { date, iso8601 } from './core/date';
 export { describe } from './core/describe';
 export { dispatch } from './core/dispatch';
