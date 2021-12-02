@@ -1,4 +1,4 @@
-## v2.0.0-beta1
+## v2.0.0-beta
 
 Potentially breaking changes:
 
