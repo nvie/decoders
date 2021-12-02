@@ -21,7 +21,6 @@ DIST="${ROOT}/dist"
 #
 DIST_CJS="$DIST"
 DIST_ES="$DIST/_esm"
-DIST_TYPES="$DIST/_typescript"
 
 # Work from the project root, independently from where this script is run
 cd "$ROOT"
@@ -40,12 +39,6 @@ build_code() {
     BABEL_ENV=esmodules babel -d "$DIST_ES" "$SRC" --ignore '**/__tests__/**'
 }
 
-copy_typescript_defs() {
-    mkdir -p "$DIST_TYPES"
-    (cd "$SRC/types" && find . -iname '*.d.ts' -a '!' -iname '*-tests.d.ts' | xargs tar -cf - ) \
-        | (cd "$DIST_TYPES" && tar -xvf -)
-}
-
 copy_flow_defs() {
     flow-copy-source -v -i '**/__tests__/**' -i '**/types/**' "$SRC" "$DIST_CJS"
     flow-copy-source -v -i '**/__tests__/**' -i '**/types/**' "$SRC" "$DIST_ES"
@@ -53,10 +46,6 @@ copy_flow_defs() {
 
 copy_metadata() {
     cp LICENSE README.md CHANGELOG.md "$DIST"
-}
-
-add_types_entrypoint() {
-    jq '. + { types: "./_typescript" }'
 }
 
 build_package_json() {
@@ -67,7 +56,6 @@ build_package_json() {
         jq 'del(.jest)'             | \
         jq 'del(.scripts)'          | \
         jq 'del(.type)'             | \
-        add_types_entrypoint        | \
         sed -Ee 's,dist/,,g'          \
         > "$DIST/package.json"
     prettier --write "$DIST/package.json"
@@ -76,7 +64,6 @@ build_package_json() {
 build() {
     clean
     build_code
-    copy_typescript_defs
     copy_flow_defs
     copy_metadata
     build_package_json
