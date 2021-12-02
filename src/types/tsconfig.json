@@ -4,6 +4,11 @@
         "strict": true,
         "noEmit": true,
         "baseUrl": ".",
-        "paths": { "decoders": ["."] }
+        "paths": {
+            "decoders": ["."],
+            "decoders/annotate": ["./annotate"],
+            "decoders/format": ["./format"],
+            "decoders/result": ["./result"]
+        }
     }
 }

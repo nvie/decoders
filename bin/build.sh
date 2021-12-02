@@ -19,13 +19,11 @@ clean() {
 build_code() {
     # Build CJS module output
     mkdir -p "$DIST_CJS"
-    babel -d "$DIST_CJS" "$SRC" --ignore '**/__tests__/**'
+    BABEL_ENV=commonjs babel -d "$DIST_CJS" "$SRC" --ignore '**/__tests__/**'
 
     # Build ES module output
     mkdir -p "$DIST_ES"
-    rollup \
-        --failAfterWarnings \
-        --config
+    BABEL_ENV=esmodules babel -d "$DIST_ES" "$SRC" --ignore '**/__tests__/**'
 }
 
 copy_typescript_defs() {
@@ -46,7 +44,12 @@ copy_metadata() {
 add_entrypoint() {
     jq ". + { \
         main: \"./cjs/index.js\", \
-        module: \"./es/index.js\" \
+        module: \"./es/index.js\",
+        exports: { \
+            \"require\": \"./cjs/index.js\", \
+            \"import\": \"./es/index.js\" \
+        },
+        type: \"module\" \
     }"
 }
 

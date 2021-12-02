@@ -1,6 +1,22 @@
-## v1.26.0-beta1
+## v2.0.0-beta1
 
--   Include ES modules in published NPM builds
+Potentially breaking changes:
+
+-   Drop support for all Node versions below 12.x
+-   Drop support for Flow versions below 0.142.0
+-   Drop all package dependencies
+
+New features:
+
+-   Include ES modules in published NPM builds (yay tree-shaking! 🍃)
+-   Much smaller total bundle size
+-   Better error messages for nested `either`s
+-   Guard API now has a simpler way to specify formatters
+
+Implementation changes:
+
+-   Major reorganization of internal module structure
+-   Various simplification of internals
 
 ## v1.25.5
 
@@ -326,7 +342,7 @@ to upgrade:
     ```javascript
     const mydecoder: Decoder<string> = predicate(
         (s) => s.startsWith('x'),
-        'Must start with "x"'
+        'Must start with "x"',
     );
     ```
 
@@ -336,7 +352,7 @@ to upgrade:
     const mydecoder: Decoder<string, string> = predicate(
         //                               ^^^^^^ Provide the input type to predicate() decoders
         (s) => s.startsWith('x'),
-        'Must start with "x"'
+        'Must start with "x"',
     );
     ```
 
@@ -560,6 +576,6 @@ to upgrade:
         object({
             name: string,
             age: number,
-        })
+        }),
     );
     ```
