@@ -1,5 +1,9 @@
 ## v2.0.0-beta
 
+Upgrading to v2 _can_, but doesn't _have_ to be a breaking change for you. If upgrading
+causes errors for you, please see the [migration guide](./MIGRATING-v2.md) for
+instructions.
+
 Potentially breaking changes:
 
 -   Drop support for all Node versions below 12.x
