@@ -18,8 +18,15 @@
  * type.  In our case, it's fine to fail with a runtime error.
  *
  */
-export type { Decoder, Guard } from './_types';
-export type { DecoderType, GuardType } from './_types';
+export type {
+    Decoder,
+    DecodeResult,
+    DecoderType,
+    Guard,
+    GuardType,
+    Predicate,
+    Scalar,
+} from './_types';
 
 export type { JSONValue, JSONObject, JSONArray } from './core/json';
 
