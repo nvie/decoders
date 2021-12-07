@@ -2,7 +2,7 @@
 
 import { annotate } from '../annotate';
 import { compose, predicate } from './composition';
-import { err, errValue, isErr, ok, unwrap, value } from '../result';
+import { err, ok, okOrErrValue, unwrap } from '../result';
 import { poja } from './array';
 import type { Decoder } from '../_types';
 
@@ -26,7 +26,7 @@ export function tuple1<T>(decoder1: Decoder<T>): Decoder<[T]> {
         } catch (e) {
             // If a decoder error has happened while unwrapping all the
             // results, try to construct a good error message
-            return err(annotate(errValue(result1)));
+            return err(annotate([okOrErrValue(result1)]));
         }
     });
 }
@@ -49,12 +49,7 @@ export function tuple2<T1, T2>(
         } catch (e) {
             // If a decoder error has happened while unwrapping all the
             // results, try to construct a good error message
-            return err(
-                annotate([
-                    isErr(result1) ? errValue(result1) : value(result1),
-                    isErr(result2) ? errValue(result2) : value(result2),
-                ]),
-            );
+            return err(annotate([okOrErrValue(result1), okOrErrValue(result2)]));
         }
     });
 }
@@ -81,9 +76,9 @@ export function tuple3<T1, T2, T3>(
             // results, try to construct a good error message
             return err(
                 annotate([
-                    isErr(result1) ? errValue(result1) : value(result1),
-                    isErr(result2) ? errValue(result2) : value(result2),
-                    isErr(result3) ? errValue(result3) : value(result3),
+                    okOrErrValue(result1),
+                    okOrErrValue(result2),
+                    okOrErrValue(result3),
                 ]),
             );
         }
@@ -119,10 +114,10 @@ export function tuple4<T1, T2, T3, T4>(
             // results, try to construct a good error message
             return err(
                 annotate([
-                    isErr(result1) ? errValue(result1) : value(result1),
-                    isErr(result2) ? errValue(result2) : value(result2),
-                    isErr(result3) ? errValue(result3) : value(result3),
-                    isErr(result4) ? errValue(result4) : value(result4),
+                    okOrErrValue(result1),
+                    okOrErrValue(result2),
+                    okOrErrValue(result3),
+                    okOrErrValue(result4),
                 ]),
             );
         }
@@ -161,11 +156,11 @@ export function tuple5<T1, T2, T3, T4, T5>(
             // results, try to construct a good error message
             return err(
                 annotate([
-                    isErr(result1) ? errValue(result1) : value(result1),
-                    isErr(result2) ? errValue(result2) : value(result2),
-                    isErr(result3) ? errValue(result3) : value(result3),
-                    isErr(result4) ? errValue(result4) : value(result4),
-                    isErr(result5) ? errValue(result5) : value(result5),
+                    okOrErrValue(result1),
+                    okOrErrValue(result2),
+                    okOrErrValue(result3),
+                    okOrErrValue(result4),
+                    okOrErrValue(result5),
                 ]),
             );
         }
@@ -207,12 +202,12 @@ export function tuple6<T1, T2, T3, T4, T5, T6>(
             // results, try to construct a good error message
             return err(
                 annotate([
-                    isErr(result1) ? errValue(result1) : value(result1),
-                    isErr(result2) ? errValue(result2) : value(result2),
-                    isErr(result3) ? errValue(result3) : value(result3),
-                    isErr(result4) ? errValue(result4) : value(result4),
-                    isErr(result5) ? errValue(result5) : value(result5),
-                    isErr(result6) ? errValue(result6) : value(result6),
+                    okOrErrValue(result1),
+                    okOrErrValue(result2),
+                    okOrErrValue(result3),
+                    okOrErrValue(result4),
+                    okOrErrValue(result5),
+                    okOrErrValue(result6),
                 ]),
             );
         }

@@ -51,6 +51,10 @@ export function errValue<E>(result: Result<mixed, E>): void | E {
     return result.type === 'err' ? result.error : undefined;
 }
 
+export function okOrErrValue<T, E>(result: Result<T, E>): T | E {
+    return result.type === 'ok' ? result.value : result.error;
+}
+
 /**
  * Unwrap the value from this Result instance if this is an "Ok" result.
  * Otherwise, will throw the "Err" error via a runtime exception.
