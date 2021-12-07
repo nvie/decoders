@@ -50,53 +50,21 @@ import { annotate, Annotation } from 'decoders/annotate'; // ✅
 Please note: if you use `lemons` outside or unrelated to decoders, don't change those.
 Only change the instances where you're using them for decoders.
 
-Rewrite imports as follows:
-
 ```typescript
 // ❌ Stop doing this
-import Result, { Ok, Err } from 'lemons/Result';
+import Result, { Ok, Err } from 'lemons/Result'; // or
 import { Result, Ok, Err } from 'lemons';
 
-// Old usage
-Ok(...);
-Err(...);
+Ok(42);
+Err('oops');
 
 // ----------------------------------------------
 
 // ✅ Do this instead
-import * as Result from 'decoders/result';
-
-// New usage
-Result.ok(...);
-Result.err(...);
-```
-
-### Changes to the `Result` type
-
-If you have written a type of the form `Result<E, T>` (where E = error, T = success),
-these should now be flipped.
-
-Change:
-
-```typescript
-Result<E, T>  // ❌ Change this...
-Result<T, E>  // ✅ ...to this
-```
-
-### Constructing `Result` instances
-
-If you manually constructed `Result` instances, please replace:
-
-```typescript
-// ❌ Stop doing this
-import { Ok, Err } from 'lemons'; // or 'lemons/Result'
-const r1 = Ok(42);
-const r2 = Err('oops');
-
-// ✅ Do this
 import { ok, err } from 'decoders/result';
-const r1 = ok(42);
-const r2 = err('oops');
+
+ok(42);
+err('oops');
 ```
 
 ### `Result` is no longer a class
@@ -132,6 +100,18 @@ import { ... } from 'decoders/result';
 
 🍀 You can directly access the `type` field on results now. This has benefits as
 TypeScript and/or Flow can easily refine both if and else branches this way.
+
+### Changes to the `Result` type
+
+If you have written a type of the form `Result<E, T>` (where E = error, T = success),
+these should now be flipped.
+
+Change:
+
+```typescript
+Result<E, T>  // ❌ Change this...
+Result<T, E>  // ✅ ...to this
+```
 
 ## Change `$DecoderType` to `DecoderType` (without the `$`)
 
