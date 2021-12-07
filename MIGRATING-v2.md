@@ -33,9 +33,16 @@ import { formatInline } from 'decoders/format'; // ✅
 
 Simply rename `serialize` to `formatInline`.
 
+The `summarize` helper is replaced by `formatShort`. Please note that its return type has
+changed from an array to a single string. It's the equivalent of
+`summarize(err).join('\n')`.
+
 ```typescript
 import { summarize } from 'debrief'; // ❌
+summarize(err); // type: string[] ☹️
+
 import { formatShort } from 'decoders/format'; // ✅
+formatShort(err); // string 👌
 ```
 
 Lastly:
