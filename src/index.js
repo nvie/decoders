@@ -27,7 +27,7 @@ export type {
     Predicate,
     Scalar,
 } from './_types';
-
+export type { Result } from './result';
 export type { JSONValue, JSONObject, JSONArray } from './core/json';
 
 export { guard } from './_guard';

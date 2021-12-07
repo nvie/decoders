@@ -39,7 +39,7 @@ changed from an array to a single string. It's the equivalent of
 
 ```typescript
 import { summarize } from 'debrief'; // ❌
-summarize(err); // type: string[] ☹️
+summarize(err); // Array<string> ☹️
 
 import { formatShort } from 'decoders/format'; // ✅
 formatShort(err); // string 👌
@@ -68,7 +68,7 @@ Err('oops');
 // ----------------------------------------------
 
 // ✅ Do this instead
-import { ok, err } from 'decoders/result';
+import { Result, ok, err } from 'decoders/result';
 
 ok(42);
 err('oops');
