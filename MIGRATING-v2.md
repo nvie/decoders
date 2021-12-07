@@ -83,33 +83,55 @@ Result<E, T>  // ❌ Change this...
 Result<T, E>  // ✅ ...to this
 ```
 
+### Constructing `Result` instances
+
+If you manually constructed `Result` instances, please replace:
+
+```typescript
+// ❌ Stop doing this
+import { Ok, Err } from 'lemons'; // or 'lemons/Result'
+const r1 = Ok(42);
+const r2 = Err('oops');
+
+// ✅ Do this
+import { ok, err } from 'decoders/result';
+const r1 = ok(42);
+const r2 = err('oops');
+```
+
 ### `Result` is no longer a class
 
 `Result` is no longer a class. As such, methods previously available on instances no
 longer exist. These have been moved to function calls, to support tree-shaking unused
 methods from your bundle.
 
-Change:
+Suggested changes:
 
 ```typescript
-const result = mydecoder(...);
-
-// ❌ These methods no longer exist
-result.unwrap();
-result.value();
-result.errValue();
-result.withDefault(...);
-result.youGetThePoint();
-
-// ✅ Instead, use functions
-import * as Result from 'decoders/result';
-
-Result.unwrap(result);
-Result.value(result);
-Result.errValue(errValue);
-Result.withDefault(...);
-Result.youGetThePoint(errValue);
+// ✅ Import the helpers you need directly as functions
+import { ... } from 'decoders/result';
+//       ^^^
+//       ✨
 ```
+
+| Replace usage of          | With ✨                    | Or even better 🍀       |     |
+| ------------------------- | -------------------------- | ----------------------- | --- |
+| `result.andThen()`        | `andThen(result)`          |                         |     |
+| `result.dispatch()`       | `dispatch(result)`         |                         |     |
+| `result.errValue()`       | `errValue(result)`         |                         |     |
+| `result.expect()`         | `expect(result)`           |                         |     |
+| `result.isErr()`          | `isErr(result)`            | `result.type === 'err'` |     |
+| `result.isOk()`           | `isOk(result)`             | `result.type === 'ok'`  |     |
+| `result.map()`            | `mapValue(result)`         |                         | ⚠️  |
+| `result.mapError()`       | `mapError(result)`         |                         |     |
+| `result.toString()`       | `toString(result)`         |                         |     |
+| `result.unwrap()`         | `unwrap(result)`           |                         |     |
+| `result.value() ?? xxx`   | `withDefault(result, xxx)` |                         | ⚠️  |
+| `result.value() \|\| xxx` | `withDefault(result, xxx)` |                         | ⚠️  |
+| `result.withDefault(xxx)` | `withDefault(result, xxx)` |                         |     |
+
+🍀 You can directly access the `type` field on results now. This has benefits as
+TypeScript and/or Flow can easily refine both if and else branches this way.
 
 ## Change `$DecoderType` to `DecoderType` (without the `$`)
 
