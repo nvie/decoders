@@ -122,7 +122,7 @@ import { ... } from 'decoders/result';
 | `result.expect()`         | `expect(result)`           |                         |     |
 | `result.isErr()`          | `isErr(result)`            | `result.type === 'err'` |     |
 | `result.isOk()`           | `isOk(result)`             | `result.type === 'ok'`  |     |
-| `result.map()`            | `mapValue(result)`         |                         | ⚠️  |
+| `result.map()`            | `mapOk(result)`            |                         | ⚠️  |
 | `result.mapError()`       | `mapError(result)`         |                         |     |
 | `result.toString()`       | `toString(result)`         |                         |     |
 | `result.unwrap()`         | `unwrap(result)`           |                         |     |

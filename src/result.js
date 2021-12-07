@@ -43,7 +43,7 @@ export function withDefault<T>(result: Result<T, mixed>, defaultValue: T): T {
     return result.type === 'ok' ? result.value : defaultValue;
 }
 
-export function value<T>(result: Result<T, mixed>): void | T {
+export function okValue<T>(result: Result<T, mixed>): void | T {
     return result.type === 'ok' ? result.value : undefined;
 }
 
@@ -148,7 +148,7 @@ export function orElse<T, E, E2>(
 /**
  * Transform an Ok result. Will not touch Err results.
  */
-export function map<T, E, T2>(
+export function mapOk<T, E, T2>(
     result: Result<T, E>,
     mapper: (value: T) => T2,
 ): Result<T2, E> {

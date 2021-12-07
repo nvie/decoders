@@ -9,7 +9,7 @@ import {
     isErr,
     isOk,
     mapError,
-    mapValue,
+    mapOk,
     ok,
     okValue,
     orElse,
@@ -63,8 +63,8 @@ describe('Result', () => {
     });
 
     it('map', () => {
-        expect(okValue(mapValue(r1, (x) => x.toString()))).toBe('42');
-        expect(okValue(mapValue(r4, (x) => x.length))).toBeUndefined();
+        expect(okValue(mapOk(r1, (x) => x.toString()))).toBe('42');
+        expect(okValue(mapOk(r4, (x) => x.length))).toBeUndefined();
     });
 
     it('mapError', () => {
