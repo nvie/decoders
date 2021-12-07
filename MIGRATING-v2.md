@@ -94,8 +94,8 @@ import { ... } from 'decoders/result';
 | `result.mapError()`       | `mapError(result)`         |                         |     |
 | `result.toString()`       | `toString(result)`         |                         |     |
 | `result.unwrap()`         | `unwrap(result)`           |                         |     |
-| `result.value() ?? xxx`   | `withDefault(result, xxx)` |                         | ⚠️  |
-| `result.value() \|\| xxx` | `withDefault(result, xxx)` |                         | ⚠️  |
+| `result.value() ?? xxx`   | `withDefault(result, xxx)` | `result.type === 'ok'`  | ⚠️  |
+| `result.value() \|\| xxx` | `withDefault(result, xxx)` | `result.type === 'ok'`  | ⚠️  |
 | `result.withDefault(xxx)` | `withDefault(result, xxx)` |                         |     |
 
 🍀 You can directly access the `type` field on results now. This has benefits as
