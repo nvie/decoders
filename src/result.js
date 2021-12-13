@@ -6,8 +6,8 @@
  *     | Err <error>
  */
 
-type Ok<+T> = {| +type: 'ok', +value: T |};
-type Err<+E> = {| +type: 'err', +error: E |};
+type Ok<+T> = {| +type: 'ok', +value: T, +error: void |};
+type Err<+E> = {| +type: 'err', +value: void, +error: E |};
 
 export type Result<+T, +E> = Ok<T> | Err<E>;
 
@@ -15,14 +15,14 @@ export type Result<+T, +E> = Ok<T> | Err<E>;
  * Create a new Result instance representing a successful computation.
  */
 export function ok<T>(value: T): Ok<T> {
-    return { type: 'ok', value };
+    return { type: 'ok', value, error: undefined };
 }
 
 /**
  * Create a new Result instance representing a failed computation.
  */
 export function err<E>(error: E): Err<E> {
-    return { type: 'err', error };
+    return { type: 'err', value: undefined, error };
 }
 
 export function toString(result: Result<mixed, mixed>): string {
@@ -43,10 +43,14 @@ export function withDefault<T>(result: Result<T, mixed>, defaultValue: T): T {
     return result.type === 'ok' ? result.value : defaultValue;
 }
 
+// TODO: Remove this from the public API? The same can be achieved now with
+// TODO: const { value } = result;
 export function okValue<T>(result: Result<T, mixed>): void | T {
     return result.type === 'ok' ? result.value : undefined;
 }
 
+// TODO: Remove this from the public API? The same can be achieved now with
+// TODO: const { error } = result;
 export function errValue<E>(result: Result<mixed, E>): void | E {
     return result.type === 'err' ? result.error : undefined;
 }
