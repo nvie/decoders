@@ -93,7 +93,7 @@ import { ... } from 'decoders/result';
 | ------------------------- | -------------------------- | --- |
 | `result.andThen()`        | `andThen(result)`          |     |
 | `result.dispatch()`       | `dispatch(result)`         |     |
-| `result.errValue()`       | `errValue(result)`         |     |
+| `result.errValue()`       | `result.error`             |     |
 | `result.expect()`         | `expect(result)`           |     |
 | `result.isErr()`          | `result.type === 'err'`    |     |
 | `result.isOk()`           | `result.type === 'ok'`     |     |
