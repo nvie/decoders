@@ -101,8 +101,8 @@ import { ... } from 'decoders/result';
 | `result.mapError()`       | `mapError(result)`         |     |
 | `result.toString()`       | `toString(result)`         |     |
 | `result.unwrap()`         | `unwrap(result)`           |     |
-| `result.value() ?? xxx`   | `result.value ?? xxx`      | ⚠️  |
-| `result.value() \|\| xxx` | `result.value \|\| xxx`    | ⚠️  |
+| `result.value() ?? xxx`   | `result.value ?? xxx`      |     |
+| `result.value() \|\| xxx` | `result.value \|\| xxx`    |     |
 | `result.withDefault(xxx)` | `withDefault(result, xxx)` |     |
 
 ### Changes to the `Result` type
