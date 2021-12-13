@@ -43,18 +43,6 @@ export function withDefault<T>(result: Result<T, mixed>, defaultValue: T): T {
     return result.type === 'ok' ? result.value : defaultValue;
 }
 
-// TODO: Remove this from the public API? The same can be achieved now with
-// TODO: const { value } = result;
-export function okValue<T>(result: Result<T, mixed>): void | T {
-    return result.type === 'ok' ? result.value : undefined;
-}
-
-// TODO: Remove this from the public API? The same can be achieved now with
-// TODO: const { error } = result;
-export function errValue<E>(result: Result<mixed, E>): void | E {
-    return result.type === 'err' ? result.error : undefined;
-}
-
 export function okOrErrValue<T, E>(result: Result<T, E>): T | E {
     return result.type === 'ok' ? result.value : result.error;
 }

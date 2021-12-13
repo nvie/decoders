@@ -4,14 +4,12 @@ import {
     andThen,
     dispatch,
     err,
-    errValue,
     expect as expect_, // To avoid conflict with Jest expect() calls
     isErr,
     isOk,
     mapError,
     mapOk,
     ok,
-    okValue,
     orElse,
     toString,
     unwrap,
@@ -63,8 +61,8 @@ describe('Result', () => {
     });
 
     it('map', () => {
-        expect(okValue(mapOk(r1, (x) => x.toString()))).toBe('42');
-        expect(okValue(mapOk(r4, (x) => x.length))).toBeUndefined();
+        expect(mapOk(r1, (x) => x.toString()).value).toBe('42');
+        expect(mapOk(r4, (x) => x.length).value).toBeUndefined();
     });
 
     it('mapError', () => {
@@ -97,18 +95,18 @@ describe('Result', () => {
         expect(withDefault(r4, 'foo')).toBe('foo');
     });
 
-    it('value', () => {
-        expect(okValue(r1)).toBe(42);
-        expect(okValue(r2)).toBe("I'm a string");
-        expect(okValue(r3)).toBeUndefined();
-        expect(okValue(r4)).toBeUndefined();
+    it('value access', () => {
+        expect(r1.value).toBe(42);
+        expect(r2.value).toBe("I'm a string");
+        expect(r3.value).toBeUndefined();
+        expect(r4.value).toBeUndefined();
     });
 
-    it('errValue', () => {
-        expect(errValue(r1)).toBeUndefined();
-        expect(errValue(r2)).toBeUndefined();
-        expect(errValue(r3)).toEqual(new Error('Proper JS error'));
-        expect(errValue(r4)).toEqual('a reason');
+    it('error access', () => {
+        expect(r1.error).toBeUndefined();
+        expect(r2.error).toBeUndefined();
+        expect(r3.error).toEqual(new Error('Proper JS error'));
+        expect(r4.error).toEqual('a reason');
     });
 
     // it('and (&&)', () => {
@@ -147,7 +145,7 @@ describe('Result', () => {
                     : err('not a number')
             ),
         );
-        expect(okValue(v1)).toBe(84);
+        expect(v1.value).toBe(84);
         expect(isErr(v2)).toBe(true);
         expect(isErr(v3)).toBe(true);
         expect(isErr(v4)).toBe(true);
@@ -160,9 +158,9 @@ describe('Result', () => {
                 (e) => ok('lesson learned: ' + e.toString())
             ),
         );
-        expect(okValue(v1)).toBe(42);
-        expect(okValue(v2)).toBe("I'm a string");
-        expect(okValue(v3)).toBe('lesson learned: Error: Proper JS error');
-        expect(okValue(v4)).toBe('lesson learned: a reason');
+        expect(v1.value).toBe(42);
+        expect(v2.value).toBe("I'm a string");
+        expect(v3.value).toBe('lesson learned: Error: Proper JS error');
+        expect(v4.value).toBe('lesson learned: a reason');
     });
 });

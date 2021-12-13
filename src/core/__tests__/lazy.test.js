@@ -2,8 +2,8 @@
 /* eslint-disable no-restricted-syntax */
 
 import { array } from '../array';
-import { errValue, isErr, okValue } from '../../result';
 import { INPUTS } from './fixtures';
+import { isErr } from '../../result';
 import { lazy } from '../lazy';
 import { number } from '../number';
 import { object } from '../object';
@@ -18,8 +18,8 @@ describe('lazy', () => {
         for (const input of INPUTS) {
             const eagerResult = eagerDecoder(input);
             const lazyResult = lazyDecoder(input);
-            expect(okValue(eagerResult)).toEqual(okValue(lazyResult));
-            expect(errValue(eagerResult)).toEqual(errValue(lazyResult));
+            expect(eagerResult.value).toEqual(lazyResult.value);
+            expect(eagerResult.error).toEqual(lazyResult.error);
         }
     });
 
@@ -41,8 +41,8 @@ describe('lazy', () => {
 
         const v1 = { curr: 'i am a string' };
         const v2 = { curr: 'i am a string', next: { curr: 'another' } };
-        expect(okValue(llist(v1))).toEqual(v1);
-        expect(okValue(llist(v2))).toEqual(v2);
+        expect(llist(v1).value).toEqual(v1);
+        expect(llist(v2).value).toEqual(v2);
     });
 
     it('build self-referential types with variables', () => {
@@ -67,12 +67,12 @@ describe('lazy', () => {
 
         const s1 = { node: 'string', children: [] };
         const s2 = { node: 'string', children: [{ node: 'another', children: [] }] };
-        expect(okValue(stringTree(s1))).toEqual(s1);
-        expect(okValue(stringTree(s2))).toEqual(s2);
+        expect(stringTree(s1).value).toEqual(s1);
+        expect(stringTree(s2).value).toEqual(s2);
 
         const n1 = { node: 123, children: [] };
         const n2 = { node: 123, children: [{ node: 456, children: [] }] };
-        expect(okValue(tree(number)(n1))).toEqual(n1);
-        expect(okValue(tree(number)(n2))).toEqual(n2);
+        expect(tree(number)(n1).value).toEqual(n1);
+        expect(tree(number)(n2).value).toEqual(n2);
     });
 });
