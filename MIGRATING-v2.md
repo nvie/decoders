@@ -89,24 +89,21 @@ import { ... } from 'decoders/result';
 //       ✨
 ```
 
-| Replace usage of          | With ✨                    | Or even better 🍀       |     |
-| ------------------------- | -------------------------- | ----------------------- | --- |
-| `result.andThen()`        | `andThen(result)`          |                         |     |
-| `result.dispatch()`       | `dispatch(result)`         |                         |     |
-| `result.errValue()`       | `errValue(result)`         |                         |     |
-| `result.expect()`         | `expect(result)`           |                         |     |
-| `result.isErr()`          | `isErr(result)`            | `result.type === 'err'` |     |
-| `result.isOk()`           | `isOk(result)`             | `result.type === 'ok'`  |     |
-| `result.map()`            | `mapOk(result)`            |                         | ⚠️  |
-| `result.mapError()`       | `mapError(result)`         |                         |     |
-| `result.toString()`       | `toString(result)`         |                         |     |
-| `result.unwrap()`         | `unwrap(result)`           |                         |     |
-| `result.value() ?? xxx`   | `withDefault(result, xxx)` | `result.type === 'ok'`  | ⚠️  |
-| `result.value() \|\| xxx` | `withDefault(result, xxx)` | `result.type === 'ok'`  | ⚠️  |
-| `result.withDefault(xxx)` | `withDefault(result, xxx)` |                         |     |
-
-🍀 You can directly access the `type` field on results now. This has benefits as
-TypeScript and/or Flow can easily refine both if and else branches this way.
+| Replace usage of          | With ✨                    |     |
+| ------------------------- | -------------------------- | --- |
+| `result.andThen()`        | `andThen(result)`          |     |
+| `result.dispatch()`       | `dispatch(result)`         |     |
+| `result.errValue()`       | `errValue(result)`         |     |
+| `result.expect()`         | `expect(result)`           |     |
+| `result.isErr()`          | `result.type === 'err'`    |     |
+| `result.isOk()`           | `result.type === 'ok'`     |     |
+| `result.map()`            | `mapOk(result)`            | ⚠️  |
+| `result.mapError()`       | `mapError(result)`         |     |
+| `result.toString()`       | `toString(result)`         |     |
+| `result.unwrap()`         | `unwrap(result)`           |     |
+| `result.value() ?? xxx`   | `result.value ?? xxx`      | ⚠️  |
+| `result.value() \|\| xxx` | `result.value \|\| xxx`    | ⚠️  |
+| `result.withDefault(xxx)` | `withDefault(result, xxx)` |     |
 
 ### Changes to the `Result` type
 
