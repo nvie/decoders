@@ -2,9 +2,14 @@
 
 import { annotate } from '../annotate';
 import { compose, predicate } from './composition';
-import { err, ok, okOrErrValue, unwrap } from '../result';
+import { err, ok, unwrap } from '../result';
 import { poja } from './array';
 import type { Decoder } from '../_types';
+import type { Result } from '../result';
+
+function okOrErr<T, E>(result: Result<T, E>): T | E {
+    return result.type === 'ok' ? result.value : result.error;
+}
 
 const ntuple = (n: number) =>
     compose(
@@ -26,7 +31,7 @@ export function tuple1<T>(decoder1: Decoder<T>): Decoder<[T]> {
         } catch (e) {
             // If a decoder error has happened while unwrapping all the
             // results, try to construct a good error message
-            return err(annotate([okOrErrValue(result1)]));
+            return err(annotate([okOrErr(result1)]));
         }
     });
 }
@@ -49,7 +54,7 @@ export function tuple2<T1, T2>(
         } catch (e) {
             // If a decoder error has happened while unwrapping all the
             // results, try to construct a good error message
-            return err(annotate([okOrErrValue(result1), okOrErrValue(result2)]));
+            return err(annotate([okOrErr(result1), okOrErr(result2)]));
         }
     });
 }
@@ -74,13 +79,7 @@ export function tuple3<T1, T2, T3>(
         } catch (e) {
             // If a decoder error has happened while unwrapping all the
             // results, try to construct a good error message
-            return err(
-                annotate([
-                    okOrErrValue(result1),
-                    okOrErrValue(result2),
-                    okOrErrValue(result3),
-                ]),
-            );
+            return err(annotate([okOrErr(result1), okOrErr(result2), okOrErr(result3)]));
         }
     });
 }
@@ -114,10 +113,10 @@ export function tuple4<T1, T2, T3, T4>(
             // results, try to construct a good error message
             return err(
                 annotate([
-                    okOrErrValue(result1),
-                    okOrErrValue(result2),
-                    okOrErrValue(result3),
-                    okOrErrValue(result4),
+                    okOrErr(result1),
+                    okOrErr(result2),
+                    okOrErr(result3),
+                    okOrErr(result4),
                 ]),
             );
         }
@@ -156,11 +155,11 @@ export function tuple5<T1, T2, T3, T4, T5>(
             // results, try to construct a good error message
             return err(
                 annotate([
-                    okOrErrValue(result1),
-                    okOrErrValue(result2),
-                    okOrErrValue(result3),
-                    okOrErrValue(result4),
-                    okOrErrValue(result5),
+                    okOrErr(result1),
+                    okOrErr(result2),
+                    okOrErr(result3),
+                    okOrErr(result4),
+                    okOrErr(result5),
                 ]),
             );
         }
@@ -202,12 +201,12 @@ export function tuple6<T1, T2, T3, T4, T5, T6>(
             // results, try to construct a good error message
             return err(
                 annotate([
-                    okOrErrValue(result1),
-                    okOrErrValue(result2),
-                    okOrErrValue(result3),
-                    okOrErrValue(result4),
-                    okOrErrValue(result5),
-                    okOrErrValue(result6),
+                    okOrErr(result1),
+                    okOrErr(result2),
+                    okOrErr(result3),
+                    okOrErr(result4),
+                    okOrErr(result5),
+                    okOrErr(result6),
                 ]),
             );
         }

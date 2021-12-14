@@ -43,10 +43,6 @@ export function withDefault<T>(result: Result<T, mixed>, defaultValue: T): T {
     return result.type === 'ok' ? result.value : defaultValue;
 }
 
-export function okOrErrValue<T, E>(result: Result<T, E>): T | E {
-    return result.type === 'ok' ? result.value : result.error;
-}
-
 /**
  * Unwrap the value from this Result instance if this is an "Ok" result.
  * Otherwise, will throw the "Err" error via a runtime exception.
