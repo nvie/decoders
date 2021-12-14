@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "lib": ["es6"],
+        "strict": true,
+        "noEmit": true,
+        "baseUrl": ".",
+        "paths": {
+            "decoders": ["."],
+            "decoders/annotate": ["./annotate"],
+            "decoders/format": ["./format"],
+            "decoders/result": ["./result"]
+        }
+    }
+}
