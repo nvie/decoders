@@ -1,7 +1,7 @@
 // @flow strict
 
-import { asDate, indent, INDENT, isMultiline } from '../_utils';
-import type { Annotation, ArrayAnnotation, ObjectAnnotation } from '../annotate';
+import { summarize as _summarize, asDate, INDENT, indent, isMultiline } from './_utils';
+import type { Annotation, ArrayAnnotation, ObjectAnnotation } from './annotate';
 
 function serializeString(s: string, width: number = 80): string {
     // Full string
@@ -119,4 +119,8 @@ export function formatInline(ann: Annotation): string {
     } else {
         return serialized;
     }
+}
+
+export function formatShort(ann: Annotation): string {
+    return _summarize(ann, []).join('\n');
 }
