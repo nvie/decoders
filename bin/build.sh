@@ -15,7 +15,6 @@
 #    those output files.
 #
 # 4. Produces "TypeScript definition types" (*.d.ts).
-#    TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 #
 set -e
 
