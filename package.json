@@ -1,6 +1,6 @@
 {
     "name": "decoders",
-    "version": "2.0.0-beta5",
+    "version": "2.0.0-beta6",
     "description": "Elegant and battle-tested validation library for type-safe input data (for TypeScript and Flow)",
     "license": "MIT",
     "repository": {
