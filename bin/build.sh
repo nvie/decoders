@@ -52,12 +52,17 @@ build_flow() {
 }
 
 build_typescript() {
-    # TODO TODO TODO TODO TODO TODO TODO TODO TODO
-    echo "TODO: Copy TypeScript definition files"
+    (cd "$SRC/types" && find . -iname '*.d.ts' -a '!' -iname '*-tests.d.ts' | xargs tar -cf - ) \
+        | (cd "$DIST" && tar -xvf -)
 }
 
 build_misc() {
     cp LICENSE README.md CHANGELOG.md "$DIST"
+}
+
+add_types_entrypoint() {
+    echo '"Package `decoders` requires TypeScript >= 4.1.0"' > "$DIST/NotSupportedTSVersion.d.ts"
+    jq '. + { typesVersions: { ">=4.1.0": {"*": ["*"]}}, "*": { "*": [ "NotSupportedTSVersion.d.ts" ] } }'
 }
 
 build_package_json() {
@@ -68,6 +73,7 @@ build_package_json() {
         jq 'del(.jest)'             | \
         jq 'del(.scripts)'          | \
         jq 'del(.type)'             | \
+        add_types_entrypoint        | \
         sed -Ee 's,dist/,,g'          \
         > "$DIST/package.json"
     prettier --write "$DIST/package.json"
