@@ -1,14 +1,14 @@
 // @flow strict
 
-import * as Result from '../result';
 import { annotate } from '../annotate';
+import { err, ok } from '../result';
 import type { Decoder } from '../_types';
 
 export function instanceOf<T>(klass: Class<T>): Decoder<T> {
     return (blob: mixed) =>
         blob instanceof klass
-            ? Result.ok(blob)
-            : Result.err(
+            ? ok(blob)
+            : err(
                   annotate(
                       blob,
                       `Must be ${

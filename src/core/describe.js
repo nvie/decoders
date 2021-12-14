@@ -1,7 +1,7 @@
 // @flow strict
 
-import * as Result from '../result';
 import { annotate } from '../annotate';
+import { mapError } from '../result';
 import type { Decoder } from '../_types';
 
 /**
@@ -12,6 +12,6 @@ import type { Decoder } from '../_types';
  */
 export function describe<T>(decoder: Decoder<T>, message: string): Decoder<T> {
     return (blob: mixed) => {
-        return Result.mapError(decoder(blob), (err) => annotate(err, message));
+        return mapError(decoder(blob), (err) => annotate(err, message));
     };
 }

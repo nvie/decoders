@@ -1,8 +1,8 @@
 // @flow strict
 
-import * as Result from '../result';
 import { annotate } from '../annotate';
 import { compose, predicate } from './composition';
+import { err, ok } from '../result';
 import type { Decoder, DecodeResult } from '../_types';
 
 /**
@@ -11,9 +11,9 @@ import type { Decoder, DecodeResult } from '../_types';
  */
 export const poja: Decoder<Array<mixed>> = (blob: mixed) => {
     if (!Array.isArray(blob)) {
-        return Result.err(annotate(blob, 'Must be an array'));
+        return err(annotate(blob, 'Must be an array'));
     }
-    return Result.ok(
+    return ok(
         // NOTE: Since Flow 0.98, Array.isArray() returns $ReadOnlyArray<mixed>
         // instead of Array<mixed>.  For rationale, see
         // https://github.com/facebook/flow/issues/7684.  In this case, we
@@ -65,10 +65,10 @@ function all<T>(
             // if (index < iterable.length - 1) {
             //     errValue.push('...'); // TODO: make special mark, not string!
             // }
-            return Result.err(annotate(clone));
+            return err(annotate(clone));
         }
     }
-    return Result.ok(results);
+    return ok(results);
 }
 
 /**

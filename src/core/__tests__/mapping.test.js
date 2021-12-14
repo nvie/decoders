@@ -1,10 +1,10 @@
 // @flow strict
 
-import * as Result from '../../result';
 import { dict, mapping } from '../mapping';
 import { guard } from '../../_guard';
 import { object } from '../object';
 import { string } from '../string';
+import { unwrap } from '../../result';
 
 describe('mappings', () => {
     const decoder = mapping(object({ name: string }));
@@ -20,7 +20,7 @@ describe('mappings', () => {
             ['23', { name: 'bar' }],
             ['key', { name: 'value' }],
         ]);
-        expect(Result.unwrap(decoder(input))).toEqual(output);
+        expect(unwrap(decoder(input))).toEqual(output);
     });
 
     it('invalid', () => {
@@ -48,7 +48,7 @@ describe('dicts', () => {
             '23': { name: 'bar' },
             key: { name: 'value' },
         };
-        expect(Result.unwrap(decoder(input))).toEqual(input);
+        expect(unwrap(decoder(input))).toEqual(input);
     });
 
     it('invalid', () => {

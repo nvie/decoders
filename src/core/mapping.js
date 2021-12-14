@@ -1,8 +1,8 @@
 // @flow strict
 
-import * as Result from '../result';
 import { annotateObject } from '../annotate';
 import { compose, map } from './composition';
+import { err, ok } from '../result';
 import { merge } from '../annotate';
 import { pojo } from './object';
 import type { Annotation } from '../annotate';
@@ -39,9 +39,9 @@ export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
         });
 
         if (errors !== null) {
-            return Result.err(merge(annotateObject(blob), errors));
+            return err(merge(annotateObject(blob), errors));
         } else {
-            return Result.ok(new Map(tuples));
+            return ok(new Map(tuples));
         }
     });
 }

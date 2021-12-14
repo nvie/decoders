@@ -1,8 +1,8 @@
 // @flow strict
 
-import * as Result from '../result';
 import { annotate, annotateObject, merge, updateText } from '../annotate';
 import { compose, map } from './composition';
+import { err, ok } from '../result';
 import type { Annotation } from '../annotate';
 import type { Decoder, DecoderType } from '../_types';
 
@@ -36,7 +36,7 @@ function subtract(xs: Set<string>, ys: Set<string>): Set<string> {
 
 export const pojo: Decoder<{| [string]: mixed |}> = (blob: mixed) => {
     return isPojo(blob)
-        ? Result.ok(
+        ? ok(
               // NOTE:
               // Since Flow 0.98, typeof o === 'object' refines to
               //     {| +[string]: mixed |}
@@ -53,7 +53,7 @@ export const pojo: Decoder<{| [string]: mixed |}> = (blob: mixed) => {
               // https://thecodebarbarian.com/object-assign-vs-object-spread.html)
               { ...blob },
           )
-        : Result.err(annotate(blob, 'Must be an object'));
+        : err(annotate(blob, 'Must be an object'));
 };
 
 /**
@@ -144,10 +144,10 @@ export function object<O: { +[field: string]: AnyDecoder, ... }>(
                 objAnn = updateText(objAnn, `Missing ${pluralized}: ${errMsg}`);
             }
 
-            return Result.err(objAnn);
+            return err(objAnn);
         }
 
-        return Result.ok(record);
+        return ok(record);
     });
 }
 
@@ -160,11 +160,11 @@ export function exact<O: { +[field: string]: AnyDecoder, ... }>(
         const actual = new Set(Object.keys(blob));
         const superfluous = subtract(actual, allowed);
         if (superfluous.size > 0) {
-            return Result.err(
+            return err(
                 annotate(blob, `Superfluous keys: ${Array.from(superfluous).join(', ')}`),
             );
         }
-        return Result.ok(blob);
+        return ok(blob);
     });
 
     // Defer to the "object" decoder for doing the real decoding work.  Since

@@ -1,10 +1,10 @@
 // @flow strict
 /* eslint-disable no-restricted-syntax */
 
-import * as Result from '../../result';
 import { boolean, numericBoolean, truthy } from '../boolean';
 import { INPUTS } from './fixtures';
 import { partition } from 'itertools';
+import { unwrap } from '../../result';
 
 describe('booleans', () => {
     const decoder = boolean;
@@ -13,7 +13,7 @@ describe('booleans', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(Result.unwrap(decoder(value))).toBe(value);
+            expect(unwrap(decoder(value))).toBe(value);
         }
     });
 
@@ -32,7 +32,7 @@ describe('truthy', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(Result.unwrap(decoder(value))).toBe(!!value);
+            expect(unwrap(decoder(value))).toBe(!!value);
         }
     });
 
@@ -48,7 +48,7 @@ describe('numeric booleans', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(Result.unwrap(decoder(value))).toBe(!!value);
+            expect(unwrap(decoder(value))).toBe(!!value);
         }
     });
 

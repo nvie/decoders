@@ -1,6 +1,6 @@
 // @flow strict
 
-import * as Result from '../result';
+import { andThen, err, ok } from '../result';
 import { annotate } from '../annotate';
 import type { Decoder } from '../_types';
 
@@ -11,9 +11,9 @@ import type { Decoder } from '../_types';
 export function map<T, V>(decoder: Decoder<T>, mapper: (T) => V): Decoder<V> {
     return compose(decoder, (x) => {
         try {
-            return Result.ok(mapper(x));
+            return ok(mapper(x));
         } catch (e) {
-            return Result.err(annotate(x, e instanceof Error ? e.message : String(e)));
+            return err(annotate(x, e instanceof Error ? e.message : String(e)));
         }
     });
 }
@@ -29,15 +29,15 @@ export function map<T, V>(decoder: Decoder<T>, mapper: (T) => V): Decoder<V> {
  * argument.
  */
 export function compose<T, V>(decoder: Decoder<T>, next: Decoder<V, T>): Decoder<V> {
-    return (blob: mixed) => Result.andThen(decoder(blob), next);
+    return (blob: mixed) => andThen(decoder(blob), next);
 }
 
 /**
  * Factory function returning a Decoder<T>, given a predicate function that
  * accepts/rejects the input of type T.
  */
-export function predicate<T>(predicate: (T) => boolean, msg: string): Decoder<T, T> {
+export function predicate<T>(predicateFn: (T) => boolean, msg: string): Decoder<T, T> {
     return (value: T) => {
-        return predicate(value) ? Result.ok(value) : Result.err(annotate(value, msg));
+        return predicateFn(value) ? ok(value) : err(annotate(value, msg));
     };
 }

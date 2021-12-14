@@ -1,7 +1,7 @@
 // @flow strict
 
-import * as Result from '../result';
 import { annotate } from '../annotate';
+import { err, ok, orElse } from '../result';
 import { indent, summarize } from '../_utils';
 import type { Decoder, Scalar } from '../_types';
 
@@ -46,12 +46,12 @@ function nest(errText: string): string {
 
 export function either<T1, T2>(d1: Decoder<T1>, d2: Decoder<T2>): Decoder<T1 | T2> {
     return (blob: mixed) =>
-        Result.orElse(d1(blob), (err1) =>
-            Result.orElse(d2(blob), (err2) => {
+        orElse(d1(blob), (err1) =>
+            orElse(d2(blob), (err2) => {
                 const serr1 = summarize(err1).join('\n');
                 const serr2 = summarize(err2).join('\n');
                 const text = ['Either:', nest(serr1), nest(serr2)].join('\n');
-                return Result.err(annotate(blob, text));
+                return err(annotate(blob, text));
             }),
         );
 }
@@ -137,9 +137,9 @@ export function oneOf<T: Scalar>(constants: $ReadOnlyArray<T>): Decoder<T> {
     return (blob: mixed) => {
         const winner = constants.find((c) => c === blob);
         if (winner !== undefined) {
-            return Result.ok(winner);
+            return ok(winner);
         }
-        return Result.err(
+        return err(
             annotate(
                 blob,
                 `Must be one of ${constants
