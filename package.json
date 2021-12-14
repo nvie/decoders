@@ -25,9 +25,10 @@
         "fix:eslint": "eslint --report-unused-disable-directives --fix src",
         "fix:prettier": "prettier --write 'src/**/*.js'",
         "prepublish": "in-publish && yarn run actually-prepublish || not-in-publish",
-        "test": "yarn run clean && yarn run test:flow && yarn run test:jest && yarn run check",
+        "test": "yarn run clean && yarn run test:flow && yarn run test:typescript && yarn run test:jest && yarn run check",
         "test:flow": "flow check",
         "test:jest": "jest --coverage --coverageThreshold '{\"global\": {\"branches\": 100, \"functions\": 100, \"lines\": 100, \"statements\": 100}}'",
+        "test:typescript": "dtslint --localTs node_modules/typescript/lib src/types",
         "watch": "jest --watch"
     },
     "files": [
