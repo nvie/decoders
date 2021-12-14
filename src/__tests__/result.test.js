@@ -109,33 +109,6 @@ describe('Result', () => {
         expect(r4.error).toEqual('a reason');
     });
 
-    // it('and (&&)', () => {
-    //     const ok1 = ok(42);
-    //     const ok2 = ok('hi');
-    //     const err1 = err('boo');
-    //     const err2 = err('bleh');
-
-    //     expect(and(ok1, ok2)).toBe(ok2);
-    //     expect(and(ok1, err1)).toBe(err1);
-    //     expect(and(err1, ok1)).toBe(err1);
-    //     expect(and(err1, err2)).toBe(err1);
-    //     expect(and(err2, err1)).toBe(err2);
-    // });
-
-    // it('or (||)', () => {
-    //     const ok1 = ok(42);
-    //     const ok2 = ok('hi');
-    //     const err1 = err('boo');
-    //     const err2 = err('bleh');
-
-    //     expect(or(ok1, ok2)).toBe(ok1);
-    //     expect(or(ok2, ok1)).toBe(ok2);
-    //     expect(or(ok1, err1)).toBe(ok1);
-    //     expect(or(err1, ok1)).toBe(ok1);
-    //     expect(or(err1, err2)).toBe(err2);
-    //     expect(or(err2, err1)).toBe(err1);
-    // });
-
     it('andThen', () => {
         const [v1, v2, v3, v4] = [r1, r2, r3, r4].map((r) =>
             // prettier-ignore
