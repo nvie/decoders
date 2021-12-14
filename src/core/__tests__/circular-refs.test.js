@@ -1,6 +1,5 @@
 // @flow strict
 
-import * as Result from '../../result';
 import { guard } from '../../_guard';
 import { mixed } from '../constants';
 import { number } from '../number';
@@ -53,22 +52,20 @@ describe('objects w/ circular refs', () => {
     });
 
     it('invalid', () => {
-        expect(Result.isErr(object({ foo: string })(value))).toBe(true);
-        expect(Result.isErr(object({ foo: string, self: mixed })(value))).toBe(true);
-        expect(Result.isErr(object({ foo: string, self: pojo })(value))).toBe(true);
+        expect(object({ foo: string })(value).type).toBe('err');
+        expect(object({ foo: string, self: mixed })(value).type).toBe('err');
+        expect(object({ foo: string, self: pojo })(value).type).toBe('err');
+        expect(object({ foo: number, self: object({ foo: string }) })(value).type).toBe(
+            'err',
+        );
         expect(
-            Result.isErr(object({ foo: number, self: object({ foo: string }) })(value)),
-        ).toBe(true);
-        expect(
-            Result.isErr(
-                object({
+            object({
+                foo: number,
+                self: object({
                     foo: number,
-                    self: object({
-                        foo: number,
-                        self: object({ self: object({ foo: string }) }),
-                    }),
-                })(value),
-            ),
-        ).toBe(true);
+                    self: object({ self: object({ foo: string }) }),
+                }),
+            })(value).type,
+        ).toBe('err');
     });
 });

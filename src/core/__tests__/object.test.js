@@ -1,12 +1,12 @@
 // @flow strict
 
-import * as Result from '../../result';
 import { exact, inexact, object, pojo } from '../object';
 import { guard } from '../../_guard';
 import { hardcoded } from '../constants';
 import { number } from '../number';
 import { optional } from '../optional';
 import { string } from '../string';
+import { unwrap } from '../../result';
 
 describe('objects', () => {
     it('decodes objects and fields', () => {
@@ -15,14 +15,14 @@ describe('objects', () => {
             name: string,
         });
 
-        expect(Result.unwrap(decoder({ id: 1, name: 'test' }))).toEqual({
+        expect(unwrap(decoder({ id: 1, name: 'test' }))).toEqual({
             id: 1,
             name: 'test',
         });
 
         // Superfluous keys are just ignored
         expect(
-            Result.unwrap(decoder({ id: 1, name: 'test', superfluous: 'abundance' })),
+            unwrap(decoder({ id: 1, name: 'test', superfluous: 'abundance' })),
         ).toEqual({ id: 1, name: 'test' });
     });
 
@@ -34,11 +34,11 @@ describe('objects', () => {
             extra: optional(string),
         });
 
-        expect(Result.unwrap(decoder({ id: 1, name: 'test' }))).toEqual({
+        expect(unwrap(decoder({ id: 1, name: 'test' }))).toEqual({
             id: 1,
             name: 'test',
         });
-        expect(Result.unwrap(decoder({ id: 1, name: 'test', extra: 'foo' }))).toEqual({
+        expect(unwrap(decoder({ id: 1, name: 'test', extra: 'foo' }))).toEqual({
             id: 1,
             name: 'test',
             extra: 'foo',
@@ -58,7 +58,7 @@ describe('objects', () => {
 
         expect({
             ...defaults,
-            ...Result.unwrap(decoder({ id: 1, name: 'test' })),
+            ...unwrap(decoder({ id: 1, name: 'test' })),
         }).toEqual({
             id: 1,
             name: 'test',
@@ -117,20 +117,20 @@ describe('objects', () => {
     it('errors on non-objects', () => {
         const decoder = object({ id: string });
 
-        expect(Result.isErr(decoder('foo'))).toBe(true);
-        expect(Result.isErr(decoder(3.14))).toBe(true);
-        expect(Result.isErr(decoder([]))).toBe(true);
-        expect(Result.isErr(decoder(undefined))).toBe(true);
-        expect(Result.isErr(decoder(NaN))).toBe(true);
-        expect(Result.isErr(decoder({ foo: [1, 2, 3] }))).toBe(true); // Missing key "id"
-        expect(Result.isErr(decoder({ id: 3 }))).toBe(true); // Invalid field value for "id"
+        expect(decoder('foo').type).toBe('err');
+        expect(decoder(3.14).type).toBe('err');
+        expect(decoder([]).type).toBe('err');
+        expect(decoder(undefined).type).toBe('err');
+        expect(decoder(NaN).type).toBe('err');
+        expect(decoder({ foo: [1, 2, 3] }).type).toBe('err'); // Missing key "id"
+        expect(decoder({ id: 3 }).type).toBe('err'); // Invalid field value for "id"
     });
 });
 
 describe('exact objects', () => {
     it('decodes objects and fields', () => {
         const decoder = exact({ id: number, name: string });
-        expect(Result.unwrap(decoder({ id: 1, name: 'test' }))).toEqual({
+        expect(unwrap(decoder({ id: 1, name: 'test' }))).toEqual({
             id: 1,
             name: 'test',
         });
@@ -149,12 +149,12 @@ describe('exact objects', () => {
             name: string,
             extra: hardcoded('extra'),
         });
-        expect(Result.unwrap(decoder({ id: 1, name: 'test' }))).toEqual({
+        expect(unwrap(decoder({ id: 1, name: 'test' }))).toEqual({
             id: 1,
             name: 'test',
             extra: 'extra',
         });
-        expect(Result.unwrap(decoder({ id: 1, name: 'test', extra: 42 }))).toEqual({
+        expect(unwrap(decoder({ id: 1, name: 'test', extra: 42 }))).toEqual({
             id: 1,
             name: 'test',
             extra: 'extra',
@@ -170,13 +170,13 @@ describe('exact objects', () => {
     it('errors on non-objects', () => {
         const decoder = exact({ id: string });
 
-        expect(Result.isErr(decoder('foo'))).toBe(true);
-        expect(Result.isErr(decoder(3.14))).toBe(true);
-        expect(Result.isErr(decoder([]))).toBe(true);
-        expect(Result.isErr(decoder(undefined))).toBe(true);
-        expect(Result.isErr(decoder(NaN))).toBe(true);
-        expect(Result.isErr(decoder({ foo: [1, 2, 3] }))).toBe(true); // Missing key "id"
-        expect(Result.isErr(decoder({ id: 3 }))).toBe(true); // Invalid field value for "id"
+        expect(decoder('foo').type).toBe('err');
+        expect(decoder(3.14).type).toBe('err');
+        expect(decoder([]).type).toBe('err');
+        expect(decoder(undefined).type).toBe('err');
+        expect(decoder(NaN).type).toBe('err');
+        expect(decoder({ foo: [1, 2, 3] }).type).toBe('err'); // Missing key "id"
+        expect(decoder({ id: 3 }).type).toBe('err'); // Invalid field value for "id"
     });
 
     it('exact objects with optional fields will be implicit-undefined', () => {
@@ -192,7 +192,7 @@ describe('exact objects', () => {
 
         expect({
             ...defaults,
-            ...Result.unwrap(decoder({ id: 1, name: 'test' })),
+            ...unwrap(decoder({ id: 1, name: 'test' })),
         }).toEqual({
             id: 1,
             name: 'test',
@@ -204,14 +204,14 @@ describe('exact objects', () => {
 describe('inexact objects', () => {
     it('decodes objects and fields', () => {
         const decoder = inexact({ id: number, name: string });
-        expect(Result.unwrap(decoder({ id: 1, name: 'test' }))).toEqual({
+        expect(unwrap(decoder({ id: 1, name: 'test' }))).toEqual({
             id: 1,
             name: 'test',
         });
 
         // Extra properties will be retained, but "unknown"
         expect(
-            Result.unwrap(decoder({ id: 1, name: 'test', extra1: 123, extra2: 'hey' })),
+            unwrap(decoder({ id: 1, name: 'test', extra1: 123, extra2: 'hey' })),
         ).toEqual({
             id: 1,
             name: 'test',
@@ -222,12 +222,12 @@ describe('inexact objects', () => {
 
     it('retains extra hardcoded fields', () => {
         const decoder = inexact({ id: number, name: string, extra: hardcoded('extra') });
-        expect(Result.unwrap(decoder({ id: 1, name: 'test', extra: 42 }))).toEqual({
+        expect(unwrap(decoder({ id: 1, name: 'test', extra: 42 }))).toEqual({
             id: 1,
             name: 'test',
             extra: 'extra',
         });
-        expect(Result.unwrap(decoder({ id: 1, name: 'test' }))).toEqual({
+        expect(unwrap(decoder({ id: 1, name: 'test' }))).toEqual({
             id: 1,
             name: 'test',
             extra: 'extra',
@@ -235,7 +235,7 @@ describe('inexact objects', () => {
 
         // Extra properties will be retained, but "unknown"
         expect(
-            Result.unwrap(decoder({ id: 1, name: 'test', extra1: 123, extra2: 'hey' })),
+            unwrap(decoder({ id: 1, name: 'test', extra1: 123, extra2: 'hey' })),
         ).toEqual({
             id: 1,
             name: 'test',
@@ -248,13 +248,13 @@ describe('inexact objects', () => {
     it('errors on non-objects', () => {
         const decoder = inexact({ id: string });
 
-        expect(Result.isErr(decoder('foo'))).toBe(true);
-        expect(Result.isErr(decoder(3.14))).toBe(true);
-        expect(Result.isErr(decoder([]))).toBe(true);
-        expect(Result.isErr(decoder(undefined))).toBe(true);
-        expect(Result.isErr(decoder(NaN))).toBe(true);
-        expect(Result.isErr(decoder({ foo: [1, 2, 3] }))).toBe(true); // Missing key "id"
-        expect(Result.isErr(decoder({ id: 3 }))).toBe(true); // Invalid field value for "id"
+        expect(decoder('foo').type).toBe('err');
+        expect(decoder(3.14).type).toBe('err');
+        expect(decoder([]).type).toBe('err');
+        expect(decoder(undefined).type).toBe('err');
+        expect(decoder(NaN).type).toBe('err');
+        expect(decoder({ foo: [1, 2, 3] }).type).toBe('err'); // Missing key "id"
+        expect(decoder({ id: 3 }).type).toBe('err'); // Invalid field value for "id"
     });
 
     it('inexact objects with optional fields will be implicit-undefined', () => {
@@ -277,7 +277,7 @@ describe('inexact objects', () => {
             //
             // prettier-ignore
             // $FlowFixMe[cannot-spread-indexer]
-            { ...defaults, ...Result.unwrap(decoder({ foo: undefined, bar: undefined })) },
+            { ...defaults, ...unwrap(decoder({ foo: undefined, bar: undefined })) },
         ).toEqual({
             foo: 'default', // 'foo' is known and allowed-optional, so this will be implicit-undefined
             bar: undefined, // 'bar' is ignored so the explicit-undefined will override here

@@ -1,7 +1,6 @@
 // @flow strict
 /* eslint-disable no-restricted-syntax */
 
-import * as Result from '../../result';
 import { boolean } from '../boolean';
 import { constant, undefined_ } from '../constants';
 import { either, either4, either9, oneOf } from '../either';
@@ -11,6 +10,7 @@ import { number } from '../number';
 import { object } from '../object';
 import { partition } from 'itertools';
 import { regex, string } from '../string';
+import { unwrap } from '../../result';
 
 describe('either', () => {
     const stringOrBooleanDecoder = guard(either(string, boolean));
@@ -127,14 +127,14 @@ describe('either9', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(Result.unwrap(decoder(value))).toBe(value);
+            expect(unwrap(decoder(value))).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(Result.isErr(decoder(value))).toBe(true);
+            expect(decoder(value).type).toBe('err');
         }
     });
 });
@@ -147,14 +147,14 @@ describe('oneOf', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(Result.unwrap(decoder(value))).toBe(value);
+            expect(unwrap(decoder(value))).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(Result.isErr(decoder(value))).toBe(true);
+            expect(decoder(value).type).toBe('err');
         }
     });
 });

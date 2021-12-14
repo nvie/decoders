@@ -1,10 +1,10 @@
 // @flow strict
 /* eslint-disable no-restricted-syntax */
 
-import * as Result from '../../result';
 import { INPUTS } from './fixtures';
 import { integer, number, positiveInteger, positiveNumber } from '../number';
 import { partition } from 'itertools';
+import { unwrap } from '../../result';
 
 describe('number', () => {
     const decoder = number;
@@ -13,14 +13,14 @@ describe('number', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(Result.unwrap(decoder(value))).toBe(value);
+            expect(unwrap(decoder(value))).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(Result.isErr(decoder(value))).toBe(true);
+            expect(decoder(value).type).toBe('err');
         }
     });
 });
@@ -35,14 +35,14 @@ describe('positiveNumber', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(Result.unwrap(decoder(value))).toBe(value);
+            expect(unwrap(decoder(value))).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(Result.isErr(decoder(value))).toBe(true);
+            expect(decoder(value).type).toBe('err');
         }
     });
 });
@@ -54,14 +54,14 @@ describe('integer', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(Result.unwrap(decoder(value))).toBe(value);
+            expect(unwrap(decoder(value))).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(Result.isErr(decoder(value))).toBe(true);
+            expect(decoder(value).type).toBe('err');
         }
     });
 });
@@ -76,14 +76,14 @@ describe('positiveInteger', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(Result.unwrap(decoder(value))).toBe(value);
+            expect(unwrap(decoder(value))).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(Result.isErr(decoder(value))).toBe(true);
+            expect(decoder(value).type).toBe('err');
         }
     });
 });

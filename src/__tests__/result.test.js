@@ -5,15 +5,11 @@ import {
     dispatch,
     err,
     expect as expect_, // To avoid conflict with Jest expect() calls
-    isErr,
-    isOk,
     mapError,
     mapOk,
     ok,
     orElse,
-    toString,
     unwrap,
-    withDefault,
 } from '../result';
 
 describe('Result', () => {
@@ -22,27 +18,16 @@ describe('Result', () => {
     const r3 = err(new Error('Proper JS error'));
     const r4 = err('a reason');
 
-    it('toString', () => {
-        expect(toString(r1)).toBe('Ok(42)');
-        expect(toString(r2)).toBe("Ok(I'm a string)");
-        expect(toString(r3)).toBe('Err(Error: Proper JS error)');
-        expect(toString(r4)).toBe('Err(a reason)');
-    });
-
     it('inspection', () => {
-        expect(isOk(r1)).toBe(true);
-        expect(isErr(r1)).toBe(false);
-        expect(isOk(r2)).toBe(true);
-        expect(isErr(r2)).toBe(false);
-        expect(isOk(r3)).toBe(false);
-        expect(isErr(r3)).toBe(true);
-        expect(isOk(r4)).toBe(false);
-        expect(isErr(r4)).toBe(true);
+        expect(r1.type).toBe('ok');
+        expect(r2.type).toBe('ok');
+        expect(r3.type).toBe('err');
+        expect(r4.type).toBe('err');
     });
 
     it('convenience constructors', () => {
-        expect(isOk(ok(42))).toBe(true);
-        expect(isErr(err('oops'))).toBe(true);
+        expect(ok(42).type).toBe('ok');
+        expect(err('oops').type).toBe('err');
     });
 
     it('dispatching', () => {
@@ -88,13 +73,6 @@ describe('Result', () => {
         expect(() => expect_(r3, new CustomErr('foo'))).toThrow(CustomErr);
     });
 
-    it('withDefault', () => {
-        expect(withDefault(r1, 'foo')).toBe(42);
-        expect(withDefault(r2, 'foo')).toBe("I'm a string");
-        expect(withDefault(r3, 'foo')).toBe('foo');
-        expect(withDefault(r4, 'foo')).toBe('foo');
-    });
-
     it('value access', () => {
         expect(r1.value).toBe(42);
         expect(r2.value).toBe("I'm a string");
@@ -119,9 +97,9 @@ describe('Result', () => {
             ),
         );
         expect(v1.value).toBe(84);
-        expect(isErr(v2)).toBe(true);
-        expect(isErr(v3)).toBe(true);
-        expect(isErr(v4)).toBe(true);
+        expect(v2.type).toBe('err');
+        expect(v3.type).toBe('err');
+        expect(v4.type).toBe('err');
     });
 
     it('orElse', () => {

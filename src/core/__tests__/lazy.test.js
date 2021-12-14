@@ -3,7 +3,6 @@
 
 import { array } from '../array';
 import { INPUTS } from './fixtures';
-import { isErr } from '../../result';
 import { lazy } from '../lazy';
 import { number } from '../number';
 import { object } from '../object';
@@ -34,10 +33,10 @@ describe('lazy', () => {
             next: optional(lazy(() => llist)),
         });
 
-        expect(isErr(llist(123))).toBe(true);
-        expect(isErr(llist('string'))).toBe(true);
-        expect(isErr(llist({ curr: 123 }))).toBe(true);
-        expect(isErr(llist({ curr: 'string', next: true }))).toBe(true);
+        expect(llist(123).type).toBe('err');
+        expect(llist('string').type).toBe('err');
+        expect(llist({ curr: 123 }).type).toBe('err');
+        expect(llist({ curr: 'string', next: true }).type).toBe('err');
 
         const v1 = { curr: 'i am a string' };
         const v2 = { curr: 'i am a string', next: { curr: 'another' } };
@@ -60,10 +59,10 @@ describe('lazy', () => {
 
         const stringTree = tree(string);
 
-        expect(isErr(stringTree(123))).toBe(true);
-        expect(isErr(stringTree('string'))).toBe(true);
-        expect(isErr(stringTree({ node: 123 }))).toBe(true);
-        expect(isErr(stringTree({ node: 'string', children: false }))).toBe(true);
+        expect(stringTree(123).type).toBe('err');
+        expect(stringTree('string').type).toBe('err');
+        expect(stringTree({ node: 123 }).type).toBe('err');
+        expect(stringTree({ node: 'string', children: false }).type).toBe('err');
 
         const s1 = { node: 'string', children: [] };
         const s2 = { node: 'string', children: [{ node: 'another', children: [] }] };

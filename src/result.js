@@ -25,24 +25,6 @@ export function err<E>(error: E): Err<E> {
     return { type: 'err', value: undefined, error };
 }
 
-export function toString(result: Result<mixed, mixed>): string {
-    return result.type === 'ok'
-        ? `Ok(${String(result.value)})`
-        : `Err(${String(result.error)})`;
-}
-
-export function isOk(result: Result<mixed, mixed>): boolean {
-    return result.type === 'ok';
-}
-
-export function isErr(result: Result<mixed, mixed>): boolean {
-    return result.type === 'err';
-}
-
-export function withDefault<T>(result: Result<T, mixed>, defaultValue: T): T {
-    return result.type === 'ok' ? result.value : defaultValue;
-}
-
 /**
  * Unwrap the value from this Result instance if this is an "Ok" result.
  * Otherwise, will throw the "Err" error via a runtime exception.
@@ -70,48 +52,6 @@ export function dispatch<T, E, O>(
 ): O {
     return result.type === 'ok' ? okCallback(result.value) : errCallback(result.error);
 }
-
-/**
- * If the given result is OK, defers to the other result. Otherwise returns the
- * error result.
- *
- * It's like saying A && B, but on Result.
- *
- * Examples:
- *
- *     Result.ok(42)     && Result.ok('hi')    // => Ok('hi')
- *     Result.err('boo') && Result.ok('hi')    // => Err('boo')
- *     Result.ok(42)     && Result.err('boo')  // => Err('boo')
- *     Result.err('boo') && Result.err('boo')  // => Err('boo')
- *
- */
-// export function and<T, E, T2>(
-//     result1: Result<T, E>,
-//     result2: Result<T2, E>,
-// ): Result<T2, E> {
-//     return result1.type === 'ok' ? result2 : result1;
-// }
-
-/**
- * If the given result is OK, return that result. Otherwise, defers to the
- * other result.
- *
- * It's like saying A || B, but on Result.
- *
- * Examples:
- *
- *     Result.ok(42)      || Result.ok('hi')    // => Ok(42)
- *     Result.err('boo')  || Result.ok('hi')    // => Ok('hi')
- *     Result.ok(42)      || Result.err('boo')  // => Ok(42)
- *     Result.err('bleh') || Result.err('boo')  // => Err('boo')
- *
- */
-// export function or<T, E, E2>(
-//     result1: Result<T, E>,
-//     result2: Result<T, E2>,
-// ): Result<T, E2> {
-//     return result1.type === 'ok' ? result1 : result2;
-// }
 
 /**
  * Like .and(), aka &&, but the second argument gets evaluated lazily only if

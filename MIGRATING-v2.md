@@ -89,21 +89,21 @@ import { ... } from 'decoders/result';
 //       ✨
 ```
 
-| Replace usage of          | With ✨                    |     |
-| ------------------------- | -------------------------- | --- |
-| `result.andThen()`        | `andThen(result)`          |     |
-| `result.dispatch()`       | `dispatch(result)`         |     |
-| `result.errValue()`       | `result.error`             | ⚠️  |
-| `result.expect()`         | `expect(result)`           |     |
-| `result.isErr()`          | `result.type === 'err'`    | ⚠️  |
-| `result.isOk()`           | `result.type === 'ok'`     | ⚠️  |
-| `result.map()`            | `mapOk(result)`            | ⚠️  |
-| `result.mapError()`       | `mapError(result)`         |     |
-| `result.toString()`       | `toString(result)`         |     |
-| `result.unwrap()`         | `unwrap(result)`           |     |
-| `result.value() ?? xxx`   | `result.value ?? xxx`      |     |
-| `result.value() \|\| xxx` | `result.value \|\| xxx`    |     |
-| `result.withDefault(xxx)` | `withDefault(result, xxx)` |     |
+| Replace usage of          | With ✨                 |     |
+| ------------------------- | ----------------------- | --- |
+| `result.andThen()`        | `andThen(result)`       |     |
+| `result.dispatch()`       | `dispatch(result)`      |     |
+| `result.errValue()`       | `result.error`          | ⚠️  |
+| `result.expect()`         | `expect(result)`        |     |
+| `result.isErr()`          | `result.type === 'err'` | ⚠️  |
+| `result.isOk()`           | `result.type === 'ok'`  | ⚠️  |
+| `result.map()`            | `mapOk(result)`         | ⚠️  |
+| `result.mapError()`       | `mapError(result)`      |     |
+| `result.toString()`       | (has been removed)      |     |
+| `result.unwrap()`         | `unwrap(result)`        |     |
+| `result.value() ?? xxx`   | `result.value ?? xxx`   |     |
+| `result.value() \|\| xxx` | `result.value \|\| xxx` |     |
+| `result.withDefault(xxx)` | `result.value ?? xxx`   | ⚠️  |
 
 ### Changes to the `Result` type
 
