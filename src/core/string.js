@@ -1,8 +1,8 @@
 // @flow strict
 
-import * as Result from '../result';
 import { annotate } from '../annotate';
 import { compose, predicate } from './composition';
+import { err, ok } from '../result';
 import type { Decoder } from '../_types';
 
 /** Match groups in this regex:
@@ -22,9 +22,7 @@ const DEFAULT_SCHEMES = ['https'];
  * Decoder that only returns Ok for string inputs.  Err otherwise.
  */
 export const string: Decoder<string> = (blob: mixed) => {
-    return typeof blob === 'string'
-        ? Result.ok(blob)
-        : Result.err(annotate(blob, 'Must be string'));
+    return typeof blob === 'string' ? ok(blob) : err(annotate(blob, 'Must be string'));
 };
 
 /**
@@ -68,13 +66,13 @@ export const url = (schemes: $ReadOnlyArray<string> = DEFAULT_SCHEMES): Decoder<
     compose(string, (value: string) => {
         const matches = value.match(url_re);
         if (!matches) {
-            return Result.err(annotate(value, 'Must be URL'));
+            return err(annotate(value, 'Must be URL'));
         } else {
             const scheme = matches[1];
             if (schemes.length === 0 || schemes.includes(scheme.toLowerCase())) {
-                return Result.ok(value);
+                return ok(value);
             } else {
-                return Result.err(
+                return err(
                     annotate(value, `URL scheme must be any of: ${schemes.join(', ')}`),
                 );
             }

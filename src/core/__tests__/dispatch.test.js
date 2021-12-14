@@ -1,11 +1,11 @@
 // @flow strict
 
-import * as Result from '../../result';
 import { constant } from '../constants';
 import { dispatch } from '../dispatch';
 import { guard } from '../../_guard';
 import { number } from '../number';
 import { object } from '../object';
+import { unwrap } from '../../result';
 import type { Decoder } from '../../_types';
 
 type Rectangle = {|
@@ -46,7 +46,7 @@ describe('dispatch', () => {
         expect(guard(decoder)(r)).toEqual(r);
 
         const c = { type: 'circle', cx: 3, cy: 5, r: 7 };
-        expect(Result.unwrap(decoder(c))).toEqual(c);
+        expect(unwrap(decoder(c))).toEqual(c);
     });
 
     it('invalid', () => {

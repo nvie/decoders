@@ -1,7 +1,7 @@
 // @flow strict
 
-import * as Result from '../result';
 import { annotate } from '../annotate';
+import { err, ok } from '../result';
 import { isDate } from '../_utils';
 import { map } from './composition';
 import { regex } from './string';
@@ -17,9 +17,7 @@ const iso8601_re =
     /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:[.]\d+)?(?:Z|[+-]\d{2}:?\d{2})$/;
 
 export const date: Decoder<Date> = (value: mixed) =>
-    isDate(value)
-        ? Result.ok(((value: cast): Date))
-        : Result.err(annotate(value, 'Must be a Date'));
+    isDate(value) ? ok(((value: cast): Date)) : err(annotate(value, 'Must be a Date'));
 
 /**
  * Decoder that only returns Ok for strings that are valid ISO8601 date
