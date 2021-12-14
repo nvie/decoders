@@ -13,7 +13,7 @@
         "url": "https://github.com/nvie/decoders/issues"
     },
     "main": "./dist/index.js",
-    "module": "./dist/_esm/index.js",
+    "module": "./dist/index.mjs",
     "scripts": {
         "actually-prepublish": "echo \"\\n\\nPlease run \\`bin/publish.sh <options>\\` instead.\\n\\n\" && exit 2",
         "build": "./bin/build.sh",

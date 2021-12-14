@@ -1,26 +1,28 @@
 #!/bin/sh
+#
+# This script builds the contents of the NPM package into the dist/ folder. It
+# does a few things:
+#
+# 1. Produces "CommonJS" output files (*.js), by running Babel on the src/ and
+#    transpiling this to ES5 code.
+#
+# 2. Produces "ES modules" output files (*.mjs), by running Babel on the src/
+#    but retaining the original module structure, and then renaming all *.js
+#    files to *.mjs extension, and dynamically rewriting all import/expert
+#    statements to include the extension.
+#
+# 3. Produces "Flow types" (*.js.flow), by copying the original source code to
+#    those output files.
+#
+# 4. Produces "TypeScript definition types" (*.d.ts).
+#    TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+#
 set -e
 
 # The output directory for the package build
 ROOT="$(git rev-parse --show-toplevel)"
 SRC="${ROOT}/src"
 DIST="${ROOT}/dist"
-
-#
-# NOTE: Okay, this is quite ugly. Ideally, we'd output to dist/typescript,
-# dist/cjs, and dist/esm separately, but... Flow doesn't seem to be able to
-# correctly look up (or respect) the entrypoint definitions in package.json
-# somehow. If the source files aren't located at the dist root, Flow is unable
-# to find imports using this syntax:
-#
-#   import { ... } from 'decoders/result';
-#                                 ^^^^^^ These submodules won't work in Flow
-#
-# I don't want to sacrifice that API though, so we'll have no choice but to
-# publish the CJS files to the dist root :(
-#
-DIST_CJS="$DIST"
-DIST_ES="$DIST/_esm"
 
 # Work from the project root, independently from where this script is run
 cd "$ROOT"
@@ -29,22 +31,32 @@ clean() {
     rm -rf "$DIST"
 }
 
-build_code() {
-    # Build CJS module output
-    mkdir -p "$DIST_CJS"
-    BABEL_ENV=commonjs babel -d "$DIST_CJS" "$SRC" --ignore '**/__tests__/**'
-
-    # Build ES module output
-    mkdir -p "$DIST_ES"
-    BABEL_ENV=esmodules babel -d "$DIST_ES" "$SRC" --ignore '**/__tests__/**'
+build_cjs() {
+    TMP=$(mktemp -d -t decoders-cjs)
+    BABEL_ENV=commonjs babel -d "$TMP" "$SRC" --ignore '**/__tests__/**'
+    rsync -aqv "$TMP/" "$DIST/"
 }
 
-copy_flow_defs() {
-    flow-copy-source -v -i '**/__tests__/**' -i '**/types/**' "$SRC" "$DIST_CJS"
-    flow-copy-source -v -i '**/__tests__/**' -i '**/types/**' "$SRC" "$DIST_ES"
+build_esm() {
+    TMP=$(mktemp -d -t decoders-esm)
+    BABEL_ENV=esmodules babel -d "$TMP" "$SRC" --ignore '**/__tests__/**'
+    find "$TMP" -iname "*.js" | while read f; do
+      mv "$f" "${f%.js}.mjs"
+    done
+    sr -s "from '(.*)'" -r "from '\\1.mjs'" "$TMP"
+    rsync -aqv "$TMP/" "$DIST/"
 }
 
-copy_metadata() {
+build_flow() {
+    flow-copy-source -v -i '**/__tests__/**' -i '**/types/**' "$SRC" "$DIST"
+}
+
+build_typescript() {
+    # TODO TODO TODO TODO TODO TODO TODO TODO TODO
+    echo "TODO: Copy TypeScript definition files"
+}
+
+build_misc() {
     cp LICENSE README.md CHANGELOG.md "$DIST"
 }
 
@@ -63,9 +75,11 @@ build_package_json() {
 
 build() {
     clean
-    build_code
-    copy_flow_defs
-    copy_metadata
+    build_cjs
+    build_esm
+    build_flow
+    build_typescript
+    build_misc
     build_package_json
 }
 
