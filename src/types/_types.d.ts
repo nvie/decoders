@@ -1,7 +1,7 @@
 import { Annotation } from './annotate';
 import { Result } from './result';
 
-export type Scalar = string | number | boolean | symbol | void | null;
+export type Scalar = string | number | boolean | symbol | undefined | null;
 
 export type Predicate<T> = (value: T) => boolean;
 export type DecodeResult<T> = Result<T, Annotation>;

@@ -1,14 +1,14 @@
-export type Ok<T> = {
+export interface Ok<T> {
     type: 'ok';
     value: T;
     error: undefined;
-};
+}
 
-export type Err<E> = {
+export interface Err<E> {
     type: 'err';
     value: undefined;
     error: E;
-};
+}
 
 export type Result<T, E> = Ok<T> | Err<E>;
 

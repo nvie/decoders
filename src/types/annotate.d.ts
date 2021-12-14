@@ -1,36 +1,36 @@
-export type ObjectAnnotation = {
+export interface ObjectAnnotation {
     readonly type: 'object';
     readonly fields: { readonly [key: string]: Annotation };
     readonly text?: string;
-};
+}
 
-export type ArrayAnnotation = {
+export interface ArrayAnnotation {
     readonly type: 'array';
     readonly items: readonly Annotation[];
     readonly text?: string;
-};
+}
 
-export type ScalarAnnotation = {
+export interface ScalarAnnotation {
     readonly type: 'scalar';
     readonly value: unknown;
     readonly text?: string;
-};
+}
 
-export type FunctionAnnotation = {
+export interface FunctionAnnotation {
     readonly type: 'function';
     readonly text?: string;
-};
+}
 
-export type CircularRefAnnotation = {
+export interface CircularRefAnnotation {
     readonly type: 'circular-ref';
     readonly text?: string;
-};
+}
 
-export type UnknownAnnotation = {
+export interface UnknownAnnotation {
     readonly type: 'unknown';
     readonly value: unknown;
     readonly text?: string;
-};
+}
 
 export type Annotation =
     | ObjectAnnotation
