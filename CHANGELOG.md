@@ -8,6 +8,7 @@ Potentially breaking changes:
 
 -   Drop support for all Node versions below 12.x
 -   Drop support for Flow versions below 0.142.0
+-   Drop support for TypeScript versions below 4.1.0
 -   Drop all package dependencies
 
 New features:
