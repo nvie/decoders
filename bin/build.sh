@@ -61,7 +61,7 @@ build_misc() {
 
 add_types_entrypoint() {
     echo '"Package `decoders` requires TypeScript >= 4.1.0"' > "$DIST/NotSupportedTSVersion.d.ts"
-    jq '. + { typesVersions: { ">=4.1.0": {"*": ["*"]}}, "*": { "*": [ "NotSupportedTSVersion.d.ts" ] } }'
+    jq '. + { typesVersions: { ">=4.1.0": {"*": ["*"]}, "*": { "*": [ "NotSupportedTSVersion.d.ts" ] } } }'
 }
 
 build_package_json() {
