@@ -12,10 +12,7 @@ function okOrErr<T, E>(result: Result<T, E>): T | E {
 }
 
 const ntuple = (n: number) =>
-    compose(
-        poja,
-        predicate((arr) => arr.length === n, `Must be a ${n}-tuple`),
-    );
+    predicate(poja, (arr) => arr.length === n, `Must be a ${n}-tuple`);
 
 /**
  * Builds a Decoder that returns Ok for 1-tuple of [T], given a Decoder for T.

@@ -1,8 +1,8 @@
 // @flow strict
 
 import { annotate } from '../annotate';
-import { compose, predicate } from './composition';
 import { err, ok } from '../result';
+import { predicate } from './composition';
 import type { Decoder } from '../_types';
 
 const anyNumber: Decoder<number> = (blob: mixed) => {
@@ -14,21 +14,27 @@ const anyNumber: Decoder<number> = (blob: mixed) => {
 const isInteger = (n: number) => Number.isInteger(n);
 const isFinite = (n: number) => Number.isFinite(n);
 
-export const number: Decoder<number> = compose(
+export const number: Decoder<number> = predicate(
     anyNumber,
-    predicate(isFinite, 'Number must be finite'),
+    isFinite,
+    'Number must be finite',
 );
-export const positiveNumber: Decoder<number> = compose(
+
+export const positiveNumber: Decoder<number> = predicate(
     number,
-    predicate((n) => n >= 0, 'Number must be positive'),
+    (n) => n >= 0,
+    'Number must be positive',
 );
 
 // Integers
-export const integer: Decoder<number> = compose(
+export const integer: Decoder<number> = predicate(
     number,
-    predicate(isInteger, 'Number must be an integer'),
+    isInteger,
+    'Number must be an integer',
 );
-export const positiveInteger: Decoder<number> = compose(
+
+export const positiveInteger: Decoder<number> = predicate(
     integer,
-    predicate((n) => n >= 0, 'Number must be positive'),
+    (n) => n >= 0,
+    'Number must be positive',
 );

@@ -36,8 +36,13 @@ export function compose<T, V>(decoder: Decoder<T>, next: Decoder<V, T>): Decoder
  * Factory function returning a Decoder<T>, given a predicate function that
  * accepts/rejects the input of type T.
  */
-export function predicate<T>(predicateFn: (T) => boolean, msg: string): Decoder<T, T> {
-    return (value: T) => {
-        return predicateFn(value) ? ok(value) : err(annotate(value, msg));
-    };
+export function predicate<T>(
+    decoder: Decoder<T>,
+    predicateFn: (T) => boolean,
+    msg: string,
+): Decoder<T> {
+    return (blob: mixed) =>
+        andThen(decoder(blob), (value) =>
+            predicateFn(value) ? ok(value) : err(annotate(value, msg)),
+        );
 }
