@@ -2,11 +2,13 @@ import { Decoder } from '../_types';
 
 export function map<T, V>(decoder: Decoder<T>, mapper: (value: T) => V): Decoder<V>;
 export function compose<T, V>(decoder: Decoder<T>, next: Decoder<V, T>): Decoder<V>;
-export function predicate<T extends F, F = unknown>(
-    predicate: (value: F) => value is T,
+export function predicate<N extends T, T>(
+    decoder: Decoder<T>,
+    predicate: (value: T) => value is N,
     msg: string,
-): Decoder<T, F>;
+): Decoder<N>;
 export function predicate<T>(
+    decoder: Decoder<T>,
     predicate: (value: T) => boolean,
     msg: string,
-): Decoder<T, T>;
+): Decoder<T>;

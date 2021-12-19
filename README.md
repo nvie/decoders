@@ -1048,6 +1048,36 @@ recommended to rely on this decoder directly for normal usage.
 
 ---
 
+<a name="predicate" href="#predicate">#</a>
+<b>predicate</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>, <i>&lt;T&gt; => boolean</i>,
+string): <i>Decoder&lt;T&gt;</i>
+[&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/predicate.js 'Source')<br />
+
+Accepts values that are accepted by the decoder _and_ also pass the predicate function.
+
+<!-- prettier-ignore-start -->
+```typescript
+const odd = predicate(
+  number,
+  (n) => n % 2 === 1,
+  'Must be odd'
+);
+const verify = guard(odd);
+
+// 👍
+verify(3) === 3;
+
+// 👎
+verify('hi');  // throws: not a number
+verify(42);    // throws: not an odd number
+```
+<!-- prettier-ignore-end -->
+
+In TypeScript, if you provide a predicate that also doubles as a [type
+predicate][type-predicates], then this will be reflected in the return type, too.
+
+---
+
 <a name="describe" href="#describe">#</a>
 <b>describe</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>, <i>string</i>):
 <i>Decoder&lt;T&gt;</i>
@@ -1162,19 +1192,15 @@ business logic outside decoders makes them more reusable and composable.
 #### Adding predicates
 
 The easiest way to decode using an existing decoder, but enforcing extra runtime checks on
-their values is by using the `compose(..., predicate(...))` construction:
+their values is by wrapping it in a `predicate(...)` construction:
 
 ```js
-const odd = compose(
-    integer,
-    predicate((n) => n % 2 !== 0, 'Must be odd'),
-);
-const shortString = compose(
-    string,
-    predicate((s) => s.length < 8, 'Must be less than 8 chars'),
-);
+const odd = predicate(integer, (n) => n % 2 !== 0, 'Must be odd');
+const shortString = predicate(string, (s) => s.length < 8, 'Must be less than 8 chars');
 ```
 
 [date-api]:
     https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
 [iso8601-fmt]: https://en.wikipedia.org/wiki/ISO_8601
+[type-predicates]:
+    https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates
