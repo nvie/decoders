@@ -81,32 +81,42 @@ The decoders package consists of a few building blocks:
 <a name="number" href="#number">#</a> <b>number</b>: <i>Decoder&lt;number&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/number.js 'Source')
 
-Returns a decoder capable of decoding finite (!) numbers (integer or float values). This
-means that values like `NaN`, or positive and negative `Infinity` are not considered valid
-numbers.
+Accepts finite (!) numbers (integer or float values). This means that values like `NaN`,
+or positive and negative `Infinity` are not considered valid numbers.
 
+<!-- prettier-ignore-start -->
 ```javascript
-const mydecoder = guard(number);
-mydecoder(123) === 123;
-mydecoder(-3.14) === -3.14;
-mydecoder(NaN); // DecodeError
-mydecoder('not a number'); // DecodeError
+const verify = guard(number);
+
+// Accepts
+verify(123) === 123;
+verify(-3.14) === -3.14;
+
+// Throws
+verify(Infinity);
+verify(NaN);
+verify('not a number');
 ```
+<!-- prettier-ignore-end -->
 
 ---
 
 <a name="integer" href="#integer">#</a> <b>integer</b>: <i>Decoder&lt;integer&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/master/src/number.js 'Source')
 
-Like `number`, but only decodes values that are whole numbers.
+Like `number`, but only accepts values that are whole numbers.
 
+<!-- prettier-ignore-start -->
 ```javascript
-const mydecoder = guard(integer);
-mydecoder(123) === 123;
-mydecoder(-3.14); // DecodeError: floats aren't valid integers
-mydecoder(NaN); // DecodeError
-mydecoder('not a integer'); // DecodeError
+const verify = guard(integer);
+verify(123) === 123;
+
+verify(-3.14);           // throws (because floats aren't valid integers)
+verify(Infinity);        // throws
+verify(NaN);             // throws
+verify('not a integer'); // throws
 ```
+<!-- prettier-ignore-end -->
 
 ---
 
@@ -115,11 +125,14 @@ mydecoder('not a integer'); // DecodeError
 
 Returns a decoder capable of decoding string values.
 
+<!-- prettier-ignore-start -->
 ```javascript
-const mydecoder = guard(string);
-mydecoder('hello world') === 'hello world';
-mydecoder(123); // DecodeError
+const verify = guard(string);
+verify('hello world') === 'hello world';
+
+verify(123);  // throws
 ```
+<!-- prettier-ignore-end -->
 
 ---
 
@@ -129,13 +142,19 @@ mydecoder(123); // DecodeError
 
 Like `string`, but will fail on inputs with only whitespace (or the empty string).
 
+<!-- prettier-ignore-start -->
 ```javascript
-const mydecoder = guard(nonEmptyString);
-mydecoder('hello world') === 'hello world';
-mydecoder(123); // DecodeError
-mydecoder('  '); // DecodeError
-mydecoder(''); // DecodeError
+const verify = guard(nonEmptyString);
+
+// 👍
+verify('hello world') === 'hello world';
+
+// 👎
+verify(123);   // throws
+verify('  ');  // throws
+verify('');    // throws
 ```
+<!-- prettier-ignore-end -->
 
 ---
 
@@ -145,11 +164,17 @@ mydecoder(''); // DecodeError
 Returns a decoder capable of decoding string values that match the given regular
 expression.
 
+<!-- prettier-ignore-start -->
 ```javascript
-const mydecoder = guard(regex(/^[0-9]+$/));
-mydecoder('12345') === '12345';
-mydecoder('foo'); // DecodeError
+const verify = guard(regex(/^[0-9]+$/));
+
+// Accepts
+verify('12345') === '12345';
+
+// Throws
+verify('foo');
 ```
+<!-- prettier-ignore-end -->
 
 ---
 
@@ -158,11 +183,17 @@ mydecoder('foo'); // DecodeError
 
 Returns a decoder capable of decoding email addresses (using a regular expression).
 
+<!-- prettier-ignore-start -->
 ```javascript
-const mydecoder = guard(email);
-mydecoder('foo'); // DecodeError
-mydecoder('alice@acme.org') === 'alice@acme.org';
+const verify = guard(email);
+
+// Accepts
+verify('alice@acme.org') === 'alice@acme.org';
+
+// Throws
+verify('foo');
 ```
+<!-- prettier-ignore-end -->
 
 ---
 
@@ -171,14 +202,20 @@ mydecoder('alice@acme.org') === 'alice@acme.org';
 
 Returns a decoder capable of decoding boolean values.
 
+<!-- prettier-ignore-start -->
 ```javascript
-const mydecoder = guard(boolean);
-mydecoder(false) === false;
-mydecoder(true) === true;
-mydecoder(undefined); // DecodeError
-mydecoder('hello world'); // DecodeError
-mydecoder(123); // DecodeError
+const verify = guard(boolean);
+
+// Accepts
+verify(false) === false;
+verify(true) === true;
+
+// Throws
+verify(undefined);
+verify('hello world');
+verify(123);
 ```
+<!-- prettier-ignore-end -->
 
 ---
 
@@ -188,15 +225,15 @@ mydecoder(123); // DecodeError
 Returns a decoder capable of decoding any input value to its "truthy value".
 
 ```javascript
-const mydecoder = guard(truthy);
-mydecoder(false) === false;
-mydecoder(true) === true;
-mydecoder(undefined) === false;
-mydecoder('hello world') === true;
-mydecoder('false') === true;
-mydecoder(0) === false;
-mydecoder(1) === true;
-mydecoder(null) === false;
+const verify = guard(truthy);
+verify(false) === false;
+verify(true) === true;
+verify(undefined) === false;
+verify('hello world') === true;
+verify('false') === true;
+verify(0) === false;
+verify(1) === true;
+verify(null) === false;
 ```
 
 ---
@@ -207,16 +244,18 @@ mydecoder(null) === false;
 
 Returns a decoder capable of decoding numbers to their boolean representation.
 
+<!-- prettier-ignore-start -->
 ```javascript
-const mydecoder = guard(numericBoolean);
-mydecoder(-1) === true;
-mydecoder(0) === false;
-mydecoder(123) === true;
-mydecoder(false); // DecodeError
-mydecoder(true); // DecodeError
-mydecoder(undefined); // DecodeError
-mydecoder('hello'); // DecodeError
+const verify = guard(numericBoolean);
+verify(-1) === true;
+verify(0) === false;
+verify(123) === true;
+verify(false); // DecodeError
+verify(true); // DecodeError
+verify(undefined); // DecodeError
+verify('hello'); // DecodeError
 ```
+<!-- prettier-ignore-end -->
 
 ---
 
@@ -227,13 +266,15 @@ Returns a decoder capable of decoding
 [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date)
 values.
 
+<!-- prettier-ignore-start -->
 ```javascript
 const now = new Date();
-const mydecoder = guard(date);
-mydecoder(now) === now;
-mydecoder(123); // DecodeError
-mydecoder('hello'); // DecodeError
+const verify = guard(date);
+verify(now) === now;
+verify(123); // DecodeError
+verify('hello'); // DecodeError
 ```
+<!-- prettier-ignore-end -->
 
 ---
 
@@ -247,13 +288,15 @@ decode them as `iso8601` when receiving.
 
 **NOTE:** This decoder reads a _string_, but returns a _Date_ instance.
 
+<!-- prettier-ignore-start -->
 ```javascript
-const mydecoder = guard(iso8601);
-mydecoder('2020-06-01T12:00:00Z'); // new Date('2020-06-01T12:00:00Z')
-mydecoder('2020-06-01'); // DecodeError
-mydecoder('hello'); // DecodeError
-mydecoder(123); // DecodeError
+const verify = guard(iso8601);
+verify('2020-06-01T12:00:00Z'); // new Date('2020-06-01T12:00:00Z')
+verify('2020-06-01'); // DecodeError
+verify('hello'); // DecodeError
+verify(123); // DecodeError
 ```
+<!-- prettier-ignore-end -->
 
 ---
 
@@ -262,13 +305,15 @@ mydecoder(123); // DecodeError
 
 Returns a decoder capable of decoding the constant value `null`.
 
+<!-- prettier-ignore-start -->
 ```javascript
-const mydecoder = guard(null_);
-mydecoder(null) === null;
-mydecoder(false); // DecodeError
-mydecoder(undefined); // DecodeError
-mydecoder('hello world'); // DecodeError
+const verify = guard(null_);
+verify(null) === null;
+verify(false); // DecodeError
+verify(undefined); // DecodeError
+verify('hello world'); // DecodeError
 ```
+<!-- prettier-ignore-end -->
 
 ---
 
@@ -278,13 +323,15 @@ mydecoder('hello world'); // DecodeError
 
 Returns a decoder capable of decoding the constant value `undefined`.
 
+<!-- prettier-ignore-start -->
 ```javascript
-const mydecoder = guard(undefined_);
-mydecoder(undefined) === undefined;
-mydecoder(null); // DecodeError
-mydecoder(false); // DecodeError
-mydecoder('hello world'); // DecodeError
+const verify = guard(undefined_);
+verify(undefined) === undefined;
+verify(null); // DecodeError
+verify(false); // DecodeError
+verify('hello world'); // DecodeError
 ```
+<!-- prettier-ignore-end -->
 
 ---
 
@@ -303,13 +350,15 @@ constant((42: 42));
 
 Example:
 
+<!-- prettier-ignore-start -->
 ```typescript
-const mydecoder = guard(constant('hello'));
-mydecoder('hello') === 'hello';
-mydecoder('this breaks'); // DecodeError
-mydecoder(false); // DecodeError
-mydecoder(undefined); // DecodeError
+const verify = guard(constant('hello'));
+verify('hello') === 'hello';
+verify('this breaks'); // DecodeError
+verify(false); // DecodeError
+verify(undefined); // DecodeError
 ```
+<!-- prettier-ignore-end -->
 
 ---
 
@@ -320,12 +369,14 @@ mydecoder(undefined); // DecodeError
 Returns a decoder that will always return the provided value **without looking at the
 input**. This is useful to manually add extra fields.
 
+<!-- prettier-ignore-start -->
 ```javascript
-const mydecoder = guard(hardcoded(2.1));
-mydecoder('hello') === 2.1;
-mydecoder(false) === 2.1;
-mydecoder(undefined) === 2.1;
+const verify = guard(hardcoded(2.1));
+verify('hello') === 2.1;
+verify(false) === 2.1;
+verify(undefined) === 2.1;
 ```
+<!-- prettier-ignore-end -->
 
 ---
 
@@ -335,12 +386,14 @@ mydecoder(undefined) === 2.1;
 Returns a decoder that will always fail with the given error messages, no matter what the
 input. May be useful for explicitly disallowing keys, or for testing purposes.
 
+<!-- prettier-ignore-start -->
 ```javascript
-const mydecoder = guard(object({ a: string, b: optional(fail('Key b has been removed')) })));
-mydecoder({ a: 'foo' }) === { a: 'foo' }
-mydecoder({ a: 'foo', c: 'bar' }) === { a: 'foo' }
-mydecoder({ a: 'foo', b: 'bar' })  // DecodeError
+const verify = guard(object({ a: string, b: optional(fail('Key b has been removed')) })));
+verify({ a: 'foo' }) === { a: 'foo' }
+verify({ a: 'foo', c: 'bar' }) === { a: 'foo' }
+verify({ a: 'foo', b: 'bar' })  // DecodeError
 ```
+<!-- prettier-ignore-end -->
 
 ---
 
@@ -355,11 +408,11 @@ effectively returns a `Decoder<mixed>`, which is not that useful. **Use sparingl
 Same as `unknown` in TypeScript.
 
 ```javascript
-const mydecoder = guard(mixed);
-mydecoder('hello') === 'hello';
-mydecoder(false) === false;
-mydecoder(undefined) === undefined;
-mydecoder([1, 2]) === [1, 2];
+const verify = guard(mixed);
+verify('hello') === 'hello';
+verify(false) === false;
+verify(undefined) === undefined;
+verify([1, 2]) === [1, 2];
 ```
 
 ### Compositions
@@ -377,14 +430,16 @@ decoder for arrays of points: `array(pointDecoder)`, which will be of type
 Returns a decoder capable of decoding **either a value of type <i>T</i>, or `undefined`**,
 provided that you already have a decoder for <i>T</i>.
 
+<!-- prettier-ignore-start -->
 ```javascript
-const mydecoder = guard(optional(string));
-mydecoder('hello') === 'hello';
-mydecoder(undefined) === undefined;
-mydecoder(null); // DecodeError
-mydecoder(0); // DecodeError
-mydecoder(42); // DecodeError
+const verify = guard(optional(string));
+verify('hello') === 'hello';
+verify(undefined) === undefined;
+verify(null); // DecodeError
+verify(0); // DecodeError
+verify(42); // DecodeError
 ```
+<!-- prettier-ignore-end -->
 
 A typical case where `optional` is useful is in decoding objects with optional fields:
 
@@ -415,14 +470,16 @@ Which will decode to type:
 Returns a decoder capable of decoding **either a value of type <i>T</i>, or `null`**,
 provided that you already have a decoder for <i>T</i>.
 
+<!-- prettier-ignore-start -->
 ```javascript
-const mydecoder = guard(nullable(string));
-mydecoder('hello') === 'hello';
-mydecoder(null) === null;
-mydecoder(undefined); // DecodeError
-mydecoder(0); // DecodeError
-mydecoder(42); // DecodeError
+const verify = guard(nullable(string));
+verify('hello') === 'hello';
+verify(null) === null;
+verify(undefined); // DecodeError
+verify(0); // DecodeError
+verify(42); // DecodeError
 ```
+<!-- prettier-ignore-end -->
 
 ---
 
@@ -433,14 +490,16 @@ mydecoder(42); // DecodeError
 Returns a decoder capable of decoding **either a value of type <i>T</i>, or `null`, or
 `undefined`**, provided that you already have a decoder for <i>T</i>.
 
+<!-- prettier-ignore-start -->
 ```javascript
-const mydecoder = guard(maybe(string));
-mydecoder('hello') === 'hello';
-mydecoder(null) === null;
-mydecoder(undefined) === undefined;
-mydecoder(0); // DecodeError
-mydecoder(42); // DecodeError
+const verify = guard(maybe(string));
+verify('hello') === 'hello';
+verify(null) === null;
+verify(undefined) === undefined;
+verify(0); // DecodeError
+verify(42); // DecodeError
 ```
+<!-- prettier-ignore-end -->
 
 ---
 
@@ -451,11 +510,13 @@ mydecoder(42); // DecodeError
 Returns a decoder capable of decoding **an array of <i>T</i>'s**, provided that you
 already have a decoder for <i>T</i>.
 
+<!-- prettier-ignore-start -->
 ```javascript
-const mydecoder = guard(array(string));
-mydecoder(['hello', 'world']) === ['hello', 'world'];
-mydecoder(['hello', 1.2]); // DecodeError
+const verify = guard(array(string));
+verify(['hello', 'world']) === ['hello', 'world'];
+verify(['hello', 1.2]); // DecodeError
 ```
+<!-- prettier-ignore-end -->
 
 ---
 
@@ -466,12 +527,14 @@ mydecoder(['hello', 1.2]); // DecodeError
 
 Like `array()`, but will fail on inputs with 0 elements.
 
+<!-- prettier-ignore-start -->
 ```javascript
-const mydecoder = guard(nonEmptyArray(string));
-mydecoder(['hello', 'world']) === ['hello', 'world'];
-mydecoder(['hello', 1.2]); // DecodeError
-mydecoder([]); // DecodeError
+const verify = guard(nonEmptyArray(string));
+verify(['hello', 'world']) === ['hello', 'world'];
+verify(['hello', 1.2]); // DecodeError
+verify([]); // DecodeError
 ```
+<!-- prettier-ignore-end -->
 
 ---
 
@@ -505,11 +568,13 @@ Returns a decoder capable of decoding **a 2-tuple of <i>(T1, T2)</i>'s**, provid
 you already have a decoder for <i>T1</i> and <i>T2</i>. A tuple is like an Array, but the
 number of items in the array is fixed (two) and their types don't have to be homogeneous.
 
+<!-- prettier-ignore-start -->
 ```javascript
-const mydecoder = guard(tuple2(string, number));
-mydecoder(['hello', 1.2]) === ['hello', 1.2];
-mydecoder(['hello', 'world']); // DecodeError
+const verify = guard(tuple2(string, number));
+verify(['hello', 1.2]) === ['hello', 1.2];
+verify(['hello', 'world']); // DecodeError
 ```
+<!-- prettier-ignore-end -->
 
 ---
 
@@ -520,17 +585,19 @@ Decoder&lt;any&gt; }&gt;</i>(mapping: O): <i>Decoder&lt;{ ... }&gt;</i>
 Returns a decoder capable of decoding **objects of the given shape** corresponding
 decoders, provided that you already have decoders for all values in the mapping.
 
+<!-- prettier-ignore-start -->
 ```javascript
-const mydecoder = guard(
+const verify = guard(
     object({
         x: number,
         y: number,
     }),
 );
-mydecoder({ x: 1, y: 2 }) === { x: 1, y: 2 };
-mydecoder({ x: 1, y: 2, z: 3 }) === { x: 1, y: 2 }; // ⚠️
-mydecoder({ x: 1 }); // DecodeError (Missing key: "y")
+verify({ x: 1, y: 2 }) === { x: 1, y: 2 };
+verify({ x: 1, y: 2, z: 3 }) === { x: 1, y: 2 }; // ⚠️
+verify({ x: 1 }); // DecodeError (Missing key: "y")
 ```
+<!-- prettier-ignore-end -->
 
 For more information, see also
 [The difference between `object`, `exact`, and `inexact`](#the-difference-between-object-exact-and-inexact).
@@ -543,17 +610,19 @@ Decoder&lt;any&gt; }&gt;</i>(mapping: O): <i>Decoder&lt;{ ... }&gt;</i>
 
 Like `object()`, but will fail if there are superfluous keys in the input data.
 
+<!-- prettier-ignore-start -->
 ```javascript
-const mydecoder = guard(
+const verify = guard(
     exact({
         x: number,
         y: number,
     }),
 );
-mydecoder({ x: 1, y: 2 }) === { x: 1, y: 2 };
-mydecoder({ x: 1, y: 2, z: 3 }); // DecodeError (Superfluous keys: "z")
-mydecoder({ x: 1 }); // DecodeError (Missing key: "y")
+verify({ x: 1, y: 2 }) === { x: 1, y: 2 };
+verify({ x: 1, y: 2, z: 3 }); // DecodeError (Superfluous keys: "z")
+verify({ x: 1 }); // DecodeError (Missing key: "y")
 ```
+<!-- prettier-ignore-end -->
 
 For more information, see also
 [The difference between `object`, `exact`, and `inexact`](#the-difference-between-object-exact-and-inexact).
@@ -567,17 +636,19 @@ Decoder&lt;any&gt; }&gt;</i>(mapping: O): <i>Decoder&lt;{ ... }&gt;</i>
 Like `object()`, but will retain any extra properties on the input type unvalidated that
 are not part of the decoder definition.
 
+<!-- prettier-ignore-start -->
 ```javascript
-const mydecoder = guard(
+const verify = guard(
     inexact({
         x: number,
     }),
 );
 
-mydecoder({ x: 1, y: 2 }) === { x: 1, y: 2 };
-mydecoder({ x: 1, y: 2, z: 3 }) === { x: 1, y: 2, z: 3 };
-mydecoder({ x: 1 }); // DecodeError (Missing key: "y")
+verify({ x: 1, y: 2 }) === { x: 1, y: 2 };
+verify({ x: 1, y: 2, z: 3 }) === { x: 1, y: 2, z: 3 };
+verify({ x: 1 }); // DecodeError (Missing key: "y")
 ```
+<!-- prettier-ignore-end -->
 
 For more information, see also
 [The difference between `object`, `exact`, and `inexact`](#the-difference-between-object-exact-and-inexact).
@@ -598,8 +669,8 @@ values are heterogeneous. Whereas with Mappings the keys are typically unknown a
 values homogeneous.
 
 ```javascript
-const mydecoder = guard(mapping(person)); // Assume you have a "person" decoder already
-mydecoder({
+const verify = guard(mapping(person)); // Assume you have a "person" decoder already
+verify({
     1: { name: 'Alice' },
     2: { name: 'Bob' },
     3: { name: 'Charlie' },
@@ -620,8 +691,8 @@ mydecoder({
 Like `mapping()`, but returns an object instead of a `Map` instance.
 
 ```javascript
-const mydecoder = guard(dict(person)); // Assume you have a "person" decoder already
-mydecoder({
+const verify = guard(dict(person)); // Assume you have a "person" decoder already
+verify({
     1: { name: 'Alice' },
     2: { name: 'Bob' },
     3: { name: 'Charlie' },
@@ -653,8 +724,8 @@ Returns a decoder capable of decoding **any valid JSON value**:
 -   `Array<JSONValue>`
 
 ```javascript
-const mydecoder = guard(json);
-mydecoder({
+const verify = guard(json);
+verify({
     name: 'Amir',
     age: 27,
     admin: true,
@@ -674,15 +745,15 @@ Any value returned by `JSON.parse()` should decode without failure.
 Like `json`, but will only decode when the JSON value is an object.
 
 ```javascript
-const mydecoder = guard(json);
-mydecoder({}); // OK
-mydecoder({ name: 'Amir' }); // OK
+const verify = guard(json);
+verify({}); // OK
+verify({ name: 'Amir' }); // OK
 
 // Error: the following values are valid JSON values, but not Objects
-mydecoder([]); // Error
-mydecoder([{ name: 'Alice' }, { name: 'Bob' }]); // Error
-mydecoder('hello'); // Error
-mydecoder(null); // Error
+verify([]); // Error
+verify([{ name: 'Alice' }, { name: 'Bob' }]); // Error
+verify('hello'); // Error
+verify(null); // Error
 ```
 
 ---
@@ -694,15 +765,15 @@ mydecoder(null); // Error
 Like `json`, but will only decode when the JSON value is an array.
 
 ```javascript
-const mydecoder = guard(json);
-mydecoder([]); // OK
-mydecoder([{ name: 'Amir' }]); // OK
+const verify = guard(json);
+verify([]); // OK
+verify([{ name: 'Amir' }]); // OK
 
 // Error: the following values are valid JSON values, but not Objects
-mydecoder({}); // Error
-mydecoder({ name: 'Alice' }); // Error
-mydecoder('hello'); // Error
-mydecoder(null); // Error
+verify({}); // Error
+verify({ name: 'Alice' }); // Error
+verify('hello'); // Error
+verify(null); // Error
 ```
 
 ---
@@ -724,12 +795,14 @@ Returns a decoder capable of decoding **either one of <i>T1</i> or <i>T2</i>**, 
 that you already have decoders for <i>T1</i> and <i>T2</i>. Eithers exist for arities up
 until 9 (either, either3, either4, ..., either9).
 
+<!-- prettier-ignore-start -->
 ```javascript
-const mydecoder = guard(either(number, string));
-mydecoder('hello world') === 'hello world';
-mydecoder(123) === 123;
-mydecoder(false); // DecodeError
+const verify = guard(either(number, string));
+verify('hello world') === 'hello world';
+verify(123) === 123;
+verify(false); // DecodeError
 ```
+<!-- prettier-ignore-end -->
 
 ---
 
@@ -771,14 +844,16 @@ sometimes confusing.
 Returns a decoder capable of decoding values that are equal (using `===`) to any of the
 given constants. The returned value will always be one of the given constants at runtime.
 
+<!-- prettier-ignore-start -->
 ```javascript
-const mydecoder = guard(oneOf(['foo', 'bar', 3]));
-mydecoder('foo') === 'foo';
-mydecoder(3) === 3;
-mydecoder('hello'); // DecodeError
-mydecoder(4); // DecodeError
-mydecoder(false); // DecodeError
+const verify = guard(oneOf(['foo', 'bar', 3]));
+verify('foo') === 'foo';
+verify(3) === 3;
+verify('hello'); // DecodeError
+verify(4); // DecodeError
+verify(false); // DecodeError
 ```
+<!-- prettier-ignore-end -->
 
 For example, given an array of strings, like so:
 
@@ -803,13 +878,15 @@ Returns a decoder capable of decoding values that are instances of the given cla
 > know how to express it, please submit a PR. See
 > https://github.com/nvie/decoders/blob/master/src/instanceOf.d.ts
 
+<!-- prettier-ignore-start -->
 ```javascript
-const mydecoder = guard(instanceOf(Error));
+const verify = guard(instanceOf(Error));
 const value = new Error('foo');
-mydecoder(value) === value;
-mydecoder('foo'); // DecodeError
-mydecoder(3); // DecodeError
+verify(value) === value;
+verify('foo'); // DecodeError
+verify(3); // DecodeError
 ```
+<!-- prettier-ignore-end -->
 
 ---
 
@@ -822,13 +899,15 @@ decoder, and on success, will call the mapper function **on the decoded value**.
 mapper function throws an error, the whole decoder will fail using the error message as
 the failure reason.
 
+<!-- prettier-ignore-start -->
 ```javascript
 const upper = map(string, (s) => s.toUpperCase());
 
-const mydecoder = guard(upper);
-mydecoder(4); // DecodeError
-mydecoder('foo') === 'FOO';
+const verify = guard(upper);
+verify(4); // DecodeError
+verify('foo') === 'FOO';
 ```
+<!-- prettier-ignore-end -->
 
 ---
 
