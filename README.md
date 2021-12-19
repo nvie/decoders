@@ -525,7 +525,7 @@ const mydecoder = guard(
     object({
         x: number,
         y: number,
-    })
+    }),
 );
 mydecoder({ x: 1, y: 2 }) === { x: 1, y: 2 };
 mydecoder({ x: 1, y: 2, z: 3 }) === { x: 1, y: 2 }; // ⚠️
@@ -548,7 +548,7 @@ const mydecoder = guard(
     exact({
         x: number,
         y: number,
-    })
+    }),
 );
 mydecoder({ x: 1, y: 2 }) === { x: 1, y: 2 };
 mydecoder({ x: 1, y: 2, z: 3 }); // DecodeError (Superfluous keys: "z")
@@ -571,7 +571,7 @@ are not part of the decoder definition.
 const mydecoder = guard(
     inexact({
         x: number,
-    })
+    }),
 );
 
 mydecoder({ x: 1, y: 2 }) === { x: 1, y: 2 };
@@ -600,9 +600,9 @@ values homogeneous.
 ```javascript
 const mydecoder = guard(mapping(person)); // Assume you have a "person" decoder already
 mydecoder({
-    '1': { name: 'Alice' },
-    '2': { name: 'Bob' },
-    '3': { name: 'Charlie' },
+    1: { name: 'Alice' },
+    2: { name: 'Bob' },
+    3: { name: 'Charlie' },
 }) ===
     Map([
         ['1', { name: 'Alice' }],
@@ -622,9 +622,9 @@ Like `mapping()`, but returns an object instead of a `Map` instance.
 ```javascript
 const mydecoder = guard(dict(person)); // Assume you have a "person" decoder already
 mydecoder({
-    '1': { name: 'Alice' },
-    '2': { name: 'Bob' },
-    '3': { name: 'Charlie' },
+    1: { name: 'Alice' },
+    2: { name: 'Bob' },
+    3: { name: 'Charlie' },
 });
 ```
 
@@ -860,7 +860,7 @@ low-level/technical errors.
 ```javascript
 const vowel = describe(
     either5(constant('a'), constant('e'), constant('i'), constant('o'), constant('u')),
-    'Must be vowel'
+    'Must be vowel',
 );
 ```
 
@@ -919,7 +919,7 @@ And a runtime input of:
 |                  | Extra properties | Output value                   | Inferred type                             |
 | ---------------- | ---------------- | ------------------------------ | ----------------------------------------- |
 | `object(thing)`  | discarded        | `{a: "hi", b: 42}`             | `{a: string, b: number}`                  |
-| `exact(thing)`   | not allowed      | ⚡️ Runtime error                | `{a: string, b: number}`                  |
+| `exact(thing)`   | not allowed      | ⚡️ Runtime error              | `{a: string, b: number}`                  |
 | `inexact(thing)` | retained         | `{a: "hi", b: 42, c: "extra"}` | `{a: string, b: number, [string]: mixed}` |
 
 ### Building custom decoders
@@ -944,7 +944,7 @@ const numericString: Decoder<number> = map(
     // At runtime, expect to read a string...
     string,
     // ...but return it as a number
-    (s) => Number(s)
+    (s) => Number(s),
 );
 ```
 
@@ -967,10 +967,10 @@ their values is by using the `compose(..., predicate(...))` construction:
 ```js
 const odd = compose(
     integer,
-    predicate((n) => n % 2 !== 0, 'Must be odd')
+    predicate((n) => n % 2 !== 0, 'Must be odd'),
 );
 const shortString = compose(
     string,
-    predicate((s) => s.length < 8, 'Must be less than 8 chars')
+    predicate((s) => s.length < 8, 'Must be less than 8 chars'),
 );
 ```
