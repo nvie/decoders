@@ -11,9 +11,24 @@ list_exports() {
     | tr -d ';{},\n'                              \
     | sed -Ee 's/\/\*.*\*\///g' -e "s/'[^']*'//g" \
     | tr ' ' '\n'                                 \
-    | grep -vEe '(export|from|type)'              \
     | grep -Ee .                                  \
+    | grep -vEe '(export|from|type)'              \
     | sort -u
+}
+
+list_decoders() {
+    cat src/index.js                 \
+        | grep -vEe '^//'            \
+        | tr -d '\n'                 \
+        | sed -Ee 's/\/\*.*\*\///g'  \
+        | tr ';' '\n'                \
+        | grep -vEe 'export type'    \
+        | grep -Ee '/core'           \
+        | sed -Ee "s/'[^']*'//g"     \
+        | tr '{}, ' '\n'             \
+        | grep -Ee .                 \
+        | grep -vEe '(export|from)'  \
+        | sort -u
 }
 
 tmp1="$(mktemp)"
@@ -27,3 +42,15 @@ if ! diff -q "$tmp1" "$tmp2"; then
     echo "Did you forget to update TypeScript definitions?" >&2
     exit 2
 fi
+
+list_decoders | while read dec; do
+  if ! grep -qF "$dec" README.md; then
+      # Cut the either family some slack
+      if [ "$dec" = 'either6' -o  "$dec" = 'either7' -o  "$dec" = 'either8' ]; then
+          continue
+      fi
+
+      echo "Decoder \"$dec\" is not documented in README?" >&2
+      exit 3
+  fi
+done
