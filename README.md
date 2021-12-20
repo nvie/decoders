@@ -791,7 +791,7 @@ verify({
 T&gt;&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/mapping.js 'Source')
 
-Like `dict()`, but returns a `Map<string, T>` instead.
+Like `dict()`, but returns the result as a `Map<string, T>` instead.
 
 ```javascript
 const verify = guard(mapping(person)); // Assume you have a "person" decoder already

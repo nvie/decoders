@@ -9,17 +9,11 @@ import type { Annotation } from '../annotate';
 import type { Decoder } from '../_types';
 
 /**
- * Given an object, will decode a Map of string keys to whatever values.
- *
- * For example, given a decoder for a Person, we can verify a Person lookup
- * table structure (of type Map<string, Person>) like so:
- *
- *   mapping(person)
- *
+ * Like mapping(), but returns an object rather than a Map instance.
  */
-export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
+export function dict<T>(decoder: Decoder<T>): Decoder<{ [string]: T }> {
     return compose(pojo, (blob: { +[key: string]: mixed }) => {
-        let tuples: Array<[string, T]> = [];
+        let rv: { [key: string]: T } = {};
         let errors: { [key: string]: Annotation } | null = null;
 
         Object.keys(blob).forEach((key: string) => {
@@ -27,10 +21,10 @@ export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
             const result = decoder(value);
             if (result.type === 'ok') {
                 if (errors === null) {
-                    tuples.push([key, result.value]);
+                    rv[key] = result.value;
                 }
             } else {
-                tuples.length = 0; // Clear the tuples array
+                rv = {}; // Clear the success value so it can get garbage collected early
                 if (errors === null) {
                     errors = {};
                 }
@@ -41,14 +35,28 @@ export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
         if (errors !== null) {
             return err(merge(annotateObject(blob), errors));
         } else {
-            return ok(new Map(tuples));
+            return ok(rv);
         }
     });
 }
 
 /**
- * Like mapping(), but returns an object rather than a Map instance.
+ * Given an object, will decode a Map of string keys to whatever values.
+ *
+ * For example, given a decoder for a Person, we can verify a Person lookup
+ * table structure (of type Map<string, Person>) like so:
+ *
+ *   mapping(person)
+ *
  */
-export function dict<T>(decoder: Decoder<T>): Decoder<{ [string]: T }> {
-    return map(mapping(decoder), (m) => Object.fromEntries(m));
+export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
+    return map(
+        dict(decoder),
+        (obj) =>
+            new Map(
+                // This is effectively Object.entries(obj), but in a way that Flow
+                // will know the types are okay
+                Object.keys(obj).map((key) => [key, obj[key]]),
+            ),
+    );
 }
