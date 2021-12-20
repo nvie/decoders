@@ -48,6 +48,11 @@ jobs:
               env:
                   CI: true
 
+            - name: Completeness check
+              run: yarn run -s test:completeness
+              env:
+                  CI: true
+
             - name: Lints
               run: yarn run -s check
               env:
