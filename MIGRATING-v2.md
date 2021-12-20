@@ -117,6 +117,25 @@ Result<E, T>  // ❌ Change this...
 Result<T, E>  // ✅ ...to this
 ```
 
+## `predicate(...)` is now a first-class citizen
+
+`predicate()` is now a first-class citizen, simplifying its typical usage even further.
+Where previously you had to use it inside of a `compose()` construct, you no longer need
+to.
+
+```typescript
+import { compose, number, predicate } from 'decoders';
+
+// ❌ Stop using `compose()` for this
+const odd = compose(
+    number,
+    predicate((n) => n % 2 === 1, 'Must be odd'),
+);
+
+// ✅ Do this instead
+const odd = predicate(number, (n) => n % 2 === 1, 'Must be odd');
+```
+
 ## `url(...)` decoder has changed!
 
 It's no longer a function taking a list of schemes, and it no longer returns a string, but
@@ -139,25 +158,6 @@ const gitUrl: Decoder<URL> = predicate(
     (value) => value.protocol === 'git:',
     'Must be a git:// URL',
 );
-```
-
-## `predicate(...)` is now a first-class citizen
-
-`predicate()` is now a first-class citizen, simplifying its typical usage even further.
-Where previously you had to use it inside of a `compose()` construct, you no longer need
-to.
-
-```typescript
-import { compose, number, predicate } from 'decoders';
-
-// ❌ Stop using `compose()` for this
-const odd = compose(
-    number,
-    predicate((n) => n % 2 === 1, 'Must be odd'),
-);
-
-// ✅ Do this instead
-const odd = predicate(number, (n) => n % 2 === 1, 'Must be odd');
 ```
 
 ## Change `$DecoderType` to `DecoderType` (without the `$`)
