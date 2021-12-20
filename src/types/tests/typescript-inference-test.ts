@@ -2,7 +2,6 @@ import {
     Decoder,
     array,
     boolean,
-    compose,
     constant,
     date,
     dict,
@@ -93,24 +92,17 @@ guard(string, formatShort);
 map(string, parseFloat);
 
 // $ExpectType Decoder<string, unknown>
-compose(
-    string,
-    predicate((s) => s.startsWith('x'), 'Must start with x'),
-);
+predicate(string, (s) => s.startsWith('x'), 'Must start with x');
 
-const a = predicate((foo): foo is string => typeof foo === 'string', 'Is string');
 // $ExpectType Decoder<string, unknown>
-a;
+predicate(unknown, (foo): foo is string => typeof foo === 'string', 'Is string');
 
-const b = predicate(
+// $ExpectType Decoder<"a" | "b", unknown>
+predicate(
+    string,
     (foo: string): foo is 'a' | 'b' => foo === 'a' || foo === 'b',
     'Is a or b',
 );
-// $ExpectType Decoder<"a" | "b", string>
-b;
-
-// $ExpectType Decoder<"a" | "b", unknown>
-compose(a, b);
 
 array(string); // $ExpectType Decoder<string[], unknown>
 array(number); // $ExpectType Decoder<number[], unknown>
