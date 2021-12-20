@@ -623,6 +623,30 @@ verify([]);              // throws
 
 ---
 
+<a name="poja" href="#poja">#</a> <b>poja</b>: <i>Decoder&lt;Array&lt;unknown&gt;&gt;</i>
+[&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/array.js 'Source')
+
+Accepts any array, but doesn't validate its items further.
+
+"poja" means "plain old JavaScript array", a play on ["pojo"](#pojo).
+
+<!-- prettier-ignore-start -->
+```javascript
+const verify = guard(poja);
+
+// 👍
+verify([1, 'hi', true]) === [1, 'hi', true];
+verify(['hello', 'world']) === ['hello', 'world'];
+verify([]) === [];
+
+// 👎
+verify({});    // throws
+verify('hi');  // throws
+```
+<!-- prettier-ignore-end -->
+
+---
+
 <a name="tuple1" href="#tuple1">#</a>
 <b>tuple1</b><i>&lt;T1&gt;</i>(<i>Decoder&lt;T1&gt;</i>): <i>Decoder&lt;[T1]&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/tuple.js 'Source')<br />
@@ -754,6 +778,31 @@ verify({ x: 1 });  // throws, missing field `y`
 
 For more information, see also
 [The difference between `object`, `exact`, and `inexact`](#the-difference-between-object-exact-and-inexact).
+
+---
+
+<a name="pojo" href="#pojo">#</a> <b>pojo</b>: <i>Decoder&lt;{ [key: string]: unknown
+}&gt;</i>
+[&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/object.js 'Source')
+
+Accepts any "plain old JavaScript object", but doesn't validate its keys or values
+further.
+
+<!-- prettier-ignore-start -->
+```javascript
+const verify = guard(pojo);
+
+// 👍
+verify({}) === {};
+verify({ name: 'hi' }) === { name: 'hi' };
+
+// 👎
+verify('hi');        // throws
+verify([]);          // throws
+verify(new Date());  // throws
+verify(null);        // throws
+```
+<!-- prettier-ignore-end -->
 
 ---
 
