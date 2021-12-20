@@ -117,6 +117,30 @@ Result<E, T>  // ❌ Change this...
 Result<T, E>  // ✅ ...to this
 ```
 
+## `url(...)` decoder has changed!
+
+It's no longer a function taking a list of schemes, and it no longer returns a string, but
+a `URL` instance.
+
+| Replace usage of | With ✨                      |
+| ---------------- | ---------------------------- |
+| `url()`          | `httpsUrl`                   |
+| `url([])`        | `url`                        |
+| `url(['git'])`   | A custom decoder, see below. |
+
+To limit the allowed types of URL, write a custom decoder. This is also a great way to
+enforce other rules, like specific domains, etc.
+
+```typescript
+import { predicate, url } from 'decoders';
+
+const gitUrl: Decoder<URL> = predicate(
+    url,
+    (value) => value.protocol === 'git:',
+    'Must be a git:// URL',
+);
+```
+
 ## `predicate(...)` is now a first-class citizen
 
 `predicate()` is now a first-class citizen, simplifying its typical usage even further.
