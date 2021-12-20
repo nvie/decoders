@@ -60,3 +60,10 @@ list_decoders | while read dec; do
       exit 3
   fi
 done
+
+list_decoders | while read dec; do
+  if ! grep -qF "$dec" src/types/tests/typescript-inference-test.ts; then
+      echo "Decoder \"$dec\" is not tested in src/types/tests/typescript-inference-test.ts?" >&2
+      exit 4
+  fi
+done
