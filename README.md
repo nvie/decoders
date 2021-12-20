@@ -1083,9 +1083,8 @@ predicate][type-predicates], then this will be reflected in the return type, too
 <i>Decoder&lt;T&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/describe.js 'Source')<br />
 
-Defers to the given decoder, but when a decoding error happens, replace the error message
-with the given one. This can be used to simplify or shorten otherwise long or
-low-level/technical errors.
+Uses the given decoder, but will use an alternative error message in case it rejects. This
+can be used to simplify or shorten otherwise long or low-level/technical errors.
 
 ```javascript
 const vowel = describe(
