@@ -21,6 +21,7 @@ import {
     fail,
     guard,
     hardcoded,
+    httpsUrl,
     inexact,
     instanceOf,
     integer,
@@ -80,7 +81,8 @@ string; // $ExpectType Decoder<string, unknown>
 nonEmptyString; // $ExpectType Decoder<string, unknown>
 email; // $ExpectType Decoder<string, unknown>
 regex(/foo/, 'Must be foo'); // $ExpectType Decoder<string, unknown>
-url(); // $ExpectType Decoder<string, unknown>
+url; // $ExpectType Decoder<URL, unknown>
+httpsUrl; // $ExpectType Decoder<URL, unknown>
 
 array(string); // $ExpectType Decoder<string[], unknown>
 array(number); // $ExpectType Decoder<number[], unknown>

@@ -59,5 +59,5 @@ export { mapping, dict } from './core/mapping';
 export { integer, number, positiveInteger, positiveNumber } from './core/number';
 export { exact, inexact, object, pojo } from './core/object';
 export { maybe, nullable, optional } from './core/optional';
-export { email, nonEmptyString, regex, string, url } from './core/string';
+export { email, httpsUrl, nonEmptyString, regex, string, url } from './core/string';
 export { tuple1, tuple2, tuple3, tuple4, tuple5, tuple6 } from './core/tuple';

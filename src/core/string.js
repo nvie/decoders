@@ -1,8 +1,10 @@
 // @flow strict
 
 import { annotate } from '../annotate';
-import { compose, predicate } from './composition';
+import { either } from './either';
 import { err, ok } from '../result';
+import { instanceOf } from './instanceOf';
+import { map, predicate } from './composition';
 import type { Decoder } from '../_types';
 
 /** Match groups in this regex:
@@ -14,9 +16,6 @@ import type { Decoder } from '../_types';
  */
 const url_re =
     /^([A-Za-z]{3,9}(?:[+][A-Za-z]{3,9})?):\/\/(?:([-;:&=+$,\w]+)@)?(?:([A-Za-z0-9.-]+)(?::([0-9]{2,5}))?)(\/(?:[-+~%/.,\w]*)?(?:\?[-+=&;%@.,\w]*)?(?:#[.,!/\w]*)?)?$/;
-
-// The URL schemes the url() decoder accepts by default
-const DEFAULT_SCHEMES = ['https'];
 
 /**
  * Decoder that only returns Ok for string inputs.  Err otherwise.
@@ -48,30 +47,13 @@ export const email: Decoder<string> = regex(
     'Must be email',
 );
 
-/**
- * Decoder that only returns Ok for string inputs that match URLs of the
- * expected scheme.  Defaults to only accept HTTPS URLs.  Err otherwise.
- *
- * Variants that can be used:
- *
- * - url()                      accepts only https:// URLs
- * - url([])                    accepts any URL scheme
- * - url(['http'])              accepts only HTTP
- * - url(['https', 'git+ssh'])  accepts both https:// and git+ssh:// URLs
- */
-export const url = (schemes: $ReadOnlyArray<string> = DEFAULT_SCHEMES): Decoder<string> =>
-    compose(string, (value: string) => {
-        const matches = value.match(url_re);
-        if (!matches) {
-            return err(annotate(value, 'Must be URL'));
-        } else {
-            const scheme = matches[1];
-            if (schemes.length === 0 || schemes.includes(scheme.toLowerCase())) {
-                return ok(value);
-            } else {
-                return err(
-                    annotate(value, `URL scheme must be any of: ${schemes.join(', ')}`),
-                );
-            }
-        }
-    });
+export const url: Decoder<URL> = either(
+    map(regex(url_re, 'Must be URL'), (value) => new URL(value)),
+    instanceOf(URL),
+);
+
+export const httpsUrl: Decoder<URL> = predicate(
+    url,
+    (value) => value.protocol === 'https:',
+    'Must be an HTTPS URL',
+);

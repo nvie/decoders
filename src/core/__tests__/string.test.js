@@ -1,10 +1,12 @@
 // @flow strict
+/* globals URL */
 /* eslint-disable no-restricted-syntax */
 
-import { email, nonEmptyString, regex, string, url } from '../string';
+import { email, httpsUrl, nonEmptyString, regex, string, url } from '../string';
 import { guard } from '../../_guard';
 import { INPUTS } from './fixtures';
 import { partition } from 'itertools';
+import { predicate } from '../composition';
 
 describe('string', () => {
     const decoder = guard(string);
@@ -71,28 +73,39 @@ describe('email', () => {
 });
 
 describe('url', () => {
-    const decoder = guard(url());
+    const decoder = guard(url);
 
     it('valid', () => {
-        expect(decoder('https://nvie.com')).toBe('https://nvie.com');
-        expect(decoder('https://user:pass@nvie.com:443/foo?q=bar&b=baz#qux')).toBe(
-            'https://user:pass@nvie.com:443/foo?q=bar&b=baz#qux',
+        expect(decoder(new URL('https://nvie.com/')).toString()).toEqual(
+            'https://nvie.com/',
         );
-        expect(decoder('https://res.example.com/a_b,c_1d/foo.svg')).toBe(
+        expect(decoder('https://nvie.com').toString()).toEqual('https://nvie.com/');
+        expect(
+            decoder('https://user:pass@nvie.com:443/foo?q=bar&b=baz#qux').toString(),
+        ).toBe('https://user:pass@nvie.com/foo?q=bar&b=baz#qux');
+        expect(decoder('https://res.example.com/a_b,c_1d/foo.svg').toString()).toBe(
             'https://res.example.com/a_b,c_1d/foo.svg',
         );
     });
 
     it('custom URL schemes', () => {
-        const decoder = guard(url(['http', 'git+ssh', 'ftp']));
-        expect(decoder('http://nvie.com')).toBe('http://nvie.com');
-        expect(decoder('ftp://nvie.com:80/')).toBe('ftp://nvie.com:80/');
-        expect(decoder('git+ssh://foo@nvie.com/blah.git')).toBe(
+        const decoder = guard(
+            predicate(
+                url,
+                (value) => ['http:', 'git+ssh:', 'ftp:'].includes(value.protocol),
+                'Must be http, git+ssh, or ftp URL',
+            ),
+        );
+        expect(decoder('http://nvie.com').toString()).toBe('http://nvie.com/');
+        expect(decoder('ftp://nvie.com:80/').toString()).toBe('ftp://nvie.com:80/');
+        expect(decoder('git+ssh://foo@nvie.com/blah.git').toString()).toBe(
             'git+ssh://foo@nvie.com/blah.git',
         );
     });
 
     it('invalid', () => {
+        const decoder = guard(httpsUrl);
+
         // HTTP URLs are not accepted by default
         expect(() => decoder('http://nvie.com')).toThrow();
         expect(() => decoder('http://nvie.com:80')).toThrow();

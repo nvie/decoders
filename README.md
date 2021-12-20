@@ -261,6 +261,64 @@ verify('alice @ acme.org');  // throws
 
 ---
 
+<a name="url" href="#url">#</a> <b>url</b>: <i>Decoder&lt;URL&gt;</i>
+[&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/string.js 'Source')
+
+Accepts strings that are valid URLs, returns the value as a URL instance.
+
+<!-- prettier-ignore-start -->
+```javascript
+const verify = guard(url);
+
+// 👍
+verify('http://nvie.com') === new URL('http://nvie.com/');
+verify('https://nvie.com') === new URL('https://nvie.com/');
+verify('git+ssh://user@github.com/foo/bar.git') === new URL('git+ssh://user@github.com/foo/bar.git');
+
+// 👎
+verify('foo');               // throws
+verify('@acme.org');         // throws
+verify('alice @ acme.org');  // throws
+verify('/search?q=foo');     // throws
+```
+<!-- prettier-ignore-end -->
+
+---
+
+<a name="httpsUrl" href="#httpsUrl">#</a> <b>httpsUrl</b>: <i>Decoder&lt;URL&gt;</i>
+[&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/string.js 'Source')
+
+Accepts strings that are valid URLs, but only HTTPS ones. Returns the value as a URL
+instance.
+
+<!-- prettier-ignore-start -->
+```javascript
+const verify = guard(httpsUrl);
+
+// 👍
+verify('https://nvie.com:443') === new URL('https://nvie.com/');
+
+// 👎
+verify('http://nvie.com');                        // throws, not HTTPS
+verify('git+ssh://user@github.com/foo/bar.git');  // throws, not HTTPS
+```
+<!-- prettier-ignore-end -->
+
+**Tip!** If you need to limit URLs to different protocols than HTTP, you can do as the
+HTTPS decoder is implemented: as a predicate on top of a regular `url` decoder.
+
+```typescript
+import { predicate, url } from 'decoders';
+
+const gitUrl: Decoder<URL> = predicate(
+    url,
+    (value) => value.protocol === 'git:',
+    'Must be a git:// URL',
+);
+```
+
+---
+
 <a name="boolean" href="#boolean">#</a> <b>boolean</b>: <i>Decoder&lt;boolean&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/boolean.js 'Source')
 
