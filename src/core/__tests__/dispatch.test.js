@@ -1,7 +1,7 @@
 // @flow strict
 
 import { constant } from '../constants';
-import { dispatch } from '../dispatch';
+import { disjointUnion } from '../dispatch';
 import { guard } from '../../_guard';
 import { number } from '../number';
 import { object } from '../object';
@@ -38,8 +38,8 @@ const circle: Decoder<Circle> = object({
     r: number,
 });
 
-describe('dispatch', () => {
-    const decoder = dispatch('type', { rectangle, circle });
+describe('disjointUnion', () => {
+    const decoder = disjointUnion('type', { rectangle, circle });
 
     it('allows conditional decoding', () => {
         const r = { type: 'rectangle', x: 3, y: 5, width: 80, height: 100 };

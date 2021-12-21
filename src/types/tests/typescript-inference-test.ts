@@ -7,7 +7,7 @@ import {
     Decoder,
     describe,
     dict,
-    dispatch,
+    disjointUnion,
     either,
     either3,
     either4,
@@ -256,7 +256,7 @@ const circle: Decoder<Circle> = object({
 });
 
 // $ExpectType Decoder<$Values<{ rect: Rect; circle: Circle; }>, unknown>
-const shape = dispatch('_type', { rect, circle });
+disjointUnion('_type', { rect, circle });
 
 // $ExpectType Decoder<string, unknown>
 describe(string, 'xxx');

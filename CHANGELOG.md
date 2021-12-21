@@ -10,12 +10,15 @@ Potentially breaking changes:
 -   Drop support for Flow versions below 0.142.0
 -   Drop support for TypeScript versions below 4.1.0
 -   Drop all package dependencies
--   API of `guard` has changed (but only if you used its undocumented second argument
-    😉) - see [migration instructions](./MIGRATING-v2.md#changes-to-the-guard-api)
--   API of `predicate` has changed - see
-    [migration instructions](./MIGRATING-v2.md#predicate-is-now-a-first-class-citizen)
--   API of `url` decoder has changed - see
-    [migration instructions](./MIGRATING-v2.md#url-decoder-has-changed)
+-   Decoders that have changed:
+    -   `dispatch` has been renamed to `disjointUnion` - see
+        [migration instructions](./MIGRATING-v2.md#dispatch-is-now-disjointUnion)
+    -   API of `guard` has changed (but only if you used its undocumented second argument
+        😉) - see [migration instructions](./MIGRATING-v2.md#changes-to-the-guard-api)
+    -   API of `predicate` has changed - see
+        [migration instructions](./MIGRATING-v2.md#predicate-is-now-a-first-class-citizen)
+    -   API of `url` decoder has changed - see
+        [migration instructions](./MIGRATING-v2.md#url-decoder-has-changed)
 
 New features:
 
