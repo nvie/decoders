@@ -255,7 +255,7 @@ const circle: Decoder<Circle> = object({
     radius: number,
 });
 
-// $ExpectType Decoder<$Values<{ rect: Rect; circle: Circle; }>, unknown>
+// $ExpectType Decoder<Values<{ rect: Rect; circle: Circle; }>, unknown>
 disjointUnion('_type', { rect, circle });
 
 // $ExpectType Decoder<string, unknown>
