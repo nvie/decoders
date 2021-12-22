@@ -1247,8 +1247,9 @@ with that accordingly.
 ```typescript
 const verify = prep(
   // Will convert any input to an int first, before feeding it to
-  // positiveInteger. If this ever throws, then the error message will be
-  // what gets annotated on the input.
+  // positiveInteger. This will effectively also allow numeric strings
+  // to be accepted (and returned) as integers. If this ever throws,
+  // then the error message will be what gets annotated on the input.
   x => parseInt(x),
   positiveInteger,
 );
