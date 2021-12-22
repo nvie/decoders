@@ -3,6 +3,7 @@
 import { andThen } from '../result';
 import { object } from './object';
 import { oneOf } from './either';
+import { prep } from './composition';
 import type { Decoder, DecoderType } from '../_types';
 
 // $FlowFixMe[unclear-type] (not really an issue) - deliberate use of `any` - not sure how we should get rid of this
@@ -47,7 +48,9 @@ export function disjointUnion<O: { +[field: string]: Decoder<anything>, ... }>(
     field: string,
     mapping: O,
 ): Decoder<$Values<$ObjMap<O, DecoderType>>> {
-    const base = object({ [field]: oneOf(Object.keys(mapping)) });
+    const base = object({
+        [field]: prep(String, oneOf(Object.keys(mapping))),
+    });
     return (blob: mixed) => {
         return andThen(base(blob), (baseObj) => {
             const decoderName = baseObj[field];

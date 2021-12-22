@@ -266,6 +266,41 @@ const circle: Decoder<Circle> = object({
 // $ExpectType Decoder<Values<{ rect: Rect; circle: Circle; }>, unknown>
 disjointUnion('_type', { rect, circle });
 
+interface Rect1 {
+    _type: 0;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+
+interface Circle1 {
+    _type: 1;
+    cx: number;
+    cy: number;
+    radius: number;
+}
+
+type Shape1 = Rect1 | Circle1;
+
+const rect1: Decoder<Rect1> = object({
+    _type: constant(0 as const),
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+});
+
+const circle1: Decoder<Circle1> = object({
+    _type: constant(1 as const),
+    cx: number,
+    cy: number,
+    radius: number,
+});
+
+// $ExpectType Decoder<Values<{ 0: Rect1; 1: Circle1; }>, unknown>
+disjointUnion('_type', { 0: rect1, 1: circle1 });
+
 // $ExpectType Decoder<string, unknown>
 describe(string, 'xxx');
 // $ExpectType Decoder<number, unknown>
