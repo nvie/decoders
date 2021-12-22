@@ -8,6 +8,7 @@ export const STRINGS: Array<string> = [
     'foo',
     ' 1 2 3 ',
     'not a number',
+    '42',
 ];
 
 // prettier-ignore

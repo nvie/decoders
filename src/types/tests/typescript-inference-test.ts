@@ -48,6 +48,7 @@ import {
     positiveInteger,
     positiveNumber,
     predicate,
+    prep,
     regex,
     string,
     truthy,
@@ -128,6 +129,13 @@ predicate(
     (foo: string): foo is 'a' | 'b' => foo === 'a' || foo === 'b',
     'Is a or b',
 );
+
+prep(Number, string); // $ExpectType Decoder<string, unknown>
+prep(String, string); // $ExpectType Decoder<string, unknown>
+prep(Number, number); // $ExpectType Decoder<number, unknown>
+prep(String, number); // $ExpectType Decoder<number, unknown>
+prep(String, either(number, string)); // $ExpectType Decoder<string | number, unknown>
+prep(Number, either(number, string)); // $ExpectType Decoder<string | number, unknown>
 
 array(string); // $ExpectType Decoder<string[], unknown>
 array(number); // $ExpectType Decoder<number[], unknown>

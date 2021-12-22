@@ -1,10 +1,14 @@
 // @flow strict
+/* eslint-disable no-restricted-syntax */
 
 import { annotate } from '../../annotate';
-import { compose, map } from '../composition';
+import { compose, map, predicate, prep } from '../composition';
+import { constant } from '../constants';
 import { err, ok, unwrap } from '../../result';
 import { guard } from '../../_guard';
+import { INPUTS } from './fixtures';
 import { number } from '../number';
+import { partition } from 'itertools';
 import { string } from '../string';
 
 describe('compose', () => {
@@ -62,5 +66,47 @@ describe('map', () => {
         expect(weirdEven(3).type).toBe('err');
         expect(() => guard(weirdEven)(3)).toThrow('^ Must be even');
         expect(unwrap(weirdEven(4))).toEqual(4);
+    });
+});
+
+describe('predicate', () => {
+    const odd = predicate(number, (n) => n % 2 !== 0, 'Must be odd');
+
+    it('valid', () => {
+        expect(odd(0).type).toEqual('err');
+        expect(odd(1).type).toEqual('ok');
+        expect(odd(2).type).toEqual('err');
+        expect(odd(3).type).toEqual('ok');
+        expect(odd(4).type).toEqual('err');
+        expect(odd(5).type).toEqual('ok');
+        expect(odd(-1).type).toEqual('ok');
+        expect(odd(-2).type).toEqual('err');
+        expect(odd(-3).type).toEqual('ok');
+        expect(odd(-4).type).toEqual('err');
+        expect(odd(-5).type).toEqual('ok');
+    });
+});
+
+describe('prep', () => {
+    const answerToLife = prep((x) => Number(x), constant((42: 42)));
+    const [okay, not_okay] = partition(INPUTS, (x) => String(x) === '42');
+
+    it('valid', () => {
+        expect(okay.length).not.toBe(0);
+        for (const value of okay) {
+            expect(unwrap(answerToLife(value))).toBe(42);
+        }
+    });
+
+    it('invalid', () => {
+        expect(not_okay.length).not.toBe(0);
+        for (const value of not_okay) {
+            expect(answerToLife(value).type).toBe('err');
+        }
+    });
+
+    it('invalid when prep mapper function throws', () => {
+        expect(answerToLife(Symbol('foo')).type).toBe('err');
+        //                  ^^^^^^^^^^^^^ This will cause the `Number(x)` call to throw
     });
 });

@@ -12,7 +12,7 @@ export { JSONValue, JSONObject, JSONArray } from './core/json';
 
 export { guard } from './_guard';
 
-export { compose, map, predicate } from './core/composition';
+export { compose, map, predicate, prep } from './core/composition';
 
 export { array, nonEmptyArray, poja } from './core/array';
 export { boolean, numericBoolean, truthy } from './core/boolean';

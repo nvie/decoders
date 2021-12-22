@@ -1215,7 +1215,7 @@ Accepts values that are accepted by the decoder _and_ also pass the predicate fu
 ```typescript
 const odd = predicate(
   number,
-  (n) => n % 2 === 1,
+  (n) => n % 2 !== 0,
   'Must be odd'
 );
 const verify = guard(odd);

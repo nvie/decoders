@@ -12,3 +12,7 @@ export function predicate<T>(
     predicate: (value: T) => boolean,
     msg: string,
 ): Decoder<T>;
+export function prep<T, I>(
+    mapperFn: (blob: unknown) => I,
+    decoder: Decoder<T, I>,
+): Decoder<T>;

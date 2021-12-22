@@ -55,7 +55,13 @@ export function predicate<T>(
  */
 export function prep<I, T>(mapperFn: (mixed) => I, decoder: Decoder<T, I>): Decoder<T> {
     return (blob: mixed) => {
-        const blob2 = mapperFn(blob);
+        let blob2;
+        try {
+            blob2 = mapperFn(blob);
+        } catch (e) {
+            return err(annotate(blob, e.message));
+        }
+
         return orElse(
             decoder(blob2),
             (ann) => err(annotate(blob, ann.text)),
