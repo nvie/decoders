@@ -1207,7 +1207,7 @@ recommended to rely on this decoder directly for normal usage.
 <a name="predicate" href="#predicate">#</a>
 <b>predicate</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>, <i>&lt;T&gt; => boolean</i>,
 string): <i>Decoder&lt;T&gt;</i>
-[&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/predicate.js 'Source')<br />
+[&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/composition.js 'Source')<br />
 
 Accepts values that are accepted by the decoder _and_ also pass the predicate function.
 
