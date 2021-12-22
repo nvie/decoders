@@ -1,6 +1,6 @@
 // @flow strict
 
-import { andThen, err, ok } from '../result';
+import { andThen, err, ok, orElse } from '../result';
 import { annotate } from '../annotate';
 import type { Decoder } from '../_types';
 
@@ -45,4 +45,22 @@ export function predicate<T>(
         andThen(decoder(blob), (value) =>
             predicateFn(value) ? ok(value) : err(annotate(value, msg)),
         );
+}
+
+/**
+ * Pre-process the data input before passing it into the decoder. This gives
+ * you the ability to arbitrarily customize the input on the fly before passing
+ * it to the decoder. Of course, the input value at that point is still of
+ * `unknown` type, so you will have to deal with that accordingly.
+ */
+export function prep<I, T>(mapperFn: (mixed) => I, decoder: Decoder<T, I>): Decoder<T> {
+    return (blob: mixed) => {
+        const blob2 = mapperFn(blob);
+        return orElse(
+            decoder(blob2),
+            (ann) => err(annotate(blob, ann.text)),
+            //                    ^^^^ Annotates the _original_ input value
+            //                         (instead of echoing back blob2 in the output)
+        );
+    };
 }

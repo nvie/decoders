@@ -1234,6 +1234,50 @@ predicate][type-predicates], then this will be reflected in the return type, too
 
 ---
 
+<a name="prep" href="#prep">#</a> <b>prep</b><i>&lt;T, I&gt;</i>(<i>unknown => I</i>,
+<i>Decoder&lt;T, I&gt;</i>): <i>Decoder&lt;T&gt;</i>
+[&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/composition.js 'Source')<br />
+
+Pre-process the raw data input before passing it into the decoder. This gives you the
+ability to arbitrarily customize the input on the fly before passing it to the decoder. Of
+course, the input value at that point is still of `unknown` type, so you will have to deal
+with that accordingly.
+
+<!-- prettier-ignore-start -->
+```typescript
+//
+// NOTE: This example is a roundabout way of converting an input to a number
+// first, dealing with all the uncertainty manually before feeding it to the
+// decoder.
+//
+// This is NOT the recommended way to decode a numeric value from a string 😉
+// 🚫 Please do not use code like this yourself.
+//
+const verify = prep(
+  x => {
+    try {
+      const y = parseInt(x);
+      return !isNaN(y) ? y : x;
+    } catch {
+      // Otherwise return the original input value
+      return x;
+    }
+  },
+  positiveInteger,
+);
+
+// 👍
+verify(42) === 42;
+verify('3') === 3;
+
+// 👎
+verify('-3');  // throws: not a positive number
+verify('hi');  // throws: not a number
+```
+<!-- prettier-ignore-end -->
+
+---
+
 <a name="describe" href="#describe">#</a>
 <b>describe</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>, <i>string</i>):
 <i>Decoder&lt;T&gt;</i>
