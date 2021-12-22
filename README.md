@@ -97,7 +97,7 @@ The typical usage is that you keep composing decoders until you have one decoder
 entire input object, and then use a guard to wrap that outer decoder. Decoders can be
 composed to build larger decoders. Guards cannot be composed.
 
-#### Formatting decoding error messsages
+#### Formatting error messsages
 
 By default, `guard()` will use the `formatInline` error formatter. You can pass another
 built-in formatter as the second argument, or provide your own. (This will require
