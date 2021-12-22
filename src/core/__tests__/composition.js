@@ -88,7 +88,7 @@ describe('predicate', () => {
 });
 
 describe('prep', () => {
-    const answerToLife = prep((x) => Number(x), constant((42: 42)));
+    const answerToLife = prep((x) => parseInt(x), constant((42: 42)));
     const [okay, not_okay] = partition(INPUTS, (x) => String(x) === '42');
 
     it('valid', () => {
