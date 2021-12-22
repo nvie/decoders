@@ -1245,24 +1245,11 @@ with that accordingly.
 
 <!-- prettier-ignore-start -->
 ```typescript
-//
-// NOTE: This example is a roundabout way of converting an input to a number
-// first, dealing with all the uncertainty manually before feeding it to the
-// decoder.
-//
-// This is NOT the recommended way to decode a numeric value from a string 😉
-// 🚫 Please do not use code like this yourself.
-//
 const verify = prep(
-  x => {
-    try {
-      const y = parseInt(x);
-      return !isNaN(y) ? y : x;
-    } catch {
-      // Otherwise return the original input value
-      return x;
-    }
-  },
+  // Will convert any input to an int first, before feeding it to
+  // positiveInteger. If this ever throws, then the error message will be
+  // what gets annotated on the input.
+  x => parseInt(x),
   positiveInteger,
 );
 
