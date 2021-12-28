@@ -52,11 +52,11 @@ describe('objects w/ circular refs', () => {
     });
 
     it('invalid', () => {
-        expect(object({ foo: string })(value).type).toBe('err');
-        expect(object({ foo: string, self: mixed })(value).type).toBe('err');
-        expect(object({ foo: string, self: pojo })(value).type).toBe('err');
-        expect(object({ foo: number, self: object({ foo: string }) })(value).type).toBe(
-            'err',
+        expect(object({ foo: string })(value).ok).toBe(false);
+        expect(object({ foo: string, self: mixed })(value).ok).toBe(false);
+        expect(object({ foo: string, self: pojo })(value).ok).toBe(false);
+        expect(object({ foo: number, self: object({ foo: string }) })(value).ok).toBe(
+            false,
         );
         expect(
             object({
@@ -65,7 +65,7 @@ describe('objects w/ circular refs', () => {
                     foo: number,
                     self: object({ self: object({ foo: string }) }),
                 }),
-            })(value).type,
-        ).toBe('err');
+            })(value).ok,
+        ).toBe(false);
     });
 });

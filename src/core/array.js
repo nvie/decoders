@@ -40,7 +40,7 @@ function all<T>(
     const results: Array<T> = [];
     for (let index = 0; index < items.length; ++index) {
         const result = items[index];
-        if (result.type === 'ok') {
+        if (result.ok) {
             results.push(result.value);
         } else {
             const ann = result.error;

@@ -4,7 +4,7 @@ import { annotate, annotateObject, merge, updateText } from '../annotate';
 import { compose, map } from './composition';
 import { err, ok } from '../result';
 import type { Annotation } from '../annotate';
-import type { Decoder, DecoderType } from '../_types';
+import type { Decoder, DecodeResult, DecoderType } from '../_types';
 
 // $FlowFixMe[unclear-type] (not really an issue) - deliberate use of `any` - not sure how we should get rid of this
 type AnyDecoder = any;
@@ -94,9 +94,9 @@ export function object<O: { +[field: string]: AnyDecoder, ... }>(
         Object.keys(mapping).forEach((key) => {
             const decoder = mapping[key];
             const rawValue = blob[key];
-            const result = decoder(rawValue);
+            const result: DecodeResult<mixed> = decoder(rawValue);
 
-            if (result.type === 'ok') {
+            if (result.ok) {
                 const value = result.value;
                 if (value !== undefined) {
                     record[key] = value;

@@ -8,7 +8,7 @@ import type { Decoder } from '../_types';
 import type { Result } from '../result';
 
 function okOrErr<T, E>(result: Result<T, E>): T | E {
-    return result.type === 'ok' ? result.value : result.error;
+    return result.ok ? result.value : result.error;
 }
 
 const ntuple = (n: number) =>

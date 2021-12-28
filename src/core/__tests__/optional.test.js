@@ -23,7 +23,7 @@ describe('optional', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
             if (value === undefined) continue;
-            expect(decoder(value).type).toBe('err');
+            expect(decoder(value).ok).toBe(false);
         }
     });
 });
@@ -44,7 +44,7 @@ describe('nullable', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
             if (value === null) continue;
-            expect(decoder(value).type).toBe('err');
+            expect(decoder(value).ok).toBe(false);
         }
     });
 });
@@ -77,7 +77,7 @@ describe('maybe', () => {
         for (const value of not_okay) {
             if (value === undefined) continue;
             if (value === null) continue;
-            expect(decoder(value).type).toBe('err');
+            expect(decoder(value).ok).toBe(false);
         }
     });
 });

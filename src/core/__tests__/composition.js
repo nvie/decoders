@@ -56,14 +56,14 @@ describe('map', () => {
         });
         expect(unwrap(odd(13))).toEqual(13);
         expect(() => guard(odd)(4)).toThrow('^ Must be odd');
-        expect(odd(3).type).toBe('ok');
-        expect(odd(4).type).toBe('err');
+        expect(odd(3).ok).toBe(true);
+        expect(odd(4).ok).toBe(false);
 
         const weirdEven = map(number, (n) => {
             if (n % 2 === 0) return n;
             throw 'Must be even'; // Throwing a string, not an Error is non-conventional, but won't break anything
         });
-        expect(weirdEven(3).type).toBe('err');
+        expect(weirdEven(3).ok).toBe(false);
         expect(() => guard(weirdEven)(3)).toThrow('^ Must be even');
         expect(unwrap(weirdEven(4))).toEqual(4);
     });
@@ -73,17 +73,17 @@ describe('predicate', () => {
     const odd = predicate(number, (n) => n % 2 !== 0, 'Must be odd');
 
     it('valid', () => {
-        expect(odd(0).type).toEqual('err');
-        expect(odd(1).type).toEqual('ok');
-        expect(odd(2).type).toEqual('err');
-        expect(odd(3).type).toEqual('ok');
-        expect(odd(4).type).toEqual('err');
-        expect(odd(5).type).toEqual('ok');
-        expect(odd(-1).type).toEqual('ok');
-        expect(odd(-2).type).toEqual('err');
-        expect(odd(-3).type).toEqual('ok');
-        expect(odd(-4).type).toEqual('err');
-        expect(odd(-5).type).toEqual('ok');
+        expect(odd(0).ok).toEqual(false);
+        expect(odd(1).ok).toEqual(true);
+        expect(odd(2).ok).toEqual(false);
+        expect(odd(3).ok).toEqual(true);
+        expect(odd(4).ok).toEqual(false);
+        expect(odd(5).ok).toEqual(true);
+        expect(odd(-1).ok).toEqual(true);
+        expect(odd(-2).ok).toEqual(false);
+        expect(odd(-3).ok).toEqual(true);
+        expect(odd(-4).ok).toEqual(false);
+        expect(odd(-5).ok).toEqual(true);
     });
 });
 
@@ -101,12 +101,12 @@ describe('prep', () => {
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(answerToLife(value).type).toBe('err');
+            expect(answerToLife(value).ok).toBe(false);
         }
     });
 
     it('invalid when prep mapper function throws', () => {
-        expect(answerToLife(Symbol('foo')).type).toBe('err');
+        expect(answerToLife(Symbol('foo')).ok).toBe(false);
         //                  ^^^^^^^^^^^^^ This will cause the `Number(x)` call to throw
     });
 });

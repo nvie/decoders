@@ -19,7 +19,7 @@ export function dict<T>(decoder: Decoder<T>): Decoder<{ [string]: T }> {
         Object.keys(blob).forEach((key: string) => {
             const value = blob[key];
             const result = decoder(value);
-            if (result.type === 'ok') {
+            if (result.ok) {
                 if (errors === null) {
                     rv[key] = result.value;
                 }

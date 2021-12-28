@@ -15,7 +15,7 @@ describe('fail', () => {
     it('throws runtime error if inputs are not strings', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).type).toBe('err');
+            expect(decoder(value).ok).toBe(false);
         }
     });
 });

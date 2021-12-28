@@ -20,7 +20,7 @@ describe('number', () => {
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).type).toBe('err');
+            expect(decoder(value).ok).toBe(false);
         }
     });
 });
@@ -42,7 +42,7 @@ describe('positiveNumber', () => {
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).type).toBe('err');
+            expect(decoder(value).ok).toBe(false);
         }
     });
 });
@@ -61,7 +61,7 @@ describe('integer', () => {
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).type).toBe('err');
+            expect(decoder(value).ok).toBe(false);
         }
     });
 });
@@ -83,7 +83,7 @@ describe('positiveInteger', () => {
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).type).toBe('err');
+            expect(decoder(value).ok).toBe(false);
         }
     });
 });

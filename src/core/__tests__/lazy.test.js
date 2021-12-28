@@ -33,10 +33,10 @@ describe('lazy', () => {
             next: optional(lazy(() => llist)),
         });
 
-        expect(llist(123).type).toBe('err');
-        expect(llist('string').type).toBe('err');
-        expect(llist({ curr: 123 }).type).toBe('err');
-        expect(llist({ curr: 'string', next: true }).type).toBe('err');
+        expect(llist(123).ok).toBe(false);
+        expect(llist('string').ok).toBe(false);
+        expect(llist({ curr: 123 }).ok).toBe(false);
+        expect(llist({ curr: 'string', next: true }).ok).toBe(false);
 
         const v1 = { curr: 'i am a string' };
         const v2 = { curr: 'i am a string', next: { curr: 'another' } };
@@ -59,10 +59,10 @@ describe('lazy', () => {
 
         const stringTree = tree(string);
 
-        expect(stringTree(123).type).toBe('err');
-        expect(stringTree('string').type).toBe('err');
-        expect(stringTree({ node: 123 }).type).toBe('err');
-        expect(stringTree({ node: 'string', children: false }).type).toBe('err');
+        expect(stringTree(123).ok).toBe(false);
+        expect(stringTree('string').ok).toBe(false);
+        expect(stringTree({ node: 123 }).ok).toBe(false);
+        expect(stringTree({ node: 'string', children: false }).ok).toBe(false);
 
         const s1 = { node: 'string', children: [] };
         const s2 = { node: 'string', children: [{ node: 'another', children: [] }] };

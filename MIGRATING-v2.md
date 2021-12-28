@@ -95,8 +95,8 @@ import { ... } from 'decoders/result';
 | `result.dispatch()`       | `dispatch(result)`      |     |
 | `result.errValue()`       | `result.error`          | ⚠️  |
 | `result.expect()`         | `expect(result)`        |     |
-| `result.isErr()`          | `result.type === 'err'` | ⚠️  |
-| `result.isOk()`           | `result.type === 'ok'`  | ⚠️  |
+| `result.isErr()`          | `!result.ok`            | ⚠️  |
+| `result.isOk()`           | `result.ok`             | ⚠️  |
 | `result.map()`            | `mapOk(result)`         | ⚠️  |
 | `result.mapError()`       | `mapError(result)`      |     |
 | `result.toString()`       | (has been removed)      |     |

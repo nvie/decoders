@@ -134,7 +134,7 @@ describe('either9', () => {
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).type).toBe('err');
+            expect(decoder(value).ok).toBe(false);
         }
     });
 });
@@ -154,7 +154,7 @@ describe('oneOf', () => {
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).type).toBe('err');
+            expect(decoder(value).ok).toBe(false);
         }
     });
 });

@@ -19,15 +19,15 @@ describe('Result', () => {
     const r4 = err('a reason');
 
     it('inspection', () => {
-        expect(r1.type).toBe('ok');
-        expect(r2.type).toBe('ok');
-        expect(r3.type).toBe('err');
-        expect(r4.type).toBe('err');
+        expect(r1.ok).toBe(true);
+        expect(r2.ok).toBe(true);
+        expect(r3.ok).toBe(false);
+        expect(r4.ok).toBe(false);
     });
 
     it('convenience constructors', () => {
-        expect(ok(42).type).toBe('ok');
-        expect(err('oops').type).toBe('err');
+        expect(ok(42).ok).toBe(true);
+        expect(err('oops').ok).toBe(false);
     });
 
     it('dispatching', () => {
@@ -97,9 +97,9 @@ describe('Result', () => {
             ),
         );
         expect(v1.value).toBe(84);
-        expect(v2.type).toBe('err');
-        expect(v3.type).toBe('err');
-        expect(v4.type).toBe('err');
+        expect(v2.ok).toBe(false);
+        expect(v3.ok).toBe(false);
+        expect(v4.ok).toBe(false);
     });
 
     it('orElse', () => {

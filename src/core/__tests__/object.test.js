@@ -117,13 +117,13 @@ describe('objects', () => {
     it('errors on non-objects', () => {
         const decoder = object({ id: string });
 
-        expect(decoder('foo').type).toBe('err');
-        expect(decoder(3.14).type).toBe('err');
-        expect(decoder([]).type).toBe('err');
-        expect(decoder(undefined).type).toBe('err');
-        expect(decoder(NaN).type).toBe('err');
-        expect(decoder({ foo: [1, 2, 3] }).type).toBe('err'); // Missing key "id"
-        expect(decoder({ id: 3 }).type).toBe('err'); // Invalid field value for "id"
+        expect(decoder('foo').ok).toBe(false);
+        expect(decoder(3.14).ok).toBe(false);
+        expect(decoder([]).ok).toBe(false);
+        expect(decoder(undefined).ok).toBe(false);
+        expect(decoder(NaN).ok).toBe(false);
+        expect(decoder({ foo: [1, 2, 3] }).ok).toBe(false); // Missing key "id"
+        expect(decoder({ id: 3 }).ok).toBe(false); // Invalid field value for "id"
     });
 });
 
@@ -170,13 +170,13 @@ describe('exact objects', () => {
     it('errors on non-objects', () => {
         const decoder = exact({ id: string });
 
-        expect(decoder('foo').type).toBe('err');
-        expect(decoder(3.14).type).toBe('err');
-        expect(decoder([]).type).toBe('err');
-        expect(decoder(undefined).type).toBe('err');
-        expect(decoder(NaN).type).toBe('err');
-        expect(decoder({ foo: [1, 2, 3] }).type).toBe('err'); // Missing key "id"
-        expect(decoder({ id: 3 }).type).toBe('err'); // Invalid field value for "id"
+        expect(decoder('foo').ok).toBe(false);
+        expect(decoder(3.14).ok).toBe(false);
+        expect(decoder([]).ok).toBe(false);
+        expect(decoder(undefined).ok).toBe(false);
+        expect(decoder(NaN).ok).toBe(false);
+        expect(decoder({ foo: [1, 2, 3] }).ok).toBe(false); // Missing key "id"
+        expect(decoder({ id: 3 }).ok).toBe(false); // Invalid field value for "id"
     });
 
     it('exact objects with optional fields will be implicit-undefined', () => {
@@ -248,13 +248,13 @@ describe('inexact objects', () => {
     it('errors on non-objects', () => {
         const decoder = inexact({ id: string });
 
-        expect(decoder('foo').type).toBe('err');
-        expect(decoder(3.14).type).toBe('err');
-        expect(decoder([]).type).toBe('err');
-        expect(decoder(undefined).type).toBe('err');
-        expect(decoder(NaN).type).toBe('err');
-        expect(decoder({ foo: [1, 2, 3] }).type).toBe('err'); // Missing key "id"
-        expect(decoder({ id: 3 }).type).toBe('err'); // Invalid field value for "id"
+        expect(decoder('foo').ok).toBe(false);
+        expect(decoder(3.14).ok).toBe(false);
+        expect(decoder([]).ok).toBe(false);
+        expect(decoder(undefined).ok).toBe(false);
+        expect(decoder(NaN).ok).toBe(false);
+        expect(decoder({ foo: [1, 2, 3] }).ok).toBe(false); // Missing key "id"
+        expect(decoder({ id: 3 }).ok).toBe(false); // Invalid field value for "id"
     });
 
     it('inexact objects with optional fields will be implicit-undefined', () => {

@@ -20,7 +20,7 @@ describe('null', () => {
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).type).toBe('err');
+            expect(decoder(value).ok).toBe(false);
         }
     });
 });
@@ -39,7 +39,7 @@ describe('undefined', () => {
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).type).toBe('err');
+            expect(decoder(value).ok).toBe(false);
         }
     });
 });
@@ -58,7 +58,7 @@ describe('string constants', () => {
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).type).toBe('err');
+            expect(decoder(value).ok).toBe(false);
         }
     });
 });
@@ -77,7 +77,7 @@ describe('number constants', () => {
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).type).toBe('err');
+            expect(decoder(value).ok).toBe(false);
         }
     });
 });
@@ -96,7 +96,7 @@ describe('boolean constants #1', () => {
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).type).toBe('err');
+            expect(decoder(value).ok).toBe(false);
         }
     });
 });
@@ -115,7 +115,7 @@ describe('boolean constants #2', () => {
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).type).toBe('err');
+            expect(decoder(value).ok).toBe(false);
         }
     });
 });
