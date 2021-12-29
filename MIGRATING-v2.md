@@ -117,9 +117,19 @@ Result<E, T>  // ❌ Change this...
 Result<T, E>  // ✅ ...to this
 ```
 
-## `either3`, `either4`, ..., `either9` have been removed!
+## `eitherN` is now simply `either`
 
-You now only need `either()` and simply pass it the params.
+The following decoders have been removed:
+
+-   `either3`
+-   `either4`
+-   `either5`
+-   `either6`
+-   `either7`
+-   `either8`
+-   `either9`
+
+You now only need `either` and simply pass it the params.
 
 ```typescript
 import { either } from 'decoders';
@@ -139,9 +149,18 @@ either(string, number, boolean, array(string), truthy);
 there is a max of 9 arguments with this construct. If you hit the 16 argument limit, you
 can work around that by stacking, e.g. do `either(<8 arguments here>, either(...))`.
 
-## `tuple1`, `tuple2`, ..., `tuple6` have been removed!
+## `tupleN` is now simply `tuple`
 
-You now only need `tuple()` and simply pass it the params.
+The following decoders have been removed:
+
+-   `tuple1`
+-   `tuple2`
+-   `tuple3`
+-   `tuple4`
+-   `tuple5`
+-   `tuple6`
+
+You now only need `tuple` and simply pass it the desired number of elements.
 
 ```typescript
 import { tuple } from 'decoders';
