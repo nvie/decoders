@@ -48,18 +48,22 @@ function nest(errText: string): string {
 
 // prettier-ignore
 interface EitherDecoderSignatures {
-    <A>(d1: Decoder<A>): Decoder<A>;
-    <A, B>(d1: Decoder<A>, d2: Decoder<B>): Decoder<A | B>;
-    <A, B, C>(d1: Decoder<A>, d2: Decoder<B>, d3: Decoder<C>): Decoder<A | B | C>;
-    <A, B, C, D>(d1: Decoder<A>, d2: Decoder<B>, d3: Decoder<C>, d4: Decoder<D>): Decoder<A | B | C | D>;
-    <A, B, C, D, E>(d1: Decoder<A>, d2: Decoder<B>, d3: Decoder<C>, d4: Decoder<D>, d5: Decoder<E>): Decoder<A | B | C | D | E>;
-    <A, B, C, D, E, F>(d1: Decoder<A>, d2: Decoder<B>, d3: Decoder<C>, d4: Decoder<D>, d5: Decoder<E>, d6: Decoder<F>): Decoder<A | B | C | D | E | F>;
-    <A, B, C, D, E, F, G>(d1: Decoder<A>, d2: Decoder<B>, d3: Decoder<C>, d4: Decoder<D>, d5: Decoder<E>, d6: Decoder<F>, d7: Decoder<G>): Decoder<A | B | C | D | E | F | G>;
-    <A, B, C, D, E, F, G, H>(d1: Decoder<A>, d2: Decoder<B>, d3: Decoder<C>, d4: Decoder<D>, d5: Decoder<E>, d6: Decoder<F>, d7: Decoder<G>, d8: Decoder<H>): Decoder<A | B | C | D | E | F | G | H>;
-    <A, B, C, D, E, F, G, H, I>(d1: Decoder<A>, d2: Decoder<B>, d3: Decoder<C>, d4: Decoder<D>, d5: Decoder<E>, d6: Decoder<F>, d7: Decoder<G>, d8: Decoder<H>, d9: Decoder<I>): Decoder<A | B | C | D | E | F | G | H | I>;
-    <A, B, C, D, E, F, G, H, I, J>(d1: Decoder<A>, d2: Decoder<B>, d3: Decoder<C>, d4: Decoder<D>, d5: Decoder<E>, d6: Decoder<F>, d7: Decoder<G>, d8: Decoder<H>, d9: Decoder<I>, d10: Decoder<J>): Decoder<A | B | C | D | E | F | G | H | I | J>;
-    <A, B, C, D, E, F, G, H, I, J, K>(d1: Decoder<A>, d2: Decoder<B>, d3: Decoder<C>, d4: Decoder<D>, d5: Decoder<E>, d6: Decoder<F>, d7: Decoder<G>, d8: Decoder<H>, d9: Decoder<I>, d10: Decoder<J>, d11: Decoder<K>): Decoder<A | B | C | D | E | F | G | H | I | J | K>;
-    <A, B, C, D, E, F, G, H, I, J, K, L>(d1: Decoder<A>, d2: Decoder<B>, d3: Decoder<C>, d4: Decoder<D>, d5: Decoder<E>, d6: Decoder<F>, d7: Decoder<G>, d8: Decoder<H>, d9: Decoder<I>, d10: Decoder<J>, d11: Decoder<K>, d12: Decoder<L>): Decoder<A | B | C | D | E | F | G | H | I | J | K | L>;
+  <A>(a: Decoder<A>): Decoder<A>;
+  <A, B>(a: Decoder<A>, b: Decoder<B>): Decoder<A | B>;
+  <A, B, C>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>): Decoder<A | B | C>;
+  <A, B, C, D>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>): Decoder<A | B | C | D>;
+  <A, B, C, D, E>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>, e: Decoder<E>): Decoder<A | B | C | D | E>;
+  <A, B, C, D, E, F>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>, e: Decoder<E>, f: Decoder<F>): Decoder<A | B | C | D | E | F>;
+  <A, B, C, D, E, F, G>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>, e: Decoder<E>, f: Decoder<F>, g: Decoder<G>): Decoder<A | B | C | D | E | F | G>;
+  <A, B, C, D, E, F, G, H>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>, e: Decoder<E>, f: Decoder<F>, g: Decoder<G>, h: Decoder<H>): Decoder<A | B | C | D | E | F | G | H>;
+  <A, B, C, D, E, F, G, H, I>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>, e: Decoder<E>, f: Decoder<F>, g: Decoder<G>, h: Decoder<H>, i: Decoder<I>): Decoder<A | B | C | D | E | F | G | H | I>;
+  <A, B, C, D, E, F, G, H, I, J>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>, e: Decoder<E>, f: Decoder<F>, g: Decoder<G>, h: Decoder<H>, i: Decoder<I>, j: Decoder<J>): Decoder<A | B | C | D | E | F | G | H | I | J>;
+  <A, B, C, D, E, F, G, H, I, J, K>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>, e: Decoder<E>, f: Decoder<F>, g: Decoder<G>, h: Decoder<H>, i: Decoder<I>, j: Decoder<J>, k: Decoder<K>): Decoder<A | B | C | D | E | F | G | H | I | J | K>;
+  <A, B, C, D, E, F, G, H, I, J, K, L>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>, e: Decoder<E>, f: Decoder<F>, g: Decoder<G>, h: Decoder<H>, i: Decoder<I>, j: Decoder<J>, k: Decoder<K>, l: Decoder<L>): Decoder<A | B | C | D | E | F | G | H | I | J | K | L>;
+  <A, B, C, D, E, F, G, H, I, J, K, L, M>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>, e: Decoder<E>, f: Decoder<F>, g: Decoder<G>, h: Decoder<H>, i: Decoder<I>, j: Decoder<J>, k: Decoder<K>, l: Decoder<L>, m: Decoder<M>): Decoder<A | B | C | D | E | F | G | H | I | J | K | L | M>;
+  <A, B, C, D, E, F, G, H, I, J, K, L, M, N>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>, e: Decoder<E>, f: Decoder<F>, g: Decoder<G>, h: Decoder<H>, i: Decoder<I>, j: Decoder<J>, k: Decoder<K>, l: Decoder<L>, m: Decoder<M>, n: Decoder<N>): Decoder<A | B | C | D | E | F | G | H | I | J | K | L | M | N>;
+  <A, B, C, D, E, F, G, H, I, J, K, L, M, N, O>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>, e: Decoder<E>, f: Decoder<F>, g: Decoder<G>, h: Decoder<H>, i: Decoder<I>, j: Decoder<J>, k: Decoder<K>, l: Decoder<L>, m: Decoder<M>, n: Decoder<N>, o: Decoder<O>): Decoder<A | B | C | D | E | F | G | H | I | J | K | L | M | N | O>;
+  <A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>, e: Decoder<E>, f: Decoder<F>, g: Decoder<G>, h: Decoder<H>, i: Decoder<I>, j: Decoder<J>, k: Decoder<K>, l: Decoder<L>, m: Decoder<M>, n: Decoder<N>, o: Decoder<O>, p: Decoder<P>): Decoder<A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P>;
 }
 
 function _either(...decoders: $ReadOnlyArray<Decoder<mixed>>): Decoder<mixed> {

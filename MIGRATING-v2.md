@@ -117,6 +117,28 @@ Result<E, T>  // ❌ Change this...
 Result<T, E>  // ✅ ...to this
 ```
 
+## `either3`, `either4`, ..., `either9` have been removed!
+
+You now only need `either()` and simply pass it the params.
+
+```typescript
+import { either } from 'decoders';
+
+// ❌ Stop using `eitherN()` for this
+either3(string, number, boolean);
+either4(string, number, boolean, array(string));
+either5(string, number, boolean, array(string), truthy);
+
+// ✅ Do this instead
+either(string, number, boolean);
+either(string, number, boolean, array(string));
+either(string, number, boolean, array(string), truthy);
+```
+
+**NOTE:** In TypeScript, this scales to an unlimited number of arguments, but in Flow,
+there is a max of 16 arguments with this construct. If you hit the 16 argument limit, you
+can work around that by stacking, e.g. do `either(<15 arguments here>, either(...))`.
+
 ## `predicate(...)` is now a first-class citizen
 
 `predicate()` is now a first-class citizen, simplifying its typical usage even further.

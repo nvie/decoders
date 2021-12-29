@@ -1112,22 +1112,13 @@ verify(null);               // throws
 
 ---
 
-<a name="either" href="#either">#</a> <b>either</b><i>&lt;T1,
-T2&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;T1 |
-T2&gt;</i><br />
+<a name="either" href="#either">#</a> <b>either</b><i>&lt;A, B, C,
+...&gt;</i>(<i>Decoder&lt;A&gt;</i>, <i>Decoder&lt;B&gt;</i>, <i>Decoder&lt;C&gt;</i>,
+...): <i>Decoder&lt;A | B | C | ...&gt;</i><br />
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/either.js 'Source')<br />
-<a name="either2" href="#either2">#</a> <b>either2</b><i>&lt;T1,
-T2&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;T1 |
-T2&gt;</i><br />
-[&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/either.js 'Source')<br />
-<a name="either3" href="#either3">#</a> <b>either3</b><i>&lt;T1, T2,
-T3&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>, <i>Decoder&lt;T3&gt;</i>):
-<i>Decoder&lt;T1 | T2 | T3&gt;</i>
-[&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/either.js 'Source')<br />
-...
 
-Accepts any value that is accepted by any of the given decoders. Eithers exist for arities
-up until 9 (`either`, `either3`, `either4`, ..., `either9`).
+Accepts any value that is accepted by any of the given decoders. The decoders are
+attempted on the input in given order. The first one that accepts the input "wins".
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -1142,6 +1133,10 @@ verify(false);  // throws
 ```
 <!-- prettier-ignore-end -->
 
+**NOTE to Flow users:** In Flow, there is a max of 16 arguments with this construct. (This
+is no problem in TypeScript.) If you hit the 16 argument limit, you can work around that
+by stacking, e.g. do `either(<15 arguments here>, either(...))`.
+
 ---
 
 <a name="disjointUnion" href="#disjointUnion">#</a> <b>disjointUnion</b><i>&lt;O: {
@@ -1151,8 +1146,8 @@ mapping: O): <i>Decoder&lt;T | V | ...&gt;</i>
 
 **NOTE:** In decoders@1.x, this was called `dispatch()`.
 
-Like the `either` family, but only for building unions of object types with a common field
-(like a `type` field) that lets you distinguish members.
+Like `either`, but only for building unions of object types with a common field (like a
+`type` field) that lets you distinguish members.
 
 The following two decoders are effectively equivalent:
 
