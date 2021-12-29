@@ -529,7 +529,7 @@ verify('hello world'); // throws
 ---
 
 <a name="undefined_" href="#undefined_">#</a> <b>undefined\_</b>:
-<i>Decoder&lt;void&gt;</i>
+<i>Decoder&lt;undefined&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/constants.js 'Source')
 
 Accepts only the literal `undefined` value.
@@ -637,14 +637,12 @@ verify({ a: 'foo', b: 'bar' });  // throws
 
 <a name="unknown" href="#unknown">#</a> <b>unknown</b>: <i>Decoder&lt;unknown&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/constants.js 'Source')
-<a name="mixed" href="#mixed">#</a> <b>unknown</b>: <i>Decoder&lt;mixed&gt;</i>
+<a name="mixed" href="#mixed">#</a> <b>mixed</b>: <i>Decoder&lt;mixed&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/constants.js 'Source')<br />
 
 Accepts any value and returns it unchanged. Useful for situation in which you don't know
 or expect a specific type. Of course, the downside is that you won't know the type of the
 value statically and you'll have to further refine it yourself.
-
-(Unknown is called `mixed` in Flow.)
 
 ```javascript
 const verify = guard(mixed);
@@ -661,14 +659,14 @@ verify([1, 2]) === [1, 2];
 
 ### Compositions
 
-Composite decoders are "higher order" decoders that can build new decoders from existing
-decoders that can already decode a "subtype". Examples are: if you already have a decoder
-for a `Point` (= `Decoder<Point>`), then you can use `array()` to automatically build a
-decoder for arrays of points: `array(pointDecoder)`, which will be of type
-`Decoder<Array<Point>>`.
+Composite decoders can build new decoders from existing decoders that can already decode a
+"subtype". Examples are: if you already have a `string` decoder (of type
+`Decoder<string>`), then you can use `array(string)` to automatically build a decoder for
+arrays of strings, which will be of type `Decoder<Array<string>>`.
 
 <a name="optional" href="#optional">#</a>
-<b>optional</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;T | void&gt;</i>
+<b>optional</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;T |
+undefined&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/optional.js 'Source')
 
 Accepts only the literal value `undefined`, or whatever the given decoder accepts.
