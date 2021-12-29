@@ -1,0 +1,12 @@
+remote_theme: pmarsceill/just-the-docs
+
+# Enable site search
+search_enabled: true
+
+logo: '../img/logo@2x.png'
+
+aux_links:
+    'Decoders on GitHub':
+        - '//github.com/nvie/decoders'
+
+footer_content: 'Copyright &copy; 2017-2022 Vincent Driessen'
