@@ -9,8 +9,6 @@ aux_links:
     'Decoders on GitHub':
         - '//github.com/nvie/decoders'
 
-footer_content: 'Copyright &copy; 2017-2022 Vincent Driessen'
-
 # Footer "Edit this page on GitHub" link text
 gh_edit_link: true
 gh_edit_link_text: 'Edit this page on GitHub'
