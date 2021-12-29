@@ -3,7 +3,7 @@
 
 import { boolean } from '../boolean';
 import { constant, undefined_ } from '../constants';
-import { either, either4, either9, oneOf } from '../either';
+import { either, oneOf } from '../either';
 import { guard } from '../../_guard';
 import { INPUTS } from './fixtures';
 import { number } from '../number';
@@ -82,8 +82,15 @@ describe('nested eithers', () => {
     );
 });
 
+describe('either fails without decoders', () => {
+    expect(() =>
+        // $FlowFixMe[incompatible-call] - deliberately invalid call
+        either(),
+    ).toThrow();
+});
+
 describe('either3', () => {
-    const decoder = guard(either4(string, boolean, number, undefined_));
+    const decoder = guard(either(string, boolean, number, undefined_));
     const [okay, not_okay] = partition(
         INPUTS,
         (x) =>
@@ -109,8 +116,7 @@ describe('either3', () => {
 });
 
 describe('either9', () => {
-    // By testing either9 we'll cover either8, either7, ...
-    const decoder = either9(
+    const decoder = either(
         constant('one'),
         constant('two'),
         constant('three'),

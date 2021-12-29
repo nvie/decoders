@@ -3,7 +3,7 @@
 import { array } from './array';
 import { boolean } from './boolean';
 import { dict } from './mapping';
-import { either6 } from './either';
+import { either } from './either';
 import { lazy } from './lazy';
 import { null_ } from './constants';
 import { number } from './number';
@@ -18,7 +18,7 @@ export const jsonObject: Decoder<JSONObject> = lazy(() => dict(json));
 
 export const jsonArray: Decoder<JSONArray> = lazy(() => array(json));
 
-export const json: Decoder<JSONValue> = either6(
+export const json: Decoder<JSONValue> = either(
     null_,
     string,
     number,

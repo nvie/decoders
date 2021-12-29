@@ -9,13 +9,13 @@ import {
     dict,
     disjointUnion,
     either,
-    either3,
-    either4,
-    either5,
-    either6,
-    either7,
-    either8,
-    either9,
+    // either3,
+    // either4,
+    // either5,
+    // either6,
+    // either7,
+    // either8,
+    // either9,
     email,
     exact,
     fail,
@@ -220,13 +220,13 @@ d.getFullYear();
 fail('I will never return');
 
 either(string, number); // $ExpectType Decoder<string | number, unknown>
-either3(string, string, number); // $ExpectType Decoder<string | number, unknown>
-either4(string, boolean, number, array(number)); // $ExpectType Decoder<string | number | boolean | number[], unknown>
-either5(string, string, string, string, string); // $ExpectType Decoder<string, unknown>
-either6(string, string, string, string, string, string); // $ExpectType Decoder<string, unknown>
-either7(string, string, string, string, string, string, string); // $ExpectType Decoder<string, unknown>
-either8(string, string, string, string, string, string, string, string); // $ExpectType Decoder<string, unknown>
-either9(string, string, string, string, string, string, string, string, string); // $ExpectType Decoder<string, unknown>
+either(string, string, number); // $ExpectType Decoder<string | number, unknown>
+either(string, boolean, number, array(number)); // $ExpectType Decoder<string | number | boolean | number[], unknown>
+either(string, string, string, string, string); // $ExpectType Decoder<string, unknown>
+either(string, string, string, string, string, string); // $ExpectType Decoder<string, unknown>
+either(string, string, string, string, string, string, string); // $ExpectType Decoder<string, unknown>
+either(string, string, string, string, string, string, string, string); // $ExpectType Decoder<string, unknown>
+either(string, string, string, string, string, string, string, string, string); // $ExpectType Decoder<string, unknown>
 
 // $ExpectType Decoder<"foo" | "bar" | "qux", unknown>
 oneOf(['foo', 'bar', 'qux']);

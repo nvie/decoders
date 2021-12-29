@@ -20,17 +20,7 @@ export { constant, hardcoded, mixed, null_, undefined_, unknown } from './core/c
 export { date, iso8601 } from './core/date';
 export { describe } from './core/describe';
 export { disjointUnion } from './core/dispatch';
-export {
-    either,
-    either3,
-    either4,
-    either5,
-    either6,
-    either7,
-    either8,
-    either9,
-    oneOf,
-} from './core/either';
+export { either, oneOf } from './core/either';
 export { fail } from './core/fail';
 export { instanceOf } from './core/instanceOf';
 export { json, jsonObject, jsonArray } from './core/json';
