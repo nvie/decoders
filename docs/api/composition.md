@@ -41,10 +41,10 @@ verify(4);  // throws
 V&gt;</i>(<i>Decoder&lt;T&gt;</i>, <i>Decoder&lt;V, T&gt;</i>): <i>Decoder&lt;V&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/composition.js 'Source')<br />
 
-Given a decoder for _T_ and another one for _V_-given-a-_T_. Will first decode the input
-using the first decoder, and _if okay_, pass the result on to the second decoder. The
-second decoder will thus be able to make more assumptions about its input value, i.e. it
-can know what type the input value is (`T` instead of `unknown`).
+Given a decoder for _T_ and another one for <i>V</i>-given-a-<i>T</i>. Will first decode
+the input using the first decoder, and _if okay_, pass the result on to the second
+decoder. The second decoder will thus be able to make more assumptions about its input
+value, i.e. it can know what type the input value is (`T` instead of `unknown`).
 
 This is an advanced decoder, typically only useful for authors of decoders. It's not
 recommended to rely on this decoder directly for normal usage.
@@ -76,5 +76,7 @@ verify(42);    // throws: not an odd number
 ```
 <!-- prettier-ignore-end -->
 
-In TypeScript, if you provide a predicate that also doubles as a [type
-predicate][type-predicates], then this will be reflected in the return type, too.
+In TypeScript, if you provide a predicate that also doubles as a [type predicate][1], then
+this will be reflected in the return type, too.
+
+[1]: https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates

@@ -126,9 +126,3 @@ their values is by wrapping it in a `predicate(...)` construction:
 const odd = predicate(integer, (n) => n % 2 !== 0, 'Must be odd');
 const shortString = predicate(string, (s) => s.length < 8, 'Must be less than 8 chars');
 ```
-
-[date-api]:
-    https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
-[iso8601-fmt]: https://en.wikipedia.org/wiki/ISO_8601
-[type-predicates]:
-    https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates

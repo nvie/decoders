@@ -16,7 +16,7 @@ nav_order: 4
 <a name="date" href="#date">#</a> <b>date</b>: <i>Decoder&lt;Date&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/date.js 'Source')
 
-Accepts only JavaScript [Date][date-api] values.
+Accepts only JavaScript [Date][1] values.
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -37,9 +37,9 @@ verify('hello');  // throws
 <a name="iso8601" href="#iso8601">#</a> <b>iso8601</b>: <i>Decoder&lt;Date&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/date.js 'Source')
 
-Accepts only [ISO8601][iso8601-fmt]-formatted strings. This is very useful for working
-with dates in APIs: serialize them as `.toISOString()` when sending, decode them with
-`iso8601` when receiving.
+Accepts only [ISO8601][2]-formatted strings. This is very useful for working with dates in
+APIs: serialize them as `.toISOString()` when sending, decode them with `iso8601` when
+receiving.
 
 **NOTE:** This decoder accepts _strings_, but returns _Date_ instances.
 
@@ -57,3 +57,8 @@ verify(123);           // throws
 verify(new Date());    // throws (does not accept dates)
 ```
 <!-- prettier-ignore-end -->
+
+---
+
+[1]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
+[2]: https://en.wikipedia.org/wiki/ISO_8601
