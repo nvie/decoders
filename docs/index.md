@@ -1,14 +1,17 @@
-<img alt="Decoders logo" src="../img/logo@2x.png" width="330" height="64" /><br />
+---
+title: Home
+---
 
-[![npm](https://img.shields.io/npm/v/decoders.svg)](https://www.npmjs.com/package/decoders)
-[![Build Status](https://github.com/nvie/decoders/workflows/test/badge.svg)](https://github.com/nvie/decoders/actions)
-[![Coverage Status](https://img.shields.io/coveralls/nvie/decoders/main.svg)](https://coveralls.io/github/nvie/decoders?branch=main)
-[![Minified Size](https://badgen.net/bundlephobia/minzip/decoders)](https://bundlephobia.com/result?p=decoders)
+# Decoders
 
 Elegant and battle-tested validation library for type-safe input data for TypeScript and
-Flow. The API is inspired by Elm’s JSON decoders, hence the name.
+Flow. The idea was inspired by Elm’s JSON decoders, hence the name.
 
-See https://nvie.com/posts/introducing-decoders/ for an introduction.
+## The core concept
+
+The central concept of this library is the Decoder. A value of type `Decoder<T>` is a
+validation function that, when called on an untrusted input, will either return a value of
+type `T`, or an error.
 
 ## Why?
 
