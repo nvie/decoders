@@ -1,5 +1,6 @@
 ---
 title: Home
+nav_order: 0
 ---
 
 # Decoders

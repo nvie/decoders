@@ -1,5 +1,8 @@
 remote_theme: pmarsceill/just-the-docs
 
+title: Decoders
+description: Elegant and battle-tested validation library for type-safe input data
+
 # Enable site search
 search_enabled: true
 
