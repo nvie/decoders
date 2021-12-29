@@ -2,12 +2,12 @@
 
 import { number } from '../number';
 import { string } from '../string';
-import { tuple1, tuple2, tuple3, tuple4, tuple5, tuple6 } from '../tuple';
+import { tuple } from '../tuple';
 import { unwrap } from '../../result';
 
 describe('tuples', () => {
-    it('tuple1', () => {
-        const decoder = tuple1(string);
+    it('1-tuples', () => {
+        const decoder = tuple(string);
         expect(unwrap(decoder(['foo']))).toEqual(['foo']);
         expect(decoder(['foo', 'bar']).ok).toBe(false);
         expect(decoder([42]).ok).toBe(false);
@@ -22,8 +22,8 @@ describe('tuples', () => {
         expect(decoder(['foo', 42, true]).ok).toBe(false);
     });
 
-    it('tuple2', () => {
-        const decoder = tuple2(string, number);
+    it('2-tuples', () => {
+        const decoder = tuple(string, number);
         expect(unwrap(decoder(['foo', 42]))).toEqual(['foo', 42]);
         expect(decoder(['foo', 'bar']).ok).toBe(false);
         expect(decoder([42, 'foo']).ok).toBe(false);
@@ -39,8 +39,8 @@ describe('tuples', () => {
         expect(decoder(['foo', 42, true]).ok).toBe(false);
     });
 
-    it('tuple3', () => {
-        const decoder = tuple3(number, number, number);
+    it('3-tuples', () => {
+        const decoder = tuple(number, number, number);
         expect(decoder([1, 2, 3]).ok).toBe(true);
         expect(decoder([]).ok).toBe(false);
         expect(decoder([1]).ok).toBe(false);
@@ -50,8 +50,8 @@ describe('tuples', () => {
         expect(decoder(['foo', 1, 2]).ok).toBe(false);
     });
 
-    it('tuple4', () => {
-        const decoder = tuple4(number, number, number, number);
+    it('4-tuples', () => {
+        const decoder = tuple(number, number, number, number);
         expect(decoder([1, 2, 3, 4]).ok).toBe(true);
         expect(decoder([]).ok).toBe(false);
         expect(decoder([1]).ok).toBe(false);
@@ -63,8 +63,8 @@ describe('tuples', () => {
         expect(decoder(['foo', 1, 2, 3]).ok).toBe(false);
     });
 
-    it('tuple5', () => {
-        const decoder = tuple5(number, number, number, number, number);
+    it('5-tuples', () => {
+        const decoder = tuple(number, number, number, number, number);
         expect(decoder([1, 2, 3, 4, 5]).ok).toBe(true);
         expect(decoder([]).ok).toBe(false);
         expect(decoder([1]).ok).toBe(false);
@@ -78,8 +78,8 @@ describe('tuples', () => {
         expect(decoder(['foo', 1, 2, 3, 4]).ok).toBe(false);
     });
 
-    it('tuple6', () => {
-        const decoder = tuple6(number, number, number, number, number, number);
+    it('6-tuples', () => {
+        const decoder = tuple(number, number, number, number, number, number);
         expect(decoder([1, 2, 3, 4, 5, 6]).ok).toBe(true);
         expect(decoder([]).ok).toBe(false);
         expect(decoder([1]).ok).toBe(false);

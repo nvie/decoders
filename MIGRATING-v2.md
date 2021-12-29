@@ -136,8 +136,29 @@ either(string, number, boolean, array(string), truthy);
 ```
 
 **NOTE:** In TypeScript, this scales to an unlimited number of arguments, but in Flow,
-there is a max of 16 arguments with this construct. If you hit the 16 argument limit, you
-can work around that by stacking, e.g. do `either(<15 arguments here>, either(...))`.
+there is a max of 9 arguments with this construct. If you hit the 16 argument limit, you
+can work around that by stacking, e.g. do `either(<8 arguments here>, either(...))`.
+
+## `tuple1`, `tuple2`, ..., `tuple6` have been removed!
+
+You now only need `tuple()` and simply pass it the params.
+
+```typescript
+import { tuple } from 'decoders';
+
+// ❌ Stop using `tupleN()` for this
+tuple2(string, number);
+tuple3(string, number, array(string));
+tuple4(string, number, array(string), truthy);
+
+// ✅ Do this instead
+tuple(string, number);
+tuple(string, number, array(string));
+tuple(string, number, array(string), truthy);
+```
+
+**NOTE:** In TypeScript, this scales to an unlimited number of arguments, but in Flow,
+there is a max of 6 arguments with this construct.
 
 ## `predicate(...)` is now a first-class citizen
 

@@ -822,38 +822,17 @@ verify('hi');  // throws
 
 ---
 
-<a name="tuple1" href="#tuple1">#</a>
-<b>tuple1</b><i>&lt;T1&gt;</i>(<i>Decoder&lt;T1&gt;</i>): <i>Decoder&lt;[T1]&gt;</i>
-[&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/tuple.js 'Source')<br />
-<a name="tuple2" href="#tuple2">#</a> <b>tuple2</b><i>&lt;T1,
-T2&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>): <i>Decoder&lt;[T1,
-T2]&gt;</i>
-[&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/tuple.js 'Source')<br />
-<a name="tuple3" href="#tuple3">#</a> <b>tuple3</b><i>&lt;T1, T2,
-T3&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>, <i>Decoder&lt;T3&gt;</i>):
-<i>Decoder&lt;[T1, T2, T3]&gt;</i>
-[&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/tuple.js 'Source')<br />
-<a name="tuple4" href="#tuple4">#</a> <b>tuple4</b><i>&lt;T1, T2, T3,
-T4&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>, <i>Decoder&lt;T3&gt;</i>,
-<i>Decoder&lt;T4&gt;</i>): <i>Decoder&lt;[T1, T2, T3, T4]&gt;</i>
-[&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/tuple.js 'Source')<br />
-<a name="tuple5" href="#tuple5">#</a> <b>tuple5</b><i>&lt;T1, T2, T3, T4,
-T5&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>, <i>Decoder&lt;T3&gt;</i>,
-<i>Decoder&lt;T3&gt;</i>, <i>Decoder&lt;T4&gt;</i>, <i>Decoder&lt;T5&gt;</i>):
-<i>Decoder&lt;[T1, T2, T3, T4, T5]&gt;</i>
-[&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/tuple.js 'Source')<br />
-<a name="tuple6" href="#tuple6">#</a> <b>tuple6</b><i>&lt;T1, T2, T3, T4, T5,
-T6&gt;</i>(<i>Decoder&lt;T1&gt;</i>, <i>Decoder&lt;T2&gt;</i>, <i>Decoder&lt;T3&gt;</i>,
-<i>Decoder&lt;T4&gt;</i>, <i>Decoder&lt;T5&gt;</i>, <i>Decoder&lt;T6&gt;</i>):
-<i>Decoder&lt;[T1, T2, T3, T4, T5, T6]&gt;</i>
+<a name="tuple" href="#tuple">#</a> <b>tuple</b><i>&lt;A, B, C,
+...&gt;</i>(<i>Decoder&lt;A&gt;</i>, <i>Decoder&lt;B&gt;</i>, <i>Decoder&lt;C&gt;</i>):
+<i>Decoder&lt;[A, B, C, ...]&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/tuple.js 'Source')
 
-Accepts a _n_-tuple (an array with exactly _n_ items) of values accepted by the _n_ given
+Accepts a tuple (an array with exactly _n_ items) of values accepted by the _n_ given
 decoders.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(tuple2(string, number));
+const verify = guard(tuple(string, number));
 
 // 👍
 verify(['hello', 1.2]) === ['hello', 1.2];
