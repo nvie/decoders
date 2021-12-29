@@ -1,12 +1,13 @@
 remote_theme: pmarsceill/just-the-docs
 
-title: Decoders
+title: 'Decoders'
 description: Elegant and battle-tested validation library for type-safe input data
 
 # Enable site search
 search_enabled: true
 
-logo: '../img/logo@2x.png'
+# When uncommented, this will be displayed instead of the title
+# logo: '../img/logo@2x.png'
 
 aux_links:
     'Decoders on GitHub':
