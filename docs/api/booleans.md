@@ -4,7 +4,15 @@ parent: API Reference
 nav_order: 3
 ---
 
-### Booleans
+# Booleans
+
+## Table of Contents
+
+-   [`boolean`](#boolean)
+-   [`truthy`](#truthy)
+-   [`numericBoolean`](#numericBoolean)
+
+---
 
 <a name="boolean" href="#boolean">#</a> <b>boolean</b>: <i>Decoder&lt;boolean&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/boolean.js 'Source')
@@ -74,5 +82,3 @@ verify(undefined);  // throws
 verify('hello');    // throws
 ```
 <!-- prettier-ignore-end -->
-
----

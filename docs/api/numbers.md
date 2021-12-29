@@ -4,7 +4,16 @@ parent: API Reference
 nav_order: 2
 ---
 
-### Numbers
+# Numbers
+
+## Table of Contents
+
+-   [`number`](#number)
+-   [`integer`](#integer)
+-   [`positiveNumber`](#positiveNumber)
+-   [`positiveInteger`](#positiveInteger)
+
+---
 
 <a name="number" href="#number">#</a> <b>number</b>: <i>Decoder&lt;number&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/number.js 'Source')
@@ -96,5 +105,3 @@ verify(NaN);             // throws
 verify('not a number');  // throws
 ```
 <!-- prettier-ignore-end -->
-
----

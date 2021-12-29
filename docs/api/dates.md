@@ -4,7 +4,14 @@ parent: API Reference
 nav_order: 4
 ---
 
-### Dates
+# Dates
+
+## Table of Contents
+
+-   [`date`](#date)
+-   [`iso8601`](#iso8601)
+
+---
 
 <a name="date" href="#date">#</a> <b>date</b>: <i>Decoder&lt;Date&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/date.js 'Source')
@@ -50,5 +57,3 @@ verify(123);           // throws
 verify(new Date());    // throws (does not accept dates)
 ```
 <!-- prettier-ignore-end -->
-
----
