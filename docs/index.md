@@ -1,4 +1,4 @@
-<img alt="Decoders logo" src="./img/logo@2x.png" width="330" height="64" /><br />
+<img alt="Decoders logo" src="../img/logo@2x.png" width="330" height="64" /><br />
 
 [![npm](https://img.shields.io/npm/v/decoders.svg)](https://www.npmjs.com/package/decoders)
 [![Build Status](https://github.com/nvie/decoders/workflows/test/badge.svg)](https://github.com/nvie/decoders/actions)
