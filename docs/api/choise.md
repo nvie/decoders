@@ -1,10 +1,10 @@
 ---
-title: Choices
+title: Choice
 parent: API Reference
 nav_order: 10
 ---
 
-# Either
+# Choice
 
 ## Table of Contents
 
