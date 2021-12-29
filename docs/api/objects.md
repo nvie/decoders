@@ -166,7 +166,8 @@ verify({
 T&gt;&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/mapping.js 'Source')
 
-Like `dict()`, but returns the result as a `Map<string, T>` instead.
+Similar to `dict()`, but returns the result as a `Map<string, T>` (an [ES6 Map][1])
+instead.
 
 ```javascript
 const verify = guard(mapping(person)); // Assume you have a "person" decoder already
@@ -217,3 +218,5 @@ And a runtime input of:
 | `object(thing)`  | discarded        | `{a: "hi", b: 42}`             | `{a: string, b: number}`                    |
 | `exact(thing)`   | not allowed      | ⚡️ Runtime error              | `{a: string, b: number}`                    |
 | `inexact(thing)` | retained         | `{a: "hi", b: 42, c: "extra"}` | `{a: string, b: number, [string]: unknown}` |
+
+[1]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
