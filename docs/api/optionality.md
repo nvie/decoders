@@ -152,7 +152,7 @@ verify(42);  // throws
 ---
 
 <a name="unknown" href="#unknown">#</a> <b>unknown</b>: <i>Decoder&lt;unknown&gt;</i>
-[&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/constants.js 'Source')
+[&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/constants.js 'Source')<br />
 <a name="mixed" href="#mixed">#</a> <b>mixed</b>: <i>Decoder&lt;mixed&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/constants.js 'Source')<br />
 
