@@ -2,8 +2,8 @@
 
 import type { Annotation } from './annotate';
 
-// $FlowFixMe[unclear-type] - deliberate casting
-type cast = any;
+// $FlowFixMe[unclear-type] - deliberate use of `any`
+export type _Any = any;
 
 // Two spaces of indentation
 export const INDENT = '  ';
@@ -29,7 +29,7 @@ export function isDate(value: mixed): boolean {
  * null.
  */
 export function asDate(value: mixed): Date | null {
-    return isDate(value) ? ((value: cast): Date) : null;
+    return isDate(value) ? ((value: _Any): Date) : null;
 }
 
 export function isMultiline(s: string): boolean {

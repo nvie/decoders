@@ -4,10 +4,8 @@ import { andThen } from '../result';
 import { object } from './object';
 import { oneOf } from './either';
 import { prep } from './composition';
+import type { _Any } from '../_utils';
 import type { Decoder, DecoderType } from '../_types';
-
-// $FlowFixMe[unclear-type] (not really an issue) - deliberate use of `any` - not sure how we should get rid of this
-type anything = any;
 
 /**
  * Dispatches to one of several given decoders, based on the value found at
@@ -44,7 +42,7 @@ type anything = any;
  *
  * Also, the error messages will be less ambiguous using `disjointUnion()`.
  */
-export function disjointUnion<O: { +[field: string]: Decoder<anything>, ... }>(
+export function disjointUnion<O: { +[field: string]: Decoder<_Any>, ... }>(
     field: string,
     mapping: O,
 ): Decoder<$Values<$ObjMap<O, DecoderType>>> {
