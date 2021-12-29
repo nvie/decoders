@@ -52,12 +52,7 @@ import {
     regex,
     string,
     truthy,
-    tuple1,
-    tuple2,
-    tuple3,
-    tuple4,
-    tuple5,
-    tuple6,
+    tuple,
     undefined_,
     unknown,
     url,
@@ -92,12 +87,12 @@ poja; // $ExpectType Decoder<unknown[], unknown>
 nonEmptyArray(string); // $ExpectType Decoder<[string, ...string[]], unknown>
 nonEmptyArray(number); // $ExpectType Decoder<[number, ...number[]], unknown>
 
-tuple1(string); // $ExpectType Decoder<[string], unknown>
-tuple2(string, number); // $ExpectType Decoder<[string, number], unknown>
-tuple3(string, string, number); // $ExpectType Decoder<[string, string, number], unknown>
-tuple4(string, string, number, string); // $ExpectType Decoder<[string, string, number, string], unknown>
-tuple5(string, string, number, string, number); // $ExpectType Decoder<[string, string, number, string, number], unknown>
-tuple6(string, string, number, string, number, string); // $ExpectType Decoder<[string, string, number, string, number, string], unknown>
+tuple(string); // $ExpectType Decoder<[string], unknown>
+tuple(string, number); // $ExpectType Decoder<[string, number], unknown>
+tuple(string, string, number); // $ExpectType Decoder<[string, string, number], unknown>
+tuple(string, string, number, string); // $ExpectType Decoder<[string, string, number, string], unknown>
+tuple(string, string, number, string, number); // $ExpectType Decoder<[string, string, number, string, number], unknown>
+tuple(string, string, number, string, number, string); // $ExpectType Decoder<[string, string, number, string, number, string], unknown>
 
 // $ExpectType { name: string; tags: string[]; }
 guard(

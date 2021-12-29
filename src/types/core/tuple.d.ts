@@ -1,30 +1,30 @@
 import { Decoder } from '../_types';
 
-export function tuple1<T1>(d1: Decoder<T1>): Decoder<[T1]>;
-export function tuple2<T1, T2>(d1: Decoder<T1>, d2: Decoder<T2>): Decoder<[T1, T2]>;
-export function tuple3<T1, T2, T3>(
-    d1: Decoder<T1>,
-    d2: Decoder<T2>,
-    d3: Decoder<T3>,
-): Decoder<[T1, T2, T3]>;
-export function tuple4<T1, T2, T3, T4>(
-    d1: Decoder<T1>,
-    d2: Decoder<T2>,
-    d3: Decoder<T3>,
-    d4: Decoder<T4>,
-): Decoder<[T1, T2, T3, T4]>;
-export function tuple5<T1, T2, T3, T4, T5>(
-    d1: Decoder<T1>,
-    d2: Decoder<T2>,
-    d3: Decoder<T3>,
-    d4: Decoder<T4>,
-    d5: Decoder<T5>,
-): Decoder<[T1, T2, T3, T4, T5]>;
-export function tuple6<T1, T2, T3, T4, T5, T6>(
-    d1: Decoder<T1>,
-    d2: Decoder<T2>,
-    d3: Decoder<T3>,
-    d4: Decoder<T4>,
-    d5: Decoder<T5>,
-    d6: Decoder<T6>,
-): Decoder<[T1, T2, T3, T4, T5, T6]>;
+export function tuple<A>(a: Decoder<A>): Decoder<[A]>;
+export function tuple<A, B>(a: Decoder<A>, b: Decoder<B>): Decoder<[A, B]>;
+export function tuple<A, B, C>(
+    a: Decoder<A>,
+    b: Decoder<B>,
+    c: Decoder<C>,
+): Decoder<[A, B, C]>;
+export function tuple<A, B, C, D>(
+    a: Decoder<A>,
+    b: Decoder<B>,
+    c: Decoder<C>,
+    d: Decoder<D>,
+): Decoder<[A, B, C, D]>;
+export function tuple<A, B, C, D, E>(
+    a: Decoder<A>,
+    b: Decoder<B>,
+    c: Decoder<C>,
+    d: Decoder<D>,
+    e: Decoder<E>,
+): Decoder<[A, B, C, D, E]>;
+export function tuple<A, B, C, D, E, F>(
+    a: Decoder<A>,
+    b: Decoder<B>,
+    c: Decoder<C>,
+    d: Decoder<D>,
+    e: Decoder<E>,
+    f: Decoder<F>,
+): Decoder<[A, B, C, D, E, F]>;
