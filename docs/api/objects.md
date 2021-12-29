@@ -133,7 +133,7 @@ verify(null);        // throws
 ---
 
 <a name="dict" href="#dict">#</a> <b>dict</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>):
-<i>Decoder&lt;{ [string]: &lt;T&gt;}&gt;</i>
+<i>Decoder&lt;{ [string]: T }&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/mapping.js 'Source')
 
 Accepts objects where all values match the given decoder, and returns the result as a
