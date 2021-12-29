@@ -1,9 +1,21 @@
 ---
 title: Strings
+parent: API Reference
 nav_order: 1
 ---
 
-### Strings
+# Strings
+
+## Table of Contents
+
+-   [`string`](#string)
+-   [`nonEmptyString`](#nonEmptyString)
+-   [`regex`](#regex)
+-   [`email`](#email)
+-   [`url`](#url)
+-   [`httpsUrl`](#httpsUrl)
+
+---
 
 <a name="string" href="#string">#</a> <b>string</b>: <i>Decoder&lt;string&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/string.js 'Source')

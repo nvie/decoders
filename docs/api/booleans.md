@@ -1,5 +1,6 @@
 ---
 title: Booleans
+parent: API Reference
 nav_order: 3
 ---
 
