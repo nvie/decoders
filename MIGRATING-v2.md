@@ -146,7 +146,7 @@ either(string, number, boolean, array(string), truthy);
 ```
 
 **NOTE:** In TypeScript, this scales to an unlimited number of arguments, but in Flow,
-there is a max of 9 arguments with this construct. If you hit the 16 argument limit, you
+there is a max of 9 arguments with this construct. If you hit the 9-argument limit, you
 can work around that by stacking, e.g. do `either(<8 arguments here>, either(...))`.
 
 ## `tupleN` is now simply `tuple`
