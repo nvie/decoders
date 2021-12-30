@@ -40,13 +40,15 @@ implementation. The decoder's documentation will tell you what inputs it accepts
 A decoder will never throw when called on an untrusted input. Instead, it will always
 return the "ok" or "error" result intermediate object.
 
-The second important concept is a Guard. A `Guard<T>` is like the decoder that it wraps:
+The second important concept is a Guard. It's a convenience wrapper around an existing
+decoder. A `Guard<T>` is like the Decoder that it wraps, but does not return those
+intermediate "result" objects that Decoders do.
 
 <img alt="The concept of a Guard explained schematically" src="./assets/schematic-guards.png" style="max-width: min(351px, 100%)" />
 
-When called on an untrusted input, it will either directly return the "ok" value, or throw
-an error. This allows you to not have to deal with the intermediate "ok" and "err" results
-returned by the Decoder.
+When called on an untrusted input, it will either directly return the decoded value, or
+throw an error. This allows you to not have to deal with the intermediate "ok" and "err"
+results returned by the Decoder.
 
 ## Motivation
 
