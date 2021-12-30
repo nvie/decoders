@@ -8,7 +8,7 @@ nav_order: 11
 
 ## Table of Contents
 
--   [`map`](#map)
+-   [`transform`](#transform)
 -   [`compose`](#compose)
 -   [`predicate`](#predicate)
 -   [`describe`](#describe)
@@ -19,17 +19,18 @@ nav_order: 11
 
 ---
 
-<a name="map" href="#map">#</a> <b>map</b><i>&lt;T, V&gt;</i>(<i>Decoder&lt;T&gt;</i>,
-<i>&lt;T&gt;</i> =&gt; <i>&lt;V&gt;</i>): <i>Decoder&lt;V&gt;</i>
+<a name="transform" href="#transform">#</a> <b>transform</b><i>&lt;T,
+V&gt;</i>(<i>Decoder&lt;T&gt;</i>, <i>&lt;T&gt;</i> =&gt; <i>&lt;V&gt;</i>):
+<i>Decoder&lt;V&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/utils.js 'Source')<br />
 
-Accepts any value the given decoder accepts, and on success, will call the mapper value
-**on the decoded result**. If the mapper function throws an error, the whole decoder will
-fail using the error message as the failure reason.
+Accepts any value the given decoder accepts, and on success, will call the given function
+**on the decoded result**. If the transformation function throws an error, the whole
+decoder will fail using the error message as the failure reason.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const upper = map(string, (s) => s.toUpperCase());
+const upper = transform(string, (s) => s.toUpperCase());
 const verify = guard(upper);
 
 // 👍
