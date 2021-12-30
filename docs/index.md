@@ -15,7 +15,7 @@ function that, when called on an untrusted input, will either return an "ok" res
 the decoded value of type `T` as its payload, or an "error" result, with the original
 input object annotated.
 
-![The concept of a decoder explained schematically](./assets/schematic-decoders@2x.png)
+![The concept of a decoder explained schematically](./assets/schematic-decoders.png)
 
 A decoder can either _accept_ or _reject_ the given untrusted input. Whether it accepts or
 rejects depends on the decoder's implementation. Every decoder has a type, for example
