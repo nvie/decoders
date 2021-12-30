@@ -1,6 +1,6 @@
 // @flow strict
 
-import { array, nonEmptyArray } from '../array';
+import { array, nonEmptyArray, set } from '../array';
 import { guard } from '../../_guard';
 import { number } from '../number';
 import { object } from '../object';
@@ -58,5 +58,26 @@ describe('nonEmptyArray', () => {
     it('but empty array throw, too', () => {
         expect(() => strings([])).toThrow('Must be non-empty array');
         expect(() => numbers([])).toThrow('Must be non-empty array');
+    });
+});
+
+describe('set', () => {
+    const decoder = set(string);
+    const verify = guard(decoder);
+
+    it('empty set', () => {
+        expect(verify([]).size).toBe(0);
+    });
+
+    it('accepts', () => {
+        const r = verify(['foo', 'bar']);
+        expect(r.has('foo')).toBe(true);
+        expect(r.has('bar')).toBe(true);
+        expect(r.size).toBe(2);
+    });
+
+    it('rejects', () => {
+        expect(decoder([1]).ok).toBe(false);
+        expect(decoder(1).ok).toBe(false);
     });
 });

@@ -14,7 +14,7 @@ export { guard } from './_guard';
 
 export { compose, map, predicate, prep } from './core/composition';
 
-export { array, nonEmptyArray, poja } from './core/array';
+export { array, nonEmptyArray, poja, set } from './core/array';
 export { boolean, numericBoolean, truthy } from './core/boolean';
 export { constant, hardcoded, mixed, null_, undefined_, unknown } from './core/constants';
 export { date, iso8601 } from './core/date';

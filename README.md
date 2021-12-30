@@ -852,6 +852,26 @@ verify(['a', 1, 'c']);       // throws, too many items
 
 ---
 
+<a name="set" href="#set">#</a> <b>set</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>):
+<i>Decoder&lt;Set&lt;T&gt;&gt;</i>
+[&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/array.js 'Source')
+
+Similar to [`array`](#array), but returns the result as an ES6 Set.
+
+<!-- prettier-ignore-start -->
+```javascript
+const verify = guard(set(string));
+
+// 👍
+verify(['hello', 'world'])  // ≈ new Set(['hello', 'world']);
+
+// 👎
+verify(['hello', 1.2]);     // throws
+```
+<!-- prettier-ignore-end -->
+
+---
+
 <a name="object" href="#object">#</a> <b>object</b><i>&lt;O: { [field: string]:
 Decoder&lt;any&gt; }&gt;</i>(mapping: O): <i>Decoder&lt;{ ... }&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/object.js 'Source')

@@ -24,7 +24,9 @@ New features:
 
 -   Include ES modules in published NPM builds (yay tree-shaking! 🍃)
 -   Much smaller total bundle size
--   New decoder: [`prep()`](./README.md#prep)
+-   New decoders:
+    -   [`prep()`](./README.md#prep)
+    -   [`set()`](./README.md#set)
 -   Better error messages for nested `either`s
 -   Guard API now has a simpler way to specify formatters
 

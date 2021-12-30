@@ -1,7 +1,7 @@
 // @flow strict
 
 import { annotate } from '../annotate';
-import { compose, predicate } from './composition';
+import { compose, map, predicate } from './composition';
 import { err, ok } from '../result';
 import type { Decoder, DecodeResult } from '../_types';
 
@@ -97,4 +97,11 @@ export function array<T>(decoder: Decoder<T>): Decoder<Array<T>> {
  */
 export function nonEmptyArray<T>(decoder: Decoder<T>): Decoder<Array<T>> {
     return predicate(array(decoder), (arr) => arr.length > 0, 'Must be non-empty array');
+}
+
+/**
+ * Similar to `array()`, but returns the result as an ES6 Set.
+ */
+export function set<T>(decoder: Decoder<T>): Decoder<Set<T>> {
+    return map(array(decoder), (items) => new Set(items));
 }

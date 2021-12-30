@@ -12,6 +12,7 @@ nav_order: 7
 -   [`nonEmptyArray`](#nonEmptyArray)
 -   [`poja`](#poja)
 -   [`tuple`](#tuple)
+-   [`set`](#set)
 
 ---
 
@@ -102,3 +103,26 @@ verify(['hello', 'world']);  // throws, not the right types
 verify(['a', 1, 'c']);       // throws, too many items
 ```
 <!-- prettier-ignore-end -->
+
+---
+
+<a name="set" href="#set">#</a> <b>set</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>):
+<i>Decoder&lt;Set&lt;T&gt;&gt;</i>
+[&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/array.js 'Source')
+
+Similar to [`array`](#array), but returns the result as an [ES6 Set][1].
+
+<!-- prettier-ignore-start -->
+```javascript
+const verify = guard(set(string));
+
+// 👍
+verify(['abc', 'pqr'])  // ≈ new Set(['abc', 'pqr'])
+verify([])              // ≈ new Set([])
+
+// 👎
+verify([1, 2]);         // throws, not the right types
+```
+<!-- prettier-ignore-end -->
+
+[1]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set

@@ -17,9 +17,13 @@ input object annotated.
 
 ![The concept of a decoder explained schematically](./assets/schematic-decoders@2x.png)
 
-At the heart, a decoder is a function that will take _any_ unsafe input, verify it, and
-either return an "ok" or an annotated "err" result. It will never throw an error when
-called.
+A decoder can either _accept_ or _reject_ the given untrusted input. Whether it accepts or
+rejects depends on the decoder's implementation. Every decoder has a type, for example
+when you see a decoder of type `Decoder<string>` it means it will always return a string
+_if_ it accepts the input. It does not mean it will only _accept_ strings. You can
+implement a decoder that will only _accept_ numbers, but return strings. What values are
+accepted by a decoder depends on its implementation. See its documentation to learn what
+it accepts.
 
 ## Why?
 

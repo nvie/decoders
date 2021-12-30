@@ -9,13 +9,6 @@ import {
     dict,
     disjointUnion,
     either,
-    // either3,
-    // either4,
-    // either5,
-    // either6,
-    // either7,
-    // either8,
-    // either9,
     email,
     exact,
     fail,
@@ -50,6 +43,7 @@ import {
     predicate,
     prep,
     regex,
+    set,
     string,
     truthy,
     tuple,
@@ -86,6 +80,8 @@ array(array(number)); // $ExpectType Decoder<number[][], unknown>
 poja; // $ExpectType Decoder<unknown[], unknown>
 nonEmptyArray(string); // $ExpectType Decoder<[string, ...string[]], unknown>
 nonEmptyArray(number); // $ExpectType Decoder<[number, ...number[]], unknown>
+set(string); // $ExpectType Decoder<Set<string>, unknown>
+set(number); // $ExpectType Decoder<Set<number>, unknown>
 
 tuple(string); // $ExpectType Decoder<[string], unknown>
 tuple(string, number); // $ExpectType Decoder<[string, number], unknown>
