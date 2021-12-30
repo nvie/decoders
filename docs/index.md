@@ -3,7 +3,7 @@ title: Overview
 nav_order: 0
 ---
 
-# Decoders
+# Overview
 
 Elegant and battle-tested validation library for type-safe input data for TypeScript and
 Flow. The idea was inspired by Elm’s JSON decoders, hence the name.
