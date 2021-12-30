@@ -1,7 +1,7 @@
 // @flow strict
 
 import { annotate, annotateObject, merge, updateText } from '../annotate';
-import { compose, map } from './composition';
+import { compose, transform } from './composition';
 import { err, ok } from '../result';
 import type { Annotation } from '../annotate';
 import type { Decoder, DecodeResult, DecoderType } from '../_types';
@@ -179,25 +179,28 @@ export function inexact<O: { +[field: string]: AnyDecoder }>(
 ): Decoder<$ObjMap<O, DecoderType> & { +[string]: mixed }> {
     return compose(pojo, (blob: {| [string]: mixed |}) => {
         const allkeys = new Set(Object.keys(blob));
-        const decoder = map(object(mapping), (safepart: $ObjMap<O, DecoderType>) => {
-            const safekeys = new Set(Object.keys(mapping));
+        const decoder = transform(
+            object(mapping),
+            (safepart: $ObjMap<O, DecoderType>) => {
+                const safekeys = new Set(Object.keys(mapping));
 
-            // To account for hard-coded keys that aren't part of the input
-            safekeys.forEach((k) => allkeys.add(k));
+                // To account for hard-coded keys that aren't part of the input
+                safekeys.forEach((k) => allkeys.add(k));
 
-            const rv = {};
-            allkeys.forEach((k) => {
-                if (safekeys.has(k)) {
-                    const value = safepart[k];
-                    if (value !== undefined) {
-                        rv[k] = value;
+                const rv = {};
+                allkeys.forEach((k) => {
+                    if (safekeys.has(k)) {
+                        const value = safepart[k];
+                        if (value !== undefined) {
+                            rv[k] = value;
+                        }
+                    } else {
+                        rv[k] = blob[k];
                     }
-                } else {
-                    rv[k] = blob[k];
-                }
-            });
-            return rv;
-        });
+                });
+                return rv;
+            },
+        );
         return decoder(blob);
     });
 }

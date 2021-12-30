@@ -4,7 +4,7 @@ import { annotate } from '../annotate';
 import { either } from './either';
 import { err, ok } from '../result';
 import { instanceOf } from './instanceOf';
-import { map, predicate } from './composition';
+import { predicate, transform } from './composition';
 import type { Decoder } from '../_types';
 
 /** Match groups in this regex:
@@ -48,7 +48,7 @@ export const email: Decoder<string> = regex(
 );
 
 export const url: Decoder<URL> = either(
-    map(regex(url_re, 'Must be URL'), (value) => new URL(value)),
+    transform(regex(url_re, 'Must be URL'), (value) => new URL(value)),
     instanceOf(URL),
 );
 

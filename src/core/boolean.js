@@ -2,8 +2,8 @@
 
 import { annotate } from '../annotate';
 import { err, ok } from '../result';
-import { map } from './composition';
 import { number } from './number';
+import { transform } from './composition';
 import type { Decoder } from '../_types';
 
 /**
@@ -24,4 +24,4 @@ export const truthy: Decoder<boolean> = (blob: mixed) => {
  * Decoder that only returns Ok for numeric input values representing booleans.
  * Returns their boolean representation.  Err otherwise.
  */
-export const numericBoolean: Decoder<boolean> = map(number, (n) => !!n);
+export const numericBoolean: Decoder<boolean> = transform(number, (n) => !!n);

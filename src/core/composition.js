@@ -5,13 +5,15 @@ import { annotate } from '../annotate';
 import type { Decoder } from '../_types';
 
 /**
- * Given a decoder T and a mapping function from T's to V's, returns a decoder
- * for V's.  This is useful to change the original input data.
+ * Accepts any value the given decoder accepts, and on success, will call the
+ * mapper value **on the decoded result**. If the mapper function throws an
+ * error, the whole decoder will fail using the error message as the failure
+ * reason.
  */
-export function map<T, V>(decoder: Decoder<T>, mapper: (T) => V): Decoder<V> {
+export function transform<T, V>(decoder: Decoder<T>, transformFn: (T) => V): Decoder<V> {
     return compose(decoder, (x) => {
         try {
-            return ok(mapper(x));
+            return ok(transformFn(x));
         } catch (e) {
             return err(annotate(x, e instanceof Error ? e.message : String(e)));
         }

@@ -3,8 +3,8 @@
 import { annotate } from '../annotate';
 import { err, ok } from '../result';
 import { isDate } from '../_utils';
-import { map } from './composition';
 import { regex } from './string';
+import { transform } from './composition';
 import type { Decoder } from '../_types';
 
 // $FlowFixMe[unclear-type] (not really an issue) - deliberate casting
@@ -23,7 +23,7 @@ export const date: Decoder<Date> = (value: mixed) =>
  * Decoder that only returns Ok for strings that are valid ISO8601 date
  * strings.  Err otherwise.
  */
-export const iso8601: Decoder<Date> = map(
+export const iso8601: Decoder<Date> = transform(
     // Input itself needs to match the ISO8601 regex...
     regex(iso8601_re, 'Must be ISO8601 format'),
 

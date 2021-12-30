@@ -74,6 +74,24 @@ ok(42);
 err('oops');
 ```
 
+### `map` is now `transform`
+
+This better reflects the operation from the user's standpoint.
+
+```typescript
+// ❌ Stop doing this
+import { map } from 'decoders';
+
+map(number, (n) => n + 1);
+
+// ----------------------------------------------
+
+// ✅ Do this instead
+import { transform } from 'decoders';
+
+transform(number, (n) => n + 1);
+```
+
 ### `Result` is no longer a class
 
 `Result` is no longer a class. As such, methods previously available on instances no

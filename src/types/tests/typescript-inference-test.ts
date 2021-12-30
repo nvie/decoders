@@ -23,7 +23,6 @@ import {
     jsonArray,
     jsonObject,
     lazy,
-    map,
     mapping,
     maybe,
     mixed,
@@ -45,6 +44,7 @@ import {
     regex,
     set,
     string,
+    transform,
     truthy,
     tuple,
     undefined_,
@@ -103,7 +103,7 @@ guard(string, formatInline);
 guard(string, formatShort);
 
 // $ExpectType Decoder<number, unknown>
-map(string, parseFloat);
+transform(string, parseFloat);
 
 // $ExpectType Decoder<number, unknown>
 compose(string, (value: string) => ok(value.length));

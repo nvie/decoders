@@ -32,7 +32,7 @@ export type { JSONValue, JSONObject, JSONArray } from './core/json';
 
 export { guard } from './_guard';
 
-export { compose, map, predicate, prep } from './core/composition';
+export { compose, predicate, prep, transform } from './core/composition';
 
 export { array, nonEmptyArray, poja, set } from './core/array';
 export { boolean, numericBoolean, truthy } from './core/boolean';

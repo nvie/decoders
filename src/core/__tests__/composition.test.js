@@ -2,7 +2,7 @@
 /* eslint-disable no-restricted-syntax */
 
 import { annotate } from '../../annotate';
-import { compose, map, predicate, prep } from '../composition';
+import { compose, predicate, prep, transform } from '../composition';
 import { constant } from '../constants';
 import { err, ok, unwrap } from '../../result';
 import { guard } from '../../_guard';
@@ -34,23 +34,21 @@ describe('compose', () => {
     });
 });
 
-describe('map', () => {
+describe('transform', () => {
     it('change type of decode result', () => {
-        // s.length can never fail, so this is a good candidate for map() over
-        // compose()
-        const len = map(string, (s) => s.length);
+        const len = transform(string, (s) => s.length);
         expect(unwrap(len('foo'))).toEqual(3);
         expect(unwrap(len('Lorem ipsum dolor sit amet.'))).toEqual(27);
     });
 
     it('change value, not type, of decoded results', () => {
-        const upcase = map(string, (s) => s.toUpperCase());
+        const upcase = transform(string, (s) => s.toUpperCase());
         expect(unwrap(upcase('123'))).toEqual('123');
         expect(unwrap(upcase('I am Hulk'))).toEqual('I AM HULK');
     });
 
-    it('a failing mapper will fail the decoder', () => {
-        const odd = map(number, (n) => {
+    it('a failing transformation function will fail the decoder', () => {
+        const odd = transform(number, (n) => {
             if (n % 2 !== 0) return n;
             throw new Error('Must be odd');
         });
@@ -59,7 +57,7 @@ describe('map', () => {
         expect(odd(3).ok).toBe(true);
         expect(odd(4).ok).toBe(false);
 
-        const weirdEven = map(number, (n) => {
+        const weirdEven = transform(number, (n) => {
             if (n % 2 === 0) return n;
             throw 'Must be even'; // Throwing a string, not an Error is non-conventional, but won't break anything
         });

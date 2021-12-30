@@ -1,7 +1,7 @@
 // @flow strict
 
 import { annotateObject } from '../annotate';
-import { compose, map } from './composition';
+import { compose, transform } from './composition';
 import { err, ok } from '../result';
 import { merge } from '../annotate';
 import { pojo } from './object';
@@ -50,7 +50,7 @@ export function dict<T>(decoder: Decoder<T>): Decoder<{ [string]: T }> {
  *
  */
 export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
-    return map(
+    return transform(
         dict(decoder),
         (obj) =>
             new Map(

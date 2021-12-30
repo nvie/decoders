@@ -1237,8 +1237,9 @@ verify(3);      // throws
 
 ---
 
-<a name="map" href="#map">#</a> <b>map</b><i>&lt;T, V&gt;</i>(<i>Decoder&lt;T&gt;</i>,
-<i>&lt;T&gt;</i> =&gt; <i>&lt;V&gt;</i>): <i>Decoder&lt;V&gt;</i>
+<a name="transform" href="#transform">#</a> <b>transform</b><i>&lt;T,
+V&gt;</i>(<i>Decoder&lt;T&gt;</i>, <i>&lt;T&gt;</i> =&gt; <i>&lt;V&gt;</i>):
+<i>Decoder&lt;V&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/utils.js 'Source')<br />
 
 Accepts any value the given decoder accepts, and on success, will call the mapper value
@@ -1247,7 +1248,7 @@ fail using the error message as the failure reason.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const upper = map(string, (s) => s.toUpperCase());
+const upper = transform(string, (s) => s.toUpperCase());
 const verify = guard(upper);
 
 // 👍
@@ -1411,8 +1412,8 @@ And a runtime input of:
 
 ### Building custom decoders
 
-There are two main building blocks for defining your own custom decoders: `map()` and
-`compose()`.
+There are two main building blocks for defining your own custom decoders: `transform()`
+and `compose()`.
 
 There are roughly 3 use cases that you will want to use:
 
@@ -1427,7 +1428,7 @@ There are roughly 3 use cases that you will want to use:
 To read one type from the input, but return another, use:
 
 ```js
-const numericString: Decoder<number> = map(
+const numericString: Decoder<number> = transform(
     // At runtime, expect to read a string...
     string,
     // ...but return it as a number
@@ -1438,7 +1439,7 @@ const numericString: Decoder<number> = map(
 To read one type, but change its value before returning:
 
 ```js
-const upperCase: Decoder<string> = map(string, (s) => s.toUpperCase());
+const upperCase: Decoder<string> = transform(string, (s) => s.toUpperCase());
 ```
 
 **WARNING:** While you can map anything to anything, it's typically **NOT A GOOD IDEA to
