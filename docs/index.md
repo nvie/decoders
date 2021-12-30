@@ -10,9 +10,16 @@ Flow. The idea was inspired by Elm’s JSON decoders, hence the name.
 
 ## The core concept
 
-The central concept of this library is the Decoder. A value of type `Decoder<T>` is a
-validation function that, when called on an untrusted input, will either return a value of
-type `T`, or an error.
+The central concept of this library is the Decoder. A `Decoder<T>` is a validation
+function that, when called on an untrusted input, will either return an "ok" result with
+the decoded value of type `T` as its payload, or an "error" result, with the original
+input object annotated.
+
+![The concept of a decoder explained schematically](./assets/schematic-decoders@2x.png)
+
+At the heart, a decoder is a function that will take _any_ unsafe input, verify it, and
+either return an "ok" or an annotated "err" result. It will never throw an error when
+called.
 
 ## Why?
 
