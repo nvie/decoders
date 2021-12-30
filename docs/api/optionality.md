@@ -14,7 +14,7 @@ nav_order: 6
 -   [`nullable`](#nullable)
 -   [`maybe`](#maybe)
 -   [`unknown`](#unknown)
--   [`mixed`](#mixed)
+-   [`mixed`](#mixed) (alias of `unknown`)
 
 ---
 
