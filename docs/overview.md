@@ -61,14 +61,6 @@ And then, you can use it to decode values:
 ... })
 ```
 
-## Understanding decoders and guards
-
-At the heart, a decoder is a function that will take _any_ unsafe input, verify it, and
-either return an "ok" or an annotated "err" result. It will never throw an error when
-called.
-
-A guard is a convenience wrapper which will use the decoder
-
 ### Building custom decoders
 
 There are two main building blocks for defining your own custom decoders: `map()` and
