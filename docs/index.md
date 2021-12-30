@@ -27,7 +27,7 @@ function that, when called on an untrusted input, will either return an "ok" res
 the decoded value of type `T` as its payload, or an "error" result, with the original
 input object annotated.
 
-<img alt="The concept of a Decoder explained schematically" src="./assets/schematic-decoders.png" style="max-width: min(416px, 100%)" />
+<img alt="The concept of a Decoder explained schematically" src="./assets/schematic-decoders.png" style="max-width: min(414px, 100%)" />
 
 A decoder can either _accept_ or _reject_ the given untrusted input. Whether it accepts or
 rejects depends on the decoder's implementation. Every decoder has a type, for example
@@ -42,7 +42,7 @@ return the "ok" or "error" result intermediate object.
 
 The second important concept is a Guard. A `Guard<T>` is like the decoder that it wraps:
 
-<img alt="The concept of a Guard explained schematically" src="./assets/schematic-guards.png" style="max-width: min(355px, 100%)" />
+<img alt="The concept of a Guard explained schematically" src="./assets/schematic-guards.png" style="max-width: min(351px, 100%)" />
 
 When called on an untrusted input, it will either directly return the "ok" value, or throw
 an error. This allows you to not have to deal with the intermediate "ok" and "err" results
