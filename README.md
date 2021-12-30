@@ -988,7 +988,7 @@ verify(null);        // throws
 
 <a name="dict" href="#dict">#</a> <b>dict</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>):
 <i>Decoder&lt;{ [string]: &lt;T&gt;}&gt;</i>
-[&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/mapping.js 'Source')
+[&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/object.js 'Source')
 
 Accepts objects where all values match the given decoder, and returns the result as a
 `{ [string]: T }`.
@@ -1018,7 +1018,7 @@ verify({
 <a name="mapping" href="#mapping">#</a>
 <b>mapping</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;Map&lt;string,
 T&gt;&gt;</i>
-[&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/mapping.js 'Source')
+[&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/object.js 'Source')
 
 Like `dict()`, but returns the result as a `Map<string, T>` instead.
 

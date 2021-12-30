@@ -1,3 +1,5 @@
+/// <reference lib="es6" />
+
 import { Decoder, DecoderType } from '../_types';
 import { AllowImplicit } from './_helpers';
 
@@ -31,3 +33,6 @@ export function inexact<O extends { [key: string]: Decoder<any> }>(
         [extra: string]: unknown;
     }
 >;
+
+export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>>;
+export function dict<T>(decoder: Decoder<T>): Decoder<{ [key: string]: T }>;

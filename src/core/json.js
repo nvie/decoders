@@ -2,7 +2,7 @@
 
 import { array } from './array';
 import { boolean } from './boolean';
-import { dict } from './mapping';
+import { dict } from './object';
 import { either } from './either';
 import { lazy } from './lazy';
 import { null_ } from './constants';
