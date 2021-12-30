@@ -27,7 +27,7 @@ function that, when called on an untrusted input, will either return an "ok" res
 the decoded value of type `T` as its payload, or an "error" result, with the original
 input object annotated.
 
-<img alt="The concept of a Decoder explained schematically" src="./assets/schematic-decoders.png" style="max-width: min(413px, 100%)" />
+<img alt="The concept of a Decoder explained schematically" src="./assets/schematic-decoders.png" style="max-width: min(416px, 100%)" />
 
 A decoder can either _accept_ or _reject_ the given untrusted input. Whether it accepts or
 rejects depends on the decoder's implementation. Every decoder has a type, for example
@@ -47,3 +47,15 @@ The second important concept is a Guard. A `Guard<T>` is like the decoder that i
 When called on an untrusted input, it will either directly return the "ok" value, or throw
 an error. This allows you to not have to deal with the intermediate "ok" and "err" results
 returned by the Decoder.
+
+## Motivation
+
+<!-- TODO -->
+
+TODO: At the boundary of your apps, you cannot trust the input data.
+
+<!-- TODO -->
+
+TODO: Using a decoder will both verify the data is in the shape you expect at runtime, and
+at the same time, you get the benefit of type inference in your statically type-checked
+app.
