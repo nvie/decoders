@@ -52,12 +52,81 @@ results returned by the Decoder.
 
 ## Motivation
 
-<!-- TODO -->
+In a fully type-checked app, data coming in from the outside world can be dynamic and
+should not be trusted without validation. Therefore, it's a good practice to validate your
+expectations right at your program's boundaries. This has two benefits: (1) your inputs
+are getting validated, and (2) you can now statically know for sure the shape of the
+incoming data.
 
-TODO: At the boundary of your apps, you cannot trust the input data.
+Decoders help solve both of these problems.
 
-<!-- TODO -->
+## An example
 
-TODO: Using a decoder will both verify the data is in the shape you expect at runtime, and
-at the same time, you get the benefit of type inference in your statically type-checked
-app.
+TODO: Find a better, real world, example.
+
+<!--
+Suppose you define a decoder for a `Person`:
+
+```typescript
+import { email, iso8601, name, positiveNumber } from 'decoders';
+
+const personDecoder: Decoder<Person> = object({
+    id: positiveNumber,
+    name: string,
+    email: email,
+    dateOfBirth: iso8601,
+});
+```
+
+For example, say your app expects a list of points in an incoming HTTP request:
+
+```javascript
+{
+  points: [
+    { x: 1, y: 2 },
+    { x: 3, y: 4 },
+  ],
+}
+```
+
+In order to decode this, you'll have to tell Flow about the expected structure, and use
+the decoders to validate at runtime that the free-form data will be in the expected shape.
+
+```javascript
+type Point = { x: number, y: number };
+
+type Payload = {
+    points: Array<Point>,
+};
+```
+
+Here's a decoder that will work for this type:
+
+```javascript
+import { array, guard, number, object } from 'decoders';
+
+const point = object({
+    x: number,
+    y: number,
+});
+
+const payload = object({
+    points: array(point),
+});
+
+const payloadGuard = guard(payload);
+```
+
+And then, you can use it to decode values:
+
+```javascript
+>>> payloadGuard(1)      // throws!
+>>> payloadGuard('foo')  // throws!
+>>> payloadGuard({       // OK!
+...     points: [
+...         { x: 1, y: 2 },
+...         { x: 3, y: 4 },
+...     ],
+... })
+```
+-->
