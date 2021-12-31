@@ -30,15 +30,9 @@ input object annotated.
 <img alt="The concept of a Decoder explained schematically" src="./assets/schematic-decoders.png" style="max-width: min(414px, 100%)" />
 
 A decoder can either _accept_ or _reject_ the given untrusted input. Whether it accepts or
-rejects depends on the decoder's implementation. Every decoder has a type, for example
-when you see a decoder of type `Decoder<string>` it means it will always return a string
-_if_ it accepts the runtime input. It does not mean it will only _accept_ string inputs.
-(You can, for example, still implement a decoder that will only _accept_ numbers, but
-_return_ strings.) What values will get accepted by a decoder depends on its
-implementation. The decoder's documentation will tell you what inputs it accepts.
-
-A decoder will never throw when called on an untrusted input. Instead, it will always
-return the "ok" or "error" result intermediate object.
+rejects depends on the decoder's implementation. The return value always is either an "ok"
+or an "error" result (aka a `DecodeResult<T>`)—it will never throw an exception at
+runtime. That's what Guards do.
 
 The second important concept is a Guard. It's a convenience wrapper around an existing
 decoder. A `Guard<T>` is like the Decoder that it wraps, but does not return those
@@ -49,6 +43,36 @@ intermediate "result" objects that Decoders do.
 When called on an untrusted input, it will either directly return the decoded value, or
 throw an error. This allows you to not have to deal with the intermediate "ok" and "err"
 results returned by the Decoder.
+
+## Understanding the "type" of a Decoder
+
+Every decoder has a type, for example when you see a decoder of type `Decoder<string>` it
+means that _if_ it accepts the runtime input, it will always return a `string`.
+
+It does **not** mean it will only accept string inputs! Take the `truthy` decoder as an
+example. That one will accept _any_ input value, but return a `boolean`. What values will
+get accepted by a decoder depends on its implementation. The decoder's documentation will
+tell you what inputs it accepts.
+
+## Composing decoders
+
+You can compose decoders together to build larger decoders. For example, here you can see
+how you can use decoders as building blocks to describe any data shape you expect:
+
+<!-- prettier-ignore-start -->
+```typescript
+import { array, number, object, string } from 'decoders';
+
+   object({
+     name: string,
+//         ^^^^^^ Decoder<string>
+     items: array(number),
+//                ^^^^^^ Decoder<number>
+//          ^^^^^^^^^^^^^ Decoder<number[]>
+   })
+// ^^ Decoder<{ name: string; items: number[] }>
+```
+<!-- prettier-ignore-end -->
 
 ## Motivation
 
