@@ -1158,6 +1158,7 @@ stacking, e.g. do `either(<8 arguments here>, either(...))`.
 ---
 
 <!-- prettier-ignore-start -->
+<a name="dispatch" href="#dispatch"></a>
 <a name="taggedUnion" href="#taggedUnion">#</a> <b>taggedUnion</b><i>&lt;O: { [field: string]: (Decoder&lt;T&gt; | Decoder&lt;V&gt; | ...) }&gt;</i>(field: string, mapping: O): <i>Decoder&lt;T | V | ...&gt;</i>
 <!-- prettier-ignore-end -->
 
