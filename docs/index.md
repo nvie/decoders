@@ -24,8 +24,10 @@ Just install the package and you're ready to go.
 
 The central concept of this library is the Decoder. A `Decoder<T>` is a validation
 function that, when called on an untrusted input, will either return an "ok" result with
-the decoded value of type `T` as its payload, or an "error" result, with the original
-input object annotated.
+the decoded value of type `T` as its payload, or an "error" result.
+
+This way, you can be sure that all untrusted runtime data is always in the shape you
+expect, and that static types can correctly be inferred for dynamic input data.
 
 <img alt="The concept of a Decoder explained schematically" src="./assets/schematic-decoders.png" style="max-width: min(414px, 100%)" />
 
