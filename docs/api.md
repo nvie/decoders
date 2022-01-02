@@ -84,7 +84,7 @@ nav_order: 10
 <a name="string" href="#string">#</a> <b>string</b>: <i>Decoder&lt;string&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/string.js 'Source')
 
-Accepts only string values.
+Accepts and returns strings.
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -108,7 +108,8 @@ verify(null);  // throws
 <i>Decoder&lt;string&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/string.js 'Source')
 
-Like `string`, but will reject the empty string, or strings containing only whitespace.
+Like [`string`](#string), but will reject the empty string or strings containing only
+whitespace.
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -130,7 +131,7 @@ verify('');    // throws
 <a name="regex" href="#regex">#</a> <b>regex</b>(): <i>Decoder&lt;string&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/string.js 'Source')
 
-Accepts only string values that match the given regular expression.
+Accepts and returns strings that match the given regular expression.
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -152,8 +153,8 @@ verify('foo');  // throws
 <a name="email" href="#email">#</a> <b>email</b>: <i>Decoder&lt;string&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/string.js 'Source')
 
-Accepts only strings that are syntactically valid email addresses. (This will not mean
-that the email address actually exist.)
+Accepts and returns strings that are syntactically valid email addresses. (This will not
+mean that the email address actually exist.)
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -241,8 +242,8 @@ const gitUrl: Decoder<URL> = predicate(
 <a name="number" href="#number">#</a> <b>number</b>: <i>Decoder&lt;number&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/number.js 'Source')
 
-Accepts only finite numbers (integer or float values). This means that values like `NaN`,
-or positive and negative `Infinity` are not considered valid numbers.
+Accepts and returns finite numbers (integer or float values). Values `NaN`, or positive
+and negative `Infinity` will get rejected.
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -342,7 +343,7 @@ verify('not a number');  // throws
 <a name="boolean" href="#boolean">#</a> <b>boolean</b>: <i>Decoder&lt;boolean&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/boolean.js 'Source')
 
-Accepts only boolean values.
+Accepts and returns booleans.
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -364,7 +365,7 @@ verify(123);            // throws
 <a name="truthy" href="#truthy">#</a> <b>truthy</b>: <i>Decoder&lt;boolean&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/boolean.js 'Source')
 
-Accepts any value and will return its "truth" value. Will never reject.
+Accepts anything and will return its "truth" value. Will never reject.
 
 ```javascript
 const verify = guard(truthy);
@@ -389,7 +390,7 @@ verify(null) === false;
 <i>Decoder&lt;boolean&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/boolean.js 'Source')
 
-Accepts only number values, but return their boolean representation.
+Accepts numbers, but return their boolean representation.
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -420,7 +421,7 @@ verify('hello');    // throws
 <a name="date" href="#date">#</a> <b>date</b>: <i>Decoder&lt;Date&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/date.js 'Source')
 
-Accepts only JavaScript [Date][moz-date] values.
+Accepts and returns JavaScript [Date][moz-date] values.
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -441,11 +442,9 @@ verify('hello');  // throws
 <a name="iso8601" href="#iso8601">#</a> <b>iso8601</b>: <i>Decoder&lt;Date&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/date.js 'Source')
 
-Accepts only [ISO8601][wiki-iso]-formatted strings. This is very useful for working with
-dates in APIs: serialize them as `.toISOString()` when sending, decode them with `iso8601`
-when receiving.
-
-**NOTE:** This decoder accepts _strings_, but returns _Date_ instances.
+Accepts [ISO8601][wiki-iso]-formatted strings, returns then as [Date][moz-date] instances.
+This is very useful for working with dates in APIs: serialize them as `.toISOString()`
+when sending, decode them with `iso8601` when receiving.
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -513,7 +512,7 @@ verify(undefined);      // throws
 <i>Decoder&lt;T&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/constants.js 'Source')
 
-Accepts any input, completely ignores it, and always returns the provided value. This is
+Accepts anything, completely ignores it, and always returns the provided value. This is
 useful to manually add extra fields to object decoders.
 
 <!-- prettier-ignore-start -->
@@ -547,7 +546,7 @@ verify(undefined) === 42;
 <a name="null_" href="#null_">#</a> <b>null\_</b>: <i>Decoder&lt;null&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/constants.js 'Source')
 
-Accepts only the literal `null` value.
+Accepts and returns only the literal `null` value.
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -569,7 +568,7 @@ verify('hello world'); // throws
 <i>Decoder&lt;undefined&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/constants.js 'Source')
 
-Accepts only the literal `undefined` value.
+Accepts and returns only the literal `undefined` value.
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -592,7 +591,7 @@ verify('hello world'); // throws
 undefined&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/optional.js 'Source')
 
-Accepts only the literal value `undefined`, or whatever the given decoder accepts.
+Accepts `undefined`, or whatever the given decoder accepts.
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -635,7 +634,7 @@ Which will decode to type:
 <b>nullable</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;T | null&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/optional.js 'Source')
 
-Accepts only the literal value `null`, or whatever the given decoder accepts.
+Accepts `null`, or whatever the given decoder accepts.
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -658,7 +657,7 @@ verify(42);         // throws
 <i>Decoder&lt;?T&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/optional.js 'Source')
 
-Accepts only `undefined`, `null`, or whatever the given decoder accepts.
+Accepts `undefined`, `null`, or whatever the given decoder accepts.
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -682,8 +681,8 @@ verify(42);  // throws
 <a name="mixed" href="#mixed">#</a> <b>mixed</b>: <i>Decoder&lt;mixed&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/constants.js 'Source')<br />
 
-Accepts any value and returns it unchanged. Useful for situation in which you don't know
-or expect a specific type. Of course, the downside is that you won't know the type of the
+Accepts anything and returns it unchanged. Useful for situation in which you don't know or
+expect a specific type. Of course, the downside is that you won't know the type of the
 value statically and you'll have to further refine it yourself.
 
 ```javascript
@@ -715,7 +714,7 @@ verify([1, 2]) === [1, 2];
 <i>Decoder&lt;Array&lt;T&gt;&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/array.js 'Source')
 
-Accepts only arrays of whatever the given decoder accepts.
+Accepts arrays of whatever the given decoder accepts.
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -838,8 +837,8 @@ verify([1, 2]);         // throws, not the right types
 Decoder&lt;any&gt; }&gt;</i>(mapping: O): <i>Decoder&lt;{ ... }&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/object.js 'Source')
 
-Accepts object values with fields matching the given decoders. Extra fields that exist on
-the input object are ignored and will not be returned.
+Accepts objects with fields matching the given decoders. Extra fields that exist on the
+input object are ignored and will not be returned.
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -1135,8 +1134,9 @@ verify(null);               // throws
 ...): <i>Decoder&lt;A | B | C | ...&gt;</i><br />
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/either.js 'Source')<br />
 
-Accepts any value that is accepted by any of the given decoders. The decoders are
-attempted on the input in given order. The first one that accepts the input "wins".
+Accepts values accepted by any of the given decoders. The decoders are tried on the input
+one by one, in the given order. The first one that accepts the input "wins". If all
+decoders reject the input, the input gets rejected.
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -1151,15 +1151,16 @@ verify(false);  // throws
 ```
 <!-- prettier-ignore-end -->
 
-**NOTE to Flow users:** In Flow, there is a max of 16 arguments with this construct. (This
-is no problem in TypeScript.) If you hit the 16 argument limit, you can work around that
-by stacking, e.g. do `either(<15 arguments here>, either(...))`.
+**NOTE to Flow users:** In Flow, there is a max of 9 arguments with this construct. (This
+is no problem in TypeScript.) If you hit the 9 argument limit, you can work around that by
+stacking, e.g. do `either(<8 arguments here>, either(...))`.
 
 ---
 
-<a name="disjointUnion" href="#disjointUnion">#</a> <b>disjointUnion</b><i>&lt;O: {
-[field: string]: (Decoder&lt;T&gt; | Decoder&lt;V&gt; | ...) }&gt;</i>(field: string,
-mapping: O): <i>Decoder&lt;T | V | ...&gt;</i>
+<!-- prettier-ignore-start -->
+<a name="disjointUnion" href="#disjointUnion">#</a> <b>disjointUnion</b><i>&lt;O: { [field: string]: (Decoder&lt;T&gt; | Decoder&lt;V&gt; | ...) }&gt;</i>(field: string, mapping: O): <i>Decoder&lt;T | V | ...&gt;</i>
+<!-- prettier-ignore-end -->
+
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/dispatch.js 'Source')
 
 **NOTE:** In decoders@1.x, this was called `dispatch()`.
@@ -1266,7 +1267,7 @@ V&gt;</i>(<i>Decoder&lt;T&gt;</i>, <i>Decoder&lt;V, T&gt;</i>): <i>Decoder&lt;V&
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/composition.js 'Source')<br />
 
 Given a decoder for _T_ and another one for <i>V</i>-given-a-<i>T</i>. Will first decode
-the input using the first decoder, and _if okay_, pass the result on to the second
+the input using the first decoder, and _if accepted_, pass the result on to the second
 decoder. The second decoder will thus be able to make more assumptions about its input
 value, i.e. it can know what type the input value is (`T` instead of `unknown`).
 
