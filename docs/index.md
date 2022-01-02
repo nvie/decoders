@@ -108,9 +108,7 @@ For example, say your app expects a list of points in an incoming HTTP request:
 
 ```javascript
 {
-  points: [
-    { x: 1, y: 2 },
-    { x: 3, y: 4 },
+  points: [ { x: 1, y: 2 }, { x: 3, y: 4 },
   ],
 }
 ```
@@ -156,3 +154,52 @@ And then, you can use it to decode values:
 ... })
 ```
 -->
+
+## Formatting error messsages
+
+By default, `guard()` will use the `formatInline` error formatter. You can pass another
+built-in formatter as the second argument, or provide your own. (This will require
+understanding the internal `Annotation` datastructure that decoders uses for error
+reporting.)
+
+Built-in formatters are:
+
+-   `formatInline` (default) — will echo back the input object and inline error messages
+    smartly. Example:
+
+    ```typescript
+    import { array, guard, object, string } from 'decoders';
+    import { formatInline } from 'decoders/format';
+
+    const mydecoder = array(object({ name: string, age: number }));
+
+    const defaultGuard = guard(mydecoder, formatInline);
+    defaultGuard([{ name: 'Alice', age: '33' }]);
+    ```
+
+    Will throw the following error message:
+
+    ```text
+    Decoding error:
+    [
+      {
+        name: 'Alice',
+        age: '33',
+             ^^^^ Must be number
+      },
+    ]
+    ```
+
+-   `formatShort` — will report the _path_ into the object where the error happened.
+    Example:
+
+    ```typescript
+    import { formatShort } from 'decoders/format';
+    const customGuard = guard(mydecoder, formatShort);
+    ```
+
+    Will throw the following error message:
+
+    ```text
+    Decoding error: Value at keypath 0.age: Must be number
+    ```
