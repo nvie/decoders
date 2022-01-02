@@ -1144,9 +1144,9 @@ by stacking, e.g. do `either(<15 arguments here>, either(...))`.
 
 ---
 
-<a name="disjointUnion" href="#disjointUnion">#</a> <b>disjointUnion</b><i>&lt;O: {
-[field: string]: (Decoder&lt;T&gt; | Decoder&lt;V&gt; | ...) }&gt;</i>(field: string,
-mapping: O): <i>Decoder&lt;T | V | ...&gt;</i>
+<a name="taggedUnion" href="#taggedUnion">#</a> <b>taggedUnion</b><i>&lt;O: { [field:
+string]: (Decoder&lt;T&gt; | Decoder&lt;V&gt; | ...) }&gt;</i>(field: string, mapping: O):
+<i>Decoder&lt;T | V | ...&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/dispatch.js 'Source')
 
 **NOTE:** In decoders@1.x, this was called `dispatch()`.
@@ -1162,14 +1162,14 @@ type Circle = { __type: 'circle', cx: number, cy: number, r: number };
 //              ^^^^^^
 //              Field that defines which decoder to pick
 //                                               vvvvvv
-const shape1: Decoder<Rect | Circle> = disjointUnion('__type', { rect, circle });
+const shape1: Decoder<Rect | Circle> = taggedUnion('__type', { rect, circle });
 const shape2: Decoder<Rect | Circle> = either(rect, circle);
 ```
 
-But using `disjointUnion()` will typically be more runtime-efficient than using
-`either()`. The reason is that `disjointUnion()` will first do minimal work to "look
-ahead" into the `type` field here, and based on that value, pick which decoder to invoke.
-Error messages will then also be tailored to the specific decoder.
+But using `taggedUnion()` will typically be more runtime-efficient than using `either()`.
+The reason is that `taggedUnion()` will first do minimal work to "look ahead" into the
+`type` field here, and based on that value, pick which decoder to invoke. Error messages
+will then also be tailored to the specific decoder.
 
 The `either()` version will instead try each decoder in turn until it finds one that
 matches. If none of the alternatives match, it needs to report all errors, which is

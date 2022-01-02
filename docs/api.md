@@ -54,7 +54,7 @@ nav_order: 10
     -   [`jsonArray`](#jsonArray)
 -   **Choice**
     -   [`either`](#either)
-    -   [`disjointUnion`](#disjointUnion)
+    -   [`taggedUnion`](#taggedUnion)
     -   [`oneOf`](#oneOf)
 -   **Utilities**
     -   [`transform`](#transform)
@@ -1124,7 +1124,7 @@ verify(null);               // throws
 ## Choice
 
 -   [`either`](#either)
--   [`disjointUnion`](#disjointUnion)
+-   [`taggedUnion`](#taggedUnion)
 -   [`oneOf`](#oneOf)
 
 ---
@@ -1158,15 +1158,15 @@ stacking, e.g. do `either(<8 arguments here>, either(...))`.
 ---
 
 <!-- prettier-ignore-start -->
-<a name="disjointUnion" href="#disjointUnion">#</a> <b>disjointUnion</b><i>&lt;O: { [field: string]: (Decoder&lt;T&gt; | Decoder&lt;V&gt; | ...) }&gt;</i>(field: string, mapping: O): <i>Decoder&lt;T | V | ...&gt;</i>
+<a name="taggedUnion" href="#taggedUnion">#</a> <b>taggedUnion</b><i>&lt;O: { [field: string]: (Decoder&lt;T&gt; | Decoder&lt;V&gt; | ...) }&gt;</i>(field: string, mapping: O): <i>Decoder&lt;T | V | ...&gt;</i>
 <!-- prettier-ignore-end -->
 
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/dispatch.js 'Source')
 
 **NOTE:** In decoders@1.x, this was called `dispatch()`.
 
-Like `either`, but only for building unions of object types with a common field (like a
-`type` field) that lets you distinguish members.
+Like `either`, but optimized for building [tagged unions][wiki-taggedunion] of object
+types with a common field (like a `type` field) that lets you distinguish members.
 
 The following two decoders are effectively equivalent:
 
@@ -1176,14 +1176,14 @@ type Circle = { __type: 'circle', cx: number, cy: number, r: number };
 //              ^^^^^^
 //              Field that defines which decoder to pick
 //                                               vvvvvv
-const shape1: Decoder<Rect | Circle> = disjointUnion('__type', { rect, circle });
+const shape1: Decoder<Rect | Circle> = taggedUnion('__type', { rect, circle });
 const shape2: Decoder<Rect | Circle> = either(rect, circle);
 ```
 
-But using `disjointUnion()` will typically be more runtime-efficient than using
-`either()`. The reason is that `disjointUnion()` will first do minimal work to "look
-ahead" into the `type` field here, and based on that value, pick which decoder to invoke.
-Error messages will then also be tailored to the specific decoder.
+But using `taggedUnion()` will typically be more runtime-efficient than using `either()`.
+The reason is that `taggedUnion()` will first do minimal work to "look ahead" into the
+`type` field here, and based on that value, pick which decoder to invoke. Error messages
+will then also be tailored to the specific decoder.
 
 The `either()` version will instead try each decoder in turn until it finds one that
 matches. If none of the alternatives match, it needs to report all errors, which is
@@ -1466,3 +1466,4 @@ composed to build larger decoders. Guards cannot be composed.
 [wiki-iso]: https://en.wikipedia.org/wiki/ISO_8601
 [ts-predicates]:
     https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates
+[wiki-taggedunion]: https://en.wikipedia.org/wiki/Tagged_union

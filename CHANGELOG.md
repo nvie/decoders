@@ -13,8 +13,8 @@ Potentially breaking changes:
 -   Renamed decoders:
     -   `map` → `transform` - see
         [migration instructions](./MIGRATING-v2.md#map-is-now-transform)
-    -   `dispatch` → `disjointUnion` - see
-        [migration instructions](./MIGRATING-v2.md#dispatch-is-now-disjointUnion)
+    -   `dispatch` → `taggedUnion` - see
+        [migration instructions](./MIGRATING-v2.md#dispatch-is-now-taggedUnion)
 -   Decoders that have changed:
     -   API of `guard` has changed (but only if you used its undocumented second argument
         😉) - see [migration instructions](./MIGRATING-v2.md#changes-to-the-guard-api)

@@ -7,7 +7,6 @@ import {
     Decoder,
     describe,
     dict,
-    disjointUnion,
     either,
     email,
     exact,
@@ -44,6 +43,7 @@ import {
     regex,
     set,
     string,
+    taggedUnion,
     transform,
     truthy,
     tuple,
@@ -255,7 +255,7 @@ const circle: Decoder<Circle> = object({
 });
 
 // $ExpectType Decoder<Values<{ rect: Rect; circle: Circle; }>, unknown>
-disjointUnion('_type', { rect, circle });
+taggedUnion('_type', { rect, circle });
 
 interface Rect1 {
     _type: 0;
@@ -290,7 +290,7 @@ const circle1: Decoder<Circle1> = object({
 });
 
 // $ExpectType Decoder<Values<{ 0: Rect1; 1: Circle1; }>, unknown>
-disjointUnion('_type', { 0: rect1, 1: circle1 });
+taggedUnion('_type', { 0: rect1, 1: circle1 });
 
 // $ExpectType Decoder<string, unknown>
 describe(string, 'xxx');

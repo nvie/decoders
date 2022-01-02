@@ -240,7 +240,7 @@ const gitUrl: Decoder<URL> = predicate(
 );
 ```
 
-## `dispatch` is now `disjointUnion`
+## `dispatch` is now `taggedUnion`
 
 Just a name change, no other changes. This new name better reflects what it's for, and
 makes room for a more generic version of `dispatch` in a future version.

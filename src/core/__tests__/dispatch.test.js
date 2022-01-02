@@ -1,11 +1,11 @@
 // @flow strict
 
 import { constant } from '../constants';
-import { disjointUnion } from '../dispatch';
 import { guard } from '../../_guard';
 import { number } from '../number';
 import { object } from '../object';
 import { string } from '../string';
+import { taggedUnion } from '../dispatch';
 import { unwrap } from '../../result';
 import type { Decoder } from '../../_types';
 
@@ -45,8 +45,8 @@ type Alt2 = {| type: 2, b: number |};
 const alt1: Decoder<Alt1> = object({ type: constant((1: 1)), a: string });
 const alt2: Decoder<Alt2> = object({ type: constant((2: 2)), b: number });
 
-describe('disjointUnion', () => {
-    const decoder = disjointUnion('type', { rectangle, circle });
+describe('taggedUnion', () => {
+    const decoder = taggedUnion('type', { rectangle, circle });
 
     it('allows conditional decoding', () => {
         const r = { type: 'rectangle', x: 3, y: 5, width: 80, height: 100 };
@@ -68,10 +68,10 @@ describe('disjointUnion', () => {
     });
 });
 
-describe('disjointUnion with numeric keys', () => {
-    const decoder = disjointUnion('type', { [1]: alt1, '2': alt2 });
-    //                                      ^^^        ^^^
-    //                                      Support both of these syntaxes
+describe('taggedUnion with numeric keys', () => {
+    const decoder = taggedUnion('type', { [1]: alt1, '2': alt2 });
+    //                                    ^^^        ^^^
+    //                                    Support both of these syntaxes
 
     it('allows conditional decoding', () => {
         const a = { type: 1, a: 'hi' };

@@ -29,20 +29,20 @@ import type { Decoder, DecoderType } from '../_types';
  * Then these two decoders are equivalent:
  *
  *     const shape = either(rectangle, circle)
- *     const shape = disjointUnion('type', { rectangle, circle })
+ *     const shape = taggedUnion('type', { rectangle, circle })
  *
  * Will be of type Decoder<Rectangle | Circle>.
  *
- * But `disjointUnion` will typically be more runtime-efficient.  The reason is
+ * But `taggedUnion` will typically be more runtime-efficient.  The reason is
  * that it will first do minimal work to "look ahead" into the `type` field
  * here, and based on that value, pick the decoder to invoke.
  *
  * The `either` version will simply try to invoke each decoder, until it finds
  * one that matches.
  *
- * Also, the error messages will be less ambiguous using `disjointUnion()`.
+ * Also, the error messages will be less ambiguous using `taggedUnion()`.
  */
-export function disjointUnion<O: { +[field: string]: Decoder<_Any>, ... }>(
+export function taggedUnion<O: { +[field: string]: Decoder<_Any>, ... }>(
     field: string,
     mapping: O,
 ): Decoder<$Values<$ObjMap<O, DecoderType>>> {
