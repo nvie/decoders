@@ -1033,7 +1033,7 @@ Like `json`, but will only decode when the JSON value is an object.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(json);
+const verify = guard(jsonObject);
 
 // 👍
 verify({});                // ≈ {}
@@ -1057,7 +1057,7 @@ Like `json`, but will only decode when the JSON value is an array.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(json);
+const verify = guard(jsonArray);
 
 // 👍
 verify([]);                  // ≈ []
