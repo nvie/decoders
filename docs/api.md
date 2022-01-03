@@ -26,7 +26,7 @@ nav_order: 10
 
 -   [`string`](#string)
 -   [`nonEmptyString`](#nonEmptyString)
--   [`regex`](#regex)
+-   [`regex()`](#regex)
 -   [`email`](#email)
 -   [`url`](#url)
 -   [`httpsUrl`](#httpsUrl)
@@ -418,8 +418,8 @@ verify(new Date());    // throws (does not accept dates)
 
 ## Constants
 
--   [`constant`](#constant)
--   [`hardcoded`](#hardcoded)
+-   [`constant()`](#constant)
+-   [`hardcoded()`](#hardcoded)
 
 ---
 
@@ -488,9 +488,9 @@ verify(undefined) === 42;
 
 -   [`null_`](#null_)
 -   [`undefined_`](#undefined_)
--   [`optional`](#optional)
--   [`nullable`](#nullable)
--   [`maybe`](#maybe)
+-   [`optional()`](#optional)
+-   [`nullable()`](#nullable)
+-   [`maybe()`](#maybe)
 -   [`unknown`](#unknown)
 -   [`mixed`](#mixed) (alias of `unknown`)
 
@@ -655,11 +655,11 @@ verify([1, 2]) === [1, 2];
 
 ## Arrays
 
--   [`array`](#array)
--   [`nonEmptyArray`](#nonEmptyArray)
+-   [`array()`](#array)
+-   [`nonEmptyArray()`](#nonEmptyArray)
 -   [`poja`](#poja)
--   [`tuple`](#tuple)
--   [`set`](#set)
+-   [`tuple()`](#tuple)
+-   [`set()`](#set)
 
 ---
 
@@ -757,7 +757,7 @@ verify(['a', 1, 'c']);       // throws, too many items
 <i>Decoder&lt;Set&lt;T&gt;&gt;</i>
 [(source)](https://github.com/nvie/decoders/blob/main/src/core/array.js 'Source')
 
-Similar to [`array`](#array), but returns the result as an [ES6 Set][moz-set].
+Similar to [`array()`](#array), but returns the result as an [ES6 Set][moz-set].
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -776,12 +776,12 @@ verify([1, 2]);         // throws, not the right types
 
 ## Objects
 
--   [`object`](#object)
--   [`exact`](#exact)
--   [`inexact`](#inexact)
+-   [`object()`](#object)
+-   [`exact()`](#exact)
+-   [`inexact()`](#inexact)
 -   [`pojo`](#pojo)
--   [`dict`](#dict)
--   [`mapping`](#mapping)
+-   [`dict()`](#dict)
+-   [`mapping()`](#mapping)
 -   [The difference between `object`, `exact`, and `inexact`](#the-difference-between-object-exact-and-inexact)
 
 ---
@@ -1076,9 +1076,9 @@ verify(null);               // throws
 
 ## Choice
 
--   [`either`](#either)
--   [`taggedUnion`](#taggedUnion)
--   [`oneOf`](#oneOf)
+-   [`either()`](#either)
+-   [`taggedUnion()`](#taggedUnion)
+-   [`oneOf()`](#oneOf)
 
 ---
 
@@ -1181,14 +1181,14 @@ annotate the type. Either by doing `oneOf([('foo': 'foo'), ('bar': 'bar')])`, or
 
 ## Utilities
 
--   [`transform`](#transform)
--   [`compose`](#compose)
--   [`predicate`](#predicate)
--   [`describe`](#describe)
--   [`prep`](#prep)
--   [`fail`](#fail)
--   [`instanceOf`](#instanceOf)
--   [`lazy`](#lazy)
+-   [`transform()`](#transform)
+-   [`compose()`](#compose)
+-   [`predicate()`](#predicate)
+-   [`describe()`](#describe)
+-   [`prep()`](#prep)
+-   [`fail()`](#fail)
+-   [`instanceOf()`](#instanceOf)
+-   [`lazy()`](#lazy)
 
 ---
 
@@ -1383,7 +1383,7 @@ const treeDecoder: Decoder<Tree> = object({
 
 ## Guards
 
--   [`guard`](#guard)
+-   [`guard()`](#guard)
 
 ---
 
