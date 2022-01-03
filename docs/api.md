@@ -1411,13 +1411,11 @@ composed to build larger decoders. Guards cannot be composed.
 
 ---
 
-[moz-date]:
-    https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
-[moz-set]:
-    https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
-[moz-map]:
-    https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
+<!-- prettier-ignore-start -->
+[moz-date]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
+[moz-set]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
+[moz-map]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
 [wiki-iso]: https://en.wikipedia.org/wiki/ISO_8601
-[ts-predicates]:
-    https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates
+[ts-predicates]: https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates
 [wiki-taggedunion]: https://en.wikipedia.org/wiki/Tagged_union
+<!-- prettier-ignore-end -->
