@@ -1,7 +1,7 @@
 // @flow strict
 /* eslint-disable no-restricted-syntax */
 
-import { boolean, numericBoolean, truthy } from '../boolean';
+import { boolean, numericBoolean, truthy } from '../booleans';
 import { INPUTS } from './fixtures';
 import { partition } from 'itertools';
 

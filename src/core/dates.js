@@ -4,7 +4,7 @@ import { annotate } from '../annotate';
 import { define } from '../_decoder';
 import { err, ok } from '../result';
 import { isDate } from '../_utils';
-import { regex } from './string';
+import { regex } from './strings';
 import type { Decoder } from '../_decoder';
 
 // $FlowFixMe[unclear-type] (not really an issue) - deliberate casting
@@ -16,6 +16,11 @@ type cast = any;
 const iso8601_re =
     /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:[.]\d+)?(?:Z|[+-]\d{2}:?\d{2})$/;
 
+/**
+ * Accepts and returns
+ * [`Date`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date)
+ * instances.
+ */
 export const date: Decoder<Date> = define((blob) =>
     isDate(blob) ? ok(((blob: cast): Date)) : err(annotate(blob, 'Must be a Date')),
 );

@@ -1,9 +1,9 @@
 // @flow strict
 
 import { constant } from '../constants';
-import { number } from '../number';
-import { object } from '../object';
-import { string } from '../string';
+import { number } from '../numbers';
+import { object } from '../objects';
+import { string } from '../strings';
 import { taggedUnion } from '../dispatch';
 import type { Decoder } from '../../_decoder';
 

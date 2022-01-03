@@ -6,21 +6,21 @@ import { err, ok } from '../result';
 import type { Decoder, Scalar } from '../_decoder';
 
 /**
- * Decoder that only returns Ok for `null` inputs.  Err otherwise.
+ * Accepts and returns only the literal `null` value.
  */
 export const null_: Decoder<null> = define((blob) =>
     blob === null ? ok(blob) : err(annotate(blob, 'Must be null')),
 );
 
 /**
- * Decoder that only returns Ok for `undefined` inputs.  Err otherwise.
+ * Accepts and returns only the literal `undefined` value.
  */
 export const undefined_: Decoder<void> = define((blob) =>
     blob === undefined ? ok(blob) : err(annotate(blob, 'Must be undefined')),
 );
 
 /**
- * Decoder that only returns Ok for the given value constant.  Err otherwise.
+ * Accepts only the given constant value.
  */
 export function constant<T: Scalar>(value: T): Decoder<T> {
     return define((blob) =>
@@ -31,7 +31,10 @@ export function constant<T: Scalar>(value: T): Decoder<T> {
 }
 
 /**
- * Decoder that always returns Ok for the given hardcoded value, no matter what the input.
+ * Accepts anything, completely ignores it, and always returns the provided
+ * value instead.
+ *
+ * This is useful to manually add extra fields to object decoders.
  */
 export function always<T>(value: T): Decoder<T> {
     return define(() => ok(value));
@@ -43,7 +46,11 @@ export function always<T>(value: T): Decoder<T> {
 export const hardcoded: <T>(T) => Decoder<T> = always;
 
 /**
- * Decoder that always returns Ok for the given hardcoded value, no matter what the input.
+ * Accepts anything and returns it unchanged.
+ *
+ * Useful for situation in which you don't know or expect a specific type. Of
+ * course, the downside is that you won't know the type of the value statically
+ * and you'll have to further refine it yourself.
  */
 export const unknown: Decoder<mixed> = define((blob) => ok(blob));
 

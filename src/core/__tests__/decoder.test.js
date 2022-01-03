@@ -1,7 +1,7 @@
 // @flow strict
 
 import { formatInline, formatShort } from '../../format';
-import { number } from '../number';
+import { number } from '../numbers';
 
 describe('guard', () => {
     it('valid', () => {

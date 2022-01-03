@@ -3,23 +3,22 @@
 import { annotate } from '../annotate';
 import { define } from '../_decoder';
 import { err, ok } from '../result';
-import { number } from './number';
+import { number } from './numbers';
 import type { Decoder } from '../_decoder';
 
 /**
- * Decoder that only returns Ok for boolean inputs.  Err otherwise.
+ * Accepts and returns booleans.
  */
 export const boolean: Decoder<boolean> = define((blob) => {
     return typeof blob === 'boolean' ? ok(blob) : err(annotate(blob, 'Must be boolean'));
 });
 
 /**
- * Decoder that returns true for all truthy values, and false otherwise.  Never fails.
+ * Accepts anything and will return its “truth” value. Will never reject.
  */
 export const truthy: Decoder<boolean> = define((blob) => ok(!!blob));
 
 /**
- * Decoder that only returns Ok for numeric input values representing booleans.
- * Returns their boolean representation.  Err otherwise.
+ * Accepts numbers, but return their boolean representation.
  */
 export const numericBoolean: Decoder<boolean> = number.transform((n) => !!n);

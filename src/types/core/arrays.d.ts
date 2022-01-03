@@ -1,4 +1,11 @@
+/// <reference lib="es6" />
+
 import { Decoder } from '../_decoder';
+
+export const poja: Decoder<unknown[]>;
+export function array<T>(decoder: Decoder<T>): Decoder<T[]>;
+export function nonEmptyArray<T>(decoder: Decoder<T>): Decoder<[T, ...T[]]>;
+export function set<T>(decoder: Decoder<T>): Decoder<Set<T>>;
 
 export function tuple<A>(a: Decoder<A>): Decoder<[A]>;
 export function tuple<A, B>(a: Decoder<A>, b: Decoder<B>): Decoder<[A, B]>;

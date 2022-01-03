@@ -1,9 +1,9 @@
 // @flow strict
 
 import { mixed } from '../constants';
-import { number } from '../number';
-import { object, pojo } from '../object';
-import { string } from '../string';
+import { number } from '../numbers';
+import { object, pojo } from '../objects';
+import { string } from '../strings';
 
 describe('objects w/ circular refs', () => {
     // Take any decoder and pass in some self-referential object

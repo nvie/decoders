@@ -5,10 +5,10 @@ import { annotate } from '../../annotate';
 import { constant } from '../constants';
 import { err, ok } from '../../result';
 import { INPUTS } from './fixtures';
-import { number } from '../number';
+import { number } from '../numbers';
 import { partition } from 'itertools';
 import { prep } from '../composition';
-import { string } from '../string';
+import { string } from '../strings';
 
 describe('compose', () => {
     const hex =

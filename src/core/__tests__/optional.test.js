@@ -4,7 +4,7 @@
 import { INPUTS } from './fixtures';
 import { maybe, nullable, optional } from '../optional';
 import { partition } from 'itertools';
-import { string } from '../string';
+import { string } from '../strings';
 
 describe('optional', () => {
     const decoder = optional(string);

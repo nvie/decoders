@@ -1,14 +1,14 @@
 // @flow strict
 /* eslint-disable no-restricted-syntax */
 
-import { boolean } from '../boolean';
+import { boolean } from '../booleans';
 import { constant, undefined_ } from '../constants';
 import { either, oneOf } from '../either';
 import { INPUTS } from './fixtures';
-import { number } from '../number';
-import { object } from '../object';
+import { number } from '../numbers';
+import { object } from '../objects';
 import { partition } from 'itertools';
-import { regex, string } from '../string';
+import { regex, string } from '../strings';
 
 describe('either', () => {
     const stringOrBooleanDecoder = either(string, boolean);

@@ -1,10 +1,10 @@
 // @flow strict
 
-import { dict, exact, inexact, mapping, object, pojo } from '../object';
+import { dict, exact, inexact, mapping, object, pojo } from '../objects';
 import { hardcoded } from '../constants';
-import { number } from '../number';
+import { number } from '../numbers';
 import { optional } from '../optional';
-import { string } from '../string';
+import { string } from '../strings';
 
 describe('objects', () => {
     it('decodes objects and fields', () => {

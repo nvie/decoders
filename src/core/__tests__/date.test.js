@@ -1,7 +1,7 @@
 // @flow strict
 /* eslint-disable no-restricted-syntax */
 
-import { date, iso8601 } from '../date';
+import { date, iso8601 } from '../dates';
 import { INPUTS } from './fixtures';
 import { partition } from 'itertools';
 

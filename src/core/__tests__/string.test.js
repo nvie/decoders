@@ -12,7 +12,7 @@ import {
     uuid,
     uuidv1,
     uuidv4,
-} from '../string';
+} from '../strings';
 import { INPUTS } from './fixtures';
 import { partition } from 'itertools';
 

@@ -1,13 +1,13 @@
 // @flow strict
 /* eslint-disable no-restricted-syntax */
 
-import { array } from '../array';
+import { array } from '../arrays';
 import { INPUTS } from './fixtures';
 import { lazy } from '../lazy';
-import { number } from '../number';
-import { object } from '../object';
+import { number } from '../numbers';
+import { object } from '../objects';
 import { optional } from '../optional';
-import { string } from '../string';
+import { string } from '../strings';
 import type { Decoder } from '../../_decoder';
 
 describe('lazy', () => {

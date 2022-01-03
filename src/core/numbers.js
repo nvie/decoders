@@ -11,22 +11,34 @@ const anyNumber: Decoder<number> = define((blob) =>
         : err(annotate(blob, 'Must be number')),
 );
 
+/**
+ * Accepts finite numbers (can be integer or float values). Values `NaN`,
+ * or positive and negative `Infinity` will get rejected.
+ */
 export const number: Decoder<number> = anyNumber.and(
     (n) => Number.isFinite(n),
     'Number must be finite',
 );
 
-export const positiveNumber: Decoder<number> = number.and(
-    (n) => n >= 0,
-    'Number must be positive',
-);
-
-// Integers
+/**
+ * Accepts only finite whole numbers.
+ */
 export const integer: Decoder<number> = number.and(
     (n) => Number.isInteger(n),
     'Number must be an integer',
 );
 
+/**
+ * Accepts only positive finite numbers.
+ */
+export const positiveNumber: Decoder<number> = number.and(
+    (n) => n >= 0,
+    'Number must be positive',
+);
+
+/**
+ * Accepts only positive finite whole numbers.
+ */
 export const positiveInteger: Decoder<number> = integer.and(
     (n) => n >= 0,
     'Number must be positive',

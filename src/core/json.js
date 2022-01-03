@@ -1,13 +1,13 @@
 // @flow strict
 
-import { array } from './array';
-import { boolean } from './boolean';
-import { dict } from './object';
+import { array } from './arrays';
+import { boolean } from './booleans';
+import { dict } from './objects';
 import { either } from './either';
 import { lazy } from './lazy';
 import { null_ } from './constants';
-import { number } from './number';
-import { string } from './string';
+import { number } from './numbers';
+import { string } from './strings';
 import type { Decoder } from '../_decoder';
 
 export type JSONValue = null | string | number | boolean | JSONObject | JSONArray;

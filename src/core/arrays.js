@@ -3,6 +3,7 @@
 import { annotate } from '../annotate';
 import { define } from '../_decoder';
 import { err, ok } from '../result';
+import type { _Any } from '../_utils';
 import type { Decoder, DecodeResult } from '../_decoder';
 
 /**
@@ -72,8 +73,7 @@ function all<T>(
 }
 
 /**
- * Builds a Decoder that returns Ok for values of `Array<T>`, given a Decoder
- * for `T`.  Err otherwise.
+ * Accepts arrays of whatever the given decoder accepts.
  */
 export function array<T>(decoder: Decoder<T>): Decoder<Array<T>> {
     return poja.chain((blobs: $ReadOnlyArray<mixed>) => {
@@ -83,16 +83,58 @@ export function array<T>(decoder: Decoder<T>): Decoder<Array<T>> {
 }
 
 /**
- * Builds a Decoder that returns Ok for values of `Array<T>`, but will reject
- * empty arrays.
+ * Like `array()`, but will reject arrays with 0 elements.
  */
 export function nonEmptyArray<T>(decoder: Decoder<T>): Decoder<Array<T>> {
     return array(decoder).and((arr) => arr.length > 0, 'Must be non-empty array');
 }
 
 /**
- * Similar to `array()`, but returns the result as an ES6 Set.
+ * Similar to `array()`, but returns the result as an [ES6
+ * Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set).
  */
 export function set<T>(decoder: Decoder<T>): Decoder<Set<T>> {
     return array(decoder).transform((items) => new Set(items));
 }
+
+const ntuple = (n: number) => poja.and((arr) => arr.length === n, `Must be a ${n}-tuple`);
+
+// prettier-ignore
+interface TupleFuncSignature {
+    <A>(a: Decoder<A>): Decoder<[A]>;
+    <A, B>(a: Decoder<A>, b: Decoder<B>): Decoder<[A, B]>;
+    <A, B, C>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>): Decoder<[A, B, C]>;
+    <A, B, C, D>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>): Decoder<[A, B, C, D]>;
+    <A, B, C, D, E>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>, e: Decoder<E>): Decoder<[A, B, C, D, E]>;
+    <A, B, C, D, E, F>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>, e: Decoder<E>, f: Decoder<F>): Decoder<[A, B, C, D, E, F]>;
+}
+
+/**
+ * Accepts n-tuples [A, B, C, ...] matching the given decoders A, B, C, ...
+ */
+function _tuple(...decoders: $ReadOnlyArray<Decoder<mixed>>): Decoder<mixed> {
+    return ntuple(decoders.length).chain((blobs) => {
+        let allOk = true;
+
+        const rvs = decoders.map((decoder, i) => {
+            const blob = blobs[i];
+            const result = decoder.decode(blob);
+            if (result.ok) {
+                return result.value;
+            } else {
+                allOk = false;
+                return result.error;
+            }
+        });
+
+        if (allOk) {
+            return ok(rvs);
+        } else {
+            // If a decoder error has happened while unwrapping all the
+            // results, try to construct a good error message
+            return err(annotate(rvs));
+        }
+    });
+}
+
+export const tuple: TupleFuncSignature = (_tuple: _Any);

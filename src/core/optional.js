@@ -8,16 +8,14 @@ import { null_, undefined_ } from './constants';
 import type { Decoder } from '../_decoder';
 
 /**
- * Builds a Decoder that returns Ok for either `undefined` or `T` values,
- * given a Decoder for `T`.  Err otherwise.
+ * Accepts whatever the given decoder accepts, or `undefined`.
  */
 export function optional<T>(decoder: Decoder<T>): Decoder<void | T> {
     return either(undefined_, decoder);
 }
 
 /**
- * Builds a Decoder that returns Ok for either `null` or `T` values,
- * given a Decoder for `T`.  Err otherwise.
+ * Accepts whatever the given decoder accepts, or `null`.
  */
 export function nullable<T>(decoder: Decoder<T>): Decoder<null | T> {
     return either(null_, decoder);
@@ -36,8 +34,8 @@ const undefined_or_null: Decoder<null | void> = define((blob) =>
 );
 
 /**
- * Decoder that only returns Ok for `null` or `undefined` inputs.
+ * Accepts whatever the given decoder accepts, or `null`, or `undefined`.
  */
-export function maybe<T>(decoder: Decoder<T>): Decoder<?T> {
+export function maybe<T>(decoder: Decoder<T>): Decoder<T | null | void> {
     return either(undefined_or_null, decoder);
 }
