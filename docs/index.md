@@ -12,6 +12,7 @@ TypeScript and Flow.
 <!-- prettier-ignore-end -->
 
 [Get started now](#getting-started){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
+[API Reference](https://nvie.com/decoders/api){: .btn .fs-5 .mb-4 .mb-md-0 }
 [View it on GitHub](https://github.com/nvie/decoders){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 ## Getting started
