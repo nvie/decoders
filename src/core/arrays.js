@@ -7,8 +7,9 @@ import type { _Any } from '../_utils';
 import type { Decoder, DecodeResult } from '../_decoder';
 
 /**
- * Like a "Plain Old JavaScript Object", but for arrays: "Plain Old JavaScript
- * Array" ^_^
+ * Accepts any array, but doesn't validate its items further.
+ *
+ * "poja" means "plain old JavaScript array", a play on [**pojo**()](#pojo).
  */
 export const poja: Decoder<Array<mixed>> = define((blob) => {
     if (!Array.isArray(blob)) {
@@ -57,15 +58,6 @@ function all<T>(
                 ),
             );
 
-            // const errValue = [];
-            // if (index > 0) {
-            //     errValue.push('...'); // TODO: make special mark, not string!
-            // }
-            // errValue.push(
-            // );
-            // if (index < iterable.length - 1) {
-            //     errValue.push('...'); // TODO: make special mark, not string!
-            // }
             return err(annotate(clone));
         }
     }
@@ -110,9 +102,10 @@ interface TupleFuncSignature {
 }
 
 /**
- * Accepts n-tuples [A, B, C, ...] matching the given decoders A, B, C, ...
+ * Accepts a tuple (an array with exactly _n_ items) of values accepted by the
+ * _n_ given decoders.
  */
-function _tuple(...decoders: $ReadOnlyArray<Decoder<mixed>>): Decoder<mixed> {
+function _tuple(...decoders: $ReadOnlyArray<Decoder<mixed>>): Decoder<Array<mixed>> {
     return ntuple(decoders.length).chain((blobs) => {
         let allOk = true;
 
