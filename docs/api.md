@@ -812,7 +812,7 @@ verify({ x: 1 });  // throws, missing field `y`
 <!-- prettier-ignore-end -->
 
 For more information, see also
-[The difference between `object`, `exact`, and `inexact`](./difference-between-object-exact-and-inexact).
+[The difference between `object`, `exact`, and `inexact`](./tips#the-difference-between-object-exact-and-inexact).
 
 ---
 
@@ -842,7 +842,7 @@ verify({ x: 1 });              // throws, missing field `y`
 <!-- prettier-ignore-end -->
 
 For more information, see also
-[The difference between `object`, `exact`, and `inexact`](./difference-between-object-exact-and-inexact).
+[The difference between `object`, `exact`, and `inexact`](./tips#the-difference-between-object-exact-and-inexact).
 
 ---
 
@@ -871,7 +871,7 @@ verify({ x: 1 });  // throws, missing field `y`
 <!-- prettier-ignore-end -->
 
 For more information, see also
-[The difference between `object`, `exact`, and `inexact`](./difference-between-object-exact-and-inexact).
+[The difference between `object`, `exact`, and `inexact`](./tips#the-difference-between-object-exact-and-inexact).
 
 ---
 
