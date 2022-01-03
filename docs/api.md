@@ -5,68 +5,27 @@ nav_order: 10
 
 # API Reference
 
--   **Strings**
-    -   [`string`](#string)
-    -   [`nonEmptyString`](#nonEmptyString)
-    -   [`regex`](#regex)
-    -   [`email`](#email)
-    -   [`url`](#url)
-    -   [`httpsUrl`](#httpsUrl)
--   **Numbers**
-    -   [`number`](#number)
-    -   [`integer`](#integer)
-    -   [`positiveNumber`](#positiveNumber)
-    -   [`positiveInteger`](#positiveInteger)
--   **Booleans**
-    -   [`boolean`](#boolean)
-    -   [`truthy`](#truthy)
-    -   [`numericBoolean`](#numericBoolean)
--   **Dates**
-    -   [`date`](#date)
-    -   [`iso8601`](#iso8601)
--   **Constants**
-    -   [`constant`](#constant)
-    -   [`hardcoded`](#hardcoded)
--   **Optionality**
-    -   [`null_`](#null_)
-    -   [`undefined_`](#undefined_)
-    -   [`optional`](#optional)
-    -   [`nullable`](#nullable)
-    -   [`maybe`](#maybe)
-    -   [`unknown`](#unknown)
-    -   [`mixed`](#mixed) (alias of `unknown`)
--   **Arrays**
-    -   [`array`](#array)
-    -   [`nonEmptyArray`](#nonEmptyArray)
-    -   [`poja`](#poja)
-    -   [`tuple`](#tuple)
-    -   [`set`](#set)
--   **Objects**
-    -   [`object`](#object)
-    -   [`exact`](#exact)
-    -   [`inexact`](#inexact)
-    -   [`pojo`](#pojo)
-    -   [`dict`](#dict)
-    -   [`mapping`](#mapping)
--   **JSON**
-    -   [`json`](#json)
-    -   [`jsonObject`](#jsonObject)
-    -   [`jsonArray`](#jsonArray)
--   **Choice**
-    -   [`either`](#either)
-    -   [`taggedUnion`](#taggedUnion)
-    -   [`oneOf`](#oneOf)
--   **Utilities**
-    -   [`transform`](#transform)
-    -   [`compose`](#compose)
-    -   [`predicate`](#predicate)
-    -   [`describe`](#describe)
-    -   [`prep`](#prep)
-    -   [`fail`](#fail)
-    -   [`instanceOf`](#instanceOf)
-    -   [`lazy`](#lazy)
--   **Guards**
-    -   [`guard`](#guard)
+-   **Strings**: [`string`](#string), [`nonEmptyString`](#nonEmptyString),
+    [`regex`](#regex), [`email`](#email), [`url`](#url), [`httpsUrl`](#httpsUrl)
+-   **Numbers**: [`number`](#number), [`integer`](#integer),
+    [`positiveNumber`](#positiveNumber), [`positiveInteger`](#positiveInteger)
+-   **Booleans**: [`boolean`](#boolean), [`truthy`](#truthy),
+    [`numericBoolean`](#numericBoolean)
+-   **Dates**: [`date`](#date), [`iso8601`](#iso8601)
+-   **Constants**: [`constant`](#constant), [`hardcoded`](#hardcoded)
+-   **Optionality**: [`null_`](#null_), [`undefined_`](#undefined_),
+    [`optional`](#optional), [`nullable`](#nullable), [`maybe`](#maybe),
+    [`unknown`](#unknown), [`mixed`](#mixed)
+-   **Arrays**: [`array`](#array), [`nonEmptyArray`](#nonEmptyArray), [`poja`](#poja),
+    [`tuple`](#tuple), [`set`](#set)
+-   **Objects**: [`object`](#object), [`exact`](#exact), [`inexact`](#inexact),
+    [`pojo`](#pojo), [`dict`](#dict), [`mapping`](#mapping)
+-   **JSON**: [`json`](#json), [`jsonObject`](#jsonObject), [`jsonArray`](#jsonArray)
+-   **Choice**: [`either`](#either), [`taggedUnion`](#taggedUnion), [`oneOf`](#oneOf)
+-   **Utilities**: [`transform`](#transform), [`compose`](#compose),
+    [`predicate`](#predicate), [`describe`](#describe), [`prep`](#prep), [`fail`](#fail),
+    [`instanceOf`](#instanceOf), [`lazy`](#lazy)
+-   **Guards**: [`guard`](#guard)
 
 ---
 
