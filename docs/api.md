@@ -14,7 +14,7 @@ nav_order: 10
 - [**Optionality**](#optionality): [`null_`](#null_), [`undefined_`](#undefined_), [`optional`](#optional), [`nullable`](#nullable), [`maybe`](#maybe), [`unknown`](#unknown), [`mixed`](#mixed)
 - [**Arrays**](#arrays): [`array`](#array), [`nonEmptyArray`](#nonEmptyArray), [`poja`](#poja), [`tuple`](#tuple), [`set`](#set)
 - [**Objects**](#objects): [`object`](#object), [`exact`](#exact), [`inexact`](#inexact), [`pojo`](#pojo), [`dict`](#dict), [`mapping`](#mapping)
-- [**JSON**](#jSON): [`json`](#json), [`jsonObject`](#jsonObject), [`jsonArray`](#jsonArray)
+- [**JSON values**](#json-values): [`json`](#json), [`jsonObject`](#jsonObject), [`jsonArray`](#jsonArray)
 - [**Choice**](#choice): [`either`](#either), [`taggedUnion`](#taggedUnion), [`oneOf`](#oneOf)
 - [**Utilities**](#utilities): [`transform`](#transform), [`compose`](#compose), [`predicate`](#predicate), [`describe`](#describe), [`prep`](#prep), [`fail`](#fail), [`instanceOf`](#instanceOf), [`lazy`](#lazy)
 - [**Guards**](#guards): [`guard`](#guard)
@@ -988,7 +988,7 @@ And a runtime input of:
 
 ---
 
-## JSON
+## JSON values
 
 -   [`json`](#json)
 -   [`jsonObject`](#jsonObject)
