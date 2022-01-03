@@ -6,18 +6,18 @@ nav_order: 10
 # API Reference
 
 <!-- prettier-ignore-start -->
-- [**Strings**](#strings): [`string`](#string), [`nonEmptyString`](#nonEmptyString), [`regex`](#regex), [`email`](#email), [`url`](#url), [`httpsUrl`](#httpsUrl)
+- [**Strings**](#strings): [`string`](#string), [`nonEmptyString`](#nonEmptyString), [`regex()`](#regex), [`email`](#email), [`url`](#url), [`httpsUrl`](#httpsUrl)
 - [**Numbers**](#numbers): [`number`](#number), [`integer`](#integer), [`positiveNumber`](#positiveNumber), [`positiveInteger`](#positiveInteger)
 - [**Booleans**](#booleans): [`boolean`](#boolean), [`truthy`](#truthy), [`numericBoolean`](#numericBoolean)
 - [**Dates**](#dates): [`date`](#date), [`iso8601`](#iso8601)
-- [**Constants**](#constants): [`constant`](#constant), [`hardcoded`](#hardcoded)
-- [**Optionality**](#optionality): [`null_`](#null_), [`undefined_`](#undefined_), [`optional`](#optional), [`nullable`](#nullable), [`maybe`](#maybe), [`unknown`](#unknown), [`mixed`](#mixed)
-- [**Arrays**](#arrays): [`array`](#array), [`nonEmptyArray`](#nonEmptyArray), [`poja`](#poja), [`tuple`](#tuple), [`set`](#set)
-- [**Objects**](#objects): [`object`](#object), [`exact`](#exact), [`inexact`](#inexact), [`pojo`](#pojo), [`dict`](#dict), [`mapping`](#mapping)
+- [**Constants**](#constants): [`constant()`](#constant), [`hardcoded()`](#hardcoded)
+- [**Optionality**](#optionality): [`null_`](#null_), [`undefined_`](#undefined_), [`optional()`](#optional), [`nullable()`](#nullable), [`maybe()`](#maybe), [`unknown`](#unknown), [`mixed`](#mixed)
+- [**Arrays**](#arrays): [`array()`](#array), [`nonEmptyArray()`](#nonEmptyArray), [`poja`](#poja), [`tuple()`](#tuple), [`set()`](#set)
+- [**Objects**](#objects): [`object()`](#object), [`exact()`](#exact), [`inexact()`](#inexact), [`pojo`](#pojo), [`dict()`](#dict), [`mapping()`](#mapping)
 - [**JSON values**](#json-values): [`json`](#json), [`jsonObject`](#jsonObject), [`jsonArray`](#jsonArray)
-- [**Choice**](#choice): [`either`](#either), [`taggedUnion`](#taggedUnion), [`oneOf`](#oneOf)
-- [**Utilities**](#utilities): [`transform`](#transform), [`compose`](#compose), [`predicate`](#predicate), [`describe`](#describe), [`prep`](#prep), [`fail`](#fail), [`instanceOf`](#instanceOf), [`lazy`](#lazy)
-- [**Guards**](#guards): [`guard`](#guard)
+- [**Choice**](#choice): [`either()`](#either), [`taggedUnion()`](#taggedUnion), [`oneOf()`](#oneOf)
+- [**Utilities**](#utilities): [`transform()`](#transform), [`compose()`](#compose), [`predicate()`](#predicate), [`describe()`](#describe), [`prep()`](#prep), [`fail()`](#fail), [`instanceOf()`](#instanceOf), [`lazy()`](#lazy)
+- [**Guards**](#guards): [`guard()`](#guard)
 <!-- prettier-ignore-end -->
 
 ---
