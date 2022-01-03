@@ -80,14 +80,15 @@ verify('');    // throws
 
 ---
 
-<a name="regex" href="#regex">#</a> <b>regex</b>(): <i>Decoder&lt;string&gt;</i>
+<a name="regex" href="#regex">#</a> <b>regex</b>(pattern: RegExp, message: string):
+<i>Decoder&lt;string&gt;</i>
 [(source)](https://github.com/nvie/decoders/blob/main/src/core/string.js 'Source')
 
 Accepts and returns strings that match the given regular expression.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(regex(/^[0-9][0-9]+$/));
+const verify = guard(regex(/^[0-9][0-9]+$/, 'Must be numeric'));
 
 // 👍
 verify('42') === '42';
