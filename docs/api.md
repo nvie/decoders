@@ -1341,7 +1341,7 @@ Accepts any value that is an `instanceof` the given class.
 
 > **NOTE: Help wanted!** The TypeScript annotation for this decoder needs help! If you
 > know how to express it, please submit a PR. See
-> https://github.com/nvie/decoders/blob/main/src/core/instanceOf.d.ts
+> https://github.com/nvie/decoders/blob/main/src/types/core/instanceOf.d.ts
 
 <!-- prettier-ignore-start -->
 ```javascript
