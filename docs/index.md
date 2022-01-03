@@ -20,6 +20,16 @@ Just install the package and you're ready to go.
 
     $ npm install decoders
 
+## Motivation
+
+In a fully type-checked app, data coming in from the outside world can be dynamic and
+should not be trusted without validation. Therefore, it's a good practice to validate your
+expectations right at your program's boundaries. This has two benefits: (1) your inputs
+are getting validated, and (2) you can now statically know for sure the shape of the
+incoming data.
+
+Decoders help solve both of these problems.
+
 ## The core idea
 
 The central concept of this library is the Decoder. A `Decoder<T>` is a validation
@@ -75,16 +85,6 @@ import { array, number, object, string } from 'decoders';
 // ^^ Decoder<{ name: string; items: number[] }>
 ```
 <!-- prettier-ignore-end -->
-
-## Motivation
-
-In a fully type-checked app, data coming in from the outside world can be dynamic and
-should not be trusted without validation. Therefore, it's a good practice to validate your
-expectations right at your program's boundaries. This has two benefits: (1) your inputs
-are getting validated, and (2) you can now statically know for sure the shape of the
-incoming data.
-
-Decoders help solve both of these problems.
 
 ## An example
 
