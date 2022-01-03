@@ -2,7 +2,17 @@
 /* globals URL */
 /* eslint-disable no-restricted-syntax */
 
-import { email, httpsUrl, nonEmptyString, regex, string, url } from '../string';
+import {
+    email,
+    httpsUrl,
+    nonEmptyString,
+    regex,
+    string,
+    url,
+    uuid,
+    uuidv1,
+    uuidv4,
+} from '../string';
 import { guard } from '../../_guard';
 import { INPUTS } from './fixtures';
 import { partition } from 'itertools';
@@ -138,5 +148,66 @@ describe('nonEmptyString', () => {
         expect(() => decoder('	')).toThrow();
         expect(() => decoder('\n')).toThrow();
         expect(() => decoder('     \n ')).toThrow();
+    });
+});
+
+describe('uuid', () => {
+    const decoder = uuid;
+
+    it('accepts', () => {
+        expect(decoder('123e4567-e89b-12d3-a456-426614174000').value).toBe(
+            '123e4567-e89b-12d3-a456-426614174000',
+        );
+        expect(decoder('123e4567-e89b-42d3-a456-426614174000').value).toBe(
+            '123e4567-e89b-42d3-a456-426614174000',
+        );
+        expect(decoder('123E4567-E89B-12D3-A456-426614174000').value).toBe(
+            '123E4567-E89B-12D3-A456-426614174000',
+        );
+        expect(decoder('123E4567-E89B-42d3-A456-426614174000').value).toBe(
+            '123E4567-E89B-42d3-A456-426614174000',
+        );
+    });
+
+    it('rejects', () => {
+        expect(decoder('123e4567-e89b-12d3-a456-42661417400x').ok).toBe(false);
+        expect(decoder('123e4567e89b12d3a456426614174000').ok).toBe(false);
+    });
+});
+
+describe('uuidv1', () => {
+    const decoder = uuidv1;
+
+    it('accepts', () => {
+        expect(uuidv1('123e4567-e89b-12d3-a456-426614174000').value).toBe(
+            '123e4567-e89b-12d3-a456-426614174000',
+        );
+        expect(uuidv1('123E4567-E89B-12D3-A456-426614174000').value).toBe(
+            '123E4567-E89B-12D3-A456-426614174000',
+        );
+    });
+
+    it('rejects', () => {
+        expect(decoder('123e4567-e89b-12d3-a456-42661417400x').ok).toBe(false);
+        expect(decoder('123e4567e89b12d3a456426614174000').ok).toBe(false);
+    });
+});
+
+describe('uuidv4', () => {
+    const decoder = uuidv4;
+
+    it('accepts', () => {
+        expect(decoder('123e4567-e89b-42d3-a456-426614174000').value).toBe(
+            '123e4567-e89b-42d3-a456-426614174000',
+        );
+        expect(decoder('123E4567-E89B-42D3-A456-426614174000').value).toBe(
+            '123E4567-E89B-42D3-A456-426614174000',
+        );
+    });
+
+    it('rejects', () => {
+        expect(decoder('123e4567-e89b-42d3-a456-42661417400x').ok).toBe(false);
+        expect(decoder('123E4567-E89B-12d3-A456-426614174000').ok).toBe(false);
+        expect(decoder('123e4567e89b42d3a456426614174000').ok).toBe(false);
     });
 });

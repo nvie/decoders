@@ -397,6 +397,65 @@ const gitUrl: Decoder<URL> = predicate(
 
 ---
 
+<a name="uuid" href="#uuid">#</a> <b>uuid</b>: <i>Decoder&lt;string&gt;</i>
+[(source)](https://github.com/nvie/decoders/blob/main/src/core/string.js 'Source')
+
+Accepts strings that are valid [UUIDs][wiki-uuid] (universally unique identifier).
+
+<!-- prettier-ignore-start -->
+```javascript
+const verify = guard(uuid);
+
+// 👍
+verify('123e4567-e89b-12d3-a456-426614174000') === '123e4567-e89b-12d3-a456-426614174000'
+verify('123E4567-E89B-12D3-A456-426614174000') === '123E4567-E89B-12D3-A456-426614174000'
+
+// 👎
+verify('123E4567E89B12D3A456426614174000');      // throws
+verify('abcdefgh-ijkl-mnop-qrst-uvwxyz012345');  // throws
+```
+<!-- prettier-ignore-end -->
+
+---
+
+<a name="uuidv1" href="#uuidv1">#</a> <b>uuidv1</b>: <i>Decoder&lt;string&gt;</i>
+[(source)](https://github.com/nvie/decoders/blob/main/src/core/string.js 'Source')
+
+Like `uuid`, but only accepts [UUIDv1s][wiki-uuidv1] strings.
+
+<!-- prettier-ignore-start -->
+```javascript
+const verify = guard(uuidv1);
+
+// 👍
+verify('123e4567-e89b-12d3-a456-426614174000') === '123e4567-e89b-42d3-a456-426614174000'
+
+// 👎
+verify('123e4567-e89b-42d3-a456-426614174000')  // throws
+```
+<!-- prettier-ignore-end -->
+
+---
+
+<a name="uuidv4" href="#uuidv4">#</a> <b>uuidv4</b>: <i>Decoder&lt;string&gt;</i>
+[(source)](https://github.com/nvie/decoders/blob/main/src/core/string.js 'Source')
+
+Like `uuid`, but only accepts [UUIDv4s][wiki-uuidv4] strings.
+
+<!-- prettier-ignore-start -->
+```javascript
+const verify = guard(uuidv4);
+
+// 👍
+verify('123e4567-e89b-42d3-a456-426614174000') === '123e4567-e89b-42d3-a456-426614174000'
+
+// 👎
+verify('123e4567-e89b-12d3-a456-426614174000')  // throws
+```
+<!-- prettier-ignore-end -->
+
+---
+
 <a name="boolean" href="#boolean">#</a> <b>boolean</b>: <i>Decoder&lt;boolean&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/boolean.js 'Source')
 

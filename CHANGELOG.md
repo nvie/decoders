@@ -28,8 +28,11 @@ New features:
 -   Include ES modules in published NPM builds (yay tree-shaking! 🍃)
 -   Much smaller total bundle size
 -   New decoders:
-    -   [`prep()`](./README.md#prep)
-    -   [`set()`](./README.md#set)
+    -   [`prep()`](https://nvie.com/decoders/api#prep)
+    -   [`set()`](https://nvie.com/decoders/api#set)
+    -   [`uuid`](https://nvie.com/decoders/api#uuid)
+    -   [`uuidv1`](https://nvie.com/decoders/api#uuidv1)
+    -   [`uuidv4`](https://nvie.com/decoders/api#uuidv4)
 -   Better error messages for nested `either`s
 -   Guard API now has a simpler way to specify formatters
 

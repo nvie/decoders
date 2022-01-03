@@ -50,6 +50,9 @@ import {
     undefined_,
     unknown,
     url,
+    uuid,
+    uuidv1,
+    uuidv4,
 } from 'decoders';
 import { formatInline, formatShort } from 'decoders/format';
 import { ok, unwrap } from 'decoders/result';
@@ -73,6 +76,9 @@ email; // $ExpectType Decoder<string, unknown>
 regex(/foo/, 'Must be foo'); // $ExpectType Decoder<string, unknown>
 url; // $ExpectType Decoder<URL, unknown>
 httpsUrl; // $ExpectType Decoder<URL, unknown>
+uuid; // $ExpectType Decoder<string, unknown>
+uuidv1; // $ExpectType Decoder<string, unknown>
+uuidv4; // $ExpectType Decoder<string, unknown>
 
 array(string); // $ExpectType Decoder<string[], unknown>
 array(number); // $ExpectType Decoder<number[], unknown>

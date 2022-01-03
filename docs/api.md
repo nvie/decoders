@@ -7,7 +7,7 @@ has_children: true
 # API Reference
 
 <!-- prettier-ignore-start -->
-- [**Strings**](#strings): [`string`](#string), [`nonEmptyString`](#nonEmptyString), [`regex()`](#regex), [`email`](#email), [`url`](#url), [`httpsUrl`](#httpsUrl)
+- [**Strings**](#strings): [`string`](#string), [`nonEmptyString`](#nonEmptyString), [`regex()`](#regex), [`email`](#email), [`url`](#url), [`httpsUrl`](#httpsUrl), [`uuid`](#uuid), [`uuidv1`](#uuidv1), [`uuidv4`](#uuidv4)
 - [**Numbers**](#numbers): [`number`](#number), [`integer`](#integer), [`positiveNumber`](#positiveNumber), [`positiveInteger`](#positiveInteger)
 - [**Booleans**](#booleans): [`boolean`](#boolean), [`truthy`](#truthy), [`numericBoolean`](#numericBoolean)
 - [**Dates**](#dates): [`date`](#date), [`iso8601`](#iso8601)
@@ -25,12 +25,15 @@ has_children: true
 
 ## Strings
 
--   [`string`](#string)
--   [`nonEmptyString`](#nonEmptyString)
--   [`regex()`](#regex)
--   [`email`](#email)
--   [`url`](#url)
--   [`httpsUrl`](#httpsUrl)
+- [`string`](#string)
+- [`nonEmptyString`](#nonEmptyString)
+- [`regex()`](#regex)
+- [`email`](#email)
+- [`url`](#url)
+- [`httpsUrl`](#httpsUrl)
+- [`uuid`](#uuid)
+- [`uuidv1`](#uuidv1)
+- [`uuidv4`](#uuidv4)
 
 ---
 
@@ -181,6 +184,65 @@ const gitUrl: Decoder<URL> = predicate(
     'Must be a git:// URL',
 );
 ```
+
+---
+
+<a name="uuid" href="#uuid">#</a> <b>uuid</b>: <i>Decoder&lt;string&gt;</i>
+[(source)](https://github.com/nvie/decoders/blob/main/src/core/string.js 'Source')
+
+Accepts strings that are valid [UUIDs][wiki-uuid] (universally unique identifier).
+
+<!-- prettier-ignore-start -->
+```javascript
+const verify = guard(uuid);
+
+// 👍
+verify('123e4567-e89b-12d3-a456-426614174000') === '123e4567-e89b-12d3-a456-426614174000'
+verify('123E4567-E89B-12D3-A456-426614174000') === '123E4567-E89B-12D3-A456-426614174000'
+
+// 👎
+verify('123E4567E89B12D3A456426614174000');      // throws
+verify('abcdefgh-ijkl-mnop-qrst-uvwxyz012345');  // throws
+```
+<!-- prettier-ignore-end -->
+
+---
+
+<a name="uuidv1" href="#uuidv1">#</a> <b>uuidv1</b>: <i>Decoder&lt;string&gt;</i>
+[(source)](https://github.com/nvie/decoders/blob/main/src/core/string.js 'Source')
+
+Like `uuid`, but only accepts [UUIDv1s][wiki-uuidv1] strings.
+
+<!-- prettier-ignore-start -->
+```javascript
+const verify = guard(uuidv1);
+
+// 👍
+verify('123e4567-e89b-12d3-a456-426614174000') === '123e4567-e89b-42d3-a456-426614174000'
+
+// 👎
+verify('123e4567-e89b-42d3-a456-426614174000')  // throws
+```
+<!-- prettier-ignore-end -->
+
+---
+
+<a name="uuidv4" href="#uuidv4">#</a> <b>uuidv4</b>: <i>Decoder&lt;string&gt;</i>
+[(source)](https://github.com/nvie/decoders/blob/main/src/core/string.js 'Source')
+
+Like `uuid`, but only accepts [UUIDv4s][wiki-uuidv4] strings.
+
+<!-- prettier-ignore-start -->
+```javascript
+const verify = guard(uuidv4);
+
+// 👍
+verify('123e4567-e89b-42d3-a456-426614174000') === '123e4567-e89b-42d3-a456-426614174000'
+
+// 👎
+verify('123e4567-e89b-12d3-a456-426614174000')  // throws
+```
+<!-- prettier-ignore-end -->
 
 ---
 
@@ -1376,6 +1438,9 @@ composed to build larger decoders. Guards cannot be composed.
 [moz-set]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
 [moz-map]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
 [wiki-iso]: https://en.wikipedia.org/wiki/ISO_8601
+[wiki-uuid]: https://en.wikipedia.org/wiki/Universally_unique_identifier
+[wiki-uuidv1]: https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_(date-time_and_MAC_address)
+[wiki-uuidv4]: https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)
 [ts-predicates]: https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates
 [wiki-taggedunion]: https://en.wikipedia.org/wiki/Tagged_union
 <!-- prettier-ignore-end -->

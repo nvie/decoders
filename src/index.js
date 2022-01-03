@@ -41,7 +41,17 @@ export { date, iso8601 } from './core/date';
 export { describe } from './core/describe';
 export { dict, exact, inexact, mapping, object, pojo } from './core/object';
 export { either, oneOf } from './core/either';
-export { email, httpsUrl, nonEmptyString, regex, string, url } from './core/string';
+export {
+    email,
+    httpsUrl,
+    nonEmptyString,
+    regex,
+    string,
+    url,
+    uuid,
+    uuidv1,
+    uuidv4,
+} from './core/string';
 export { fail } from './core/fail';
 export { instanceOf } from './core/instanceOf';
 export { integer, number, positiveInteger, positiveNumber } from './core/number';
