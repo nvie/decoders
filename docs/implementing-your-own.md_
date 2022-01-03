@@ -1,9 +1,14 @@
 ---
-title: Overview
+title: Implementing your own decoders
 nav_order: 1
 ---
 
-### Building custom decoders
+# Implementing your own decoders
+
+Implementing your own decoders is easy. All you have to do is implement a function that:
+
+-   Takes a (`blob: unknown`) as its only argument
+-   Returns a `DecodeResult<...>`
 
 There are two main building blocks for defining your own custom decoders: `map()` and
 `compose()`.
