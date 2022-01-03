@@ -114,4 +114,7 @@ const user = userDecoder.verify(externalData);
 <div id="transformation"></div>
 <div id="adding-predicates"></div>
 
-Documentation has moved to [https://decoders.cc](https://decoders.cc).
+Documentation for v1 can be found
+[here](https://github.com/nvie/decoders/tree/v1.25.5#readme).  
+Documentation for v2 (currently in beta) can be found on
+[https://decoders.cc](https://decoders.cc).
