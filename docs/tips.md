@@ -14,10 +14,7 @@ For example, for a definition like:
 ```typescript
 import { exact, inexact, number, object, string } from 'decoders';
 
-const thing = {
-    a: string,
-    b: number,
-};
+const thing = { a: string, b: number };
 ```
 
 And a runtime input of:
@@ -33,5 +30,5 @@ And a runtime input of:
 |                                   | Extra properties | Output value                   | Inferred type                               |
 | --------------------------------- | ---------------- | ------------------------------ | ------------------------------------------- |
 | [`object(thing)`](./api#object)   | discarded        | `{a: "hi", b: 42}`             | `{a: string, b: number}`                    |
-| [`exact(thing)`](./api#exact)     | not allowed      | ⚡️ Runtime error              | `{a: string, b: number}`                    |
+| [`exact(thing)`](./api#exact)     | not allowed      | n/a (rejected)                 | `{a: string, b: number}`                    |
 | [`inexact(thing)`](./api#inexact) | retained         | `{a: "hi", b: 42, c: "extra"}` | `{a: string, b: number, [string]: unknown}` |
