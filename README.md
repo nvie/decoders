@@ -623,14 +623,9 @@ verify('hello world'); // throws
 
 Accepts only the given constant value.
 
-For TypeScript, use this syntax:
-
-```typescript
-constant('something' as const);
-constant(42 as const);
-```
-
-For Flow, use this syntax:
+Flow, unlike TypeScript, will not infer constants correctly. In TypeScript, the type of
+`constant(42)` will correctly be `Decoder<42>`, but in Flow it will get inferred as
+`Decoder<number>`. To work around this, you should use this syntax in Flow:
 
 ```javascript
 constant(('something': 'something'));
@@ -641,7 +636,7 @@ Example:
 
 <!-- prettier-ignore-start -->
 ```typescript
-const verify = guard(constant('hello' as const));
+const verify = guard(constant('hello'));
 
 // 👍
 verify('hello') === 'hello';
