@@ -3,7 +3,10 @@ title: Overview
 nav_order: 0
 ---
 
-# Validate your untrusted inputs
+<!-- prettier-ignore-start -->
+# Validate untrusted inputs
+{: .fs-8 .fw-400 }
+<!-- prettier-ignore-end -->
 
 <!-- prettier-ignore-start -->
 Decoders is an elegant and battle-tested validation library for type-safe input data for
@@ -11,8 +14,9 @@ TypeScript and Flow.
 {: .fs-6 .fw-300 }
 <!-- prettier-ignore-end -->
 
-[Get started now](#getting-started){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
-[API Reference](https://nvie.com/decoders/api){: .btn .fs-5 .mb-4 .mb-md-0 }
+[Get started now](#getting-started){: .btn .btn-primary .fs-6 .mb-4 .mb-md-0 .mr-4 .px-5
+.py-3 } [API Reference](https://nvie.com/decoders/api){: .btn .fs-6 .mb-4 .mb-md-0 .px-5
+.py-3 }
 
 ## Getting started
 
