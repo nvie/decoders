@@ -39,65 +39,6 @@ function neverThrow<T, V>(transformFn: (T) => V): DecodeFn<V, T> {
     };
 }
 
-function makeVerify<T>(
-    decodeFn: DecodeFn<T>,
-): (blob: mixed, formatterFn?: (Annotation) => string) => T {
-    return (blob: mixed, formatter: (Annotation) => string = formatInline): T => {
-        const result = decodeFn(blob);
-        if (result.ok) {
-            return result.value;
-        } else {
-            const err = new Error('\n' + formatter(result.error));
-            err.name = 'Decoding error';
-            throw err;
-        }
-    };
-}
-
-function makeDescribe<T>(decodeFn: DecodeFn<T>): (message: string) => Decoder<T> {
-    return (message: string): Decoder<T> =>
-        define((blob) => {
-            // Decode using the given decoder...
-            const result = decodeFn(blob);
-            if (result.ok) {
-                return result;
-            } else {
-                // ...but in case of error, annotate this with the custom given
-                // message instead
-                return err(annotate(result.error, message));
-            }
-        });
-}
-
-function makeAnd<T>(
-    decodeFn: DecodeFn<T>,
-): (predicateFn: (value: T) => boolean, message: string) => Decoder<T> {
-    return (predicateFn: (value: T) => boolean, message: string): Decoder<T> =>
-        define((blob) =>
-            andThen(decodeFn(blob), (value) =>
-                predicateFn(value) ? ok(value) : err(annotate(value, message)),
-            ),
-        );
-}
-
-/**
- * Compose two decoders by passing the result of the first into the second.
- * The second decoder may assume as its input type the output type of the first
- * decoder (so it's not necessary to accept the typical "mixed").  This is
- * useful for "narrowing down" the checks.  For example, if you want to write
- * a decoder for positive numbers, you can compose it from an existing decoder
- * for any number, and a decoder that, assuming a number, checks if it's
- * positive.  Very often combined with the predicate() helper as the second
- * argument.
- */
-function makeChain<T, V>(
-    decodeFn: DecodeFn<T>,
-): (nextDecodeFn: (T) => DecodeResult<V>) => Decoder<V> {
-    return (nextDecodeFn: (T) => DecodeResult<V>): Decoder<V> => {
-        return define((blob) => andThen(decodeFn(blob), nextDecodeFn));
-    };
-}
-
 /**
  * Build a Decoder<T> using the given decoding function. A valid decoding
  * function meets the following requirements:
@@ -112,10 +53,28 @@ function makeChain<T, V>(
  */
 export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
     return Object.freeze({
-        decode: decodeFn,
-        verify: makeVerify(decodeFn),
+        decode(blob: mixed): DecodeResult<T> {
+            return decodeFn(blob);
+        },
 
-        and: makeAnd(decodeFn),
+        verify(blob: mixed, formatter: (Annotation) => string = formatInline): T {
+            const result = decodeFn(blob);
+            if (result.ok) {
+                return result.value;
+            } else {
+                const err = new Error('\n' + formatter(result.error));
+                err.name = 'Decoding error';
+                throw err;
+            }
+        },
+
+        and(predicateFn: (value: T) => boolean, message: string): Decoder<T> {
+            return define((blob) =>
+                andThen(decodeFn(blob), (value) =>
+                    predicateFn(value) ? ok(value) : err(annotate(value, message)),
+                ),
+            );
+        },
 
         /**
          * Accepts any value the given decoder accepts, and on success, will
@@ -129,8 +88,32 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
             );
         },
 
-        describe: makeDescribe(decodeFn),
+        describe(message: string): Decoder<T> {
+            return define((blob) => {
+                // Decode using the given decoder...
+                const result = decodeFn(blob);
+                if (result.ok) {
+                    return result;
+                } else {
+                    // ...but in case of error, annotate this with the custom given
+                    // message instead
+                    return err(annotate(result.error, message));
+                }
+            });
+        },
 
-        chain: makeChain(decodeFn),
+        /**
+         * Compose two decoders by passing the result of the first into the second.
+         * The second decoder may assume as its input type the output type of the first
+         * decoder (so it's not necessary to accept the typical "mixed").  This is
+         * useful for "narrowing down" the checks.  For example, if you want to write
+         * a decoder for positive numbers, you can compose it from an existing decoder
+         * for any number, and a decoder that, assuming a number, checks if it's
+         * positive.  Very often combined with the predicate() helper as the second
+         * argument.
+         */
+        chain<V>(nextDecodeFn: (T) => DecodeResult<V>): Decoder<V> {
+            return define((blob) => andThen(decodeFn(blob), nextDecodeFn));
+        },
     });
 }
