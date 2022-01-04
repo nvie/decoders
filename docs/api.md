@@ -11,13 +11,13 @@ has_children: true
 - [**Numbers**](#numbers): [`number`](#number), [`integer`](#integer), [`positiveNumber`](#positiveNumber), [`positiveInteger`](#positiveInteger)
 - [**Booleans**](#booleans): [`boolean`](#boolean), [`truthy`](#truthy), [`numericBoolean`](#numericBoolean)
 - [**Dates**](#dates): [`date`](#date), [`iso8601`](#iso8601)
-- [**Constants**](#constants): [`constant()`](#constant), [`hardcoded()`](#hardcoded)
+- [**Constants**](#constants): [`constant()`](#constant), [`always()`](#always), [`hardcoded()`](#hardcoded)
 - [**Optionality**](#optionality): [`null_`](#null_), [`undefined_`](#undefined_), [`optional()`](#optional), [`nullable()`](#nullable), [`maybe()`](#maybe), [`unknown`](#unknown), [`mixed`](#mixed)
 - [**Arrays**](#arrays): [`array()`](#array), [`nonEmptyArray()`](#nonEmptyArray), [`poja`](#poja), [`tuple()`](#tuple), [`set()`](#set)
 - [**Objects**](#objects): [`object()`](#object), [`exact()`](#exact), [`inexact()`](#inexact), [`pojo`](#pojo), [`dict()`](#dict), [`mapping()`](#mapping)
 - [**JSON values**](#json-values): [`json`](#json), [`jsonObject`](#jsonObject), [`jsonArray`](#jsonArray)
 - [**Choice**](#choice): [`either()`](#either), [`taggedUnion()`](#taggedUnion), [`oneOf()`](#oneOf)
-- [**Utilities**](#utilities): [`transform()`](#transform), [`compose()`](#compose), [`predicate()`](#predicate), [`describe()`](#describe), [`prep()`](#prep), [`fail()`](#fail), [`instanceOf()`](#instanceOf), [`lazy()`](#lazy)
+- [**Utilities**](#utilities): [`transform()`](#transform), [`compose()`](#compose), [`predicate()`](#predicate), [`describe()`](#describe), [`prep()`](#prep), [`never()`](#never), [`fail()`](#fail), [`instanceOf()`](#instanceOf), [`lazy()`](#lazy)
 - [**Guards**](#guards): [`guard()`](#guard)
 <!-- prettier-ignore-end -->
 
@@ -482,7 +482,8 @@ verify(new Date());    // throws (does not accept dates)
 ## Constants
 
 -   [`constant()`](#constant)
--   [`hardcoded()`](#hardcoded)
+-   [`always()`](#always)
+-   [`hardcoded()`](#hardcoded) (alias of [`always()`](#always))
 
 ---
 
@@ -524,8 +525,9 @@ verify(undefined);      // throws
 
 ---
 
-<a name="hardcoded" href="#hardcoded">#</a> <b>hardcoded</b><i>&lt;T&gt;</i>(value: T):
-<i>Decoder&lt;T&gt;</i>
+<a name="always" href="#always">#</a> <b>always</b><i>&lt;T&gt;</i>(value: T):
+<i>Decoder&lt;T&gt;</i> <a name="hardcoded" href="#hardcoded">#</a>
+<b>hardcoded</b><i>&lt;T&gt;</i>(value: T): <i>Decoder&lt;T&gt;</i>
 [(source)](https://github.com/nvie/decoders/blob/main/src/core/constants.js 'Source')
 
 Accepts anything, completely ignores it, and always returns the provided value. This is
@@ -533,7 +535,7 @@ useful to manually add extra fields to object decoders.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(hardcoded(42));
+const verify = guard(always(42));
 
 // 👍
 verify('hello') === 42;
@@ -555,7 +557,7 @@ verify(undefined) === 42;
 -   [`nullable()`](#nullable)
 -   [`maybe()`](#maybe)
 -   [`unknown`](#unknown)
--   [`mixed`](#mixed) (alias of `unknown`)
+-   [`mixed`](#mixed) (alias of [`unknown`](#unknown))
 
 ---
 
@@ -1214,7 +1216,8 @@ annotate the type. Either by doing `oneOf([('foo': 'foo'), ('bar': 'bar')])`, or
 -   [`predicate()`](#predicate)
 -   [`describe()`](#describe)
 -   [`prep()`](#prep)
--   [`fail()`](#fail)
+-   [`never()`](#never)
+-   [`fail()`](#fail) (alias of [`never()`](#never))
 -   [`instanceOf()`](#instanceOf)
 -   [`lazy()`](#lazy)
 
@@ -1337,8 +1340,9 @@ verify('hi');  // throws: not a number
 
 ---
 
+<a name="never" href="#never">#</a> <b>never</b>(): <i>Decoder&lt;never&gt;</i>
 <a name="fail" href="#fail">#</a> <b>fail</b>(): <i>Decoder&lt;empty&gt;</i>
-[(source)](https://github.com/nvie/decoders/blob/main/src/core/fail.js 'Source')
+[(source)](https://github.com/nvie/decoders/blob/main/src/core/never.js 'Source')
 
 Rejects all inputs, and always fails with the given error message. May be useful for
 explicitly disallowing keys, or for testing purposes.
@@ -1347,7 +1351,7 @@ explicitly disallowing keys, or for testing purposes.
 ```javascript
 const verify = guard(object({
   a: string,
-  b: optional(fail('Key b has been removed')),
+  b: optional(never('Key b has been removed')),
 }));
 
 // 👍

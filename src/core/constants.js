@@ -29,9 +29,14 @@ export function constant<T: Scalar>(value: T): Decoder<T> {
 /**
  * Decoder that always returns Ok for the given hardcoded value, no matter what the input.
  */
-export function hardcoded<T>(value: T): Decoder<T> {
+export function always<T>(value: T): Decoder<T> {
     return () => ok(value);
 }
+
+/**
+ * Alias of always.
+ */
+export const hardcoded: <T>(T) => Decoder<T> = always;
 
 /**
  * Decoder that always returns Ok for the given hardcoded value, no matter what the input.

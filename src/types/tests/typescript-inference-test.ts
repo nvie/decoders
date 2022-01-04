@@ -1,4 +1,5 @@
 import {
+    always,
     array,
     boolean,
     compose,
@@ -25,6 +26,7 @@ import {
     mapping,
     maybe,
     mixed,
+    never,
     nonEmptyArray,
     nonEmptyString,
     nullable,
@@ -59,6 +61,8 @@ import { ok, unwrap } from 'decoders/result';
 
 constant('foo'); // $ExpectType Decoder<"foo", unknown>
 hardcoded('foo'); // $ExpectType Decoder<"foo", unknown>
+always('foo'); // $ExpectType Decoder<"foo", unknown>
+always(42); // $ExpectType Decoder<42, unknown>
 
 null_; // $ExpectType Decoder<null, unknown>
 undefined_; // $ExpectType Decoder<undefined, unknown>
@@ -213,8 +217,8 @@ date;
 const d = guard(iso8601)('dummy');
 d.getFullYear();
 
-// $ExpectType Decoder<never, unknown>
-fail('I will never return');
+fail('I will never return'); // $ExpectType Decoder<never, unknown>
+never('I will never return'); // $ExpectType Decoder<never, unknown>
 
 either(string, number); // $ExpectType Decoder<string | number, unknown>
 either(string, string, number); // $ExpectType Decoder<string | number, unknown>

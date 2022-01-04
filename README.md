@@ -655,8 +655,9 @@ verify(undefined);      // throws
 
 ---
 
-<a name="hardcoded" href="#hardcoded">#</a> <b>hardcoded</b><i>&lt;T&gt;</i>(value: T):
-<i>Decoder&lt;T&gt;</i>
+<a name="always" href="#always">#</a> <b>always</b><i>&lt;T&gt;</i>(value: T):
+<i>Decoder&lt;T&gt;</i> <a name="hardcoded" href="#hardcoded">#</a>
+<b>hardcoded</b><i>&lt;T&gt;</i>(value: T): <i>Decoder&lt;T&gt;</i>
 [&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/constants.js 'Source')
 
 Accepts any input, completely ignores it, and always returns the provided value. This is
@@ -664,7 +665,7 @@ useful to manually add extra fields to object decoders.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(hardcoded(42));
+const verify = guard(always(42));
 
 // 👍
 verify('hello') === 42;
@@ -678,8 +679,9 @@ verify(undefined) === 42;
 
 ---
 
-<a name="fail" href="#fail">#</a> <b>fail</b>(): <i>Decoder&lt;empty&gt;</i>
-[&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/fail.js 'Source')
+<a name="never" href="#never">#</a> <b>never</b>(): <i>Decoder&lt;never&gt;</i>
+<a name="fail" href="#fail">#</a> <b>fail</b>(): <i>Decoder&lt;never&gt;</i>
+[&lt;&gt;](https://github.com/nvie/decoders/blob/main/src/core/never.js 'Source')
 
 Rejects all inputs, and always fails with the given error message. May be useful for
 explicitly disallowing keys, or for testing purposes.
@@ -688,7 +690,7 @@ explicitly disallowing keys, or for testing purposes.
 ```javascript
 const verify = guard(object({
   a: string,
-  b: optional(fail('Key b has been removed')),
+  b: optional(never('Key b has been removed')),
 }));
 
 // 👍
