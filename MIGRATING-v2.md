@@ -216,10 +216,15 @@ const odd = compose(
 const odd = predicate(number, (n) => n % 2 === 1, 'Must be odd');
 ```
 
-## `url(...)` decoder has changed!
+## `url()` decoder has changed!
 
-It's no longer a function taking a list of schemes, and it no longer returns a string, but
-a `URL` instance.
+Two things have changed!
+
+1. It's no longer a function taking a list of schemes; and
+2. It no longer returns a `string`, but a `URL` instance.
+
+In other words, its type has been simplified from
+`(schemes?: Array<string>) => Decoder<string>` to simply `Decoder<URL>`.
 
 | Replace usage of | With ✨                      |
 | ---------------- | ---------------------------- |
