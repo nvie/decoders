@@ -10,15 +10,21 @@ Potentially breaking changes:
 -   Drop support for Flow versions below 0.142.0
 -   Drop support for TypeScript versions below 4.1.0
 -   Drop all package dependencies
+-   Removed decoders:
+    -   `eitherN()` (now simply `either()`, see
+        [migration instructions](./MIGRATING-v2.md#eitherN-is-now-simply-either))
+    -   `tupleN()` (now simply `tuple()`, see
+        [migration instructions](./MIGRATING-v2.md#tupleN-is-now-simply-tuple))
 -   Renamed decoders:
-    -   `map` → `transform` - see
+    -   `map()` → `transform()` - see
         [migration instructions](./MIGRATING-v2.md#map-is-now-transform)
-    -   `dispatch` → `taggedUnion` - see
+    -   `dispatch()` → `taggedUnion()` - see
         [migration instructions](./MIGRATING-v2.md#dispatch-is-now-taggedUnion)
 -   Decoders that have changed:
-    -   API of `guard` has changed (but only if you used its undocumented second argument
-        😉) - see [migration instructions](./MIGRATING-v2.md#changes-to-the-guard-api)
-    -   API of `predicate` has changed - see
+    -   API of `guard()` has changed (but only if you used its undocumented second
+        argument 😉) - see
+        [migration instructions](./MIGRATING-v2.md#changes-to-the-guard-api)
+    -   API of `predicate()` has changed - see
         [migration instructions](./MIGRATING-v2.md#predicate-is-now-a-first-class-citizen)
     -   API of `url` decoder has changed - see
         [migration instructions](./MIGRATING-v2.md#url-decoder-has-changed)
@@ -28,11 +34,13 @@ New features:
 -   Include ES modules in published NPM builds (yay tree-shaking! 🍃)
 -   Much smaller total bundle size
 -   New decoders:
+    -   [`always`](https://nvie.com/decoders/api#always)
+    -   [`never`](https://nvie.com/decoders/api#never)
     -   [`prep()`](https://nvie.com/decoders/api#prep)
     -   [`set()`](https://nvie.com/decoders/api#set)
-    -   [`uuid`](https://nvie.com/decoders/api#uuid)
     -   [`uuidv1`](https://nvie.com/decoders/api#uuidv1)
     -   [`uuidv4`](https://nvie.com/decoders/api#uuidv4)
+    -   [`uuid`](https://nvie.com/decoders/api#uuid)
 -   Better error messages for nested `either`s
 -   Guard API now has a simpler way to specify formatters
 
