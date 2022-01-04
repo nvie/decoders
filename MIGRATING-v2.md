@@ -74,7 +74,7 @@ ok(42);
 err('oops');
 ```
 
-### `map` is now `transform`
+### `map()` is now `transform()`
 
 This better reflects the operation from the user's standpoint.
 
@@ -135,7 +135,7 @@ Result<E, T>  // ❌ Change this...
 Result<T, E>  // ✅ ...to this
 ```
 
-## `eitherN` is now simply `either`
+## `eitherN()` is now simply `either()`
 
 The following decoders have been removed:
 
@@ -167,7 +167,7 @@ either(string, number, boolean, array(string), truthy);
 there is a max of 9 arguments with this construct. If you hit the 9-argument limit, you
 can work around that by stacking, e.g. do `either(<8 arguments here>, either(...))`.
 
-## `tupleN` is now simply `tuple`
+## `tupleN()` is now simply `tuple()`
 
 The following decoders have been removed:
 
@@ -197,7 +197,7 @@ tuple(string, number, array(string), truthy);
 **NOTE:** In TypeScript, this scales to an unlimited number of arguments, but in Flow,
 there is a max of 6 arguments with this construct.
 
-## `predicate(...)` is now a first-class citizen
+## `predicate()` is now a first-class citizen
 
 `predicate()` is now a first-class citizen, simplifying its typical usage even further.
 Where previously you had to use it inside of a `compose()` construct, you no longer need
@@ -240,7 +240,7 @@ const gitUrl: Decoder<URL> = predicate(
 );
 ```
 
-## `dispatch` is now `taggedUnion`
+## `dispatch()` is now `taggedUnion()`
 
 Just a name change, no other changes. This new name better reflects what it's for, and
 makes room for a more generic version of `dispatch` in a future version.
