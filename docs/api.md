@@ -526,8 +526,10 @@ verify(undefined);      // throws
 ---
 
 <a name="always" href="#always">#</a> <b>always</b><i>&lt;T&gt;</i>(value: T):
-<i>Decoder&lt;T&gt;</i> <a name="hardcoded" href="#hardcoded">#</a>
-<b>hardcoded</b><i>&lt;T&gt;</i>(value: T): <i>Decoder&lt;T&gt;</i>
+<i>Decoder&lt;T&gt;</i>
+[(source)](https://github.com/nvie/decoders/blob/main/src/core/constants.js 'Source')<br />
+<a name="hardcoded" href="#hardcoded">#</a> <b>hardcoded</b><i>&lt;T&gt;</i>(value: T):
+<i>Decoder&lt;T&gt;</i>
 [(source)](https://github.com/nvie/decoders/blob/main/src/core/constants.js 'Source')
 
 Accepts anything, completely ignores it, and always returns the provided value. This is
@@ -1341,6 +1343,7 @@ verify('hi');  // throws: not a number
 ---
 
 <a name="never" href="#never">#</a> <b>never</b>(): <i>Decoder&lt;never&gt;</i>
+[(source)](https://github.com/nvie/decoders/blob/main/src/core/never.js 'Source')<br />
 <a name="fail" href="#fail">#</a> <b>fail</b>(): <i>Decoder&lt;empty&gt;</i>
 [(source)](https://github.com/nvie/decoders/blob/main/src/core/never.js 'Source')
 
