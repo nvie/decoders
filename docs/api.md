@@ -4,6 +4,109 @@ nav_order: 10
 has_children: true
 ---
 
+<!--[[[cog
+import cog
+import html
+import re
+import textwrap
+
+DECODER_METHODS = {
+  'verify': {
+    'source': '_decoder.js',
+    'params': [['blob', 'mixed']],
+    'result': 'T',
+    'markdown': """
+    Verified the (raw/untrusted/unknown) input and either accepts or rejects it.  When accepted, returns the decoded `T` value directly. Otherwise fail with a runtime error.
+
+    For example, take this simple "number" decoder.
+
+    ```typescript
+    // 👍
+    number.verify(3);     // 3
+
+    // 👎
+    number.verify('hi');  // throws
+    ```
+    """,
+  },
+
+  'decode': {
+    'source': '_decoder.js',
+    'params': [['blob', 'mixed']],
+    'result': 'DecodeResult<T>',
+    'markdown': """
+      Validates the raw/untrusted/unknown input and either accepts or rejects it.
+
+      Contrasted with [`.verify()`](#verify), calls to `.decode()` will never fail and instead return a result type.
+
+      For example, take this simple “number” decoder. When given an number value, it will return an ok: true result. Otherwise, it will return an ok: false result with the original input value annotated.
+
+      ```typescript
+      // 👍
+      number.decode(3);     // { ok: true, value: 3 };
+
+      // 👎
+      number.decode('hi');  // { ok: false, error: { type: 'scalar', value: 'hi', text: 'Must be number' } }
+      ```
+    """,
+  },
+
+  'and': {
+    'source': '_decoder.js',
+    'params': [
+      ['predicate', 'T => boolean'],
+      ['message', 'string'],
+    ],
+    'result': 'Decoder<T>',
+    'markdown': """
+      Accepts values that are accepted by the decoder _and_ also pass the predicate function.
+
+      ```typescript
+      const odd = number.and(
+        (n) => n % 2 !== 0,
+        'Must be odd'
+      );
+
+      // 👍
+      odd.verify(3) === 3;
+
+      // 👎
+      odd.verify(42);    // throws: not an odd number
+      odd.verify('hi');  // throws: not a number
+      ```
+
+      In TypeScript, if you provide a predicate that also doubles as a [type predicate][https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates], then this will be reflected in the return type, too.
+    """,
+  },
+
+  'chain': {
+    'source': '_decoder.js',
+    'params': [
+      ['nextDecodeFn', 'T => DecodeResult<V>'],
+    ],
+    'result': 'Decoder<V>',
+    'markdown': """
+      Given a decoder for _T_ and another one for <i>V</i>-given-a-<i>T</i>. Will first decode the input using the first decoder, and _if accepted_, pass the result on to the second decoder. The second decoder will thus be able to make more assumptions about its input value, i.e. it can know what type the input value is (`T` instead of `unknown`).
+
+      This is an advanced decoder, typically only useful for authors of decoders. It's not recommended to rely on this decoder directly for normal usage.
+    """,
+  },
+}
+
+def multi(lines, prefix = ' '): return ('\n' + prefix + '\n' + prefix).join([safe(p) for p
+in lines])
+
+def safe(s): return html.escape(s)
+
+def i(s): return '<i>' + safe(s) + '</i>'
+
+def slugify(s): return re.sub(r'[^a-z0-9_-]+', '', s.lower())
+
+def reindent(s): return textwrap.indent(textwrap.dedent(s), ' ').strip()
+
+]]]-->
+<!--[[[end]]] (checksum: d41d8cd98f00b204e9800998ecf8427e)-->
+
 # API Reference
 
 <!-- prettier-ignore-start -->
@@ -25,68 +128,86 @@ has_children: true
 
 ## Available methods on `Decoder<T>`
 
-- [`.decode()`](#decode)
+<!--[[[cog
+for name in DECODER_METHODS:
+  cog.outl(f'- [`.{name}()`](#{name})')
+]]]-->
 - [`.verify()`](#verify)
+- [`.decode()`](#decode)
 - [`.and()`](#and)
 - [`.chain()`](#chain)
-- [`.transform()`](#transform)
-- [`.describe()`](#describe)
+<!--[[[end]]] (checksum: f83d520da5a6e300007266f17fd43ac4)-->
 
 ---
-
-<a name="decode" href="#decode">#</a>
-<b>.decode</b>(blob: mixed): <i>DecodeResult&lt;T&gt;</i>
-[(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
-
-Validates the raw/untrusted/unknown input and either accepts or rejects it.
-Contrasted with [`.verify()`](#verify), calls to `.decode()` will never fail
-and instead return a result type.
-
-For example, take this simple "number" decoder. When given an number value, it
-will return an `ok: true` result. Otherwise, it will return an `ok: false`
-result with the original input value annotated.
-
-<!-- TODO: Link to explanation of error annotations -->
 
 <!-- prettier-ignore-start -->
-```typescript
-// 👍
-number.decode(3)     // { ok: true, value: 3 };
-
-// 👎
-number.decode('hi')  // { ok: false, error: { type: 'scalar', value: 'hi', text: 'Must be number' } }
-```
-<!-- prettier-ignore-end -->
-
----
-
-<a name="verify" href="#verify">#</a> <b>.verify</b>(blob: mixed): <i>T</i>
-[(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
-
-Verified the raw/untrusted/unknown input and either accepts or rejects it. When accepted,
-returns the `T` value directly. Otherwise fail with a runtime error.
+<!--[[[cog
+for (raw_name, info) in DECODER_METHODS.items():
+  name = safe(raw_name)
+  slug = slugify(raw_name)
+  params = ', '.join([f'{safe(pname)}: {i(ptype)}' for (pname, ptype) in info['params']])
+  source = info['source']
+  result = i(info['result'])
+  markdown = reindent(info['markdown'])
+  cog.outl(f"""
+    ---
+    
+    <a name="{slug}" href="#{slug}">#</a>
+    <b>.{name}</b>({params}): {result}
+    [(source)](https://github.com/nvie/decoders/blob/main/src/{source} 'Source')<br />
+    
+    {markdown}
+    
+  """, dedent=True, trimblanklines=True)
+]]]-->
+   ---
+   
+   <a name="verify" href="#verify">#</a>
+   <b>.verify</b>(blob: <i>mixed</i>): <i>T</i>
+   [(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
+   
+   Verified the (raw/untrusted/unknown) input and either accepts or rejects it.  When accepted, returns the decoded `T` value directly. Otherwise fail with a runtime error.
 
 For example, take this simple "number" decoder.
 
-<!-- prettier-ignore-start -->
 ```typescript
 // 👍
-number.verify(3)     // 3
+number.verify(3);     // 3
 
 // 👎
-number.verify('hi')  // throws
+number.verify('hi');  // throws
 ```
-<!-- prettier-ignore-end -->
+   
 
----
+   ---
+   
+   <a name="decode" href="#decode">#</a>
+   <b>.decode</b>(blob: <i>mixed</i>): <i>DecodeResult&lt;T&gt;</i>
+   [(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
+   
+   Validates the raw/untrusted/unknown input and either accepts or rejects it.
 
-<a name="and" href="#and">#</a> <b>.and</b>(predicate: <i>&lt;T&gt; =&gt; boolean</i>,
-message: <i>string</i>): <i>Decoder&lt;T&gt;</i>
-[(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
+Contrasted with [`.verify()`](#verify), calls to `.decode()` will never fail and instead return a result type.
 
-Accepts values that are accepted by the decoder _and_ also pass the predicate function.
+For example, take this simple “number” decoder. When given an number value, it will return an ok: true result. Otherwise, it will return an ok: false result with the original input value annotated.
 
-<!-- prettier-ignore-start -->
+```typescript
+// 👍
+number.decode(3);     // { ok: true, value: 3 };
+
+// 👎
+number.decode('hi');  // { ok: false, error: { type: 'scalar', value: 'hi', text: 'Must be number' } }
+```
+   
+
+   ---
+   
+   <a name="and" href="#and">#</a>
+   <b>.and</b>(predicate: <i>T =&gt; boolean</i>, message: <i>string</i>): <i>Decoder&lt;T&gt;</i>
+   [(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
+   
+   Accepts values that are accepted by the decoder _and_ also pass the predicate function.
+
 ```typescript
 const odd = number.and(
   (n) => n % 2 !== 0,
@@ -97,45 +218,26 @@ const odd = number.and(
 odd.verify(3) === 3;
 
 // 👎
-odd.verify('hi');  // throws: not a number
 odd.verify(42);    // throws: not an odd number
+odd.verify('hi');  // throws: not a number
 ```
+
+In TypeScript, if you provide a predicate that also doubles as a [type predicate][https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates], then this will be reflected in the return type, too.
+   
+
+   ---
+   
+   <a name="chain" href="#chain">#</a>
+   <b>.chain</b>(nextDecodeFn: <i>T =&gt; DecodeResult&lt;V&gt;</i>): <i>Decoder&lt;V&gt;</i>
+   [(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
+   
+   Given a decoder for _T_ and another one for <i>V</i>-given-a-<i>T</i>. Will first decode the input using the first decoder, and _if accepted_, pass the result on to the second decoder. The second decoder will thus be able to make more assumptions about its input value, i.e. it can know what type the input value is (`T` instead of `unknown`).
+
+This is an advanced decoder, typically only useful for authors of decoders. It's not recommended to rely on this decoder directly for normal usage.
+   
+
+<!--[[[end]]] (checksum: d535716df06ede2f2c3e867a7e573075)-->
 <!-- prettier-ignore-end -->
-
-In TypeScript, if you provide a predicate that also doubles as a [type
-predicate][ts-predicates], then this will be reflected in the return type, too.
-
----
-
-<a name="chain" href="#chain">#</a> <b>.chain</b><i>&lt;V&gt;</i>(<i>T</i> =&gt;
-<i>DecodeResult&lt;V&gt;</i>): <i>Decoder&lt;V&gt;</i>
-[(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
-
-Given a decoder for _T_ and another one for <i>V</i>-given-a-<i>T</i>. Will first decode
-the input using the first decoder, and _if accepted_, pass the result on to the second
-decoder. The second decoder will thus be able to make more assumptions about its input
-value, i.e. it can know what type the input value is (`T` instead of `unknown`).
-
-This is an advanced decoder, typically only useful for authors of decoders. It's not
-recommended to rely on this decoder directly for normal usage.
-
-<!-- TODO: Add example -->
-
----
-
-<a name="then" href="#then">#</a> <b>.then</b><i>&lt;V&gt;</i>(<i>Decoder&lt;V,
-T&gt;</i>): <i>Decoder&lt;V&gt;</i>
-[(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
-
-Given a decoder for _T_ and another one for <i>V</i>-given-a-<i>T</i>. Will first decode
-the input using the first decoder, and _if accepted_, pass the result on to the second
-decoder. The second decoder will thus be able to make more assumptions about its input
-value, i.e. it can know what type the input value is (`T` instead of `unknown`).
-
-This is an advanced decoder, typically only useful for authors of decoders. It's not
-recommended to rely on this decoder directly for normal usage.
-
-<!-- TODO: Add example -->
 
 ---
 
@@ -1414,6 +1516,5 @@ const treeDecoder: Decoder<Tree> = object({
 [wiki-uuid]: https://en.wikipedia.org/wiki/Universally_unique_identifier
 [wiki-uuidv1]: https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_(date-time_and_MAC_address)
 [wiki-uuidv4]: https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)
-[ts-predicates]: https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates
 [wiki-taggedunion]: https://en.wikipedia.org/wiki/Tagged_union
 <!-- prettier-ignore-end -->
