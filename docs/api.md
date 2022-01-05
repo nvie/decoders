@@ -18,7 +18,6 @@ has_children: true
 - [**JSON values**](#json-values): [`json`](#json), [`jsonObject`](#jsonObject), [`jsonArray`](#jsonArray)
 - [**Choice**](#choice): [`either()`](#either), [`taggedUnion()`](#taggedUnion), [`oneOf()`](#oneOf)
 - [**Utilities**](#utilities): [`prep()`](#prep), [`never()`](#never), [`fail()`](#fail), [`instanceOf()`](#instanceOf), [`lazy()`](#lazy)
-- [**Guards**](#guards): [`guard()`](#guard)
 <!-- prettier-ignore-end -->
 
 
