@@ -21,6 +21,7 @@
         "check:eslint": "eslint --report-unused-disable-directives src",
         "check:prettier": "prettier --list-different 'src/**/*.js'",
         "clean": "rimraf dist",
+        "docs": "cog -cr docs/*.md",
         "fix": "yarn run fix:eslint && yarn run fix:prettier",
         "fix:eslint": "eslint --report-unused-disable-directives --fix src",
         "fix:prettier": "prettier --write 'src/**/*.js'",

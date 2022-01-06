@@ -58,6 +58,9 @@ jobs:
               env:
                   CI: true
 
+            - name: Check docs
+              run: 'cog --check -c docs/*.md || echo "Docs aren\'t up-to-date. Please run `yarn docs` to update them." >&2'
+
             - name: Upload coverage report to Coveralls
               uses: coverallsapp/github-action@master
               with:

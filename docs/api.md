@@ -9,130 +9,7 @@ import cog
 import html
 import re
 import textwrap
-
-DECODER_METHODS = {
-  'verify': {
-    'params': [['blob', 'mixed']],
-    'result': 'T',
-    'markdown': """
-      Verified the (raw/untrusted/unknown) input and either accepts or rejects it.  When accepted, returns the decoded `T` value directly. Otherwise fail with a runtime error.
-
-      For example, take this simple "number" decoder.
-
-      ```typescript
-      // 👍
-      number.verify(3);     // 3
-
-      // 👎
-      number.verify('hi');  // throws
-      ```
-    """,
-  },
-
-  'decode': {
-    'params': [['blob', 'mixed']],
-    'result': 'DecodeResult<T>',
-    'markdown': """
-      Validates the raw/untrusted/unknown input and either accepts or rejects it.
-
-      Contrasted with [**.verify**()](#verify), calls to **.decode**() will never fail and instead return a result type.
-
-      For example, take this simple “number” decoder. When given an number value, it will return an ok: true result. Otherwise, it will return an ok: false result with the original input value annotated.
-
-      ```typescript
-      // 👍
-      number.decode(3);     // { ok: true, value: 3 };
-
-      // 👎
-      number.decode('hi');  // { ok: false, error: { type: 'scalar', value: 'hi', text: 'Must be number' } }
-      ```
-    """,
-  },
-
-  'and': {
-    'params': [
-      ['predicate', 'T => boolean'],
-      ['message', 'string'],
-    ],
-    'result': 'Decoder<T>',
-    'markdown': """
-      Adds an extra predicate to a decoder. The new decoder is like the original decoder, but only accepts values that also meet the predicate.
-
-      ```typescript
-      const odd = number.and(
-        (n) => n % 2 !== 0,
-        'Must be odd'
-      );
-
-      // 👍
-      odd.verify(3) === 3;
-
-      // 👎
-      odd.verify(42);    // throws: not an odd number
-      odd.verify('hi');  // throws: not a number
-      ```
-
-      In TypeScript, if you provide a predicate that also is a [type predicate](https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates), then this will be reflected in the return type, too.
-    """,
-  },
-
-  'chain': {
-    'type_params': ['V'],
-    'params': [
-      ['nextDecodeFn', 'T => DecodeResult<V>'],
-    ],
-    'result': 'Decoder<V>',
-    'markdown': """
-      Chain together the current decoder with the given decode function. The given function will only get called after the current decoder accepts an input.
-
-      The given "next" decoding function will thus be able to make more assumptions about its input value, i.e. it can know what type the input value is (`T` instead of `unknown`).
-
-      This is an advanced decoder, typically only useful for authors of decoders. It's not recommended to rely on this decoder directly for normal usage.  In most cases, [**.transform**()](#transform) is what you'll want instead.
-    """,
-  },
-
-  'transform': {
-    'type_params': ['V'],
-    'params': [
-        ['transformFn', '(T) => V'],
-    ],
-    'result': 'Decoder<V>',
-    'markdown': """
-      Accepts any value the given decoder accepts, and on success, will call the given function **on the decoded result**. If the transformation function throws an error, the whole decoder will fail using the error message as the failure reason.
-
-      ```typescript
-      const upper = string.transform((s) => s.toUpperCase());
-
-      // 👍
-      upper.verify('foo') === 'FOO'
-
-      // 👎
-      upper.verify(4);  // throws
-      ```
-    """,
-  },
-
-  'describe': {
-    'params': [
-        ['message', 'string'],
-    ],
-    'result': 'Decoder<T>',
-    'markdown': """
-      Uses the given decoder, but will use an alternative error message in case it rejects. This can be used to simplify or shorten otherwise long or low-level/technical errors.
-
-      ```typescript
-      const decoder = either(
-          constant('a'),
-          constant('e'),
-          constant('i'),
-          constant('o'),
-          constant('u'),
-      );
-      const vowel = decoder.describe('Must be vowel');
-      ```
-    """,
-  },
-}
+from _data import DECODER_METHODS
 
 def multi(lines, prefix = ' '):
   return ('\n' + prefix + '\n' + prefix).join([safe(p) for p in lines])
@@ -150,7 +27,7 @@ def reindent(s):
   return textwrap.indent(textwrap.dedent(s), '    ').strip()
 
 ]]]-->
-<!--[[[end]]]-->
+<!--[[[end]]] (checksum: d41d8cd98f00b204e9800998ecf8427e)-->
 
 # API Reference
 
@@ -183,7 +60,7 @@ for name in DECODER_METHODS:
 - [**.chain**()](#chain)
 - [**.transform**()](#transform)
 - [**.describe**()](#describe)
-<!--[[[end]]]-->
+<!--[[[end]]] (checksum: 48871c2155909565cb696defc20c08b8)-->
 
 ---
 
@@ -194,7 +71,7 @@ for (raw_name, info) in DECODER_METHODS.items():
   slug = slugify(raw_name)
   params = '' if not info['params'] else '(' + ', '.join([f'{safe(pname)}: {i(ptype)}' for (pname, ptype) in info['params']]) + ')'
   type_params = '' if not info.get('type_params') else safe('<') + ', '.join([i(ptype) for ptype in info['type_params']]) + safe('>')
-  source = 'https://github.com/nvie/decoders/blob/main/src/_decoder.js'
+  source = info['source']
   result = i(info['result'])
   markdown = reindent(info['markdown'])
   cog.outl(f"""
@@ -209,7 +86,7 @@ for (raw_name, info) in DECODER_METHODS.items():
 ---
 
 <a name="verify" href="#verify">#</a>
-**.verify** (blob: <i>mixed</i>): <i>T</i> [<small>(source)</small>](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
+**.verify** (blob: <i>mixed</i>): <i>T</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/_decoder.js#L60-L69 'Source')<br />
 
 Verified the (raw/untrusted/unknown) input and either accepts or rejects it.  When accepted, returns the decoded `T` value directly. Otherwise fail with a runtime error.
 
@@ -226,7 +103,7 @@ number.verify('hi');  // throws
 ---
 
 <a name="decode" href="#decode">#</a>
-**.decode** (blob: <i>mixed</i>): <i>DecodeResult&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
+**.decode** (blob: <i>mixed</i>): <i>DecodeResult&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/_decoder.js#L56-L58 'Source')<br />
 
 Validates the raw/untrusted/unknown input and either accepts or rejects it.
 
@@ -245,7 +122,7 @@ number.decode('hi');  // { ok: false, error: { type: 'scalar', value: 'hi', text
 ---
 
 <a name="and" href="#and">#</a>
-**.and** (predicate: <i>T =&gt; boolean</i>, message: <i>string</i>): <i>Decoder&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
+**.and** (predicate: <i>T =&gt; boolean</i>, message: <i>string</i>): <i>Decoder&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/_decoder.js#L71-L77 'Source')<br />
 
 Adds an extra predicate to a decoder. The new decoder is like the original decoder, but only accepts values that also meet the predicate.
 
@@ -268,7 +145,7 @@ In TypeScript, if you provide a predicate that also is a [type predicate](https:
 ---
 
 <a name="chain" href="#chain">#</a>
-**.chain** &lt;<i>V</i>&gt;(nextDecodeFn: <i>T =&gt; DecodeResult&lt;V&gt;</i>): <i>Decoder&lt;V&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
+**.chain** &lt;<i>V</i>&gt;(nextDecodeFn: <i>T =&gt; DecodeResult&lt;V&gt;</i>): <i>Decoder&lt;V&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/_decoder.js#L115-L117 'Source')<br />
 
 Chain together the current decoder with the given decode function. The given function will only get called after the current decoder accepts an input.
 
@@ -279,7 +156,7 @@ This is an advanced decoder, typically only useful for authors of decoders. It's
 ---
 
 <a name="transform" href="#transform">#</a>
-**.transform** &lt;<i>V</i>&gt;(transformFn: <i>(T) =&gt; V</i>): <i>Decoder&lt;V&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
+**.transform** &lt;<i>V</i>&gt;(transformFn: <i>(T) =&gt; V</i>): <i>Decoder&lt;V&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/_decoder.js#L85-L89 'Source')<br />
 
 Accepts any value the given decoder accepts, and on success, will call the given function **on the decoded result**. If the transformation function throws an error, the whole decoder will fail using the error message as the failure reason.
 
@@ -296,7 +173,7 @@ upper.verify(4);  // throws
 ---
 
 <a name="describe" href="#describe">#</a>
-**.describe** (message: <i>string</i>): <i>Decoder&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
+**.describe** (message: <i>string</i>): <i>Decoder&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/_decoder.js#L91-L103 'Source')<br />
 
 Uses the given decoder, but will use an alternative error message in case it rejects. This can be used to simplify or shorten otherwise long or low-level/technical errors.
 
@@ -311,7 +188,7 @@ const decoder = either(
 const vowel = decoder.describe('Must be vowel');
 ```
 
-<!--[[[end]]] -->
+<!--[[[end]]] (checksum: ad7acdef4a58bee84b5eb23d484fd91b) -->
 <!-- prettier-ignore-end -->
 
 ---
