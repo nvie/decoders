@@ -18,7 +18,7 @@
         "actually-prepublish": "echo \"\\n\\nPlease run \\`bin/publish.sh <options>\\` instead.\\n\\n\" && exit 2",
         "build": "./bin/build.sh",
         "check": "yarn run check:eslint && yarn run check:prettier",
-        "check:docs": "cog -c --check docs/*.md",
+        "check:docs": "cog -c --check docs/*.md || (yarn run docs; git diff; echo 'Error: docs not up-to-date, please re-run \"yarn docs\" to update them.' && exit 1)",
         "check:eslint": "eslint --report-unused-disable-directives src",
         "check:prettier": "prettier --list-different 'src/**/*.js'",
         "clean": "rimraf dist",

@@ -16,13 +16,21 @@ jobs:
         steps:
             - uses: actions/checkout@v1
 
-            - name: Use Node.js ${{ matrix.node-version }}
+            - name: Set up Node.js ${{ matrix.node-version }}
               uses: actions/setup-node@v1
               with:
                   node-version: ${{ matrix.node-version }}
 
-            - name: Install dependencies
+            - name: Set up Python
+              uses: actions/setup-python@v2
+              with:
+                  python-version: '3.x'
+
+            - name: Install Node dependencies
               run: yarn install
+
+            - name: Install Python dependencies (for documentation generation)
+              run: pip install cogapp
 
             - name: Install flow version
               run: yarn add flow-bin@${{ matrix.flow-version }}
@@ -59,7 +67,9 @@ jobs:
                   CI: true
 
             - name: Check docs
-              run: 'yarn check:docs || echo "Docs aren''t up-to-date. Please run `yarn docs` to update them." >&2'
+              run: yarn run -s check:docs
+              env:
+                  CI: true
 
             - name: Upload coverage report to Coveralls
               uses: coverallsapp/github-action@master
