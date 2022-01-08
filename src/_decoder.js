@@ -11,7 +11,11 @@ export type Scalar = string | number | boolean | symbol | void | null;
 export type Predicate<T> = (T) => boolean;
 
 export type DecodeResult<T> = Result<T, Annotation>;
-export type DecodeFn<T, I = mixed> = (blob: I) => DecodeResult<T>;
+export type DecodeFn<T, I = mixed> = (
+    blob: I,
+    accept: (value: T) => DecodeResult<T>,
+    reject: (msg: string | Annotation) => DecodeResult<T>,
+) => DecodeResult<T>;
 
 /**
  * Helper type to return the "type" of a Decoder.
@@ -30,23 +34,13 @@ export type DecodeFn<T, I = mixed> = (blob: I) => DecodeResult<T>;
 export type DecoderType<D> = $Call<<T>(Decoder<T>) => T, D>;
 
 export type Decoder<T> = {|
-    +decode: DecodeFn<T>,
+    +decode: (blob: mixed) => DecodeResult<T>,
     +verify: (blob: mixed, formatterFn?: (Annotation) => string) => T,
     +and: (predicateFn: (value: T) => boolean, message: string) => Decoder<T>,
     +transform: <V>(transformFn: (value: T) => V) => Decoder<V>,
     +describe: (message: string) => Decoder<T>,
     +chain: <V>(nextDecodeFn: DecodeFn<V, T>) => Decoder<V>,
 |};
-
-function neverThrow<T, V>(transformFn: (T) => V): DecodeFn<V, T> {
-    return (value: T) => {
-        try {
-            return ok(transformFn(value));
-        } catch (e) {
-            return err(annotate(value, e instanceof Error ? e.message : String(e)));
-        }
-    };
-}
 
 /**
  * Build a Decoder<T> using the given decoding function. A valid decoding
@@ -61,13 +55,16 @@ function neverThrow<T, V>(transformFn: (T) => V): DecodeFn<V, T> {
  *
  */
 export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
+    const decode = (blob: mixed) =>
+        decodeFn(blob, ok, (msg: Annotation | string) =>
+            err(typeof msg === 'string' ? annotate(blob, msg) : msg),
+        );
+
     return Object.freeze({
-        decode(blob: mixed): DecodeResult<T> {
-            return decodeFn(blob);
-        },
+        decode,
 
         verify(blob: mixed, formatter: (Annotation) => string = formatInline): T {
-            const result = decodeFn(blob);
+            const result = decode(blob);
             if (result.ok) {
                 return result.value;
             } else {
@@ -78,9 +75,9 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
         },
 
         and(predicateFn: (value: T) => boolean, message: string): Decoder<T> {
-            return define((blob) =>
-                andThen(decodeFn(blob), (value) =>
-                    predicateFn(value) ? ok(value) : err(annotate(value, message)),
+            return define((blob, accept, reject) =>
+                andThen(decode(blob), (value) =>
+                    predicateFn(value) ? accept(value) : reject(annotate(value, message)),
                 ),
             );
         },
@@ -92,21 +89,29 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
          * using the error message as the failure reason.
          */
         transform<V>(transformFn: (T) => V): Decoder<V> {
-            return define((blob: mixed): DecodeResult<V> =>
-                andThen(decodeFn(blob), neverThrow(transformFn)),
+            return define((blob, accept, reject): DecodeResult<V> =>
+                andThen(decode(blob), (value) => {
+                    try {
+                        return accept(transformFn(value));
+                    } catch (e) {
+                        return reject(
+                            annotate(value, e instanceof Error ? e.message : String(e)),
+                        );
+                    }
+                }),
             );
         },
 
         describe(message: string): Decoder<T> {
-            return define((blob) => {
+            return define((blob, _, reject) => {
                 // Decode using the given decoder...
-                const result = decodeFn(blob);
+                const result = decode(blob);
                 if (result.ok) {
                     return result;
                 } else {
                     // ...but in case of error, annotate this with the custom given
                     // message instead
-                    return err(annotate(result.error, message));
+                    return reject(annotate(result.error, message));
                 }
             });
         },
@@ -121,8 +126,10 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
          * positive.  Very often combined with the predicate() helper as the second
          * argument.
          */
-        chain<V>(nextDecodeFn: (T) => DecodeResult<V>): Decoder<V> {
-            return define((blob) => andThen(decodeFn(blob), nextDecodeFn));
+        chain<V>(nextDecodeFn: DecodeFn<V, T>): Decoder<V> {
+            return define((blob, accept, reject) =>
+                andThen(decode(blob), (value) => nextDecodeFn(value, accept, reject)),
+            );
         },
     });
 }

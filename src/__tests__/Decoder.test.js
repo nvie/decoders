@@ -1,7 +1,5 @@
 // @flow strict
 
-import { annotate } from '../annotate';
-import { err, ok } from '../result';
 import { formatInline, formatShort } from '../format';
 import { number } from '../lib/numbers';
 import { string } from '../lib/strings';
@@ -12,9 +10,9 @@ describe('.chain', () => {
         string.chain(
             // We'll try to parse it as an hex int, but if it fails, we'll
             // return Err, otherwise Ok
-            (s) => {
+            (s, accept, reject) => {
                 const n = parseInt(s, 16);
-                return !Number.isNaN(n) ? ok(n) : err(annotate(n, 'Nope'));
+                return !Number.isNaN(n) ? accept(n) : reject('Nope');
             },
         );
 

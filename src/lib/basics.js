@@ -1,23 +1,21 @@
 // @flow strict
 
-import { annotate } from '../annotate';
 import { define } from '../_decoder';
 import { either } from './either';
-import { err, ok } from '../result';
 import type { Decoder, Scalar } from '../_decoder';
 
 /**
  * Accepts and returns only the literal `null` value.
  */
-export const null_: Decoder<null> = define((blob) =>
-    blob === null ? ok(blob) : err(annotate(blob, 'Must be null')),
+export const null_: Decoder<null> = define((blob, accept, reject) =>
+    blob === null ? accept(blob) : reject('Must be null'),
 );
 
 /**
  * Accepts and returns only the literal `undefined` value.
  */
-export const undefined_: Decoder<void> = define((blob) =>
-    blob === undefined ? ok(blob) : err(annotate(blob, 'Must be undefined')),
+export const undefined_: Decoder<void> = define((blob, accept, reject) =>
+    blob === undefined ? accept(blob) : reject('Must be undefined'),
 );
 
 /**
@@ -34,11 +32,11 @@ export function nullable<T>(decoder: Decoder<T>): Decoder<null | T> {
     return either(null_, decoder);
 }
 
-const undefined_or_null: Decoder<null | void> = define((blob) =>
+const undefined_or_null: Decoder<null | void> = define((blob, accept, reject) =>
     blob === undefined || blob === null
-        ? ok(blob)
+        ? accept(blob)
         : // Combine error message into a single line for readability
-          err(annotate(blob, 'Must be undefined or null')),
+          reject('Must be undefined or null'),
 );
 
 /**
@@ -52,10 +50,8 @@ export function maybe<T>(decoder: Decoder<T>): Decoder<T | null | void> {
  * Accepts only the given constant value.
  */
 export function constant<T: Scalar>(value: T): Decoder<T> {
-    return define((blob) =>
-        blob === value
-            ? ok(value)
-            : err(annotate(blob, `Must be constant ${String(value)}`)),
+    return define((blob, accept, reject) =>
+        blob === value ? accept(value) : reject(`Must be constant ${String(value)}`),
     );
 }
 
@@ -66,7 +62,7 @@ export function constant<T: Scalar>(value: T): Decoder<T> {
  * This is useful to manually add extra fields to object decoders.
  */
 export function always<T>(value: T): Decoder<T> {
-    return define(() => ok(value));
+    return define((_, accept) => accept(value));
 }
 
 /**
@@ -81,7 +77,7 @@ export const hardcoded: <T>(T) => Decoder<T> = always;
  * course, the downside is that you won't know the type of the value statically
  * and you'll have to further refine it yourself.
  */
-export const unknown: Decoder<mixed> = define((blob) => ok(blob));
+export const unknown: Decoder<mixed> = define((blob, accept) => accept(blob));
 
 /**
  * Alias of unknown.

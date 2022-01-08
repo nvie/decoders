@@ -1007,32 +1007,33 @@ DECODERS = {
     'section': 'Utilities',
     'type_params': ['T'],
     'params': [
-      ('fn', '(blob: unknown) => DecodeResult<T>'),
+      ('fn', '(blob: unknown, accept, reject) => T'),
     ],
     'return_type': 'Decoder<T>',
     'markdown': """
-      Defines a new Decoder<T>, by providing a definition function. The function receives the unknown input (aka your external data), and then must decide to call the `accept()` or `reject()` functions which are also passed in.
+      Defines a new `Decoder<T>`, by implementing a custom accept function. The function receives three arguments:
 
-      **This is a low-level function. For most use cases, there is a simpler alternative.**
+      1. The raw/unknown input (aka your external data)
+      2. An `accept()` callback
+      3. A `reject()` callback
+
+      The expected return value should be a `DecodeResult<T>`, which can be created by calling one of the provided callback functions.
 
       ```typescript
-      import { define } from 'decoders';
-      import { annotate } from 'decoders/annotate';
-      import { err, ok } from 'decoders/result';
-
       // NOTE: Please do NOT implement an uppercase decoder like this! 😇
       const uppercase: Decoder<string> = define(
-        (blob) =>
+        (blob, accept, reject) =>
           (typeof blob === 'string')
-            ? ok(blob.toUpperCase())
-            : err(annotate(blob, 'I can only accept string inputs'))
+            ? accept(blob.toUpperCase())
+            : reject('I only accept strings as input')
       );
 
       // 👍
-      string.verify('hi there') === 'HI THERE';
+      uppercase.verify('hi there') === 'HI THERE';
 
       // 👎
-      string.verify(123);   // throws
+      uppercase.verify(123);   // throws: 123
+                               //         ^^^ I only accept strings as input
       ```
 
       The above example is just an example to illustrate how `define()` works. It would be more idiomatic to implement an uppercase decoder as follows:
@@ -1300,15 +1301,20 @@ def run_json(cmd):
 
 def find_source_locations():
     locinfo1 = run_json(
-      "./bin/linenos src/_decoder.js --remote-url --object-methods --json",
+      "./bin/linenos src/_decoder.js --remote-url --object-keys --object-methods --json",
     )
     locinfo2 = run_json(
       "./bin/linenos src/*.js src/**/*.js --remote-url --functions --variables --json",
     )
 
     # Check the definitions against the found sources
-    assert all(any(loc['name'] == method for loc in locinfo1) for method in DECODER_METHODS), 'Not all decoder methods found in source code'
-    assert all(any(loc['name'] == name for loc in locinfo2) for name in DECODERS), 'Not all decoders found in source code'
+    for method in DECODER_METHODS:
+      if not any(loc['name'] == method for loc in locinfo1):
+        raise Exception(f'Decoder method ".{method}()" not found in source code')
+
+    for name in DECODERS:
+      if not any(loc['name'] == name for loc in locinfo2):
+        raise Exception(f'Decoder "{name}" not found in source code')
 
     locations = { }
     for info in locinfo1:

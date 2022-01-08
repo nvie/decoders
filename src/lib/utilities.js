@@ -2,24 +2,20 @@
 
 import { annotate } from '../annotate';
 import { define } from '../_decoder';
-import { err, ok } from '../result';
 import type { Decoder } from '../_decoder';
 
 /**
  * Accepts any value that is an instanceof the given class.
  */
 export function instanceOf<T>(klass: Class<T>): Decoder<T> {
-    return define((blob) =>
+    return define((blob, accept, reject) =>
         blob instanceof klass
-            ? ok(blob)
-            : err(
-                  annotate(
-                      blob,
-                      `Must be ${
-                          // $FlowFixMe[incompatible-use] - klass.name is fine?
-                          klass.name
-                      } instance`,
-                  ),
+            ? accept(blob)
+            : reject(
+                  `Must be ${
+                      // $FlowFixMe[incompatible-use] - klass.name is fine?
+                      klass.name
+                  } instance`,
               ),
     );
 }
@@ -40,19 +36,19 @@ export function lazy<T>(decoderFn: () => Decoder<T>): Decoder<T> {
  * `unknown` type, so you will have to deal with that accordingly.
  */
 export function prep<T>(mapperFn: (mixed) => mixed, decoder: Decoder<T>): Decoder<T> {
-    return define((originalInput) => {
+    return define((originalInput, _, reject) => {
         let blob;
         try {
             blob = mapperFn(originalInput);
         } catch (e) {
-            return err(annotate(originalInput, e.message));
+            return reject(annotate(originalInput, e.message));
         }
 
         const r = decoder.decode(blob);
-        return r.ok ? r : err(annotate(originalInput, r.error.text));
-        //                             ^^^^^^^^^^^^^
-        //                             Annotates the _original_ input value
-        //                             (instead of echoing back blob)
+        return r.ok ? r : reject(annotate(originalInput, r.error.text));
+        //                                ^^^^^^^^^^^^^
+        //                                Annotates the _original_ input value
+        //                                (instead of echoing back blob)
     });
 }
 
@@ -60,7 +56,7 @@ export function prep<T>(mapperFn: (mixed) => mixed, decoder: Decoder<T>): Decode
  * Decoder that always fails with the given error message, no matter what the input.
  */
 export function never(msg: string): Decoder<empty> {
-    return define((blob) => err(annotate(blob, msg)));
+    return define((_blob, _accept, reject) => reject(msg));
 }
 
 /**

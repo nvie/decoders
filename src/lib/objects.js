@@ -1,8 +1,7 @@
 // @flow strict
 
-import { annotate, annotateObject, merge, updateText } from '../annotate';
+import { annotateObject, merge, updateText } from '../annotate';
 import { define } from '../_decoder';
-import { err, ok } from '../result';
 import type { _Any } from '../_utils';
 import type { Annotation } from '../annotate';
 import type { Decoder, DecodeResult } from '../_decoder';
@@ -29,9 +28,9 @@ function subtract(xs: Set<string>, ys: Set<string>): Set<string> {
     return result;
 }
 
-export const pojo: Decoder<{| [string]: mixed |}> = define((blob) =>
+export const pojo: Decoder<{| [string]: mixed |}> = define((blob, accept, reject) =>
     isPojo(blob)
-        ? ok(
+        ? accept(
               // NOTE:
               // Since Flow 0.98, typeof o === 'object' refines to
               //     {| +[string]: mixed |}
@@ -48,7 +47,7 @@ export const pojo: Decoder<{| [string]: mixed |}> = define((blob) =>
               // https://thecodebarbarian.com/object-assign-vs-object-spread.html)
               { ...blob },
           )
-        : err(annotate(blob, 'Must be an object')),
+        : reject('Must be an object'),
 );
 
 /**
@@ -74,7 +73,7 @@ export function object<O: { +[field: string]: Decoder<_Any>, ... }>(
     mapping: O,
 ): Decoder<$ObjMap<O, <T>(Decoder<T>) => T>> {
     const known = new Set(Object.keys(mapping));
-    return pojo.chain((blob) => {
+    return pojo.chain((blob, accept, reject) => {
         const actual = new Set(Object.keys(blob));
 
         // At this point, "missing" will also include all fields that may
@@ -139,10 +138,10 @@ export function object<O: { +[field: string]: Decoder<_Any>, ... }>(
                 objAnn = updateText(objAnn, `Missing ${pluralized}: ${errMsg}`);
             }
 
-            return err(objAnn);
+            return reject(objAnn);
         }
 
-        return ok(record);
+        return accept(record);
     });
 }
 
@@ -151,15 +150,13 @@ export function exact<O: { +[field: string]: Decoder<_Any>, ... }>(
 ): Decoder<$ObjMap<$Exact<O>, <T>(Decoder<T>) => T>> {
     // Check the inputted object for any superfluous keys
     const allowed = new Set(Object.keys(mapping));
-    const checked = pojo.chain((blob) => {
+    const checked = pojo.chain((blob, accept, reject) => {
         const actual = new Set(Object.keys(blob));
         const superfluous = subtract(actual, allowed);
         if (superfluous.size > 0) {
-            return err(
-                annotate(blob, `Superfluous keys: ${Array.from(superfluous).join(', ')}`),
-            );
+            return reject(`Superfluous keys: ${Array.from(superfluous).join(', ')}`);
         }
-        return ok(blob);
+        return accept(blob);
     });
 
     // Defer to the "object" decoder for doing the real decoding work.  Since
@@ -204,7 +201,7 @@ export function inexact<O: { +[field: string]: Decoder<_Any> }>(
  * Like mapping(), but returns an object rather than a Map instance.
  */
 export function dict<T>(decoder: Decoder<T>): Decoder<{ [string]: T }> {
-    return pojo.chain((blob) => {
+    return pojo.chain((blob, accept, reject) => {
         let rv: { [key: string]: T } = {};
         let errors: { [key: string]: Annotation } | null = null;
 
@@ -225,9 +222,9 @@ export function dict<T>(decoder: Decoder<T>): Decoder<{ [string]: T }> {
         });
 
         if (errors !== null) {
-            return err(merge(annotateObject(blob), errors));
+            return reject(merge(annotateObject(blob), errors));
         } else {
-            return ok(rv);
+            return accept(rv);
         }
     });
 }

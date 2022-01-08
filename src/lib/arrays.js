@@ -2,8 +2,8 @@
 
 import { annotate } from '../annotate';
 import { define } from '../_decoder';
-import { err, ok } from '../result';
 import type { _Any } from '../_utils';
+import type { Annotation } from '../annotate';
 import type { Decoder, DecodeResult } from '../_decoder';
 
 /**
@@ -11,11 +11,11 @@ import type { Decoder, DecodeResult } from '../_decoder';
  *
  * "poja" means "plain old JavaScript array", a play on [**pojo**()](#pojo).
  */
-export const poja: Decoder<Array<mixed>> = define((blob) => {
+export const poja: Decoder<Array<mixed>> = define((blob, accept, reject) => {
     if (!Array.isArray(blob)) {
-        return err(annotate(blob, 'Must be an array'));
+        return reject('Must be an array');
     }
-    return ok(
+    return accept(
         // NOTE: Since Flow 0.98, Array.isArray() returns $ReadOnlyArray<mixed>
         // instead of Array<mixed>.  For rationale, see
         // https://github.com/facebook/flow/issues/7684.  In this case, we
@@ -38,6 +38,10 @@ export const poja: Decoder<Array<mixed>> = define((blob) => {
 function all<T>(
     items: $ReadOnlyArray<DecodeResult<T>>,
     blobs: $ReadOnlyArray<mixed>,
+
+    // TODO: Make this less ugly
+    accept: (Array<T>) => DecodeResult<Array<T>>,
+    reject: (Annotation) => DecodeResult<Array<T>>,
 ): DecodeResult<Array<T>> {
     const results: Array<T> = [];
     for (let index = 0; index < items.length; ++index) {
@@ -58,19 +62,19 @@ function all<T>(
                 ),
             );
 
-            return err(annotate(clone));
+            return reject(annotate(clone));
         }
     }
-    return ok(results);
+    return accept(results);
 }
 
 /**
  * Accepts arrays of whatever the given decoder accepts.
  */
 export function array<T>(decoder: Decoder<T>): Decoder<Array<T>> {
-    return poja.chain((blobs: $ReadOnlyArray<mixed>) => {
+    return poja.chain((blobs: $ReadOnlyArray<mixed>, accept, reject) => {
         const results = blobs.map(decoder.decode);
-        return all(results, blobs);
+        return all(results, blobs, accept, reject);
     });
 }
 
@@ -106,7 +110,7 @@ interface TupleFuncSignature {
  * _n_ given decoders.
  */
 function _tuple(...decoders: $ReadOnlyArray<Decoder<mixed>>): Decoder<Array<mixed>> {
-    return ntuple(decoders.length).chain((blobs) => {
+    return ntuple(decoders.length).chain((blobs, accept, reject) => {
         let allOk = true;
 
         const rvs = decoders.map((decoder, i) => {
@@ -121,11 +125,11 @@ function _tuple(...decoders: $ReadOnlyArray<Decoder<mixed>>): Decoder<Array<mixe
         });
 
         if (allOk) {
-            return ok(rvs);
+            return accept(rvs);
         } else {
             // If a decoder error has happened while unwrapping all the
             // results, try to construct a good error message
-            return err(annotate(rvs));
+            return reject(annotate(rvs));
         }
     });
 }

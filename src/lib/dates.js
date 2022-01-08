@@ -1,14 +1,10 @@
 // @flow strict
 
-import { annotate } from '../annotate';
 import { define } from '../_decoder';
-import { err, ok } from '../result';
 import { isDate } from '../_utils';
 import { regex } from './strings';
+import type { _Any } from '../_utils';
 import type { Decoder } from '../_decoder';
-
-// $FlowFixMe[unclear-type] (not really an issue) - deliberate casting
-type cast = any;
 
 // Only matches the shape.  This "over-matches" some values that still aren't
 // valid dates (like 9999-99-99), but those will be caught by JS Date's
@@ -21,8 +17,8 @@ const iso8601_re =
  * [`Date`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date)
  * instances.
  */
-export const date: Decoder<Date> = define((blob) =>
-    isDate(blob) ? ok(((blob: cast): Date)) : err(annotate(blob, 'Must be a Date')),
+export const date: Decoder<Date> = define((blob, accept, reject) =>
+    isDate(blob) ? accept(((blob: _Any): Date)) : reject('Must be a Date'),
 );
 
 /**

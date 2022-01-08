@@ -1,9 +1,7 @@
 // @flow strict
 
-import { annotate } from '../annotate';
 import { define } from '../_decoder';
 import { either } from './either';
-import { err, ok } from '../result';
 import { instanceOf } from './utilities';
 import type { Decoder } from '../_decoder';
 
@@ -20,8 +18,8 @@ const url_re =
 /**
  * Accepts and returns strings.
  */
-export const string: Decoder<string> = define((blob) =>
-    typeof blob === 'string' ? ok(blob) : err(annotate(blob, 'Must be string')),
+export const string: Decoder<string> = define((blob, accept, reject) =>
+    typeof blob === 'string' ? accept(blob) : reject('Must be string'),
 );
 
 /**

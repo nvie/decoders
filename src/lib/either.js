@@ -1,8 +1,6 @@
 // @flow strict
 
-import { annotate } from '../annotate';
 import { define } from '../_decoder';
-import { err, ok } from '../result';
 import { indent, summarize } from '../_utils';
 import type { _Any } from '../_utils';
 import type { Decoder, DecodeResult, Scalar } from '../_decoder';
@@ -65,7 +63,7 @@ function _either(...decoders: $ReadOnlyArray<Decoder<mixed>>): Decoder<mixed> {
         throw new Error('Pass at least one decoder to either()');
     }
 
-    return define((blob) => {
+    return define((blob, _, reject) => {
         // Collect errors here along the way
         const errors = [];
 
@@ -82,25 +80,22 @@ function _either(...decoders: $ReadOnlyArray<Decoder<mixed>>): Decoder<mixed> {
         const text =
             EITHER_PREFIX +
             errors.map((err) => nest(summarize(err).join('\n'))).join('\n');
-        return err(annotate(blob, text));
+        return reject(text);
     });
 }
 
 export const either: EitherDecoderSignatures = (_either: _Any);
 
 export function oneOf<T: Scalar>(constants: $ReadOnlyArray<T>): Decoder<T> {
-    return define((blob) => {
+    return define((blob, accept, reject) => {
         const winner = constants.find((c) => c === blob);
         if (winner !== undefined) {
-            return ok(winner);
+            return accept(winner);
         }
-        return err(
-            annotate(
-                blob,
-                `Must be one of ${constants
-                    .map((value) => JSON.stringify(value))
-                    .join(', ')}`,
-            ),
+        return reject(
+            `Must be one of ${constants
+                .map((value) => JSON.stringify(value))
+                .join(', ')}`,
         );
     });
 }

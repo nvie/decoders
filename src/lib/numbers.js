@@ -1,14 +1,12 @@
 // @flow strict
 
-import { annotate } from '../annotate';
 import { define } from '../_decoder';
-import { err, ok } from '../result';
 import type { Decoder } from '../_decoder';
 
-const anyNumber: Decoder<number> = define((blob) =>
+const anyNumber: Decoder<number> = define((blob, accept, reject) =>
     typeof blob === 'number' && !Number.isNaN(blob)
-        ? ok(blob)
-        : err(annotate(blob, 'Must be number')),
+        ? accept(blob)
+        : reject('Must be number'),
 );
 
 /**
