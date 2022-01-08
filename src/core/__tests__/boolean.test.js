@@ -4,7 +4,6 @@
 import { boolean, numericBoolean, truthy } from '../boolean';
 import { INPUTS } from './fixtures';
 import { partition } from 'itertools';
-import { unwrap } from '../../result';
 
 describe('booleans', () => {
     const decoder = boolean;

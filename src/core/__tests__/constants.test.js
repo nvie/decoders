@@ -4,7 +4,6 @@
 import { constant, hardcoded, mixed, null_, undefined_ } from '../constants';
 import { INPUTS } from './fixtures';
 import { partition } from 'itertools';
-import { unwrap } from '../../result';
 
 describe('null', () => {
     const decoder = null_;

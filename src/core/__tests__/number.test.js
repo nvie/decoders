@@ -4,7 +4,6 @@
 import { INPUTS } from './fixtures';
 import { integer, number, positiveInteger, positiveNumber } from '../number';
 import { partition } from 'itertools';
-import { unwrap } from '../../result';
 
 describe('number', () => {
     const decoder = number;

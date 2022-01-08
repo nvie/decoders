@@ -3,7 +3,6 @@
 import { number } from '../number';
 import { string } from '../string';
 import { tuple } from '../tuple';
-import { unwrap } from '../../result';
 
 describe('tuples', () => {
     it('1-tuples', () => {
