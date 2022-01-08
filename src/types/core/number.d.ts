@@ -1,4 +1,4 @@
-import { Decoder } from '../_types';
+import { Decoder } from '../_decoder';
 
 export const integer: Decoder<number>;
 export const number: Decoder<number>;

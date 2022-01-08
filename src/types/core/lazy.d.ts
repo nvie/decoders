@@ -1,3 +1,3 @@
-import { Decoder } from '../_types';
+import { Decoder } from '../_decoder';
 
 export function lazy<T>(decoderFn: () => Decoder<T>): Decoder<T>;

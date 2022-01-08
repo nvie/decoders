@@ -1,4 +1,4 @@
-import { Decoder, Scalar } from '../_types';
+import { Decoder, Scalar } from '../_decoder';
 
 export type DecoderTypes<T> = T extends ReadonlyArray<Decoder<infer U>> ? U : never;
 

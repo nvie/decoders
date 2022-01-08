@@ -1,4 +1,4 @@
-import { Decoder } from '../_types';
+import { Decoder } from '../_decoder';
 
 export function optional<T>(decoder: Decoder<T>): Decoder<T | undefined>;
 export function nullable<T>(decoder: Decoder<T>): Decoder<T | null>;

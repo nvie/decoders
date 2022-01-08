@@ -1,12 +1,4 @@
-export {
-    Decoder,
-    DecodeResult,
-    DecoderType,
-    Guard,
-    GuardType,
-    Predicate,
-    Scalar,
-} from './_types';
+export { Decoder, DecodeResult, DecoderType, Predicate, Scalar } from './_decoder';
 export { Result } from './result';
 export { JSONValue, JSONObject, JSONArray } from './core/json';
 

@@ -12,7 +12,6 @@ import {
     email,
     exact,
     fail,
-    guard,
     hardcoded,
     httpsUrl,
     inexact,
@@ -101,16 +100,14 @@ tuple(string, string, number, string, number); // $ExpectType Decoder<[string, s
 tuple(string, string, number, string, number, string); // $ExpectType Decoder<[string, string, number, string, number, string], unknown>
 
 // $ExpectType { name: string; tags: string[]; }
-guard(
-    object({
-        name: string,
-        tags: array(string),
-    }),
-)('dummy');
+object({
+    name: string,
+    tags: array(string),
+}).verify('dummy');
 
 // Style argument
-guard(string, formatInline);
-guard(string, formatShort);
+string.verify('dummy', formatInline);
+string.verify('dummy', formatShort);
 
 // $ExpectType Decoder<number, unknown>
 transform(string, parseFloat);
@@ -143,9 +140,9 @@ array(number); // $ExpectType Decoder<number[], unknown>
 array(array(number)); // $ExpectType Decoder<number[][], unknown>
 poja; // $ExpectType Decoder<unknown[], unknown>
 
-guard(boolean)('dummy'); // $ExpectType boolean
-guard(truthy)('dummy'); // $ExpectType boolean
-guard(numericBoolean)('dummy'); // $ExpectType boolean
+boolean.verify('dummy'); // $ExpectType boolean
+truthy.verify('dummy'); // $ExpectType boolean
+numericBoolean.verify('dummy'); // $ExpectType boolean
 
 optional(string); // $ExpectType Decoder<string | undefined, unknown>
 optional(optional(string)); // $ExpectType Decoder<string | undefined, unknown>
@@ -214,7 +211,7 @@ instanceOf<Promise<string>>(Set);
 date;
 
 // $ExpectType Date
-const d = guard(iso8601)('dummy');
+const d = iso8601.verify('dummy');
 d.getFullYear();
 
 fail('I will never return'); // $ExpectType Decoder<never, unknown>

@@ -1,4 +1,4 @@
-import { Decoder } from '../_types';
+import { Decoder } from '../_decoder';
 
 export function transform<T, V>(decoder: Decoder<T>, mapper: (value: T) => V): Decoder<V>;
 export function compose<T, V>(decoder: Decoder<T>, next: Decoder<V, T>): Decoder<V>;

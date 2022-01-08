@@ -1,4 +1,4 @@
-import { Decoder, DecoderType } from '../_types';
+import { Decoder, DecoderType } from '../_decoder';
 
 export type Values<T extends object> = T[keyof T];
 
