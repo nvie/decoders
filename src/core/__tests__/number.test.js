@@ -13,14 +13,14 @@ describe('number', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(unwrap(decoder(value))).toBe(value);
+            expect(decoder.verify(value)).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).ok).toBe(false);
+            expect(decoder.decode(value).ok).toBe(false);
         }
     });
 });
@@ -35,14 +35,14 @@ describe('positiveNumber', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(unwrap(decoder(value))).toBe(value);
+            expect(decoder.verify(value)).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).ok).toBe(false);
+            expect(decoder.decode(value).ok).toBe(false);
         }
     });
 });
@@ -54,14 +54,14 @@ describe('integer', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(unwrap(decoder(value))).toBe(value);
+            expect(decoder.verify(value)).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).ok).toBe(false);
+            expect(decoder.decode(value).ok).toBe(false);
         }
     });
 });
@@ -76,14 +76,14 @@ describe('positiveInteger', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(unwrap(decoder(value))).toBe(value);
+            expect(decoder.verify(value)).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).ok).toBe(false);
+            expect(decoder.decode(value).ok).toBe(false);
         }
     });
 });

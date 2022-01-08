@@ -1,14 +1,15 @@
 // @flow strict
 
 import { annotate } from '../annotate';
+import { define } from '../_decoder';
 import { err } from '../result';
-import type { Decoder } from '../_types';
+import type { Decoder } from '../_decoder';
 
 /**
  * Decoder that always fails with the given error message, no matter what the input.
  */
 export function never(msg: string): Decoder<empty> {
-    return (blob: mixed) => err(annotate(blob, msg));
+    return define((blob) => err(annotate(blob, msg)));
 }
 
 /**

@@ -1,83 +1,82 @@
 // @flow strict
 
 import { array, nonEmptyArray, set } from '../array';
-import { guard } from '../../_guard';
 import { number } from '../number';
 import { object } from '../object';
 import { string } from '../string';
-import { unwrap } from '../../result';
 
 describe('array', () => {
     it('empty array', () => {
         // What type it is does not matter if the array is empty
-        expect(unwrap(array(string)([]))).toEqual([]);
-        expect(unwrap(array(number)([]))).toEqual([]);
-        expect(unwrap(array(array(array(array(number))))([]))).toEqual([]);
+        expect(array(string).verify([])).toEqual([]);
+        expect(array(number).verify([])).toEqual([]);
+        expect(array(array(array(array(number)))).verify([])).toEqual([]);
     });
 
     it('simple nesting', () => {
         const verifier1 = array(string);
-        expect(unwrap(verifier1([]))).toEqual([]);
-        expect(unwrap(verifier1(['foo', 'bar']))).toEqual(['foo', 'bar']);
+        expect(verifier1.verify([])).toEqual([]);
+        expect(verifier1.verify(['foo', 'bar'])).toEqual(['foo', 'bar']);
 
         const verifier2 = array(number);
-        expect(unwrap(verifier2([]))).toEqual([]);
-        expect(unwrap(verifier2([0, 1, 2, Math.PI]))).toEqual([0, 1, 2, Math.PI]);
+        expect(verifier2.verify([])).toEqual([]);
+        expect(verifier2.verify([0, 1, 2, Math.PI])).toEqual([0, 1, 2, Math.PI]);
     });
 
     it('complex nesting decoding', () => {
         const decoder = array(array(number));
-        expect(unwrap(decoder([]))).toEqual([]);
-        expect(unwrap(decoder([[]]))).toEqual([[]]);
-        expect(unwrap(decoder([[1, 2], [], [3, 4, 5]]))).toEqual([[1, 2], [], [3, 4, 5]]);
+        expect(decoder.verify([])).toEqual([]);
+        expect(decoder.verify([[]])).toEqual([[]]);
+        expect(decoder.verify([[1, 2], [], [3, 4, 5]])).toEqual([[1, 2], [], [3, 4, 5]]);
     });
 
     it('failure to unpack', () => {
-        const g = guard(array(string));
-        expect(() => g('boop')).toThrow('Must be an array');
-        expect(() => g([42])).toThrow('Must be string (at index 0)');
-        expect(() => g(['foo', 'bar', 42])).toThrow('Must be string (at index 2)');
+        const decoder = array(string);
+        expect(() => decoder.verify('boop')).toThrow('Must be an array');
+        expect(() => decoder.verify([42])).toThrow('Must be string (at index 0)');
+        expect(() => decoder.verify(['foo', 'bar', 42])).toThrow(
+            'Must be string (at index 2)',
+        );
 
-        const g2 = guard(array(object({ name: string })));
-        expect(() => g2([{ name: 123 }])).toThrow('^ index 0');
+        const decoder2 = array(object({ name: string }));
+        expect(() => decoder2.verify([{ name: 123 }])).toThrow('^ index 0');
     });
 });
 
 describe('nonEmptyArray', () => {
-    const strings = guard(nonEmptyArray(string));
-    const numbers = guard(nonEmptyArray(number));
+    const strings = nonEmptyArray(string);
+    const numbers = nonEmptyArray(number);
 
     it('works like normal array', () => {
-        expect(strings(['foo', 'bar'])).toEqual(['foo', 'bar']);
-        expect(numbers([1, 2, 3])).toEqual([1, 2, 3]);
+        expect(strings.verify(['foo', 'bar'])).toEqual(['foo', 'bar']);
+        expect(numbers.verify([1, 2, 3])).toEqual([1, 2, 3]);
 
-        expect(() => strings([1])).toThrow('Must be string');
-        expect(() => numbers(['foo'])).toThrow('Must be number');
+        expect(() => strings.verify([1])).toThrow('Must be string');
+        expect(() => numbers.verify(['foo'])).toThrow('Must be number');
     });
 
     it('but empty array throw, too', () => {
-        expect(() => strings([])).toThrow('Must be non-empty array');
-        expect(() => numbers([])).toThrow('Must be non-empty array');
+        expect(() => strings.verify([])).toThrow('Must be non-empty array');
+        expect(() => numbers.verify([])).toThrow('Must be non-empty array');
     });
 });
 
 describe('set', () => {
     const decoder = set(string);
-    const verify = guard(decoder);
 
     it('empty set', () => {
-        expect(verify([]).size).toBe(0);
+        expect(decoder.verify([]).size).toBe(0);
     });
 
     it('accepts', () => {
-        const r = verify(['foo', 'bar']);
+        const r = decoder.verify(['foo', 'bar']);
         expect(r.has('foo')).toBe(true);
         expect(r.has('bar')).toBe(true);
         expect(r.size).toBe(2);
     });
 
     it('rejects', () => {
-        expect(decoder([1]).ok).toBe(false);
-        expect(decoder(1).ok).toBe(false);
+        expect(decoder.decode([1]).ok).toBe(false);
+        expect(decoder.decode(1).ok).toBe(false);
     });
 });

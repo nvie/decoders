@@ -15,7 +15,7 @@ describe('fail', () => {
     it('rejects everything', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).ok).toBe(false);
+            expect(decoder.decode(value).ok).toBe(false);
         }
     });
 });
@@ -31,7 +31,7 @@ describe('never', () => {
     it('rejects everything', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).ok).toBe(false);
+            expect(decoder.decode(value).ok).toBe(false);
         }
     });
 });

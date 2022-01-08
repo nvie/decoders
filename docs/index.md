@@ -35,7 +35,7 @@ solve both of these problems at once.**
 
 ## The core idea
 
-The central concept of this library is the Decoder. A `Decoder<T>` is a validation
+The central concept of this library is the Decoder. A `Decoder<T>` has a validation
 function that, when called on an untrusted input, will either return an "ok" result with
 the decoded value of type `T` as its payload, or an "error" result.
 

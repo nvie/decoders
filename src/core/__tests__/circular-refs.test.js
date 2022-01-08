@@ -1,6 +1,5 @@
 // @flow strict
 
-import { guard } from '../../_guard';
 import { mixed } from '../constants';
 import { number } from '../number';
 import { object, pojo } from '../object';
@@ -13,31 +12,29 @@ describe('objects w/ circular refs', () => {
     // $FlowFixMe[prop-missing] - let's create a self-referential object
     value.self = self;
     it('valid', () => {
-        expect(guard(object({ foo: number }))(value)).toEqual({ foo: 42 });
-        expect(guard(object({ foo: number, self: mixed }))(value)).toEqual({
+        expect(object({ foo: number }).verify(value)).toEqual({ foo: 42 });
+        expect(object({ foo: number, self: mixed }).verify(value)).toEqual({
             foo: 42,
             self,
         });
-        expect(guard(object({ foo: number, self: pojo }))(value)).toEqual({
+        expect(object({ foo: number, self: pojo }).verify(value)).toEqual({
             foo: 42,
             self,
         });
         expect(
-            guard(object({ foo: number, self: object({ foo: number }) }))(value),
+            object({ foo: number, self: object({ foo: number }) }).verify(value),
         ).toEqual({
             foo: 42,
             self: { foo: 42 },
         });
         expect(
-            guard(
-                object({
+            object({
+                foo: number,
+                self: object({
                     foo: number,
-                    self: object({
-                        foo: number,
-                        self: object({ self: object({ foo: number }) }),
-                    }),
+                    self: object({ self: object({ foo: number }) }),
                 }),
-            )(value),
+            }).verify(value),
         ).toEqual({
             foo: 42,
             self: {
@@ -52,12 +49,12 @@ describe('objects w/ circular refs', () => {
     });
 
     it('invalid', () => {
-        expect(object({ foo: string })(value).ok).toBe(false);
-        expect(object({ foo: string, self: mixed })(value).ok).toBe(false);
-        expect(object({ foo: string, self: pojo })(value).ok).toBe(false);
-        expect(object({ foo: number, self: object({ foo: string }) })(value).ok).toBe(
-            false,
-        );
+        expect(object({ foo: string }).decode(value).ok).toBe(false);
+        expect(object({ foo: string, self: mixed }).decode(value).ok).toBe(false);
+        expect(object({ foo: string, self: pojo }).decode(value).ok).toBe(false);
+        expect(
+            object({ foo: number, self: object({ foo: string }) }).decode(value).ok,
+        ).toBe(false);
         expect(
             object({
                 foo: number,
@@ -65,7 +62,7 @@ describe('objects w/ circular refs', () => {
                     foo: number,
                     self: object({ self: object({ foo: string }) }),
                 }),
-            })(value).ok,
+            }).decode(value).ok,
         ).toBe(false);
     });
 });

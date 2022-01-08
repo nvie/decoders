@@ -13,9 +13,9 @@ describe('optional', () => {
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
-        expect(unwrap(decoder(undefined))).toBe(undefined);
+        expect(decoder.verify(undefined)).toBe(undefined);
         for (const value of okay) {
-            expect(unwrap(decoder(value))).toBe(value);
+            expect(decoder.verify(value)).toBe(value);
         }
     });
 
@@ -23,7 +23,7 @@ describe('optional', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
             if (value === undefined) continue;
-            expect(decoder(value).ok).toBe(false);
+            expect(decoder.decode(value).ok).toBe(false);
         }
     });
 });
@@ -34,9 +34,9 @@ describe('nullable', () => {
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
-        expect(unwrap(decoder(null))).toBe(null);
+        expect(decoder.verify(null)).toBe(null);
         for (const value of okay) {
-            expect(unwrap(decoder(value))).toBe(value);
+            expect(decoder.verify(value)).toBe(value);
         }
     });
 
@@ -44,7 +44,7 @@ describe('nullable', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
             if (value === null) continue;
-            expect(decoder(value).ok).toBe(false);
+            expect(decoder.decode(value).ok).toBe(false);
         }
     });
 });
@@ -55,21 +55,21 @@ describe('maybe', () => {
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);
-        expect(unwrap(decoder(null))).toBe(null);
-        expect(unwrap(decoder(undefined))).toBe(undefined);
+        expect(decoder.verify(null)).toBe(null);
+        expect(decoder.verify(undefined)).toBe(undefined);
         for (const value of okay) {
-            expect(unwrap(decoder(value))).toBe(value);
+            expect(decoder.verify(value)).toBe(value);
         }
     });
 
     it('allowNull', () => {
         // No difference when decoding undefined
-        expect(unwrap(decoder(undefined))).toBeUndefined();
-        expect(unwrap(decoder(null))).toBeNull();
+        expect(decoder.verify(undefined)).toBeUndefined();
+        expect(decoder.verify(null)).toBeNull();
 
         // No difference when string-decoding
-        expect(unwrap(decoder(''))).toBe('');
-        expect(unwrap(decoder('foo'))).toBe('foo');
+        expect(decoder.verify('')).toBe('');
+        expect(decoder.verify('foo')).toBe('foo');
     });
 
     it('invalid', () => {
@@ -77,7 +77,7 @@ describe('maybe', () => {
         for (const value of not_okay) {
             if (value === undefined) continue;
             if (value === null) continue;
-            expect(decoder(value).ok).toBe(false);
+            expect(decoder.decode(value).ok).toBe(false);
         }
     });
 });

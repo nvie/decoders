@@ -1,10 +1,11 @@
 // @flow strict
 
 import { annotate } from '../annotate';
+import { define } from '../_decoder';
 import { either } from './either';
 import { err, ok } from '../result';
 import { null_, undefined_ } from './constants';
-import type { Decoder } from '../_types';
+import type { Decoder } from '../_decoder';
 
 /**
  * Builds a Decoder that returns Ok for either `undefined` or `T` values,
@@ -27,11 +28,12 @@ export function nullable<T>(decoder: Decoder<T>): Decoder<null | T> {
  * This is effectively equivalent to either(null_, undefined_), but combines
  * their error message output into a single line for convenience.
  */
-const undefined_or_null: Decoder<null | void> = (blob: mixed) =>
+const undefined_or_null: Decoder<null | void> = define((blob) =>
     blob === undefined || blob === null
         ? ok(blob)
         : // Combine error message into a single line
-          err(annotate(blob, 'Must be undefined or null'));
+          err(annotate(blob, 'Must be undefined or null')),
+);
 
 /**
  * Decoder that only returns Ok for `null` or `undefined` inputs.

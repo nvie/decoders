@@ -1,11 +1,12 @@
 // @flow strict
 
 import { annotate } from '../annotate';
+import { define } from '../_decoder';
 import { err, ok } from '../result';
-import type { Decoder } from '../_types';
+import type { Decoder } from '../_decoder';
 
 export function instanceOf<T>(klass: Class<T>): Decoder<T> {
-    return (blob: mixed) =>
+    return define((blob) =>
         blob instanceof klass
             ? ok(blob)
             : err(
@@ -16,5 +17,6 @@ export function instanceOf<T>(klass: Class<T>): Decoder<T> {
                           klass.name
                       } instance`,
                   ),
-              );
+              ),
+    );
 }

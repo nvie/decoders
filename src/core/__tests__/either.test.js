@@ -4,16 +4,14 @@
 import { boolean } from '../boolean';
 import { constant, undefined_ } from '../constants';
 import { either, oneOf } from '../either';
-import { guard } from '../../_guard';
 import { INPUTS } from './fixtures';
 import { number } from '../number';
 import { object } from '../object';
 import { partition } from 'itertools';
 import { regex, string } from '../string';
-import { unwrap } from '../../result';
 
 describe('either', () => {
-    const stringOrBooleanDecoder = guard(either(string, boolean));
+    const stringOrBooleanDecoder = either(string, boolean);
     const [okay, not_okay] = partition(
         INPUTS,
         (x) => typeof x === 'string' || typeof x === 'boolean',
@@ -22,43 +20,47 @@ describe('either', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(stringOrBooleanDecoder(value)).toBe(value);
+            expect(stringOrBooleanDecoder.verify(value)).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(() => stringOrBooleanDecoder(value)).toThrow();
+            expect(() => stringOrBooleanDecoder.verify(value)).toThrow();
         }
     });
 
     it('errors nicely in trivial eithers', () => {
-        expect(() => stringOrBooleanDecoder(42)).toThrow('Either:');
+        expect(() => stringOrBooleanDecoder.verify(42)).toThrow('Either:');
     });
 
     it('errors nicely in common, simple eithers (ie optional)', () => {
         // Either undefined or string
-        const g1 = guard(either(undefined_, string));
-        expect(() => g1(42)).toThrow('Either:\n- Must be undefined\n- Must be string');
-        expect(() => g1({})).toThrow('Either:\n- Must be undefined\n- Must be string');
+        const d1 = either(undefined_, string);
+        expect(() => d1.verify(42)).toThrow(
+            'Either:\n- Must be undefined\n- Must be string',
+        );
+        expect(() => d1.verify({})).toThrow(
+            'Either:\n- Must be undefined\n- Must be string',
+        );
 
         // Either undefined or object
-        const g2 = guard(either(undefined_, object({ name: string })));
-        expect(() => g2(42)).toThrow('Either:\n- Must be undefined\n- Must be an object');
-        expect(() => g2({ name: 42 })).toThrow('Either');
-
-        const g3 = guard(
-            either(regex(/1/, 'Must contain 1'), regex(/2/, 'Must contain 2')),
+        const d2 = either(undefined_, object({ name: string }));
+        expect(() => d2.verify(42)).toThrow(
+            'Either:\n- Must be undefined\n- Must be an object',
         );
-        expect(() => g3(42)).toThrow('Either');
-        expect(() => g3('foobar')).toThrow('Either');
+        expect(() => d2.verify({ name: 42 })).toThrow('Either');
+
+        const d3 = either(regex(/1/, 'Must contain 1'), regex(/2/, 'Must contain 2'));
+        expect(() => d3.verify(42)).toThrow('Either');
+        expect(() => d3.verify('foobar')).toThrow('Either');
     });
 
     it('errors in complex eithers (with two wildly different branches)', () => {
-        const g = guard(either(object({ foo: string }), object({ bar: number })));
+        const decoder = either(object({ foo: string }), object({ bar: number }));
         expect(() =>
-            g({
+            decoder.verify({
                 foo: 123,
                 bar: 'not a number',
             }),
@@ -76,8 +78,8 @@ Either:
 });
 
 describe('nested eithers', () => {
-    const decoder = guard(either(either(string, boolean), either(number, undefined_)));
-    expect(() => decoder(null)).toThrow(
+    const decoder = either(either(string, boolean), either(number, undefined_));
+    expect(() => decoder.verify(null)).toThrow(
         'Either:\n- Must be string\n- Must be boolean\n- Must be number\n- Must be undefined',
     );
 });
@@ -90,7 +92,7 @@ describe('either fails without decoders', () => {
 });
 
 describe('either3', () => {
-    const decoder = guard(either(string, boolean, number, undefined_));
+    const decoder = either(string, boolean, number, undefined_);
     const [okay, not_okay] = partition(
         INPUTS,
         (x) =>
@@ -103,14 +105,14 @@ describe('either3', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(decoder(value)).toBe(value);
+            expect(decoder.verify(value)).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(() => decoder(value)).toThrow();
+            expect(() => decoder.verify(value)).toThrow();
         }
     });
 });
@@ -133,14 +135,14 @@ describe('either9', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(unwrap(decoder(value))).toBe(value);
+            expect(decoder.verify(value)).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).ok).toBe(false);
+            expect(decoder.decode(value).ok).toBe(false);
         }
     });
 });
@@ -153,14 +155,14 @@ describe('oneOf', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(unwrap(decoder(value))).toBe(value);
+            expect(decoder.verify(value)).toBe(value);
         }
     });
 
     it('invalid', () => {
         expect(not_okay.length).not.toBe(0);
         for (const value of not_okay) {
-            expect(decoder(value).ok).toBe(false);
+            expect(decoder.decode(value).ok).toBe(false);
         }
     });
 });

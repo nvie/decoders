@@ -1,11 +1,12 @@
 // @flow strict
 
 import { andThen } from '../result';
+import { define } from '../_decoder';
 import { object } from './object';
 import { oneOf } from './either';
 import { prep } from './composition';
 import type { _Any } from '../_utils';
-import type { Decoder, DecoderType } from '../_types';
+import type { Decoder, DecoderType } from '../_decoder';
 
 /**
  * Dispatches to one of several given decoders, based on the value found at
@@ -49,11 +50,11 @@ export function taggedUnion<O: { +[field: string]: Decoder<_Any>, ... }>(
     const base = object({
         [field]: prep(String, oneOf(Object.keys(mapping))),
     });
-    return (blob: mixed) => {
-        return andThen(base(blob), (baseObj) => {
+    return define((blob) => {
+        return andThen(base.decode(blob), (baseObj) => {
             const decoderName = baseObj[field];
             const decoder = mapping[decoderName];
-            return decoder(blob);
+            return decoder.decode(blob);
         });
-    };
+    });
 }

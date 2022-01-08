@@ -1,13 +1,11 @@
 // @flow strict
 
 import { constant } from '../constants';
-import { guard } from '../../_guard';
 import { number } from '../number';
 import { object } from '../object';
 import { string } from '../string';
 import { taggedUnion } from '../dispatch';
-import { unwrap } from '../../result';
-import type { Decoder } from '../../_types';
+import type { Decoder } from '../../_decoder';
 
 type Rectangle = {|
     type: 'rectangle',
@@ -50,19 +48,19 @@ describe('taggedUnion', () => {
 
     it('allows conditional decoding', () => {
         const r = { type: 'rectangle', x: 3, y: 5, width: 80, height: 100 };
-        expect(guard(decoder)(r)).toEqual(r);
+        expect(decoder.verify(r)).toEqual(r);
 
         const c = { type: 'circle', cx: 3, cy: 5, r: 7 };
-        expect(unwrap(decoder(c))).toEqual(c);
+        expect(decoder.verify(c)).toEqual(c);
     });
 
     it('invalid', () => {
-        expect(() => guard(decoder)('foo')).toThrow('Must be an object');
-        expect(() => guard(decoder)({})).toThrow('Missing key: "type"');
-        expect(() => guard(decoder)({ type: 'blah' })).toThrow(
+        expect(() => decoder.verify('foo')).toThrow('Must be an object');
+        expect(() => decoder.verify({})).toThrow('Missing key: "type"');
+        expect(() => decoder.verify({ type: 'blah' })).toThrow(
             /Must be one of.*rectangle.*circle/,
         );
-        expect(() => guard(decoder)({ type: 'rectangle', x: 1 })).toThrow(
+        expect(() => decoder.verify({ type: 'rectangle', x: 1 })).toThrow(
             /Missing keys: "y", "width", "height"/,
         );
     });
@@ -75,17 +73,17 @@ describe('taggedUnion with numeric keys', () => {
 
     it('allows conditional decoding', () => {
         const a = { type: 1, a: 'hi' };
-        expect(guard(decoder)(a)).toEqual(a);
+        expect(decoder.verify(a)).toEqual(a);
 
         const b = { type: 2, b: 42 };
-        expect(unwrap(decoder(b))).toEqual(b);
+        expect(decoder.verify(b)).toEqual(b);
     });
 
     it('invalid', () => {
-        expect(() => guard(decoder)('foo')).toThrow('Must be an object');
-        expect(() => guard(decoder)({})).toThrow('Missing key: "type"');
-        expect(() => guard(decoder)({ type: 'blah' })).toThrow(/Must be one of.*1.*2/);
-        expect(() => guard(decoder)({ type: 1, x: 1 })).toThrow(/Missing key: "a"/);
-        expect(() => guard(decoder)({ type: 2, x: 1 })).toThrow(/Missing key: "b"/);
+        expect(() => decoder.verify('foo')).toThrow('Must be an object');
+        expect(() => decoder.verify({})).toThrow('Missing key: "type"');
+        expect(() => decoder.verify({ type: 'blah' })).toThrow(/Must be one of.*1.*2/);
+        expect(() => decoder.verify({ type: 1, x: 1 })).toThrow(/Missing key: "a"/);
+        expect(() => decoder.verify({ type: 2, x: 1 })).toThrow(/Missing key: "b"/);
     });
 });

@@ -2,14 +2,15 @@
 
 import { annotate } from '../annotate';
 import { compose, predicate, transform } from './composition';
+import { define } from '../_decoder';
 import { err, ok } from '../result';
-import type { Decoder, DecodeResult } from '../_types';
+import type { Decoder, DecodeResult } from '../_decoder';
 
 /**
  * Like a "Plain Old JavaScript Object", but for arrays: "Plain Old JavaScript
  * Array" ^_^
  */
-export const poja: Decoder<Array<mixed>> = (blob: mixed) => {
+export const poja: Decoder<Array<mixed>> = define((blob) => {
     if (!Array.isArray(blob)) {
         return err(annotate(blob, 'Must be an array'));
     }
@@ -25,7 +26,7 @@ export const poja: Decoder<Array<mixed>> = (blob: mixed) => {
         // http://jsben.ch/lO6C5
         blob.slice(),
     );
-};
+});
 
 /**
  * Given an array of Result instances, loop over them all and return:
@@ -76,11 +77,11 @@ function all<T>(
  * Array<T>.
  */
 function members<T>(decoder: Decoder<T>): Decoder<Array<T>, Array<mixed>> {
-    return (blobs: $ReadOnlyArray<mixed>) => {
-        const results = blobs.map(decoder);
+    return define((blobs: $ReadOnlyArray<mixed>) => {
+        const results = blobs.map(decoder.decode);
         const result = all(results, blobs);
         return result;
-    };
+    });
 }
 
 /**

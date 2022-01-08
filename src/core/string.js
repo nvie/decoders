@@ -1,11 +1,12 @@
 // @flow strict
 
 import { annotate } from '../annotate';
+import { define } from '../_decoder';
 import { either } from './either';
 import { err, ok } from '../result';
 import { instanceOf } from './instanceOf';
 import { predicate, transform } from './composition';
-import type { Decoder } from '../_types';
+import type { Decoder } from '../_decoder';
 
 /** Match groups in this regex:
  * \1 - the scheme
@@ -20,9 +21,9 @@ const url_re =
 /**
  * Decoder that only returns Ok for string inputs.  Err otherwise.
  */
-export const string: Decoder<string> = (blob: mixed) => {
-    return typeof blob === 'string' ? ok(blob) : err(annotate(blob, 'Must be string'));
-};
+export const string: Decoder<string> = define((blob) =>
+    typeof blob === 'string' ? ok(blob) : err(annotate(blob, 'Must be string')),
+);
 
 /**
  * Decoder that only returns Ok for non-empty string inputs.  Err otherwise.

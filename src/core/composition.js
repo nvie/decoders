@@ -2,7 +2,8 @@
 
 import { andThen, err, ok, orElse } from '../result';
 import { annotate } from '../annotate';
-import type { Decoder } from '../_types';
+import { define } from '../_decoder';
+import type { Decoder } from '../_decoder';
 
 /**
  * Accepts any value the given decoder accepts, and on success, will call the
@@ -11,13 +12,16 @@ import type { Decoder } from '../_types';
  * reason.
  */
 export function transform<T, V>(decoder: Decoder<T>, transformFn: (T) => V): Decoder<V> {
-    return compose(decoder, (x) => {
-        try {
-            return ok(transformFn(x));
-        } catch (e) {
-            return err(annotate(x, e instanceof Error ? e.message : String(e)));
-        }
-    });
+    return compose(
+        decoder,
+        define((x) => {
+            try {
+                return ok(transformFn(x));
+            } catch (e) {
+                return err(annotate(x, e instanceof Error ? e.message : String(e)));
+            }
+        }),
+    );
 }
 
 /**
@@ -31,7 +35,7 @@ export function transform<T, V>(decoder: Decoder<T>, transformFn: (T) => V): Dec
  * argument.
  */
 export function compose<T, V>(decoder: Decoder<T>, next: Decoder<V, T>): Decoder<V> {
-    return (blob: mixed) => andThen(decoder(blob), next);
+    return define((blob) => andThen(decoder.decode(blob), next.decode));
 }
 
 /**
@@ -43,10 +47,11 @@ export function predicate<T>(
     predicateFn: (T) => boolean,
     msg: string,
 ): Decoder<T> {
-    return (blob: mixed) =>
-        andThen(decoder(blob), (value) =>
+    return define((blob) =>
+        andThen(decoder.decode(blob), (value) =>
             predicateFn(value) ? ok(value) : err(annotate(value, msg)),
-        );
+        ),
+    );
 }
 
 /**
@@ -56,7 +61,7 @@ export function predicate<T>(
  * `unknown` type, so you will have to deal with that accordingly.
  */
 export function prep<I, T>(mapperFn: (mixed) => I, decoder: Decoder<T, I>): Decoder<T> {
-    return (blob: mixed) => {
+    return define((blob) => {
         let blob2;
         try {
             blob2 = mapperFn(blob);
@@ -65,10 +70,10 @@ export function prep<I, T>(mapperFn: (mixed) => I, decoder: Decoder<T, I>): Deco
         }
 
         return orElse(
-            decoder(blob2),
+            decoder.decode(blob2),
             (ann) => err(annotate(blob, ann.text)),
             //                    ^^^^ Annotates the _original_ input value
             //                         (instead of echoing back blob2 in the output)
         );
-    };
+    });
 }

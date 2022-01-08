@@ -1,6 +1,7 @@
 // @flow strict
 
-import type { Decoder } from '../_types';
+import { define } from '../_decoder';
+import type { Decoder } from '../_decoder';
 
 /**
  * Given an function returning a Decoder, will use that decoder to decode the
@@ -8,8 +9,5 @@ import type { Decoder } from '../_types';
  * self-referential types.
  */
 export function lazy<T>(decoderFn: () => Decoder<T>): Decoder<T> {
-    return (blob: mixed) => {
-        const decoder = decoderFn();
-        return decoder(blob);
-    };
+    return define((blob) => decoderFn().decode(blob));
 }
