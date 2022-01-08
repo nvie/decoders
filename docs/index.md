@@ -50,7 +50,7 @@ or an "error" result (aka a `DecodeResult<T>`)—it will never throw an exceptio
 runtime. That's what Guards do.
 
 The second important concept is a Guard. It's a convenience wrapper around an existing
-decoder. A `Guard<T>` is like the Decoder that it wraps, but does not return those
+(large) decoder. A `Guard<T>` is like the Decoder that it wraps, but does not return those
 intermediate "result" objects that Decoders do.
 
 <img alt="The concept of a Guard explained schematically" src="./assets/schematic-guards.png" style="max-width: min(600px, 100%)" />
@@ -71,96 +71,65 @@ tell you what inputs it accepts.
 
 ## Composing decoders
 
-You can compose decoders together to build larger decoders. For example, here you can see
-how you can use decoders as building blocks to describe any data shape you expect:
+You can build larger decoders from smaller decoders. For example, here you can see how
+four decoders are combined to build a fourth, larger decoder:
 
 <!-- prettier-ignore-start -->
 ```typescript
-import { array, number, object, string } from 'decoders';
+import { array, number, object, positiveInteger, string } from 'decoders';
 
    object({
+     id: positiveInteger,
+//       ^^^^^^^^^^^^^^^   Decoder<number>                    (1)
      name: string,
-//         ^^^^^^ Decoder<string>
+//         ^^^^^^          Decoder<string>                    (2)
      items: array(number),
-//                ^^^^^^ Decoder<number>
-//          ^^^^^^^^^^^^^ Decoder<number[]>
+//                ^^^^^^   Decoder<number>                    (3)
+//          ^^^^^^^^^^^^^  Decoder<number[]>                  (4)
    })
-// ^^ Decoder<{ name: string; items: number[] }>
+// ^^ Decoder<{ id: number, name: string; items: number[] }>  (5)
 ```
 <!-- prettier-ignore-end -->
 
-## An example
-
-TODO: Find a better, real world, example.
-
 <!--
-Suppose you define a decoder for a `Person`:
 
-```typescript
-import { email, iso8601, name, positiveNumber } from 'decoders';
+## Example
 
-const personDecoder: Decoder<Person> = object({
-    id: positiveNumber,
-    name: string,
-    email: email,
-    dateOfBirth: iso8601,
-});
-```
+Suppose, for example, you have a webhook endpoint that will receive user payloads:
 
-For example, say your app expects a list of points in an incoming HTTP request:
+```json
+import { array, iso8601, number, object, optional, string } from 'decoders';
 
-```javascript
-{
-  points: [ { x: 1, y: 2 }, { x: 3, y: 4 },
-  ],
-}
-```
-
-In order to decode this, you'll have to tell Flow about the expected structure, and use
-the decoders to validate at runtime that the free-form data will be in the expected shape.
-
-```javascript
-type Point = { x: number, y: number };
-
-type Payload = {
-    points: Array<Point>,
+// External data, for example JSON.parse()'ed from a request payload
+const externalData = {
+    id: 123,
+    name: 'Alison Roberts',
+    createdAt: '1994-01-11T12:26:37.024Z',
+    tags: ['foo', 'bar', 'qux'],
 };
-```
 
-Here's a decoder that will work for this type:
-
-```javascript
-import { array, guard, number, object } from 'decoders';
-
-const point = object({
-    x: number,
-    y: number,
+const userDecoder = object({
+    id: number,
+    name: string,
+    createdAt: optional(iso8601),
+    friends: array(string),
 });
 
-const payload = object({
-    points: array(point),
-});
+// NOTE: TypeScript will automatically infer this type for the `user` variable
+// interface User {
+//     id: number;
+//     name: string;
+//     createdAt?: Date;
+//     friends: string[];
+// }
 
-const payloadGuard = guard(payload);
-```
-
-And then, you can use it to decode values:
-
-```javascript
->>> payloadGuard(1)      // throws!
->>> payloadGuard('foo')  // throws!
->>> payloadGuard({       // OK!
-...     points: [
-...         { x: 1, y: 2 },
-...         { x: 3, y: 4 },
-...     ],
-... })
+const user = userDecoder.verify(externalData);
 ```
 -->
 
 ## Formatting error messsages
 
-By default, `guard()` will use the `formatInline` error formatter. You can pass another
+By default, `.verify()` will use the `formatInline` error formatter. You can pass another
 built-in formatter as the second argument, or provide your own. (This will require
 understanding the internal `Annotation` datastructure that decoders uses for error
 reporting.)
@@ -171,13 +140,13 @@ Built-in formatters are:
     smartly. Example:
 
     ```typescript
-    import { array, guard, object, string } from 'decoders';
+    import { array, object, string } from 'decoders';
     import { formatInline } from 'decoders/format';
 
     const mydecoder = array(object({ name: string, age: number }));
 
-    const defaultGuard = guard(mydecoder, formatInline);
-    defaultGuard([{ name: 'Alice', age: '33' }]);
+    const externalData = [{ name: 'Alice', age: '33' }];
+    const defaultGuard = mydecoder.verify(externalData, formatInline);
     ```
 
     Will throw the following error message:
@@ -198,7 +167,7 @@ Built-in formatters are:
 
     ```typescript
     import { formatShort } from 'decoders/format';
-    const customGuard = guard(mydecoder, formatShort);
+    mydecoder.verify(externalData, formatShort);
     ```
 
     Will throw the following error message:
