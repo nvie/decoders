@@ -18,9 +18,11 @@
  * type.  In our case, it's fine to fail with a runtime error.
  *
  */
-export { DecodeResult, DecoderType, Predicate, Scalar } from './_decoder';
+export type { Decoder, DecodeResult, DecoderType, Predicate, Scalar } from './_decoder';
 export type { Result } from './result';
 export type { JSONValue, JSONObject, JSONArray } from './core/json';
+
+export { define } from './_decoder';
 
 export { compose, predicate, prep, transform } from './core/composition';
 

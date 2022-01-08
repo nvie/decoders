@@ -1,8 +1,13 @@
-export { Decoder, DecodeResult, DecoderType, Predicate, Scalar } from './_decoder';
+export {
+    DecodeResult,
+    Decoder,
+    DecoderType,
+    Predicate,
+    Scalar,
+    define,
+} from './_decoder';
 export { Result } from './result';
 export { JSONValue, JSONObject, JSONArray } from './core/json';
-
-export { guard } from './_guard';
 
 export { compose, predicate, prep, transform } from './core/composition';
 
