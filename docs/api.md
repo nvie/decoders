@@ -1405,30 +1405,6 @@ const treeDecoder: Decoder<Tree> = object({
 
 ---
 
-## Guards
-
--   [`guard()`](#guard)
-
----
-
-<a name="guard" href="#guard">#</a> <b>guard</b>(decoder: <i>Decoder&lt;T&gt;</i>,
-formatter?: <i>Annotation => string</i>): <i>Guard&lt;T&gt;</i>
-[(source)](https://github.com/nvie/decoders/blob/main/src/_guard.js 'Source')
-
-Turns any given `Decoder<T>` into a `Guard<T>`.
-
-A guard works like a decoder, but will either:
-
--   Return the decoded value (aka the happy path)
--   Or throw an exception
-
-So a Guard bypasses the intermediate "Result" type that decoders output. An "ok" result
-will get returned, an "err" result will be formatted into an error message and thrown.
-
-The typical usage is that you keep composing decoders until you have one decoder for your
-entire input object, and then use a guard to wrap that outer decoder. Decoders can be
-composed to build larger decoders. Guards cannot be composed.
-
 <!-- prettier-ignore-start -->
 [moz-date]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
 [moz-set]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
