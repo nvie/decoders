@@ -1003,6 +1003,46 @@ DECODERS = {
     """,
   },
 
+  'define': {
+    'section': 'Utilities',
+    'type_params': ['T'],
+    'params': [
+      ('fn', '(blob: unknown) => DecodeResult<T>'),
+    ],
+    'return_type': 'Decoder<T>',
+    'markdown': """
+      Defines a new Decoder<T>, by providing a definition function. The function receives the unknown input (aka your external data), and then must decide to call the `accept()` or `reject()` functions which are also passed in.
+
+      **This is a low-level function. For most use cases, there is a simpler alternative.**
+
+      ```typescript
+      import { define } from 'decoders';
+      import { annotate } from 'decoders/annotate';
+      import { err, ok } from 'decoders/result';
+
+      // NOTE: Please do NOT implement an uppercase decoder like this! 😇
+      const uppercase: Decoder<string> = define(
+        (blob) =>
+          (typeof blob === 'string')
+            ? ok(blob.toUpperCase())
+            : err(annotate(blob, 'I can only accept string inputs'))
+      );
+
+      // 👍
+      string.verify('hi there') === 'HI THERE';
+
+      // 👎
+      string.verify(123);   // throws
+      ```
+
+      The above example is just an example to illustrate how `define()` works. It would be more idiomatic to implement an uppercase decoder as follows:
+
+      ```ts
+      const uppercase: Decoder<string> = string.transform(s => s.toUpperCase());
+      ```
+    """,
+  },
+
   'prep': {
     'section': 'Utilities',
     'type_params': ['T'],
@@ -1263,12 +1303,12 @@ def find_source_locations():
       "./bin/linenos src/_decoder.js --remote-url --object-methods --json",
     )
     locinfo2 = run_json(
-      "./bin/linenos src/lib/*.js --remote-url --functions --variables --json",
+      "./bin/linenos src/*.js src/**/*.js --remote-url --functions --variables --json",
     )
 
     # Check the definitions against the found sources
-    assert all(1 for method in DECODER_METHODS if method in locinfo1), 'Not all decoder methods found in source code'
-    assert all(1 for name in DECODERS if name in locinfo2), 'Not all decoders found in source code'
+    assert all(any(loc['name'] == method for loc in locinfo1) for method in DECODER_METHODS), 'Not all decoder methods found in source code'
+    assert all(any(loc['name'] == name for loc in locinfo2) for name in DECODERS), 'Not all decoders found in source code'
 
     locations = { }
     for info in locinfo1:

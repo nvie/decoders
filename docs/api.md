@@ -73,8 +73,8 @@ for section, names in DECODERS_BY_SECTION.items():
 - [**Objects**](#objects): [`object()`](#object), [`exact()`](#exact), [`inexact()`](#inexact), [`pojo`](#pojo), [`dict()`](#dict), [`mapping()`](#mapping)
 - [**JSON values**](#json-values): [`json`](#json), [`jsonObject`](#jsonObject), [`jsonArray`](#jsonArray)
 - [**Choice**](#choice): [`either()`](#either), [`taggedUnion()`](#taggedUnion), [`oneOf()`](#oneOf), [`dispatch()`](#dispatch)
-- [**Utilities**](#utilities): [`prep()`](#prep), [`never`](#never), [`instanceOf()`](#instanceOf), [`lazy()`](#lazy), [`fail`](#fail)
-<!--[[[end]]] (checksum: 02958b7294c32fa79d9d7d9531d18e67) -->
+- [**Utilities**](#utilities): [`define()`](#define), [`prep()`](#prep), [`never`](#never), [`instanceOf()`](#instanceOf), [`lazy()`](#lazy), [`fail`](#fail)
+<!--[[[end]]] (checksum: f81f02e221e7ea159b68c1fb331bb611) -->
 <!-- prettier-ignore-end -->
 
 ---
@@ -1253,11 +1253,47 @@ oneOf(['foo', 'bar']);
 ## Utilities
 
 
+- [`define()`](#define)
 - [`prep()`](#prep)
 - [`never`](#never)
 - [`instanceOf()`](#instanceOf)
 - [`lazy()`](#lazy)
 - [`fail`](#fail) (alias of [`never`](#never))
+
+---
+
+<a name="define" href="#define">#</a>
+**define**&lt;<i style="color: #267f99">T</i>&gt;(fn: <i style="color: #267f99">(blob: unknown) =&gt; DecodeResult&lt;T&gt;</i>): <i style="color: #267f99">Decoder&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/_decoder.js#L63-L128 'Source')
+
+Defines a new Decoder<T>, by providing a definition function. The function receives the unknown input (aka your external data), and then must decide to call the `accept()` or `reject()` functions which are also passed in.
+
+**This is a low-level function. For most use cases, there is a simpler alternative.**
+
+```typescript
+import { define } from 'decoders';
+import { annotate } from 'decoders/annotate';
+import { err, ok } from 'decoders/result';
+
+// NOTE: Please do NOT implement an uppercase decoder like this! 😇
+const uppercase: Decoder<string> = define(
+  (blob) =>
+    (typeof blob === 'string')
+      ? ok(blob.toUpperCase())
+      : err(annotate(blob, 'I can only accept string inputs'))
+);
+
+// 👍
+string.verify('hi there') === 'HI THERE';
+
+// 👎
+string.verify(123);   // throws
+```
+
+The above example is just an example to illustrate how `define()` works. It would be more idiomatic to implement an uppercase decoder as follows:
+
+```ts
+const uppercase: Decoder<string> = string.transform(s => s.toUpperCase());
+```
 
 ---
 
@@ -1351,5 +1387,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 7bf74970674833606fc3101375fabdaf) -->
+<!--[[[end]]] (checksum: 9dd740af538733348d4c714a7571d76d) -->
 <!-- prettier-ignore-end -->
