@@ -55,46 +55,46 @@ import {
 import { formatInline, formatShort } from 'decoders/format';
 import { ok } from 'decoders/result';
 
-constant('foo'); // $ExpectType Decoder<"foo", unknown>
-hardcoded('foo'); // $ExpectType Decoder<"foo", unknown>
-always('foo'); // $ExpectType Decoder<"foo", unknown>
-always(42); // $ExpectType Decoder<42, unknown>
+constant('foo'); // $ExpectType Decoder<"foo">
+hardcoded('foo'); // $ExpectType Decoder<"foo">
+always('foo'); // $ExpectType Decoder<"foo">
+always(42); // $ExpectType Decoder<42>
 
-null_; // $ExpectType Decoder<null, unknown>
-undefined_; // $ExpectType Decoder<undefined, unknown>
-mixed; // $ExpectType Decoder<unknown, unknown>
-unknown; // $ExpectType Decoder<unknown, unknown>
+null_; // $ExpectType Decoder<null>
+undefined_; // $ExpectType Decoder<undefined>
+mixed; // $ExpectType Decoder<unknown>
+unknown; // $ExpectType Decoder<unknown>
 
-integer; // $ExpectType Decoder<number, unknown>
-number; // $ExpectType Decoder<number, unknown>
-positiveInteger; // $ExpectType Decoder<number, unknown>
-positiveNumber; // $ExpectType Decoder<number, unknown>
+integer; // $ExpectType Decoder<number>
+number; // $ExpectType Decoder<number>
+positiveInteger; // $ExpectType Decoder<number>
+positiveNumber; // $ExpectType Decoder<number>
 
-string; // $ExpectType Decoder<string, unknown>
-nonEmptyString; // $ExpectType Decoder<string, unknown>
-email; // $ExpectType Decoder<string, unknown>
-regex(/foo/, 'Must be foo'); // $ExpectType Decoder<string, unknown>
-url; // $ExpectType Decoder<URL, unknown>
-httpsUrl; // $ExpectType Decoder<URL, unknown>
-uuid; // $ExpectType Decoder<string, unknown>
-uuidv1; // $ExpectType Decoder<string, unknown>
-uuidv4; // $ExpectType Decoder<string, unknown>
+string; // $ExpectType Decoder<string>
+nonEmptyString; // $ExpectType Decoder<string>
+email; // $ExpectType Decoder<string>
+regex(/foo/, 'Must be foo'); // $ExpectType Decoder<string>
+url; // $ExpectType Decoder<URL>
+httpsUrl; // $ExpectType Decoder<URL>
+uuid; // $ExpectType Decoder<string>
+uuidv1; // $ExpectType Decoder<string>
+uuidv4; // $ExpectType Decoder<string>
 
-array(string); // $ExpectType Decoder<string[], unknown>
-array(number); // $ExpectType Decoder<number[], unknown>
-array(array(number)); // $ExpectType Decoder<number[][], unknown>
-poja; // $ExpectType Decoder<unknown[], unknown>
-nonEmptyArray(string); // $ExpectType Decoder<[string, ...string[]], unknown>
-nonEmptyArray(number); // $ExpectType Decoder<[number, ...number[]], unknown>
-set(string); // $ExpectType Decoder<Set<string>, unknown>
-set(number); // $ExpectType Decoder<Set<number>, unknown>
+array(string); // $ExpectType Decoder<string[]>
+array(number); // $ExpectType Decoder<number[]>
+array(array(number)); // $ExpectType Decoder<number[][]>
+poja; // $ExpectType Decoder<unknown[]>
+nonEmptyArray(string); // $ExpectType Decoder<[string, ...string[]]>
+nonEmptyArray(number); // $ExpectType Decoder<[number, ...number[]]>
+set(string); // $ExpectType Decoder<Set<string>>
+set(number); // $ExpectType Decoder<Set<number>>
 
-tuple(string); // $ExpectType Decoder<[string], unknown>
-tuple(string, number); // $ExpectType Decoder<[string, number], unknown>
-tuple(string, string, number); // $ExpectType Decoder<[string, string, number], unknown>
-tuple(string, string, number, string); // $ExpectType Decoder<[string, string, number, string], unknown>
-tuple(string, string, number, string, number); // $ExpectType Decoder<[string, string, number, string, number], unknown>
-tuple(string, string, number, string, number, string); // $ExpectType Decoder<[string, string, number, string, number, string], unknown>
+tuple(string); // $ExpectType Decoder<[string]>
+tuple(string, number); // $ExpectType Decoder<[string, number]>
+tuple(string, string, number); // $ExpectType Decoder<[string, string, number]>
+tuple(string, string, number, string); // $ExpectType Decoder<[string, string, number, string]>
+tuple(string, string, number, string, number); // $ExpectType Decoder<[string, string, number, string, number]>
+tuple(string, string, number, string, number, string); // $ExpectType Decoder<[string, string, number, string, number, string]>
 
 // $ExpectType { name: string; tags: string[]; }
 object({
@@ -106,71 +106,71 @@ object({
 string.verify('dummy', formatInline);
 string.verify('dummy', formatShort);
 
-// $ExpectType Decoder<number, unknown>
+// $ExpectType Decoder<number>
 string.chain((value: string) => ok(value.length));
 
-// $ExpectType Decoder<string, unknown>
+// $ExpectType Decoder<string>
 string.and((s) => s.startsWith('x'), 'Must start with x');
 
-// $ExpectType Decoder<string, unknown>
+// $ExpectType Decoder<string>
 unknown.and((foo): foo is string => typeof foo === 'string', 'Is string');
 
-// $ExpectType Decoder<"a" | "b", unknown>
+// $ExpectType Decoder<"a" | "b">
 string.and((foo: string): foo is 'a' | 'b' => foo === 'a' || foo === 'b', 'Is a or b');
 
-prep(Number, string); // $ExpectType Decoder<string, unknown>
-prep(String, string); // $ExpectType Decoder<string, unknown>
-prep(Number, number); // $ExpectType Decoder<number, unknown>
-prep(String, number); // $ExpectType Decoder<number, unknown>
-prep(String, either(number, string)); // $ExpectType Decoder<string | number, unknown>
-prep(Number, either(number, string)); // $ExpectType Decoder<string | number, unknown>
+prep(Number, string); // $ExpectType Decoder<string>
+prep(String, string); // $ExpectType Decoder<string>
+prep(Number, number); // $ExpectType Decoder<number>
+prep(String, number); // $ExpectType Decoder<number>
+prep(String, either(number, string)); // $ExpectType Decoder<string | number>
+prep(Number, either(number, string)); // $ExpectType Decoder<string | number>
 
-array(string); // $ExpectType Decoder<string[], unknown>
-array(number); // $ExpectType Decoder<number[], unknown>
-array(array(number)); // $ExpectType Decoder<number[][], unknown>
-poja; // $ExpectType Decoder<unknown[], unknown>
+array(string); // $ExpectType Decoder<string[]>
+array(number); // $ExpectType Decoder<number[]>
+array(array(number)); // $ExpectType Decoder<number[][]>
+poja; // $ExpectType Decoder<unknown[]>
 
 boolean.verify('dummy'); // $ExpectType boolean
 truthy.verify('dummy'); // $ExpectType boolean
 numericBoolean.verify('dummy'); // $ExpectType boolean
 
-optional(string); // $ExpectType Decoder<string | undefined, unknown>
-optional(optional(string)); // $ExpectType Decoder<string | undefined, unknown>
+optional(string); // $ExpectType Decoder<string | undefined>
+optional(optional(string)); // $ExpectType Decoder<string | undefined>
 
-nullable(string); // $ExpectType Decoder<string | null, unknown>
-nullable(nullable(string)); // $ExpectType Decoder<string | null, unknown>
+nullable(string); // $ExpectType Decoder<string | null>
+nullable(nullable(string)); // $ExpectType Decoder<string | null>
 
-maybe(string); // $ExpectType Decoder<string | null | undefined, unknown>
-maybe(maybe(string)); // $ExpectType Decoder<string | null | undefined, unknown>
+maybe(string); // $ExpectType Decoder<string | null | undefined>
+maybe(maybe(string)); // $ExpectType Decoder<string | null | undefined>
 
-// $ExpectType Decoder<{ bar: { qux: string; }; foo?: string | undefined; }, unknown>
+// $ExpectType Decoder<{ bar: { qux: string; }; foo?: string | undefined; }>
 object({
     foo: optional(string),
     bar: object({ qux: string }),
 });
 
-// $ExpectType Decoder<{ bar: { qux: string; }; foo?: string | undefined; }, unknown>
+// $ExpectType Decoder<{ bar: { qux: string; }; foo?: string | undefined; }>
 exact({
     foo: optional(string),
     bar: object({ qux: string }),
 });
 
-// $ExpectType Decoder<{ id: string; } & { [extra: string]: unknown; }, unknown>
+// $ExpectType Decoder<{ id: string; } & { [extra: string]: unknown; }>
 inexact({ id: string });
 
-// $ExpectType Decoder<{ [key: string]: unknown; }, unknown>
+// $ExpectType Decoder<{ [key: string]: unknown; }>
 pojo;
 
-// $ExpectType Decoder<Map<string, number>, unknown>
+// $ExpectType Decoder<Map<string, number>>
 mapping(number);
 
-// $ExpectType Decoder<{ [key: string]: number; }, unknown>
+// $ExpectType Decoder<{ [key: string]: number; }>
 dict(number);
 
-// $ExpectType Decoder<string, unknown>
+// $ExpectType Decoder<string>
 lazy(() => string);
 
-// $ExpectType Decoder<number, unknown>
+// $ExpectType Decoder<number>
 lazy(() => number);
 
 // $ExpectType JSONValue
@@ -182,41 +182,41 @@ jsonObject.verify({});
 // $ExpectType JSONArray
 jsonArray.verify([]);
 
-// $ExpectType Decoder<Error, unknown>
+// $ExpectType Decoder<Error>
 instanceOf(Error);
 
-// $ ExpectType Decoder<TypeError, unknown>
+// $ ExpectType Decoder<TypeError>
 instanceOf(TypeError);
 
-// $ExpectType Decoder<RegExp, unknown>
+// $ExpectType Decoder<RegExp>
 instanceOf(RegExp);
 
-// $ExpectType Decoder<Promise<string>, unknown>
+// $ExpectType Decoder<Promise<string>>
 instanceOf<Promise<string>>(Promise);
 
 // $ExpectError
 instanceOf<Promise<string>>(Set);
 
-// $ExpectType Decoder<Date, unknown>
+// $ExpectType Decoder<Date>
 date;
 
 // $ExpectType Date
 const d = iso8601.verify('dummy');
 d.getFullYear();
 
-fail('I will never return'); // $ExpectType Decoder<never, unknown>
-never('I will never return'); // $ExpectType Decoder<never, unknown>
+fail('I will never return'); // $ExpectType Decoder<never>
+never('I will never return'); // $ExpectType Decoder<never>
 
-either(string, number); // $ExpectType Decoder<string | number, unknown>
-either(string, string, number); // $ExpectType Decoder<string | number, unknown>
-either(string, boolean, number, array(number)); // $ExpectType Decoder<string | number | boolean | number[], unknown>
-either(string, string, string, string, string); // $ExpectType Decoder<string, unknown>
-either(string, string, string, string, string, string); // $ExpectType Decoder<string, unknown>
-either(string, string, string, string, string, string, string); // $ExpectType Decoder<string, unknown>
-either(string, string, string, string, string, string, string, string); // $ExpectType Decoder<string, unknown>
-either(string, string, string, string, string, string, string, string, string); // $ExpectType Decoder<string, unknown>
+either(string, number); // $ExpectType Decoder<string | number>
+either(string, string, number); // $ExpectType Decoder<string | number>
+either(string, boolean, number, array(number)); // $ExpectType Decoder<string | number | boolean | number[]>
+either(string, string, string, string, string); // $ExpectType Decoder<string>
+either(string, string, string, string, string, string); // $ExpectType Decoder<string>
+either(string, string, string, string, string, string, string); // $ExpectType Decoder<string>
+either(string, string, string, string, string, string, string, string); // $ExpectType Decoder<string>
+either(string, string, string, string, string, string, string, string, string); // $ExpectType Decoder<string>
 
-// $ExpectType Decoder<"foo" | "bar" | "qux", unknown>
+// $ExpectType Decoder<"foo" | "bar" | "qux">
 oneOf(['foo', 'bar', 'qux']);
 
 interface Rect {
@@ -251,7 +251,7 @@ const circle: Decoder<Circle> = object({
     radius: number,
 });
 
-// $ExpectType Decoder<Values<{ rect: Rect; circle: Circle; }>, unknown>
+// $ExpectType Decoder<Values<{ rect: Rect; circle: Circle; }>>
 taggedUnion('_type', { rect, circle });
 
 interface Rect1 {
@@ -286,10 +286,10 @@ const circle1: Decoder<Circle1> = object({
     radius: number,
 });
 
-// $ExpectType Decoder<Values<{ 0: Rect1; 1: Circle1; }>, unknown>
+// $ExpectType Decoder<Values<{ 0: Rect1; 1: Circle1; }>>
 taggedUnion('_type', { 0: rect1, 1: circle1 });
 
-// $ExpectType Decoder<string, unknown>
+// $ExpectType Decoder<string>
 string.describe('xxx');
-// $ExpectType Decoder<number, unknown>
+// $ExpectType Decoder<number>
 number.describe('xxx');

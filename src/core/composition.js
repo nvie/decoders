@@ -11,7 +11,7 @@ import type { Decoder } from '../_decoder';
  * it to the decoder. Of course, the input value at that point is still of
  * `unknown` type, so you will have to deal with that accordingly.
  */
-export function prep<I, T>(mapperFn: (mixed) => I, decoder: Decoder<T, I>): Decoder<T> {
+export function prep<T>(mapperFn: (mixed) => mixed, decoder: Decoder<T>): Decoder<T> {
     return define((originalInput) => {
         let blob;
         try {
