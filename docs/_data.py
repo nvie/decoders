@@ -8,7 +8,7 @@ import subprocess
 from operator import itemgetter
 
 #
-# These lists the available decoders, as configured in src/core/*.js.
+# These lists the available decoders, as configured in src/lib/*.js.
 #
 DECODERS = {
   'string': {
@@ -1263,7 +1263,7 @@ def find_source_locations():
       "./bin/linenos src/_decoder.js --remote-url --object-methods --json",
     )
     locinfo2 = run_json(
-      "./bin/linenos src/core/*.js --remote-url --functions --variables --json",
+      "./bin/linenos src/lib/*.js --remote-url --functions --variables --json",
     )
 
     # Check the definitions against the found sources
