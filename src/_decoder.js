@@ -15,6 +15,18 @@ export type Decoder<T, F = mixed> = {|
     +verify: (blob: F, formatterFn?: (Annotation) => string) => T,
 |};
 
+/**
+ * Build a Decoder<T> using the given decoding function. A valid decoding
+ * function meets the following requirements:
+ *
+ * 1. The function has no side-effects
+ * 2. The function takes exactly one argument (of `unknown` type) aka it could
+ *    receive anything
+ * 3. The function returns either:
+ *    a. An "ok" Result (with a value payload of type T)
+ *    b. An "err" Result (an annotated representation of the runtime input)
+ *
+ */
 export function define<T, F = mixed>(fn: (F) => DecodeResult<T>): Decoder<T, F> {
     return Object.freeze({
         decode(blob: F): DecodeResult<T> {
