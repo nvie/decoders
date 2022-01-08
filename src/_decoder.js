@@ -14,11 +14,20 @@ export type DecodeResult<T> = Result<T, Annotation>;
 export type DecodeFn<T, I = mixed> = (blob: I) => DecodeResult<T>;
 
 /**
- * A "type function" which informs Flow about how a type will be modified at runtime.
- * Read this as "given a Guard of type T, I can produce a value of type T".  This
- * definition helps construct $ObjMap types.
+ * Helper type to return the "type" of a Decoder.
+ *
+ * You can use it on types:
+ *
+ *   DecoderType<Decoder<string>>       // => string
+ *   DecoderType<Decoder<number[]>>     // => number[]
+ *
+ * Or on "values", by using the `typeof` keyword:
+ *
+ *   DecoderType<typeof array(string)>  // => string[]
+ *   DecoderType<typeof truthy>         // => boolean
+ *
  */
-export type DecoderType = <T>(Decoder<T>) => T;
+export type DecoderType<D> = $Call<<T>(Decoder<T>) => T, D>;
 
 export type Decoder<T> = {|
     +decode: DecodeFn<T>,

@@ -5,10 +5,7 @@ import { define } from '../_decoder';
 import { err, ok } from '../result';
 import type { _Any } from '../_utils';
 import type { Annotation } from '../annotate';
-import type { Decoder, DecodeResult, DecoderType } from '../_decoder';
-
-// $FlowFixMe[unclear-type] (not really an issue) - deliberately casting
-type cast = any;
+import type { Decoder, DecodeResult } from '../_decoder';
 
 function isPojo(o: mixed): boolean %checks {
     return (
@@ -75,7 +72,7 @@ export const pojo: Decoder<{| [string]: mixed |}> = define((blob) =>
  */
 export function object<O: { +[field: string]: Decoder<_Any>, ... }>(
     mapping: O,
-): Decoder<$ObjMap<O, DecoderType>> {
+): Decoder<$ObjMap<O, <T>(Decoder<T>) => T>> {
     const known = new Set(Object.keys(mapping));
     return pojo.chain((blob) => {
         const actual = new Set(Object.keys(blob));
@@ -151,7 +148,7 @@ export function object<O: { +[field: string]: Decoder<_Any>, ... }>(
 
 export function exact<O: { +[field: string]: Decoder<_Any>, ... }>(
     mapping: O,
-): Decoder<$ObjMap<$Exact<O>, DecoderType>> {
+): Decoder<$ObjMap<$Exact<O>, <T>(Decoder<T>) => T>> {
     // Check the inputted object for any superfluous keys
     const allowed = new Set(Object.keys(mapping));
     const checked = pojo.chain((blob) => {
@@ -168,34 +165,37 @@ export function exact<O: { +[field: string]: Decoder<_Any>, ... }>(
     // Defer to the "object" decoder for doing the real decoding work.  Since
     // we made sure there are no superfluous keys in this structure, it's now
     // safe to force-cast it to an $Exact<> type.
-    const decoder = ((object(mapping): cast): Decoder<$ObjMap<$Exact<O>, DecoderType>>);
+    // prettier-ignore
+    const decoder = ((object(mapping): _Any): Decoder<$ObjMap<$Exact<O>, <T>(Decoder<T>) => T>>);
     return checked.chain(decoder.decode);
 }
 
 export function inexact<O: { +[field: string]: Decoder<_Any> }>(
     mapping: O,
-): Decoder<$ObjMap<O, DecoderType> & { +[string]: mixed }> {
+): Decoder<$ObjMap<O, <T>(Decoder<T>) => T> & { +[string]: mixed }> {
     return pojo.chain((blob) => {
         const allkeys = new Set(Object.keys(blob));
-        const decoder = object(mapping).transform((safepart: $ObjMap<O, DecoderType>) => {
-            const safekeys = new Set(Object.keys(mapping));
+        const decoder = object(mapping).transform(
+            (safepart: $ObjMap<O, <T>(Decoder<T>) => T>) => {
+                const safekeys = new Set(Object.keys(mapping));
 
-            // To account for hard-coded keys that aren't part of the input
-            safekeys.forEach((k) => allkeys.add(k));
+                // To account for hard-coded keys that aren't part of the input
+                safekeys.forEach((k) => allkeys.add(k));
 
-            const rv = {};
-            allkeys.forEach((k) => {
-                if (safekeys.has(k)) {
-                    const value = safepart[k];
-                    if (value !== undefined) {
-                        rv[k] = value;
+                const rv = {};
+                allkeys.forEach((k) => {
+                    if (safekeys.has(k)) {
+                        const value = safepart[k];
+                        if (value !== undefined) {
+                            rv[k] = value;
+                        }
+                    } else {
+                        rv[k] = blob[k];
                     }
-                } else {
-                    rv[k] = blob[k];
-                }
-            });
-            return rv;
-        });
+                });
+                return rv;
+            },
+        );
         return decoder.decode(blob);
     });
 }

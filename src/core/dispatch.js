@@ -6,7 +6,7 @@ import { object } from './objects';
 import { oneOf } from './either';
 import { prep } from './composition';
 import type { _Any } from '../_utils';
-import type { Decoder, DecoderType } from '../_decoder';
+import type { Decoder } from '../_decoder';
 
 /**
  * Dispatches to one of several given decoders, based on the value found at
@@ -46,7 +46,7 @@ import type { Decoder, DecoderType } from '../_decoder';
 export function taggedUnion<O: { +[field: string]: Decoder<_Any>, ... }>(
     field: string,
     mapping: O,
-): Decoder<$Values<$ObjMap<O, DecoderType>>> {
+): Decoder<$Values<$ObjMap<O, <T>(Decoder<T>) => T>>> {
     const base = object({
         [field]: prep(String, oneOf(Object.keys(mapping))),
     });

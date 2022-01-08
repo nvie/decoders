@@ -5,6 +5,7 @@ import {
     constant,
     date,
     Decoder,
+    DecoderType,
     define,
     dict,
     either,
@@ -54,6 +55,16 @@ import {
 } from 'decoders';
 import { formatInline, formatShort } from 'decoders/format';
 import { ok } from 'decoders/result';
+
+const strings = array(string);
+
+// $ExpectType (p: string, q: number[], r: string[], s: boolean) => void
+function foo(
+    p: DecoderType<Decoder<string>>,
+    q: DecoderType<Decoder<number[]>>,
+    r: DecoderType<typeof strings>,
+    s: DecoderType<typeof truthy>,
+) {}
 
 constant('foo'); // $ExpectType Decoder<"foo">
 hardcoded('foo'); // $ExpectType Decoder<"foo">
