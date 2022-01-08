@@ -6,7 +6,6 @@ export {
     Scalar,
     define,
 } from './_decoder';
-export { Result } from './result';
 export { JSONValue, JSONObject, JSONArray } from './core/json';
 
 export { compose, predicate, prep, transform } from './core/composition';
