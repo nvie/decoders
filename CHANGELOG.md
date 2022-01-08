@@ -1,8 +1,8 @@
 ## v2.0.0-beta
 
-Upgrading to v2 _can_, but doesn't _have_ to be a breaking change for you. If upgrading
-causes errors for you, please see the [migration guide](./MIGRATING-v2.md) for
-instructions.
+This is a breaking change, which brings numerous benefits including speed, bundle size,
+and simplicity. Please see the [migration guide](./MIGRATING-v2.md) for instructions on
+how to adjust your code.
 
 Potentially breaking changes:
 
@@ -11,6 +11,8 @@ Potentially breaking changes:
 -   Drop support for TypeScript versions below 4.1.0
 -   Drop all package dependencies
 -   Removed decoders:
+    -   `guard()` no longer exists, see
+        [migration instructions](./MIGRATING-v2.md#guards-are-no-longer-a-thing)
     -   `eitherN()` (now simply `either()`, see
         [migration instructions](./MIGRATING-v2.md#eitherN-is-now-simply-either))
     -   `tupleN()` (now simply `tuple()`, see
@@ -21,9 +23,6 @@ Potentially breaking changes:
     -   `dispatch()` → `taggedUnion()` - see
         [migration instructions](./MIGRATING-v2.md#dispatch-is-now-taggedUnion)
 -   Decoders that have changed:
-    -   API of `guard()` has changed (but only if you used its undocumented second
-        argument 😉) - see
-        [migration instructions](./MIGRATING-v2.md#changes-to-the-guard-api)
     -   API of `predicate()` has changed - see
         [migration instructions](./MIGRATING-v2.md#predicate-is-now-a-first-class-citizen)
     -   API of `url` decoder has changed - see

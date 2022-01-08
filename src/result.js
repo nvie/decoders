@@ -26,13 +26,15 @@ export function err<E>(error: E): Err<E> {
 }
 
 /**
- * Like .and(), aka &&, but the second argument gets evaluated lazily only if
- * the first result is an Ok result. If so, it has access to the Ok value from
- * the first argument.
+ * Chain together multiple results. If the first result is ok, return the
+ * result of invoking the callback with that first value.
+ * The callback is only invoked lazily if the first result is an Ok result.
+ * If so, it has
+ * access to the Ok value from the first argument.
  */
-export function andThen<T1, E, T2>(
-    r: Result<T1, E>,
-    callback: (value: T1) => Result<T2, E>,
-): Result<T2, E> {
+export function andThen<A, B, E>(
+    r: Result<A, E>,
+    callback: (value: A) => Result<B, E>,
+): Result<B, E> {
     return r.ok ? callback(r.value) : r;
 }

@@ -14,7 +14,7 @@ export type Result<T, E> = Ok<T> | Err<E>;
 
 export function ok<T>(value: T): Ok<T>;
 export function err<E>(error: E): Err<E>;
-export function andThen<T, E, T2>(
-    result1: Result<T, E>,
-    lazyResult2: (value: T) => Result<T2, E>,
-): Result<T2, E>;
+export function andThen<A, B, E>(
+    result1: Result<A, E>,
+    lazyResult2: (value: A) => Result<B, E>,
+): Result<B, E>;

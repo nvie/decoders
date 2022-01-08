@@ -92,37 +92,6 @@ import { transform } from 'decoders';
 transform(number, (n) => n + 1);
 ```
 
-### `Result` is no longer a class
-
-`Result` is no longer a class. As such, methods previously available on instances no
-longer exist. These have been moved to function calls, to support tree-shaking unused
-methods from your bundle.
-
-Suggested changes:
-
-```typescript
-// ✅ Import the helpers you need directly as functions
-import { ... } from 'decoders/result';
-//       ^^^
-//       ✨
-```
-
-| Replace usage of          | With ✨                 |     |
-| ------------------------- | ----------------------- | --- |
-| `result.andThen()`        | `andThen(result)`       |     |
-| `result.dispatch()`       | `dispatch(result)`      |     |
-| `result.errValue()`       | `result.error`          | ⚠️  |
-| `result.expect()`         | `expect(result)`        |     |
-| `result.isErr()`          | `!result.ok`            | ⚠️  |
-| `result.isOk()`           | `result.ok`             | ⚠️  |
-| `result.map()`            | `mapOk(result)`         | ⚠️  |
-| `result.mapError()`       | `mapError(result)`      |     |
-| `result.toString()`       | (has been removed)      |     |
-| `result.unwrap()`         | `unwrap(result)`        |     |
-| `result.value() ?? xxx`   | `result.value ?? xxx`   |     |
-| `result.value() \|\| xxx` | `result.value \|\| xxx` |     |
-| `result.withDefault(xxx)` | `result.value ?? xxx`   | ⚠️  |
-
 ### Changes to the `Result` type
 
 If you have written a type of the form `Result<E, T>` (where E = error, T = success),
@@ -133,6 +102,48 @@ Change:
 ```typescript
 Result<E, T>  // ❌ Change this...
 Result<T, E>  // ✅ ...to this
+```
+
+#### `Result` is no longer a class
+
+`Result` is no longer a class. As such, methods previously available on instances no
+longer exist. Most of them have also been removed, to favor direct access of the `ok`,
+`value`, and `error` properties. This plays well with TypeScript as well as helps to
+tree-shake unused methods from your bundle.
+
+Suggested changes:
+
+```typescript
+import { andThen, err, ok } from 'decoders/result';
+```
+
+| Replace usage of          | With ✨                                         |
+| ------------------------- | ----------------------------------------------- |
+| `result.andThen()`        | `andThen(result)`                               |
+| `result.dispatch(f, g)`   | `result.ok ? f(result.value) : g(result.error)` |
+| `result.errValue()`       | `result.error`                                  |
+| `result.expect()`         | _removed_                                       |
+| `result.isErr()`          | `!result.ok`                                    |
+| `result.isOk()`           | `result.ok`                                     |
+| `result.map(f)`           | `result.ok ? ok(f(result.value)) : result`      |
+| `result.mapError(g)`      | `result.ok ? result : err(g(result.error))`     |
+| `result.toString()`       | _removed_                                       |
+| `result.unwrap()`         | _removed_ (see below)                           |
+| `result.value() ?? xxx`   | `result.value ?? xxx`                           |
+| `result.value() \|\| xxx` | `result.value \|\| xxx`                         |
+| `result.withDefault(xxx)` | `result.value ?? xxx`                           |
+
+If you're using `result.unwrap()` it's probably because you're using it like so. You will
+likely no longer need it, now that the decoder method
+[`.verify()`](https://decoders.cc/api/Decoder#verify) exists.
+
+```ts
+// ❌
+const result = mydecoder(externalData);
+result.unwrap(); // Might throw
+
+// ✅
+mydecoder.verify(externalData); // Might throw
 ```
 
 ## `eitherN()` is now simply `either()`
@@ -252,10 +263,39 @@ makes room for a more generic version of `dispatch` in a future version.
 
 ## Change `$DecoderType` to `DecoderType` (without the `$`)
 
-The helper type `$DecoderType` has been renamed to `DecoderType`. Just remove the `$`
-prefix.
+**Flow users only!** The helper type `$DecoderType` has now been simplified. The `$`-sign
+has been removed from the name, and the usage also changed:
 
-## Change `$GuardType` to `GuardType` (without the `$`)
+```js
+const mydecoder = array(whatever);
+
+// ❌
+type X = $Call<$DecoderType, typeof mydecoder>; // Array<Whatever>
+
+// ✅
+type X = DecoderType<typeof mydecoder>; // Array<Whatever>
+```
+
+(In TypeScript, this already worked this way.)
+
+## Guards are no longer a thing
+
+The concept of "guards" has been removed entirely. The following APIs have been removed:
+
+-   The function `guard()`
+-   The type `Guard<T>`
+-   The helper type `GuardType<T>`
+
+```ts
+// ❌
+import { guard, Guard } from 'decoders';
+
+const verify: Guard<Whatever> = guard(whatever);
+const value: Whatever = verify(externalData);
+
+// ✅
+const value: Whatever = whatever.verify(externalData);
+```
 
 The helper type `$GuardType` has been renamed to `GuardType`. Just remove the `$` prefix.
 
@@ -264,12 +304,15 @@ The helper type `$GuardType` has been renamed to `GuardType`. Just remove the `$
 If you use the (undocumented) second argument to the Guard API, rewrite it as follows:
 
 ```typescript
-guard(mydecoder, { style: 'simple' });
-//               ^^^^^^^^^^^^^^^^^^^ ❌
+// ❌
+const verify = guard(mydecoder, { style: 'simple' });
+//                              ^^^^^^^^^^^^^^^^^^^
+verify(externalData);
 
+// ✅
 import { formatShort } from 'decoders/format';
-guard(mydecoder, formatShort);
-//               ^^^^^^^^^^^ ✅
+mydecoder.verify(externalData, formatShort);
+//                             ^^^^^^^^^^^
 ```
 
 [^1]:
