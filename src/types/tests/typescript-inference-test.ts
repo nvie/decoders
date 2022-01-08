@@ -6,6 +6,7 @@ import {
     constant,
     date,
     Decoder,
+    define,
     describe,
     dict,
     either,
@@ -56,7 +57,7 @@ import {
     uuidv4,
 } from 'decoders';
 import { formatInline, formatShort } from 'decoders/format';
-import { ok, unwrap } from 'decoders/result';
+import { ok } from 'decoders/result';
 
 constant('foo'); // $ExpectType Decoder<"foo", unknown>
 hardcoded('foo'); // $ExpectType Decoder<"foo", unknown>
@@ -113,7 +114,10 @@ string.verify('dummy', formatShort);
 transform(string, parseFloat);
 
 // $ExpectType Decoder<number, unknown>
-compose(string, (value: string) => ok(value.length));
+compose(
+    string,
+    define((value: string) => ok(value.length)),
+);
 
 // $ExpectType Decoder<string, unknown>
 predicate(string, (s) => s.startsWith('x'), 'Must start with x');
@@ -184,13 +188,13 @@ lazy(() => string);
 lazy(() => number);
 
 // $ExpectType JSONValue
-unwrap(json('hi'));
+json.verify('hi');
 
 // $ExpectType JSONObject
-unwrap(jsonObject({}));
+jsonObject.verify({});
 
 // $ExpectType JSONArray
-unwrap(jsonArray([]));
+jsonArray.verify([]);
 
 // $ExpectType Decoder<Error, unknown>
 instanceOf(Error);
