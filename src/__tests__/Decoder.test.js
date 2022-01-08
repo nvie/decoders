@@ -1,16 +1,12 @@
 // @flow strict
-/* eslint-disable no-restricted-syntax */
 
-import { annotate } from '../../annotate';
-import { constant } from '../constants';
-import { err, ok } from '../../result';
-import { INPUTS } from './fixtures';
-import { number } from '../numbers';
-import { partition } from 'itertools';
-import { prep } from '../composition';
-import { string } from '../strings';
+import { annotate } from '../annotate';
+import { err, ok } from '../result';
+import { formatInline, formatShort } from '../format';
+import { number } from '../lib/numbers';
+import { string } from '../lib/strings';
 
-describe('compose', () => {
+describe('.chain', () => {
     const hex =
         // We already know how to decode strings...
         string.chain(
@@ -32,7 +28,7 @@ describe('compose', () => {
     });
 });
 
-describe('transform', () => {
+describe('.transform', () => {
     it('change type of decode result', () => {
         const len = string.transform((s) => s.length);
         expect(len.verify('foo')).toEqual(3);
@@ -65,7 +61,7 @@ describe('transform', () => {
     });
 });
 
-describe('predicate', () => {
+describe('.and', () => {
     const odd = number.and((n) => n % 2 !== 0, 'Must be odd');
 
     it('valid', () => {
@@ -83,26 +79,48 @@ describe('predicate', () => {
     });
 });
 
-describe('prep', () => {
-    const answerToLife = prep((x) => parseInt(x), constant((42: 42)));
-    const [okay, not_okay] = partition(INPUTS, (x) => String(x) === '42');
+describe('.describe', () => {
+    const decoder = string.describe('Must be text');
 
     it('valid', () => {
-        expect(okay.length).not.toBe(0);
-        for (const value of okay) {
-            expect(answerToLife.verify(value)).toBe(42);
-        }
+        expect(decoder.verify('foo')).toBe('foo');
+        expect(decoder.verify('')).toBe('');
     });
 
     it('invalid', () => {
-        expect(not_okay.length).not.toBe(0);
-        for (const value of not_okay) {
-            expect(answerToLife.decode(value).ok).toBe(false);
-        }
+        expect(() => decoder.verify(0)).toThrow(/Must be text/);
+    });
+});
+
+describe('.verify', () => {
+    it('valid', () => {
+        const decoder = number;
+        expect(decoder.verify(0)).toBe(0);
+        expect(decoder.verify(1)).toBe(1);
+        expect(decoder.verify(4)).toBe(4);
+        expect(decoder.verify(-3)).toBe(-3);
+        expect(decoder.verify(-3.14)).toBe(-3.14);
     });
 
-    it('invalid when prep mapper function throws', () => {
-        expect(answerToLife.decode(Symbol('foo')).ok).toBe(false);
-        //                  ^^^^^^^^^^^^^ This will cause the `Number(x)` call to throw
+    it('invalid', () => {
+        const decoder = number;
+        expect(() => decoder.verify('foo')).toThrow('Must be number');
+    });
+
+    it('different erroring styles', () => {
+        const decoder = number;
+
+        // Default
+        expect(() => decoder.verify('xyz')).toThrow('xyz');
+        expect(() => decoder.verify('xyz')).toThrow('Must be number');
+
+        // Same as default
+        expect(() => decoder.verify('xyz', formatInline)).toThrow('xyz');
+        expect(() => decoder.verify('xyz', formatInline)).toThrow('Must be number');
+
+        // Without echoing back the inputs
+        expect(() => decoder.verify('xyz', formatShort)).not.toThrow('xyz');
+        //                                               ^^^ Make sure the input is _NOT_ echoed back
+        expect(() => decoder.verify('xyz', formatShort)).toThrow(/Must be number/);
     });
 });

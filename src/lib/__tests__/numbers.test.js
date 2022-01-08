@@ -1,7 +1,7 @@
 // @flow strict
 /* eslint-disable no-restricted-syntax */
 
-import { INPUTS } from './fixtures';
+import { INPUTS } from './_fixtures';
 import { integer, number, positiveInteger, positiveNumber } from '../numbers';
 import { partition } from 'itertools';
 

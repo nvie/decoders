@@ -2,6 +2,7 @@
 
 import { annotate } from '../annotate';
 import { define } from '../_decoder';
+import { either } from './either';
 import { err, ok } from '../result';
 import type { Decoder, Scalar } from '../_decoder';
 
@@ -18,6 +19,34 @@ export const null_: Decoder<null> = define((blob) =>
 export const undefined_: Decoder<void> = define((blob) =>
     blob === undefined ? ok(blob) : err(annotate(blob, 'Must be undefined')),
 );
+
+/**
+ * Accepts whatever the given decoder accepts, or `undefined`.
+ */
+export function optional<T>(decoder: Decoder<T>): Decoder<void | T> {
+    return either(undefined_, decoder);
+}
+
+/**
+ * Accepts whatever the given decoder accepts, or `null`.
+ */
+export function nullable<T>(decoder: Decoder<T>): Decoder<null | T> {
+    return either(null_, decoder);
+}
+
+const undefined_or_null: Decoder<null | void> = define((blob) =>
+    blob === undefined || blob === null
+        ? ok(blob)
+        : // Combine error message into a single line for readability
+          err(annotate(blob, 'Must be undefined or null')),
+);
+
+/**
+ * Accepts whatever the given decoder accepts, or `null`, or `undefined`.
+ */
+export function maybe<T>(decoder: Decoder<T>): Decoder<T | null | void> {
+    return either(undefined_or_null, decoder);
+}
 
 /**
  * Accepts only the given constant value.

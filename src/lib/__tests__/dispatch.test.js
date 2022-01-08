@@ -1,6 +1,6 @@
 // @flow strict
 
-import { constant } from '../constants';
+import { constant } from '../basics';
 import { number } from '../numbers';
 import { object } from '../objects';
 import { string } from '../strings';

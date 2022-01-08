@@ -661,7 +661,7 @@ iso8601.verify(new Date());    // throws (does not accept dates)
 ---
 
 <a name="constant" href="#constant">#</a>
-**constant**&lt;<i style="color: #267f99">T</i>&gt;(value: <i style="color: #267f99">T</i>): <i style="color: #267f99">Decoder&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/constants.js#L25-L31 'Source')
+**constant**&lt;<i style="color: #267f99">T</i>&gt;(value: <i style="color: #267f99">T</i>): <i style="color: #267f99">Decoder&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L54-L60 'Source')
 
 Accepts only the given constant value.
 
@@ -682,9 +682,9 @@ decoder.verify(undefined);      // throws
 ---
 
 <a name="always" href="#always">#</a>
-**always**&lt;<i style="color: #267f99">T</i>&gt;(value: <i style="color: #267f99">T</i>): <i style="color: #267f99">Decoder&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/constants.js#L39-L41 'Source')  
+**always**&lt;<i style="color: #267f99">T</i>&gt;(value: <i style="color: #267f99">T</i>): <i style="color: #267f99">Decoder&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L68-L70 'Source')  
 <a name="hardcoded" href="#hardcoded">#</a>
-**hardcoded**&lt;<i style="color: #267f99">T</i>&gt;(value: <i style="color: #267f99">T</i>): <i style="color: #267f99">Decoder&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/constants.js#L46 'Source')
+**hardcoded**&lt;<i style="color: #267f99">T</i>&gt;(value: <i style="color: #267f99">T</i>): <i style="color: #267f99">Decoder&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L75 'Source')
 
 Accepts anything, completely ignores it, and always returns the provided value instead.
 
@@ -718,7 +718,7 @@ decoder.verify(undefined) === 42;
 ---
 
 <a name="null_" href="#null_">#</a>
-**null_**: <i style="color: #267f99">Decoder&lt;null&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/constants.js#L11-L13 'Source')
+**null_**: <i style="color: #267f99">Decoder&lt;null&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L12-L14 'Source')
 
 Accepts and returns only the literal `null` value.
 
@@ -735,7 +735,7 @@ null_.verify('hello world'); // throws
 ---
 
 <a name="undefined_" href="#undefined_">#</a>
-**undefined_**: <i style="color: #267f99">Decoder&lt;undefined&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/constants.js#L18-L20 'Source')
+**undefined_**: <i style="color: #267f99">Decoder&lt;undefined&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L19-L21 'Source')
 
 Accepts and returns only the literal `undefined` value.
 
@@ -752,7 +752,7 @@ undefined_.verify('hello world'); // throws
 ---
 
 <a name="optional" href="#optional">#</a>
-**optional**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99">Decoder&lt;T&gt;</i>): <i style="color: #267f99">Decoder&lt;T | undefined&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/optional.js#L13-L15 'Source')
+**optional**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99">Decoder&lt;T&gt;</i>): <i style="color: #267f99">Decoder&lt;T | undefined&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L26-L28 'Source')
 
 Accepts whatever the given decoder accepts, or `undefined`.
 
@@ -792,7 +792,7 @@ Which will decode to type:
 ---
 
 <a name="nullable" href="#nullable">#</a>
-**nullable**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99">Decoder&lt;T&gt;</i>): <i style="color: #267f99">Decoder&lt;T | null&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/optional.js#L20-L22 'Source')
+**nullable**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99">Decoder&lt;T&gt;</i>): <i style="color: #267f99">Decoder&lt;T | null&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L33-L35 'Source')
 
 Accepts whatever the given decoder accepts, or `null`.
 
@@ -812,7 +812,7 @@ decoder.verify(42);         // throws
 ---
 
 <a name="maybe" href="#maybe">#</a>
-**maybe**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99">Decoder&lt;T&gt;</i>): <i style="color: #267f99">Decoder&lt;T | null | undefined&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/optional.js#L39-L41 'Source')
+**maybe**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99">Decoder&lt;T&gt;</i>): <i style="color: #267f99">Decoder&lt;T | null | undefined&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L47-L49 'Source')
 
 Accepts whatever the given decoder accepts, or `null`, or `undefined`.
 
@@ -832,9 +832,9 @@ decoder.verify(42);  // throws
 ---
 
 <a name="unknown" href="#unknown">#</a>
-**unknown**: <i style="color: #267f99">Decoder&lt;unknown&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/constants.js#L55 'Source')  
+**unknown**: <i style="color: #267f99">Decoder&lt;unknown&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L84 'Source')  
 <a name="mixed" href="#mixed">#</a>
-**mixed**: <i style="color: #267f99">Decoder&lt;unknown&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/constants.js#L60 'Source')
+**mixed**: <i style="color: #267f99">Decoder&lt;unknown&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L89 'Source')
 
 Accepts anything and returns it unchanged.
 
@@ -1262,7 +1262,7 @@ oneOf(['foo', 'bar']);
 ---
 
 <a name="prep" href="#prep">#</a>
-**prep**&lt;<i style="color: #267f99">T</i>&gt;(mapperFn: <i style="color: #267f99">(raw: mixed) =&gt; mixed</i>, decoder: <i style="color: #267f99">Decoder&lt;T&gt;</i>): <i style="color: #267f99">Decoder&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/composition.js#L14-L29 'Source')
+**prep**&lt;<i style="color: #267f99">T</i>&gt;(mapperFn: <i style="color: #267f99">(raw: mixed) =&gt; mixed</i>, decoder: <i style="color: #267f99">Decoder&lt;T&gt;</i>): <i style="color: #267f99">Decoder&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L42-L57 'Source')
 
 Pre-process the raw data input before passing it into the decoder. This gives you the ability to arbitrarily customize the input on the fly before passing it to the decoder. Of course, the input value at that point is still of `unknown` type, so you will have to deal with that accordingly.
 
@@ -1288,9 +1288,9 @@ decoder.verify('hi');  // throws: not a number
 ---
 
 <a name="never" href="#never">#</a>
-**never**: <i style="color: #267f99">Decoder&lt;never&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/never.js#L11-L13 'Source')  
+**never**: <i style="color: #267f99">Decoder&lt;never&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L62-L64 'Source')  
 <a name="fail" href="#fail">#</a>
-**fail**: <i style="color: #267f99">Decoder&lt;never&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/never.js#L18 'Source')
+**fail**: <i style="color: #267f99">Decoder&lt;never&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L69 'Source')
 
 Rejects all inputs, and always fails with the given error message. May be useful for explicitly disallowing keys, or for testing purposes.
 
@@ -1311,7 +1311,7 @@ decoder.verify({ a: 'foo', b: 'bar' });  // throws
 ---
 
 <a name="instanceOf" href="#instanceOf">#</a>
-**instanceOf**&lt;<i style="color: #267f99">T</i>&gt;(klass: <i style="color: #267f99">Class&lt;T&gt;</i>): <i style="color: #267f99">Decoder&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/instanceOf.js#L8-L22 'Source')
+**instanceOf**&lt;<i style="color: #267f99">T</i>&gt;(klass: <i style="color: #267f99">Class&lt;T&gt;</i>): <i style="color: #267f99">Decoder&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L11-L25 'Source')
 
 Accepts any value that is an `instanceof` the given class.
 
@@ -1330,7 +1330,7 @@ decoder.verify(3);      // throws
 ---
 
 <a name="lazy" href="#lazy">#</a>
-**lazy**&lt;<i style="color: #267f99">T</i>&gt;(decoderFn: <i style="color: #267f99">() =&gt; Decoder&lt;T&gt;</i>): <i style="color: #267f99">Decoder&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/lazy.js#L11-L13 'Source')
+**lazy**&lt;<i style="color: #267f99">T</i>&gt;(decoderFn: <i style="color: #267f99">() =&gt; Decoder&lt;T&gt;</i>): <i style="color: #267f99">Decoder&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L32-L34 'Source')
 
 Lazily evaluate the given decoder. This is useful to build self-referential types for recursive data structures. Example:
 
@@ -1351,5 +1351,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 695d7a0338d5d1fc685853c88e197a33) -->
+<!--[[[end]]] (checksum: 7bf74970674833606fc3101375fabdaf) -->
 <!-- prettier-ignore-end -->

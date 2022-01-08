@@ -4,7 +4,7 @@ import { annotate } from '../annotate';
 import { define } from '../_decoder';
 import { either } from './either';
 import { err, ok } from '../result';
-import { instanceOf } from './instanceOf';
+import { instanceOf } from './utilities';
 import type { Decoder } from '../_decoder';
 
 /** Match groups in this regex:

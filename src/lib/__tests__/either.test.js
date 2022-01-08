@@ -2,9 +2,9 @@
 /* eslint-disable no-restricted-syntax */
 
 import { boolean } from '../booleans';
-import { constant, undefined_ } from '../constants';
+import { constant, undefined_ } from '../basics';
 import { either, oneOf } from '../either';
-import { INPUTS } from './fixtures';
+import { INPUTS } from './_fixtures';
 import { number } from '../numbers';
 import { object } from '../objects';
 import { partition } from 'itertools';

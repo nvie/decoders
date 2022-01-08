@@ -5,17 +5,18 @@ export type { JSONValue, JSONObject, JSONArray } from './lib/json';
 
 export { define } from './_decoder';
 
-export { prep } from './lib/composition';
-
 export {
     always,
     constant,
     hardcoded,
+    maybe,
     mixed,
+    nullable,
     null_,
+    optional,
     undefined_,
     unknown,
-} from './lib/constants';
+} from './lib/basics';
 export { array, nonEmptyArray, poja, set, tuple } from './lib/arrays';
 export { boolean, numericBoolean, truthy } from './lib/booleans';
 export { date, iso8601 } from './lib/dates';
@@ -32,10 +33,7 @@ export {
     uuidv1,
     uuidv4,
 } from './lib/strings';
-export { fail, never } from './lib/never';
-export { instanceOf } from './lib/instanceOf';
+export { fail, instanceOf, lazy, never, prep } from './lib/utilities';
 export { integer, number, positiveInteger, positiveNumber } from './lib/numbers';
 export { json, jsonObject, jsonArray } from './lib/json';
-export { lazy } from './lib/lazy';
-export { maybe, nullable, optional } from './lib/optional';
 export { taggedUnion } from './lib/dispatch';

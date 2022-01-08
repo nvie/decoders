@@ -4,7 +4,7 @@ import { andThen } from '../result';
 import { define } from '../_decoder';
 import { object } from './objects';
 import { oneOf } from './either';
-import { prep } from './composition';
+import { prep } from './utilities';
 import type { _Any } from '../_utils';
 import type { Decoder } from '../_decoder';
 

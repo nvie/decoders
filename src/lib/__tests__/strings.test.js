@@ -13,7 +13,7 @@ import {
     uuidv1,
     uuidv4,
 } from '../strings';
-import { INPUTS } from './fixtures';
+import { INPUTS } from './_fixtures';
 import { partition } from 'itertools';
 
 describe('string', () => {

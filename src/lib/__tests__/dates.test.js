@@ -2,7 +2,7 @@
 /* eslint-disable no-restricted-syntax */
 
 import { date, iso8601 } from '../dates';
-import { INPUTS } from './fixtures';
+import { INPUTS } from './_fixtures';
 import { partition } from 'itertools';
 
 describe('dates', () => {
