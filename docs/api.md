@@ -36,7 +36,7 @@ has_children: true
 ---
 
 <a name="decode" href="#decode">#</a>
-Decoder&lt;T&gt;<b>.decode</b>(blob: mixed): <i>DecodeResult&lt;T&gt;</i>
+<i>Decoder&lt;T&gt;</i> <b>.decode</b>(blob: mixed): <i>DecodeResult&lt;T&gt;</i>
 [(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
 
 Validates the raw/untrusted/unknown input and either accepts or rejects it.
@@ -61,7 +61,7 @@ number.decode('hi')  // { ok: false, error: { type: 'scalar', value: 'hi', text:
 
 ---
 
-<a name="verify" href="#verify">#</a> Decoder&lt;T&gt;<b>.verify</b>(blob: mixed):
+<a name="verify" href="#verify">#</a> <i>Decoder&lt;T&gt;</i> <b>.verify</b>(blob: mixed):
 <i>T</i>
 [(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
 
@@ -82,8 +82,8 @@ number.verify('hi')  // throws
 
 ---
 
-<a name="and" href="#and">#</a> Decoder&lt;T&gt;<b>.and</b>(predicate: <i>&lt;T&gt; =>
-boolean</i>, message: <i>string</i>): <i>Decoder&lt;T&gt;</i>
+<a name="and" href="#and">#</a> <i>Decoder&lt;T&gt;</i> <b>.and</b>(predicate:
+<i>&lt;T&gt; =&gt; boolean</i>, message: <i>string</i>): <i>Decoder&lt;T&gt;</i>
 [(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
 
 Accepts values that are accepted by the decoder _and_ also pass the predicate function.
@@ -109,38 +109,43 @@ predicate][ts-predicates], then this will be reflected in the return type, too.
 
 ---
 
-<a name="chain" href="#chain">#</a> Decoder&lt;T&gt;<b>.chain</b><i>&lt;T,
-V&gt;</i>(<i>T</i> => <i>DecodeResult&lt;V&gt;</i>): <i>Decoder&lt;V&gt;</i>
-[(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
-
-Given a decoder for _T_ and another one for <i>V</i>-given-a-<i>T</i>. Will first decode
-the input using the first decoder, and _if accepted_, pass the result on to the second
-decoder. The second decoder will thus be able to make more assumptions about its input
-value, i.e. it can know what type the input value is (`T` instead of `unknown`).
-
-This is an advanced decoder, typically only useful for authors of decoders. It's not
-recommended to rely on this decoder directly for normal usage.
-
----
-
-<a name="then" href="#then">#</a> Decoder&lt;T&gt;<b>.then</b><i>&lt;T,
-V&gt;</i>(<i>Decoder&lt;V, T&gt;</i>): <i>Decoder&lt;V&gt;</i>
-[(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
-
-Given a decoder for _T_ and another one for <i>V</i>-given-a-<i>T</i>. Will first decode
-the input using the first decoder, and _if accepted_, pass the result on to the second
-decoder. The second decoder will thus be able to make more assumptions about its input
-value, i.e. it can know what type the input value is (`T` instead of `unknown`).
-
-This is an advanced decoder, typically only useful for authors of decoders. It's not
-recommended to rely on this decoder directly for normal usage.
-
----
-
-<a name="transform" href="#transform">#</a> <b>transform</b><i>&lt;T,
-V&gt;</i>(<i>Decoder&lt;T&gt;</i>, <i>&lt;T&gt;</i> =&gt; <i>&lt;V&gt;</i>):
+<a name="chain" href="#chain">#</a> <i>Decoder&lt;T&gt;</i>
+<b>.chain</b><i>&lt;V&gt;</i>(<i>T</i> =&gt; <i>DecodeResult&lt;V&gt;</i>):
 <i>Decoder&lt;V&gt;</i>
-[(source)](https://github.com/nvie/decoders/blob/main/src/core/utils.js 'Source')<br />
+[(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
+
+Given a decoder for _T_ and another one for <i>V</i>-given-a-<i>T</i>. Will first decode
+the input using the first decoder, and _if accepted_, pass the result on to the second
+decoder. The second decoder will thus be able to make more assumptions about its input
+value, i.e. it can know what type the input value is (`T` instead of `unknown`).
+
+This is an advanced decoder, typically only useful for authors of decoders. It's not
+recommended to rely on this decoder directly for normal usage.
+
+<!-- TODO: Add example -->
+
+---
+
+<a name="then" href="#then">#</a> <i>Decoder&lt;T&gt;</i>
+<b>.then</b><i>&lt;V&gt;</i>(<i>Decoder&lt;V, T&gt;</i>): <i>Decoder&lt;V&gt;</i>
+[(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
+
+Given a decoder for _T_ and another one for <i>V</i>-given-a-<i>T</i>. Will first decode
+the input using the first decoder, and _if accepted_, pass the result on to the second
+decoder. The second decoder will thus be able to make more assumptions about its input
+value, i.e. it can know what type the input value is (`T` instead of `unknown`).
+
+This is an advanced decoder, typically only useful for authors of decoders. It's not
+recommended to rely on this decoder directly for normal usage.
+
+<!-- TODO: Add example -->
+
+---
+
+<a name="transform" href="#transform">#</a> <i>Decoder&lt;T&gt;</i>
+<b>.transform</b><i>&lt;V&gt;</i>(<i>&lt;T&gt;</i> =&gt; <i>&lt;V&gt;</i>):
+<i>Decoder&lt;V&gt;</i>
+[(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
 
 Accepts any value the given decoder accepts, and on success, will call the given function
 **on the decoded result**. If the transformation function throws an error, the whole
@@ -148,35 +153,35 @@ decoder will fail using the error message as the failure reason.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const upper = transform(string, (s) => s.toUpperCase());
-const verify = guard(upper);
+const upper = string.transform((s) => s.toUpperCase());
 
 // 👍
-verify('foo') === 'FOO';
+upper.verify('foo') === 'FOO'
 
 // 👎
-verify(4);  // throws
+upper.verify(4);  // throws
 ```
 <!-- prettier-ignore-end -->
 
 ---
 
-<a name="describe" href="#describe">#</a>
-<b>describe</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>, <i>string</i>):
-<i>Decoder&lt;T&gt;</i>
-[(source)](https://github.com/nvie/decoders/blob/main/src/core/describe.js 'Source')<br />
+<a name="describe" href="#describe">#</a> <i>Decoder&lt;T&gt;</i>
+<b>.describe</b>(message: <i>string</i>): <i>Decoder&lt;T&gt;</i>
+[(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
 
 Uses the given decoder, but will use an alternative error message in case it rejects. This
 can be used to simplify or shorten otherwise long or low-level/technical errors.
 
 ```javascript
-const vowel = describe(
-    either5(constant('a'), constant('e'), constant('i'), constant('o'), constant('u')),
-    'Must be vowel',
+const decoder = either5(
+    constant('a'),
+    constant('e'),
+    constant('i'),
+    constant('o'),
+    constant('u'),
 );
+const vowel = decoder.describe('Must be vowel');
 ```
-
----
 
 ---
 
@@ -1366,7 +1371,7 @@ annotate the type. Either by doing `oneOf([('foo': 'foo'), ('bar': 'bar')])`, or
 
 ---
 
-<a name="prep" href="#prep">#</a> <b>prep</b><i>&lt;T, I&gt;</i>(<i>unknown => I</i>,
+<a name="prep" href="#prep">#</a> <b>prep</b><i>&lt;T, I&gt;</i>(<i>unknown =&gt; I</i>,
 <i>Decoder&lt;T, I&gt;</i>): <i>Decoder&lt;T&gt;</i>
 [(source)](https://github.com/nvie/decoders/blob/main/src/core/composition.js 'Source')<br />
 
@@ -1446,7 +1451,7 @@ verify(3);      // throws
 
 ---
 
-<a name="lazy" href="#lazy">#</a> <b>lazy</b><i>&lt;T&gt;</i>(() =>
+<a name="lazy" href="#lazy">#</a> <b>lazy</b><i>&lt;T&gt;</i>(() =&gt;
 <i>Decoder&lt;T&gt;</i>): <i>Decoder&lt;T&gt;</i>
 [(source)](https://github.com/nvie/decoders/blob/main/src/core/lazy.js 'Source')<br />
 
