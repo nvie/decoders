@@ -36,7 +36,7 @@ has_children: true
 ---
 
 <a name="decode" href="#decode">#</a>
-<i>Decoder&lt;T&gt;</i> <b>.decode</b>(blob: mixed): <i>DecodeResult&lt;T&gt;</i>
+<b>.decode</b>(blob: mixed): <i>DecodeResult&lt;T&gt;</i>
 [(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
 
 Validates the raw/untrusted/unknown input and either accepts or rejects it.
@@ -61,8 +61,7 @@ number.decode('hi')  // { ok: false, error: { type: 'scalar', value: 'hi', text:
 
 ---
 
-<a name="verify" href="#verify">#</a> <i>Decoder&lt;T&gt;</i> <b>.verify</b>(blob: mixed):
-<i>T</i>
+<a name="verify" href="#verify">#</a> <b>.verify</b>(blob: mixed): <i>T</i>
 [(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
 
 Verified the raw/untrusted/unknown input and either accepts or rejects it. When accepted,
@@ -82,8 +81,8 @@ number.verify('hi')  // throws
 
 ---
 
-<a name="and" href="#and">#</a> <i>Decoder&lt;T&gt;</i> <b>.and</b>(predicate:
-<i>&lt;T&gt; =&gt; boolean</i>, message: <i>string</i>): <i>Decoder&lt;T&gt;</i>
+<a name="and" href="#and">#</a> <b>.and</b>(predicate: <i>&lt;T&gt; =&gt; boolean</i>,
+message: <i>string</i>): <i>Decoder&lt;T&gt;</i>
 [(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
 
 Accepts values that are accepted by the decoder _and_ also pass the predicate function.
@@ -109,9 +108,8 @@ predicate][ts-predicates], then this will be reflected in the return type, too.
 
 ---
 
-<a name="chain" href="#chain">#</a> <i>Decoder&lt;T&gt;</i>
-<b>.chain</b><i>&lt;V&gt;</i>(<i>T</i> =&gt; <i>DecodeResult&lt;V&gt;</i>):
-<i>Decoder&lt;V&gt;</i>
+<a name="chain" href="#chain">#</a> <b>.chain</b><i>&lt;V&gt;</i>(<i>T</i> =&gt;
+<i>DecodeResult&lt;V&gt;</i>): <i>Decoder&lt;V&gt;</i>
 [(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
 
 Given a decoder for _T_ and another one for <i>V</i>-given-a-<i>T</i>. Will first decode
@@ -126,8 +124,8 @@ recommended to rely on this decoder directly for normal usage.
 
 ---
 
-<a name="then" href="#then">#</a> <i>Decoder&lt;T&gt;</i>
-<b>.then</b><i>&lt;V&gt;</i>(<i>Decoder&lt;V, T&gt;</i>): <i>Decoder&lt;V&gt;</i>
+<a name="then" href="#then">#</a> <b>.then</b><i>&lt;V&gt;</i>(<i>Decoder&lt;V,
+T&gt;</i>): <i>Decoder&lt;V&gt;</i>
 [(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
 
 Given a decoder for _T_ and another one for <i>V</i>-given-a-<i>T</i>. Will first decode
@@ -142,8 +140,7 @@ recommended to rely on this decoder directly for normal usage.
 
 ---
 
-<a name="transform" href="#transform">#</a> <i>Decoder&lt;T&gt;</i>
-<b>.transform</b><i>&lt;V&gt;</i>(<i>&lt;T&gt;</i> =&gt; <i>&lt;V&gt;</i>):
+<a name="transform" href="#transform">#</a> <b>.transform</b>(<i>T</i> =&gt; <i>V</i>):
 <i>Decoder&lt;V&gt;</i>
 [(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
 
@@ -165,8 +162,8 @@ upper.verify(4);  // throws
 
 ---
 
-<a name="describe" href="#describe">#</a> <i>Decoder&lt;T&gt;</i>
-<b>.describe</b>(message: <i>string</i>): <i>Decoder&lt;T&gt;</i>
+<a name="describe" href="#describe">#</a> <b>.describe</b>(message: <i>string</i>):
+<i>Decoder&lt;T&gt;</i>
 [(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
 
 Uses the given decoder, but will use an alternative error message in case it rejects. This
@@ -206,17 +203,15 @@ Accepts and returns strings.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(string);
-
 // 👍
-verify('hello world') === 'hello world';
-verify('🚀') === '🚀';
-verify('') === '';
+string.verify('hello world') === 'hello world';
+string.verify('🚀') === '🚀';
+string.verify('') === '';
 
 // 👎
-verify(123);   // throws
-verify(true);  // throws
-verify(null);  // throws
+string.verify(123);   // throws
+string.verify(true);  // throws
+string.verify(null);  // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -231,16 +226,14 @@ whitespace.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(nonEmptyString);
-
 // 👍
-verify('hello world') === 'hello world';
-verify('🚀') === '🚀';
+nonEmptyString.verify('hello world') === 'hello world';
+nonEmptyString.verify('🚀') === '🚀';
 
 // 👎
-verify(123);   // throws
-verify('  ');  // throws
-verify('');    // throws
+nonEmptyString.verify(123);   // throws
+nonEmptyString.verify('  ');  // throws
+nonEmptyString.verify('');    // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -254,16 +247,16 @@ Accepts and returns strings that match the given regular expression.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(regex(/^[0-9][0-9]+$/, 'Must be numeric'));
+const decoder = regex(/^[0-9][0-9]+$/, 'Must be numeric');
 
 // 👍
-verify('42') === '42';
-verify('83401648364738') === '83401648364738';
+decoder.verify('42') === '42';
+decoder.verify('83401648364738') === '83401648364738';
 
 // 👎
-verify('');     // throws
-verify('1');    // throws
-verify('foo');  // throws
+decoder.verify('');     // throws
+decoder.verify('1');    // throws
+decoder.verify('foo');  // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -277,15 +270,13 @@ mean that the email address actually exist.)
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(email);
-
 // 👍
-verify('alice@acme.org') === 'alice@acme.org';
+email.verify('alice@acme.org') === 'alice@acme.org';
 
 // 👎
-verify('foo');               // throws
-verify('@acme.org');         // throws
-verify('alice @ acme.org');  // throws
+email.verify('foo');               // throws
+email.verify('@acme.org');         // throws
+email.verify('alice @ acme.org');  // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -298,18 +289,16 @@ Accepts strings that are valid URLs, returns the value as a URL instance.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(url);
-
 // 👍
-verify('http://nvie.com') === new URL('http://nvie.com/');
-verify('https://nvie.com') === new URL('https://nvie.com/');
-verify('git+ssh://user@github.com/foo/bar.git') === new URL('git+ssh://user@github.com/foo/bar.git');
+url.verify('http://nvie.com') === new URL('http://nvie.com/');
+url.verify('https://nvie.com') === new URL('https://nvie.com/');
+url.verify('git+ssh://user@github.com/foo/bar.git') === new URL('git+ssh://user@github.com/foo/bar.git');
 
 // 👎
-verify('foo');               // throws
-verify('@acme.org');         // throws
-verify('alice @ acme.org');  // throws
-verify('/search?q=foo');     // throws
+url.verify('foo');               // throws
+url.verify('@acme.org');         // throws
+url.verify('alice @ acme.org');  // throws
+url.verify('/search?q=foo');     // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -323,19 +312,17 @@ instance.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(httpsUrl);
-
 // 👍
-verify('https://nvie.com:443') === new URL('https://nvie.com/');
+httpsUrl.verify('https://nvie.com:443') === new URL('https://nvie.com/');
 
 // 👎
-verify('http://nvie.com');                        // throws, not HTTPS
-verify('git+ssh://user@github.com/foo/bar.git');  // throws, not HTTPS
+httpsUrl.verify('http://nvie.com');                        // throws, not HTTPS
+httpsUrl.verify('git+ssh://user@github.com/foo/bar.git');  // throws, not HTTPS
 ```
 <!-- prettier-ignore-end -->
 
 **Tip!** If you need to limit URLs to different protocols than HTTP, you can do as the
-HTTPS decoder is implemented: by adding further conditions using an `.and()` call.
+HTTPS decoder is implemented: by adding further conditions using an [`.and()`](#and) call.
 
 ```typescript
 import { url } from 'decoders';
@@ -355,15 +342,13 @@ Accepts strings that are valid [UUIDs][wiki-uuid] (universally unique identifier
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(uuid);
-
 // 👍
-verify('123e4567-e89b-12d3-a456-426614174000') === '123e4567-e89b-12d3-a456-426614174000'
-verify('123E4567-E89B-12D3-A456-426614174000') === '123E4567-E89B-12D3-A456-426614174000'
+uuid.verify('123e4567-e89b-12d3-a456-426614174000') === '123e4567-e89b-12d3-a456-426614174000'
+uuid.verify('123E4567-E89B-12D3-A456-426614174000') === '123E4567-E89B-12D3-A456-426614174000'
 
 // 👎
-verify('123E4567E89B12D3A456426614174000');      // throws
-verify('abcdefgh-ijkl-mnop-qrst-uvwxyz012345');  // throws
+uuid.verify('123E4567E89B12D3A456426614174000');      // throws
+uuid.verify('abcdefgh-ijkl-mnop-qrst-uvwxyz012345');  // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -376,13 +361,11 @@ Like `uuid`, but only accepts [UUIDv1s][wiki-uuidv1] strings.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(uuidv1);
-
 // 👍
-verify('123e4567-e89b-12d3-a456-426614174000') === '123e4567-e89b-42d3-a456-426614174000'
+uuidv1.verify('123e4567-e89b-12d3-a456-426614174000') === '123e4567-e89b-42d3-a456-426614174000'
 
 // 👎
-verify('123e4567-e89b-42d3-a456-426614174000')  // throws
+uuidv1.verify('123e4567-e89b-42d3-a456-426614174000')  // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -395,13 +378,11 @@ Like `uuid`, but only accepts [UUIDv4s][wiki-uuidv4] strings.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(uuidv4);
-
 // 👍
-verify('123e4567-e89b-42d3-a456-426614174000') === '123e4567-e89b-42d3-a456-426614174000'
+uuidv4.verify('123e4567-e89b-42d3-a456-426614174000') === '123e4567-e89b-42d3-a456-426614174000'
 
 // 👎
-verify('123e4567-e89b-12d3-a456-426614174000')  // throws
+uuidv4.verify('123e4567-e89b-12d3-a456-426614174000')  // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -424,16 +405,14 @@ and negative `Infinity` will get rejected.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(number);
-
 // 👍
-verify(123) === 123;
-verify(-3.14) === -3.14;
+number.verify(123) === 123;
+number.verify(-3.14) === -3.14;
 
 // 👎
-verify(Infinity);        // throws
-verify(NaN);             // throws
-verify('not a number');  // throws
+number.verify(Infinity);        // throws
+number.verify(NaN);             // throws
+number.verify('not a number');  // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -446,16 +425,14 @@ Like `number`, but only accepts values that are whole numbers.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(integer);
-
 // 👍
-verify(123) === 123;
+integer.verify(123) === 123;
 
 // 👎
-verify(-3.14);           // throws
-verify(Infinity);        // throws
-verify(NaN);             // throws
-verify('not a integer'); // throws
+integer.verify(-3.14);           // throws
+integer.verify(Infinity);        // throws
+integer.verify(NaN);             // throws
+integer.verify('not a integer'); // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -469,17 +446,15 @@ Accepts only positive finite numbers (integer or float values).
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(positiveNumber);
-
 // 👍
-verify(123) === 123;
+positiveNumber.verify(123) === 123;
 
 // 👎
-verify(-42);             // throws
-verify(3.14);            // throws
-verify(Infinity);        // throws
-verify(NaN);             // throws
-verify('not a number');  // throws
+positiveNumber.verify(-42);             // throws
+positiveNumber.verify(3.14);            // throws
+positiveNumber.verify(Infinity);        // throws
+positiveNumber.verify(NaN);             // throws
+positiveNumber.verify('not a number');  // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -493,17 +468,15 @@ Accepts only positive finite integers.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(positiveInteger);
-
 // 👍
-verify(123) === 123;
+positiveInteger.verify(123) === 123;
 
 // 👎
-verify(-3);              // throws
-verify(3.14);            // throws
-verify(Infinity);        // throws
-verify(NaN);             // throws
-verify('not a number');  // throws
+positiveInteger.verify(-3);              // throws
+positiveInteger.verify(3.14);            // throws
+positiveInteger.verify(Infinity);        // throws
+positiveInteger.verify(NaN);             // throws
+positiveInteger.verify('not a number');  // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -524,16 +497,14 @@ Accepts and returns booleans.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(boolean);
-
 // 👍
-verify(false) === false;
-verify(true) === true;
+boolean.verify(false) === false;
+boolean.verify(true) === true;
 
 // 👎
-verify(undefined);      // throws
-verify('hello world');  // throws
-verify(123);            // throws
+boolean.verify(undefined);      // throws
+boolean.verify('hello world');  // throws
+boolean.verify(123);            // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -545,17 +516,15 @@ verify(123);            // throws
 Accepts anything and will return its "truth" value. Will never reject.
 
 ```javascript
-const verify = guard(truthy);
-
 // 👍
-verify(false) === false;
-verify(true) === true;
-verify(undefined) === false;
-verify('hello world') === true;
-verify('false') === true;
-verify(0) === false;
-verify(1) === true;
-verify(null) === false;
+truthy.verify(false) === false;
+truthy.verify(true) === true;
+truthy.verify(undefined) === false;
+truthy.verify('hello world') === true;
+truthy.verify('false') === true;
+truthy.verify(0) === false;
+truthy.verify(1) === true;
+truthy.verify(null) === false;
 
 // 👎
 // This decoder will never reject an input
@@ -571,18 +540,16 @@ Accepts numbers, but return their boolean representation.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(numericBoolean);
-
 // 👍
-verify(-1) === true;
-verify(0) === false;
-verify(123) === true;
+numericBoolean.verify(-1) === true;
+numericBoolean.verify(0) === false;
+numericBoolean.verify(123) === true;
 
 // 👎
-verify(false);      // throws
-verify(true);       // throws
-verify(undefined);  // throws
-verify('hello');    // throws
+numericBoolean.verify(false);      // throws
+numericBoolean.verify(true);       // throws
+numericBoolean.verify(undefined);  // throws
+numericBoolean.verify('hello');    // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -602,15 +569,14 @@ Accepts and returns JavaScript [Date][moz-date] values.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(date);
 const now = new Date();
 
 // 👍
-verify(now) === now;
+date.verify(now) === now;
 
 // 👎
-verify(123);      // throws
-verify('hello');  // throws
+date.verify(123);      // throws
+date.verify('hello');  // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -625,16 +591,14 @@ when sending, decode them with `iso8601` when receiving.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(iso8601);
-
 // 👍
-verify('2020-06-01T12:00:00Z'); // ≈ new Date('2020-06-01T12:00:00Z')
+iso8601.verify('2020-06-01T12:00:00Z'); // ≈ new Date('2020-06-01T12:00:00Z')
 
 // 👎
-verify('2020-06-01');  // throws
-verify('hello');       // throws
-verify(123);           // throws
-verify(new Date());    // throws (does not accept dates)
+iso8601.verify('2020-06-01');  // throws
+iso8601.verify('hello');       // throws
+iso8601.verify(123);           // throws
+iso8601.verify(new Date());    // throws (does not accept dates)
 ```
 <!-- prettier-ignore-end -->
 
@@ -661,15 +625,15 @@ inferred as `Decoder<number>`. To work around this, you should use this syntax i
 
 <!-- prettier-ignore-start -->
 ```typescript
-const verify = guard(constant('hello'));
+const decoder = constant('hello');
 
 // 👍
-verify('hello') === 'hello';
+decoder.verify('hello') === 'hello';
 
 // 👎
-verify('this breaks');  // throws
-verify(false);          // throws
-verify(undefined);      // throws
+decoder.verify('this breaks');  // throws
+decoder.verify(false);          // throws
+decoder.verify(undefined);      // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -687,12 +651,12 @@ useful to manually add extra fields to object decoders.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(always(42));
+const decoder = always(42);
 
 // 👍
-verify('hello') === 42;
-verify(false) === 42;
-verify(undefined) === 42;
+decoder.verify('hello') === 42;
+decoder.verify(false) === 42;
+decoder.verify(undefined) === 42;
 
 // 👎
 // This decoder will never reject an input
@@ -720,15 +684,13 @@ Accepts and returns only the literal `null` value.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(null_);
-
 // 👍
-verify(null) === null;
+null_.verify(null) === null;
 
 // 👎
-verify(false);         // throws
-verify(undefined);     // throws
-verify('hello world'); // throws
+null_.verify(false);         // throws
+null_.verify(undefined);     // throws
+null_.verify('hello world'); // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -742,15 +704,13 @@ Accepts and returns only the literal `undefined` value.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(undefined_);
-
 // 👍
-verify(undefined) === undefined;
+undefined_.verify(undefined) === undefined;
 
 // 👎
-verify(null);          // throws
-verify(false);         // throws
-verify('hello world'); // throws
+undefined_.verify(null);          // throws
+undefined_.verify(false);         // throws
+undefined_.verify('hello world'); // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -765,16 +725,16 @@ Accepts `undefined`, or whatever the given decoder accepts.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(optional(string));
+const decoder = optional(string);
 
 // 👍
-verify('hello') === 'hello';
-verify(undefined) === undefined;
+decoder.verify('hello') === 'hello';
+decoder.verify(undefined) === undefined;
 
 // 👎
-verify(null);  // throws
-verify(0);     // throws
-verify(42);    // throws
+decoder.verify(null);  // throws
+decoder.verify(0);     // throws
+decoder.verify(42);    // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -808,16 +768,16 @@ Accepts `null`, or whatever the given decoder accepts.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(nullable(string));
+const decoder = nullable(string);
 
 // 👍
-verify('hello') === 'hello';
-verify(null) === null;
+decoder.verify('hello') === 'hello';
+decoder.verify(null) === null;
 
 // 👎
-verify(undefined);  // throws
-verify(0);          // throws
-verify(42);         // throws
+decoder.verify(undefined);  // throws
+decoder.verify(0);          // throws
+decoder.verify(42);         // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -831,16 +791,16 @@ Accepts `undefined`, `null`, or whatever the given decoder accepts.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(maybe(string));
+const decoder = maybe(string);
 
 // 👍
-verify('hello') === 'hello';
-verify(null) === null;
-verify(undefined) === undefined;
+decoder.verify('hello') === 'hello';
+decoder.verify(null) === null;
+decoder.verify(undefined) === undefined;
 
 // 👎
-verify(0);   // throws
-verify(42);  // throws
+decoder.verify(0);   // throws
+decoder.verify(42);  // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -856,13 +816,11 @@ expect a specific type. Of course, the downside is that you won't know the type 
 value statically and you'll have to further refine it yourself.
 
 ```javascript
-const verify = guard(mixed);
-
 // 👍
-verify('hello') === 'hello';
-verify(false) === false;
-verify(undefined) === undefined;
-verify([1, 2]) === [1, 2];
+unknown.verify('hello') === 'hello';
+unknown.verify(false) === false;
+unknown.verify(undefined) === undefined;
+unknown.verify([1, 2]) === [1, 2];
 
 // 👎
 // This decoder will never reject an input
@@ -888,13 +846,13 @@ Accepts arrays of whatever the given decoder accepts.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(array(string));
+const decoder = array(string);
 
 // 👍
-verify(['hello', 'world']) === ['hello', 'world'];
+decoder.verify(['hello', 'world']) === ['hello', 'world'];
 
 // 👎
-verify(['hello', 1.2]);  // throws
+decoder.verify(['hello', 1.2]);  // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -909,14 +867,14 @@ Like `array()`, but will reject arrays with 0 elements.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(nonEmptyArray(string));
+const decoder = nonEmptyArray(string);
 
 // 👍
-verify(['hello', 'world']) === ['hello', 'world'];
+decoder.verify(['hello', 'world']) === ['hello', 'world'];
 
 // 👎
-verify(['hello', 1.2]);  // throws
-verify([]);              // throws
+decoder.verify(['hello', 1.2]);  // throws
+decoder.verify([]);              // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -931,16 +889,14 @@ Accepts any array, but doesn't validate its items further.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(poja);
-
 // 👍
-verify([1, 'hi', true]) === [1, 'hi', true];
-verify(['hello', 'world']) === ['hello', 'world'];
-verify([]) === [];
+poja.verify([1, 'hi', true]) === [1, 'hi', true];
+poja.verify(['hello', 'world']) === ['hello', 'world'];
+poja.verify([]) === [];
 
 // 👎
-verify({});    // throws
-verify('hi');  // throws
+poja.verify({});    // throws
+poja.verify('hi');  // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -956,15 +912,15 @@ decoders.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(tuple(string, number));
+const decoder = tuple(string, number);
 
 // 👍
-verify(['hello', 1.2]) === ['hello', 1.2];
+decoder.verify(['hello', 1.2]) === ['hello', 1.2];
 
 // 👎
-verify([]);                  // throws, too few items
-verify(['hello', 'world']);  // throws, not the right types
-verify(['a', 1, 'c']);       // throws, too many items
+decoder.verify([]);                  // throws, too few items
+decoder.verify(['hello', 'world']);  // throws, not the right types
+decoder.verify(['a', 1, 'c']);       // throws, too many items
 ```
 <!-- prettier-ignore-end -->
 
@@ -978,14 +934,14 @@ Similar to [`array()`](#array), but returns the result as an [ES6 Set][moz-set].
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(set(string));
+const decoder = set(string);
 
 // 👍
-verify(['abc', 'pqr'])  // ≈ new Set(['abc', 'pqr'])
-verify([])              // ≈ new Set([])
+decoder.verify(['abc', 'pqr'])  // ≈ new Set(['abc', 'pqr'])
+decoder.verify([])              // ≈ new Set([])
 
 // 👎
-verify([1, 2]);         // throws, not the right types
+decoder.verify([1, 2]);         // throws, not the right types
 ```
 <!-- prettier-ignore-end -->
 
@@ -1011,19 +967,17 @@ input object are ignored and will not be returned.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(
-    object({
-        x: number,
-        y: number,
-    }),
-);
+const decoder = object({
+    x: number,
+    y: number,
+});
 
 // 👍
-verify({ x: 1, y: 2 }) === { x: 1, y: 2 };
-verify({ x: 1, y: 2, z: 3 }) === { x: 1, y: 2 }; // ⚠️ extra field `z` not returned!
+decoder.verify({ x: 1, y: 2 }) === { x: 1, y: 2 };
+decoder.verify({ x: 1, y: 2, z: 3 }) === { x: 1, y: 2 }; // ⚠️ extra field `z` not returned!
 
 // 👎
-verify({ x: 1 });  // throws, missing field `y`
+decoder.verify({ x: 1 });  // throws, missing field `y`
 ```
 <!-- prettier-ignore-end -->
 
@@ -1041,19 +995,17 @@ explicitly.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(
-    exact({
-        x: number,
-        y: number,
-    }),
-);
+const decoder = exact({
+    x: number,
+    y: number,
+});
 
 // 👍
-verify({ x: 1, y: 2 }) === { x: 1, y: 2 };
+decoder.verify({ x: 1, y: 2 }) === { x: 1, y: 2 };
 
 // 👎
-verify({ x: 1, y: 2, z: 3 });  // throws, extra field `z` not allowed
-verify({ x: 1 });              // throws, missing field `y`
+decoder.verify({ x: 1, y: 2, z: 3 });  // throws, extra field `z` not allowed
+decoder.verify({ x: 1 });              // throws, missing field `y`
 ```
 <!-- prettier-ignore-end -->
 
@@ -1071,18 +1023,16 @@ that will thus be of `unknown` type statically.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(
-    inexact({
-        x: number,
-    }),
-);
+const decoder = inexact({
+    x: number,
+});
 
 // 👍
-verify({ x: 1, y: 2 }) === { x: 1, y: 2 };
-verify({ x: 1, y: 2, z: 3 }) === { x: 1, y: 2, z: 3 };
+decoder.verify({ x: 1, y: 2 }) === { x: 1, y: 2 };
+decoder.verify({ x: 1, y: 2, z: 3 }) === { x: 1, y: 2, z: 3 };
 
 // 👎
-verify({ x: 1 });  // throws, missing field `y`
+decoder.verify({ x: 1 });  // throws, missing field `y`
 ```
 <!-- prettier-ignore-end -->
 
@@ -1100,17 +1050,15 @@ further.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(pojo);
-
 // 👍
-verify({}) === {};
-verify({ name: 'hi' }) === { name: 'hi' };
+pojo.verify({}) === {};
+pojo.verify({ name: 'hi' }) === { name: 'hi' };
 
 // 👎
-verify('hi');        // throws
-verify([]);          // throws
-verify(new Date());  // throws
-verify(null);        // throws
+pojo.verify('hi');        // throws
+pojo.verify([]);          // throws
+pojo.verify(new Date());  // throws
+pojo.verify(null);        // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -1129,18 +1077,10 @@ heterogeneous. Whereas with `dict()` the keys are typically dynamic and the valu
 homogeneous, like in a dictionary, a lookup table, or a cache.
 
 ```javascript
-const verify = guard(dict(person)); // Assume you have a "person" decoder already
+const decoder = dict(number);
 
 // 👍
-verify({
-    1: { name: 'Alice' },
-    2: { name: 'Bob' },
-    3: { name: 'Charlie' },
-}); // ≈ {
-//     "1": { name: "Alice" },
-//     "2": { name: "Bob" },
-//     "3": { name: "Charlie" },
-// }
+decoder.verify({ red: 1, blue: 2, green: 3 }); // ≈ { red: 1, blue: 2, green: 3 }
 ```
 
 ---
@@ -1154,18 +1094,14 @@ Similar to `dict()`, but returns the result as a `Map<string, T>` (an [ES6 Map][
 instead.
 
 ```javascript
-const verify = guard(mapping(person)); // Assume you have a "person" decoder already
+const decoder = mapping(number);
 
 // 👍
-verify({
-    1: { name: 'Alice' },
-    2: { name: 'Bob' },
-    3: { name: 'Charlie' },
-});
+decoder.verify({ red: 1, blue: 2, green: 3 });
 // ≈ Map([
-//     ['1', { name: 'Alice' }],
-//     ['2', { name: 'Bob' }],
-//     ['3', { name: 'Charlie' }],
+//     ['red', '1'],
+//     ['blue', '2'],
+//     ['green', '3'],
 //   ]);
 ```
 
@@ -1192,10 +1128,8 @@ Accepts any value that's a valid JSON value:
 -   `Array<JSONValue>`
 
 ```javascript
-const verify = guard(json);
-
 // 👍
-verify({
+json.verify({
     name: 'Amir',
     age: 27,
     admin: true,
@@ -1216,17 +1150,15 @@ Like `json`, but will only decode when the JSON value is an object.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(jsonObject);
-
 // 👍
-verify({});                // ≈ {}
-verify({ name: 'Amir' });  // ≈ { name: 'Amir' }
+jsonObject.verify({});                // ≈ {}
+jsonObject.verify({ name: 'Amir' });  // ≈ { name: 'Amir' }
 
 // 👎
-verify([]);                   // throws
-verify([{ name: 'Alice' }]);  // throws
-verify('hello');              // throws
-verify(null);                 // throws
+jsonObject.verify([]);                   // throws
+jsonObject.verify([{ name: 'Alice' }]);  // throws
+jsonObject.verify('hello');              // throws
+jsonObject.verify(null);                 // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -1240,17 +1172,15 @@ Like `json`, but will only decode when the JSON value is an array.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(jsonArray);
-
 // 👍
-verify([]);                  // ≈ []
-verify([{ name: 'Amir' }]);  // ≈ [{ name: 'Amir' }]
+jsonArray.verify([]);                  // ≈ []
+jsonArray.verify([{ name: 'Amir' }]);  // ≈ [{ name: 'Amir' }]
 
 // 👎
-verify({});                 // throws
-verify({ name: 'Alice' });  // throws
-verify('hello');            // throws
-verify(null);               // throws
+jsonArray.verify({});                 // throws
+jsonArray.verify({ name: 'Alice' });  // throws
+jsonArray.verify('hello');            // throws
+jsonArray.verify(null);               // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -1275,14 +1205,14 @@ decoders reject the input, the input gets rejected.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(either(number, string));
+const decoder = either(number, string);
 
 // 👍
-verify('hello world') === 'hello world';
-verify(123) === 123;
+decoder.verify('hello world') === 'hello world';
+decoder.verify(123) === 123;
 
 // 👎
-verify(false);  // throws
+decoder.verify(false);  // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -1335,16 +1265,16 @@ Accepts any value that is strictly-equal (using `===`) to one of the specified v
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(oneOf(['foo', 'bar', 3]));
+const decoder = oneOf(['foo', 'bar', 3]);
 
 // 👍
-verify('foo') === 'foo';
-verify(3) === 3;
+decoder.verify('foo') === 'foo';
+decoder.verify(3) === 3;
 
 // 👎
-verify('hello');  // throws
-verify(4);        // throws
-verify(false);    // throws
+decoder.verify('hello');  // throws
+decoder.verify(4);        // throws
+decoder.verify(false);    // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -1382,7 +1312,7 @@ with that accordingly.
 
 <!-- prettier-ignore-start -->
 ```typescript
-const verify = prep(
+const decoder = prep(
   // Will convert any input to an int first, before feeding it to
   // positiveInteger. This will effectively also allow numeric strings
   // to be accepted (and returned) as integers. If this ever throws,
@@ -1392,12 +1322,12 @@ const verify = prep(
 );
 
 // 👍
-verify(42) === 42;
-verify('3') === 3;
+decoder.verify(42) === 42;
+decoder.verify('3') === 3;
 
 // 👎
-verify('-3');  // throws: not a positive number
-verify('hi');  // throws: not a number
+decoder.verify('-3');  // throws: not a positive number
+decoder.verify('hi');  // throws: not a number
 ```
 <!-- prettier-ignore-end -->
 
@@ -1413,17 +1343,17 @@ explicitly disallowing keys, or for testing purposes.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(object({
+const decoder = object({
   a: string,
   b: optional(never('Key b has been removed')),
-}));
+});
 
 // 👍
-verify({ a: 'foo' });            // ≈ { a: 'foo' };
-verify({ a: 'foo', c: 'bar' });  // ≈ { a: 'foo' };
+decoder.verify({ a: 'foo' });            // ≈ { a: 'foo' };
+decoder.verify({ a: 'foo', c: 'bar' });  // ≈ { a: 'foo' };
 
 // 👎
-verify({ a: 'foo', b: 'bar' });  // throws
+decoder.verify({ a: 'foo', b: 'bar' });  // throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -1437,15 +1367,15 @@ Accepts any value that is an `instanceof` the given class.
 
 <!-- prettier-ignore-start -->
 ```javascript
-const verify = guard(instanceOf(Error));
+const decoder = instanceOf(Error);
 
 // 👍
 const value = new Error('foo');
-verify(value) === value;
+decoder.verify(value) === value;
 
 // 👎
-verify('foo');  // throws
-verify(3);      // throws
+decoder.verify('foo');  // throws
+decoder.verify(3);      // throws
 ```
 <!-- prettier-ignore-end -->
 

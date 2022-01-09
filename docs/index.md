@@ -42,22 +42,35 @@ the decoded value of type `T` as its payload, or an "error" result.
 This way, you can be sure that all untrusted runtime data is always in the shape you
 expect, and that static types can correctly be inferred for dynamic input data.
 
-<img alt="The concept of a Decoder explained schematically" src="./assets/schematic-decoders.png" style="max-width: min(600px, 100%)" />
+There are roughly two ways to use a `Decoder<T>` instance:
 
-A decoder can either _accept_ or _reject_ the given untrusted input. Whether it accepts or
-rejects depends on the decoder's implementation. The return value always is either an "ok"
-or an "error" result (aka a `DecodeResult<T>`)—it will never throw an exception at
-runtime. That's what Guards do.
+-   `.verify()` (for convenience)
+-   `.decode()` (for programmatically handling the success)
 
-The second important concept is a Guard. It's a convenience wrapper around an existing
-(large) decoder. A `Guard<T>` is like the Decoder that it wraps, but does not return those
-intermediate "result" objects that Decoders do.
+The simplest API is `.verify()`. It will either return the decoded (safe) value on
+success, or throw an error with a friendly message when the decoding failed.
 
-<img alt="The concept of a Guard explained schematically" src="./assets/schematic-guards.png" style="max-width: min(600px, 100%)" />
+<img alt="The .verify() method explained" src="./assets/schematic-verify.png" style="max-width: min(592px, 100%)" />
 
-When called on an untrusted input, it will either directly return the decoded value, or
-throw an error. This allows you to not have to deal with the intermediate "ok" and "err"
-results returned by the Decoder.
+Alternatively, you can use the lower-level `.decode()` method if you want to have more
+programmatic control over the result. It works like `.verify()`, but instead of directly
+returning a value or failing, it returns a "Result" value, which can either have
+`ok: true` (and a value), or `ok: false` and an error annotation.
+
+<img alt="The .decode() method explained" src="./assets/schematic-decode.png" style="max-width: min(592px, 100%)" />
+
+This makes it easier to use in `if`-statements, or to fall back to a default value if you
+want to allow graceful failure. For example, you can use it as follows:
+
+```typescript
+// Best-effort attempt to decode, but fall back to 0 if externalData is not
+// a valid positive number.
+positiveNumber.decode(externalData).value ?? 0;
+
+// 42    => 42
+// -1    => 0
+// 'lol' => 0
+```
 
 ## Understanding the "type" of a Decoder
 
@@ -71,8 +84,8 @@ tell you what inputs it accepts.
 
 ## Composing decoders
 
-You can build larger decoders from smaller decoders. For example, here you can see how
-four decoders are combined to build a fourth, larger decoder:
+You are encouraged to build large decoders from small building blocks. For example, here
+you can see how four decoders are combined to build a fourth, larger decoder:
 
 <!-- prettier-ignore-start -->
 ```typescript
