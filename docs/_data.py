@@ -721,7 +721,7 @@ DECODERS = {
       decoder.verify({ x: 1 });  // throws, missing field `y`
       ```
 
-      For more information, see also [The difference between `object`, `exact`, and `inexact`](./tips#the-difference-between-object-exact-and-inexact).
+      For more information, see also [The difference between `object`, `exact`, and `inexact`](./tips.html#the-difference-between-object-exact-and-inexact).
     """,
   },
 
@@ -747,7 +747,7 @@ DECODERS = {
       decoder.verify({ x: 1 });              // throws, missing field `y`
       ```
 
-      For more information, see also [The difference between `object`, `exact`, and `inexact`](./tips#the-difference-between-object-exact-and-inexact).
+      For more information, see also [The difference between `object`, `exact`, and `inexact`](./tips.html#the-difference-between-object-exact-and-inexact).
     """,
   },
 
@@ -772,7 +772,7 @@ DECODERS = {
       decoder.verify({ x: 1 });  // throws, missing field `y`
       ```
 
-      For more information, see also [The difference between `object`, `exact`, and `inexact`](./tips#the-difference-between-object-exact-and-inexact).
+      For more information, see also [The difference between `object`, `exact`, and `inexact`](./tips.html#the-difference-between-object-exact-and-inexact).
     """,
   },
 

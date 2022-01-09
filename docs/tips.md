@@ -1,6 +1,6 @@
 ---
 title: Tips
-parent: API Reference
+nav_order: 50
 ---
 
 ## The difference between `object`, `exact`, and `inexact`

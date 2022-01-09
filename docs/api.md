@@ -1,7 +1,6 @@
 ---
 title: API Reference
-nav_order: 10
-has_children: true
+nav_order: 20
 ---
 
 <!--[[[cog
@@ -9,50 +8,8 @@ import cog
 import html
 import re
 import textwrap
-from _data import (
-  DECODERS,
-  DECODERS_BY_SECTION,
-  DECODER_METHODS,
-  LOCATIONS,
-)
-
-
-def multi(lines, prefix = ' '):
-  return ('\n' + prefix + '\n' + prefix).join([safe(p) for p in lines])
-
-
-def slugify(s):
-  return re.sub('[^a-z0-9]+', '-', s.lower())
-
-
-def safe(s):
-  return html.escape(s)
-
-
-def format_type(s):
-  return f'<i style="color: #267f99">{safe(s)}</i>'
-
-
-def reindent(s, prefix = ''):
-  return textwrap.indent(textwrap.dedent(s), prefix).strip()
-
-
-def ref(name):
-  decoder = DECODERS.get(name)
-  if decoder is not None:
-    if decoder.get('params') is not None:
-      return f'[`{name}()`](#{name})'
-  return f'[`{name}`](#{name})'
-
-
-def methodref(name):
-  return f'[`.{name}()`](#{name})'
-
-
-def source_link(name):
-  source = LOCATIONS.get(name)
-  return f"[<small>(source)</small>]({source} 'Source')" if source else ''
-
+from _data import DECODERS, DECODERS_BY_SECTION
+from _lib import safe, format_type, reindent, ref, methodref, source_link, slugify
 ]]]-->
 <!--[[[end]]] (checksum: d41d8cd98f00b204e9800998ecf8427e)-->
 
@@ -63,162 +20,19 @@ def source_link(name):
 for section, names in DECODERS_BY_SECTION.items():
   cog.outl(f'- [**{section}**](#{slugify(section)}): {", ".join(ref(name) for name in names)}')
 ]]]-->
-- [**Strings**](#strings): [`string`](#string), [`nonEmptyString`](#nonEmptyString), [`regex()`](#regex), [`email`](#email), [`url`](#url), [`httpsUrl`](#httpsUrl), [`uuid`](#uuid), [`uuidv1`](#uuidv1), [`uuidv4`](#uuidv4)
-- [**Numbers**](#numbers): [`number`](#number), [`integer`](#integer), [`positiveNumber`](#positiveNumber), [`positiveInteger`](#positiveInteger)
-- [**Booleans**](#booleans): [`boolean`](#boolean), [`truthy`](#truthy), [`numericBoolean`](#numericBoolean)
-- [**Dates**](#dates): [`date`](#date), [`iso8601`](#iso8601)
+- [**Strings**](#strings): [`string`](/api.html#string), [`nonEmptyString`](/api.html#nonEmptyString), [`regex()`](#regex), [`email`](/api.html#email), [`url`](/api.html#url), [`httpsUrl`](/api.html#httpsUrl), [`uuid`](/api.html#uuid), [`uuidv1`](/api.html#uuidv1), [`uuidv4`](/api.html#uuidv4)
+- [**Numbers**](#numbers): [`number`](/api.html#number), [`integer`](/api.html#integer), [`positiveNumber`](/api.html#positiveNumber), [`positiveInteger`](/api.html#positiveInteger)
+- [**Booleans**](#booleans): [`boolean`](/api.html#boolean), [`truthy`](/api.html#truthy), [`numericBoolean`](/api.html#numericBoolean)
+- [**Dates**](#dates): [`date`](/api.html#date), [`iso8601`](/api.html#iso8601)
 - [**Constants**](#constants): [`constant()`](#constant), [`always()`](#always), [`hardcoded()`](#hardcoded)
-- [**Optionality**](#optionality): [`null_`](#null_), [`undefined_`](#undefined_), [`optional()`](#optional), [`nullable()`](#nullable), [`maybe()`](#maybe), [`unknown`](#unknown), [`mixed`](#mixed)
-- [**Arrays**](#arrays): [`array()`](#array), [`nonEmptyArray()`](#nonEmptyArray), [`poja`](#poja), [`tuple()`](#tuple), [`set()`](#set)
-- [**Objects**](#objects): [`object()`](#object), [`exact()`](#exact), [`inexact()`](#inexact), [`pojo`](#pojo), [`dict()`](#dict), [`mapping()`](#mapping)
-- [**JSON values**](#json-values): [`json`](#json), [`jsonObject`](#jsonObject), [`jsonArray`](#jsonArray)
+- [**Optionality**](#optionality): [`null_`](/api.html#null_), [`undefined_`](/api.html#undefined_), [`optional()`](#optional), [`nullable()`](#nullable), [`maybe()`](#maybe), [`unknown`](/api.html#unknown), [`mixed`](/api.html#mixed)
+- [**Arrays**](#arrays): [`array()`](#array), [`nonEmptyArray()`](#nonEmptyArray), [`poja`](/api.html#poja), [`tuple()`](#tuple), [`set()`](#set)
+- [**Objects**](#objects): [`object()`](#object), [`exact()`](#exact), [`inexact()`](#inexact), [`pojo`](/api.html#pojo), [`dict()`](#dict), [`mapping()`](#mapping)
+- [**JSON values**](#json-values): [`json`](/api.html#json), [`jsonObject`](/api.html#jsonObject), [`jsonArray`](/api.html#jsonArray)
 - [**Choice**](#choice): [`either()`](#either), [`taggedUnion()`](#taggedUnion), [`oneOf()`](#oneOf), [`dispatch()`](#dispatch)
-- [**Utilities**](#utilities): [`define()`](#define), [`prep()`](#prep), [`never`](#never), [`instanceOf()`](#instanceOf), [`lazy()`](#lazy), [`fail`](#fail)
-<!--[[[end]]] (checksum: f81f02e221e7ea159b68c1fb331bb611) -->
-<!-- prettier-ignore-end -->
+- [**Utilities**](#utilities): [`define()`](#define), [`prep()`](#prep), [`never`](/api.html#never), [`instanceOf()`](#instanceOf), [`lazy()`](#lazy), [`fail`](/api.html#fail)
+<!--[[[end]]] (checksum: 340a0dd1fb9553a67e7e46925eafda7d) -->
 
----
-
-## Available methods on `Decoder<T>`
-
-<!-- prettier-ignore-start -->
-<!--[[[cog
-for name in DECODER_METHODS:
-  cog.outl(f'- {methodref(name)}')
-]]]-->
-- [`.verify()`](#verify)
-- [`.decode()`](#decode)
-- [`.and()`](#and)
-- [`.chain()`](#chain)
-- [`.transform()`](#transform)
-- [`.describe()`](#describe)
-<!--[[[end]]] (checksum: 31cba22c90966a5e3faa6463056a50d2)-->
-
-<!--[[[cog
-for (name, info) in DECODER_METHODS.items():
-  name = safe(name)
-  params = '' if not info['params'] else '(' + ', '.join([f'{safe(pname)}: {format_type(ptype)}' for (pname, ptype) in info['params']]) + ')'
-  type_params = '' if not info.get('type_params') else safe('<') + ', '.join([format_type(ptype) for ptype in info['type_params']]) + safe('>')
-  return_type = format_type(info['return_type'])
-  markdown = reindent(info['markdown'], prefix='    ')
-  cog.outl(f"""
-    ---
-
-    <a name="{name}" href="#{name}">#</a>
-    **.{name}**{type_params}{params}: {return_type} {source_link(name)}<br />
-
-    {markdown}
-  """, dedent=True, trimblanklines=True)
-]]]-->
----
-
-<a name="verify" href="#verify">#</a>
-**.verify**(blob: <i style="color: #267f99">mixed</i>): <i style="color: #267f99">T</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/_decoder.js#L66-L75 'Source')<br />
-
-Verified the (raw/untrusted/unknown) input and either accepts or rejects it. When accepted, returns the decoded `T` value directly. Otherwise fail with a runtime error.
-
-For example, take this simple "number" decoder.
-
-```typescript
-// 👍
-number.verify(3);     // 3
-
-// 👎
-number.verify('hi');  // throws
-```
-
----
-
-<a name="decode" href="#decode">#</a>
-**.decode**(blob: <i style="color: #267f99">mixed</i>): <i style="color: #267f99">DecodeResult&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/_decoder.js#L58-L61 'Source')<br />
-
-Validates the raw/untrusted/unknown input and either accepts or rejects it.
-
-Contrasted with `.verify()`, calls to `.decode()` will never fail and instead return a result type.
-
-For example, take this simple “number” decoder. When given an number value, it will return an ok: true result. Otherwise, it will return an ok: false result with the original input value annotated.
-
-```typescript
-// 👍
-number.decode(3);     // { ok: true, value: 3 };
-
-// 👎
-number.decode('hi');  // { ok: false, error: { type: 'scalar', value: 'hi', text: 'Must be number' } }
-```
-
----
-
-<a name="and" href="#and">#</a>
-**.and**(predicate: <i style="color: #267f99">T =&gt; boolean</i>, message: <i style="color: #267f99">string</i>): <i style="color: #267f99">Decoder&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/_decoder.js#L77-L83 'Source')<br />
-
-Adds an extra predicate to a decoder. The new decoder is like the original decoder, but only accepts values that also meet the predicate.
-
-```typescript
-const odd = number.and(
-  (n) => n % 2 !== 0,
-  'Must be odd'
-);
-
-// 👍
-odd.verify(3) === 3;
-
-// 👎
-odd.verify(42);    // throws: not an odd number
-odd.verify('hi');  // throws: not a number
-```
-
-In TypeScript, if you provide a predicate that also is a [type predicate](https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates), then this will be reflected in the return type, too.
-
----
-
-<a name="chain" href="#chain">#</a>
-**.chain**&lt;<i style="color: #267f99">V</i>&gt;(nextDecodeFn: <i style="color: #267f99">T =&gt; DecodeResult&lt;V&gt;</i>): <i style="color: #267f99">Decoder&lt;V&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/_decoder.js#L129-L133 'Source')<br />
-
-Chain together the current decoder with the given decode function. The given function will only get called after the current decoder accepts an input.
-
-The given "next" decoding function will thus be able to make more assumptions about its input value, i.e. it can know what type the input value is (`T` instead of `unknown`).
-
-This is an advanced decoder, typically only useful for authors of decoders. It's not recommended to rely on this decoder directly for normal usage.  In most cases, [**.transform**()](#transform) is what you'll want instead.
-
----
-
-<a name="transform" href="#transform">#</a>
-**.transform**&lt;<i style="color: #267f99">V</i>&gt;(transformFn: <i style="color: #267f99">(T) =&gt; V</i>): <i style="color: #267f99">Decoder&lt;V&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/_decoder.js#L91-L103 'Source')<br />
-
-Accepts any value the given decoder accepts, and on success, will call the given function **on the decoded result**. If the transformation function throws an error, the whole decoder will fail using the error message as the failure reason.
-
-```typescript
-const upper = string.transform((s) => s.toUpperCase());
-
-// 👍
-upper.verify('foo') === 'FOO'
-
-// 👎
-upper.verify(4);  // throws
-```
-
----
-
-<a name="describe" href="#describe">#</a>
-**.describe**(message: <i style="color: #267f99">string</i>): <i style="color: #267f99">Decoder&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/_decoder.js#L105-L117 'Source')<br />
-
-Uses the given decoder, but will use an alternative error message in case it rejects. This can be used to simplify or shorten otherwise long or low-level/technical errors.
-
-```typescript
-const decoder = either(
-    constant('a'),
-    constant('e'),
-    constant('i'),
-    constant('o'),
-    constant('u'),
-);
-const vowel = decoder.describe('Must be vowel');
-```
-
-<!--[[[end]]] (checksum: e9ce667db1b8e8d01508f67eb727da44) -->
-<!-- prettier-ignore-end -->
-
-<!-- prettier-ignore-start -->
 <!--[[[cog
 for section, names in DECODERS_BY_SECTION.items():
   # Section heading
@@ -250,7 +64,6 @@ for section, names in DECODERS_BY_SECTION.items():
     type_params = '' if not info.get('type_params') else safe('<') + ', '.join([format_type(ptype) for ptype in info['type_params']]) + safe('>')
     return_type = format_type(info['return_type'])
     markdown = reindent(info['markdown'], prefix='      ')
-    source = LOCATIONS.get(name)
     heading = '  \n'.join([
       f'<a name="{name}" href="#{name}">#</a>\n**{name}**{type_params}{params}: {return_type} {source_link(name)}',
       *(f'<a name="{alias}" href="#{alias}">#</a>\n**{alias}**{type_params}{params}: {return_type} {source_link(alias)}' for alias in info.get('aliases', []))
@@ -272,20 +85,20 @@ for section, names in DECODERS_BY_SECTION.items():
 ## Strings
 
 
-- [`string`](#string)
-- [`nonEmptyString`](#nonEmptyString)
+- [`string`](/api.html#string)
+- [`nonEmptyString`](/api.html#nonEmptyString)
 - [`regex()`](#regex)
-- [`email`](#email)
-- [`url`](#url)
-- [`httpsUrl`](#httpsUrl)
-- [`uuid`](#uuid)
-- [`uuidv1`](#uuidv1)
-- [`uuidv4`](#uuidv4)
+- [`email`](/api.html#email)
+- [`url`](/api.html#url)
+- [`httpsUrl`](/api.html#httpsUrl)
+- [`uuid`](/api.html#uuid)
+- [`uuidv1`](/api.html#uuidv1)
+- [`uuidv4`](/api.html#uuidv4)
 
 ---
 
 <a name="string" href="#string">#</a>
-**string**: <i style="color: #267f99">Decoder&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L21-L23 'Source')
+**string**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L21-L23 'Source')
 
 Accepts and returns strings.
 
@@ -304,7 +117,7 @@ string.verify(null);  // throws
 ---
 
 <a name="nonEmptyString" href="#nonEmptyString">#</a>
-**nonEmptyString**: <i style="color: #267f99">Decoder&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L28 'Source')
+**nonEmptyString**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L28 'Source')
 
 Like `string`, but will reject the empty string or strings containing only whitespace.
 
@@ -322,7 +135,7 @@ nonEmptyString.verify('');    // throws
 ---
 
 <a name="regex" href="#regex">#</a>
-**regex**(pattern: <i style="color: #267f99">RegExp</i>, message: <i style="color: #267f99">string</i>): <i style="color: #267f99">Decoder&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L33-L35 'Source')
+**regex**(pattern: <i style="color: #267f99">RegExp</i>, message: <i style="color: #267f99">string</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L33-L35 'Source')
 
 Accepts and returns strings that match the given regular expression.
 
@@ -342,7 +155,7 @@ decoder.verify('foo');  // throws
 ---
 
 <a name="email" href="#email">#</a>
-**email**: <i style="color: #267f99">Decoder&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L41-L45 'Source')
+**email**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L41-L45 'Source')
 
 Accepts and returns strings that are syntactically valid email addresses. (This will not mean that the email address actually exist.)
 
@@ -359,7 +172,7 @@ email.verify('alice @ acme.org');  // throws
 ---
 
 <a name="url" href="#url">#</a>
-**url**: <i style="color: #267f99">Decoder&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L50-L53 'Source')
+**url**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L50-L53 'Source')
 
 Accepts strings that are valid URLs, returns the value as a URL instance.
 
@@ -379,7 +192,7 @@ url.verify('/search?q=foo');     // throws
 ---
 
 <a name="httpsUrl" href="#httpsUrl">#</a>
-**httpsUrl**: <i style="color: #267f99">Decoder&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L59-L62 'Source')
+**httpsUrl**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L59-L62 'Source')
 
 Accepts strings that are valid URLs, but only HTTPS ones. Returns the value as a URL instance.
 
@@ -406,7 +219,7 @@ const gitUrl: Decoder<URL> = url.and(
 ---
 
 <a name="uuid" href="#uuid">#</a>
-**uuid**: <i style="color: #267f99">Decoder&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L69-L72 'Source')
+**uuid**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L69-L72 'Source')
 
 Accepts strings that are valid [UUIDs](https://en.wikipedia.org/wiki/universally_unique_identifier) (universally unique identifier).
 
@@ -423,7 +236,7 @@ uuid.verify('abcdefgh-ijkl-mnop-qrst-uvwxyz012345');  // throws
 ---
 
 <a name="uuidv1" href="#uuidv1">#</a>
-**uuidv1**: <i style="color: #267f99">Decoder&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L79-L81 'Source')
+**uuidv1**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L79-L81 'Source')
 
 Like `uuid`, but only accepts [UUIDv1s](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_%28date-time_and_MAC_address%29) strings.
 
@@ -438,7 +251,7 @@ uuidv1.verify('123e4567-e89b-42d3-a456-426614174000')  // throws
 ---
 
 <a name="uuidv4" href="#uuidv4">#</a>
-**uuidv4**: <i style="color: #267f99">Decoder&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L88-L90 'Source')
+**uuidv4**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L88-L90 'Source')
 
 Like `uuid`, but only accepts [UUIDv4s](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_%28random%29) strings.
 
@@ -455,15 +268,15 @@ uuidv4.verify('123e4567-e89b-12d3-a456-426614174000')  // throws
 ## Numbers
 
 
-- [`number`](#number)
-- [`integer`](#integer)
-- [`positiveNumber`](#positiveNumber)
-- [`positiveInteger`](#positiveInteger)
+- [`number`](/api.html#number)
+- [`integer`](/api.html#integer)
+- [`positiveNumber`](/api.html#positiveNumber)
+- [`positiveInteger`](/api.html#positiveInteger)
 
 ---
 
 <a name="number" href="#number">#</a>
-**number**: <i style="color: #267f99">Decoder&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L16-L19 'Source')
+**number**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L16-L19 'Source')
 
 Accepts finite numbers (can be integer or float values). Values `NaN`, or positive and negative `Infinity` will get rejected.
 
@@ -481,7 +294,7 @@ number.verify('not a number');  // throws
 ---
 
 <a name="integer" href="#integer">#</a>
-**integer**: <i style="color: #267f99">Decoder&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L24-L27 'Source')
+**integer**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L24-L27 'Source')
 
 Accepts only finite whole numbers.
 
@@ -499,7 +312,7 @@ integer.verify('not a integer'); // throws
 ---
 
 <a name="positiveNumber" href="#positiveNumber">#</a>
-**positiveNumber**: <i style="color: #267f99">Decoder&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L32-L35 'Source')
+**positiveNumber**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L32-L35 'Source')
 
 Accepts only positive finite numbers.
 
@@ -518,7 +331,7 @@ positiveNumber.verify('not a number');  // throws
 ---
 
 <a name="positiveInteger" href="#positiveInteger">#</a>
-**positiveInteger**: <i style="color: #267f99">Decoder&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L40-L43 'Source')
+**positiveInteger**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L40-L43 'Source')
 
 Accepts only positive finite whole numbers.
 
@@ -539,14 +352,14 @@ positiveInteger.verify('not a number');  // throws
 ## Booleans
 
 
-- [`boolean`](#boolean)
-- [`truthy`](#truthy)
-- [`numericBoolean`](#numericBoolean)
+- [`boolean`](/api.html#boolean)
+- [`truthy`](/api.html#truthy)
+- [`numericBoolean`](/api.html#numericBoolean)
 
 ---
 
 <a name="boolean" href="#boolean">#</a>
-**boolean**: <i style="color: #267f99">Decoder&lt;boolean&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/booleans.js#L10-L12 'Source')
+**boolean**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;boolean&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/booleans.js#L10-L12 'Source')
 
 Accepts and returns booleans.
 
@@ -564,7 +377,7 @@ boolean.verify(123);            // throws
 ---
 
 <a name="truthy" href="#truthy">#</a>
-**truthy**: <i style="color: #267f99">Decoder&lt;boolean&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/booleans.js#L17 'Source')
+**truthy**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;boolean&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/booleans.js#L17 'Source')
 
 Accepts anything and will return its "truth" value. Will never reject.
 
@@ -586,7 +399,7 @@ truthy.verify(null) === false;
 ---
 
 <a name="numericBoolean" href="#numericBoolean">#</a>
-**numericBoolean**: <i style="color: #267f99">Decoder&lt;boolean&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/booleans.js#L22 'Source')
+**numericBoolean**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;boolean&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/booleans.js#L22 'Source')
 
 Accepts numbers, but return their boolean representation.
 
@@ -608,13 +421,13 @@ numericBoolean.verify('hello');    // throws
 ## Dates
 
 
-- [`date`](#date)
-- [`iso8601`](#iso8601)
+- [`date`](/api.html#date)
+- [`iso8601`](/api.html#iso8601)
 
 ---
 
 <a name="date" href="#date">#</a>
-**date**: <i style="color: #267f99">Decoder&lt;Date&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/dates.js#L33 'Source')
+**date**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Date&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/dates.js#L33 'Source')
 
 Accepts and returns [`Date`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) instances.
 
@@ -632,7 +445,7 @@ date.verify('hello');  // throws
 ---
 
 <a name="iso8601" href="#iso8601">#</a>
-**iso8601**: <i style="color: #267f99">Decoder&lt;Date&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/dates.js#L28-L39 'Source')
+**iso8601**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Date&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/dates.js#L28-L39 'Source')
 
 Accepts [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings, returns then as [`Date`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) instances.
 
@@ -661,7 +474,7 @@ iso8601.verify(new Date());    // throws (does not accept dates)
 ---
 
 <a name="constant" href="#constant">#</a>
-**constant**&lt;<i style="color: #267f99">T</i>&gt;(value: <i style="color: #267f99">T</i>): <i style="color: #267f99">Decoder&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L52-L56 'Source')
+**constant**&lt;<i style="color: #267f99">T</i>&gt;(value: <i style="color: #267f99">T</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L52-L56 'Source')
 
 Accepts only the given constant value.
 
@@ -682,9 +495,9 @@ decoder.verify(undefined);      // throws
 ---
 
 <a name="always" href="#always">#</a>
-**always**&lt;<i style="color: #267f99">T</i>&gt;(value: <i style="color: #267f99">T</i>): <i style="color: #267f99">Decoder&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L64-L66 'Source')  
+**always**&lt;<i style="color: #267f99">T</i>&gt;(value: <i style="color: #267f99">T</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L64-L66 'Source')  
 <a name="hardcoded" href="#hardcoded">#</a>
-**hardcoded**&lt;<i style="color: #267f99">T</i>&gt;(value: <i style="color: #267f99">T</i>): <i style="color: #267f99">Decoder&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L71 'Source')
+**hardcoded**&lt;<i style="color: #267f99">T</i>&gt;(value: <i style="color: #267f99">T</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L71 'Source')
 
 Accepts anything, completely ignores it, and always returns the provided value instead.
 
@@ -707,18 +520,18 @@ decoder.verify(undefined) === 42;
 ## Optionality
 
 
-- [`null_`](#null_)
-- [`undefined_`](#undefined_)
+- [`null_`](/api.html#null_)
+- [`undefined_`](/api.html#undefined_)
 - [`optional()`](#optional)
 - [`nullable()`](#nullable)
 - [`maybe()`](#maybe)
-- [`unknown`](#unknown)
-- [`mixed`](#mixed) (alias of [`unknown`](#unknown))
+- [`unknown`](/api.html#unknown)
+- [`mixed`](/api.html#mixed) (alias of [`unknown`](/api.html#unknown))
 
 ---
 
 <a name="null_" href="#null_">#</a>
-**null_**: <i style="color: #267f99">Decoder&lt;null&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L10-L12 'Source')
+**null_**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;null&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L10-L12 'Source')
 
 Accepts and returns only the literal `null` value.
 
@@ -735,7 +548,7 @@ null_.verify('hello world'); // throws
 ---
 
 <a name="undefined_" href="#undefined_">#</a>
-**undefined_**: <i style="color: #267f99">Decoder&lt;undefined&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L17-L19 'Source')
+**undefined_**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;undefined&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L17-L19 'Source')
 
 Accepts and returns only the literal `undefined` value.
 
@@ -752,7 +565,7 @@ undefined_.verify('hello world'); // throws
 ---
 
 <a name="optional" href="#optional">#</a>
-**optional**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99">Decoder&lt;T&gt;</i>): <i style="color: #267f99">Decoder&lt;T | undefined&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L24-L26 'Source')
+**optional**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T | undefined&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L24-L26 'Source')
 
 Accepts whatever the given decoder accepts, or `undefined`.
 
@@ -792,7 +605,7 @@ Which will decode to type:
 ---
 
 <a name="nullable" href="#nullable">#</a>
-**nullable**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99">Decoder&lt;T&gt;</i>): <i style="color: #267f99">Decoder&lt;T | null&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L31-L33 'Source')
+**nullable**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T | null&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L31-L33 'Source')
 
 Accepts whatever the given decoder accepts, or `null`.
 
@@ -812,7 +625,7 @@ decoder.verify(42);         // throws
 ---
 
 <a name="maybe" href="#maybe">#</a>
-**maybe**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99">Decoder&lt;T&gt;</i>): <i style="color: #267f99">Decoder&lt;T | null | undefined&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L45-L47 'Source')
+**maybe**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T | null | undefined&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L45-L47 'Source')
 
 Accepts whatever the given decoder accepts, or `null`, or `undefined`.
 
@@ -832,9 +645,9 @@ decoder.verify(42);  // throws
 ---
 
 <a name="unknown" href="#unknown">#</a>
-**unknown**: <i style="color: #267f99">Decoder&lt;unknown&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L80 'Source')  
+**unknown**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;unknown&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L80 'Source')  
 <a name="mixed" href="#mixed">#</a>
-**mixed**: <i style="color: #267f99">Decoder&lt;unknown&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L85 'Source')
+**mixed**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;unknown&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L85 'Source')
 
 Accepts anything and returns it unchanged.
 
@@ -858,14 +671,14 @@ unknown.verify([1, 2]) === [1, 2];
 
 - [`array()`](#array)
 - [`nonEmptyArray()`](#nonEmptyArray)
-- [`poja`](#poja)
+- [`poja`](/api.html#poja)
 - [`tuple()`](#tuple)
 - [`set()`](#set)
 
 ---
 
 <a name="array" href="#array">#</a>
-**array**(decoder: <i style="color: #267f99">Decoder&lt;T&gt;</i>): <i style="color: #267f99">Decoder&lt;T[]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/arrays.js#L74-L79 'Source')
+**array**(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T[]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/arrays.js#L74-L79 'Source')
 
 Accepts arrays of whatever the given decoder accepts.
 
@@ -883,7 +696,7 @@ decoder.verify(['hello', 1.2]);  // throws
 ---
 
 <a name="nonEmptyArray" href="#nonEmptyArray">#</a>
-**nonEmptyArray**(decoder: <i style="color: #267f99">Decoder&lt;T&gt;</i>): <i style="color: #267f99">Decoder&lt;T[]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/arrays.js#L84-L86 'Source')
+**nonEmptyArray**(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T[]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/arrays.js#L84-L86 'Source')
 
 Like `array()`, but will reject arrays with 0 elements.
 
@@ -901,7 +714,7 @@ decoder.verify([]);              // throws
 ---
 
 <a name="poja" href="#poja">#</a>
-**poja**: <i style="color: #267f99">Decoder&lt;unknown[]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/arrays.js#L14-L30 'Source')
+**poja**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;unknown[]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/arrays.js#L14-L30 'Source')
 
 Accepts any array, but doesn't validate its items further.
 
@@ -921,7 +734,7 @@ poja.verify('hi');  // throws
 ---
 
 <a name="tuple" href="#tuple">#</a>
-**tuple**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">C</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99">Decoder&lt;A&gt;</i>, <i style="color: #267f99">Decoder&lt;B&gt;</i>, <i style="color: #267f99">Decoder&lt;C&gt;</i>, <i style="color: #267f99">...</i>): <i style="color: #267f99">Decoder&lt;[A, B, C, ...]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/arrays.js#L137 'Source')
+**tuple**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">C</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;C&gt;</i>, <i style="color: #267f99">...</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;[A, B, C, ...]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/arrays.js#L137 'Source')
 
 Accepts a tuple (an array with exactly _n_ items) of values accepted by the _n_ given decoders.
 
@@ -940,7 +753,7 @@ decoder.verify(['a', 1, 'c']);       // throws, too many items
 ---
 
 <a name="set" href="#set">#</a>
-**set**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99">Decoder&lt;T&gt;</i>): <i style="color: #267f99">Decoder&lt;Set&lt;T&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/arrays.js#L92-L94 'Source')
+**set**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Set&lt;T&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/arrays.js#L92-L94 'Source')
 
 Similar to [`array()`](#array), but returns the result as an [ES6 Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set).
 
@@ -963,14 +776,14 @@ decoder.verify([1, 2]);         // throws, not the right types
 - [`object()`](#object)
 - [`exact()`](#exact)
 - [`inexact()`](#inexact)
-- [`pojo`](#pojo)
+- [`pojo`](/api.html#pojo)
 - [`dict()`](#dict)
 - [`mapping()`](#mapping)
 
 ---
 
 <a name="object" href="#object">#</a>
-**object**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99">{ field1: Decoder&lt;A&gt;, field2: Decoder&lt;B&gt;, ... }</i>): <i style="color: #267f99">Decoder&lt;{ field1: A, field2: B, ... }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L72-L146 'Source')
+**object**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99">{ field1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, field2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ field1: A, field2: B, ... }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L72-L146 'Source')
 
 Accepts objects with fields matching the given decoders. Extra fields that exist on the input object are ignored and will not be returned.
 
@@ -988,12 +801,12 @@ decoder.verify({ x: 1, y: 2, z: 3 }) === { x: 1, y: 2 }; // ⚠️ extra field `
 decoder.verify({ x: 1 });  // throws, missing field `y`
 ```
 
-For more information, see also [The difference between `object`, `exact`, and `inexact`](./tips#the-difference-between-object-exact-and-inexact).
+For more information, see also [The difference between `object`, `exact`, and `inexact`](./tips.html#the-difference-between-object-exact-and-inexact).
 
 ---
 
 <a name="exact" href="#exact">#</a>
-**exact**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99">{ field1: Decoder&lt;A&gt;, field2: Decoder&lt;B&gt;, ... }</i>): <i style="color: #267f99">Decoder&lt;{ field1: A, field2: B, ... }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L148-L168 'Source')
+**exact**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99">{ field1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, field2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ field1: A, field2: B, ... }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L148-L168 'Source')
 
 Like `object()`, but will reject inputs that contain extra keys that are not specified explicitly.
 
@@ -1011,12 +824,12 @@ decoder.verify({ x: 1, y: 2, z: 3 });  // throws, extra field `z` not allowed
 decoder.verify({ x: 1 });              // throws, missing field `y`
 ```
 
-For more information, see also [The difference between `object`, `exact`, and `inexact`](./tips#the-difference-between-object-exact-and-inexact).
+For more information, see also [The difference between `object`, `exact`, and `inexact`](./tips.html#the-difference-between-object-exact-and-inexact).
 
 ---
 
 <a name="inexact" href="#inexact">#</a>
-**inexact**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99">{ field1: Decoder&lt;A&gt;, field2: Decoder&lt;B&gt;, ... }</i>): <i style="color: #267f99">Decoder&lt;{ field1: A, field2: B, ... }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L170-L198 'Source')
+**inexact**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99">{ field1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, field2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ field1: A, field2: B, ... }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L170-L198 'Source')
 
 Like `object()`, but will pass through any extra fields on the input object unvalidated that will thus be of `unknown` type statically.
 
@@ -1033,12 +846,12 @@ decoder.verify({ x: 1, y: 2, z: 3 }) === { x: 1, y: 2, z: 3 };
 decoder.verify({ x: 1 });  // throws, missing field `y`
 ```
 
-For more information, see also [The difference between `object`, `exact`, and `inexact`](./tips#the-difference-between-object-exact-and-inexact).
+For more information, see also [The difference between `object`, `exact`, and `inexact`](./tips.html#the-difference-between-object-exact-and-inexact).
 
 ---
 
 <a name="pojo" href="#pojo">#</a>
-**pojo**: <i style="color: #267f99">Decoder&lt;{ [key: string]: unknown }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L31-L51 'Source')
+**pojo**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ [key: string]: unknown }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L31-L51 'Source')
 
 Accepts any "plain old JavaScript object", but doesn't validate its keys or values further.
 
@@ -1057,7 +870,7 @@ pojo.verify(null);        // throws
 ---
 
 <a name="dict" href="#dict">#</a>
-**dict**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99">Decoder&lt;T&gt;</i>): <i style="color: #267f99">Decoder&lt;{ [key: string]: T }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L203-L230 'Source')
+**dict**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ [key: string]: T }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L203-L230 'Source')
 
 Accepts objects where all values match the given decoder, and returns the result as a `{ [string]: T }`.
 
@@ -1073,7 +886,7 @@ decoder.verify({ red: 1, blue: 2, green: 3 }); // ≈ { red: 1, blue: 2, green: 
 ---
 
 <a name="mapping" href="#mapping">#</a>
-**mapping**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99">Decoder&lt;T&gt;</i>): <i style="color: #267f99">Decoder&lt;Map&lt;string, T&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L241-L250 'Source')
+**mapping**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Map&lt;string, T&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L241-L250 'Source')
 
 Similar to `dict()`, but returns the result as a `Map<string, T>` (an [ES6 Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)) instead.
 
@@ -1094,14 +907,14 @@ decoder.verify({ red: 1, blue: 2, green: 3 });
 ## JSON values
 
 
-- [`json`](#json)
-- [`jsonObject`](#jsonObject)
-- [`jsonArray`](#jsonArray)
+- [`json`](/api.html#json)
+- [`jsonObject`](/api.html#jsonObject)
+- [`jsonArray`](/api.html#jsonArray)
 
 ---
 
 <a name="json" href="#json">#</a>
-**json**: <i style="color: #267f99">Decoder&lt;JSONValue&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/json.js#L21-L28 'Source')
+**json**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;JSONValue&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/json.js#L21-L28 'Source')
 
 Accepts any value that's a valid JSON value.
 
@@ -1128,7 +941,7 @@ json.verify({
 ---
 
 <a name="jsonObject" href="#jsonObject">#</a>
-**jsonObject**: <i style="color: #267f99">Decoder&lt;{ [string]: JSONValue }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/json.js#L17 'Source')
+**jsonObject**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ [string]: JSONValue }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/json.js#L17 'Source')
 
 Like `json`, but will only decode when the JSON value is an object.
 
@@ -1147,7 +960,7 @@ jsonObject.verify(null);                 // throws
 ---
 
 <a name="jsonArray" href="#jsonArray">#</a>
-**jsonArray**: <i style="color: #267f99">Decoder&lt;JSONValue[]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/json.js#L19 'Source')
+**jsonArray**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;JSONValue[]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/json.js#L19 'Source')
 
 Like `json`, but will only decode when the JSON value is an array.
 
@@ -1176,7 +989,7 @@ jsonArray.verify(null);               // throws
 ---
 
 <a name="either" href="#either">#</a>
-**either**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">C</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99">Decoder&lt;A&gt;</i>, <i style="color: #267f99">Decoder&lt;B&gt;</i>, <i style="color: #267f99">Decoder&lt;C&gt;</i>, <i style="color: #267f99">...</i>): <i style="color: #267f99">Decoder&lt;A | B | C | ...&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/either.js#L87 'Source')
+**either**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">C</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;C&gt;</i>, <i style="color: #267f99">...</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | C | ...&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/either.js#L87 'Source')
 
 Accepts values accepted by any of the given decoders. The decoders are tried on the input one by one, in the given order. The first one that accepts the input "wins". If all decoders reject the input, the input gets rejected.
 
@@ -1196,9 +1009,9 @@ decoder.verify(false);  // throws
 ---
 
 <a name="taggedUnion" href="#taggedUnion">#</a>
-**taggedUnion**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(field: <i style="color: #267f99">string</i>, mapping: <i style="color: #267f99">{ value1: Decoder&lt;A&gt;, value2: Decoder&lt;B&gt;, ... }</i>): <i style="color: #267f99">Decoder&lt;A | B | ...&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/dispatch.js#L46-L60 'Source')  
+**taggedUnion**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(field: <i style="color: #267f99">string</i>, mapping: <i style="color: #267f99">{ value1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, value2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | ...&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/dispatch.js#L46-L60 'Source')  
 <a name="dispatch" href="#dispatch">#</a>
-**dispatch**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(field: <i style="color: #267f99">string</i>, mapping: <i style="color: #267f99">{ value1: Decoder&lt;A&gt;, value2: Decoder&lt;B&gt;, ... }</i>): <i style="color: #267f99">Decoder&lt;A | B | ...&gt;</i> 
+**dispatch**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(field: <i style="color: #267f99">string</i>, mapping: <i style="color: #267f99">{ value1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, value2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | ...&gt;</i> 
 
 **NOTE:** In decoders@1.x, this was called `dispatch()`.
 
@@ -1223,7 +1036,7 @@ The `either()` version will instead try each decoder in turn until it finds one 
 ---
 
 <a name="oneOf" href="#oneOf">#</a>
-**oneOf**&lt;<i style="color: #267f99">T</i>&gt;(values: <i style="color: #267f99">T[]</i>): <i style="color: #267f99">Decoder&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/either.js#L89-L101 'Source')
+**oneOf**&lt;<i style="color: #267f99">T</i>&gt;(values: <i style="color: #267f99">T[]</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/either.js#L89-L101 'Source')
 
 Accepts any value that is strictly-equal (using `===`) to one of the specified values.
 
@@ -1255,15 +1068,15 @@ oneOf(['foo', 'bar']);
 
 - [`define()`](#define)
 - [`prep()`](#prep)
-- [`never`](#never)
+- [`never`](/api.html#never)
 - [`instanceOf()`](#instanceOf)
 - [`lazy()`](#lazy)
-- [`fail`](#fail) (alias of [`never`](#never))
+- [`fail`](/api.html#fail) (alias of [`never`](/api.html#never))
 
 ---
 
 <a name="define" href="#define">#</a>
-**define**&lt;<i style="color: #267f99">T</i>&gt;(fn: <i style="color: #267f99">(blob: unknown, accept, reject) =&gt; T</i>): <i style="color: #267f99">Decoder&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/_decoder.js#L57-L135 'Source')
+**define**&lt;<i style="color: #267f99">T</i>&gt;(fn: <i style="color: #267f99">(blob: unknown, accept, reject) =&gt; T</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/_decoder.js#L57-L135 'Source')
 
 Defines a new `Decoder<T>`, by implementing a custom accept function. The function receives three arguments:
 
@@ -1299,7 +1112,7 @@ const uppercase: Decoder<string> = string.transform(s => s.toUpperCase());
 ---
 
 <a name="prep" href="#prep">#</a>
-**prep**&lt;<i style="color: #267f99">T</i>&gt;(mapperFn: <i style="color: #267f99">(raw: mixed) =&gt; mixed</i>, decoder: <i style="color: #267f99">Decoder&lt;T&gt;</i>): <i style="color: #267f99">Decoder&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L38-L53 'Source')
+**prep**&lt;<i style="color: #267f99">T</i>&gt;(mapperFn: <i style="color: #267f99">(raw: mixed) =&gt; mixed</i>, decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L38-L53 'Source')
 
 Pre-process the raw data input before passing it into the decoder. This gives you the ability to arbitrarily customize the input on the fly before passing it to the decoder. Of course, the input value at that point is still of `unknown` type, so you will have to deal with that accordingly.
 
@@ -1325,9 +1138,9 @@ decoder.verify('hi');  // throws: not a number
 ---
 
 <a name="never" href="#never">#</a>
-**never**: <i style="color: #267f99">Decoder&lt;never&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L58-L60 'Source')  
+**never**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;never&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L58-L60 'Source')  
 <a name="fail" href="#fail">#</a>
-**fail**: <i style="color: #267f99">Decoder&lt;never&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L65 'Source')
+**fail**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;never&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L65 'Source')
 
 Rejects all inputs, and always fails with the given error message. May be useful for explicitly disallowing keys, or for testing purposes.
 
@@ -1348,7 +1161,7 @@ decoder.verify({ a: 'foo', b: 'bar' });  // throws
 ---
 
 <a name="instanceOf" href="#instanceOf">#</a>
-**instanceOf**&lt;<i style="color: #267f99">T</i>&gt;(klass: <i style="color: #267f99">Class&lt;T&gt;</i>): <i style="color: #267f99">Decoder&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L10-L21 'Source')
+**instanceOf**&lt;<i style="color: #267f99">T</i>&gt;(klass: <i style="color: #267f99">Class&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L10-L21 'Source')
 
 Accepts any value that is an `instanceof` the given class.
 
@@ -1367,7 +1180,7 @@ decoder.verify(3);      // throws
 ---
 
 <a name="lazy" href="#lazy">#</a>
-**lazy**&lt;<i style="color: #267f99">T</i>&gt;(decoderFn: <i style="color: #267f99">() =&gt; Decoder&lt;T&gt;</i>): <i style="color: #267f99">Decoder&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L28-L30 'Source')
+**lazy**&lt;<i style="color: #267f99">T</i>&gt;(decoderFn: <i style="color: #267f99">() =&gt; <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L28-L30 'Source')
 
 Lazily evaluate the given decoder. This is useful to build self-referential types for recursive data structures. Example:
 
@@ -1388,5 +1201,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 7b1c20d91f7c6978176a47488cb5f85a) -->
+<!--[[[end]]] (checksum: da48bee43cad34a07b96c9c286339d99)-->
 <!-- prettier-ignore-end -->
