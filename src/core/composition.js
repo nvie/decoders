@@ -1,6 +1,6 @@
 // @flow strict
 
-import { andThen, err, ok, orElse } from '../result';
+import { andThen, err, ok } from '../result';
 import { annotate } from '../annotate';
 import { define } from '../_decoder';
 import type { Decoder } from '../_decoder';
@@ -61,19 +61,18 @@ export function predicate<T>(
  * `unknown` type, so you will have to deal with that accordingly.
  */
 export function prep<I, T>(mapperFn: (mixed) => I, decoder: Decoder<T, I>): Decoder<T> {
-    return define((blob) => {
-        let blob2;
+    return define((originalInput) => {
+        let blob;
         try {
-            blob2 = mapperFn(blob);
+            blob = mapperFn(originalInput);
         } catch (e) {
-            return err(annotate(blob, e.message));
+            return err(annotate(originalInput, e.message));
         }
 
-        return orElse(
-            decoder.decode(blob2),
-            (ann) => err(annotate(blob, ann.text)),
-            //                    ^^^^ Annotates the _original_ input value
-            //                         (instead of echoing back blob2 in the output)
-        );
+        const r = decoder.decode(blob);
+        return r.ok ? r : err(annotate(originalInput, r.error.text));
+        //                             ^^^^^^^^^^^^^
+        //                             Annotates the _original_ input value
+        //                             (instead of echoing back blob)
     });
 }

@@ -2,7 +2,7 @@
 
 import { annotate } from '../annotate';
 import { define } from '../_decoder';
-import { mapError } from '../result';
+import { err } from '../result';
 import type { Decoder } from '../_decoder';
 
 /**
@@ -12,14 +12,15 @@ import type { Decoder } from '../_decoder';
  * example to show in form errors).
  */
 export function describe<T>(decoder: Decoder<T>, message: string): Decoder<T> {
-    return define((blob) =>
-        mapError(
-            // Decode using the given decoder...
-            decoder.decode(blob),
-
+    return define((blob) => {
+        // Decode using the given decoder...
+        const result = decoder.decode(blob);
+        if (result.ok) {
+            return result;
+        } else {
             // ...but in case of error, annotate this with the custom given
             // message instead
-            (ann) => annotate(ann, message),
-        ),
-    );
+            return err(annotate(result.error, message));
+        }
+    });
 }
