@@ -17,9 +17,61 @@ has_children: true
 - [**Objects**](#objects): [`object()`](#object), [`exact()`](#exact), [`inexact()`](#inexact), [`pojo`](#pojo), [`dict()`](#dict), [`mapping()`](#mapping)
 - [**JSON values**](#json-values): [`json`](#json), [`jsonObject`](#jsonObject), [`jsonArray`](#jsonArray)
 - [**Choice**](#choice): [`either()`](#either), [`taggedUnion()`](#taggedUnion), [`oneOf()`](#oneOf)
-- [**Utilities**](#utilities): [`transform()`](#transform), [`compose()`](#compose), [`predicate()`](#predicate), [`describe()`](#describe), [`prep()`](#prep), [`never()`](#never), [`fail()`](#fail), [`instanceOf()`](#instanceOf), [`lazy()`](#lazy)
+- [**Utilities**](#utilities): [`compose()`](#compose), [`predicate()`](#predicate), [`prep()`](#prep), [`never()`](#never), [`fail()`](#fail), [`instanceOf()`](#instanceOf), [`lazy()`](#lazy)
 - [**Guards**](#guards): [`guard()`](#guard)
 <!-- prettier-ignore-end -->
+
+
+---
+
+## Meta
+
+-   [`transform()`](#transform)
+-   [`describe()`](#describe)
+
+---
+
+
+<a name="transform" href="#transform">#</a> <b>transform</b><i>&lt;T,
+V&gt;</i>(<i>Decoder&lt;T&gt;</i>, <i>&lt;T&gt;</i> =&gt; <i>&lt;V&gt;</i>):
+<i>Decoder&lt;V&gt;</i>
+[(source)](https://github.com/nvie/decoders/blob/main/src/core/utils.js 'Source')<br />
+
+Accepts any value the given decoder accepts, and on success, will call the given function
+**on the decoded result**. If the transformation function throws an error, the whole
+decoder will fail using the error message as the failure reason.
+
+<!-- prettier-ignore-start -->
+```javascript
+const upper = transform(string, (s) => s.toUpperCase());
+const verify = guard(upper);
+
+// 👍
+verify('foo') === 'FOO';
+
+// 👎
+verify(4);  // throws
+```
+<!-- prettier-ignore-end -->
+
+---
+
+<a name="describe" href="#describe">#</a>
+<b>describe</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>, <i>string</i>):
+<i>Decoder&lt;T&gt;</i>
+[(source)](https://github.com/nvie/decoders/blob/main/src/core/describe.js 'Source')<br />
+
+Uses the given decoder, but will use an alternative error message in case it rejects. This
+can be used to simplify or shorten otherwise long or low-level/technical errors.
+
+```javascript
+const vowel = describe(
+    either5(constant('a'), constant('e'), constant('i'), constant('o'), constant('u')),
+    'Must be vowel',
+);
+```
+
+---
 
 ---
 
@@ -1202,39 +1254,13 @@ annotate the type. Either by doing `oneOf([('foo': 'foo'), ('bar': 'bar')])`, or
 
 ## Utilities
 
--   [`transform()`](#transform)
 -   [`compose()`](#compose)
 -   [`predicate()`](#predicate)
--   [`describe()`](#describe)
 -   [`prep()`](#prep)
 -   [`never()`](#never)
 -   [`fail()`](#fail) (alias of [`never()`](#never))
 -   [`instanceOf()`](#instanceOf)
 -   [`lazy()`](#lazy)
-
----
-
-<a name="transform" href="#transform">#</a> <b>transform</b><i>&lt;T,
-V&gt;</i>(<i>Decoder&lt;T&gt;</i>, <i>&lt;T&gt;</i> =&gt; <i>&lt;V&gt;</i>):
-<i>Decoder&lt;V&gt;</i>
-[(source)](https://github.com/nvie/decoders/blob/main/src/core/utils.js 'Source')<br />
-
-Accepts any value the given decoder accepts, and on success, will call the given function
-**on the decoded result**. If the transformation function throws an error, the whole
-decoder will fail using the error message as the failure reason.
-
-<!-- prettier-ignore-start -->
-```javascript
-const upper = transform(string, (s) => s.toUpperCase());
-const verify = guard(upper);
-
-// 👍
-verify('foo') === 'FOO';
-
-// 👎
-verify(4);  // throws
-```
-<!-- prettier-ignore-end -->
 
 ---
 
@@ -1279,23 +1305,6 @@ verify(42);    // throws: not an odd number
 
 In TypeScript, if you provide a predicate that also doubles as a [type
 predicate][ts-predicates], then this will be reflected in the return type, too.
-
----
-
-<a name="describe" href="#describe">#</a>
-<b>describe</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>, <i>string</i>):
-<i>Decoder&lt;T&gt;</i>
-[(source)](https://github.com/nvie/decoders/blob/main/src/core/describe.js 'Source')<br />
-
-Uses the given decoder, but will use an alternative error message in case it rejects. This
-can be used to simplify or shorten otherwise long or low-level/technical errors.
-
-```javascript
-const vowel = describe(
-    either5(constant('a'), constant('e'), constant('i'), constant('o'), constant('u')),
-    'Must be vowel',
-);
-```
 
 ---
 
