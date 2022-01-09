@@ -24,8 +24,10 @@ has_children: true
 
 ---
 
-## Meta
+## Available methods on `Decoder<T>`
 
+- [`.decode()`](#decode)
+- [`.verify()`](#verify)
 - [`.and()`](#and)
 - [`.chain()`](#chain)
 - [`.transform()`](#transform)
@@ -33,8 +35,55 @@ has_children: true
 
 ---
 
-<a name="and" href="#and">#</a>
-Decoder&lt;T&gt;<b>.and</b>(predicate: <i>&lt;T&gt; => boolean</i>, message: <i>string</i>): <i>Decoder&lt;T&gt;</i>
+<a name="decode" href="#decode">#</a>
+Decoder&lt;T&gt;<b>.decode</b>(blob: mixed): <i>DecodeResult&lt;T&gt;</i>
+[(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
+
+Validates the raw/untrusted/unknown input and either accepts or rejects it.
+Contrasted with [`.verify()`](#verify), calls to `.decode()` will never fail
+and instead return a result type.
+
+For example, take this simple "number" decoder. When given an number value, it
+will return an `ok: true` result. Otherwise, it will return an `ok: false`
+result with the original input value annotated.
+
+<!-- TODO: Link to explanation of error annotations -->
+
+<!-- prettier-ignore-start -->
+```typescript
+// 👍
+number.decode(3)     // { ok: true, value: 3 };
+
+// 👎
+number.decode('hi')  // { ok: false, error: { type: 'scalar', value: 'hi', text: 'Must be number' } }
+```
+<!-- prettier-ignore-end -->
+
+---
+
+<a name="verify" href="#verify">#</a> Decoder&lt;T&gt;<b>.verify</b>(blob: mixed):
+<i>T</i>
+[(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
+
+Verified the raw/untrusted/unknown input and either accepts or rejects it. When accepted,
+returns the `T` value directly. Otherwise fail with a runtime error.
+
+For example, take this simple "number" decoder.
+
+<!-- prettier-ignore-start -->
+```typescript
+// 👍
+number.verify(3)     // 3
+
+// 👎
+number.verify('hi')  // throws
+```
+<!-- prettier-ignore-end -->
+
+---
+
+<a name="and" href="#and">#</a> Decoder&lt;T&gt;<b>.and</b>(predicate: <i>&lt;T&gt; =>
+boolean</i>, message: <i>string</i>): <i>Decoder&lt;T&gt;</i>
 [(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
 
 Accepts values that are accepted by the decoder _and_ also pass the predicate function.
