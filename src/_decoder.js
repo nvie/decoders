@@ -11,17 +11,25 @@ export type Scalar = string | number | boolean | symbol | void | null;
 export type Predicate<T> = (T) => boolean;
 
 export type DecodeResult<T> = Result<T, Annotation>;
+export type DecodeFn<T, I = mixed> = (blob: I) => DecodeResult<T>;
+
+/**
+ * A "type function" which informs Flow about how a type will be modified at runtime.
+ * Read this as "given a Guard of type T, I can produce a value of type T".  This
+ * definition helps construct $ObjMap types.
+ */
+export type DecoderType = <T>(Decoder<T>) => T;
 
 export type Decoder<T> = {|
-    +decode: (blob: mixed) => DecodeResult<T>,
+    +decode: DecodeFn<T>,
     +verify: (blob: mixed, formatterFn?: (Annotation) => string) => T,
     +and: (predicateFn: (value: T) => boolean, message: string) => Decoder<T>,
     +transform: <V>(transformFn: (value: T) => V) => Decoder<V>,
     +describe: (message: string) => Decoder<T>,
-    +chain: <V>(nextDecodeFn: (T) => DecodeResult<V>) => Decoder<V>,
+    +chain: <V>(nextDecodeFn: DecodeFn<V, T>) => Decoder<V>,
 |};
 
-function neverThrow<T, V>(transformFn: (T) => V): (T) => DecodeResult<V> {
+function neverThrow<T, V>(transformFn: (T) => V): DecodeFn<V, T> {
     return (value: T) => {
         try {
             return ok(transformFn(value));
@@ -32,7 +40,7 @@ function neverThrow<T, V>(transformFn: (T) => V): (T) => DecodeResult<V> {
 }
 
 function makeVerify<T>(
-    decodeFn: (mixed) => DecodeResult<T>,
+    decodeFn: DecodeFn<T>,
 ): (blob: mixed, formatterFn?: (Annotation) => string) => T {
     return (blob: mixed, formatter: (Annotation) => string = formatInline): T => {
         const result = decodeFn(blob);
@@ -46,9 +54,7 @@ function makeVerify<T>(
     };
 }
 
-function makeDescribe<T>(
-    decodeFn: (mixed) => DecodeResult<T>,
-): (message: string) => Decoder<T> {
+function makeDescribe<T>(decodeFn: DecodeFn<T>): (message: string) => Decoder<T> {
     return (message: string): Decoder<T> =>
         define((blob) => {
             // Decode using the given decoder...
@@ -64,7 +70,7 @@ function makeDescribe<T>(
 }
 
 function makeAnd<T>(
-    decodeFn: (mixed) => DecodeResult<T>,
+    decodeFn: DecodeFn<T>,
 ): (predicateFn: (value: T) => boolean, message: string) => Decoder<T> {
     return (predicateFn: (value: T) => boolean, message: string): Decoder<T> =>
         define((blob) =>
@@ -85,7 +91,7 @@ function makeAnd<T>(
  * argument.
  */
 function makeChain<T, V>(
-    decodeFn: (mixed) => DecodeResult<T>,
+    decodeFn: DecodeFn<T>,
 ): (nextDecodeFn: (T) => DecodeResult<V>) => Decoder<V> {
     return (nextDecodeFn: (T) => DecodeResult<V>): Decoder<V> => {
         return define((blob) => andThen(decodeFn(blob), nextDecodeFn));
@@ -104,7 +110,7 @@ function makeChain<T, V>(
  *    b. An "err" Result (an annotated representation of the runtime input)
  *
  */
-export function define<T>(decodeFn: (mixed) => DecodeResult<T>): Decoder<T> {
+export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
     return Object.freeze({
         decode: decodeFn,
         verify: makeVerify(decodeFn),
@@ -128,10 +134,3 @@ export function define<T>(decodeFn: (mixed) => DecodeResult<T>): Decoder<T> {
         chain: makeChain(decodeFn),
     });
 }
-
-/**
- * A "type function" which informs Flow about how a type will be modified at runtime.
- * Read this as "given a Guard of type T, I can produce a value of type T".  This
- * definition helps construct $ObjMap types.
- */
-export type DecoderType = <T>(Decoder<T>) => T;
