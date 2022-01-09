@@ -848,12 +848,12 @@ DECODERS = {
 
       In other words: any value returned by `JSON.parse()` should decode without failure.
 
-      - `null`
-      - `string`
-      - `number`
-      - `boolean`
-      - `{ [string]: JSONValue }`
-      - `JSONValue[]`
+      - ``null``
+      - ``string``
+      - ``number``
+      - ``boolean``
+      - ``{ [string]: JSONValue }``
+      - ``JSONValue[]``
 
       ```typescript
       // 👍
