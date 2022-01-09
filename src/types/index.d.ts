@@ -8,7 +8,7 @@ export {
 } from './_decoder';
 export { JSONValue, JSONObject, JSONArray } from './core/json';
 
-export { compose, predicate, prep, transform } from './core/composition';
+export { compose, predicate, prep } from './core/composition';
 
 export {
     always,

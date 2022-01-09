@@ -6,25 +6,6 @@ import { define } from '../_decoder';
 import type { Decoder } from '../_decoder';
 
 /**
- * Accepts any value the given decoder accepts, and on success, will call the
- * mapper value **on the decoded result**. If the mapper function throws an
- * error, the whole decoder will fail using the error message as the failure
- * reason.
- */
-export function transform<T, V>(decoder: Decoder<T>, transformFn: (T) => V): Decoder<V> {
-    return compose(
-        decoder,
-        define((x) => {
-            try {
-                return ok(transformFn(x));
-            } catch (e) {
-                return err(annotate(x, e instanceof Error ? e.message : String(e)));
-            }
-        }),
-    );
-}
-
-/**
  * Compose two decoders by passing the result of the first into the second.
  * The second decoder may assume as its input type the output type of the first
  * decoder (so it's not necessary to accept the typical "mixed").  This is

@@ -5,7 +5,6 @@ import { define } from '../_decoder';
 import { err, ok } from '../result';
 import { isDate } from '../_utils';
 import { regex } from './string';
-import { transform } from './composition';
 import type { Decoder } from '../_decoder';
 
 // $FlowFixMe[unclear-type] (not really an issue) - deliberate casting
@@ -25,16 +24,15 @@ export const date: Decoder<Date> = define((blob) =>
  * Decoder that only returns Ok for strings that are valid ISO8601 date
  * strings.  Err otherwise.
  */
-export const iso8601: Decoder<Date> = transform(
+export const iso8601: Decoder<Date> =
     // Input itself needs to match the ISO8601 regex...
-    regex(iso8601_re, 'Must be ISO8601 format'),
-
-    // Make sure it is a _valid_ date
-    (value: string) => {
-        const date = new Date(value);
-        if (isNaN(date.getTime())) {
-            throw new Error('Must be valid date/time value');
-        }
-        return date;
-    },
-);
+    regex(iso8601_re, 'Must be ISO8601 format').transform(
+        // Make sure it is a _valid_ date
+        (value: string) => {
+            const date = new Date(value);
+            if (isNaN(date.getTime())) {
+                throw new Error('Must be valid date/time value');
+            }
+            return date;
+        },
+    );

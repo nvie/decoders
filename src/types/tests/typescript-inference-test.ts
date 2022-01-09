@@ -46,7 +46,6 @@ import {
     set,
     string,
     taggedUnion,
-    transform,
     truthy,
     tuple,
     undefined_,
@@ -109,9 +108,6 @@ object({
 // Style argument
 string.verify('dummy', formatInline);
 string.verify('dummy', formatShort);
-
-// $ExpectType Decoder<number, unknown>
-transform(string, parseFloat);
 
 // $ExpectType Decoder<number, unknown>
 compose(

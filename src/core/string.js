@@ -5,7 +5,7 @@ import { define } from '../_decoder';
 import { either } from './either';
 import { err, ok } from '../result';
 import { instanceOf } from './instanceOf';
-import { predicate, transform } from './composition';
+import { predicate } from './composition';
 import type { Decoder } from '../_decoder';
 
 /** Match groups in this regex:
@@ -49,7 +49,7 @@ export const email: Decoder<string> = regex(
 );
 
 export const url: Decoder<URL> = either(
-    transform(regex(url_re, 'Must be URL'), (value) => new URL(value)),
+    regex(url_re, 'Must be URL').transform((value) => new URL(value)),
     instanceOf(URL),
 );
 

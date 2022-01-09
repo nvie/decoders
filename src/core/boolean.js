@@ -4,7 +4,6 @@ import { annotate } from '../annotate';
 import { define } from '../_decoder';
 import { err, ok } from '../result';
 import { number } from './number';
-import { transform } from './composition';
 import type { Decoder } from '../_decoder';
 
 /**
@@ -23,4 +22,4 @@ export const truthy: Decoder<boolean> = define((blob) => ok(!!blob));
  * Decoder that only returns Ok for numeric input values representing booleans.
  * Returns their boolean representation.  Err otherwise.
  */
-export const numericBoolean: Decoder<boolean> = transform(number, (n) => !!n);
+export const numericBoolean: Decoder<boolean> = number.transform((n) => !!n);

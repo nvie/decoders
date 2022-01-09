@@ -1,5 +1,7 @@
 // @flow strict
 
+import { andThen, err, ok } from './result';
+import { annotate } from './annotate';
 import { formatInline } from './format';
 import type { Annotation } from './annotate';
 import type { Result } from './result';
@@ -13,7 +15,18 @@ export type DecodeResult<T> = Result<T, Annotation>;
 export type Decoder<T, F = mixed> = {|
     +decode: (blob: F) => DecodeResult<T>,
     +verify: (blob: F, formatterFn?: (Annotation) => string) => T,
+    +transform: <V>(transformFn: (value: T) => V) => Decoder<V, F>,
 |};
+
+function neverThrow<T, V>(transformFn: (T) => V): (T) => DecodeResult<V> {
+    return (value: T) => {
+        try {
+            return ok(transformFn(value));
+        } catch (e) {
+            return err(annotate(value, e instanceof Error ? e.message : String(e)));
+        }
+    };
+}
 
 /**
  * Build a Decoder<T> using the given decoding function. A valid decoding
@@ -28,13 +41,15 @@ export type Decoder<T, F = mixed> = {|
  *
  */
 export function define<T, F = mixed>(fn: (F) => DecodeResult<T>): Decoder<T, F> {
+    function decode(blob: F): DecodeResult<T> {
+        return fn(blob);
+    }
+
     return Object.freeze({
-        decode(blob: F): DecodeResult<T> {
-            return fn(blob);
-        },
+        decode,
 
         verify(blob: F, formatter: (Annotation) => string = formatInline): T {
-            const result = fn(blob);
+            const result = decode(blob);
             if (result.ok) {
                 return result.value;
             } else {
@@ -42,6 +57,20 @@ export function define<T, F = mixed>(fn: (F) => DecodeResult<T>): Decoder<T, F> 
                 err.name = 'Decoding error';
                 throw err;
             }
+        },
+
+        /**
+         * Accepts any value the given decoder accepts, and on success, will
+         * call the mapper value **on the decoded result**. If the mapper
+         * function throws an error, the whole decoder will fail using the
+         * error message as the failure reason.
+         */
+        transform<V>(transformFn: (T) => V): Decoder<V, F> {
+            return define((blob: F): DecodeResult<V> => {
+                const result = decode(blob);
+                const mapper = neverThrow(transformFn);
+                return andThen(result, mapper);
+            });
         },
     });
 }

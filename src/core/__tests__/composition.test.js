@@ -2,7 +2,7 @@
 /* eslint-disable no-restricted-syntax */
 
 import { annotate } from '../../annotate';
-import { compose, predicate, prep, transform } from '../composition';
+import { compose, predicate, prep } from '../composition';
 import { constant } from '../constants';
 import { define } from '../../_decoder';
 import { err, ok } from '../../result';
@@ -36,19 +36,19 @@ describe('compose', () => {
 
 describe('transform', () => {
     it('change type of decode result', () => {
-        const len = transform(string, (s) => s.length);
+        const len = string.transform((s) => s.length);
         expect(len.verify('foo')).toEqual(3);
         expect(len.verify('Lorem ipsum dolor sit amet.')).toEqual(27);
     });
 
     it('change value, not type, of decoded results', () => {
-        const upcase = transform(string, (s) => s.toUpperCase());
+        const upcase = string.transform((s) => s.toUpperCase());
         expect(upcase.verify('123')).toEqual('123');
         expect(upcase.verify('I am Hulk')).toEqual('I AM HULK');
     });
 
     it('a failing transformation function will fail the decoder', () => {
-        const odd = transform(number, (n) => {
+        const odd = number.transform((n) => {
             if (n % 2 !== 0) return n;
             throw new Error('Must be odd');
         });
@@ -57,7 +57,7 @@ describe('transform', () => {
         expect(odd.decode(3).ok).toBe(true);
         expect(odd.decode(4).ok).toBe(false);
 
-        const weirdEven = transform(number, (n) => {
+        const weirdEven = number.transform((n) => {
             if (n % 2 === 0) return n;
             throw 'Must be even'; // Throwing a string, not an Error is non-conventional, but won't break anything
         });

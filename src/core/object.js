@@ -1,7 +1,7 @@
 // @flow strict
 
 import { annotate, annotateObject, merge, updateText } from '../annotate';
-import { compose, transform } from './composition';
+import { compose } from './composition';
 import { define } from '../_decoder';
 import { err, ok } from '../result';
 import type { _Any } from '../_utils';
@@ -189,8 +189,7 @@ export function inexact<O: { +[field: string]: Decoder<_Any> }>(
         pojo,
         define((blob) => {
             const allkeys = new Set(Object.keys(blob));
-            const decoder = transform(
-                object(mapping),
+            const decoder = object(mapping).transform(
                 (safepart: $ObjMap<O, DecoderType>) => {
                     const safekeys = new Set(Object.keys(mapping));
 
@@ -261,8 +260,7 @@ export function dict<T>(decoder: Decoder<T>): Decoder<{ [string]: T }> {
  *
  */
 export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
-    return transform(
-        dict(decoder),
+    return dict(decoder).transform(
         (obj) =>
             new Map(
                 // This is effectively Object.entries(obj), but in a way that Flow
