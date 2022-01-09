@@ -2,7 +2,6 @@ import {
     always,
     array,
     boolean,
-    compose,
     constant,
     date,
     Decoder,
@@ -39,7 +38,6 @@ import {
     pojo,
     positiveInteger,
     positiveNumber,
-    predicate,
     prep,
     regex,
     set,
@@ -109,23 +107,16 @@ string.verify('dummy', formatInline);
 string.verify('dummy', formatShort);
 
 // $ExpectType Decoder<number, unknown>
-compose(
-    string,
-    define((value: string) => ok(value.length)),
-);
+string.chain((value: string) => ok(value.length));
 
 // $ExpectType Decoder<string, unknown>
-predicate(string, (s) => s.startsWith('x'), 'Must start with x');
+string.and((s) => s.startsWith('x'), 'Must start with x');
 
 // $ExpectType Decoder<string, unknown>
-predicate(unknown, (foo): foo is string => typeof foo === 'string', 'Is string');
+unknown.and((foo): foo is string => typeof foo === 'string', 'Is string');
 
 // $ExpectType Decoder<"a" | "b", unknown>
-predicate(
-    string,
-    (foo: string): foo is 'a' | 'b' => foo === 'a' || foo === 'b',
-    'Is a or b',
-);
+string.and((foo: string): foo is 'a' | 'b' => foo === 'a' || foo === 'b', 'Is a or b');
 
 prep(Number, string); // $ExpectType Decoder<string, unknown>
 prep(String, string); // $ExpectType Decoder<string, unknown>

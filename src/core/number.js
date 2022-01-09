@@ -3,7 +3,6 @@
 import { annotate } from '../annotate';
 import { define } from '../_decoder';
 import { err, ok } from '../result';
-import { predicate } from './composition';
 import type { Decoder } from '../_decoder';
 
 const anyNumber: Decoder<number> = define((blob) =>
@@ -12,30 +11,23 @@ const anyNumber: Decoder<number> = define((blob) =>
         : err(annotate(blob, 'Must be number')),
 );
 
-const isInteger = (n: number) => Number.isInteger(n);
-const isFinite = (n: number) => Number.isFinite(n);
-
-export const number: Decoder<number> = predicate(
-    anyNumber,
-    isFinite,
+export const number: Decoder<number> = anyNumber.and(
+    (n) => Number.isFinite(n),
     'Number must be finite',
 );
 
-export const positiveNumber: Decoder<number> = predicate(
-    number,
+export const positiveNumber: Decoder<number> = number.and(
     (n) => n >= 0,
     'Number must be positive',
 );
 
 // Integers
-export const integer: Decoder<number> = predicate(
-    number,
-    isInteger,
+export const integer: Decoder<number> = number.and(
+    (n) => Number.isInteger(n),
     'Number must be an integer',
 );
 
-export const positiveInteger: Decoder<number> = predicate(
-    integer,
+export const positiveInteger: Decoder<number> = integer.and(
     (n) => n >= 0,
     'Number must be positive',
 );

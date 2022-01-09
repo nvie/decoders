@@ -5,7 +5,6 @@ import { define } from '../_decoder';
 import { either } from './either';
 import { err, ok } from '../result';
 import { instanceOf } from './instanceOf';
-import { predicate } from './composition';
 import type { Decoder } from '../_decoder';
 
 /** Match groups in this regex:
@@ -36,7 +35,7 @@ export const nonEmptyString: Decoder<string> = regex(/\S/, 'Must be non-empty st
  * before testing the regex.
  */
 export function regex(regex: RegExp, msg: string): Decoder<string> {
-    return predicate(string, (s) => regex.test(s), msg);
+    return string.and((s) => regex.test(s), msg);
 }
 
 /**
@@ -53,8 +52,7 @@ export const url: Decoder<URL> = either(
     instanceOf(URL),
 );
 
-export const httpsUrl: Decoder<URL> = predicate(
-    url,
+export const httpsUrl: Decoder<URL> = url.and(
     (value) => value.protocol === 'https:',
     'Must be an HTTPS URL',
 );
@@ -66,8 +64,8 @@ export const uuid: Decoder<string> = regex(
 
 export const uuidv1: Decoder<string> =
     // https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_(date-time_and_MAC_address)
-    predicate(uuid, (value) => value[14] === '1', 'Must be uuidv1');
+    uuid.and((value) => value[14] === '1', 'Must be uuidv1');
 
 export const uuidv4: Decoder<string> =
     // https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)
-    predicate(uuid, (value) => value[14] === '4', 'Must be uuidv4');
+    uuid.and((value) => value[14] === '4', 'Must be uuidv4');

@@ -15,8 +15,10 @@ export type DecodeResult<T> = Result<T, Annotation>;
 export type Decoder<T, F = mixed> = {|
     +decode: (blob: F) => DecodeResult<T>,
     +verify: (blob: F, formatterFn?: (Annotation) => string) => T,
+    +and: (predicateFn: (value: T) => boolean, message: string) => Decoder<T, F>,
     +transform: <V>(transformFn: (value: T) => V) => Decoder<V, F>,
     +describe: (message: string) => Decoder<T, F>,
+    +chain: <V>(nextDecodeFn: (T) => DecodeResult<V>) => Decoder<V, F>,
 |};
 
 function neverThrow<T, V>(transformFn: (T) => V): (T) => DecodeResult<V> {
@@ -61,6 +63,35 @@ function makeDescribe<T, F>(
         });
 }
 
+function makeAnd<T, F>(
+    decodeFn: (F) => DecodeResult<T>,
+): (predicateFn: (value: T) => boolean, message: string) => Decoder<T, F> {
+    return (predicateFn: (value: T) => boolean, message: string): Decoder<T, F> =>
+        define((blob) =>
+            andThen(decodeFn(blob), (value) =>
+                predicateFn(value) ? ok(value) : err(annotate(value, message)),
+            ),
+        );
+}
+
+/**
+ * Compose two decoders by passing the result of the first into the second.
+ * The second decoder may assume as its input type the output type of the first
+ * decoder (so it's not necessary to accept the typical "mixed").  This is
+ * useful for "narrowing down" the checks.  For example, if you want to write
+ * a decoder for positive numbers, you can compose it from an existing decoder
+ * for any number, and a decoder that, assuming a number, checks if it's
+ * positive.  Very often combined with the predicate() helper as the second
+ * argument.
+ */
+function makeChain<T, F, V>(
+    decodeFn: (F) => DecodeResult<T>,
+): (nextDecodeFn: (T) => DecodeResult<V>) => Decoder<V, F> {
+    return (nextDecodeFn: (T) => DecodeResult<V>): Decoder<V, F> => {
+        return define((blob) => andThen(decodeFn(blob), nextDecodeFn));
+    };
+}
+
 /**
  * Build a Decoder<T> using the given decoding function. A valid decoding
  * function meets the following requirements:
@@ -78,6 +109,8 @@ export function define<T, F = mixed>(decodeFn: (F) => DecodeResult<T>): Decoder<
         decode: decodeFn,
         verify: makeVerify(decodeFn),
 
+        and: makeAnd(decodeFn),
+
         /**
          * Accepts any value the given decoder accepts, and on success, will
          * call the transformation function **with the decoded result**. If the
@@ -91,6 +124,8 @@ export function define<T, F = mixed>(decodeFn: (F) => DecodeResult<T>): Decoder<
         },
 
         describe: makeDescribe(decodeFn),
+
+        chain: makeChain(decodeFn),
     });
 }
 

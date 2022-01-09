@@ -1,15 +1,12 @@
 // @flow strict
 
 import { annotate } from '../annotate';
-import { compose, predicate } from './composition';
-import { define } from '../_decoder';
 import { err, ok } from '../result';
 import { poja } from './array';
 import type { _Any } from '../_utils';
 import type { Decoder } from '../_decoder';
 
-const ntuple = (n: number) =>
-    predicate(poja, (arr) => arr.length === n, `Must be a ${n}-tuple`);
+const ntuple = (n: number) => poja.and((arr) => arr.length === n, `Must be a ${n}-tuple`);
 
 // prettier-ignore
 interface TupleFuncSignature {
@@ -25,31 +22,28 @@ interface TupleFuncSignature {
  * Accepts n-tuples [A, B, C, ...] matching the given decoders A, B, C, ...
  */
 function _tuple(...decoders: $ReadOnlyArray<Decoder<mixed>>): Decoder<mixed> {
-    return compose(
-        ntuple(decoders.length),
-        define((blobs) => {
-            let allOk = true;
+    return ntuple(decoders.length).chain((blobs) => {
+        let allOk = true;
 
-            const rvs = decoders.map((decoder, i) => {
-                const blob = blobs[i];
-                const result = decoder.decode(blob);
-                if (result.ok) {
-                    return result.value;
-                } else {
-                    allOk = false;
-                    return result.error;
-                }
-            });
-
-            if (allOk) {
-                return ok(rvs);
+        const rvs = decoders.map((decoder, i) => {
+            const blob = blobs[i];
+            const result = decoder.decode(blob);
+            if (result.ok) {
+                return result.value;
             } else {
-                // If a decoder error has happened while unwrapping all the
-                // results, try to construct a good error message
-                return err(annotate(rvs));
+                allOk = false;
+                return result.error;
             }
-        }),
-    );
+        });
+
+        if (allOk) {
+            return ok(rvs);
+        } else {
+            // If a decoder error has happened while unwrapping all the
+            // results, try to construct a good error message
+            return err(annotate(rvs));
+        }
+    });
 }
 
 export const tuple: TupleFuncSignature = (_tuple: _Any);

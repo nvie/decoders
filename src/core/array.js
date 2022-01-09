@@ -1,7 +1,6 @@
 // @flow strict
 
 import { annotate } from '../annotate';
-import { compose, predicate } from './composition';
 import { define } from '../_decoder';
 import { err, ok } from '../result';
 import type { Decoder, DecodeResult } from '../_decoder';
@@ -73,23 +72,14 @@ function all<T>(
 }
 
 /**
- * Given a T, builds a decoder that assumes an array input and returns an
- * Array<T>.
- */
-function members<T>(decoder: Decoder<T>): Decoder<Array<T>, Array<mixed>> {
-    return define((blobs: $ReadOnlyArray<mixed>) => {
-        const results = blobs.map(decoder.decode);
-        const result = all(results, blobs);
-        return result;
-    });
-}
-
-/**
  * Builds a Decoder that returns Ok for values of `Array<T>`, given a Decoder
  * for `T`.  Err otherwise.
  */
 export function array<T>(decoder: Decoder<T>): Decoder<Array<T>> {
-    return compose(poja, members(decoder));
+    return poja.chain((blobs: $ReadOnlyArray<mixed>) => {
+        const results = blobs.map(decoder.decode);
+        return all(results, blobs);
+    });
 }
 
 /**
@@ -97,7 +87,7 @@ export function array<T>(decoder: Decoder<T>): Decoder<Array<T>> {
  * empty arrays.
  */
 export function nonEmptyArray<T>(decoder: Decoder<T>): Decoder<Array<T>> {
-    return predicate(array(decoder), (arr) => arr.length > 0, 'Must be non-empty array');
+    return array(decoder).and((arr) => arr.length > 0, 'Must be non-empty array');
 }
 
 /**

@@ -15,7 +15,6 @@ import {
 } from '../string';
 import { INPUTS } from './fixtures';
 import { partition } from 'itertools';
-import { predicate } from '../composition';
 
 describe('string', () => {
     const decoder = string;
@@ -104,8 +103,7 @@ describe('url', () => {
     });
 
     it('custom URL schemes', () => {
-        const decoder = predicate(
-            url,
+        const decoder = url.and(
             (value) => ['http:', 'git+ssh:', 'ftp:'].includes(value.protocol),
             'Must be http, git+ssh, or ftp URL',
         );

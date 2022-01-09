@@ -23,7 +23,7 @@ export type { JSONValue, JSONObject, JSONArray } from './core/json';
 
 export { define } from './_decoder';
 
-export { compose, predicate, prep } from './core/composition';
+export { prep } from './core/composition';
 
 export {
     always,

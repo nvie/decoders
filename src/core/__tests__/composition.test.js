@@ -2,27 +2,25 @@
 /* eslint-disable no-restricted-syntax */
 
 import { annotate } from '../../annotate';
-import { compose, predicate, prep } from '../composition';
 import { constant } from '../constants';
-import { define } from '../../_decoder';
 import { err, ok } from '../../result';
 import { INPUTS } from './fixtures';
 import { number } from '../number';
 import { partition } from 'itertools';
+import { prep } from '../composition';
 import { string } from '../string';
 
 describe('compose', () => {
-    const hex = compose(
+    const hex =
         // We already know how to decode strings...
-        string,
-
-        // We'll try to parse it as an hex int, but if it fails, we'll
-        // return Err, otherwise Ok
-        define((s) => {
-            const n = parseInt(s, 16);
-            return !Number.isNaN(n) ? ok(n) : err(annotate(n, 'Nope'));
-        }),
-    );
+        string.chain(
+            // We'll try to parse it as an hex int, but if it fails, we'll
+            // return Err, otherwise Ok
+            (s) => {
+                const n = parseInt(s, 16);
+                return !Number.isNaN(n) ? ok(n) : err(annotate(n, 'Nope'));
+            },
+        );
 
     it('valid type of decode result', () => {
         expect(hex.verify('100')).toEqual(256);
@@ -68,7 +66,7 @@ describe('transform', () => {
 });
 
 describe('predicate', () => {
-    const odd = predicate(number, (n) => n % 2 !== 0, 'Must be odd');
+    const odd = number.and((n) => n % 2 !== 0, 'Must be odd');
 
     it('valid', () => {
         expect(odd.decode(0).ok).toEqual(false);

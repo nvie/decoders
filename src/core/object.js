@@ -1,7 +1,6 @@
 // @flow strict
 
 import { annotate, annotateObject, merge, updateText } from '../annotate';
-import { compose } from './composition';
 import { define } from '../_decoder';
 import { err, ok } from '../result';
 import type { _Any } from '../_utils';
@@ -78,79 +77,76 @@ export function object<O: { +[field: string]: Decoder<_Any>, ... }>(
     mapping: O,
 ): Decoder<$ObjMap<O, DecoderType>> {
     const known = new Set(Object.keys(mapping));
-    return compose(
-        pojo,
-        define((blob) => {
-            const actual = new Set(Object.keys(blob));
+    return pojo.chain((blob) => {
+        const actual = new Set(Object.keys(blob));
 
-            // At this point, "missing" will also include all fields that may
-            // validly be optional.  We'll let the underlying decoder decide and
-            // remove the key from this missing set if the decoder accepts the
-            // value.
-            const missing = subtract(known, actual);
+        // At this point, "missing" will also include all fields that may
+        // validly be optional.  We'll let the underlying decoder decide and
+        // remove the key from this missing set if the decoder accepts the
+        // value.
+        const missing = subtract(known, actual);
 
-            let record = {};
-            let errors: { [key: string]: Annotation } | null = null;
+        let record = {};
+        let errors: { [key: string]: Annotation } | null = null;
 
-            Object.keys(mapping).forEach((key) => {
-                const decoder = mapping[key];
-                const rawValue = blob[key];
-                const result: DecodeResult<mixed> = decoder.decode(rawValue);
+        Object.keys(mapping).forEach((key) => {
+            const decoder = mapping[key];
+            const rawValue = blob[key];
+            const result: DecodeResult<mixed> = decoder.decode(rawValue);
 
-                if (result.ok) {
-                    const value = result.value;
-                    if (value !== undefined) {
-                        record[key] = value;
-                    }
+            if (result.ok) {
+                const value = result.value;
+                if (value !== undefined) {
+                    record[key] = value;
+                }
 
-                    // If this succeeded, remove the key from the missing keys
-                    // tracker
-                    missing.delete(key);
+                // If this succeeded, remove the key from the missing keys
+                // tracker
+                missing.delete(key);
+            } else {
+                const ann = result.error;
+
+                // Keep track of the annotation, but don't return just yet. We
+                // want to collect more error information.
+                if (rawValue === undefined) {
+                    // Explicitly add it to the missing set if the value is
+                    // undefined.  This covers explicit undefineds to be
+                    // treated the same as implicit undefineds (aka missing
+                    // keys).
+                    missing.add(key);
                 } else {
-                    const ann = result.error;
-
-                    // Keep track of the annotation, but don't return just yet. We
-                    // want to collect more error information.
-                    if (rawValue === undefined) {
-                        // Explicitly add it to the missing set if the value is
-                        // undefined.  This covers explicit undefineds to be
-                        // treated the same as implicit undefineds (aka missing
-                        // keys).
-                        missing.add(key);
-                    } else {
-                        if (errors === null) {
-                            errors = {};
-                        }
-                        errors[key] = ann;
+                    if (errors === null) {
+                        errors = {};
                     }
+                    errors[key] = ann;
                 }
-            });
+            }
+        });
 
-            // Deal with errors now. There are two classes of errors we want to
-            // report.  First of all, we want to report any inline errors in this
-            // object.  Lastly, any fields that are missing should be annotated on
-            // the outer object itself.
-            if (errors || missing.size > 0) {
-                let objAnn = annotateObject(blob);
+        // Deal with errors now. There are two classes of errors we want to
+        // report.  First of all, we want to report any inline errors in this
+        // object.  Lastly, any fields that are missing should be annotated on
+        // the outer object itself.
+        if (errors || missing.size > 0) {
+            let objAnn = annotateObject(blob);
 
-                if (errors) {
-                    objAnn = merge(objAnn, errors);
-                }
-
-                if (missing.size > 0) {
-                    const errMsg = Array.from(missing)
-                        .map((key) => `"${key}"`)
-                        .join(', ');
-                    const pluralized = missing.size > 1 ? 'keys' : 'key';
-                    objAnn = updateText(objAnn, `Missing ${pluralized}: ${errMsg}`);
-                }
-
-                return err(objAnn);
+            if (errors) {
+                objAnn = merge(objAnn, errors);
             }
 
-            return ok(record);
-        }),
-    );
+            if (missing.size > 0) {
+                const errMsg = Array.from(missing)
+                    .map((key) => `"${key}"`)
+                    .join(', ');
+                const pluralized = missing.size > 1 ? 'keys' : 'key';
+                objAnn = updateText(objAnn, `Missing ${pluralized}: ${errMsg}`);
+            }
+
+            return err(objAnn);
+        }
+
+        return ok(record);
+    });
 }
 
 export function exact<O: { +[field: string]: Decoder<_Any>, ... }>(
@@ -158,96 +154,82 @@ export function exact<O: { +[field: string]: Decoder<_Any>, ... }>(
 ): Decoder<$ObjMap<$Exact<O>, DecoderType>> {
     // Check the inputted object for any superfluous keys
     const allowed = new Set(Object.keys(mapping));
-    const checked = compose(
-        pojo,
-        define((blob) => {
-            const actual = new Set(Object.keys(blob));
-            const superfluous = subtract(actual, allowed);
-            if (superfluous.size > 0) {
-                return err(
-                    annotate(
-                        blob,
-                        `Superfluous keys: ${Array.from(superfluous).join(', ')}`,
-                    ),
-                );
-            }
-            return ok(blob);
-        }),
-    );
+    const checked = pojo.chain((blob) => {
+        const actual = new Set(Object.keys(blob));
+        const superfluous = subtract(actual, allowed);
+        if (superfluous.size > 0) {
+            return err(
+                annotate(blob, `Superfluous keys: ${Array.from(superfluous).join(', ')}`),
+            );
+        }
+        return ok(blob);
+    });
 
     // Defer to the "object" decoder for doing the real decoding work.  Since
     // we made sure there are no superfluous keys in this structure, it's now
     // safe to force-cast it to an $Exact<> type.
     const decoder = ((object(mapping): cast): Decoder<$ObjMap<$Exact<O>, DecoderType>>);
-    return compose(checked, decoder);
+    return checked.chain(decoder.decode);
 }
 
 export function inexact<O: { +[field: string]: Decoder<_Any> }>(
     mapping: O,
 ): Decoder<$ObjMap<O, DecoderType> & { +[string]: mixed }> {
-    return compose(
-        pojo,
-        define((blob) => {
-            const allkeys = new Set(Object.keys(blob));
-            const decoder = object(mapping).transform(
-                (safepart: $ObjMap<O, DecoderType>) => {
-                    const safekeys = new Set(Object.keys(mapping));
+    return pojo.chain((blob) => {
+        const allkeys = new Set(Object.keys(blob));
+        const decoder = object(mapping).transform((safepart: $ObjMap<O, DecoderType>) => {
+            const safekeys = new Set(Object.keys(mapping));
 
-                    // To account for hard-coded keys that aren't part of the input
-                    safekeys.forEach((k) => allkeys.add(k));
+            // To account for hard-coded keys that aren't part of the input
+            safekeys.forEach((k) => allkeys.add(k));
 
-                    const rv = {};
-                    allkeys.forEach((k) => {
-                        if (safekeys.has(k)) {
-                            const value = safepart[k];
-                            if (value !== undefined) {
-                                rv[k] = value;
-                            }
-                        } else {
-                            rv[k] = blob[k];
-                        }
-                    });
-                    return rv;
-                },
-            );
-            return decoder.decode(blob);
-        }),
-    );
+            const rv = {};
+            allkeys.forEach((k) => {
+                if (safekeys.has(k)) {
+                    const value = safepart[k];
+                    if (value !== undefined) {
+                        rv[k] = value;
+                    }
+                } else {
+                    rv[k] = blob[k];
+                }
+            });
+            return rv;
+        });
+        return decoder.decode(blob);
+    });
 }
 
 /**
  * Like mapping(), but returns an object rather than a Map instance.
  */
 export function dict<T>(decoder: Decoder<T>): Decoder<{ [string]: T }> {
-    return compose(
-        pojo,
-        define((blob) => {
-            let rv: { [key: string]: T } = {};
-            let errors: { [key: string]: Annotation } | null = null;
+    return pojo.chain((blob) => {
+        let rv: { [key: string]: T } = {};
+        let errors: { [key: string]: Annotation } | null = null;
 
-            Object.keys(blob).forEach((key: string) => {
-                const value = blob[key];
-                const result = decoder.decode(value);
-                if (result.ok) {
-                    if (errors === null) {
-                        rv[key] = result.value;
-                    }
-                } else {
-                    rv = {}; // Clear the success value so it can get garbage collected early
-                    if (errors === null) {
-                        errors = {};
-                    }
-                    errors[key] = result.error;
+        Object.keys(blob).forEach((key: string) => {
+            const value = blob[key];
+            const result = decoder.decode(value);
+            if (result.ok) {
+                if (errors === null) {
+                    rv[key] = result.value;
                 }
-            });
-
-            if (errors !== null) {
-                return err(merge(annotateObject(blob), errors));
             } else {
-                return ok(rv);
+                rv = {}; // Clear the success value so it can get garbage collected early
+                if (errors === null) {
+                    errors = {};
+                }
+                errors[key] = result.error;
             }
-        }),
-    );
+        });
+
+        if (errors !== null) {
+            return err(merge(annotateObject(blob), errors));
+        } else {
+            return ok(rv);
+        }
+    });
 }
 
 /**

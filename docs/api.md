@@ -17,7 +17,7 @@ has_children: true
 - [**Objects**](#objects): [`object()`](#object), [`exact()`](#exact), [`inexact()`](#inexact), [`pojo`](#pojo), [`dict()`](#dict), [`mapping()`](#mapping)
 - [**JSON values**](#json-values): [`json`](#json), [`jsonObject`](#jsonObject), [`jsonArray`](#jsonArray)
 - [**Choice**](#choice): [`either()`](#either), [`taggedUnion()`](#taggedUnion), [`oneOf()`](#oneOf)
-- [**Utilities**](#utilities): [`compose()`](#compose), [`predicate()`](#predicate), [`prep()`](#prep), [`never()`](#never), [`fail()`](#fail), [`instanceOf()`](#instanceOf), [`lazy()`](#lazy)
+- [**Utilities**](#utilities): [`prep()`](#prep), [`never()`](#never), [`fail()`](#fail), [`instanceOf()`](#instanceOf), [`lazy()`](#lazy)
 - [**Guards**](#guards): [`guard()`](#guard)
 <!-- prettier-ignore-end -->
 
@@ -26,11 +26,67 @@ has_children: true
 
 ## Meta
 
--   [`transform()`](#transform)
--   [`describe()`](#describe)
+- [`.and()`](#and)
+- [`.chain()`](#chain)
+- [`.transform()`](#transform)
+- [`.describe()`](#describe)
 
 ---
 
+<a name="and" href="#and">#</a>
+Decoder&lt;T&gt;<b>.and</b>(predicate: <i>&lt;T&gt; => boolean</i>, message: <i>string</i>): <i>Decoder&lt;T&gt;</i>
+[(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
+
+Accepts values that are accepted by the decoder _and_ also pass the predicate function.
+
+<!-- prettier-ignore-start -->
+```typescript
+const odd = number.and(
+  (n) => n % 2 !== 0,
+  'Must be odd'
+);
+
+// 👍
+odd.verify(3) === 3;
+
+// 👎
+odd.verify('hi');  // throws: not a number
+odd.verify(42);    // throws: not an odd number
+```
+<!-- prettier-ignore-end -->
+
+In TypeScript, if you provide a predicate that also doubles as a [type
+predicate][ts-predicates], then this will be reflected in the return type, too.
+
+---
+
+<a name="chain" href="#chain">#</a> Decoder&lt;T&gt;<b>.chain</b><i>&lt;T,
+V&gt;</i>(<i>T</i> => <i>DecodeResult&lt;V&gt;</i>): <i>Decoder&lt;V&gt;</i>
+[(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
+
+Given a decoder for _T_ and another one for <i>V</i>-given-a-<i>T</i>. Will first decode
+the input using the first decoder, and _if accepted_, pass the result on to the second
+decoder. The second decoder will thus be able to make more assumptions about its input
+value, i.e. it can know what type the input value is (`T` instead of `unknown`).
+
+This is an advanced decoder, typically only useful for authors of decoders. It's not
+recommended to rely on this decoder directly for normal usage.
+
+---
+
+<a name="then" href="#then">#</a> Decoder&lt;T&gt;<b>.then</b><i>&lt;T,
+V&gt;</i>(<i>Decoder&lt;V, T&gt;</i>): <i>Decoder&lt;V&gt;</i>
+[(source)](https://github.com/nvie/decoders/blob/main/src/_decoder.js 'Source')<br />
+
+Given a decoder for _T_ and another one for <i>V</i>-given-a-<i>T</i>. Will first decode
+the input using the first decoder, and _if accepted_, pass the result on to the second
+decoder. The second decoder will thus be able to make more assumptions about its input
+value, i.e. it can know what type the input value is (`T` instead of `unknown`).
+
+This is an advanced decoder, typically only useful for authors of decoders. It's not
+recommended to rely on this decoder directly for normal usage.
+
+---
 
 <a name="transform" href="#transform">#</a> <b>transform</b><i>&lt;T,
 V&gt;</i>(<i>Decoder&lt;T&gt;</i>, <i>&lt;T&gt;</i> =&gt; <i>&lt;V&gt;</i>):
@@ -77,15 +133,15 @@ const vowel = describe(
 
 ## Strings
 
-- [`string`](#string)
-- [`nonEmptyString`](#nonEmptyString)
-- [`regex()`](#regex)
-- [`email`](#email)
-- [`url`](#url)
-- [`httpsUrl`](#httpsUrl)
-- [`uuid`](#uuid)
-- [`uuidv1`](#uuidv1)
-- [`uuidv4`](#uuidv4)
+-   [`string`](#string)
+-   [`nonEmptyString`](#nonEmptyString)
+-   [`regex()`](#regex)
+-   [`email`](#email)
+-   [`url`](#url)
+-   [`httpsUrl`](#httpsUrl)
+-   [`uuid`](#uuid)
+-   [`uuidv1`](#uuidv1)
+-   [`uuidv4`](#uuidv4)
 
 ---
 
@@ -225,13 +281,12 @@ verify('git+ssh://user@github.com/foo/bar.git');  // throws, not HTTPS
 <!-- prettier-ignore-end -->
 
 **Tip!** If you need to limit URLs to different protocols than HTTP, you can do as the
-HTTPS decoder is implemented: as a predicate on top of a regular `url` decoder.
+HTTPS decoder is implemented: by adding further conditions using an `.and()` call.
 
 ```typescript
-import { predicate, url } from 'decoders';
+import { url } from 'decoders';
 
-const gitUrl: Decoder<URL> = predicate(
-    url,
+const gitUrl: Decoder<URL> = url.and(
     (value) => value.protocol === 'git:',
     'Must be a git:// URL',
 );
@@ -1254,57 +1309,11 @@ annotate the type. Either by doing `oneOf([('foo': 'foo'), ('bar': 'bar')])`, or
 
 ## Utilities
 
--   [`compose()`](#compose)
--   [`predicate()`](#predicate)
 -   [`prep()`](#prep)
 -   [`never()`](#never)
 -   [`fail()`](#fail) (alias of [`never()`](#never))
 -   [`instanceOf()`](#instanceOf)
 -   [`lazy()`](#lazy)
-
----
-
-<a name="compose" href="#compose">#</a> <b>compose</b><i>&lt;T,
-V&gt;</i>(<i>Decoder&lt;T&gt;</i>, <i>Decoder&lt;V, T&gt;</i>): <i>Decoder&lt;V&gt;</i>
-[(source)](https://github.com/nvie/decoders/blob/main/src/core/composition.js 'Source')<br />
-
-Given a decoder for _T_ and another one for <i>V</i>-given-a-<i>T</i>. Will first decode
-the input using the first decoder, and _if accepted_, pass the result on to the second
-decoder. The second decoder will thus be able to make more assumptions about its input
-value, i.e. it can know what type the input value is (`T` instead of `unknown`).
-
-This is an advanced decoder, typically only useful for authors of decoders. It's not
-recommended to rely on this decoder directly for normal usage.
-
----
-
-<a name="predicate" href="#predicate">#</a>
-<b>predicate</b><i>&lt;T&gt;</i>(<i>Decoder&lt;T&gt;</i>, <i>&lt;T&gt; => boolean</i>,
-string): <i>Decoder&lt;T&gt;</i>
-[(source)](https://github.com/nvie/decoders/blob/main/src/core/composition.js 'Source')<br />
-
-Accepts values that are accepted by the decoder _and_ also pass the predicate function.
-
-<!-- prettier-ignore-start -->
-```typescript
-const odd = predicate(
-  number,
-  (n) => n % 2 !== 0,
-  'Must be odd'
-);
-const verify = guard(odd);
-
-// 👍
-verify(3) === 3;
-
-// 👎
-verify('hi');  // throws: not a number
-verify(42);    // throws: not an odd number
-```
-<!-- prettier-ignore-end -->
-
-In TypeScript, if you provide a predicate that also doubles as a [type
-predicate][ts-predicates], then this will be reflected in the return type, too.
 
 ---
 
