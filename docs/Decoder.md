@@ -9,7 +9,15 @@ import html
 import re
 import textwrap
 from _data import DECODERS, DECODERS_BY_SECTION, DECODER_METHODS
-from _lib import safe, format_type, reindent, ref, methodref, source_link
+from _lib import (
+  format_type,
+  linkify,
+  methodref,
+  ref,
+  reindent,
+  safe,
+  source_link,
+)
 ]]]-->
 <!--[[[end]]] (checksum: d41d8cd98f00b204e9800998ecf8427e) -->
 
@@ -36,7 +44,7 @@ for (name, info) in DECODER_METHODS.items():
   params = '' if not info['params'] else '(' + ', '.join([f'{safe(pname)}: {format_type(ptype)}' for (pname, ptype) in info['params']]) + ')'
   type_params = '' if not info.get('type_params') else safe('<') + ', '.join([format_type(ptype) for ptype in info['type_params']]) + safe('>')
   return_type = format_type(info['return_type'])
-  markdown = reindent(info['markdown'], prefix='    ')
+  markdown = linkify(reindent(info['markdown'], prefix='    '))
   cog.outl(f"""
     ---
 
@@ -70,7 +78,7 @@ number.verify('hi');  // throws
 
 Validates the raw/untrusted/unknown input and either accepts or rejects it.
 
-Contrasted with `.verify()`, calls to `.decode()` will never fail and instead return a result type.
+Contrasted with [`.verify()`](/Decoder.html#verify), calls to [`.decode()`](/Decoder.html#decode) will never fail and instead return a result type.
 
 For example, take this simple “number” decoder. When given an number value, it will return an ok: true result. Otherwise, it will return an ok: false result with the original input value annotated.
 
@@ -112,9 +120,9 @@ In TypeScript, if you provide a predicate that also is a [type predicate](https:
 
 Chain together the current decoder with the given decode function. The given function will only get called after the current decoder accepts an input.
 
-The given "next" decoding function will thus be able to make more assumptions about its input value, i.e. it can know what type the input value is (`T` instead of `unknown`).
+The given "next" decoding function will thus be able to make more assumptions about its input value, i.e. it can know what type the input value is (`T` instead of ``unknown``).
 
-This is an advanced decoder, typically only useful for authors of decoders. It's not recommended to rely on this decoder directly for normal usage.  In most cases, [**.transform**()](#transform) is what you'll want instead.
+This is an advanced decoder, typically only useful for authors of decoders. It's not recommended to rely on this decoder directly for normal usage.  In most cases, [`.transform()`](/Decoder.html#transform) is what you'll want instead.
 
 ---
 
@@ -151,5 +159,5 @@ const decoder = either(
 const vowel = decoder.describe('Must be vowel');
 ```
 
-<!--[[[end]]] (checksum: 085b67331bea4bc5af681ef507f9dc04)-->
+<!--[[[end]]] (checksum: fc0aa8fd13ede44a95b179c155f4536e)-->
 <!-- prettier-ignore-end -->

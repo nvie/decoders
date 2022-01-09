@@ -1232,9 +1232,9 @@ DECODER_METHODS = {
     'markdown': """
       Chain together the current decoder with the given decode function. The given function will only get called after the current decoder accepts an input.
 
-      The given "next" decoding function will thus be able to make more assumptions about its input value, i.e. it can know what type the input value is (`T` instead of `unknown`).
+      The given "next" decoding function will thus be able to make more assumptions about its input value, i.e. it can know what type the input value is (`T` instead of ``unknown``).
 
-      This is an advanced decoder, typically only useful for authors of decoders. It's not recommended to rely on this decoder directly for normal usage.  In most cases, [**.transform**()](#transform) is what you'll want instead.
+      This is an advanced decoder, typically only useful for authors of decoders. It's not recommended to rely on this decoder directly for normal usage.  In most cases, `.transform()` is what you'll want instead.
     """,
   },
 

@@ -9,7 +9,16 @@ import html
 import re
 import textwrap
 from _data import DECODERS, DECODERS_BY_SECTION
-from _lib import safe, format_type, reindent, ref, methodref, source_link, slugify
+from _lib import (
+  format_type,
+  linkify,
+  methodref,
+  ref,
+  reindent,
+  safe,
+  slugify,
+  source_link,
+)
 ]]]-->
 <!--[[[end]]] (checksum: d41d8cd98f00b204e9800998ecf8427e)-->
 
@@ -20,18 +29,18 @@ from _lib import safe, format_type, reindent, ref, methodref, source_link, slugi
 for section, names in DECODERS_BY_SECTION.items():
   cog.outl(f'- [**{section}**](#{slugify(section)}): {", ".join(ref(name) for name in names)}')
 ]]]-->
-- [**Strings**](#strings): [`string`](/api.html#string), [`nonEmptyString`](/api.html#nonEmptyString), [`regex()`](#regex), [`email`](/api.html#email), [`url`](/api.html#url), [`httpsUrl`](/api.html#httpsUrl), [`uuid`](/api.html#uuid), [`uuidv1`](/api.html#uuidv1), [`uuidv4`](/api.html#uuidv4)
+- [**Strings**](#strings): [`string`](/api.html#string), [`nonEmptyString`](/api.html#nonEmptyString), [`regex()`](/api.html#regex), [`email`](/api.html#email), [`url`](/api.html#url), [`httpsUrl`](/api.html#httpsUrl), [`uuid`](/api.html#uuid), [`uuidv1`](/api.html#uuidv1), [`uuidv4`](/api.html#uuidv4)
 - [**Numbers**](#numbers): [`number`](/api.html#number), [`integer`](/api.html#integer), [`positiveNumber`](/api.html#positiveNumber), [`positiveInteger`](/api.html#positiveInteger)
 - [**Booleans**](#booleans): [`boolean`](/api.html#boolean), [`truthy`](/api.html#truthy), [`numericBoolean`](/api.html#numericBoolean)
 - [**Dates**](#dates): [`date`](/api.html#date), [`iso8601`](/api.html#iso8601)
-- [**Constants**](#constants): [`constant()`](#constant), [`always()`](#always), [`hardcoded()`](#hardcoded)
-- [**Optionality**](#optionality): [`null_`](/api.html#null_), [`undefined_`](/api.html#undefined_), [`optional()`](#optional), [`nullable()`](#nullable), [`maybe()`](#maybe), [`unknown`](/api.html#unknown), [`mixed`](/api.html#mixed)
-- [**Arrays**](#arrays): [`array()`](#array), [`nonEmptyArray()`](#nonEmptyArray), [`poja`](/api.html#poja), [`tuple()`](#tuple), [`set()`](#set)
-- [**Objects**](#objects): [`object()`](#object), [`exact()`](#exact), [`inexact()`](#inexact), [`pojo`](/api.html#pojo), [`dict()`](#dict), [`mapping()`](#mapping)
+- [**Constants**](#constants): [`constant()`](/api.html#constant), [`always()`](/api.html#always), [`hardcoded()`](/api.html#hardcoded)
+- [**Optionality**](#optionality): [`null_`](/api.html#null_), [`undefined_`](/api.html#undefined_), [`optional()`](/api.html#optional), [`nullable()`](/api.html#nullable), [`maybe()`](/api.html#maybe), [`unknown`](/api.html#unknown), [`mixed`](/api.html#mixed)
+- [**Arrays**](#arrays): [`array()`](/api.html#array), [`nonEmptyArray()`](/api.html#nonEmptyArray), [`poja`](/api.html#poja), [`tuple()`](/api.html#tuple), [`set()`](/api.html#set)
+- [**Objects**](#objects): [`object()`](/api.html#object), [`exact()`](/api.html#exact), [`inexact()`](/api.html#inexact), [`pojo`](/api.html#pojo), [`dict()`](/api.html#dict), [`mapping()`](/api.html#mapping)
 - [**JSON values**](#json-values): [`json`](/api.html#json), [`jsonObject`](/api.html#jsonObject), [`jsonArray`](/api.html#jsonArray)
-- [**Choice**](#choice): [`either()`](#either), [`taggedUnion()`](#taggedUnion), [`oneOf()`](#oneOf), [`dispatch()`](#dispatch)
-- [**Utilities**](#utilities): [`define()`](#define), [`prep()`](#prep), [`never`](/api.html#never), [`instanceOf()`](#instanceOf), [`lazy()`](#lazy), [`fail`](/api.html#fail)
-<!--[[[end]]] (checksum: 340a0dd1fb9553a67e7e46925eafda7d) -->
+- [**Choice**](#choice): [`either()`](/api.html#either), [`taggedUnion()`](/api.html#taggedUnion), [`oneOf()`](/api.html#oneOf), [`dispatch()`](/api.html#dispatch)
+- [**Utilities**](#utilities): [`define()`](/api.html#define), [`prep()`](/api.html#prep), [`never`](/api.html#never), [`instanceOf()`](/api.html#instanceOf), [`lazy()`](/api.html#lazy), [`fail`](/api.html#fail)
+<!--[[[end]]] (checksum: 6d8d05a0ad6d29f30ba1b8dafdafbf78) -->
 
 <!--[[[cog
 for section, names in DECODERS_BY_SECTION.items():
@@ -63,7 +72,7 @@ for section, names in DECODERS_BY_SECTION.items():
     params = '' if not info['params'] else '(' + ', '.join([(f'{safe(pname)}: {format_type(ptype)}' if pname else f'{format_type(ptype)}') if ptype else f'{safe(pname)}' for (pname, ptype) in info['params']]) + ')'
     type_params = '' if not info.get('type_params') else safe('<') + ', '.join([format_type(ptype) for ptype in info['type_params']]) + safe('>')
     return_type = format_type(info['return_type'])
-    markdown = reindent(info['markdown'], prefix='      ')
+    markdown = linkify(reindent(info['markdown'], prefix='      '))
     heading = '  \n'.join([
       f'<a name="{name}" href="#{name}">#</a>\n**{name}**{type_params}{params}: {return_type} {source_link(name)}',
       *(f'<a name="{alias}" href="#{alias}">#</a>\n**{alias}**{type_params}{params}: {return_type} {source_link(alias)}' for alias in info.get('aliases', []))
@@ -87,7 +96,7 @@ for section, names in DECODERS_BY_SECTION.items():
 
 - [`string`](/api.html#string)
 - [`nonEmptyString`](/api.html#nonEmptyString)
-- [`regex()`](#regex)
+- [`regex()`](/api.html#regex)
 - [`email`](/api.html#email)
 - [`url`](/api.html#url)
 - [`httpsUrl`](/api.html#httpsUrl)
@@ -119,7 +128,7 @@ string.verify(null);  // throws
 <a name="nonEmptyString" href="#nonEmptyString">#</a>
 **nonEmptyString**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L28 'Source')
 
-Like `string`, but will reject the empty string or strings containing only whitespace.
+Like [`string`](/api.html#string), but will reject the empty string or strings containing only whitespace.
 
 ```typescript
 // 👍
@@ -238,7 +247,7 @@ uuid.verify('abcdefgh-ijkl-mnop-qrst-uvwxyz012345');  // throws
 <a name="uuidv1" href="#uuidv1">#</a>
 **uuidv1**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L79-L81 'Source')
 
-Like `uuid`, but only accepts [UUIDv1s](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_%28date-time_and_MAC_address%29) strings.
+Like [`uuid`](/api.html#uuid), but only accepts [UUIDv1s](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_%28date-time_and_MAC_address%29) strings.
 
 ```typescript
 // 👍
@@ -253,7 +262,7 @@ uuidv1.verify('123e4567-e89b-42d3-a456-426614174000')  // throws
 <a name="uuidv4" href="#uuidv4">#</a>
 **uuidv4**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L88-L90 'Source')
 
-Like `uuid`, but only accepts [UUIDv4s](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_%28random%29) strings.
+Like [`uuid`](/api.html#uuid), but only accepts [UUIDv4s](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_%28random%29) strings.
 
 ```typescript
 // 👍
@@ -449,7 +458,7 @@ date.verify('hello');  // throws
 
 Accepts [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings, returns then as [`Date`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) instances.
 
-This is very useful for working with dates in APIs: serialize them as `.toISOString()` when sending, decode them with `iso8601` when receiving.
+This is very useful for working with dates in APIs: serialize them as `.toISOString()` when sending, decode them with [`iso8601`](/api.html#iso8601) when receiving.
 
 ```typescript
 // 👍
@@ -467,9 +476,9 @@ iso8601.verify(new Date());    // throws (does not accept dates)
 ## Constants
 
 
-- [`constant()`](#constant)
-- [`always()`](#always)
-- [`hardcoded()`](#hardcoded) (alias of [`always()`](#always))
+- [`constant()`](/api.html#constant)
+- [`always()`](/api.html#always)
+- [`hardcoded()`](/api.html#hardcoded) (alias of [`always()`](/api.html#always))
 
 ---
 
@@ -522,9 +531,9 @@ decoder.verify(undefined) === 42;
 
 - [`null_`](/api.html#null_)
 - [`undefined_`](/api.html#undefined_)
-- [`optional()`](#optional)
-- [`nullable()`](#nullable)
-- [`maybe()`](#maybe)
+- [`optional()`](/api.html#optional)
+- [`nullable()`](/api.html#nullable)
+- [`maybe()`](/api.html#maybe)
 - [`unknown`](/api.html#unknown)
 - [`mixed`](/api.html#mixed) (alias of [`unknown`](/api.html#unknown))
 
@@ -582,7 +591,7 @@ decoder.verify(0);     // throws
 decoder.verify(42);    // throws
 ```
 
-A typical case where `optional` is useful is in decoding objects with optional fields:
+A typical case where [`optional()`](/api.html#optional) is useful is in decoding objects with optional fields:
 
 ```typescript
 object({
@@ -669,11 +678,11 @@ unknown.verify([1, 2]) === [1, 2];
 ## Arrays
 
 
-- [`array()`](#array)
-- [`nonEmptyArray()`](#nonEmptyArray)
+- [`array()`](/api.html#array)
+- [`nonEmptyArray()`](/api.html#nonEmptyArray)
 - [`poja`](/api.html#poja)
-- [`tuple()`](#tuple)
-- [`set()`](#set)
+- [`tuple()`](/api.html#tuple)
+- [`set()`](/api.html#set)
 
 ---
 
@@ -698,7 +707,7 @@ decoder.verify(['hello', 1.2]);  // throws
 <a name="nonEmptyArray" href="#nonEmptyArray">#</a>
 **nonEmptyArray**(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T[]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/arrays.js#L84-L86 'Source')
 
-Like `array()`, but will reject arrays with 0 elements.
+Like [`array()`](/api.html#array), but will reject arrays with 0 elements.
 
 ```typescript
 const decoder = nonEmptyArray(string);
@@ -718,7 +727,7 @@ decoder.verify([]);              // throws
 
 Accepts any array, but doesn't validate its items further.
 
-"poja" means "plain old JavaScript array", a play on `pojo()`.
+"poja" means "plain old JavaScript array", a play on [`pojo`](/api.html#pojo).
 
 ```typescript
 // 👍
@@ -773,12 +782,12 @@ decoder.verify([1, 2]);         // throws, not the right types
 ## Objects
 
 
-- [`object()`](#object)
-- [`exact()`](#exact)
-- [`inexact()`](#inexact)
+- [`object()`](/api.html#object)
+- [`exact()`](/api.html#exact)
+- [`inexact()`](/api.html#inexact)
 - [`pojo`](/api.html#pojo)
-- [`dict()`](#dict)
-- [`mapping()`](#mapping)
+- [`dict()`](/api.html#dict)
+- [`mapping()`](/api.html#mapping)
 
 ---
 
@@ -801,14 +810,14 @@ decoder.verify({ x: 1, y: 2, z: 3 }) === { x: 1, y: 2 }; // ⚠️ extra field `
 decoder.verify({ x: 1 });  // throws, missing field `y`
 ```
 
-For more information, see also [The difference between `object`, `exact`, and `inexact`](./tips.html#the-difference-between-object-exact-and-inexact).
+For more information, see also [The difference between [`object()`](/api.html#object), [`exact()`](/api.html#exact), and [`inexact()`](/api.html#inexact)](./tips.html#the-difference-between-object-exact-and-inexact).
 
 ---
 
 <a name="exact" href="#exact">#</a>
 **exact**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99">{ field1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, field2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ field1: A, field2: B, ... }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L148-L168 'Source')
 
-Like `object()`, but will reject inputs that contain extra keys that are not specified explicitly.
+Like [`object()`](/api.html#object), but will reject inputs that contain extra keys that are not specified explicitly.
 
 ```typescript
 const decoder = exact({
@@ -824,14 +833,14 @@ decoder.verify({ x: 1, y: 2, z: 3 });  // throws, extra field `z` not allowed
 decoder.verify({ x: 1 });              // throws, missing field `y`
 ```
 
-For more information, see also [The difference between `object`, `exact`, and `inexact`](./tips.html#the-difference-between-object-exact-and-inexact).
+For more information, see also [The difference between [`object()`](/api.html#object), [`exact()`](/api.html#exact), and [`inexact()`](/api.html#inexact)](./tips.html#the-difference-between-object-exact-and-inexact).
 
 ---
 
 <a name="inexact" href="#inexact">#</a>
 **inexact**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99">{ field1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, field2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ field1: A, field2: B, ... }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L170-L198 'Source')
 
-Like `object()`, but will pass through any extra fields on the input object unvalidated that will thus be of `unknown` type statically.
+Like [`object()`](/api.html#object), but will pass through any extra fields on the input object unvalidated that will thus be of [`unknown`](/api.html#unknown) type statically.
 
 ```typescript
 const decoder = inexact({
@@ -846,7 +855,7 @@ decoder.verify({ x: 1, y: 2, z: 3 }) === { x: 1, y: 2, z: 3 };
 decoder.verify({ x: 1 });  // throws, missing field `y`
 ```
 
-For more information, see also [The difference between `object`, `exact`, and `inexact`](./tips.html#the-difference-between-object-exact-and-inexact).
+For more information, see also [The difference between [`object()`](/api.html#object), [`exact()`](/api.html#exact), and [`inexact()`](/api.html#inexact)](./tips.html#the-difference-between-object-exact-and-inexact).
 
 ---
 
@@ -874,7 +883,7 @@ pojo.verify(null);        // throws
 
 Accepts objects where all values match the given decoder, and returns the result as a `{ [string]: T }`.
 
-The main difference between `object()` and `dict()` is that you'd typically use `object()` if this is a record-like object, where all field names are known and the values are heterogeneous. Whereas with `dict()` the keys are typically dynamic and the values homogeneous, like in a dictionary, a lookup table, or a cache.
+The main difference between [`object()`](/api.html#object) and [`dict()`](/api.html#dict) is that you'd typically use [`object()`](/api.html#object) if this is a record-like object, where all field names are known and the values are heterogeneous. Whereas with [`dict()`](/api.html#dict) the keys are typically dynamic and the values homogeneous, like in a dictionary, a lookup table, or a cache.
 
 ```typescript
 const decoder = dict(number);
@@ -888,7 +897,7 @@ decoder.verify({ red: 1, blue: 2, green: 3 }); // ≈ { red: 1, blue: 2, green: 
 <a name="mapping" href="#mapping">#</a>
 **mapping**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Map&lt;string, T&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L241-L250 'Source')
 
-Similar to `dict()`, but returns the result as a `Map<string, T>` (an [ES6 Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)) instead.
+Similar to [`dict()`](/api.html#dict), but returns the result as a `Map<string, T>` (an [ES6 Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)) instead.
 
 ```typescript
 const decoder = mapping(number);
@@ -920,12 +929,12 @@ Accepts any value that's a valid JSON value.
 
 In other words: any value returned by `JSON.parse()` should decode without failure.
 
-- `null`
-- `string`
-- `number`
-- `boolean`
-- `{ [string]: JSONValue }`
-- `JSONValue[]`
+- ``null``
+- ``string``
+- ``number``
+- ``boolean``
+- ``{ [string]: JSONValue }``
+- ``JSONValue[]``
 
 ```typescript
 // 👍
@@ -943,7 +952,7 @@ json.verify({
 <a name="jsonObject" href="#jsonObject">#</a>
 **jsonObject**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ [string]: JSONValue }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/json.js#L17 'Source')
 
-Like `json`, but will only decode when the JSON value is an object.
+Like [`json`](/api.html#json), but will only decode when the JSON value is an object.
 
 ```typescript
 // 👍
@@ -962,7 +971,7 @@ jsonObject.verify(null);                 // throws
 <a name="jsonArray" href="#jsonArray">#</a>
 **jsonArray**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;JSONValue[]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/json.js#L19 'Source')
 
-Like `json`, but will only decode when the JSON value is an array.
+Like [`json`](/api.html#json), but will only decode when the JSON value is an array.
 
 ```typescript
 // 👍
@@ -981,10 +990,10 @@ jsonArray.verify(null);               // throws
 ## Choice
 
 
-- [`either()`](#either)
-- [`taggedUnion()`](#taggedUnion)
-- [`oneOf()`](#oneOf)
-- [`dispatch()`](#dispatch) (alias of [`taggedUnion()`](#taggedUnion))
+- [`either()`](/api.html#either)
+- [`taggedUnion()`](/api.html#taggedUnion)
+- [`oneOf()`](/api.html#oneOf)
+- [`dispatch()`](/api.html#dispatch) (alias of [`taggedUnion()`](/api.html#taggedUnion))
 
 ---
 
@@ -1013,9 +1022,9 @@ decoder.verify(false);  // throws
 <a name="dispatch" href="#dispatch">#</a>
 **dispatch**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(field: <i style="color: #267f99">string</i>, mapping: <i style="color: #267f99">{ value1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, value2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | ...&gt;</i> 
 
-**NOTE:** In decoders@1.x, this was called `dispatch()`.
+**NOTE:** In decoders@1.x, this was called [`dispatch()`](/api.html#dispatch).
 
-Like `either`, but optimized for building [tagged unions](https://en.wikipedia.org/wiki/Tagged_union) of object types with a common field (like a `type` field) that lets you distinguish members.
+Like [`either()`](/api.html#either), but optimized for building [tagged unions](https://en.wikipedia.org/wiki/Tagged_union) of object types with a common field (like a `type` field) that lets you distinguish members.
 
 The following two decoders are effectively equivalent:
 
@@ -1029,9 +1038,9 @@ const shape1: Decoder<Rect | Circle> = taggedUnion('__type', { rect, circle });
 const shape2: Decoder<Rect | Circle> = either(rect, circle);
 ```
 
-But using `taggedUnion()` will typically be more runtime-efficient than using `either()`. The reason is that `taggedUnion()` will first do minimal work to "look ahead" into the `type` field here, and based on that value, pick which decoder to invoke. Error messages will then also be tailored to the specific decoder.
+But using [`taggedUnion()`](/api.html#taggedUnion) will typically be more runtime-efficient than using [`either()`](/api.html#either). The reason is that [`taggedUnion()`](/api.html#taggedUnion) will first do minimal work to "look ahead" into the `type` field here, and based on that value, pick which decoder to invoke. Error messages will then also be tailored to the specific decoder.
 
-The `either()` version will instead try each decoder in turn until it finds one that matches. If none of the alternatives match, it needs to report all errors, which is sometimes confusing.
+The [`either()`](/api.html#either) version will instead try each decoder in turn until it finds one that matches. If none of the alternatives match, it needs to report all errors, which is sometimes confusing.
 
 ---
 
@@ -1066,11 +1075,11 @@ oneOf(['foo', 'bar']);
 ## Utilities
 
 
-- [`define()`](#define)
-- [`prep()`](#prep)
+- [`define()`](/api.html#define)
+- [`prep()`](/api.html#prep)
 - [`never`](/api.html#never)
-- [`instanceOf()`](#instanceOf)
-- [`lazy()`](#lazy)
+- [`instanceOf()`](/api.html#instanceOf)
+- [`lazy()`](/api.html#lazy)
 - [`fail`](/api.html#fail) (alias of [`never`](/api.html#never))
 
 ---
@@ -1103,7 +1112,7 @@ uppercase.verify(123);   // throws: 123
                          //         ^^^ I only accept strings as input
 ```
 
-The above example is just an example to illustrate how `define()` works. It would be more idiomatic to implement an uppercase decoder as follows:
+The above example is just an example to illustrate how [`define()`](/api.html#define) works. It would be more idiomatic to implement an uppercase decoder as follows:
 
 ```ts
 const uppercase: Decoder<string> = string.transform(s => s.toUpperCase());
@@ -1114,7 +1123,7 @@ const uppercase: Decoder<string> = string.transform(s => s.toUpperCase());
 <a name="prep" href="#prep">#</a>
 **prep**&lt;<i style="color: #267f99">T</i>&gt;(mapperFn: <i style="color: #267f99">(raw: mixed) =&gt; mixed</i>, decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L38-L53 'Source')
 
-Pre-process the raw data input before passing it into the decoder. This gives you the ability to arbitrarily customize the input on the fly before passing it to the decoder. Of course, the input value at that point is still of `unknown` type, so you will have to deal with that accordingly.
+Pre-process the raw data input before passing it into the decoder. This gives you the ability to arbitrarily customize the input on the fly before passing it to the decoder. Of course, the input value at that point is still of [`unknown`](/api.html#unknown) type, so you will have to deal with that accordingly.
 
 ```typescript
 const decoder = prep(
@@ -1201,5 +1210,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: da48bee43cad34a07b96c9c286339d99)-->
+<!--[[[end]]] (checksum: 214aa3f5956f0891cb715df8944b7cc1)-->
 <!-- prettier-ignore-end -->
