@@ -22,7 +22,6 @@ export {
 export { array, nonEmptyArray, poja, set } from './core/array';
 export { boolean, numericBoolean, truthy } from './core/boolean';
 export { date, iso8601 } from './core/date';
-export { describe } from './core/describe';
 export { dict, exact, inexact, mapping, object, pojo } from './core/object';
 export { either, oneOf } from './core/either';
 export {

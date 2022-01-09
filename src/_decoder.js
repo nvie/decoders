@@ -16,6 +16,7 @@ export type Decoder<T, F = mixed> = {|
     +decode: (blob: F) => DecodeResult<T>,
     +verify: (blob: F, formatterFn?: (Annotation) => string) => T,
     +transform: <V>(transformFn: (value: T) => V) => Decoder<V, F>,
+    +describe: (message: string) => Decoder<T, F>,
 |};
 
 function neverThrow<T, V>(transformFn: (T) => V): (T) => DecodeResult<V> {
@@ -26,6 +27,38 @@ function neverThrow<T, V>(transformFn: (T) => V): (T) => DecodeResult<V> {
             return err(annotate(value, e instanceof Error ? e.message : String(e)));
         }
     };
+}
+
+function makeVerify<T, F>(
+    decodeFn: (F) => DecodeResult<T>,
+): (blob: F, formatterFn?: (Annotation) => string) => T {
+    return (blob: F, formatter: (Annotation) => string = formatInline): T => {
+        const result = decodeFn(blob);
+        if (result.ok) {
+            return result.value;
+        } else {
+            const err = new Error('\n' + formatter(result.error));
+            err.name = 'Decoding error';
+            throw err;
+        }
+    };
+}
+
+function makeDescribe<T, F>(
+    decodeFn: (F) => DecodeResult<T>,
+): (message: string) => Decoder<T, F> {
+    return (message: string): Decoder<T, F> =>
+        define((blob: F) => {
+            // Decode using the given decoder...
+            const result = decodeFn(blob);
+            if (result.ok) {
+                return result;
+            } else {
+                // ...but in case of error, annotate this with the custom given
+                // message instead
+                return err(annotate(result.error, message));
+            }
+        });
 }
 
 /**
@@ -40,38 +73,24 @@ function neverThrow<T, V>(transformFn: (T) => V): (T) => DecodeResult<V> {
  *    b. An "err" Result (an annotated representation of the runtime input)
  *
  */
-export function define<T, F = mixed>(fn: (F) => DecodeResult<T>): Decoder<T, F> {
-    function decode(blob: F): DecodeResult<T> {
-        return fn(blob);
-    }
-
+export function define<T, F = mixed>(decodeFn: (F) => DecodeResult<T>): Decoder<T, F> {
     return Object.freeze({
-        decode,
-
-        verify(blob: F, formatter: (Annotation) => string = formatInline): T {
-            const result = decode(blob);
-            if (result.ok) {
-                return result.value;
-            } else {
-                const err = new Error('\n' + formatter(result.error));
-                err.name = 'Decoding error';
-                throw err;
-            }
-        },
+        decode: decodeFn,
+        verify: makeVerify(decodeFn),
 
         /**
          * Accepts any value the given decoder accepts, and on success, will
-         * call the mapper value **on the decoded result**. If the mapper
-         * function throws an error, the whole decoder will fail using the
-         * error message as the failure reason.
+         * call the transformation function **with the decoded result**. If the
+         * transformation function throws an error, the whole decoder will fail
+         * using the error message as the failure reason.
          */
         transform<V>(transformFn: (T) => V): Decoder<V, F> {
-            return define((blob: F): DecodeResult<V> => {
-                const result = decode(blob);
-                const mapper = neverThrow(transformFn);
-                return andThen(result, mapper);
-            });
+            return define((blob: F): DecodeResult<V> =>
+                andThen(decodeFn(blob), neverThrow(transformFn)),
+            );
         },
+
+        describe: makeDescribe(decodeFn),
     });
 }
 

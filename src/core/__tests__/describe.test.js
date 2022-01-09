@@ -1,12 +1,10 @@
 // @flow strict
 
 import { constant } from '../constants';
-import { describe as describe_ } from '../describe';
 import { either } from '../either';
 
 describe('describe', () => {
-    const decoder = describe_(
-        either(constant('a'), constant('b'), constant('c')),
+    const decoder = either(constant('a'), constant('b'), constant('c')).describe(
         'Must be ABC',
     );
 

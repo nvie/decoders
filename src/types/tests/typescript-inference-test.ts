@@ -7,7 +7,6 @@ import {
     date,
     Decoder,
     define,
-    describe,
     dict,
     either,
     email,
@@ -300,6 +299,6 @@ const circle1: Decoder<Circle1> = object({
 taggedUnion('_type', { 0: rect1, 1: circle1 });
 
 // $ExpectType Decoder<string, unknown>
-describe(string, 'xxx');
+string.describe('xxx');
 // $ExpectType Decoder<number, unknown>
-describe(number, 'xxx');
+number.describe('xxx');
