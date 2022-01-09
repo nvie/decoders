@@ -73,7 +73,7 @@ export const uuid: Decoder<string> = regex(
 
 /**
  * Like `uuid`, but only accepts
- * [UUIDv1s](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_%28date-time_and_MAC_address%29)
+ * [UUIDv1](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_%28date-time_and_MAC_address%29)
  * strings.
  */
 export const uuidv1: Decoder<string> =
@@ -82,7 +82,7 @@ export const uuidv1: Decoder<string> =
 
 /**
  * Like `uuid`, but only accepts
- * [UUIDv4s](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_%28random%29)
+ * [UUIDv4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_%28random%29)
  * strings.
  */
 export const uuidv4: Decoder<string> =

@@ -26,7 +26,7 @@ import { array, iso8601, number, object, optional, string } from 'decoders';
 const externalData = {
     id: 123,
     name: 'Alison Roberts',
-    createdAt: '1994-01-11T12:26:37.024Z',
+    createdAt: '2022-01-11T12:26:37.024Z',
     tags: ['foo', 'bar', 'qux'],
 };
 

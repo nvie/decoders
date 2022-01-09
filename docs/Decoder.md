@@ -116,7 +116,7 @@ In TypeScript, if you provide a predicate that also is a [type predicate](https:
 ---
 
 <a name="chain" href="#chain">#</a>
-**.chain**&lt;<i style="color: #267f99">V</i>&gt;(nextDecodeFn: <i style="color: #267f99">T =&gt; DecodeResult&lt;V&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;V&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/_decoder.js#L129-L133 'Source')<br />
+**.chain**&lt;<i style="color: #267f99">V</i>&gt;(nextDecodeFn: <i style="color: #267f99">T =&gt; DecodeFn&lt;V, T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;V&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/_decoder.js#L129-L133 'Source')<br />
 
 Chain together the current decoder with the given decode function. The given function will only get called after the current decoder accepts an input.
 
@@ -159,5 +159,5 @@ const decoder = either(
 const vowel = decoder.describe('Must be vowel');
 ```
 
-<!--[[[end]]] (checksum: fc0aa8fd13ede44a95b179c155f4536e)-->
+<!--[[[end]]] (checksum: 1964fc24a04cc1969eac0beecbe316fd)-->
 <!-- prettier-ignore-end -->

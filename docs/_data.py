@@ -171,7 +171,7 @@ DECODERS = {
     'params': None,
     'return_type': 'Decoder<URL>',
     'markdown': """
-      Like `uuid`, but only accepts [UUIDv1s](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_%28date-time_and_MAC_address%29) strings.
+      Like `uuid`, but only accepts [UUIDv1](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_%28date-time_and_MAC_address%29) strings.
 
       ```typescript
       // 👍
@@ -188,7 +188,7 @@ DECODERS = {
     'params': None,
     'return_type': 'Decoder<URL>',
     'markdown': """
-      Like `uuid`, but only accepts [UUIDv4s](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_%28random%29) strings.
+      Like `uuid`, but only accepts [UUIDv4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_%28random%29) strings.
 
       ```typescript
       // 👍
@@ -1226,7 +1226,7 @@ DECODER_METHODS = {
   'chain': {
     'type_params': ['V'],
     'params': [
-      ('nextDecodeFn', 'T => DecodeResult<V>'),
+      ('nextDecodeFn', 'T => DecodeFn<V, T>'),
     ],
     'return_type': 'Decoder<V>',
     'markdown': """

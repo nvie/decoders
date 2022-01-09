@@ -247,7 +247,7 @@ uuid.verify('abcdefgh-ijkl-mnop-qrst-uvwxyz012345');  // throws
 <a name="uuidv1" href="#uuidv1">#</a>
 **uuidv1**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L79-L81 'Source')
 
-Like [`uuid`](/api.html#uuid), but only accepts [UUIDv1s](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_%28date-time_and_MAC_address%29) strings.
+Like [`uuid`](/api.html#uuid), but only accepts [UUIDv1](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_%28date-time_and_MAC_address%29) strings.
 
 ```typescript
 // 👍
@@ -262,7 +262,7 @@ uuidv1.verify('123e4567-e89b-42d3-a456-426614174000')  // throws
 <a name="uuidv4" href="#uuidv4">#</a>
 **uuidv4**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L88-L90 'Source')
 
-Like [`uuid`](/api.html#uuid), but only accepts [UUIDv4s](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_%28random%29) strings.
+Like [`uuid`](/api.html#uuid), but only accepts [UUIDv4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_%28random%29) strings.
 
 ```typescript
 // 👍
@@ -1210,5 +1210,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 214aa3f5956f0891cb715df8944b7cc1)-->
+<!--[[[end]]] (checksum: d4d7bd4d92023b3d5137ee380fc2c2ad)-->
 <!-- prettier-ignore-end -->

@@ -159,7 +159,7 @@ Built-in formatters are:
     const mydecoder = array(object({ name: string, age: number }));
 
     const externalData = [{ name: 'Alice', age: '33' }];
-    const defaultGuard = mydecoder.verify(externalData, formatInline);
+    mydecoder.verify(externalData, formatInline);
     ```
 
     Will throw the following error message:
