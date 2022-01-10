@@ -13,17 +13,18 @@ const iso8601_re =
     /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:[.]\d+)?(?:Z|[+-]\d{2}:?\d{2})$/;
 
 /**
- * Accepts and returns
- * [`Date`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date)
- * instances.
+ * Accepts and returns `Date` instances.
  */
 export const date: Decoder<Date> = define((blob, accept, reject) =>
     isDate(blob) ? accept(((blob: _Any): Date)) : reject('Must be a Date'),
 );
 
 /**
- * Decoder that only returns Ok for strings that are valid ISO8601 date
- * strings.  Err otherwise.
+ * Accepts [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings,
+ * returns then as `Date` instances.
+ *
+ * This is very useful for working with dates in APIs: serialize them as
+ * `.toISOString()` when sending, decode them with `iso8601` when receiving.
  */
 export const iso8601: Decoder<Date> =
     // Input itself needs to match the ISO8601 regex...

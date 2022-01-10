@@ -28,6 +28,10 @@ function subtract(xs: Set<string>, ys: Set<string>): Set<string> {
     return result;
 }
 
+/**
+ * Accepts any "plain old JavaScript object", but doesn't validate its keys or
+ * values further.
+ */
 export const pojo: Decoder<{| [string]: mixed |}> = define((blob, accept, reject) =>
     isPojo(blob)
         ? accept(
@@ -51,23 +55,8 @@ export const pojo: Decoder<{| [string]: mixed |}> = define((blob, accept, reject
 );
 
 /**
- * Given a mapping of fields-to-decoders, builds a decoder for an object type.
- *
- * For example, given decoders for a number and a string, we can construct an
- * "object description" like so:
- *
- *   { id: number, name: string }
- *
- * Which is of type:
- *
- *   { id: Decoder<number>, name: Decoder<string> }
- *
- * Passing this to object() will produce the following return type:
- *
- *   Decoder<{ id: number, name: string }>
- *
- * Put simply: it'll "peel off" all of the nested Decoders, puts them together
- * in an object, and wraps it in a Decoder<...>.
+ * Accepts objects with fields matching the given decoders. Extra fields that
+ * exist on the input object are ignored and will not be returned.
  */
 export function object<O: { +[field: string]: Decoder<_Any>, ... }>(
     mapping: O,
@@ -145,6 +134,10 @@ export function object<O: { +[field: string]: Decoder<_Any>, ... }>(
     });
 }
 
+/**
+ * Like `object()`, but will reject inputs that contain extra fields that are
+ * not specified explicitly.
+ */
 export function exact<O: { +[field: string]: Decoder<_Any>, ... }>(
     mapping: O,
 ): Decoder<$ObjMap<$Exact<O>, <T>(Decoder<T>) => T>> {
@@ -167,6 +160,10 @@ export function exact<O: { +[field: string]: Decoder<_Any>, ... }>(
     return checked.chain(decoder.decode);
 }
 
+/**
+ * Like `object()`, but will pass through any extra fields on the input object
+ * unvalidated that will thus be of `unknown` type statically.
+ */
 export function inexact<O: { +[field: string]: Decoder<_Any> }>(
     mapping: O,
 ): Decoder<$ObjMap<O, <T>(Decoder<T>) => T> & { +[string]: mixed }> {
@@ -198,7 +195,14 @@ export function inexact<O: { +[field: string]: Decoder<_Any> }>(
 }
 
 /**
- * Like mapping(), but returns an object rather than a Map instance.
+ * Accepts objects where all values match the given decoder, and returns the
+ * result as a `{ [string]: T }`.
+ *
+ * The main difference between `object()` and `dict()` is that you'd typically
+ * use `object()` if this is a record-like object, where all field names are
+ * known and the values are heterogeneous. Whereas with `dict()` the keys are
+ * typically dynamic and the values homogeneous, like in a dictionary,
+ * a lookup table, or a cache.
  */
 export function dict<T>(decoder: Decoder<T>): Decoder<{ [string]: T }> {
     return pojo.chain((blob, accept, reject) => {
@@ -230,13 +234,9 @@ export function dict<T>(decoder: Decoder<T>): Decoder<{ [string]: T }> {
 }
 
 /**
- * Given an object, will decode a Map of string keys to whatever values.
- *
- * For example, given a decoder for a Person, we can verify a Person lookup
- * table structure (of type Map<string, Person>) like so:
- *
- *   mapping(person)
- *
+ * Similar to `dict()`, but returns the result as a `Map<string, T>` (an [ES6
+ * Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map))
+ * instead.
  */
 export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
     return dict(decoder).transform(

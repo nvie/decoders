@@ -375,7 +375,7 @@ DECODERS = {
     'params': None,
     'return_type': 'Decoder<Date>',
     'markdown': """
-      Accepts and returns [`Date`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) instances.
+      Accepts and returns `Date` instances.
 
       ```typescript
       const now = new Date();
@@ -395,7 +395,7 @@ DECODERS = {
     'params': None,
     'return_type': 'Decoder<Date>',
     'markdown': """
-      Accepts [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings, returns then as [`Date`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) instances.
+      Accepts [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings, returns then as `Date` instances.
 
       This is very useful for working with dates in APIs: serialize them as `.toISOString()` when sending, decode them with `iso8601` when receiving.
 
@@ -743,7 +743,7 @@ DECODERS = {
       decoder.verify({ x: 1 });  // throws, missing field `y`
       ```
 
-      For more information, see also [The difference between `object`, `exact`, and `inexact`](./tips.html#the-difference-between-object-exact-and-inexact).
+      For more information, see also [The difference between ``object``, ``exact``, and ``inexact``](./tips.html#the-difference-between-object-exact-and-inexact).
     """,
   },
 
@@ -753,7 +753,7 @@ DECODERS = {
     'params': [(None, '{ field1: Decoder<A>, field2: Decoder<B>, ... }')],
     'return_type': 'Decoder<{ field1: A, field2: B, ... }>',
     'markdown': """
-      Like `object()`, but will reject inputs that contain extra keys that are not specified explicitly.
+      Like `object()`, but will reject inputs that contain extra fields that are not specified explicitly.
 
       ```typescript
       const decoder = exact({
@@ -769,7 +769,7 @@ DECODERS = {
       decoder.verify({ x: 1 });              // throws, missing field `y`
       ```
 
-      For more information, see also [The difference between `object`, `exact`, and `inexact`](./tips.html#the-difference-between-object-exact-and-inexact).
+      For more information, see also [The difference between ``object``, ``exact``, and ``inexact``](./tips.html#the-difference-between-object-exact-and-inexact).
     """,
   },
 
@@ -794,7 +794,7 @@ DECODERS = {
       decoder.verify({ x: 1 });  // throws, missing field `y`
       ```
 
-      For more information, see also [The difference between `object`, `exact`, and `inexact`](./tips.html#the-difference-between-object-exact-and-inexact).
+      For more information, see also [The difference between ``object``, ``exact``, and ``inexact``](./tips.html#the-difference-between-object-exact-and-inexact).
     """,
   },
 
@@ -870,12 +870,15 @@ DECODERS = {
 
       In other words: any value returned by `JSON.parse()` should decode without failure.
 
-      - ``null``
-      - ``string``
-      - ``number``
-      - ``boolean``
-      - ``{ [string]: JSONValue }``
-      - ``JSONValue[]``
+      ```typescript
+      type JSONValue =
+          | null
+          | string
+          | number
+          | boolean
+          | { [string]: JSONValue }
+          | JSONValue[]
+      ```
 
       ```typescript
       // 👍
@@ -1001,26 +1004,26 @@ DECODERS = {
       ('mapping', '{ value1: Decoder<A>, value2: Decoder<B>, ... }'),
     ],
     'return_type': 'Decoder<A | B | ...>',
+    # 'aliases': ['dispatch'],
     'markdown': """
-      **NOTE:** In decoders@1.x, this was called `dispatch()`.
+      If you are decoding tagged unions you may want to use the `taggedUnion()` decoder instead of the general purpose `either()` decoder to get better error messages and better performance.
 
-      Like `either`, but optimized for building [tagged unions](https://en.wikipedia.org/wiki/Tagged_union) of object types with a common field (like a `type` field) that lets you distinguish members.
+      This decoder is optimized for [tagged unions](https://en.wikipedia.org/wiki/Tagged_union), i.e. a union of objects where one field is used as the discriminator.
 
-      The following two decoders are effectively equivalent:
+      ```ts
+      const A = object({ tag: constant('A'), foo: string });
+      const B = object({ tag: constant('B'), bar: number });
 
-      ```typescript
-      type Rect = { __type: 'rect', x: number, y: number, width: number, height: number };
-      type Circle = { __type: 'circle', cx: number, cy: number, r: number };
-      //              ↑↑↑↑↑↑
-      //              Field that defines which decoder to pick
-      //                                                  ↓↓↓↓↓↓
-      const shape1: Decoder<Rect | Circle> = taggedUnion('__type', { rect, circle });
-      const shape2: Decoder<Rect | Circle> = either(rect, circle);
+      const AorB = taggedUnion('tag', { A, B });
+      //                        ^^^
       ```
 
-      But using `taggedUnion()` will typically be more runtime-efficient than using `either()`. The reason is that `taggedUnion()` will first do minimal work to "look ahead" into the `type` field here, and based on that value, pick which decoder to invoke. Error messages will then also be tailored to the specific decoder.
+      Decoding now works in two steps:
 
-      The `either()` version will instead try each decoder in turn until it finds one that matches. If none of the alternatives match, it needs to report all errors, which is sometimes confusing.
+      1. Look at the given `'tag'` field in the incoming object (this is the field that decides which decoder will be used)
+      2. If the value is `'A'`, then decoder `A` will be used. If it's `'B'`, then decoder `B` will be used. Otherwise, this will fail.
+
+      This is effectively equivalent to `either(A, B)`, but will provide better error messages and is more performant at runtime because it doesn't have to try all decoders one by one.
     """,
   },
 
@@ -1129,7 +1132,7 @@ DECODERS = {
     ],
     'return_type': 'Decoder<T>',
     'markdown': """
-      Accepts any value that is an `instanceof` the given class.
+      Accepts any value that is an ``instanceof`` the given class.
 
       ```typescript
       const decoder = instanceOf(Error);

@@ -9,7 +9,7 @@ import type { Decoder, DecodeResult } from '../_decoder';
 /**
  * Accepts any array, but doesn't validate its items further.
  *
- * "poja" means "plain old JavaScript array", a play on [**pojo**()](#pojo).
+ * "poja" means "plain old JavaScript array", a play on `pojo()`.
  */
 export const poja: Decoder<Array<mixed>> = define((blob, accept, reject) => {
     if (!Array.isArray(blob)) {

@@ -457,9 +457,9 @@ numericBoolean.verify('hello');    // throws
 ---
 
 <a name="date" href="#date">#</a>
-**date**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Date&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/dates.js#L33 'Source')
+**date**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Date&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/dates.js#L34 'Source')
 
-Accepts and returns [`Date`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) instances.
+Accepts and returns `Date` instances.
 
 ```typescript
 const now = new Date();
@@ -475,9 +475,9 @@ date.verify('hello');  // throws
 ---
 
 <a name="iso8601" href="#iso8601">#</a>
-**iso8601**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Date&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/dates.js#L28-L39 'Source')
+**iso8601**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Date&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/dates.js#L29-L40 'Source')
 
-Accepts [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings, returns then as [`Date`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) instances.
+Accepts [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings, returns then as `Date` instances.
 
 This is very useful for working with dates in APIs: serialize them as `.toISOString()` when sending, decode them with [`iso8601`](/api.html#iso8601) when receiving.
 
@@ -813,7 +813,7 @@ decoder.verify([1, 2]);         // throws, not the right types
 ---
 
 <a name="object" href="#object">#</a>
-**object**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99">{ field1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, field2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ field1: A, field2: B, ... }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L72-L146 'Source')
+**object**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99">{ field1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, field2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ field1: A, field2: B, ... }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L61-L135 'Source')
 
 Accepts objects with fields matching the given decoders. Extra fields that exist on the input object are ignored and will not be returned.
 
@@ -831,14 +831,14 @@ decoder.verify({ x: 1, y: 2, z: 3 }) === { x: 1, y: 2 }; // ⚠️ extra field `
 decoder.verify({ x: 1 });  // throws, missing field `y`
 ```
 
-For more information, see also [The difference between [`object()`](/api.html#object), [`exact()`](/api.html#exact), and [`inexact()`](/api.html#inexact)](./tips.html#the-difference-between-object-exact-and-inexact).
+For more information, see also [The difference between ``object``, ``exact``, and ``inexact``](./tips.html#the-difference-between-object-exact-and-inexact).
 
 ---
 
 <a name="exact" href="#exact">#</a>
-**exact**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99">{ field1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, field2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ field1: A, field2: B, ... }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L148-L168 'Source')
+**exact**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99">{ field1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, field2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ field1: A, field2: B, ... }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L141-L161 'Source')
 
-Like [`object()`](/api.html#object), but will reject inputs that contain extra keys that are not specified explicitly.
+Like [`object()`](/api.html#object), but will reject inputs that contain extra fields that are not specified explicitly.
 
 ```typescript
 const decoder = exact({
@@ -854,12 +854,12 @@ decoder.verify({ x: 1, y: 2, z: 3 });  // throws, extra field `z` not allowed
 decoder.verify({ x: 1 });              // throws, missing field `y`
 ```
 
-For more information, see also [The difference between [`object()`](/api.html#object), [`exact()`](/api.html#exact), and [`inexact()`](/api.html#inexact)](./tips.html#the-difference-between-object-exact-and-inexact).
+For more information, see also [The difference between ``object``, ``exact``, and ``inexact``](./tips.html#the-difference-between-object-exact-and-inexact).
 
 ---
 
 <a name="inexact" href="#inexact">#</a>
-**inexact**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99">{ field1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, field2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ field1: A, field2: B, ... }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L170-L198 'Source')
+**inexact**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99">{ field1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, field2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ field1: A, field2: B, ... }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L167-L195 'Source')
 
 Like [`object()`](/api.html#object), but will pass through any extra fields on the input object unvalidated that will thus be of [`unknown`](/api.html#unknown) type statically.
 
@@ -876,12 +876,12 @@ decoder.verify({ x: 1, y: 2, z: 3 }) === { x: 1, y: 2, z: 3 };
 decoder.verify({ x: 1 });  // throws, missing field `y`
 ```
 
-For more information, see also [The difference between [`object()`](/api.html#object), [`exact()`](/api.html#exact), and [`inexact()`](/api.html#inexact)](./tips.html#the-difference-between-object-exact-and-inexact).
+For more information, see also [The difference between ``object``, ``exact``, and ``inexact``](./tips.html#the-difference-between-object-exact-and-inexact).
 
 ---
 
 <a name="pojo" href="#pojo">#</a>
-**pojo**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ [key: string]: unknown }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L31-L51 'Source')
+**pojo**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ [key: string]: unknown }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L35-L55 'Source')
 
 Accepts any "plain old JavaScript object", but doesn't validate its keys or values further.
 
@@ -900,7 +900,7 @@ pojo.verify(null);        // throws
 ---
 
 <a name="dict" href="#dict">#</a>
-**dict**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ [key: string]: T }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L203-L230 'Source')
+**dict**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ [key: string]: T }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L207-L234 'Source')
 
 Accepts objects where all values match the given decoder, and returns the result as a `{ [string]: T }`.
 
@@ -944,18 +944,21 @@ decoder.verify({ red: 1, blue: 2, green: 3 });
 ---
 
 <a name="json" href="#json">#</a>
-**json**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;JSONValue&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/json.js#L21-L28 'Source')
+**json**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;JSONValue&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/json.js#L43-L50 'Source')
 
 Accepts any value that's a valid JSON value.
 
 In other words: any value returned by `JSON.parse()` should decode without failure.
 
-- ``null``
-- ``string``
-- ``number``
-- ``boolean``
-- ``{ [string]: JSONValue }``
-- ``JSONValue[]``
+```typescript
+type JSONValue =
+    | null
+    | string
+    | number
+    | boolean
+    | { [string]: JSONValue }
+    | JSONValue[]
+```
 
 ```typescript
 // 👍
@@ -971,7 +974,7 @@ json.verify({
 ---
 
 <a name="jsonObject" href="#jsonObject">#</a>
-**jsonObject**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ [string]: JSONValue }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/json.js#L17 'Source')
+**jsonObject**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ [string]: JSONValue }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/json.js#L20 'Source')
 
 Like [`json`](/api.html#json), but will only decode when the JSON value is an object.
 
@@ -990,7 +993,7 @@ jsonObject.verify(null);                 // throws
 ---
 
 <a name="jsonArray" href="#jsonArray">#</a>
-**jsonArray**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;JSONValue[]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/json.js#L19 'Source')
+**jsonArray**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;JSONValue[]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/json.js#L25 'Source')
 
 Like [`json`](/api.html#json), but will only decode when the JSON value is an array.
 
@@ -1018,7 +1021,7 @@ jsonArray.verify(null);               // throws
 ---
 
 <a name="either" href="#either">#</a>
-**either**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">C</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;C&gt;</i>, <i style="color: #267f99">...</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | C | ...&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/unions.js#L90 'Source')
+**either**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">C</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;C&gt;</i>, <i style="color: #267f99">...</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | C | ...&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/unions.js#L97 'Source')
 
 Accepts values accepted by any of the given decoders. The decoders are tried on the input one by one, in the given order. The first one that accepts the input "wins". If all decoders reject the input, the input gets rejected.
 
@@ -1038,7 +1041,7 @@ decoder.verify(false);  // throws
 ---
 
 <a name="oneOf" href="#oneOf">#</a>
-**oneOf**&lt;<i style="color: #267f99">T</i>&gt;(values: <i style="color: #267f99">T[]</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/unions.js#L92-L104 'Source')
+**oneOf**&lt;<i style="color: #267f99">T</i>&gt;(values: <i style="color: #267f99">T[]</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/unions.js#L103-L115 'Source')
 
 Accepts any value that is strictly-equal (using `===`) to one of the specified values.
 
@@ -1066,27 +1069,26 @@ oneOf(['foo', 'bar']);
 ---
 
 <a name="taggedUnion" href="#taggedUnion">#</a>
-**taggedUnion**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(field: <i style="color: #267f99">string</i>, mapping: <i style="color: #267f99">{ value1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, value2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | ...&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/unions.js#L141-L155 'Source')
+**taggedUnion**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(field: <i style="color: #267f99">string</i>, mapping: <i style="color: #267f99">{ value1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, value2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | ...&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/unions.js#L143-L157 'Source')
 
-**NOTE:** In decoders@1.x, this was called `dispatch()`.
+If you are decoding tagged unions you may want to use the [`taggedUnion()`](/api.html#taggedUnion) decoder instead of the general purpose [`either()`](/api.html#either) decoder to get better error messages and better performance.
 
-Like [`either()`](/api.html#either), but optimized for building [tagged unions](https://en.wikipedia.org/wiki/Tagged_union) of object types with a common field (like a `type` field) that lets you distinguish members.
+This decoder is optimized for [tagged unions](https://en.wikipedia.org/wiki/Tagged_union), i.e. a union of objects where one field is used as the discriminator.
 
-The following two decoders are effectively equivalent:
+```ts
+const A = object({ tag: constant('A'), foo: string });
+const B = object({ tag: constant('B'), bar: number });
 
-```typescript
-type Rect = { __type: 'rect', x: number, y: number, width: number, height: number };
-type Circle = { __type: 'circle', cx: number, cy: number, r: number };
-//              ↑↑↑↑↑↑
-//              Field that defines which decoder to pick
-//                                                  ↓↓↓↓↓↓
-const shape1: Decoder<Rect | Circle> = taggedUnion('__type', { rect, circle });
-const shape2: Decoder<Rect | Circle> = either(rect, circle);
+const AorB = taggedUnion('tag', { A, B });
+//                        ^^^
 ```
 
-But using [`taggedUnion()`](/api.html#taggedUnion) will typically be more runtime-efficient than using [`either()`](/api.html#either). The reason is that [`taggedUnion()`](/api.html#taggedUnion) will first do minimal work to "look ahead" into the `type` field here, and based on that value, pick which decoder to invoke. Error messages will then also be tailored to the specific decoder.
+Decoding now works in two steps:
 
-The [`either()`](/api.html#either) version will instead try each decoder in turn until it finds one that matches. If none of the alternatives match, it needs to report all errors, which is sometimes confusing.
+1. Look at the given `'tag'` field in the incoming object (this is the field that decides which decoder will be used)
+2. If the value is `'A'`, then decoder `A` will be used. If it's `'B'`, then decoder `B` will be used. Otherwise, this will fail.
+
+This is effectively equivalent to `either(A, B)`, but will provide better error messages and is more performant at runtime because it doesn't have to try all decoders one by one.
 
 ---
 
@@ -1139,7 +1141,7 @@ const uppercase: Decoder<string> = string.transform(s => s.toUpperCase());
 ---
 
 <a name="prep" href="#prep">#</a>
-**prep**&lt;<i style="color: #267f99">T</i>&gt;(mapperFn: <i style="color: #267f99">(raw: mixed) =&gt; mixed</i>, decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L38-L53 'Source')
+**prep**&lt;<i style="color: #267f99">T</i>&gt;(mapperFn: <i style="color: #267f99">(raw: mixed) =&gt; mixed</i>, decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L56-L71 'Source')
 
 Pre-process the raw data input before passing it into the decoder. This gives you the ability to arbitrarily customize the input on the fly before passing it to the decoder. Of course, the input value at that point is still of [`unknown`](/api.html#unknown) type, so you will have to deal with that accordingly.
 
@@ -1165,9 +1167,9 @@ decoder.verify('hi');  // throws: not a number
 ---
 
 <a name="never" href="#never">#</a>
-**never**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;never&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L58-L60 'Source')  
+**never**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;never&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L77-L79 'Source')  
 <a name="fail" href="#fail">#</a>
-**fail**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;never&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L65 'Source')
+**fail**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;never&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L84 'Source')
 
 Rejects all inputs, and always fails with the given error message. May be useful for explicitly disallowing keys, or for testing purposes.
 
@@ -1190,7 +1192,7 @@ decoder.verify({ a: 'foo', b: 'bar' });  // throws
 <a name="instanceOf" href="#instanceOf">#</a>
 **instanceOf**&lt;<i style="color: #267f99">T</i>&gt;(klass: <i style="color: #267f99">Class&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L10-L21 'Source')
 
-Accepts any value that is an `instanceof` the given class.
+Accepts any value that is an ``instanceof`` the given class.
 
 ```typescript
 const decoder = instanceOf(Error);
@@ -1207,7 +1209,7 @@ decoder.verify(3);      // throws
 ---
 
 <a name="lazy" href="#lazy">#</a>
-**lazy**&lt;<i style="color: #267f99">T</i>&gt;(decoderFn: <i style="color: #267f99">() =&gt; <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L28-L30 'Source')
+**lazy**&lt;<i style="color: #267f99">T</i>&gt;(decoderFn: <i style="color: #267f99">() =&gt; <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L46-L48 'Source')
 
 Lazily evaluate the given decoder. This is useful to build self-referential types for recursive data structures. Example:
 
@@ -1228,5 +1230,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 082d1e775c9ee0efda5c92cea54331c0) -->
+<!--[[[end]]] (checksum: ff69658191044e7434d53dbdcba29993) -->
 <!-- prettier-ignore-end -->

@@ -87,8 +87,19 @@ function _either(...decoders: $ReadOnlyArray<Decoder<mixed>>): Decoder<mixed> {
     });
 }
 
+/**
+ * Accepts values accepted by any of the given decoders.
+ *
+ * The decoders are tried on the input one by one, in the given order. The
+ * first one that accepts the input "wins". If all decoders reject the input,
+ * the input gets rejected.
+ */
 export const either: EitherDecoderSignatures = (_either: _Any);
 
+/**
+ * Accepts any value that is strictly-equal (using ===) to one of the specified
+ * values.
+ */
 export function oneOf<T: Scalar>(constants: $ReadOnlyArray<T>): Decoder<T> {
     return define((blob, accept, reject) => {
         const winner = constants.find((c) => c === blob);
@@ -104,39 +115,30 @@ export function oneOf<T: Scalar>(constants: $ReadOnlyArray<T>): Decoder<T> {
 }
 
 /**
- * Dispatches to one of several given decoders, based on the value found at
- * runtime in the given field.  For example, suppose you have these decoders:
+ * If you are decoding tagged unions you may want to use the `taggedUnion()`
+ * decoder instead of the general purpose `either()` decoder to get better
+ * error messages and better performance.
  *
- *     const rectangle = object({
- *         type: constant('rect'),
- *         x: number,
- *         y: number,
- *         width: number,
- *         height: number,
- *     });
+ * This decoder is optimized for [tagged
+ * unions](https://en.wikipedia.org/wiki/Tagged_union), i.e. a union of
+ * objects where one field is used as the discriminator.
  *
- *     const circle = object({
- *         type: constant('circle'),
- *         cx: number,
- *         cy: number,
- *         r: number,
- *      });
+ *   const A = object({ tag: constant('A'), foo: string });
+ *   const B = object({ tag: constant('B'), bar: number });
  *
- * Then these two decoders are equivalent:
+ *   const AorB = taggedUnion('tag', { A, B });
+ *   //                        ^^^
  *
- *     const shape = either(rectangle, circle)
- *     const shape = taggedUnion('type', { rectangle, circle })
+ * Decoding now works in two steps:
  *
- * Will be of type Decoder<Rectangle | Circle>.
+ * 1. Look at the `'tag'` field in the incoming object (this is the field
+ *    that decides which decoder will be used)
+ * 2. If the value is `'A'`, then decoder `A` will be used. If it's `'B'`, then
+ *    decoder `B` will be used. Otherwise, this will fail.
  *
- * But `taggedUnion` will typically be more runtime-efficient.  The reason is
- * that it will first do minimal work to "look ahead" into the `type` field
- * here, and based on that value, pick the decoder to invoke.
- *
- * The `either` version will simply try to invoke each decoder, until it finds
- * one that matches.
- *
- * Also, the error messages will be less ambiguous using `taggedUnion()`.
+ * This is effectively equivalent to `either(A, B)`, but will provide better
+ * error messages and is more performant at runtime because it doesn't have to
+ * try all decoders one by one.
  */
 export function taggedUnion<O: { +[field: string]: Decoder<_Any>, ... }>(
     field: string,
