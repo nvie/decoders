@@ -256,11 +256,6 @@ const gitUrl: Decoder<URL> = predicate(
 );
 ```
 
-## `dispatch()` is now `taggedUnion()`
-
-Just a name change, no other changes. This new name better reflects what it's for, and
-makes room for a more generic version of `dispatch` in a future version.
-
 ## Change `$DecoderType` to `DecoderType` (without the `$`)
 
 **Flow users only!** The helper type `$DecoderType` has now been simplified. The `$`-sign

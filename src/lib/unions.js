@@ -147,11 +147,16 @@ export function taggedUnion<O: { +[field: string]: Decoder<_Any>, ... }>(
     const base = object({
         [field]: prep(String, oneOf(Object.keys(mapping))),
     });
-    return define((blob) => {
-        return andThen(base.decode(blob), (baseObj) => {
+    return define((blob) =>
+        andThen(base.decode(blob), (baseObj) => {
             const decoderName = baseObj[field];
             const decoder = mapping[decoderName];
             return decoder.decode(blob);
-        });
-    });
+        }),
+    );
 }
+
+export const dispatch: <O: { +[field: string]: Decoder<_Any>, ... }>(
+    field: string,
+    mapping: O,
+) => Decoder<$Values<$ObjMap<O, <T>(Decoder<T>) => T>>> = taggedUnion;

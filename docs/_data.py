@@ -1004,7 +1004,7 @@ DECODERS = {
       ('mapping', '{ value1: Decoder<A>, value2: Decoder<B>, ... }'),
     ],
     'return_type': 'Decoder<A | B | ...>',
-    # 'aliases': ['dispatch'],
+    'aliases': ['dispatch'],
     'markdown': """
       If you are decoding tagged unions you may want to use the `taggedUnion()` decoder instead of the general purpose `either()` decoder to get better error messages and better performance.
 
