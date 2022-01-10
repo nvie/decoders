@@ -1,4 +1,5 @@
 remote_theme: pmarsceill/just-the-docs
+color_scheme: rose
 
 title: 'Decoders'
 description: Elegant and battle-tested validation library for type-safe input data
@@ -7,7 +8,7 @@ description: Elegant and battle-tested validation library for type-safe input da
 search_enabled: true
 
 # When uncommented, this will be displayed instead of the title
-# logo: '../img/logo@2x.png'
+logo: './assets/logo-small@2x.png'
 
 aux_links:
     'NPM':
