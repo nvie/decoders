@@ -989,9 +989,9 @@ DECODERS = {
       ```typescript
       type Rect = { __type: 'rect', x: number, y: number, width: number, height: number };
       type Circle = { __type: 'circle', cx: number, cy: number, r: number };
-      //              ^^^^^^
+      //              ↑↑↑↑↑↑
       //              Field that defines which decoder to pick
-      //                                               vvvvvv
+      //                                                  ↓↓↓↓↓↓
       const shape1: Decoder<Rect | Circle> = taggedUnion('__type', { rect, circle });
       const shape2: Decoder<Rect | Circle> = either(rect, circle);
       ```

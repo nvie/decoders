@@ -1056,9 +1056,9 @@ The following two decoders are effectively equivalent:
 ```typescript
 type Rect = { __type: 'rect', x: number, y: number, width: number, height: number };
 type Circle = { __type: 'circle', cx: number, cy: number, r: number };
-//              ^^^^^^
+//              ↑↑↑↑↑↑
 //              Field that defines which decoder to pick
-//                                               vvvvvv
+//                                                  ↓↓↓↓↓↓
 const shape1: Decoder<Rect | Circle> = taggedUnion('__type', { rect, circle });
 const shape2: Decoder<Rect | Circle> = either(rect, circle);
 ```
@@ -1207,5 +1207,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: e1ad964d5f48e11b77ffd19e01667881)-->
+<!--[[[end]]] (checksum: 73f77ee8f7763c599139a63ba0d7bfb6)-->
 <!-- prettier-ignore-end -->
