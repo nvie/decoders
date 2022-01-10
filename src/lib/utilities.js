@@ -1,8 +1,8 @@
 // @flow strict
 
 import { annotate } from '../annotate';
-import { define } from '../_decoder';
-import type { Decoder } from '../_decoder';
+import { define } from '../Decoder';
+import type { Decoder } from '../Decoder';
 
 /**
  * Accepts any value that is an ``instanceof`` the given class.

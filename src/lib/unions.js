@@ -1,12 +1,12 @@
 // @flow strict
 
 import { andThen } from '../result';
-import { define } from '../_decoder';
+import { define } from '../Decoder';
 import { indent, summarize } from '../_utils';
 import { object } from './objects';
 import { prep } from './utilities';
 import type { _Any } from '../_utils';
-import type { Decoder, DecodeResult, Scalar } from '../_decoder';
+import type { Decoder, DecodeResult, Scalar } from '../Decoder';
 
 const EITHER_PREFIX = 'Either:\n';
 

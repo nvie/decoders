@@ -10,7 +10,7 @@ import { object } from '../objects';
 import { optional } from '../basics';
 import { partition } from 'itertools';
 import { string } from '../strings';
-import type { Decoder } from '../../_decoder';
+import type { Decoder } from '../../Decoder';
 
 describe('instanceOf', () => {
     const errorDecoder = instanceOf(Error);

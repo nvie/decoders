@@ -1,10 +1,10 @@
 // @flow strict
 
-import { define } from '../_decoder';
+import { define } from '../Decoder';
 import { isDate } from '../_utils';
 import { regex } from './strings';
 import type { _Any } from '../_utils';
-import type { Decoder } from '../_decoder';
+import type { Decoder } from '../Decoder';
 
 // Only matches the shape.  This "over-matches" some values that still aren't
 // valid dates (like 9999-99-99), but those will be caught by JS Date's

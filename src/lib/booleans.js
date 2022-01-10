@@ -1,8 +1,8 @@
 // @flow strict
 
-import { define } from '../_decoder';
+import { define } from '../Decoder';
 import { number } from './numbers';
-import type { Decoder } from '../_decoder';
+import type { Decoder } from '../Decoder';
 
 /**
  * Accepts and returns booleans.

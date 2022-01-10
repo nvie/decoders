@@ -1,4 +1,4 @@
-import { Decoder } from '../_decoder';
+import { Decoder } from '../Decoder';
 
 export function instanceOf<T>(klass: new (...args: readonly any[]) => T): Decoder<T>;
 export function lazy<T>(decoderFn: () => Decoder<T>): Decoder<T>;

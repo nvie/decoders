@@ -8,7 +8,7 @@ import { lazy } from './utilities';
 import { null_ } from './basics';
 import { number } from './numbers';
 import { string } from './strings';
-import type { Decoder } from '../_decoder';
+import type { Decoder } from '../Decoder';
 
 export type JSONValue = null | string | number | boolean | JSONObject | JSONArray;
 export type JSONObject = { [string]: JSONValue };

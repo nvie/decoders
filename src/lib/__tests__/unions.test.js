@@ -10,7 +10,7 @@ import { object } from '../objects';
 import { partition } from 'itertools';
 import { regex, string } from '../strings';
 import { taggedUnion } from '../unions';
-import type { Decoder } from '../../_decoder';
+import type { Decoder } from '../../Decoder';
 
 describe('either', () => {
     const stringOrBooleanDecoder = either(string, boolean);

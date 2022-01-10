@@ -1,8 +1,8 @@
 // @flow strict
 
-import { define } from '../_decoder';
+import { define } from '../Decoder';
 import { either } from './unions';
-import type { Decoder, Scalar } from '../_decoder';
+import type { Decoder, Scalar } from '../Decoder';
 
 /**
  * Accepts and returns only the literal `null` value.

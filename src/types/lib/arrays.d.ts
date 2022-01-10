@@ -1,6 +1,6 @@
 /// <reference lib="es6" />
 
-import { Decoder } from '../_decoder';
+import { Decoder } from '../Decoder';
 
 export const poja: Decoder<unknown[]>;
 export function array<T>(decoder: Decoder<T>): Decoder<T[]>;

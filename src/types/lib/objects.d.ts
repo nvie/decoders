@@ -1,6 +1,6 @@
 /// <reference lib="es6" />
 
-import { Decoder, DecoderType } from '../_decoder';
+import { Decoder, DecoderType } from '../Decoder';
 import { AllowImplicit } from './_helpers';
 
 export type ObjectDecoderType<T> = AllowImplicit<{

@@ -1,6 +1,6 @@
 /// <reference lib="dom" />
 
-import { Decoder } from '../_decoder';
+import { Decoder } from '../Decoder';
 
 export const string: Decoder<string>;
 export const nonEmptyString: Decoder<string>;

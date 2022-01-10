@@ -1,7 +1,7 @@
 // @flow strict
 
-import { define } from '../_decoder';
-import type { Decoder } from '../_decoder';
+import { define } from '../Decoder';
+import type { Decoder } from '../Decoder';
 
 /**
  * Accepts any valid ``number`` value.

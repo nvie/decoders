@@ -1,9 +1,9 @@
 // @flow strict
 
-export type { Decoder, DecodeResult, DecoderType, Scalar } from './_decoder';
+export type { Decoder, DecodeResult, DecoderType, Scalar } from './Decoder';
 export type { JSONValue, JSONObject, JSONArray } from './lib/json';
 
-export { define } from './_decoder';
+export { define } from './Decoder';
 
 export {
     always,

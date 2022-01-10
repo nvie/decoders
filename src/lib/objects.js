@@ -1,10 +1,10 @@
 // @flow strict
 
 import { annotateObject, merge, updateText } from '../annotate';
-import { define } from '../_decoder';
+import { define } from '../Decoder';
 import type { _Any } from '../_utils';
 import type { Annotation } from '../annotate';
-import type { Decoder, DecodeResult } from '../_decoder';
+import type { Decoder, DecodeResult } from '../Decoder';
 
 function isPojo(o: mixed): boolean %checks {
     return (

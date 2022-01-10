@@ -1,4 +1,4 @@
-import { Decoder } from '../_decoder';
+import { Decoder } from '../Decoder';
 
 export const boolean: Decoder<boolean>;
 export const truthy: Decoder<boolean>;

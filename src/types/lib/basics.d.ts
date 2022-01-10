@@ -1,4 +1,4 @@
-import { Decoder, Scalar } from '../_decoder';
+import { Decoder, Scalar } from '../Decoder';
 
 export const null_: Decoder<null>;
 export const undefined_: Decoder<undefined>;

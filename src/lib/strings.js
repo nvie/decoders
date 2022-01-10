@@ -1,9 +1,9 @@
 // @flow strict
 
-import { define } from '../_decoder';
+import { define } from '../Decoder';
 import { either } from './unions';
 import { instanceOf } from './utilities';
-import type { Decoder } from '../_decoder';
+import type { Decoder } from '../Decoder';
 
 /** Match groups in this regex:
  * \1 - the scheme

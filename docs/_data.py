@@ -1179,7 +1179,7 @@ DECODERS = {
 }
 
 #
-# These lists the methods, as configured in src/_decoder.js.
+# These lists the methods, as configured in src/Decoder.js.
 #
 DECODER_METHODS = {
   'verify': {
@@ -1325,7 +1325,7 @@ def run_json(cmd):
 
 def find_source_locations():
     locinfo1 = run_json(
-      "./bin/linenos src/_decoder.js --remote-url --object-keys --object-methods --json",
+      "./bin/linenos src/Decoder.js --remote-url --object-keys --object-methods --json",
     )
     locinfo2 = run_json(
       "./bin/linenos src/*.js src/**/*.js --remote-url --functions --variables --json",
