@@ -1,11 +1,4 @@
-export {
-    DecodeResult,
-    Decoder,
-    DecoderType,
-    Predicate,
-    Scalar,
-    define,
-} from './_decoder';
+export { DecodeResult, Decoder, DecoderType, Scalar, define } from './_decoder';
 export { JSONValue, JSONObject, JSONArray } from './lib/json';
 
 export {

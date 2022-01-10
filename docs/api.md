@@ -1082,7 +1082,7 @@ The [`either()`](/api.html#either) version will instead try each decoder in turn
 ---
 
 <a name="define" href="#define">#</a>
-**define**&lt;<i style="color: #267f99">T</i>&gt;(fn: <i style="color: #267f99">(blob: unknown, accept, reject) =&gt; T</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/_decoder.js#L57-L135 'Source')
+**define**&lt;<i style="color: #267f99">T</i>&gt;(fn: <i style="color: #267f99">(blob: unknown, accept, reject) =&gt; T</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/_decoder.js#L55-L133 'Source')
 
 Defines a new `Decoder<T>`, by implementing a custom accept function. The function receives three arguments:
 
@@ -1207,5 +1207,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 73f77ee8f7763c599139a63ba0d7bfb6)-->
+<!--[[[end]]] (checksum: 655989b231b3c5641cac4aee04723c11)-->
 <!-- prettier-ignore-end -->

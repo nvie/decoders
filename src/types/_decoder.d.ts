@@ -3,8 +3,6 @@ import { Result } from './result';
 
 export type Scalar = string | number | boolean | symbol | undefined | null;
 
-export type Predicate<T> = (value: T) => boolean;
-
 export type DecodeResult<T> = Result<T, Annotation>;
 export type DecodeFn<T, I = unknown> = (
     blob: I,
