@@ -30,7 +30,7 @@ for section, names in DECODERS_BY_SECTION.items():
   cog.outl(f'- [**{section}**](#{slugify(section)}): {", ".join(ref(name) for name in names)}')
 ]]]-->
 - [**Strings**](#strings): [`string`](/api.html#string), [`nonEmptyString`](/api.html#nonEmptyString), [`regex()`](/api.html#regex), [`email`](/api.html#email), [`url`](/api.html#url), [`httpsUrl`](/api.html#httpsUrl), [`uuid`](/api.html#uuid), [`uuidv1`](/api.html#uuidv1), [`uuidv4`](/api.html#uuidv4)
-- [**Numbers**](#numbers): [`number`](/api.html#number), [`integer`](/api.html#integer), [`positiveNumber`](/api.html#positiveNumber), [`positiveInteger`](/api.html#positiveInteger)
+- [**Numbers**](#numbers): [`number`](/api.html#number), [`integer`](/api.html#integer), [`positiveNumber`](/api.html#positiveNumber), [`positiveInteger`](/api.html#positiveInteger), [`anyNumber`](/api.html#anyNumber)
 - [**Booleans**](#booleans): [`boolean`](/api.html#boolean), [`truthy`](/api.html#truthy), [`numericBoolean`](/api.html#numericBoolean)
 - [**Dates**](#dates): [`date`](/api.html#date), [`iso8601`](/api.html#iso8601)
 - [**Constants**](#constants): [`constant()`](/api.html#constant), [`always()`](/api.html#always), [`hardcoded()`](/api.html#hardcoded)
@@ -40,7 +40,7 @@ for section, names in DECODERS_BY_SECTION.items():
 - [**JSON values**](#json-values): [`json`](/api.html#json), [`jsonObject`](/api.html#jsonObject), [`jsonArray`](/api.html#jsonArray)
 - [**Unions**](#unions): [`either()`](/api.html#either), [`oneOf()`](/api.html#oneOf), [`taggedUnion()`](/api.html#taggedUnion)
 - [**Utilities**](#utilities): [`define()`](/api.html#define), [`prep()`](/api.html#prep), [`never`](/api.html#never), [`instanceOf()`](/api.html#instanceOf), [`lazy()`](/api.html#lazy), [`fail`](/api.html#fail)
-<!--[[[end]]] (checksum: 438fb3f7c069eb030f25fda858d15c70) -->
+<!--[[[end]]] (checksum: b4110a1d7b1aba8473d102f8bb9163c3) -->
 
 <!--[[[cog
 for section, names in DECODERS_BY_SECTION.items():
@@ -281,11 +281,12 @@ uuidv4.verify('123e4567-e89b-12d3-a456-426614174000')  // throws
 - [`integer`](/api.html#integer)
 - [`positiveNumber`](/api.html#positiveNumber)
 - [`positiveInteger`](/api.html#positiveInteger)
+- [`anyNumber`](/api.html#anyNumber)
 
 ---
 
 <a name="number" href="#number">#</a>
-**number**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L16-L19 'Source')
+**number**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L22-L25 'Source')
 
 Accepts finite numbers (can be integer or float values). Values `NaN`, or positive and negative `Infinity` will get rejected.
 
@@ -303,7 +304,7 @@ number.verify('not a number');  // throws
 ---
 
 <a name="integer" href="#integer">#</a>
-**integer**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L24-L27 'Source')
+**integer**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L30-L33 'Source')
 
 Accepts only finite whole numbers.
 
@@ -321,7 +322,7 @@ integer.verify('not a integer'); // throws
 ---
 
 <a name="positiveNumber" href="#positiveNumber">#</a>
-**positiveNumber**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L32-L35 'Source')
+**positiveNumber**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L38-L41 'Source')
 
 Accepts only positive finite numbers.
 
@@ -340,7 +341,7 @@ positiveNumber.verify('not a number');  // throws
 ---
 
 <a name="positiveInteger" href="#positiveInteger">#</a>
-**positiveInteger**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L40-L43 'Source')
+**positiveInteger**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L46-L49 'Source')
 
 Accepts only positive finite whole numbers.
 
@@ -354,6 +355,26 @@ positiveInteger.verify(3.14);            // throws
 positiveInteger.verify(Infinity);        // throws
 positiveInteger.verify(NaN);             // throws
 positiveInteger.verify('not a number');  // throws
+```
+
+---
+
+<a name="anyNumber" href="#anyNumber">#</a>
+**anyNumber**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L13-L15 'Source')
+
+Accepts any valid ``number`` value.
+
+This also accepts special values like `NaN` and `Infinity`. Unless you want to deliberately accept those, you'll likely want to use the [`number`](/api.html#number) decoder instead.
+
+```typescript
+// 👍
+anyNumber.verify(123) === 123;
+anyNumber.verify(-3.14) === -3.14;
+anyNumber.verify(Infinity) === Infinity;
+anyNumber.verify(NaN) === NaN;
+
+// 👎
+anyNumber.verify('not a number');  // throws
 ```
 
 ---
@@ -1207,5 +1228,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 655989b231b3c5641cac4aee04723c11)-->
+<!--[[[end]]] (checksum: 082d1e775c9ee0efda5c92cea54331c0) -->
 <!-- prettier-ignore-end -->

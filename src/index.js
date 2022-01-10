@@ -34,5 +34,11 @@ export {
     uuidv4,
 } from './lib/strings';
 export { fail, instanceOf, lazy, never, prep } from './lib/utilities';
-export { integer, number, positiveInteger, positiveNumber } from './lib/numbers';
+export {
+    anyNumber,
+    integer,
+    number,
+    positiveInteger,
+    positiveNumber,
+} from './lib/numbers';
 export { json, jsonObject, jsonArray } from './lib/json';

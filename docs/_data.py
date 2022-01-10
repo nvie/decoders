@@ -282,6 +282,28 @@ DECODERS = {
     """,
   },
 
+  'anyNumber': {
+    'section': 'Numbers',
+    'params': None,
+    'return_type': 'Decoder<number>',
+    'markdown': """
+      Accepts any valid ``number`` value.
+
+      This also accepts special values like `NaN` and `Infinity`. Unless you want to deliberately accept those, you'll likely want to use the `number` decoder instead.
+
+      ```typescript
+      // 👍
+      anyNumber.verify(123) === 123;
+      anyNumber.verify(-3.14) === -3.14;
+      anyNumber.verify(Infinity) === Infinity;
+      anyNumber.verify(NaN) === NaN;
+
+      // 👎
+      anyNumber.verify('not a number');  // throws
+      ```
+    """,
+  },
+
   'boolean': {
     'section': 'Booleans',
     'params': None,

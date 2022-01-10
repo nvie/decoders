@@ -3,14 +3,20 @@
 import { define } from '../_decoder';
 import type { Decoder } from '../_decoder';
 
-const anyNumber: Decoder<number> = define((blob, accept, reject) =>
-    typeof blob === 'number' && !Number.isNaN(blob)
-        ? accept(blob)
-        : reject('Must be number'),
+/**
+ * Accepts any valid ``number`` value.
+ *
+ * This also accepts special values like `NaN` and `Infinity`. Unless you want
+ * to deliberately accept those, you'll likely want to use the `number` decoder
+ * instead.
+ */
+export const anyNumber: Decoder<number> = define((blob, accept, reject) =>
+    typeof blob === 'number' ? accept(blob) : reject('Must be number'),
 );
 
 /**
- * Accepts finite numbers (can be integer or float values). Values `NaN`,
+ * Accepts finite numbers (can be integer or float values). Values
+ * `NaN`,
  * or positive and negative `Infinity` will get rejected.
  */
 export const number: Decoder<number> = anyNumber.and(

@@ -1,13 +1,32 @@
 // @flow strict
 /* eslint-disable no-restricted-syntax */
 
+import { anyNumber, integer, number, positiveInteger, positiveNumber } from '../numbers';
 import { INPUTS } from './_fixtures';
-import { integer, number, positiveInteger, positiveNumber } from '../numbers';
 import { partition } from 'itertools';
 
 describe('number', () => {
     const decoder = number;
     const [okay, not_okay] = partition(INPUTS, (n) => Number.isFinite(n));
+
+    it('valid', () => {
+        expect(okay.length).not.toBe(0);
+        for (const value of okay) {
+            expect(decoder.verify(value)).toBe(value);
+        }
+    });
+
+    it('invalid', () => {
+        expect(not_okay.length).not.toBe(0);
+        for (const value of not_okay) {
+            expect(decoder.decode(value).ok).toBe(false);
+        }
+    });
+});
+
+describe('anyNumber', () => {
+    const decoder = anyNumber;
+    const [okay, not_okay] = partition(INPUTS, (n) => typeof n === 'number');
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);

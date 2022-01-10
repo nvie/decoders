@@ -1,5 +1,6 @@
 import {
     always,
+    anyNumber,
     array,
     boolean,
     constant,
@@ -76,6 +77,7 @@ undefined_; // $ExpectType Decoder<undefined>
 mixed; // $ExpectType Decoder<unknown>
 unknown; // $ExpectType Decoder<unknown>
 
+anyNumber; // $ExpectType Decoder<number>
 integer; // $ExpectType Decoder<number>
 number; // $ExpectType Decoder<number>
 positiveInteger; // $ExpectType Decoder<number>
