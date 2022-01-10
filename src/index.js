@@ -21,7 +21,7 @@ export { array, nonEmptyArray, poja, set, tuple } from './lib/arrays';
 export { boolean, numericBoolean, truthy } from './lib/booleans';
 export { date, iso8601 } from './lib/dates';
 export { dict, exact, inexact, mapping, object, pojo } from './lib/objects';
-export { either, oneOf } from './lib/either';
+export { either, oneOf, taggedUnion } from './lib/unions';
 export {
     email,
     httpsUrl,
@@ -36,4 +36,3 @@ export {
 export { fail, instanceOf, lazy, never, prep } from './lib/utilities';
 export { integer, number, positiveInteger, positiveNumber } from './lib/numbers';
 export { json, jsonObject, jsonArray } from './lib/json';
-export { taggedUnion } from './lib/dispatch';

@@ -3,7 +3,7 @@
 import { array } from './arrays';
 import { boolean } from './booleans';
 import { dict } from './objects';
-import { either } from './either';
+import { either } from './unions';
 import { lazy } from './utilities';
 import { null_ } from './basics';
 import { number } from './numbers';

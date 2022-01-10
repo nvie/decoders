@@ -1,4 +1,6 @@
-import { Decoder, Scalar } from '../_decoder';
+import { Decoder, DecoderType, Scalar } from '../_decoder';
+
+export type Values<T extends object> = T[keyof T];
 
 export type DecoderTypes<T> = T extends ReadonlyArray<Decoder<infer U>> ? U : never;
 
@@ -64,3 +66,8 @@ export function either<T extends ReadonlyArray<Decoder<any>>>(
 //     d9: Decoder<T9>,
 // ): Decoder<T1 | T2 | T3 | T4 | T5 | T6 | T7 | T8 | T9>;
 export function oneOf<T extends Scalar>(constants: readonly T[]): Decoder<T>;
+
+export function taggedUnion<O extends { [key: string]: Decoder<any> }>(
+    field: string,
+    mapping: O,
+): Decoder<Values<{ [key in keyof O]: DecoderType<O[key]> }>>;

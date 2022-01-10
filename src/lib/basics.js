@@ -1,7 +1,7 @@
 // @flow strict
 
 import { define } from '../_decoder';
-import { either } from './either';
+import { either } from './unions';
 import type { Decoder, Scalar } from '../_decoder';
 
 /**

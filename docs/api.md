@@ -38,9 +38,9 @@ for section, names in DECODERS_BY_SECTION.items():
 - [**Arrays**](#arrays): [`array()`](/api.html#array), [`nonEmptyArray()`](/api.html#nonEmptyArray), [`poja`](/api.html#poja), [`tuple()`](/api.html#tuple), [`set()`](/api.html#set)
 - [**Objects**](#objects): [`object()`](/api.html#object), [`exact()`](/api.html#exact), [`inexact()`](/api.html#inexact), [`pojo`](/api.html#pojo), [`dict()`](/api.html#dict), [`mapping()`](/api.html#mapping)
 - [**JSON values**](#json-values): [`json`](/api.html#json), [`jsonObject`](/api.html#jsonObject), [`jsonArray`](/api.html#jsonArray)
-- [**Choice**](#choice): [`either()`](/api.html#either), [`taggedUnion()`](/api.html#taggedUnion), [`oneOf()`](/api.html#oneOf), [`dispatch()`](/api.html#dispatch)
+- [**Unions**](#unions): [`either()`](/api.html#either), [`oneOf()`](/api.html#oneOf), [`taggedUnion()`](/api.html#taggedUnion)
 - [**Utilities**](#utilities): [`define()`](/api.html#define), [`prep()`](/api.html#prep), [`never`](/api.html#never), [`instanceOf()`](/api.html#instanceOf), [`lazy()`](/api.html#lazy), [`fail`](/api.html#fail)
-<!--[[[end]]] (checksum: 6d8d05a0ad6d29f30ba1b8dafdafbf78) -->
+<!--[[[end]]] (checksum: 438fb3f7c069eb030f25fda858d15c70) -->
 
 <!--[[[cog
 for section, names in DECODERS_BY_SECTION.items():
@@ -987,18 +987,17 @@ jsonArray.verify(null);               // throws
 
 ---
 
-## Choice
+## Unions
 
 
 - [`either()`](/api.html#either)
-- [`taggedUnion()`](/api.html#taggedUnion)
 - [`oneOf()`](/api.html#oneOf)
-- [`dispatch()`](/api.html#dispatch) (alias of [`taggedUnion()`](/api.html#taggedUnion))
+- [`taggedUnion()`](/api.html#taggedUnion)
 
 ---
 
 <a name="either" href="#either">#</a>
-**either**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">C</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;C&gt;</i>, <i style="color: #267f99">...</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | C | ...&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/either.js#L87 'Source')
+**either**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">C</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;C&gt;</i>, <i style="color: #267f99">...</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | C | ...&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/unions.js#L90 'Source')
 
 Accepts values accepted by any of the given decoders. The decoders are tried on the input one by one, in the given order. The first one that accepts the input "wins". If all decoders reject the input, the input gets rejected.
 
@@ -1017,35 +1016,8 @@ decoder.verify(false);  // throws
 
 ---
 
-<a name="taggedUnion" href="#taggedUnion">#</a>
-**taggedUnion**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(field: <i style="color: #267f99">string</i>, mapping: <i style="color: #267f99">{ value1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, value2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | ...&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/dispatch.js#L46-L60 'Source')  
-<a name="dispatch" href="#dispatch">#</a>
-**dispatch**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(field: <i style="color: #267f99">string</i>, mapping: <i style="color: #267f99">{ value1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, value2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | ...&gt;</i> 
-
-**NOTE:** In decoders@1.x, this was called [`dispatch()`](/api.html#dispatch).
-
-Like [`either()`](/api.html#either), but optimized for building [tagged unions](https://en.wikipedia.org/wiki/Tagged_union) of object types with a common field (like a `type` field) that lets you distinguish members.
-
-The following two decoders are effectively equivalent:
-
-```typescript
-type Rect = { __type: 'rect', x: number, y: number, width: number, height: number };
-type Circle = { __type: 'circle', cx: number, cy: number, r: number };
-//              ^^^^^^
-//              Field that defines which decoder to pick
-//                                               vvvvvv
-const shape1: Decoder<Rect | Circle> = taggedUnion('__type', { rect, circle });
-const shape2: Decoder<Rect | Circle> = either(rect, circle);
-```
-
-But using [`taggedUnion()`](/api.html#taggedUnion) will typically be more runtime-efficient than using [`either()`](/api.html#either). The reason is that [`taggedUnion()`](/api.html#taggedUnion) will first do minimal work to "look ahead" into the `type` field here, and based on that value, pick which decoder to invoke. Error messages will then also be tailored to the specific decoder.
-
-The [`either()`](/api.html#either) version will instead try each decoder in turn until it finds one that matches. If none of the alternatives match, it needs to report all errors, which is sometimes confusing.
-
----
-
 <a name="oneOf" href="#oneOf">#</a>
-**oneOf**&lt;<i style="color: #267f99">T</i>&gt;(values: <i style="color: #267f99">T[]</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/either.js#L89-L101 'Source')
+**oneOf**&lt;<i style="color: #267f99">T</i>&gt;(values: <i style="color: #267f99">T[]</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/unions.js#L92-L104 'Source')
 
 Accepts any value that is strictly-equal (using `===`) to one of the specified values.
 
@@ -1069,6 +1041,31 @@ oneOf(['foo', 'bar']);
 ```
 
 **NOTE to Flow users:** TypeScript is capable of inferring the return type as `Decoder<'foo' | 'bar'>`, but in Flow it will (unfortunately) be `Decoder<string>`. So in Flow, be sure to explicitly annotate the type. Either by doing `oneOf([('foo': 'foo'), ('bar': 'bar')])`, or as `oneOf<'foo' | 'bar'>(['foo', 'bar'])`.
+
+---
+
+<a name="taggedUnion" href="#taggedUnion">#</a>
+**taggedUnion**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(field: <i style="color: #267f99">string</i>, mapping: <i style="color: #267f99">{ value1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, value2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | ...&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/unions.js#L141-L155 'Source')
+
+**NOTE:** In decoders@1.x, this was called `dispatch()`.
+
+Like [`either()`](/api.html#either), but optimized for building [tagged unions](https://en.wikipedia.org/wiki/Tagged_union) of object types with a common field (like a `type` field) that lets you distinguish members.
+
+The following two decoders are effectively equivalent:
+
+```typescript
+type Rect = { __type: 'rect', x: number, y: number, width: number, height: number };
+type Circle = { __type: 'circle', cx: number, cy: number, r: number };
+//              ^^^^^^
+//              Field that defines which decoder to pick
+//                                               vvvvvv
+const shape1: Decoder<Rect | Circle> = taggedUnion('__type', { rect, circle });
+const shape2: Decoder<Rect | Circle> = either(rect, circle);
+```
+
+But using [`taggedUnion()`](/api.html#taggedUnion) will typically be more runtime-efficient than using [`either()`](/api.html#either). The reason is that [`taggedUnion()`](/api.html#taggedUnion) will first do minimal work to "look ahead" into the `type` field here, and based on that value, pick which decoder to invoke. Error messages will then also be tailored to the specific decoder.
+
+The [`either()`](/api.html#either) version will instead try each decoder in turn until it finds one that matches. If none of the alternatives match, it needs to report all errors, which is sometimes confusing.
 
 ---
 
@@ -1210,5 +1207,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: d4d7bd4d92023b3d5137ee380fc2c2ad)-->
+<!--[[[end]]] (checksum: e1ad964d5f48e11b77ffd19e01667881)-->
 <!-- prettier-ignore-end -->

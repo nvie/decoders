@@ -911,7 +911,7 @@ DECODERS = {
   },
 
   'either': {
-    'section': 'Choice',
+    'section': 'Unions',
     'type_params': ['A', 'B', 'C', '...'],
     'params': [
       (None, 'Decoder<A>'),
@@ -938,40 +938,8 @@ DECODERS = {
     """,
   },
 
-  'taggedUnion': {
-    'section': 'Choice',
-    'type_params': ['A', 'B', '...'],
-    'params': [
-      ('field', 'string'),
-      ('mapping', '{ value1: Decoder<A>, value2: Decoder<B>, ... }'),
-    ],
-    'return_type': 'Decoder<A | B | ...>',
-    'aliases': ['dispatch'],
-    'markdown': """
-      **NOTE:** In decoders@1.x, this was called `dispatch()`.
-
-      Like `either`, but optimized for building [tagged unions](https://en.wikipedia.org/wiki/Tagged_union) of object types with a common field (like a `type` field) that lets you distinguish members.
-
-      The following two decoders are effectively equivalent:
-
-      ```typescript
-      type Rect = { __type: 'rect', x: number, y: number, width: number, height: number };
-      type Circle = { __type: 'circle', cx: number, cy: number, r: number };
-      //              ^^^^^^
-      //              Field that defines which decoder to pick
-      //                                               vvvvvv
-      const shape1: Decoder<Rect | Circle> = taggedUnion('__type', { rect, circle });
-      const shape2: Decoder<Rect | Circle> = either(rect, circle);
-      ```
-
-      But using `taggedUnion()` will typically be more runtime-efficient than using `either()`. The reason is that `taggedUnion()` will first do minimal work to "look ahead" into the `type` field here, and based on that value, pick which decoder to invoke. Error messages will then also be tailored to the specific decoder.
-
-      The `either()` version will instead try each decoder in turn until it finds one that matches. If none of the alternatives match, it needs to report all errors, which is sometimes confusing.
-    """,
-  },
-
   'oneOf': {
-    'section': 'Choice',
+    'section': 'Unions',
     'type_params': ['T'],
     'params': [
       ('values', 'T[]'),
@@ -1000,6 +968,37 @@ DECODERS = {
       ```
 
       **NOTE to Flow users:** TypeScript is capable of inferring the return type as `Decoder<'foo' | 'bar'>`, but in Flow it will (unfortunately) be `Decoder<string>`. So in Flow, be sure to explicitly annotate the type. Either by doing `oneOf([('foo': 'foo'), ('bar': 'bar')])`, or as `oneOf<'foo' | 'bar'>(['foo', 'bar'])`.
+    """,
+  },
+
+  'taggedUnion': {
+    'section': 'Unions',
+    'type_params': ['A', 'B', '...'],
+    'params': [
+      ('field', 'string'),
+      ('mapping', '{ value1: Decoder<A>, value2: Decoder<B>, ... }'),
+    ],
+    'return_type': 'Decoder<A | B | ...>',
+    'markdown': """
+      **NOTE:** In decoders@1.x, this was called `dispatch()`.
+
+      Like `either`, but optimized for building [tagged unions](https://en.wikipedia.org/wiki/Tagged_union) of object types with a common field (like a `type` field) that lets you distinguish members.
+
+      The following two decoders are effectively equivalent:
+
+      ```typescript
+      type Rect = { __type: 'rect', x: number, y: number, width: number, height: number };
+      type Circle = { __type: 'circle', cx: number, cy: number, r: number };
+      //              ^^^^^^
+      //              Field that defines which decoder to pick
+      //                                               vvvvvv
+      const shape1: Decoder<Rect | Circle> = taggedUnion('__type', { rect, circle });
+      const shape2: Decoder<Rect | Circle> = either(rect, circle);
+      ```
+
+      But using `taggedUnion()` will typically be more runtime-efficient than using `either()`. The reason is that `taggedUnion()` will first do minimal work to "look ahead" into the `type` field here, and based on that value, pick which decoder to invoke. Error messages will then also be tailored to the specific decoder.
+
+      The `either()` version will instead try each decoder in turn until it finds one that matches. If none of the alternatives match, it needs to report all errors, which is sometimes confusing.
     """,
   },
 
