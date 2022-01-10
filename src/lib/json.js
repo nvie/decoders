@@ -25,4 +25,4 @@ export const json: Decoder<JSONValue> = either(
     boolean,
     jsonObject,
     jsonArray,
-);
+).describe('Must be valid JSON value');
