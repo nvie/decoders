@@ -26,13 +26,13 @@ Just install the package and you're ready to go.
 
 ## Motivation
 
-In a fully type-checked app, data coming in from the outside world can be dynamic and
-should not be trusted without validation. Therefore, it's a good practice to validate your
-expectations right at your program's boundaries. This has two benefits: (1) your inputs
-are getting validated, and (2) you can now statically know for sure the shape of the
-incoming data.
+Data entering your application from the outside world should not be trusted without
+validation and often is of the `any` type, effectively disabling your type checker around
+input values. It's an industry good practice to validate your expectations right at your
+program's boundaries. This has two benefits: (1) your inputs are getting validated, and
+(2) you can now statically know for sure the shape of the incoming data.
 
-Decoders help solve both of these problems.
+Decoders help solve both of these problems at once.
 
 ## The core idea
 
