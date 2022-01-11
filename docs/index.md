@@ -42,7 +42,7 @@ the decoded value of type `T` as its payload, or an "error" result.
 This way, you can be sure that all untrusted runtime data is always in the shape you
 expect, and that static types can correctly be inferred for dynamic input data.
 
-<img alt="The concept of a Decoder explained schematically" src="./assets/schematic-decoders.png" style="max-width: min(414px, 100%)" />
+<img alt="The concept of a Decoder explained schematically" src="./assets/schematic-decoders.png" style="max-width: min(600px, 100%)" />
 
 A decoder can either _accept_ or _reject_ the given untrusted input. Whether it accepts or
 rejects depends on the decoder's implementation. The return value always is either an "ok"
@@ -53,7 +53,7 @@ The second important concept is a Guard. It's a convenience wrapper around an ex
 decoder. A `Guard<T>` is like the Decoder that it wraps, but does not return those
 intermediate "result" objects that Decoders do.
 
-<img alt="The concept of a Guard explained schematically" src="./assets/schematic-guards.png" style="max-width: min(351px, 100%)" />
+<img alt="The concept of a Guard explained schematically" src="./assets/schematic-guards.png" style="max-width: min(600px, 100%)" />
 
 When called on an untrusted input, it will either directly return the decoded value, or
 throw an error. This allows you to not have to deal with the intermediate "ok" and "err"
