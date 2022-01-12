@@ -62,7 +62,7 @@ export function object<O: { +[field: string]: Decoder<_Any>, ... }>(
         const actualKeys = new Set(Object.keys(plainObj));
 
         // At this point, "missingKeys" will also include all fields that may
-        // validly be optional.  We'll let the underlying decoder decide and
+        // validly be optional. We'll let the underlying decoder decide and
         // remove the key from this missing set if the decoder accepts the
         // value.
         const missingKeys = subtract(knownKeys, actualKeys);
