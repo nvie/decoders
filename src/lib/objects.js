@@ -55,15 +55,17 @@ export const pojo: Decoder<{| [string]: mixed |}> = define((blob, accept, reject
 export function object<O: { +[field: string]: Decoder<_Any>, ... }>(
     decodersByKey: O,
 ): Decoder<$ObjMap<O, <T>(Decoder<T>) => T>> {
-    const known = new Set(Object.keys(decodersByKey));
-    return pojo.then((plainObj, accept, reject) => {
-        const actual = new Set(Object.keys(plainObj));
+    // Compute this set at decoder definition time
+    const knownKeys = new Set(Object.keys(decodersByKey));
 
-        // At this point, "missing" will also include all fields that may
+    return pojo.then((plainObj, accept, reject) => {
+        const actualKeys = new Set(Object.keys(plainObj));
+
+        // At this point, "missingKeys" will also include all fields that may
         // validly be optional.  We'll let the underlying decoder decide and
         // remove the key from this missing set if the decoder accepts the
         // value.
-        const missing = subtract(known, actual);
+        const missingKeys = subtract(knownKeys, actualKeys);
 
         let record = {};
         let errors: { [key: string]: Annotation } | null = null;
@@ -81,7 +83,7 @@ export function object<O: { +[field: string]: Decoder<_Any>, ... }>(
 
                 // If this succeeded, remove the key from the missing keys
                 // tracker
-                missing.delete(key);
+                missingKeys.delete(key);
             } else {
                 const ann = result.error;
 
@@ -92,7 +94,7 @@ export function object<O: { +[field: string]: Decoder<_Any>, ... }>(
                     // undefined.  This covers explicit undefineds to be
                     // treated the same as implicit undefineds (aka missing
                     // keys).
-                    missing.add(key);
+                    missingKeys.add(key);
                 } else {
                     if (errors === null) {
                         errors = {};
@@ -106,18 +108,18 @@ export function object<O: { +[field: string]: Decoder<_Any>, ... }>(
         // report.  First of all, we want to report any inline errors in this
         // object.  Lastly, any fields that are missing should be annotated on
         // the outer object itself.
-        if (errors || missing.size > 0) {
+        if (errors || missingKeys.size > 0) {
             let objAnn = annotateObject(plainObj);
 
             if (errors) {
                 objAnn = merge(objAnn, errors);
             }
 
-            if (missing.size > 0) {
-                const errMsg = Array.from(missing)
+            if (missingKeys.size > 0) {
+                const errMsg = Array.from(missingKeys)
                     .map((key) => `"${key}"`)
                     .join(', ');
-                const pluralized = missing.size > 1 ? 'keys' : 'key';
+                const pluralized = missingKeys.size > 1 ? 'keys' : 'key';
                 objAnn = updateText(objAnn, `Missing ${pluralized}: ${errMsg}`);
             }
 
@@ -135,20 +137,22 @@ export function object<O: { +[field: string]: Decoder<_Any>, ... }>(
 export function exact<O: { +[field: string]: Decoder<_Any>, ... }>(
     decodersByKey: O,
 ): Decoder<$ObjMap<$Exact<O>, <T>(Decoder<T>) => T>> {
-    // Check the inputted object for any superfluous keys
-    const allowed = new Set(Object.keys(decodersByKey));
+    // Compute this set at decoder definition time
+    const allowedKeys = new Set(Object.keys(decodersByKey));
+
+    // Check the inputted object for any unexpected extra keys
     const checked = pojo.then((plainObj, accept, reject) => {
-        const actual = new Set(Object.keys(plainObj));
-        const superfluous = subtract(actual, allowed);
-        if (superfluous.size > 0) {
-            return reject(`Superfluous keys: ${Array.from(superfluous).join(', ')}`);
+        const actualKeys = new Set(Object.keys(plainObj));
+        const extraKeys = subtract(actualKeys, allowedKeys);
+        if (extraKeys.size > 0) {
+            return reject(`Unexpected extra keys: ${Array.from(extraKeys).join(', ')}`);
         }
         return accept(plainObj);
     });
 
     // Defer to the "object" decoder for doing the real decoding work.  Since
-    // we made sure there are no superfluous keys in this structure, it's now
-    // safe to force-cast it to an $Exact<> type.
+    // we made sure there are no unexpected extra keys in this structure, it's
+    // now safe to force-cast it to an $Exact<> type.
     // prettier-ignore
     const decoder = ((object(decodersByKey): _Any): Decoder<$ObjMap<$Exact<O>, <T>(Decoder<T>) => T>>);
     return checked.then(decoder.decode);
