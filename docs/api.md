@@ -1108,13 +1108,13 @@ This is effectively equivalent to `either(A, B)`, but will provide better error 
 ---
 
 <a name="define" href="#define">#</a>
-**define**&lt;<i style="color: #267f99">T</i>&gt;(fn: <i style="color: #267f99">(blob: unknown, accept, reject) =&gt; T</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L78-L189 'Source')
+**define**&lt;<i style="color: #267f99">T</i>&gt;(fn: <i style="color: #267f99">(blob: unknown, accept, reject) =&gt; DecodeResult&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L78-L189 'Source')
 
 Defines a new `Decoder<T>`, by implementing a custom accept function. The function receives three arguments:
 
 1. The raw/unknown input (aka your external data)
-2. An `accept()` callback
-3. A [`.reject()`](/Decoder.html#reject) callback
+2. An ``accept()`` callback
+3. A ``reject()`` callback
 
 The expected return value should be a `DecodeResult<T>`, which can be created by calling one of the provided callback functions.
 
@@ -1233,5 +1233,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 79d661f5d295f77bca93d389146e94e3) -->
+<!--[[[end]]] (checksum: 2b968d28ec760aedaedbbe64f61b7ed0) -->
 <!-- prettier-ignore-end -->

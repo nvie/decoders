@@ -1031,15 +1031,15 @@ DECODERS = {
     'section': 'Utilities',
     'type_params': ['T'],
     'params': [
-      ('fn', '(blob: unknown, accept, reject) => T'),
+      ('fn', '(blob: unknown, accept, reject) => DecodeResult<T>'),
     ],
     'return_type': 'Decoder<T>',
     'markdown': """
       Defines a new `Decoder<T>`, by implementing a custom accept function. The function receives three arguments:
 
       1. The raw/unknown input (aka your external data)
-      2. An `accept()` callback
-      3. A `reject()` callback
+      2. An ``accept()`` callback
+      3. A ``reject()`` callback
 
       The expected return value should be a `DecodeResult<T>`, which can be created by calling one of the provided callback functions.
 
