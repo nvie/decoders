@@ -72,7 +72,7 @@ function all<T>(
  * Accepts arrays of whatever the given decoder accepts.
  */
 export function array<T>(decoder: Decoder<T>): Decoder<Array<T>> {
-    return poja.chain((blobs: $ReadOnlyArray<mixed>, accept, reject) => {
+    return poja.then((blobs: $ReadOnlyArray<mixed>, accept, reject) => {
         const results = blobs.map(decoder.decode);
         return all(results, blobs, accept, reject);
     });
@@ -110,7 +110,7 @@ interface TupleFuncSignature {
  * _n_ given decoders.
  */
 function _tuple(...decoders: $ReadOnlyArray<Decoder<mixed>>): Decoder<Array<mixed>> {
-    return ntuple(decoders.length).chain((blobs, accept, reject) => {
+    return ntuple(decoders.length).then((blobs, accept, reject) => {
         let allOk = true;
 
         const rvs = decoders.map((decoder, i) => {

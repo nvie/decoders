@@ -1,6 +1,6 @@
 // @flow strict
 
-import { andThen, err, ok } from '../result';
+import { err, ok } from '../result';
 
 describe('Result', () => {
     const r1 = ok(42);
@@ -32,20 +32,5 @@ describe('Result', () => {
         expect(r2.error).toBeUndefined();
         expect(r3.error).toEqual(new Error('Proper JS error'));
         expect(r4.error).toEqual('a reason');
-    });
-
-    it('andThen', () => {
-        const [v1, v2, v3, v4] = [r1, r2, r3, r4].map((r) =>
-            // prettier-ignore
-            andThen(r, (n) =>
-                typeof n === 'number'
-                    ? ok(n * 2)
-                    : err('not a number')
-            ),
-        );
-        expect(v1.value).toBe(84);
-        expect(v2.ok).toBe(false);
-        expect(v3.ok).toBe(false);
-        expect(v4.ok).toBe(false);
     });
 });

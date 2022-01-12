@@ -62,7 +62,7 @@ export function object<O: { +[field: string]: Decoder<_Any>, ... }>(
     mapping: O,
 ): Decoder<$ObjMap<O, <T>(Decoder<T>) => T>> {
     const known = new Set(Object.keys(mapping));
-    return pojo.chain((blob, accept, reject) => {
+    return pojo.then((blob, accept, reject) => {
         const actual = new Set(Object.keys(blob));
 
         // At this point, "missing" will also include all fields that may
@@ -143,7 +143,7 @@ export function exact<O: { +[field: string]: Decoder<_Any>, ... }>(
 ): Decoder<$ObjMap<$Exact<O>, <T>(Decoder<T>) => T>> {
     // Check the inputted object for any superfluous keys
     const allowed = new Set(Object.keys(mapping));
-    const checked = pojo.chain((blob, accept, reject) => {
+    const checked = pojo.then((blob, accept, reject) => {
         const actual = new Set(Object.keys(blob));
         const superfluous = subtract(actual, allowed);
         if (superfluous.size > 0) {
@@ -157,7 +157,7 @@ export function exact<O: { +[field: string]: Decoder<_Any>, ... }>(
     // safe to force-cast it to an $Exact<> type.
     // prettier-ignore
     const decoder = ((object(mapping): _Any): Decoder<$ObjMap<$Exact<O>, <T>(Decoder<T>) => T>>);
-    return checked.chain(decoder.decode);
+    return checked.then(decoder.decode);
 }
 
 /**
@@ -167,7 +167,7 @@ export function exact<O: { +[field: string]: Decoder<_Any>, ... }>(
 export function inexact<O: { +[field: string]: Decoder<_Any> }>(
     mapping: O,
 ): Decoder<$ObjMap<O, <T>(Decoder<T>) => T> & { +[string]: mixed }> {
-    return pojo.chain((blob) => {
+    return pojo.then((blob) => {
         const allkeys = new Set(Object.keys(blob));
         const decoder = object(mapping).transform(
             (safepart: $ObjMap<O, <T>(Decoder<T>) => T>) => {
@@ -205,7 +205,7 @@ export function inexact<O: { +[field: string]: Decoder<_Any> }>(
  * a lookup table, or a cache.
  */
 export function dict<T>(decoder: Decoder<T>): Decoder<{ [string]: T }> {
-    return pojo.chain((blob, accept, reject) => {
+    return pojo.then((blob, accept, reject) => {
         let rv: { [key: string]: T } = {};
         let errors: { [key: string]: Annotation } | null = null;
 

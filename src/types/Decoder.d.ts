@@ -17,7 +17,8 @@ export interface Decoder<T> {
     and(predicate: (value: T) => boolean, msg: string): Decoder<T>;
     transform<V>(transformFn: (value: T) => V): Decoder<V>;
     describe(message: string): Decoder<T>;
-    chain<V>(nextDecodeFn: DecodeFn<V, T>): Decoder<V>;
+    then<V>(nextDecodeFn: DecodeFn<V, T>): Decoder<V>;
+    peek<V>(nextDecodeFn: DecodeFn<V, [unknown, T]>): Decoder<V>;
 }
 
 export type DecoderType<T> = T extends Decoder<infer V> ? V : never;

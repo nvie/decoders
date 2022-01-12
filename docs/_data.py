@@ -1220,6 +1220,27 @@ DECODER_METHODS = {
     """,
   },
 
+  'transform': {
+    'type_params': ['V'],
+    'params': [
+        ('transformFn', '(T) => V'),
+    ],
+    'return_type': 'Decoder<V>',
+    'markdown': """
+      Accepts any value the given decoder accepts, and on success, will call the given function **on the decoded result**. If the transformation function throws an error, the whole decoder will fail using the error message as the failure reason.
+
+      ```typescript
+      const upper = string.transform((s) => s.toUpperCase());
+
+      // 👍
+      upper.verify('foo') === 'FOO'
+
+      // 👎
+      upper.verify(4);  // throws
+      ```
+    """,
+  },
+
   'and': {
     'params': [
       ('predicate', 'T => boolean'),
@@ -1247,42 +1268,6 @@ DECODER_METHODS = {
     """,
   },
 
-  'chain': {
-    'type_params': ['V'],
-    'params': [
-      ('nextDecodeFn', 'T => DecodeFn<V, T>'),
-    ],
-    'return_type': 'Decoder<V>',
-    'markdown': """
-      Chain together the current decoder with the given decode function. The given function will only get called after the current decoder accepts an input.
-
-      The given "next" decoding function will thus be able to make more assumptions about its input value, i.e. it can know what type the input value is (`T` instead of ``unknown``).
-
-      This is an advanced decoder, typically only useful for authors of decoders. It's not recommended to rely on this decoder directly for normal usage.  In most cases, `.transform()` is what you'll want instead.
-    """,
-  },
-
-  'transform': {
-    'type_params': ['V'],
-    'params': [
-        ('transformFn', '(T) => V'),
-    ],
-    'return_type': 'Decoder<V>',
-    'markdown': """
-      Accepts any value the given decoder accepts, and on success, will call the given function **on the decoded result**. If the transformation function throws an error, the whole decoder will fail using the error message as the failure reason.
-
-      ```typescript
-      const upper = string.transform((s) => s.toUpperCase());
-
-      // 👍
-      upper.verify('foo') === 'FOO'
-
-      // 👎
-      upper.verify(4);  // throws
-      ```
-    """,
-  },
-
   'describe': {
     'params': [
         ('message', 'string'),
@@ -1301,6 +1286,25 @@ DECODER_METHODS = {
       );
       const vowel = decoder.describe('Must be vowel');
       ```
+    """,
+  },
+
+  'then': {
+    'type_params': ['V'],
+    'params': [
+      ('next', 'DecodeFn<V, T>'),
+    ],
+    'return_type': 'Decoder<V>',
+    'markdown': """
+      Chain together the current decoder with another.
+
+      First, the current decoder must accept the input. If so, it will pass the successfully decoded result to the given ``next`` function to further decide whether or not the value should get accepted or rejected.
+
+      The argument to `.then()` is a decoding function, just like one you would pass to `define()`. The key difference with `define()` is that `define()` must always assume an ``unknown`` input, whereas with a `.then()` call the provided ``next`` function will receive a ``T`` as its input. This will allow the function to make a stronger assumption about its input.
+
+      If it helps, you can think of `define(nextFn)` as equivalent to `unknown.then(nextFn)`.
+
+      This is an advanced, low-level, decoder. It's not recommended to reach for this low-level construct when implementing custom decoders. Most cases can be covered by `.transform()` or `.and()`.
     """,
   },
 }

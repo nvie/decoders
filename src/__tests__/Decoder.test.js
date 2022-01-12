@@ -4,10 +4,10 @@ import { formatInline, formatShort } from '../format';
 import { number } from '../lib/numbers';
 import { string } from '../lib/strings';
 
-describe('.chain', () => {
+describe('.then', () => {
     const hex =
         // We already know how to decode strings...
-        string.chain(
+        string.then(
             // We'll try to parse it as an hex int, but if it fails, we'll
             // return Err, otherwise Ok
             (s, accept, reject) => {

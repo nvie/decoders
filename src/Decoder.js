@@ -1,7 +1,7 @@
 // @flow strict
 
-import { andThen, err, ok } from './result';
 import { annotate } from './annotate';
+import { err, ok } from './result';
 import { formatInline } from './format';
 import type { Annotation } from './annotate';
 import type { Result } from './result';
@@ -32,13 +32,34 @@ export type DecodeFn<T, I = mixed> = (
 export type DecoderType<D> = $Call<<T>(Decoder<T>) => T, D>;
 
 export type Decoder<T> = {|
-    +decode: (blob: mixed) => DecodeResult<T>,
-    +verify: (blob: mixed, formatterFn?: (Annotation) => string) => T,
-    +and: (predicateFn: (value: T) => boolean, message: string) => Decoder<T>,
-    +transform: <V>(transformFn: (value: T) => V) => Decoder<V>,
-    +describe: (message: string) => Decoder<T>,
-    +chain: <V>(nextDecodeFn: DecodeFn<V, T>) => Decoder<V>,
+    decode(blob: mixed): DecodeResult<T>,
+    verify(blob: mixed, formatterFn?: (Annotation) => string): T,
+    and(predicateFn: (value: T) => boolean, message: string): Decoder<T>,
+    transform<V>(transformFn: (value: T) => V): Decoder<V>,
+    describe(message: string): Decoder<T>,
+    then<V>(next: DecodeFn<V, T>): Decoder<V>,
+
+    // Experimental APIs (please don't rely on these yet)
+    peek_UNSTABLE<V>(next: DecodeFn<V, [mixed, T]>): Decoder<V>,
 |};
+
+function andThen<A, B, E>(
+    r: Result<A, E>,
+    callback: (value: A) => Result<B, E>,
+): Result<B, E> {
+    return r.ok ? callback(r.value) : r;
+}
+
+function noThrow<T, V>(fn: (value: T) => V): (T) => DecodeResult<V> {
+    return (t) => {
+        try {
+            const v = fn(t);
+            return ok(v);
+        } catch (e) {
+            return err(annotate(t, e instanceof Error ? e.message : String(e)));
+        }
+    };
+}
 
 /**
  * Build a Decoder<T> using the given decoding function. A valid decoding
@@ -58,6 +79,9 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
             err(typeof msg === 'string' ? annotate(blob, msg) : msg),
         );
 
+    const then = <V>(next: DecodeFn<V, T>): Decoder<V> =>
+        define((blob, accV, rejV) => andThen(decode(blob), (t) => next(t, accV, rejV)));
+
     return Object.freeze({
         decode,
 
@@ -73,10 +97,8 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
         },
 
         and(predicateFn: (value: T) => boolean, message: string): Decoder<T> {
-            return define((blob, accept, reject) =>
-                andThen(decode(blob), (value) =>
-                    predicateFn(value) ? accept(value) : reject(annotate(value, message)),
-                ),
+            return then((value, accT, rejT) =>
+                predicateFn(value) ? accT(value) : rejT(annotate(value, message)),
             );
         },
 
@@ -87,17 +109,7 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
          * using the error message as the failure reason.
          */
         transform<V>(transformFn: (T) => V): Decoder<V> {
-            return define((blob, accept, reject): DecodeResult<V> =>
-                andThen(decode(blob), (value) => {
-                    try {
-                        return accept(transformFn(value));
-                    } catch (e) {
-                        return reject(
-                            annotate(value, e instanceof Error ? e.message : String(e)),
-                        );
-                    }
-                }),
-            );
+            return then(noThrow(transformFn));
         },
 
         describe(message: string): Decoder<T> {
@@ -115,18 +127,44 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
         },
 
         /**
-         * Compose two decoders by passing the result of the first into the second.
-         * The second decoder may assume as its input type the output type of the first
-         * decoder (so it's not necessary to accept the typical "mixed").  This is
-         * useful for "narrowing down" the checks.  For example, if you want to write
-         * a decoder for positive numbers, you can compose it from an existing decoder
-         * for any number, and a decoder that, assuming a number, checks if it's
-         * positive.  Very often combined with the predicate() helper as the second
-         * argument.
+         * Chain together the current decoder with another.
+         *
+         * First, the current decoder must accept the input. If so, it will
+         * pass the successfully decoded result to the given ``next`` function
+         * to further decide whether or not the value should get accepted or
+         * rejected.
+         *
+         * The argument to `.then()` is a decoding function, just like one you
+         * would pass to `define()`. The key difference with `define()` is that
+         * `define()` must always assume an ``unknown`` input, whereas with
+         * a `.then()` call the provided ``next`` function will receive a ``T``
+         * as its input. This will allow the function to make a stronger
+         * assumption about its input.
+         *
+         * If it helps, you can think of `define(nextFn)` as equivalent to
+         * `unknown.then(nextFn)`.
+         *
+         * This is an advanced, low-level, decoder. It's not recommended to
+         * reach for this low-level construct when implementing custom
+         * decoders. Most cases can be covered by `.transform()` or `.and()`.
          */
-        chain<V>(nextDecodeFn: DecodeFn<V, T>): Decoder<V> {
-            return define((blob, accept, reject) =>
-                andThen(decode(blob), (value) => nextDecodeFn(value, accept, reject)),
+        then,
+
+        /**
+         * WARNING: This is an EXPERIMENTAL API that may likely change in the
+         * future. Please DO NOT rely on it.
+         *
+         * Chain together the current decoder with another, but also pass along
+         * the original input.
+         *
+         * This is like `.then()`, but instead of this function receiving just
+         * the decoded result ``T``, it also receives the original input.
+         *
+         * This is an advanced, low-level, decoder.
+         */
+        peek_UNSTABLE<V>(next: DecodeFn<V, [mixed, T]>): Decoder<V> {
+            return define((blob, accV, rejV) =>
+                andThen(decode(blob), (t) => next([blob, t], accV, rejV)),
             );
         },
     });

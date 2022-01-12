@@ -120,7 +120,10 @@ string.verify('dummy', formatInline);
 string.verify('dummy', formatShort);
 
 // $ExpectType Decoder<number>
-string.chain((value: string) => ok(value.length));
+string.then((value: string) => ok(value.length));
+
+// $ExpectType Decoder<number>
+string.peek(([blob, value]) => ok(value.length));
 
 // $ExpectType Decoder<string>
 string.and((s) => s.startsWith('x'), 'Must start with x');

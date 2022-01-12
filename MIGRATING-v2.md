@@ -114,12 +114,12 @@ tree-shake unused methods from your bundle.
 Suggested changes:
 
 ```typescript
-import { andThen, err, ok } from 'decoders/result';
+import { err, ok } from 'decoders/result';
 ```
 
 | Replace usage of          | With ✨                                         |
 | ------------------------- | ----------------------------------------------- |
-| `result.andThen()`        | `andThen(result)`                               |
+| `result.andThen(f)`       | `result.ok ? f(result.value) : result`          |
 | `result.dispatch(f, g)`   | `result.ok ? f(result.value) : g(result.error)` |
 | `result.errValue()`       | `result.error`                                  |
 | `result.expect()`         | _removed_                                       |

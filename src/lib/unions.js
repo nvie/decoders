@@ -1,6 +1,5 @@
 // @flow strict
 
-import { andThen } from '../result';
 import { define } from '../Decoder';
 import { indent, summarize } from '../_utils';
 import { object } from './objects';
@@ -144,16 +143,13 @@ export function taggedUnion<O: { +[field: string]: Decoder<_Any>, ... }>(
     field: string,
     mapping: O,
 ): Decoder<$Values<$ObjMap<O, <T>(Decoder<T>) => T>>> {
-    const base = object({
+    const base: Decoder<string> = object({
         [field]: prep(String, oneOf(Object.keys(mapping))),
+    }).transform((o) => o[field]);
+    return base.peek_UNSTABLE(([blob, key]) => {
+        const decoder = mapping[key];
+        return decoder.decode(blob);
     });
-    return define((blob) =>
-        andThen(base.decode(blob), (baseObj) => {
-            const decoderName = baseObj[field];
-            const decoder = mapping[decoderName];
-            return decoder.decode(blob);
-        }),
-    );
 }
 
 export const dispatch: <O: { +[field: string]: Decoder<_Any>, ... }>(
