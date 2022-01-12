@@ -6,18 +6,6 @@ import type { _Any } from '../_utils';
 import type { Annotation } from '../annotate';
 import type { Decoder, DecodeResult } from '../Decoder';
 
-function isPojo(o: mixed): boolean %checks {
-    return (
-        o !== null &&
-        o !== undefined &&
-        typeof o === 'object' &&
-        // This still seems to be the only reliable way to determine whether
-        // something is a pojo... ¯\_(ツ)_/¯
-        // $FlowFixMe[method-unbinding]
-        Object.prototype.toString.call(o) === '[object Object]'
-    );
-}
-
 function subtract(xs: Set<string>, ys: Set<string>): Set<string> {
     const result = new Set();
     xs.forEach((x) => {
@@ -33,7 +21,13 @@ function subtract(xs: Set<string>, ys: Set<string>): Set<string> {
  * values further.
  */
 export const pojo: Decoder<{| [string]: mixed |}> = define((blob, accept, reject) =>
-    isPojo(blob)
+    blob !== null &&
+    blob !== undefined &&
+    typeof blob === 'object' &&
+    // This still seems to be the only reliable way to determine whether
+    // something is a pojo... ¯\_(ツ)_/¯
+    // $FlowFixMe[method-unbinding]
+    Object.prototype.toString.call(blob) === '[object Object]'
         ? accept(
               // NOTE:
               // Since Flow 0.98, typeof o === 'object' refines to
