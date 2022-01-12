@@ -169,7 +169,7 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
         then,
 
         /**
-         * WARNING: This is an EXPERIMENTAL API that may likely change in the
+         * WARNING: This is an EXPERIMENTAL API that will likely change in the
          * future. Please DO NOT rely on it.
          *
          * Chain together the current decoder with another, but also pass along
