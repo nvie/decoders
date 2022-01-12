@@ -141,13 +141,13 @@ export function exact<O: { +[field: string]: Decoder<_Any>, ... }>(
     const allowedKeys = new Set(Object.keys(decodersByKey));
 
     // Check the inputted object for any unexpected extra keys
-    const checked = pojo.then((plainObj, accept, reject) => {
+    const checked = pojo.reject((plainObj) => {
         const actualKeys = new Set(Object.keys(plainObj));
         const extraKeys = subtract(actualKeys, allowedKeys);
-        if (extraKeys.size > 0) {
-            return reject(`Unexpected extra keys: ${Array.from(extraKeys).join(', ')}`);
-        }
-        return accept(plainObj);
+        return extraKeys.size > 0
+            ? `Unexpected extra keys: ${Array.from(extraKeys).join(', ')}`
+            : // Don't reject
+              null;
     });
 
     // Defer to the "object" decoder for doing the real decoding work.  Since

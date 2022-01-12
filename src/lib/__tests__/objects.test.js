@@ -17,14 +17,15 @@ describe('objects', () => {
             name: 'test',
         });
 
-        // Superfluous keys are just ignored
-        expect(decoder.verify({ id: 1, name: 'test', superfluous: 'abundance' })).toEqual(
-            { id: 1, name: 'test' },
-        );
+        // Unexpected extra keys are just ignored
+        expect(decoder.verify({ id: 1, name: 'test', extra: 'abundance' })).toEqual({
+            id: 1,
+            name: 'test',
+        });
     });
 
-    it('decodes objects and fields (ignore superfluous fields)', () => {
-        // Extra (unwanted) keys are ignored
+    it('decodes objects and fields (ignore unknown fields)', () => {
+        // Unexpected extra keys are ignored
         const decoder = object({
             id: number,
             name: string,
@@ -139,7 +140,7 @@ describe('exact objects', () => {
         const decoder = exact({ id: number, name: string });
         expect(() =>
             decoder.verify({ id: 1, name: 'test', superfluous: 'abundance' }),
-        ).toThrow('Superfluous keys');
+        ).toThrow('Unexpected extra keys');
     });
 
     it('retains extra hardcoded fields', () => {
@@ -160,10 +161,10 @@ describe('exact objects', () => {
         });
         expect(() =>
             decoder.verify({ id: 1, name: 'test', superfluous: 'abundance' }),
-        ).toThrow('Superfluous keys');
+        ).toThrow('Unexpected extra keys');
         expect(() =>
             decoder.verify({ id: 1, name: 'test', extra: 42, superfluous: 'abundance' }),
-        ).toThrow('Superfluous keys');
+        ).toThrow('Unexpected extra keys');
     });
 
     it('errors on non-objects', () => {
