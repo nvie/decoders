@@ -1268,6 +1268,38 @@ DECODER_METHODS = {
     """,
   },
 
+  'reject': {
+    'params': [
+      ('rejectFn', 'T => string | null'),
+    ],
+    'return_type': 'Decoder<T>',
+    'markdown': """
+      Adds an extra predicate to a decoder. The new decoder is like the original decoder, but only accepts values that aren't rejected by the given function.
+
+      The given function can return `null` to accept the decoded value, or return a specific error message to reject.
+
+      Unlike `.refine()`, you can use this function to return a dynamic error message.
+
+      ```typescript
+      const decoder = pojo
+        .reject(
+          obj => {
+            const badKeys = Object.keys(obj).filter(key => key.startsWith('_'));
+            return badKeys.length > 0
+              ? `Disallowed keys: ${badKeys.join(', ')}`
+              : null;
+          }
+        );
+
+      // 👍
+      decoder.verify({ id: 123, name: 'Vincent' }) === { id: 123, name: 'Vincent' };
+
+      // 👎
+      decoder.verify({ id: 123, _name: 'Vincent'  })   // throws: "Disallowed keys: _name"
+      ```
+    """,
+  },
+
   'describe': {
     'params': [
         ('message', 'string'),

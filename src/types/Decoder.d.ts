@@ -15,6 +15,7 @@ export interface Decoder<T> {
     verify(blob: unknown, formatterFn?: (ann: Annotation) => string): T;
     refine<N extends T>(predicate: (value: T) => value is N, msg: string): Decoder<N>;
     refine(predicate: (value: T) => boolean, msg: string): Decoder<T>;
+    reject(rejectFn: (value: T) => string | Annotation | null): Decoder<T>;
     transform<V>(transformFn: (value: T) => V): Decoder<V>;
     describe(message: string): Decoder<T>;
     then<V>(nextDecodeFn: DecodeFn<V, T>): Decoder<V>;

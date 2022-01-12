@@ -34,7 +34,9 @@ export type DecoderType<D> = $Call<<T>(Decoder<T>) => T, D>;
 export type Decoder<T> = {|
     decode(blob: mixed): DecodeResult<T>,
     verify(blob: mixed, formatterFn?: (Annotation) => string): T,
-    refine(predicateFn: (value: T) => boolean, message: string): Decoder<T>,
+    refine(predicateFn: (value: T) => boolean, errmsg: string): Decoder<T>,
+    // reject(invertedPredicateFn: (value: T) => boolean, errmsg: string): Decoder<T>,
+    reject(rejectFn: (value: T) => string | Annotation | null): Decoder<T>,
     transform<V>(transformFn: (value: T) => V): Decoder<V>,
     describe(message: string): Decoder<T>,
     then<V>(next: DecodeFn<V, T>): Decoder<V>,
@@ -82,6 +84,15 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
     const then = <V>(next: DecodeFn<V, T>): Decoder<V> =>
         define((blob, accV, rejV) => andThen(decode(blob), (t) => next(t, accV, rejV)));
 
+    const reject = (rejectFn: (value: T) => string | Annotation | null): Decoder<T> => {
+        return then((value, accT, rejT) => {
+            const errmsg = rejectFn(value);
+            return errmsg === null
+                ? accT(value)
+                : rejT(typeof errmsg === 'string' ? annotate(value, errmsg) : errmsg);
+        });
+    };
+
     return Object.freeze({
         decode,
 
@@ -96,11 +107,17 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
             }
         },
 
-        refine(predicateFn: (value: T) => boolean, message: string): Decoder<T> {
-            return then((value, accT, rejT) =>
-                predicateFn(value) ? accT(value) : rejT(annotate(value, message)),
+        refine(predicateFn: (value: T) => boolean, errmsg: string): Decoder<T> {
+            return reject((value) =>
+                predicateFn(value)
+                    ? // Don't reject
+                      null
+                    : // Reject with the given error message
+                      errmsg,
             );
         },
+
+        reject,
 
         /**
          * Accepts any value the given decoder accepts, and on success, will

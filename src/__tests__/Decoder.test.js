@@ -1,7 +1,9 @@
 // @flow strict
 
+import { annotate } from '../annotate';
 import { formatInline, formatShort } from '../format';
 import { number } from '../lib/numbers';
+import { pojo } from '../lib/objects';
 import { string } from '../lib/strings';
 
 describe('.then', () => {
@@ -61,6 +63,40 @@ describe('.transform', () => {
 
 describe('.refine', () => {
     const odd = number.refine((n) => n % 2 !== 0, 'Must be odd');
+
+    it('valid', () => {
+        expect(odd.decode(0).ok).toEqual(false);
+        expect(odd.decode(1).ok).toEqual(true);
+        expect(odd.decode(2).ok).toEqual(false);
+        expect(odd.decode(3).ok).toEqual(true);
+        expect(odd.decode(4).ok).toEqual(false);
+        expect(odd.decode(5).ok).toEqual(true);
+        expect(odd.decode(-1).ok).toEqual(true);
+        expect(odd.decode(-2).ok).toEqual(false);
+        expect(odd.decode(-3).ok).toEqual(true);
+        expect(odd.decode(-4).ok).toEqual(false);
+        expect(odd.decode(-5).ok).toEqual(true);
+    });
+});
+
+describe('.reject (simple)', () => {
+    const decoder = pojo.reject((obj) => {
+        const badKeys = Object.keys(obj).filter((key) => key.startsWith('_'));
+        return badKeys.length > 0 ? `Disallowed keys: ${badKeys.join(', ')}` : null;
+    });
+
+    it('valid', () => {
+        expect(decoder.decode({ id: 123, name: 'Bob' }).ok).toEqual(true);
+        expect(() => decoder.verify({ id: 123, _x: 123, _y: 'Bob' })).toThrow(
+            /Disallowed keys: _x, _y/,
+        );
+    });
+});
+
+describe('.reject (w/ Annotation)', () => {
+    const odd = number.reject((n) =>
+        n % 2 === 0 ? annotate('***', "Can't show ya, but this must be odd") : null,
+    );
 
     it('valid', () => {
         expect(odd.decode(0).ok).toEqual(false);

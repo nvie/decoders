@@ -134,6 +134,13 @@ unknown.refine((foo): foo is string => typeof foo === 'string', 'Is string');
 // $ExpectType Decoder<"a" | "b">
 string.refine((foo: string): foo is 'a' | 'b' => foo === 'a' || foo === 'b', 'Is a or b');
 
+// $ExpectType Decoder<number[]>
+array(number).reject((numbers) =>
+    numbers.reduce((acc, n) => acc + n) > 0
+        ? `Sum of ${numbers.join(' + ')} must be positive`
+        : null,
+);
+
 prep(Number, string); // $ExpectType Decoder<string>
 prep(String, string); // $ExpectType Decoder<string>
 prep(Number, number); // $ExpectType Decoder<number>

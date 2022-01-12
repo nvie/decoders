@@ -34,9 +34,10 @@ for name in DECODER_METHODS:
 - [`.decode()`](/Decoder.html#decode)
 - [`.transform()`](/Decoder.html#transform)
 - [`.refine()`](/Decoder.html#refine)
+- [`.reject()`](/Decoder.html#reject)
 - [`.describe()`](/Decoder.html#describe)
 - [`.then()`](/Decoder.html#then)
-<!--[[[end]]] (checksum: baf6c32c0515a7f9a115dece9d130555) -->
+<!--[[[end]]] (checksum: 65516e5ec3782afbbbe223d7162844f4) -->
 
 <!--[[[cog
 for (name, info) in DECODER_METHODS.items():
@@ -57,7 +58,7 @@ for (name, info) in DECODER_METHODS.items():
 ---
 
 <a name="verify" href="#verify">#</a>
-**.verify**(blob: <i style="color: #267f99">mixed</i>): <i style="color: #267f99">T</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L88-L97 'Source')<br />
+**.verify**(blob: <i style="color: #267f99">mixed</i>): <i style="color: #267f99">T</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L99-L108 'Source')<br />
 
 Verified the (raw/untrusted/unknown) input and either accepts or rejects it. When accepted, returns the decoded `T` value directly. Otherwise fail with a runtime error.
 
@@ -74,7 +75,7 @@ number.verify('hi');  // throws
 ---
 
 <a name="decode" href="#decode">#</a>
-**.decode**(blob: <i style="color: #267f99">mixed</i>): <i style="color: #267f99">DecodeResult&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L77-L80 'Source')<br />
+**.decode**(blob: <i style="color: #267f99">mixed</i>): <i style="color: #267f99">DecodeResult&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L79-L82 'Source')<br />
 
 Validates the raw/untrusted/unknown input and either accepts or rejects it.
 
@@ -93,7 +94,7 @@ number.decode('hi');  // { ok: false, error: { type: 'scalar', value: 'hi', text
 ---
 
 <a name="transform" href="#transform">#</a>
-**.transform**&lt;<i style="color: #267f99">V</i>&gt;(transformFn: <i style="color: #267f99">(T) =&gt; V</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;V&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L111-L113 'Source')<br />
+**.transform**&lt;<i style="color: #267f99">V</i>&gt;(transformFn: <i style="color: #267f99">(T) =&gt; V</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;V&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L128-L130 'Source')<br />
 
 Accepts any value the given decoder accepts, and on success, will call the given function **on the decoded result**. If the transformation function throws an error, the whole decoder will fail using the error message as the failure reason.
 
@@ -110,7 +111,7 @@ upper.verify(4);  // throws
 ---
 
 <a name="refine" href="#refine">#</a>
-**.refine**(predicate: <i style="color: #267f99">T =&gt; boolean</i>, message: <i style="color: #267f99">string</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L99-L103 'Source')<br />
+**.refine**(predicate: <i style="color: #267f99">T =&gt; boolean</i>, message: <i style="color: #267f99">string</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L110-L118 'Source')<br />
 
 Adds an extra predicate to a decoder. The new decoder is like the original decoder, but only accepts values that also meet the predicate.
 
@@ -132,8 +133,37 @@ In TypeScript, if you provide a predicate that also is a [type predicate](https:
 
 ---
 
+<a name="reject" href="#reject">#</a>
+**.reject**(rejectFn: <i style="color: #267f99">T =&gt; string | null</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L87-L94 'Source')<br />
+
+Adds an extra predicate to a decoder. The new decoder is like the original decoder, but only accepts values that aren't rejected by the given function.
+
+The given function can return `null` to accept the decoded value, or return a specific error message to reject.
+
+Unlike [`.refine()`](/Decoder.html#refine), you can use this function to return a dynamic error message.
+
+```typescript
+const decoder = pojo
+  .reject(
+    obj => {
+      const badKeys = Object.keys(obj).filter(key => key.startsWith('_'));
+      return badKeys.length > 0
+        ? `Disallowed keys: ${badKeys.join(', ')}`
+        : null;
+    }
+  );
+
+// 👍
+decoder.verify({ id: 123, name: 'Vincent' }) === { id: 123, name: 'Vincent' };
+
+// 👎
+decoder.verify({ id: 123, _name: 'Vincent'  })   // throws: "Disallowed keys: _name"
+```
+
+---
+
 <a name="describe" href="#describe">#</a>
-**.describe**(message: <i style="color: #267f99">string</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L115-L127 'Source')<br />
+**.describe**(message: <i style="color: #267f99">string</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L132-L144 'Source')<br />
 
 Uses the given decoder, but will use an alternative error message in case it rejects. This can be used to simplify or shorten otherwise long or low-level/technical errors.
 
@@ -151,7 +181,7 @@ const vowel = decoder.describe('Must be vowel');
 ---
 
 <a name="then" href="#then">#</a>
-**.then**&lt;<i style="color: #267f99">V</i>&gt;(next: <i style="color: #267f99">DecodeFn&lt;V, T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;V&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L82-L83 'Source')<br />
+**.then**&lt;<i style="color: #267f99">V</i>&gt;(next: <i style="color: #267f99">DecodeFn&lt;V, T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;V&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L84-L85 'Source')<br />
 
 Chain together the current decoder with another.
 
@@ -163,5 +193,5 @@ If it helps, you can think of `define(nextFn)` as equivalent to `unknown.then(ne
 
 This is an advanced, low-level, decoder. It's not recommended to reach for this low-level construct when implementing custom decoders. Most cases can be covered by [`.transform()`](/Decoder.html#transform) or [`.refine()`](/Decoder.html#refine).
 
-<!--[[[end]]] (checksum: 2cb20a9b714615368231d00e5aa5a195)-->
+<!--[[[end]]] (checksum: a27a0ad99d16ec9ee4afae465708b15d)-->
 <!-- prettier-ignore-end -->
