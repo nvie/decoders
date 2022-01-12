@@ -10,7 +10,7 @@ export type ObjectDecoderType<T> = AllowImplicit<{
 export const pojo: Decoder<{ [key: string]: unknown }>;
 
 export function object<O extends { [key: string]: Decoder<any> }>(
-    mapping: O,
+    decodersByKey: O,
 ): Decoder<{ [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] }>;
 //         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 //         This is basically just equivalent to:
@@ -21,13 +21,13 @@ export function object<O extends { [key: string]: Decoder<any> }>(
 //         work with while developing.
 
 export function exact<O extends { [key: string]: Decoder<any> }>(
-    mapping: O,
+    decodersByKey: O,
 ): Decoder<{ [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] }>;
 //         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 //         Ditto (see above)
 
 export function inexact<O extends { [key: string]: Decoder<any> }>(
-    mapping: O,
+    decodersByKey: O,
 ): Decoder<
     { [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] } & {
         [extra: string]: unknown;

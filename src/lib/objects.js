@@ -53,9 +53,9 @@ export const pojo: Decoder<{| [string]: mixed |}> = define((blob, accept, reject
  * exist on the input object are ignored and will not be returned.
  */
 export function object<O: { +[field: string]: Decoder<_Any>, ... }>(
-    mapping: O,
+    decodersByKey: O,
 ): Decoder<$ObjMap<O, <T>(Decoder<T>) => T>> {
-    const known = new Set(Object.keys(mapping));
+    const known = new Set(Object.keys(decodersByKey));
     return pojo.then((blob, accept, reject) => {
         const actual = new Set(Object.keys(blob));
 
@@ -68,8 +68,8 @@ export function object<O: { +[field: string]: Decoder<_Any>, ... }>(
         let record = {};
         let errors: { [key: string]: Annotation } | null = null;
 
-        Object.keys(mapping).forEach((key) => {
-            const decoder = mapping[key];
+        Object.keys(decodersByKey).forEach((key) => {
+            const decoder = decodersByKey[key];
             const rawValue = blob[key];
             const result: DecodeResult<mixed> = decoder.decode(rawValue);
 
@@ -133,10 +133,10 @@ export function object<O: { +[field: string]: Decoder<_Any>, ... }>(
  * not specified explicitly.
  */
 export function exact<O: { +[field: string]: Decoder<_Any>, ... }>(
-    mapping: O,
+    decodersByKey: O,
 ): Decoder<$ObjMap<$Exact<O>, <T>(Decoder<T>) => T>> {
     // Check the inputted object for any superfluous keys
-    const allowed = new Set(Object.keys(mapping));
+    const allowed = new Set(Object.keys(decodersByKey));
     const checked = pojo.then((blob, accept, reject) => {
         const actual = new Set(Object.keys(blob));
         const superfluous = subtract(actual, allowed);
@@ -150,7 +150,7 @@ export function exact<O: { +[field: string]: Decoder<_Any>, ... }>(
     // we made sure there are no superfluous keys in this structure, it's now
     // safe to force-cast it to an $Exact<> type.
     // prettier-ignore
-    const decoder = ((object(mapping): _Any): Decoder<$ObjMap<$Exact<O>, <T>(Decoder<T>) => T>>);
+    const decoder = ((object(decodersByKey): _Any): Decoder<$ObjMap<$Exact<O>, <T>(Decoder<T>) => T>>);
     return checked.then(decoder.decode);
 }
 
@@ -159,13 +159,13 @@ export function exact<O: { +[field: string]: Decoder<_Any>, ... }>(
  * unvalidated that will thus be of `unknown` type statically.
  */
 export function inexact<O: { +[field: string]: Decoder<_Any> }>(
-    mapping: O,
+    decodersByKey: O,
 ): Decoder<$ObjMap<O, <T>(Decoder<T>) => T> & { +[string]: mixed }> {
     return pojo.then((blob) => {
         const allkeys = new Set(Object.keys(blob));
-        const decoder = object(mapping).transform(
+        const decoder = object(decodersByKey).transform(
             (safepart: $ObjMap<O, <T>(Decoder<T>) => T>) => {
-                const safekeys = new Set(Object.keys(mapping));
+                const safekeys = new Set(Object.keys(decodersByKey));
 
                 // To account for hard-coded keys that aren't part of the input
                 safekeys.forEach((k) => allkeys.add(k));
