@@ -31,7 +31,7 @@ export const nonEmptyString: Decoder<string> = regex(/\S/, 'Must be non-empty st
  * Accepts and returns strings that match the given regular expression.
  */
 export function regex(regex: RegExp, msg: string): Decoder<string> {
-    return string.and((s) => regex.test(s), msg);
+    return string.refine((s) => regex.test(s), msg);
 }
 
 /**
@@ -56,7 +56,7 @@ export const url: Decoder<URL> = either(
  * Accepts strings that are valid URLs, but only HTTPS ones. Returns the value
  * as a URL instance.
  */
-export const httpsUrl: Decoder<URL> = url.and(
+export const httpsUrl: Decoder<URL> = url.refine(
     (value) => value.protocol === 'https:',
     'Must be an HTTPS URL',
 );
@@ -78,7 +78,7 @@ export const uuid: Decoder<string> = regex(
  */
 export const uuidv1: Decoder<string> =
     // https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_(date-time_and_MAC_address)
-    uuid.and((value) => value[14] === '1', 'Must be uuidv1');
+    uuid.refine((value) => value[14] === '1', 'Must be uuidv1');
 
 /**
  * Like `uuid`, but only accepts
@@ -87,4 +87,4 @@ export const uuidv1: Decoder<string> =
  */
 export const uuidv4: Decoder<string> =
     // https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)
-    uuid.and((value) => value[14] === '4', 'Must be uuidv4');
+    uuid.refine((value) => value[14] === '4', 'Must be uuidv4');

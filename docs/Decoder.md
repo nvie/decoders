@@ -33,10 +33,10 @@ for name in DECODER_METHODS:
 - [`.verify()`](/Decoder.html#verify)
 - [`.decode()`](/Decoder.html#decode)
 - [`.transform()`](/Decoder.html#transform)
-- [`.and()`](/Decoder.html#and)
+- [`.refine()`](/Decoder.html#refine)
 - [`.describe()`](/Decoder.html#describe)
 - [`.then()`](/Decoder.html#then)
-<!--[[[end]]] (checksum: 16d0c7b81fe7cc68e615bbc1d37a8041) -->
+<!--[[[end]]] (checksum: baf6c32c0515a7f9a115dece9d130555) -->
 
 <!--[[[cog
 for (name, info) in DECODER_METHODS.items():
@@ -109,13 +109,13 @@ upper.verify(4);  // throws
 
 ---
 
-<a name="and" href="#and">#</a>
-**.and**(predicate: <i style="color: #267f99">T =&gt; boolean</i>, message: <i style="color: #267f99">string</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L99-L103 'Source')<br />
+<a name="refine" href="#refine">#</a>
+**.refine**(predicate: <i style="color: #267f99">T =&gt; boolean</i>, message: <i style="color: #267f99">string</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L99-L103 'Source')<br />
 
 Adds an extra predicate to a decoder. The new decoder is like the original decoder, but only accepts values that also meet the predicate.
 
 ```typescript
-const odd = number.and(
+const odd = number.refine(
   (n) => n % 2 !== 0,
   'Must be odd'
 );
@@ -161,7 +161,7 @@ The argument to [`.then()`](/Decoder.html#then) is a decoding function, just lik
 
 If it helps, you can think of `define(nextFn)` as equivalent to `unknown.then(nextFn)`.
 
-This is an advanced, low-level, decoder. It's not recommended to reach for this low-level construct when implementing custom decoders. Most cases can be covered by [`.transform()`](/Decoder.html#transform) or [`.and()`](/Decoder.html#and).
+This is an advanced, low-level, decoder. It's not recommended to reach for this low-level construct when implementing custom decoders. Most cases can be covered by [`.transform()`](/Decoder.html#transform) or [`.refine()`](/Decoder.html#refine).
 
-<!--[[[end]]] (checksum: d35639ce2bab35b98dc44e60de5d4218)-->
+<!--[[[end]]] (checksum: 2cb20a9b714615368231d00e5aa5a195)-->
 <!-- prettier-ignore-end -->

@@ -82,7 +82,7 @@ export function array<T>(decoder: Decoder<T>): Decoder<Array<T>> {
  * Like `array()`, but will reject arrays with 0 elements.
  */
 export function nonEmptyArray<T>(decoder: Decoder<T>): Decoder<Array<T>> {
-    return array(decoder).and((arr) => arr.length > 0, 'Must be non-empty array');
+    return array(decoder).refine((arr) => arr.length > 0, 'Must be non-empty array');
 }
 
 /**
@@ -93,7 +93,8 @@ export function set<T>(decoder: Decoder<T>): Decoder<Set<T>> {
     return array(decoder).transform((items) => new Set(items));
 }
 
-const ntuple = (n: number) => poja.and((arr) => arr.length === n, `Must be a ${n}-tuple`);
+const ntuple = (n: number) =>
+    poja.refine((arr) => arr.length === n, `Must be a ${n}-tuple`);
 
 // prettier-ignore
 interface TupleFuncSignature {

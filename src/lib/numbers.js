@@ -19,7 +19,7 @@ export const anyNumber: Decoder<number> = define((blob, accept, reject) =>
  * `NaN`,
  * or positive and negative `Infinity` will get rejected.
  */
-export const number: Decoder<number> = anyNumber.and(
+export const number: Decoder<number> = anyNumber.refine(
     (n) => Number.isFinite(n),
     'Number must be finite',
 );
@@ -27,7 +27,7 @@ export const number: Decoder<number> = anyNumber.and(
 /**
  * Accepts only finite whole numbers.
  */
-export const integer: Decoder<number> = number.and(
+export const integer: Decoder<number> = number.refine(
     (n) => Number.isInteger(n),
     'Number must be an integer',
 );
@@ -35,7 +35,7 @@ export const integer: Decoder<number> = number.and(
 /**
  * Accepts only positive finite numbers.
  */
-export const positiveNumber: Decoder<number> = number.and(
+export const positiveNumber: Decoder<number> = number.refine(
     (n) => n >= 0,
     'Number must be positive',
 );
@@ -43,7 +43,7 @@ export const positiveNumber: Decoder<number> = number.and(
 /**
  * Accepts only positive finite whole numbers.
  */
-export const positiveInteger: Decoder<number> = integer.and(
+export const positiveInteger: Decoder<number> = integer.refine(
     (n) => n >= 0,
     'Number must be positive',
 );

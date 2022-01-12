@@ -34,7 +34,7 @@ export type DecoderType<D> = $Call<<T>(Decoder<T>) => T, D>;
 export type Decoder<T> = {|
     decode(blob: mixed): DecodeResult<T>,
     verify(blob: mixed, formatterFn?: (Annotation) => string): T,
-    and(predicateFn: (value: T) => boolean, message: string): Decoder<T>,
+    refine(predicateFn: (value: T) => boolean, message: string): Decoder<T>,
     transform<V>(transformFn: (value: T) => V): Decoder<V>,
     describe(message: string): Decoder<T>,
     then<V>(next: DecodeFn<V, T>): Decoder<V>,
@@ -96,7 +96,7 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
             }
         },
 
-        and(predicateFn: (value: T) => boolean, message: string): Decoder<T> {
+        refine(predicateFn: (value: T) => boolean, message: string): Decoder<T> {
             return then((value, accT, rejT) =>
                 predicateFn(value) ? accT(value) : rejT(annotate(value, message)),
             );
@@ -146,7 +146,8 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
          *
          * This is an advanced, low-level, decoder. It's not recommended to
          * reach for this low-level construct when implementing custom
-         * decoders. Most cases can be covered by `.transform()` or `.and()`.
+         * decoders. Most cases can be covered by `.transform()` or
+         * `.refine()`.
          */
         then,
 

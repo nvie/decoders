@@ -126,13 +126,13 @@ string.then((value: string) => ok(value.length));
 string.peek(([blob, value]) => ok(value.length));
 
 // $ExpectType Decoder<string>
-string.and((s) => s.startsWith('x'), 'Must start with x');
+string.refine((s) => s.startsWith('x'), 'Must start with x');
 
 // $ExpectType Decoder<string>
-unknown.and((foo): foo is string => typeof foo === 'string', 'Is string');
+unknown.refine((foo): foo is string => typeof foo === 'string', 'Is string');
 
 // $ExpectType Decoder<"a" | "b">
-string.and((foo: string): foo is 'a' | 'b' => foo === 'a' || foo === 'b', 'Is a or b');
+string.refine((foo: string): foo is 'a' | 'b' => foo === 'a' || foo === 'b', 'Is a or b');
 
 prep(Number, string); // $ExpectType Decoder<string>
 prep(String, string); // $ExpectType Decoder<string>

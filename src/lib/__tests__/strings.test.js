@@ -103,7 +103,7 @@ describe('url', () => {
     });
 
     it('custom URL schemes', () => {
-        const decoder = url.and(
+        const decoder = url.refine(
             (value) => ['http:', 'git+ssh:', 'ftp:'].includes(value.protocol),
             'Must be http, git+ssh, or ftp URL',
         );

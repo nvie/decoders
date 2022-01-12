@@ -13,8 +13,8 @@ export type DecodeFn<T, I = unknown> = (
 export interface Decoder<T> {
     decode(blob: unknown): DecodeResult<T>;
     verify(blob: unknown, formatterFn?: (ann: Annotation) => string): T;
-    and<N extends T>(predicate: (value: T) => value is N, msg: string): Decoder<N>;
-    and(predicate: (value: T) => boolean, msg: string): Decoder<T>;
+    refine<N extends T>(predicate: (value: T) => value is N, msg: string): Decoder<N>;
+    refine(predicate: (value: T) => boolean, msg: string): Decoder<T>;
     transform<V>(transformFn: (value: T) => V): Decoder<V>;
     describe(message: string): Decoder<T>;
     then<V>(nextDecodeFn: DecodeFn<V, T>): Decoder<V>;

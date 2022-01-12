@@ -134,12 +134,12 @@ DECODERS = {
       httpsUrl.verify('git+ssh://user@github.com/foo/bar.git');  // throws, not HTTPS
       ```
 
-      **Tip!** If you need to limit URLs to different protocols than HTTP, you can do as the HTTPS decoder is implemented: by adding further conditions using an [`.and()`](#and) call.
+      **Tip!** If you need to limit URLs to different protocols than HTTP, you can do as the HTTPS decoder is implemented: by adding further conditions using an `.refine()` call.
 
       ```typescript
       import { url } from 'decoders';
 
-      const gitUrl: Decoder<URL> = url.and(
+      const gitUrl: Decoder<URL> = url.refine(
           (value) => value.protocol === 'git:',
           'Must be a git:// URL',
       );
@@ -1241,7 +1241,7 @@ DECODER_METHODS = {
     """,
   },
 
-  'and': {
+  'refine': {
     'params': [
       ('predicate', 'T => boolean'),
       ('message', 'string'),
@@ -1251,7 +1251,7 @@ DECODER_METHODS = {
       Adds an extra predicate to a decoder. The new decoder is like the original decoder, but only accepts values that also meet the predicate.
 
       ```typescript
-      const odd = number.and(
+      const odd = number.refine(
         (n) => n % 2 !== 0,
         'Must be odd'
       );
@@ -1304,7 +1304,7 @@ DECODER_METHODS = {
 
       If it helps, you can think of `define(nextFn)` as equivalent to `unknown.then(nextFn)`.
 
-      This is an advanced, low-level, decoder. It's not recommended to reach for this low-level construct when implementing custom decoders. Most cases can be covered by `.transform()` or `.and()`.
+      This is an advanced, low-level, decoder. It's not recommended to reach for this low-level construct when implementing custom decoders. Most cases can be covered by `.transform()` or `.refine()`.
     """,
   },
 }

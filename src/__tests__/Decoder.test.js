@@ -59,8 +59,8 @@ describe('.transform', () => {
     });
 });
 
-describe('.and', () => {
-    const odd = number.and((n) => n % 2 !== 0, 'Must be odd');
+describe('.refine', () => {
+    const odd = number.refine((n) => n % 2 !== 0, 'Must be odd');
 
     it('valid', () => {
         expect(odd.decode(0).ok).toEqual(false);
