@@ -151,11 +151,9 @@ export function exact<O: { +[field: string]: Decoder<_Any>, ... }>(
     });
 
     // Defer to the "object" decoder for doing the real decoding work.  Since
-    // we made sure there are no unexpected extra keys in this structure, it's
-    // now safe to force-cast it to an $Exact<> type.
-    // prettier-ignore
-    const decoder = ((object(decodersByKey): _Any): Decoder<$ObjMap<$Exact<O>, <T>(Decoder<T>) => T>>);
-    return checked.then(decoder.decode);
+    // we made sure there are no superfluous keys in this structure, it's now
+    // safe to force-cast it to an $Exact<> type.
+    return checked.then(object(decodersByKey).decode);
 }
 
 /**
