@@ -56,8 +56,8 @@ export function object<O: { +[field: string]: Decoder<_Any>, ... }>(
     decodersByKey: O,
 ): Decoder<$ObjMap<O, <T>(Decoder<T>) => T>> {
     const known = new Set(Object.keys(decodersByKey));
-    return pojo.then((blob, accept, reject) => {
-        const actual = new Set(Object.keys(blob));
+    return pojo.then((plainObj, accept, reject) => {
+        const actual = new Set(Object.keys(plainObj));
 
         // At this point, "missing" will also include all fields that may
         // validly be optional.  We'll let the underlying decoder decide and
@@ -70,7 +70,7 @@ export function object<O: { +[field: string]: Decoder<_Any>, ... }>(
 
         Object.keys(decodersByKey).forEach((key) => {
             const decoder = decodersByKey[key];
-            const rawValue = blob[key];
+            const rawValue = plainObj[key];
             const result: DecodeResult<mixed> = decoder.decode(rawValue);
 
             if (result.ok) {
@@ -107,7 +107,7 @@ export function object<O: { +[field: string]: Decoder<_Any>, ... }>(
         // object.  Lastly, any fields that are missing should be annotated on
         // the outer object itself.
         if (errors || missing.size > 0) {
-            let objAnn = annotateObject(blob);
+            let objAnn = annotateObject(plainObj);
 
             if (errors) {
                 objAnn = merge(objAnn, errors);
@@ -137,13 +137,13 @@ export function exact<O: { +[field: string]: Decoder<_Any>, ... }>(
 ): Decoder<$ObjMap<$Exact<O>, <T>(Decoder<T>) => T>> {
     // Check the inputted object for any superfluous keys
     const allowed = new Set(Object.keys(decodersByKey));
-    const checked = pojo.then((blob, accept, reject) => {
-        const actual = new Set(Object.keys(blob));
+    const checked = pojo.then((plainObj, accept, reject) => {
+        const actual = new Set(Object.keys(plainObj));
         const superfluous = subtract(actual, allowed);
         if (superfluous.size > 0) {
             return reject(`Superfluous keys: ${Array.from(superfluous).join(', ')}`);
         }
-        return accept(blob);
+        return accept(plainObj);
     });
 
     // Defer to the "object" decoder for doing the real decoding work.  Since
@@ -161,8 +161,8 @@ export function exact<O: { +[field: string]: Decoder<_Any>, ... }>(
 export function inexact<O: { +[field: string]: Decoder<_Any> }>(
     decodersByKey: O,
 ): Decoder<$ObjMap<O, <T>(Decoder<T>) => T> & { +[string]: mixed }> {
-    return pojo.then((blob) => {
-        const allkeys = new Set(Object.keys(blob));
+    return pojo.then((plainObj) => {
+        const allkeys = new Set(Object.keys(plainObj));
         const decoder = object(decodersByKey).transform(
             (safepart: $ObjMap<O, <T>(Decoder<T>) => T>) => {
                 const safekeys = new Set(Object.keys(decodersByKey));
@@ -178,13 +178,13 @@ export function inexact<O: { +[field: string]: Decoder<_Any> }>(
                             rv[k] = value;
                         }
                     } else {
-                        rv[k] = blob[k];
+                        rv[k] = plainObj[k];
                     }
                 });
                 return rv;
             },
         );
-        return decoder.decode(blob);
+        return decoder.decode(plainObj);
     });
 }
 
@@ -199,12 +199,12 @@ export function inexact<O: { +[field: string]: Decoder<_Any> }>(
  * a lookup table, or a cache.
  */
 export function dict<T>(decoder: Decoder<T>): Decoder<{ [string]: T }> {
-    return pojo.then((blob, accept, reject) => {
+    return pojo.then((plainObj, accept, reject) => {
         let rv: { [key: string]: T } = {};
         let errors: { [key: string]: Annotation } | null = null;
 
-        Object.keys(blob).forEach((key: string) => {
-            const value = blob[key];
+        Object.keys(plainObj).forEach((key: string) => {
+            const value = plainObj[key];
             const result = decoder.decode(value);
             if (result.ok) {
                 if (errors === null) {
@@ -220,7 +220,7 @@ export function dict<T>(decoder: Decoder<T>): Decoder<{ [string]: T }> {
         });
 
         if (errors !== null) {
-            return reject(merge(annotateObject(blob), errors));
+            return reject(merge(annotateObject(plainObj), errors));
         } else {
             return accept(rv);
         }
