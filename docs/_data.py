@@ -1031,25 +1031,25 @@ DECODERS = {
     'section': 'Utilities',
     'type_params': ['T'],
     'params': [
-      ('fn', '(blob: unknown, accept, reject) => DecodeResult<T>'),
+      ('fn', '(blob: unknown, ok, err) => DecodeResult<T>'),
     ],
     'return_type': 'Decoder<T>',
     'markdown': """
       Defines a new `Decoder<T>`, by implementing a custom accept function. The function receives three arguments:
 
       1. The raw/unknown input (aka your external data)
-      2. An ``accept()`` callback
-      3. A ``reject()`` callback
+      2. An ``ok()`` callback
+      3. A ``err()`` callback
 
       The expected return value should be a `DecodeResult<T>`, which can be created by calling one of the provided callback functions.
 
       ```typescript
       // NOTE: Please do NOT implement an uppercase decoder like this! 😇
       const uppercase: Decoder<string> = define(
-        (blob, accept, reject) =>
+        (blob, ok, err) =>
           (typeof blob === 'string')
-            ? accept(blob.toUpperCase())
-            : reject('I only accept strings as input')
+            ? ok(blob.toUpperCase())
+            : err('I only accept strings as input')
       );
 
       // 👍

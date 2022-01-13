@@ -27,7 +27,7 @@ from _lib import (
   source_link,
 )
 ]]]-->
-<!--[[[end]]] (checksum: d41d8cd98f00b204e9800998ecf8427e)-->
+<!--[[[end]]] (checksum: d41d8cd98f00b204e9800998ecf8427e) -->
 
 # API Reference
 
@@ -1115,23 +1115,23 @@ This is effectively equivalent to `either(A, B)`, but will provide better error 
 ---
 
 <a name="define" href="#define">#</a>
-**define**&lt;<i style="color: #267f99">T</i>&gt;(fn: <i style="color: #267f99">(blob: unknown, accept, reject) =&gt; DecodeResult&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L77-L228 'Source')
+**define**&lt;<i style="color: #267f99">T</i>&gt;(fn: <i style="color: #267f99">(blob: unknown, ok, err) =&gt; DecodeResult&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L77-L228 'Source')
 
 Defines a new `Decoder<T>`, by implementing a custom accept function. The function receives three arguments:
 
 1. The raw/unknown input (aka your external data)
-2. An ``accept()`` callback
-3. A ``reject()`` callback
+2. An ``ok()`` callback
+3. A ``err()`` callback
 
 The expected return value should be a `DecodeResult<T>`, which can be created by calling one of the provided callback functions.
 
 ```typescript
 // NOTE: Please do NOT implement an uppercase decoder like this! 😇
 const uppercase: Decoder<string> = define(
-  (blob, accept, reject) =>
+  (blob, ok, err) =>
     (typeof blob === 'string')
-      ? accept(blob.toUpperCase())
-      : reject('I only accept strings as input')
+      ? ok(blob.toUpperCase())
+      : err('I only accept strings as input')
 );
 
 // 👍
@@ -1240,5 +1240,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: aa60c7a9da89711e0ad14aa00bdb6177) -->
+<!--[[[end]]] (checksum: 1cad04fa0a82dae014b1bca5fa926ddd) -->
 <!-- prettier-ignore-end -->

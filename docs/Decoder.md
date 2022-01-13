@@ -200,5 +200,5 @@ If it helps, you can think of `define(nextFn)` as equivalent to `unknown.then(ne
 
 This is an advanced, low-level, decoder. It's not recommended to reach for this low-level construct when implementing custom decoders. Most cases can be covered by [`.transform()`](/Decoder.html#transform) or [`.refine()`](/Decoder.html#refine).
 
-<!--[[[end]]] (checksum: 8118f884a23a018e94fe9169f770d971)-->
+<!--[[[end]]] (checksum: 8118f884a23a018e94fe9169f770d971) -->
 <!-- prettier-ignore-end -->
