@@ -74,7 +74,7 @@ export function serializeValue(value: mixed): string {
             return `new Date(${JSON.stringify(valueAsDate.toISOString())})`;
         } else if (value instanceof Date) {
             // NOTE: Using `instanceof Date` is unreliable way of checking dates.
-            // If this case occurs (and it didn't pass the prior isDate())
+            // If this case occurs (and it didn't pass the prior asDate())
             // check, then this must be the case where it's an invalid date.
             return '(Invalid Date)';
         } else {

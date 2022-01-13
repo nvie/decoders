@@ -1,9 +1,8 @@
 // @flow strict
 
+import { asDate } from '../_utils';
 import { define } from '../Decoder';
-import { isDate } from '../_utils';
 import { regex } from './strings';
-import type { _Any } from '../_utils';
 import type { Decoder } from '../Decoder';
 
 // Only matches the shape.  This "over-matches" some values that still aren't
@@ -15,9 +14,10 @@ const iso8601_re =
 /**
  * Accepts and returns `Date` instances.
  */
-export const date: Decoder<Date> = define((blob, accept, reject) =>
-    isDate(blob) ? accept(((blob: _Any): Date)) : reject('Must be a Date'),
-);
+export const date: Decoder<Date> = define((blob, ok, err) => {
+    const date = asDate(blob);
+    return date !== null ? ok(date) : err('Must be a Date');
+});
 
 /**
  * Accepts [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings,

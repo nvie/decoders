@@ -9,27 +9,23 @@ export type _Any = any;
 export const INDENT = '  ';
 
 /**
- * `x instanceof Date` checks are unreliable across stack frames (that information
- * might get lost by the JS runtime), so we'll have to reside to more runtime
- * inspection checks.
- *
- * Taken from https://stackoverflow.com/a/44198641
- */
-export function isDate(value: mixed): boolean {
-    return (
-        !!value &&
-        // $FlowFixMe[method-unbinding]
-        Object.prototype.toString.call(value) === '[object Date]' &&
-        !isNaN(value)
-    );
-}
-
-/**
- * Is value is a valid Date instance, then return that.  If not, then return
+ * Is value is a valid Date instance, then return that. If not, then return
  * null.
  */
 export function asDate(value: mixed): Date | null {
-    return isDate(value) ? ((value: _Any): Date) : null;
+    //
+    // `x instanceof Date` checks are unreliable across stack frames (that
+    // information might get lost by the JS runtime), so we'll have to reside
+    // to more runtime inspection checks.
+    //
+    // Taken from https://stackoverflow.com/a/44198641
+    //
+    return !!value &&
+        // $FlowFixMe[method-unbinding]
+        Object.prototype.toString.call(value) === '[object Date]' &&
+        !isNaN(value)
+        ? ((value: _Any): Date)
+        : null;
 }
 
 export function isMultiline(s: string): boolean {
