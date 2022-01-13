@@ -11,11 +11,11 @@ import type { Decoder, DecodeResult } from '../Decoder';
  *
  * "poja" means "plain old JavaScript array", a play on `pojo()`.
  */
-export const poja: Decoder<Array<mixed>> = define((blob, accept, reject) => {
+export const poja: Decoder<Array<mixed>> = define((blob, ok, err) => {
     if (!Array.isArray(blob)) {
-        return reject('Must be an array');
+        return err('Must be an array');
     }
-    return accept(
+    return ok(
         // NOTE: Since Flow 0.98, Array.isArray() returns $ReadOnlyArray<mixed>
         // instead of Array<mixed>.  For rationale, see
         // https://github.com/facebook/flow/issues/7684.  In this case, we
@@ -40,8 +40,8 @@ function all<T>(
     blobs: $ReadOnlyArray<mixed>,
 
     // TODO: Make this less ugly
-    accept: (Array<T>) => DecodeResult<Array<T>>,
-    reject: (Annotation) => DecodeResult<Array<T>>,
+    ok: (Array<T>) => DecodeResult<Array<T>>,
+    err: (Annotation) => DecodeResult<Array<T>>,
 ): DecodeResult<Array<T>> {
     const results: Array<T> = [];
     for (let index = 0; index < items.length; ++index) {
@@ -62,19 +62,19 @@ function all<T>(
                 ),
             );
 
-            return reject(annotate(clone));
+            return err(annotate(clone));
         }
     }
-    return accept(results);
+    return ok(results);
 }
 
 /**
  * Accepts arrays of whatever the given decoder accepts.
  */
 export function array<T>(decoder: Decoder<T>): Decoder<Array<T>> {
-    return poja.then((blobs: $ReadOnlyArray<mixed>, accept, reject) => {
+    return poja.then((blobs: $ReadOnlyArray<mixed>, ok, err) => {
         const results = blobs.map(decoder.decode);
-        return all(results, blobs, accept, reject);
+        return all(results, blobs, ok, err);
     });
 }
 
@@ -111,7 +111,7 @@ interface TupleFuncSignature {
  * _n_ given decoders.
  */
 function _tuple(...decoders: $ReadOnlyArray<Decoder<mixed>>): Decoder<Array<mixed>> {
-    return ntuple(decoders.length).then((blobs, accept, reject) => {
+    return ntuple(decoders.length).then((blobs, ok, err) => {
         let allOk = true;
 
         const rvs = decoders.map((decoder, i) => {
@@ -126,11 +126,11 @@ function _tuple(...decoders: $ReadOnlyArray<Decoder<mixed>>): Decoder<Array<mixe
         });
 
         if (allOk) {
-            return accept(rvs);
+            return ok(rvs);
         } else {
             // If a decoder error has happened while unwrapping all the
             // results, try to construct a good error message
-            return reject(annotate(rvs));
+            return err(annotate(rvs));
         }
     });
 }

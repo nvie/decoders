@@ -18,8 +18,8 @@ const url_re =
 /**
  * Accepts and returns strings.
  */
-export const string: Decoder<string> = define((blob, accept, reject) =>
-    typeof blob === 'string' ? accept(blob) : reject('Must be string'),
+export const string: Decoder<string> = define((blob, ok, err) =>
+    typeof blob === 'string' ? ok(blob) : err('Must be string'),
 );
 
 /**

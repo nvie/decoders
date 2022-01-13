@@ -20,7 +20,7 @@ function subtract(xs: Set<string>, ys: Set<string>): Set<string> {
  * Accepts any "plain old JavaScript object", but doesn't validate its keys or
  * values further.
  */
-export const pojo: Decoder<{| [string]: mixed |}> = define((blob, accept, reject) =>
+export const pojo: Decoder<{| [string]: mixed |}> = define((blob, ok, err) =>
     blob !== null &&
     blob !== undefined &&
     typeof blob === 'object' &&
@@ -28,7 +28,7 @@ export const pojo: Decoder<{| [string]: mixed |}> = define((blob, accept, reject
     // something is a pojo... ¯\_(ツ)_/¯
     // $FlowFixMe[method-unbinding]
     Object.prototype.toString.call(blob) === '[object Object]'
-        ? accept(
+        ? ok(
               // NOTE:
               // Since Flow 0.98, typeof o === 'object' refines to
               //     {| +[string]: mixed |}
@@ -45,7 +45,7 @@ export const pojo: Decoder<{| [string]: mixed |}> = define((blob, accept, reject
               // https://thecodebarbarian.com/object-assign-vs-object-spread.html)
               { ...blob },
           )
-        : reject('Must be an object'),
+        : err('Must be an object'),
 );
 
 /**
@@ -58,7 +58,7 @@ export function object<O: { +[field: string]: Decoder<_Any>, ... }>(
     // Compute this set at decoder definition time
     const knownKeys = new Set(Object.keys(decodersByKey));
 
-    return pojo.then((plainObj, accept, reject) => {
+    return pojo.then((plainObj, ok, err) => {
         const actualKeys = new Set(Object.keys(plainObj));
 
         // At this point, "missingKeys" will also include all fields that may
@@ -123,10 +123,10 @@ export function object<O: { +[field: string]: Decoder<_Any>, ... }>(
                 objAnn = updateText(objAnn, `Missing ${pluralized}: ${errMsg}`);
             }
 
-            return reject(objAnn);
+            return err(objAnn);
         }
 
-        return accept(record);
+        return ok(record);
     });
 }
 
@@ -201,7 +201,7 @@ export function inexact<O: { +[field: string]: Decoder<_Any> }>(
  * a lookup table, or a cache.
  */
 export function dict<T>(decoder: Decoder<T>): Decoder<{ [string]: T }> {
-    return pojo.then((plainObj, accept, reject) => {
+    return pojo.then((plainObj, ok, err) => {
         let rv: { [key: string]: T } = {};
         let errors: { [key: string]: Annotation } | null = null;
 
@@ -222,9 +222,9 @@ export function dict<T>(decoder: Decoder<T>): Decoder<{ [string]: T }> {
         });
 
         if (errors !== null) {
-            return reject(merge(annotateObject(plainObj), errors));
+            return err(merge(annotateObject(plainObj), errors));
         } else {
-            return accept(rv);
+            return ok(rv);
         }
     });
 }

@@ -10,8 +10,8 @@ import type { Decoder } from '../Decoder';
  * to deliberately accept those, you'll likely want to use the `number` decoder
  * instead.
  */
-export const anyNumber: Decoder<number> = define((blob, accept, reject) =>
-    typeof blob === 'number' ? accept(blob) : reject('Must be number'),
+export const anyNumber: Decoder<number> = define((blob, ok, err) =>
+    typeof blob === 'number' ? ok(blob) : err('Must be number'),
 );
 
 /**

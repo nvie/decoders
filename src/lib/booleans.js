@@ -7,14 +7,14 @@ import type { Decoder } from '../Decoder';
 /**
  * Accepts and returns booleans.
  */
-export const boolean: Decoder<boolean> = define((blob, accept, reject) => {
-    return typeof blob === 'boolean' ? accept(blob) : reject('Must be boolean');
+export const boolean: Decoder<boolean> = define((blob, ok, err) => {
+    return typeof blob === 'boolean' ? ok(blob) : err('Must be boolean');
 });
 
 /**
  * Accepts anything and will return its “truth” value. Will never reject.
  */
-export const truthy: Decoder<boolean> = define((blob, accept) => accept(!!blob));
+export const truthy: Decoder<boolean> = define((blob, ok, _) => ok(!!blob));
 
 /**
  * Accepts numbers, but return their boolean representation.

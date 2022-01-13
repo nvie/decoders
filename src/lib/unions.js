@@ -65,7 +65,7 @@ function _either(...decoders: $ReadOnlyArray<Decoder<mixed>>): Decoder<mixed> {
         throw new Error('Pass at least one decoder to either()');
     }
 
-    return define((blob, _, reject) => {
+    return define((blob, _, err) => {
         // Collect errors here along the way
         const errors = [];
 
@@ -82,7 +82,7 @@ function _either(...decoders: $ReadOnlyArray<Decoder<mixed>>): Decoder<mixed> {
         const text =
             EITHER_PREFIX +
             errors.map((err) => nest(summarize(err).join('\n'))).join('\n');
-        return reject(text);
+        return err(text);
     });
 }
 
@@ -100,12 +100,12 @@ export const either: EitherDecoderSignatures = (_either: _Any);
  * values.
  */
 export function oneOf<T: Scalar>(constants: $ReadOnlyArray<T>): Decoder<T> {
-    return define((blob, accept, reject) => {
+    return define((blob, ok, err) => {
         const winner = constants.find((c) => c === blob);
         if (winner !== undefined) {
-            return accept(winner);
+            return ok(winner);
         }
-        return reject(
+        return err(
             `Must be one of ${constants
                 .map((value) => JSON.stringify(value))
                 .join(', ')}`,

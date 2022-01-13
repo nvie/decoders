@@ -7,15 +7,15 @@ import type { Decoder, Scalar } from '../Decoder';
 /**
  * Accepts and returns only the literal `null` value.
  */
-export const null_: Decoder<null> = define((blob, accept, reject) =>
-    blob === null ? accept(blob) : reject('Must be null'),
+export const null_: Decoder<null> = define((blob, ok, err) =>
+    blob === null ? ok(blob) : err('Must be null'),
 );
 
 /**
  * Accepts and returns only the literal `undefined` value.
  */
-export const undefined_: Decoder<void> = define((blob, accept, reject) =>
-    blob === undefined ? accept(blob) : reject('Must be undefined'),
+export const undefined_: Decoder<void> = define((blob, ok, err) =>
+    blob === undefined ? ok(blob) : err('Must be undefined'),
 );
 
 /**
@@ -32,11 +32,11 @@ export function nullable<T>(decoder: Decoder<T>): Decoder<null | T> {
     return either(null_, decoder);
 }
 
-const undefined_or_null: Decoder<null | void> = define((blob, accept, reject) =>
+const undefined_or_null: Decoder<null | void> = define((blob, ok, err) =>
     blob === undefined || blob === null
-        ? accept(blob)
+        ? ok(blob)
         : // Combine error message into a single line for readability
-          reject('Must be undefined or null'),
+          err('Must be undefined or null'),
 );
 
 /**
@@ -50,8 +50,8 @@ export function maybe<T>(decoder: Decoder<T>): Decoder<T | null | void> {
  * Accepts only the given constant value.
  */
 export function constant<T: Scalar>(value: T): Decoder<T> {
-    return define((blob, accept, reject) =>
-        blob === value ? accept(value) : reject(`Must be constant ${String(value)}`),
+    return define((blob, ok, err) =>
+        blob === value ? ok(value) : err(`Must be constant ${String(value)}`),
     );
 }
 
@@ -62,7 +62,7 @@ export function constant<T: Scalar>(value: T): Decoder<T> {
  * This is useful to manually add extra fields to object decoders.
  */
 export function always<T>(value: T): Decoder<T> {
-    return define((_, accept) => accept(value));
+    return define((blob /* ignored */, ok, _) => ok(value));
 }
 
 /**
@@ -77,7 +77,7 @@ export const hardcoded: <T>(T) => Decoder<T> = always;
  * course, the downside is that you won't know the type of the value statically
  * and you'll have to further refine it yourself.
  */
-export const unknown: Decoder<mixed> = define((blob, accept) => accept(blob));
+export const unknown: Decoder<mixed> = define((blob, ok, _) => ok(blob));
 
 /**
  * Alias of unknown.

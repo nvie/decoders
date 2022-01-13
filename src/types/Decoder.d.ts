@@ -6,8 +6,8 @@ export type Scalar = string | number | boolean | symbol | undefined | null;
 export type DecodeResult<T> = Result<T, Annotation>;
 export type DecodeFn<T, I = unknown> = (
     blob: I,
-    accept: (value: T) => DecodeResult<T>,
-    reject: (msg: string | Annotation) => DecodeResult<T>,
+    ok: (value: T) => DecodeResult<T>,
+    err: (msg: string | Annotation) => DecodeResult<T>,
 ) => DecodeResult<T>;
 
 export interface Decoder<T> {

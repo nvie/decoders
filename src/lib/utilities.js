@@ -8,10 +8,10 @@ import type { Decoder } from '../Decoder';
  * Accepts any value that is an ``instanceof`` the given class.
  */
 export function instanceOf<T>(klass: Class<T>): Decoder<T> {
-    return define((blob, accept, reject) =>
+    return define((blob, ok, err) =>
         blob instanceof klass
-            ? accept(blob)
-            : reject(
+            ? ok(blob)
+            : err(
                   `Must be ${
                       // $FlowFixMe[incompatible-use] - klass.name is fine?
                       klass.name
@@ -54,19 +54,19 @@ export function lazy<T>(decoderFn: () => Decoder<T>): Decoder<T> {
  * ``unknown`` type, so you will have to deal with that accordingly.
  */
 export function prep<T>(mapperFn: (mixed) => mixed, decoder: Decoder<T>): Decoder<T> {
-    return define((originalInput, _, reject) => {
+    return define((originalInput, _, err) => {
         let blob;
         try {
             blob = mapperFn(originalInput);
         } catch (e) {
-            return reject(annotate(originalInput, e.message));
+            return err(annotate(originalInput, e.message));
         }
 
         const r = decoder.decode(blob);
-        return r.ok ? r : reject(annotate(originalInput, r.error.text));
-        //                                ^^^^^^^^^^^^^
-        //                                Annotates the _original_ input value
-        //                                (instead of echoing back blob)
+        return r.ok ? r : err(annotate(originalInput, r.error.text));
+        //                             ^^^^^^^^^^^^^
+        //                             Annotates the _original_ input value
+        //                             (instead of echoing back blob)
     });
 }
 
@@ -75,7 +75,7 @@ export function prep<T>(mapperFn: (mixed) => mixed, decoder: Decoder<T>): Decode
  * useful for explicitly disallowing keys, or for testing purposes.
  */
 export function never(msg: string): Decoder<empty> {
-    return define((_, __, reject) => reject(msg));
+    return define((_, __, err) => err(msg));
 }
 
 /**

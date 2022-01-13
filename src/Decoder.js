@@ -1,8 +1,8 @@
 // @flow strict
 
 import { annotate } from './annotate';
-import { err, ok } from './result';
 import { formatInline } from './format';
+import { err as makeErr, ok as makeOk } from './result';
 import type { Annotation } from './annotate';
 import type { Result } from './result';
 
@@ -11,8 +11,8 @@ export type Scalar = string | number | boolean | symbol | void | null;
 export type DecodeResult<T> = Result<T, Annotation>;
 export type DecodeFn<T, I = mixed> = (
     blob: I,
-    accept: (value: T) => DecodeResult<T>,
-    reject: (msg: string | Annotation) => DecodeResult<T>,
+    ok: (value: T) => DecodeResult<T>,
+    err: (msg: string | Annotation) => DecodeResult<T>,
 ) => DecodeResult<T>;
 
 /**
@@ -48,9 +48,9 @@ function noThrow<T, V>(fn: (value: T) => V): (T) => DecodeResult<V> {
     return (t) => {
         try {
             const v = fn(t);
-            return ok(v);
+            return makeOk(v);
         } catch (e) {
-            return err(annotate(t, e instanceof Error ? e.message : String(e)));
+            return makeErr(annotate(t, e instanceof Error ? e.message : String(e)));
         }
     };
 }
@@ -76,8 +76,8 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
      * instead return a result type.
      */
     function decode(blob: mixed): DecodeResult<T> {
-        return decodeFn(blob, ok, (msg: Annotation | string) =>
-            err(typeof msg === 'string' ? annotate(blob, msg) : msg),
+        return decodeFn(blob, makeOk, (msg: Annotation | string) =>
+            makeErr(typeof msg === 'string' ? annotate(blob, msg) : msg),
         );
     }
 
@@ -144,9 +144,9 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
      * cases can be covered by `.transform()` or `.refine()`.
      */
     function then<V>(next: DecodeFn<V, T>): Decoder<V> {
-        return define((blob, accV, rejV) => {
+        return define((blob, ok, err) => {
             const result = decode(blob);
-            return result.ok ? next(result.value, accV, rejV) : result;
+            return result.ok ? next(result.value, ok, err) : result;
         });
     }
 
@@ -162,11 +162,11 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
      * message.
      */
     function reject(rejectFn: (value: T) => string | Annotation | null): Decoder<T> {
-        return then((value, accT, rejT) => {
+        return then((value, ok, err) => {
             const errmsg = rejectFn(value);
             return errmsg === null
-                ? accT(value)
-                : rejT(typeof errmsg === 'string' ? annotate(value, errmsg) : errmsg);
+                ? ok(value)
+                : err(typeof errmsg === 'string' ? annotate(value, errmsg) : errmsg);
         });
     }
 
@@ -176,7 +176,7 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
      * long or low-level/technical errors.
      */
     function describe(message: string): Decoder<T> {
-        return define((blob, _, reject) => {
+        return define((blob, _, err) => {
             // Decode using the given decoder...
             const result = decode(blob);
             if (result.ok) {
@@ -184,7 +184,7 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
             } else {
                 // ...but in case of error, annotate this with the custom given
                 // message instead
-                return reject(annotate(result.error, message));
+                return err(annotate(result.error, message));
             }
         });
     }
@@ -202,9 +202,9 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
      * This is an advanced, low-level, decoder.
      */
     function peek_UNSTABLE<V>(next: DecodeFn<V, [mixed, T]>): Decoder<V> {
-        return define((blob, accV, rejV) => {
+        return define((blob, ok, err) => {
             const result = decode(blob);
-            return result.ok ? next([blob, result.value], accV, rejV) : result;
+            return result.ok ? next([blob, result.value], ok, err) : result;
         });
     }
 

@@ -12,9 +12,9 @@ describe('.then', () => {
         string.then(
             // We'll try to parse it as an hex int, but if it fails, we'll
             // return Err, otherwise Ok
-            (s, accept, reject) => {
+            (s, ok, err) => {
                 const n = parseInt(s, 16);
-                return !Number.isNaN(n) ? accept(n) : reject('Nope');
+                return !Number.isNaN(n) ? ok(n) : err('Nope');
             },
         );
 
