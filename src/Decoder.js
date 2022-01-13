@@ -56,16 +56,17 @@ function noThrow<T, V>(fn: (value: T) => V): (T) => DecodeResult<V> {
 }
 
 /**
- * Build a Decoder<T> using the given decoding function. A valid decoding
- * function meets the following requirements:
+ * Defines a new `Decoder<T>`, by implementing a custom acceptance function.
+ * The function receives three arguments:
  *
- * 1. The function has no side-effects
- * 2. The function takes exactly one argument (of `unknown` type) aka it could
- *    receive anything
- * 3. The function returns either:
- *    a. An "ok" Result (with a value payload of type T)
- *    b. An "err" Result (an annotated representation of the runtime input)
+ * 1. `blob` - the raw/unknown input (aka your external data)
+ * 2. `ok` - Call `ok(value)` to accept the input and return `value`
+ * 3. `err` - Call `err(message)` to reject the input and use "message" in the
+ *    annotation
  *
+ * The expected return value should be a `DecodeResult<T>`, which can be
+ * obtained by returning the result from the provided `ok` or `err` helper
+ * functions.
  */
 export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
     /**

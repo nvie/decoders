@@ -1035,13 +1035,13 @@ DECODERS = {
     ],
     'return_type': 'Decoder<T>',
     'markdown': """
-      Defines a new `Decoder<T>`, by implementing a custom accept function. The function receives three arguments:
+      Defines a new `Decoder<T>`, by implementing a custom acceptance function. The function receives three arguments:
 
-      1. The raw/unknown input (aka your external data)
-      2. An ``ok()`` callback
-      3. A ``err()`` callback
+      1. `blob` - the raw/unknown input (aka your external data)
+      2. `ok` - Call `ok(value)` to accept the input and return `value`
+      3. `err` - Call `err(message)` to reject the input and use "message" in the annotation
 
-      The expected return value should be a `DecodeResult<T>`, which can be created by calling one of the provided callback functions.
+      The expected return value should be a `DecodeResult<T>`, which can be obtained by returning the result from the provided `ok` or `err` helper functions.
 
       ```typescript
       // NOTE: Please do NOT implement an uppercase decoder like this! 😇
