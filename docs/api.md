@@ -1108,7 +1108,7 @@ This is effectively equivalent to `either(A, B)`, but will provide better error 
 ---
 
 <a name="define" href="#define">#</a>
-**define**&lt;<i style="color: #267f99">T</i>&gt;(fn: <i style="color: #267f99">(blob: unknown, accept, reject) =&gt; DecodeResult&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L77-L221 'Source')
+**define**&lt;<i style="color: #267f99">T</i>&gt;(fn: <i style="color: #267f99">(blob: unknown, accept, reject) =&gt; DecodeResult&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L77-L228 'Source')
 
 Defines a new `Decoder<T>`, by implementing a custom accept function. The function receives three arguments:
 
@@ -1233,5 +1233,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 5ded396eb5366753dc84cd8201b6755a) -->
+<!--[[[end]]] (checksum: aa60c7a9da89711e0ad14aa00bdb6177) -->
 <!-- prettier-ignore-end -->

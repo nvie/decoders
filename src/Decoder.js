@@ -82,17 +82,18 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
      * Contrasted with `.verify()`, calls to `.decode()` will never fail and
      * instead return a result type.
      */
-    const decode = (blob: mixed) =>
-        decodeFn(blob, ok, (msg: Annotation | string) =>
+    function decode(blob: mixed): DecodeResult<T> {
+        return decodeFn(blob, ok, (msg: Annotation | string) =>
             err(typeof msg === 'string' ? annotate(blob, msg) : msg),
         );
+    }
 
     /**
      * Verified the (raw/untrusted/unknown) input and either accepts or rejects
      * it. When accepted, returns the decoded `T` value directly. Otherwise
      * fail with a runtime error.
      */
-    const verify = (blob: mixed, formatter: (Annotation) => string = formatInline): T => {
+    function verify(blob: mixed, formatter: (Annotation) => string = formatInline): T {
         const result = decode(blob);
         if (result.ok) {
             return result.value;
@@ -101,7 +102,7 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
             err.name = 'Decoding error';
             throw err;
         }
-    };
+    }
 
     /**
      * Accepts any value the given decoder accepts, and on success, will call
@@ -109,16 +110,16 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
      * function throws an error, the whole decoder will fail using the error
      * message as the failure reason.
      */
-    const transform = <V>(transformFn: (T) => V): Decoder<V> => {
+    function transform<V>(transformFn: (T) => V): Decoder<V> {
         return then(noThrow(transformFn));
-    };
+    }
 
     /**
      * Adds an extra predicate to a decoder. The new decoder is like the
      * original decoder, but only accepts values that also meet the
      * predicate.
      */
-    const refine = (predicateFn: (value: T) => boolean, errmsg: string): Decoder<T> => {
+    function refine(predicateFn: (value: T) => boolean, errmsg: string): Decoder<T> {
         return reject((value) =>
             predicateFn(value)
                 ? // Don't reject
@@ -126,7 +127,7 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
                 : // Reject with the given error message
                   errmsg,
         );
-    };
+    }
 
     /**
      * Chain together the current decoder with another.
@@ -149,8 +150,11 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
      * for this low-level construct when implementing custom decoders. Most
      * cases can be covered by `.transform()` or `.refine()`.
      */
-    const then = <V>(next: DecodeFn<V, T>): Decoder<V> =>
-        define((blob, accV, rejV) => andThen(decode(blob), (t) => next(t, accV, rejV)));
+    function then<V>(next: DecodeFn<V, T>): Decoder<V> {
+        return define((blob, accV, rejV) =>
+            andThen(decode(blob), (t) => next(t, accV, rejV)),
+        );
+    }
 
     /**
      * Adds an extra predicate to a decoder. The new decoder is like the
@@ -163,21 +167,21 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
      * Unlike `.refine()`, you can use this function to return a dynamic error
      * message.
      */
-    const reject = (rejectFn: (value: T) => string | Annotation | null): Decoder<T> => {
+    function reject(rejectFn: (value: T) => string | Annotation | null): Decoder<T> {
         return then((value, accT, rejT) => {
             const errmsg = rejectFn(value);
             return errmsg === null
                 ? accT(value)
                 : rejT(typeof errmsg === 'string' ? annotate(value, errmsg) : errmsg);
         });
-    };
+    }
 
     /**
      * Uses the given decoder, but will use an alternative error message in
      * case it rejects. This can be used to simplify or shorten otherwise
      * long or low-level/technical errors.
      */
-    const describe = (message: string): Decoder<T> => {
+    function describe(message: string): Decoder<T> {
         return define((blob, _, reject) => {
             // Decode using the given decoder...
             const result = decode(blob);
@@ -189,7 +193,25 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
                 return reject(annotate(result.error, message));
             }
         });
-    };
+    }
+
+    /**
+     * WARNING: This is an EXPERIMENTAL API that will likely change in the
+     * future. Please DO NOT rely on it.
+     *
+     * Chain together the current decoder with another, but also pass along
+     * the original input.
+     *
+     * This is like `.then()`, but instead of this function receiving just
+     * the decoded result ``T``, it also receives the original input.
+     *
+     * This is an advanced, low-level, decoder.
+     */
+    function peek_UNSTABLE<V>(next: DecodeFn<V, [mixed, T]>): Decoder<V> {
+        return define((blob, accV, rejV) =>
+            andThen(decode(blob), (t) => next([blob, t], accV, rejV)),
+        );
+    }
 
     return Object.freeze({
         verify,
@@ -200,22 +222,7 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
         describe,
         then,
 
-        /**
-         * WARNING: This is an EXPERIMENTAL API that will likely change in the
-         * future. Please DO NOT rely on it.
-         *
-         * Chain together the current decoder with another, but also pass along
-         * the original input.
-         *
-         * This is like `.then()`, but instead of this function receiving just
-         * the decoded result ``T``, it also receives the original input.
-         *
-         * This is an advanced, low-level, decoder.
-         */
-        peek_UNSTABLE<V>(next: DecodeFn<V, [mixed, T]>): Decoder<V> {
-            return define((blob, accV, rejV) =>
-                andThen(decode(blob), (t) => next([blob, t], accV, rejV)),
-            );
-        },
+        // EXPERIMENTAL - please DO NOT rely on this method
+        peek_UNSTABLE,
     });
 }
