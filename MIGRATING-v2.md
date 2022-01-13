@@ -4,7 +4,10 @@ Decoders v2 has been rewritten to be simpler, smaller, and more efficient. Conce
 it still works the same way as v1, but some of the APIs have been rewritten in a backward
 incompatible manner. As such, you may have to make some code changes to migrate to v2.
 
-Please go over this checklist to perform the migration.
+Please go over this checklist to perform the migration. If you run into issues that aren't
+somehow covered by this migration guide, please
+[open an issue](https://github.com/nvie/decoders/issues/new?assignees=nvie&labels=question&template=need-help-migrating-to-2-x.md&title=Migration+help+needed)
+for this, and I'm happy to help 🙏 !
 
 ## 🏁 Checklist
 
