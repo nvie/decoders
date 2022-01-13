@@ -35,7 +35,6 @@ export type Decoder<T> = {|
     decode(blob: mixed): DecodeResult<T>,
     verify(blob: mixed, formatterFn?: (Annotation) => string): T,
     refine(predicateFn: (value: T) => boolean, errmsg: string): Decoder<T>,
-    // reject(invertedPredicateFn: (value: T) => boolean, errmsg: string): Decoder<T>,
     reject(rejectFn: (value: T) => string | Annotation | null): Decoder<T>,
     transform<V>(transformFn: (value: T) => V): Decoder<V>,
     describe(message: string): Decoder<T>,
@@ -76,14 +75,94 @@ function noThrow<T, V>(fn: (value: T) => V): (T) => DecodeResult<V> {
  *
  */
 export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
+    /**
+     * Validates the raw/untrusted/unknown input and either accepts or rejects
+     * it.
+     *
+     * Contrasted with `.verify()`, calls to `.decode()` will never fail and
+     * instead return a result type.
+     */
     const decode = (blob: mixed) =>
         decodeFn(blob, ok, (msg: Annotation | string) =>
             err(typeof msg === 'string' ? annotate(blob, msg) : msg),
         );
 
+    /**
+     * Verified the (raw/untrusted/unknown) input and either accepts or rejects
+     * it. When accepted, returns the decoded `T` value directly. Otherwise
+     * fail with a runtime error.
+     */
+    const verify = (blob: mixed, formatter: (Annotation) => string = formatInline): T => {
+        const result = decode(blob);
+        if (result.ok) {
+            return result.value;
+        } else {
+            const err = new Error('\n' + formatter(result.error));
+            err.name = 'Decoding error';
+            throw err;
+        }
+    };
+
+    /**
+     * Accepts any value the given decoder accepts, and on success, will call
+     * the given function **on the decoded result**. If the transformation
+     * function throws an error, the whole decoder will fail using the error
+     * message as the failure reason.
+     */
+    const transform = <V>(transformFn: (T) => V): Decoder<V> => {
+        return then(noThrow(transformFn));
+    };
+
+    /**
+     * Adds an extra predicate to a decoder. The new decoder is like the
+     * original decoder, but only accepts values that also meet the
+     * predicate.
+     */
+    const refine = (predicateFn: (value: T) => boolean, errmsg: string): Decoder<T> => {
+        return reject((value) =>
+            predicateFn(value)
+                ? // Don't reject
+                  null
+                : // Reject with the given error message
+                  errmsg,
+        );
+    };
+
+    /**
+     * Chain together the current decoder with another.
+     *
+     * First, the current decoder must accept the input. If so, it will pass
+     * the successfully decoded result to the given ``next`` function to
+     * further decide whether or not the value should get accepted or rejected.
+     *
+     * The argument to `.then()` is a decoding function, just like one you
+     * would pass to `define()`. The key difference with `define()` is that
+     * `define()` must always assume an ``unknown`` input, whereas with
+     * a `.then()` call the provided ``next`` function will receive a ``T`` as
+     * its input. This will allow the function to make a stronger assumption
+     * about its input.
+     *
+     * If it helps, you can think of `define(nextFn)` as equivalent to
+     * `unknown.then(nextFn)`.
+     *
+     * This is an advanced, low-level, decoder. It's not recommended to reach
+     * for this low-level construct when implementing custom decoders. Most
+     * cases can be covered by `.transform()` or `.refine()`.
+     */
     const then = <V>(next: DecodeFn<V, T>): Decoder<V> =>
         define((blob, accV, rejV) => andThen(decode(blob), (t) => next(t, accV, rejV)));
 
+    /**
+     * Adds an extra predicate to a decoder. The new decoder is like the
+     * original decoder, but only accepts values that aren't rejected by the
+     * given function.
+     *
+     * The given function can return `null` to accept the decoded value, or
+     * return a specific error message to reject.
+     *
+     * Unlike `.refine()`, you can use this function to return a dynamic error
+     * message.
+     */
     const reject = (rejectFn: (value: T) => string | Annotation | null): Decoder<T> => {
         return then((value, accT, rejT) => {
             const errmsg = rejectFn(value);
@@ -93,79 +172,32 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
         });
     };
 
-    return Object.freeze({
-        decode,
-
-        verify(blob: mixed, formatter: (Annotation) => string = formatInline): T {
+    /**
+     * Uses the given decoder, but will use an alternative error message in
+     * case it rejects. This can be used to simplify or shorten otherwise
+     * long or low-level/technical errors.
+     */
+    const describe = (message: string): Decoder<T> => {
+        return define((blob, _, reject) => {
+            // Decode using the given decoder...
             const result = decode(blob);
             if (result.ok) {
-                return result.value;
+                return result;
             } else {
-                const err = new Error('\n' + formatter(result.error));
-                err.name = 'Decoding error';
-                throw err;
+                // ...but in case of error, annotate this with the custom given
+                // message instead
+                return reject(annotate(result.error, message));
             }
-        },
+        });
+    };
 
-        refine(predicateFn: (value: T) => boolean, errmsg: string): Decoder<T> {
-            return reject((value) =>
-                predicateFn(value)
-                    ? // Don't reject
-                      null
-                    : // Reject with the given error message
-                      errmsg,
-            );
-        },
-
+    return Object.freeze({
+        verify,
+        decode,
+        transform,
+        refine,
         reject,
-
-        /**
-         * Accepts any value the given decoder accepts, and on success, will
-         * call the transformation function **with the decoded result**. If the
-         * transformation function throws an error, the whole decoder will fail
-         * using the error message as the failure reason.
-         */
-        transform<V>(transformFn: (T) => V): Decoder<V> {
-            return then(noThrow(transformFn));
-        },
-
-        describe(message: string): Decoder<T> {
-            return define((blob, _, reject) => {
-                // Decode using the given decoder...
-                const result = decode(blob);
-                if (result.ok) {
-                    return result;
-                } else {
-                    // ...but in case of error, annotate this with the custom given
-                    // message instead
-                    return reject(annotate(result.error, message));
-                }
-            });
-        },
-
-        /**
-         * Chain together the current decoder with another.
-         *
-         * First, the current decoder must accept the input. If so, it will
-         * pass the successfully decoded result to the given ``next`` function
-         * to further decide whether or not the value should get accepted or
-         * rejected.
-         *
-         * The argument to `.then()` is a decoding function, just like one you
-         * would pass to `define()`. The key difference with `define()` is that
-         * `define()` must always assume an ``unknown`` input, whereas with
-         * a `.then()` call the provided ``next`` function will receive a ``T``
-         * as its input. This will allow the function to make a stronger
-         * assumption about its input.
-         *
-         * If it helps, you can think of `define(nextFn)` as equivalent to
-         * `unknown.then(nextFn)`.
-         *
-         * This is an advanced, low-level, decoder. It's not recommended to
-         * reach for this low-level construct when implementing custom
-         * decoders. Most cases can be covered by `.transform()` or
-         * `.refine()`.
-         */
+        describe,
         then,
 
         /**
