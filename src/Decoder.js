@@ -44,13 +44,6 @@ export type Decoder<T> = {|
     peek_UNSTABLE<V>(next: DecodeFn<V, [mixed, T]>): Decoder<V>,
 |};
 
-function andThen<A, B, E>(
-    r: Result<A, E>,
-    callback: (value: A) => Result<B, E>,
-): Result<B, E> {
-    return r.ok ? callback(r.value) : r;
-}
-
 function noThrow<T, V>(fn: (value: T) => V): (T) => DecodeResult<V> {
     return (t) => {
         try {
@@ -151,9 +144,10 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
      * cases can be covered by `.transform()` or `.refine()`.
      */
     function then<V>(next: DecodeFn<V, T>): Decoder<V> {
-        return define((blob, accV, rejV) =>
-            andThen(decode(blob), (t) => next(t, accV, rejV)),
-        );
+        return define((blob, accV, rejV) => {
+            const result = decode(blob);
+            return result.ok ? next(result.value, accV, rejV) : result;
+        });
     }
 
     /**
@@ -208,9 +202,10 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
      * This is an advanced, low-level, decoder.
      */
     function peek_UNSTABLE<V>(next: DecodeFn<V, [mixed, T]>): Decoder<V> {
-        return define((blob, accV, rejV) =>
-            andThen(decode(blob), (t) => next([blob, t], accV, rejV)),
-        );
+        return define((blob, accV, rejV) => {
+            const result = decode(blob);
+            return result.ok ? next([blob, result.value], accV, rejV) : result;
+        });
     }
 
     return Object.freeze({
