@@ -42,7 +42,7 @@ build_esm() {
     find "$TMP" -iname "*.js" | while read f; do
       mv "$f" "${f%.js}.mjs"
     done
-    sr -s "from '(.*)'" -r "from '\\1.mjs'" "$TMP"
+    sr -s "from '(.*)'" -r "from '\$1.mjs'" "$TMP"
     rsync -aqv "$TMP/" "$DIST/"
 }
 
