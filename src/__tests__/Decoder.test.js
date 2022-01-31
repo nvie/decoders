@@ -6,6 +6,10 @@ import { number } from '../lib/numbers';
 import { pojo } from '../lib/objects';
 import { string } from '../lib/strings';
 
+describe('.decode', () => {
+    // .decode() is tested implicitly because it's used _everywhere_
+});
+
 describe('.verify', () => {
     it('valid', () => {
         const decoder = number;
@@ -36,6 +40,22 @@ describe('.verify', () => {
         expect(() => decoder.verify('xyz', formatShort)).not.toThrow('xyz');
         //                                               ^^^ Make sure the input is _NOT_ echoed back
         expect(() => decoder.verify('xyz', formatShort)).toThrow(/Must be number/);
+    });
+});
+
+describe('.value', () => {
+    it('valid', () => {
+        const decoder = number;
+        expect(decoder.value(0)).toBe(0);
+        expect(decoder.value(1)).toBe(1);
+        expect(decoder.value(4)).toBe(4);
+        expect(decoder.value(-3)).toBe(-3);
+        expect(decoder.value(-3.14)).toBe(-3.14);
+    });
+
+    it('invalid', () => {
+        const decoder = number;
+        expect(decoder.value('foo')).toBeUndefined();
     });
 });
 
