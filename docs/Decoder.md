@@ -92,12 +92,14 @@ Use this when you're not interested in programmatically handling the error messa
 ```typescript
 // 👍
 number.value(3);     // 3
+string.value('hi');  // 'hi'
 
 // 👎
 number.value('hi');  // undefined
+string.value(42);    // undefined
 ```
 
-**NOTE:** This helper mainly exists for pragmatic reasons, but please note that when you use this on [`optional()`](/api.html#optional) decoders, you cannot distinguish a _failed_ from a legally-`undefined` input value.
+**NOTE:** This helper mainly exists for pragmatic reasons, but please note that when you use this on [`optional()`](/api.html#optional) decoders, you cannot distinguish a _rejected_ value from a legal ``undefined`` input value.
 
 ---
 
@@ -220,5 +222,5 @@ If it helps, you can think of `define(nextFn)` as equivalent to `unknown.then(ne
 
 This is an advanced, low-level, decoder. It's not recommended to reach for this low-level construct when implementing custom decoders. Most cases can be covered by [`.transform()`](/Decoder.html#transform) or [`.refine()`](/Decoder.html#refine).
 
-<!--[[[end]]] (checksum: f73aad66e3bfcb1d0246f9b419804d9e) -->
+<!--[[[end]]] (checksum: 82240e322ac702cb165083439fa60b46) -->
 <!-- prettier-ignore-end -->

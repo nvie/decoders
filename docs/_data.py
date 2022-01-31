@@ -1211,12 +1211,14 @@ DECODER_METHODS = {
       ```typescript
       // 👍
       number.value(3);     // 3
+      string.value('hi');  // 'hi'
 
       // 👎
       number.value('hi');  // undefined
+      string.value(42);    // undefined
       ```
 
-      **NOTE:** This helper mainly exists for pragmatic reasons, but please note that when you use this on `optional()` decoders, you cannot distinguish a _failed_ from a legally-`undefined` input value.
+      **NOTE:** This helper mainly exists for pragmatic reasons, but please note that when you use this on `optional()` decoders, you cannot distinguish a _rejected_ value from a legal ``undefined`` input value.
     """,
   },
 
