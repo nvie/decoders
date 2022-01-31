@@ -119,6 +119,11 @@ object({
 string.verify('dummy', formatInline);
 string.verify('dummy', formatShort);
 
+// $ExpectType number | undefined
+number.value('dummy');
+// $ExpectType string | undefined
+string.value('dummy');
+
 // $ExpectType Decoder<number>
 string.then((value: string) => ok(value.length));
 

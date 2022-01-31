@@ -1038,8 +1038,8 @@ DECODERS = {
       Defines a new `Decoder<T>`, by implementing a custom acceptance function. The function receives three arguments:
 
       1. `blob` - the raw/unknown input (aka your external data)
-      2. `ok` - Call `ok(value)` to accept the input and return `value`
-      3. `err` - Call `err(message)` to reject the input and use "message" in the annotation
+      2. `ok` - Call `ok(value)` to accept the input and return ``value``
+      3. `err` - Call `err(message)` to reject the input with error ``message``
 
       The expected return value should be a `DecodeResult<T>`, which can be obtained by returning the result from the provided `ok` or `err` helper functions.
 
@@ -1197,6 +1197,26 @@ DECODER_METHODS = {
       // 👎
       number.verify('hi');  // throws
       ```
+    """,
+  },
+
+  'value': {
+    'params': [('blob', 'mixed')],
+    'return_type': 'T | undefined',
+    'markdown': """
+      Verified the (raw/untrusted/unknown) input and either accepts or rejects it. When accepted, returns the decoded `T` value directly. Otherwise returns ``undefined``.
+
+      Use this when you're not interested in programmatically handling the error message.
+
+      ```typescript
+      // 👍
+      number.value(3);     // 3
+
+      // 👎
+      number.value('hi');  // undefined
+      ```
+
+      **NOTE:** This helper mainly exists for pragmatic reasons, but please note that when you use this on `optional()` decoders, you cannot distinguish a _failed_ from a legally-`undefined` input value.
     """,
   },
 

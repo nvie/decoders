@@ -32,8 +32,9 @@ export type DecodeFn<T, I = mixed> = (
 export type DecoderType<D> = $Call<<T>(Decoder<T>) => T, D>;
 
 export type Decoder<T> = {|
-    decode(blob: mixed): DecodeResult<T>,
     verify(blob: mixed, formatterFn?: (Annotation) => string): T,
+    value(blob: mixed): T | void,
+    decode(blob: mixed): DecodeResult<T>,
     refine(predicateFn: (value: T) => boolean, errmsg: string): Decoder<T>,
     reject(rejectFn: (value: T) => string | Annotation | null): Decoder<T>,
     transform<V>(transformFn: (value: T) => V): Decoder<V>,
@@ -60,7 +61,7 @@ function noThrow<T, V>(fn: (value: T) => V): (T) => DecodeResult<V> {
  * The function receives three arguments:
  *
  * 1. `blob` - the raw/unknown input (aka your external data)
- * 2. `ok` - Call `ok(value)` to accept the input and return `value`
+ * 2. `ok` - Call `ok(value)` to accept the input and return ``value``
  * 3. `err` - Call `err(message)` to reject the input and use "message" in the
  *    annotation
  *
@@ -96,6 +97,18 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
             err.name = 'Decoding error';
             throw err;
         }
+    }
+
+    /**
+     * Verified the (raw/untrusted/unknown) input and either accepts or rejects
+     * it. When accepted, returns the decoded `T` value directly. Otherwise
+     * returns `undefined`.
+     *
+     * Use this when you're not interested in programmatically handling the
+     * error message.
+     */
+    function value(blob: mixed): T | void {
+        return decode(blob).value;
     }
 
     /**
@@ -211,6 +224,7 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
 
     return Object.freeze({
         verify,
+        value,
         decode,
         transform,
         refine,

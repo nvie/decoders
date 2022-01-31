@@ -1115,13 +1115,13 @@ This is effectively equivalent to `either(A, B)`, but will provide better error 
 ---
 
 <a name="define" href="#define">#</a>
-**define**&lt;<i style="color: #267f99">T</i>&gt;(fn: <i style="color: #267f99">(blob: unknown, ok, err) =&gt; DecodeResult&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L71-L224 'Source')
+**define**&lt;<i style="color: #267f99">T</i>&gt;(fn: <i style="color: #267f99">(blob: unknown, ok, err) =&gt; DecodeResult&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L72-L238 'Source')
 
 Defines a new `Decoder<T>`, by implementing a custom acceptance function. The function receives three arguments:
 
 1. `blob` - the raw/unknown input (aka your external data)
-2. `ok` - Call `ok(value)` to accept the input and return `value`
-3. `err` - Call `err(message)` to reject the input and use "message" in the annotation
+2. `ok` - Call `ok(value)` to accept the input and return ``value``
+3. `err` - Call `err(message)` to reject the input with error ``message``
 
 The expected return value should be a `DecodeResult<T>`, which can be obtained by returning the result from the provided `ok` or `err` helper functions.
 
@@ -1240,5 +1240,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: c811fd7a88fa5d86cdf351da9f9b0e46) -->
+<!--[[[end]]] (checksum: 7c1e4ef518be478c64257a10256bfca7) -->
 <!-- prettier-ignore-end -->
