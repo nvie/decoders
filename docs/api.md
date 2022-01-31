@@ -464,7 +464,7 @@ numericBoolean.verify('hello');    // throws
 ---
 
 <a name="date" href="#date">#</a>
-**date**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Date&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/dates.js#L34 'Source')
+**date**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Date&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/dates.js#L17-L20 'Source')
 
 Accepts and returns `Date` instances.
 
@@ -1240,5 +1240,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 7c1e4ef518be478c64257a10256bfca7) -->
+<!--[[[end]]] (checksum: 01246809fba74626510c693b473f2a25) -->
 <!-- prettier-ignore-end -->

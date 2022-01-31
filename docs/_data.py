@@ -1386,7 +1386,7 @@ def find_source_locations():
       "./bin/linenos src/Decoder.js --remote-url --object-keys --object-methods --json",
     )
     locinfo2 = run_json(
-      "./bin/linenos src/*.js src/**/*.js --remote-url --functions --variables --json",
+      "./bin/linenos src/*.js src/**/*.js --remote-url --functions --global-variables --json",
     )
 
     # Check the definitions against the found sources

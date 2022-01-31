@@ -83,7 +83,7 @@ number.verify('hi');  // throws
 ---
 
 <a name="value" href="#value">#</a>
-**.value**(blob: <i style="color: #267f99">mixed</i>): <i style="color: #267f99">T | undefined</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L209 'Source')<br />
+**.value**(blob: <i style="color: #267f99">mixed</i>): <i style="color: #267f99">T | undefined</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L110-L112 'Source')<br />
 
 Verified the (raw/untrusted/unknown) input and either accepts or rejects it. When accepted, returns the decoded `T` value directly. Otherwise returns ``undefined``.
 
@@ -222,5 +222,5 @@ If it helps, you can think of `define(nextFn)` as equivalent to `unknown.then(ne
 
 This is an advanced, low-level, decoder. It's not recommended to reach for this low-level construct when implementing custom decoders. Most cases can be covered by [`.transform()`](/Decoder.html#transform) or [`.refine()`](/Decoder.html#refine).
 
-<!--[[[end]]] (checksum: 82240e322ac702cb165083439fa60b46) -->
+<!--[[[end]]] (checksum: 92c66c0408f4c599818e79549e516024) -->
 <!-- prettier-ignore-end -->
