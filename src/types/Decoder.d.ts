@@ -11,7 +11,7 @@ export type DecodeFn<T, I = unknown> = (
 ) => DecodeResult<T>;
 
 export interface Decoder<T> {
-    verify(blob: unknown, formatterFn?: (ann: Annotation) => string): T;
+    verify(blob: unknown, formatterFn?: (ann: Annotation) => string | Error): T;
     value(blob: unknown): T | undefined;
     decode(blob: unknown): DecodeResult<T>;
     refine<N extends T>(predicate: (value: T) => value is N, msg: string): Decoder<N>;

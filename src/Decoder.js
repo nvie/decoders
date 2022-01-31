@@ -32,7 +32,7 @@ export type DecodeFn<T, I = mixed> = (
 export type DecoderType<D> = $Call<<T>(Decoder<T>) => T, D>;
 
 export type Decoder<T> = {|
-    verify(blob: mixed, formatterFn?: (Annotation) => string): T,
+    verify(blob: mixed, formatterFn?: (Annotation) => string | Error): T,
     value(blob: mixed): T | void,
     decode(blob: mixed): DecodeResult<T>,
     refine(predicateFn: (value: T) => boolean, errmsg: string): Decoder<T>,
@@ -88,14 +88,26 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
      * it. When accepted, returns the decoded `T` value directly. Otherwise
      * fail with a runtime error.
      */
-    function verify(blob: mixed, formatter: (Annotation) => string = formatInline): T {
+    function verify(
+        blob: mixed,
+        formatter: (Annotation) => string | Error = formatInline,
+    ): T {
         const result = decode(blob);
         if (result.ok) {
             return result.value;
         } else {
-            const err = new Error('\n' + formatter(result.error));
-            err.name = 'Decoding error';
-            throw err;
+            // Formatters may return a string or an error for convenience of
+            // writing them. If it already returns an Error, throw it
+            // unmodified. If it returns a string, wrap it in a "Decoding
+            // error" instance from it and throw that.
+            const strOrErr = formatter(result.error);
+            if (typeof strOrErr === 'string') {
+                const err = new Error('\n' + strOrErr);
+                err.name = 'Decoding error';
+                throw err;
+            } else {
+                throw strOrErr;
+            }
         }
     }
 

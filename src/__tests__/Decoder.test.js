@@ -40,6 +40,11 @@ describe('.verify', () => {
         expect(() => decoder.verify('xyz', formatShort)).not.toThrow('xyz');
         //                                               ^^^ Make sure the input is _NOT_ echoed back
         expect(() => decoder.verify('xyz', formatShort)).toThrow(/Must be number/);
+
+        // Throwing a custom error
+        expect(() => decoder.verify('xyz', () => new Error('Computer says no'))).toThrow(
+            /Computer says no/,
+        );
     });
 });
 
