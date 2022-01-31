@@ -146,9 +146,9 @@ import { err, ok } from 'decoders/result';
 | `result.mapError(g)`      | `result.ok ? result : err(g(result.error))`     |
 | `result.toString()`       | _removed_                                       |
 | `result.unwrap()`         | _removed_ (see below)                           |
-| `result.value() ?? xxx`   | `result.value ?? xxx`                           |
-| `result.value() \|\| xxx` | `result.value \|\| xxx`                         |
-| `result.withDefault(xxx)` | `result.value ?? xxx`                           |
+| `result.value() ?? xxx`   | `decoder.value(...) ?? xxx`                     |
+| `result.value() \|\| xxx` | `decoder.value(...) \|\| xxx`                   |
+| `result.withDefault(xxx)` | `decoder.value(...) ?? xxx`                     |
 
 If you're using `result.unwrap()` it's probably because you're using it like so:
 
