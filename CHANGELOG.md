@@ -10,21 +10,21 @@ This is a breaking change, which brings numerous benefits:
 -   Better support for writing your own decoders
 
 Please see the [migration guide](./MIGRATING-v2.md) for precise instructions on how to
-adjust your code.
+adjust your v1 code.
 
 The main change is the brand new `Decoder<T>` API! The **tl;dr** is:
 
-| Old API (v1)<br /><small>If you're using this pattern...</small> |     | New API (v2)<br /><small>...replace it with this now</small> | Notes                                                                    |
-| :--------------------------------------------------------------- | --- | :----------------------------------------------------------- | :----------------------------------------------------------------------- |
-| `mydecoder(input)`                                               | →   | `mydecoder.decode(input)`                                    |                                                                          |
-| `guard(mydecoder)(input)`                                        | →   | `mydecoder.verify(input)`                                    | [instructions](./MIGRATING-v2.md#guards-are-no-longer-a-thing)           |
-| `map(mydecoder, ...)`                                            | →   | `mydecoder.transform(...)`                                   | [instructions](./MIGRATING-v2.md#map-is-now-transform)                   |
-| `compose(mydecoder, predicate(...))`                             | →   | `mydecoder.refine(...)`                                      | [instructions](./MIGRATING-v2.md#predicate-is-now-a-first-class-citizen) |
-| `describe(mydecoder, ...)`                                       | →   | `mydecoder.describe(...)`                                    |                                                                          |
-| `mydecoder(input).value()`                                       | →   | `mydecoder.value(input)`                                     |                                                                          |
-| `either`, `either3`, ..., `either9`                              | →   | `either`                                                     | [instructions](./MIGRATING-v2.md#eitherN-is-now-simply-either)           |
-| `tuple1`, `tuple2`, ... `tuple6`                                 | →   | `tuple`                                                      | [instructions](./MIGRATING-v2.md#tupleN-is-now-simply-tuple)             |
-| `dispatch`                                                       | →   | `taggedUnion`                                                | [instructions](./MIGRATING-v2.md#dispatch-is-now-taggedUnion)            |
+| Old API (v1)<br /><small>If you're using this pattern...</small> |     | New API (v2)<br /><small>...replace it with this now</small> | Notes                                                                              |
+| :--------------------------------------------------------------- | --- | :----------------------------------------------------------- | :--------------------------------------------------------------------------------- |
+| `mydecoder(input)`                                               | →   | `mydecoder.decode(input)`                                    |                                                                                    |
+| `guard(mydecoder)(input)`                                        | →   | `mydecoder.verify(input)`                                    | [migration instructions](./MIGRATING-v2.md#guards-are-no-longer-a-thing)           |
+| `map(mydecoder, ...)`                                            | →   | `mydecoder.transform(...)`                                   | [migration instructions](./MIGRATING-v2.md#map-is-now-transform)                   |
+| `compose(mydecoder, predicate(...))`                             | →   | `mydecoder.refine(...)`                                      | [migration instructions](./MIGRATING-v2.md#predicate-is-now-a-first-class-citizen) |
+| `describe(mydecoder, ...)`                                       | →   | `mydecoder.describe(...)`                                    |                                                                                    |
+| `mydecoder(input).value()`                                       | →   | `mydecoder.value(input)`                                     |                                                                                    |
+| `either`, `either3`, ..., `either9`                              | →   | `either`                                                     | [migration instructions](./MIGRATING-v2.md#eitherN-is-now-simply-either)           |
+| `tuple1`, `tuple2`, ... `tuple6`                                 | →   | `tuple`                                                      | [migration instructions](./MIGRATING-v2.md#tupleN-is-now-simply-tuple)             |
+| `dispatch`                                                       | →   | `taggedUnion`                                                | [migration instructions](./MIGRATING-v2.md#dispatch-is-now-taggedUnion)            |
 
 The full documentation is available on [**decoders.cc**](https://decoders.cc).
 
