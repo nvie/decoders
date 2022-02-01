@@ -42,14 +42,47 @@ const result = mydecoder.decode(externalData);
 Some decoders have been renamed. See the table below. You can do a simple "search &
 replace" command for these:
 
-| Replace... (v1)                                          |     | with... (v2) ✨                                                                           | Notes |
-| :------------------------------------------------------- | --- | :---------------------------------------------------------------------------------------- | ----- |
-| `eitherN`<br /><small>`either3`, `either4`, etc.</small> | →   | [`either`](https://decoders.cc/api.html#either)                                           |       |
-| `tupleN`<br /><small>`tuple1`, `tuple2`, etc.</small>    | →   | [`tuple`](https://decoders.cc/api.html#tuple)                                             |       |
-| `dispatch`                                               | →   | [`taggedUnion`](https://decoders.cc/api.html#taggedUnion)                                 |       |
-| `map(YOUR_DECODER, YOUR_FUNC)`                           | →   | `YOUR_DECODER`[`.transform`](https://decoders.cc/Decoder.html#transform)`(YOUR_FUNC)`     |       |
-| `compose(YOUR_DECODER, predicate(YOUR_FUNC, YOUR_MSG))`  | →   | `YOUR_DECODER`[`.refine`](https://decoders.cc/Decoder.html#refine)`(YOUR_FUNC, YOUR_MSG)` |       |
-| `describe(YOUR_DECODER, YOUR_MSG)`                       | →   | `YOUR_DECODER`[`.describe`](https://decoders.cc/Decoder.html#describe)`(YOUR_MSG)`        |       |
+| Replace this v1 pattern...           |     | ...with this v2 API                        | Notes                                                                        |
+| :----------------------------------- | --- | :----------------------------------------- | :--------------------------------------------------------------------------- |
+| `map(mydecoder, ...)`                | →   | `mydecoder.transform(...)`                 | [migration instructions](./MIGRATING-v2.md#map-is-now-transform)             |
+| `compose(mydecoder, predicate(...))` | →   | `mydecoder.refine(...)`                    | [migration instructions](./MIGRATING-v2.md#compose--predicate-is-now-refine) |
+| `describe(mydecoder, ...)`           | →   | `mydecoder.describe(...)`                  |                                                                              |
+| `either`, `either3`, ..., `either9`  | →   | `either`                                   |                                                                              |
+| `tuple1`, `tuple2`, ... `tuple6`     | →   | `tuple`                                    |                                                                              |
+| `dispatch`                           | →   | `taggedUnion`                              |                                                                              |
+| `url(...)`                           | →   | `httpsUrl` / `url` (signature has changed) | [migration instructions](./MIGRATING-v2.md#signature-of-url-has-changed)     |
+
+## `map()` is now `.transform()`
+
+The `map()` decoder has been renamed to the
+[`.transform`](https://decoders.cc/Decoder.html#transform) decoder method:
+
+```typescript
+// ❌ 1.x
+import { string } from 'decoders';
+const uppercase = map(string, (s) => s.toUpperCase());
+
+// ✅ 2.x
+const uppercase = string.transform((s) => s.toUpperCase());
+```
+
+## `compose()` + `predicate()` is now `.refine()`
+
+The `compose()` and `predicate()` decoders from v1 where mostly used in tandem and used to
+add additional checks to existing decoders. Predicates have been moved to the
+[`.refine()`](https://decoders.cc/Decoder.html#refine) decoder method:
+
+```typescript
+// ❌ 1.x
+import { compose, number, predicate } from 'decoders';
+const odd = compose(
+    number,
+    predicate((n) => n % 2 !== 0, 'Must be odd'),
+);
+
+// ✅ 2.x
+const odd = number.refine((n) => n % 2 !== 0, 'Must be odd');
+```
 
 ## Guards are no longer a thing
 
@@ -85,11 +118,11 @@ The signature of the old `url` decoder has changed. Compare
    [reimplement the old decoder yourself](https://gist.github.com/nvie/9e912992102b44b5c843c26ee3b19450).
    This is also a great way to enforce other rules, like specific domains, etc.
 
-| Rewrite... (v1) |     | to... (v2) ✨                                                                              |
-| :-------------- | --- | :----------------------------------------------------------------------------------------- |
-| `url()`         | →   | [`httpsUrl`](https://decoders.cc/api.html#httpsUrl)                                        |
-| `url([])`       | →   | [`url`](https://decoders.cc/api.html#url)                                                  |
-| `url(['git'])`  | →   | Define manually ([example](https://gist.github.com/nvie/9e912992102b44b5c843c26ee3b19450)) |
+| Replace this v1 pattern... |     | ...with this v2 API                                                                        |
+| :------------------------- | --- | :----------------------------------------------------------------------------------------- |
+| `url()`                    | →   | [`httpsUrl`](https://decoders.cc/api.html#httpsUrl)                                        |
+| `url([])`                  | →   | [`url`](https://decoders.cc/api.html#url)                                                  |
+| `url(['git'])`             | →   | Define manually ([example](https://gist.github.com/nvie/9e912992102b44b5c843c26ee3b19450)) |
 
 ## Rewriting imports from `lemons` or `debrief`
 
@@ -142,21 +175,21 @@ Suggested changes:
 import { err, ok } from 'decoders/result';
 ```
 
-| Replace usage of          | With ✨                                         |
-| ------------------------- | ----------------------------------------------- |
-| `result.andThen(f)`       | `result.ok ? f(result.value) : result`          |
-| `result.dispatch(f, g)`   | `result.ok ? f(result.value) : g(result.error)` |
-| `result.errValue()`       | `result.error`                                  |
-| `result.expect()`         | _removed_                                       |
-| `result.isErr()`          | `!result.ok`                                    |
-| `result.isOk()`           | `result.ok`                                     |
-| `result.map(f)`           | `result.ok ? ok(f(result.value)) : result`      |
-| `result.mapError(g)`      | `result.ok ? result : err(g(result.error))`     |
-| `result.toString()`       | _removed_                                       |
-| `result.unwrap()`         | _removed_ (see below)                           |
-| `result.value() ?? xxx`   | `decoder.value(...) ?? xxx`                     |
-| `result.value() \|\| xxx` | `decoder.value(...) \|\| xxx`                   |
-| `result.withDefault(xxx)` | `decoder.value(...) ?? xxx`                     |
+| Replace this v1 pattern... |     | ...with this v2 API                             |
+| :------------------------- | :-- | :---------------------------------------------- |
+| `result.andThen(f)`        | →   | `result.ok ? f(result.value) : result`          |
+| `result.dispatch(f, g)`    | →   | `result.ok ? f(result.value) : g(result.error)` |
+| `result.errValue()`        | →   | `result.error`                                  |
+| `result.expect()`          | →   | _removed_                                       |
+| `result.isErr()`           | →   | `!result.ok`                                    |
+| `result.isOk()`            | →   | `result.ok`                                     |
+| `result.map(f)`            | →   | `result.ok ? ok(f(result.value)) : result`      |
+| `result.mapError(g)`       | →   | `result.ok ? result : err(g(result.error))`     |
+| `result.toString()`        | →   | _removed_                                       |
+| `result.unwrap()`          | →   | _removed_ (see below)                           |
+| `result.value() ?? xxx`    | →   | `decoder.value(...) ?? xxx`                     |
+| `result.value() \|\| xxx`  | →   | `decoder.value(...) \|\| xxx`                   |
+| `result.withDefault(xxx)`  | →   | `decoder.value(...) ?? xxx`                     |
 
 If you're using `result.unwrap()` it's probably because you're using it like so:
 

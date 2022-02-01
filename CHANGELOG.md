@@ -14,18 +14,18 @@ adjust your v1 code.
 
 The main change is the brand new `Decoder<T>` API! The **tl;dr** is:
 
-| Old API (v1)<br /><small>If you're using this pattern...</small> |     | New API (v2)<br /><small>...replace it with this now</small> | Notes                                                                              |
-| :--------------------------------------------------------------- | --- | :----------------------------------------------------------- | :--------------------------------------------------------------------------------- |
-| `mydecoder(input)`                                               | →   | `mydecoder.decode(input)`                                    |                                                                                    |
-| `guard(mydecoder)(input)`                                        | →   | `mydecoder.verify(input)`                                    | [migration instructions](./MIGRATING-v2.md#guards-are-no-longer-a-thing)           |
-| `map(mydecoder, ...)`                                            | →   | `mydecoder.transform(...)`                                   | [migration instructions](./MIGRATING-v2.md#map-is-now-transform)                   |
-| `compose(mydecoder, predicate(...))`                             | →   | `mydecoder.refine(...)`                                      | [migration instructions](./MIGRATING-v2.md#predicate-is-now-a-first-class-citizen) |
-| `describe(mydecoder, ...)`                                       | →   | `mydecoder.describe(...)`                                    |                                                                                    |
-| `mydecoder(input).value()`                                       | →   | `mydecoder.value(input)`                                     |                                                                                    |
-| `either`, `either3`, ..., `either9`                              | →   | `either`                                                     | [migration instructions](./MIGRATING-v2.md#eitherN-is-now-simply-either)           |
-| `tuple1`, `tuple2`, ... `tuple6`                                 | →   | `tuple`                                                      | [migration instructions](./MIGRATING-v2.md#tupleN-is-now-simply-tuple)             |
-| `dispatch`                                                       | →   | `taggedUnion`                                                | [migration instructions](./MIGRATING-v2.md#dispatch-is-now-taggedUnion)            |
-| `url(...)`                                                       | →   | `httpsUrl` / `url` (signature has changed)                   | [migration instructions](./MIGRATING-v2.md#signature-of-url-has-changed)           |
+| Replace this v1 pattern...           |     | ...with this v2 API                        | Notes                                                                        |
+| :----------------------------------- | --- | :----------------------------------------- | :--------------------------------------------------------------------------- |
+| `mydecoder(input)`                   | →   | `mydecoder.decode(input)`                  | [migration instructions](./MIGRATING-v2.md#stop-calling-decoders)            |
+| `guard(mydecoder)(input)`            | →   | `mydecoder.verify(input)`                  | [migration instructions](./MIGRATING-v2.md#guards-are-no-longer-a-thing)     |
+| `map(mydecoder, ...)`                | →   | `mydecoder.transform(...)`                 | [migration instructions](./MIGRATING-v2.md#map-is-now-transform)             |
+| `compose(mydecoder, predicate(...))` | →   | `mydecoder.refine(...)`                    | [migration instructions](./MIGRATING-v2.md#compose--predicate-is-now-refine) |
+| `describe(mydecoder, ...)`           | →   | `mydecoder.describe(...)`                  |                                                                              |
+| `mydecoder(input).value()`           | →   | `mydecoder.value(input)`                   |                                                                              |
+| `either`, `either3`, ..., `either9`  | →   | `either`                                   | [migration instructions](./MIGRATING-v2.md#eitherN-is-now-simply-either)     |
+| `tuple1`, `tuple2`, ... `tuple6`     | →   | `tuple`                                    | [migration instructions](./MIGRATING-v2.md#tupleN-is-now-simply-tuple)       |
+| `dispatch`                           | →   | `taggedUnion`                              | [migration instructions](./MIGRATING-v2.md#dispatch-is-now-taggedUnion)      |
+| `url(...)`                           | →   | `httpsUrl` / `url` (signature has changed) | [migration instructions](./MIGRATING-v2.md#signature-of-url-has-changed)     |
 
 The full documentation is available on [**decoders.cc**](https://decoders.cc).
 
