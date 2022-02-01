@@ -2,12 +2,12 @@
 
 This is a breaking change, which brings numerous benefits:
 
--   A **simpler API**
--   Smaller **bundle size** (67% reduction)
--   **Tree-shaking** support
--   Runtime **speed**
--   Better documentation
--   Better support for writing your own decoders
+-   A **simpler API** 😇
+-   Smaller **bundle size** (67% reduction 😱)
+-   **Tree-shaking** support 🍃
+-   Runtime **speed** 🏎️
+-   Better documentation 📚
+-   Better support for writing your own decoders 🛠️
 
 Please see the [migration guide](./MIGRATING-v2.md) for precise instructions on how to
 adjust your v1 code.
@@ -32,7 +32,7 @@ The full documentation is available on [**decoders.cc**](https://decoders.cc).
 Other features:
 
 -   Include ES modules in published NPM builds (yay tree-shaking! 🍃)
--   Much smaller total bundle size (**67% smaller** compared to v1 😇)
+-   Much smaller total bundle size (**67% smaller** compared to v1 😱)
 
 Other potentially breaking changes:
 
