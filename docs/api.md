@@ -18,6 +18,7 @@ import textwrap
 from _data import DECODERS, DECODERS_BY_SECTION
 from _lib import (
   format_type,
+  get_signature_html,
   linkify,
   methodref,
   ref,
@@ -76,14 +77,8 @@ for section, names in DECODERS_BY_SECTION.items():
     if info.get('alias_of'):
       continue
 
-    params = '' if not info['params'] else '(' + ', '.join([(f'{safe(pname)}: {format_type(ptype)}' if pname else f'{format_type(ptype)}') if ptype else f'{safe(pname)}' for (pname, ptype) in info['params']]) + ')'
-    type_params = '' if not info.get('type_params') else safe('<') + ', '.join([format_type(ptype) for ptype in info['type_params']]) + safe('>')
-    return_type = format_type(info['return_type'])
     markdown = linkify(reindent(info['markdown'], prefix='      '))
-    heading = '  \n'.join([
-      f'<a name="{name}" href="#{name}">#</a>\n**{name}**{type_params}{params}: {return_type} {source_link(name)}',
-      *(f'<a name="{alias}" href="#{alias}">#</a>\n**{alias}**{type_params}{params}: {return_type} {source_link(alias)}' for alias in info.get('aliases', []))
-    ])
+    heading = get_signature_html(name)
 
     cog.outl('---')
 
@@ -1240,5 +1235,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: de5156877b1bbe0a0aa29dd8ba04f6b6) -->
+<!--[[[end]]] (checksum: de5156877b1bbe0a0aa29dd8ba04f6b6)-->
 <!-- prettier-ignore-end -->
