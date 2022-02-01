@@ -46,9 +46,9 @@ for section, names in DECODERS_BY_SECTION.items():
 - [**Arrays**](#arrays): [`array()`](/api.html#array), [`nonEmptyArray()`](/api.html#nonEmptyArray), [`poja`](/api.html#poja), [`tuple()`](/api.html#tuple), [`set()`](/api.html#set)
 - [**Objects**](#objects): [`object()`](/api.html#object), [`exact()`](/api.html#exact), [`inexact()`](/api.html#inexact), [`pojo`](/api.html#pojo), [`dict()`](/api.html#dict), [`mapping()`](/api.html#mapping)
 - [**JSON values**](#json-values): [`json`](/api.html#json), [`jsonObject`](/api.html#jsonObject), [`jsonArray`](/api.html#jsonArray)
-- [**Unions**](#unions): [`either()`](/api.html#either), [`oneOf()`](/api.html#oneOf), [`taggedUnion()`](/api.html#taggedUnion), [`dispatch()`](/api.html#dispatch)
+- [**Unions**](#unions): [`either()`](/api.html#either), [`oneOf()`](/api.html#oneOf), [`taggedUnion()`](/api.html#taggedUnion)
 - [**Utilities**](#utilities): [`define()`](/api.html#define), [`prep()`](/api.html#prep), [`never`](/api.html#never), [`instanceOf()`](/api.html#instanceOf), [`lazy()`](/api.html#lazy), [`fail`](/api.html#fail)
-<!--[[[end]]] (checksum: 252d82369573a524a7f3a7186af1935e) -->
+<!--[[[end]]] (checksum: b4110a1d7b1aba8473d102f8bb9163c3) -->
 
 <!--[[[cog
 for section, names in DECODERS_BY_SECTION.items():
@@ -1031,7 +1031,6 @@ jsonArray.verify(null);               // throws
 - [`either()`](/api.html#either)
 - [`oneOf()`](/api.html#oneOf)
 - [`taggedUnion()`](/api.html#taggedUnion)
-- [`dispatch()`](/api.html#dispatch) (alias of [`taggedUnion()`](/api.html#taggedUnion))
 
 ---
 
@@ -1084,9 +1083,7 @@ oneOf(['foo', 'bar']);
 ---
 
 <a name="taggedUnion" href="#taggedUnion">#</a>
-**taggedUnion**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(field: <i style="color: #267f99">string</i>, mapping: <i style="color: #267f99">{ value1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, value2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | ...&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/unions.js#L142-L153 'Source')  
-<a name="dispatch" href="#dispatch">#</a>
-**dispatch**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(field: <i style="color: #267f99">string</i>, mapping: <i style="color: #267f99">{ value1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, value2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | ...&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/unions.js#L155-L158 'Source')
+**taggedUnion**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(field: <i style="color: #267f99">string</i>, mapping: <i style="color: #267f99">{ value1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, value2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | ...&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/unions.js#L142-L153 'Source')
 
 If you are decoding tagged unions you may want to use the [`taggedUnion()`](/api.html#taggedUnion) decoder instead of the general purpose [`either()`](/api.html#either) decoder to get better error messages and better performance.
 
@@ -1247,5 +1244,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 53c9fce4cca386532aefdb89bec56ab2)-->
+<!--[[[end]]] (checksum: ac6a715254ee9d57c086e2e945ae890a)-->
 <!-- prettier-ignore-end -->

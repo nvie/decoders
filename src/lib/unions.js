@@ -151,8 +151,3 @@ export function taggedUnion<O: { +[field: string]: Decoder<_Any>, ... }>(
         return decoder.decode(blob);
     });
 }
-
-export const dispatch: <O: { +[field: string]: Decoder<_Any>, ... }>(
-    field: string,
-    mapping: O,
-) => Decoder<$Values<$ObjMap<O, <T>(Decoder<T>) => T>>> = taggedUnion;

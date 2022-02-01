@@ -21,7 +21,7 @@ export { array, nonEmptyArray, poja, set, tuple } from './lib/arrays';
 export { boolean, numericBoolean, truthy } from './lib/booleans';
 export { date, iso8601 } from './lib/dates';
 export { dict, exact, inexact, mapping, object, pojo } from './lib/objects';
-export { either, oneOf, taggedUnion, dispatch } from './lib/unions';
+export { either, oneOf, taggedUnion } from './lib/unions';
 export {
     email,
     httpsUrl,
