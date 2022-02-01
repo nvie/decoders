@@ -164,12 +164,21 @@ numericBoolean.verify('dummy'); // $ExpectType boolean
 
 optional(string); // $ExpectType Decoder<string | undefined>
 optional(optional(string)); // $ExpectType Decoder<string | undefined>
+optional(string, 42); // $ExpectType Decoder<string | 42>
+optional(optional(string), 42); // $ExpectType Decoder<string | 42>
+optional(optional(string, 42)); // $ExpectType Decoder<string | 42 | undefined>
 
 nullable(string); // $ExpectType Decoder<string | null>
 nullable(nullable(string)); // $ExpectType Decoder<string | null>
+nullable(string, 42); // $ExpectType Decoder<string | 42>
+nullable(nullable(string), 42); // $ExpectType Decoder<string | 42>
+nullable(nullable(string, 42)); // $ExpectType Decoder<string | 42 | null>
 
 maybe(string); // $ExpectType Decoder<string | null | undefined>
 maybe(maybe(string)); // $ExpectType Decoder<string | null | undefined>
+maybe(string, 42); // $ExpectType Decoder<string | 42>
+maybe(maybe(string), 42); // $ExpectType Decoder<string | 42>
+maybe(maybe(string, 42)); // $ExpectType Decoder<string | 42 | null | undefined>
 
 // $ExpectType Decoder<{ bar: { qux: string; }; foo?: string | undefined; }>
 object({

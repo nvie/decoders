@@ -501,11 +501,27 @@ DECODERS = {
 
   'optional': {
     'section': 'Optionality',
-    'type_params': ['T'],
-    'params': [('decoder', 'Decoder<T>')],
-    'return_type': 'Decoder<T | undefined>',
+
+    'signatures': [
+      {
+        'type_params': ['T'],
+        'params': [('decoder', 'Decoder<T>')],
+        'return_type': 'Decoder<T | undefined>',
+      },
+      {
+        'type_params': ['T', 'V'],
+        'params': [
+          ('decoder', 'Decoder<T>'),
+          ('defaultValue', 'V'),
+        ],
+        'return_type': 'Decoder<T | V>',
+        },
+    ],
+
     'markdown': """
       Accepts whatever the given decoder accepts, or `undefined`.
+
+      If a default value is explicitly provided, return that instead in the `undefined` case.
 
       ```typescript
       const decoder = optional(string);
@@ -544,11 +560,27 @@ DECODERS = {
 
   'nullable': {
     'section': 'Optionality',
-    'type_params': ['T'],
-    'params': [('decoder', 'Decoder<T>')],
-    'return_type': 'Decoder<T | null>',
+
+    'signatures': [
+      {
+        'type_params': ['T'],
+        'params': [('decoder', 'Decoder<T>')],
+        'return_type': 'Decoder<T | null>',
+      },
+      {
+        'type_params': ['T', 'V'],
+        'params': [
+          ('decoder', 'Decoder<T>'),
+          ('defaultValue', 'V'),
+        ],
+        'return_type': 'Decoder<T | V>',
+      },
+    ],
+
     'markdown': """
       Accepts whatever the given decoder accepts, or `null`.
+
+      If a default value is explicitly provided, return that instead in the `null` case.
 
       ```typescript
       const decoder = nullable(string);
@@ -567,11 +599,27 @@ DECODERS = {
 
   'maybe': {
     'section': 'Optionality',
-    'type_params': ['T'],
-    'params': [('decoder', 'Decoder<T>')],
-    'return_type': 'Decoder<T | null | undefined>',
+
+    'signatures': [
+      {
+        'type_params': ['T'],
+        'params': [('decoder', 'Decoder<T>')],
+        'return_type': 'Decoder<T | null | undefined>',
+      },
+      {
+        'type_params': ['T', 'V'],
+        'params': [
+          ('decoder', 'Decoder<T>'),
+          ('defaultValue', 'V'),
+        ],
+        'return_type': 'Decoder<T | V>',
+      },
+    ],
+
     'markdown': """
       Accepts whatever the given decoder accepts, or `null`, or `undefined`.
+
+      If a default value is explicitly provided, return that instead in the `null`/`undefined` case.
 
       ```typescript
       const decoder = maybe(string);

@@ -187,6 +187,17 @@ describe('optional', () => {
             expect(decoder.decode(value).ok).toBe(false);
         }
     });
+
+    it('w/ default value', () => {
+        const DEFAULT_VALUE = 42;
+        const decoder = optional(string, DEFAULT_VALUE);
+        expect(decoder.verify('foo')).toBe('foo');
+        expect(decoder.verify('')).toBe('');
+        expect(decoder.verify(undefined)).toBe(DEFAULT_VALUE);
+
+        expect(() => decoder.verify(null)).toThrow();
+        expect(() => decoder.verify(123)).toThrow();
+    });
 });
 
 describe('nullable', () => {
@@ -207,6 +218,17 @@ describe('nullable', () => {
             if (value === null) continue;
             expect(decoder.decode(value).ok).toBe(false);
         }
+    });
+
+    it('w/ default value', () => {
+        const DEFAULT_VALUE = 42;
+        const decoder = nullable(string, DEFAULT_VALUE);
+        expect(decoder.verify('foo')).toBe('foo');
+        expect(decoder.verify('')).toBe('');
+        expect(decoder.verify(null)).toBe(DEFAULT_VALUE);
+
+        expect(() => decoder.verify(undefined)).toThrow();
+        expect(() => decoder.verify(123)).toThrow();
     });
 });
 
@@ -240,5 +262,16 @@ describe('maybe', () => {
             if (value === null) continue;
             expect(decoder.decode(value).ok).toBe(false);
         }
+    });
+
+    it('w/ default value', () => {
+        const DEFAULT_VALUE = 42;
+        const decoder = maybe(string, DEFAULT_VALUE);
+        expect(decoder.verify('foo')).toBe('foo');
+        expect(decoder.verify('')).toBe('');
+        expect(decoder.verify(null)).toBe(DEFAULT_VALUE);
+        expect(decoder.verify(undefined)).toBe(DEFAULT_VALUE);
+
+        expect(() => decoder.verify(123)).toThrow();
     });
 });

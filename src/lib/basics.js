@@ -2,6 +2,7 @@
 
 import { define } from '../Decoder';
 import { either } from './unions';
+import type { _Any } from '../_utils';
 import type { Decoder, Scalar } from '../Decoder';
 
 /**
@@ -18,20 +19,6 @@ export const undefined_: Decoder<void> = define((blob, ok, err) =>
     blob === undefined ? ok(blob) : err('Must be undefined'),
 );
 
-/**
- * Accepts whatever the given decoder accepts, or `undefined`.
- */
-export function optional<T>(decoder: Decoder<T>): Decoder<void | T> {
-    return either(undefined_, decoder);
-}
-
-/**
- * Accepts whatever the given decoder accepts, or `null`.
- */
-export function nullable<T>(decoder: Decoder<T>): Decoder<null | T> {
-    return either(null_, decoder);
-}
-
 const undefined_or_null: Decoder<null | void> = define((blob, ok, err) =>
     blob === undefined || blob === null
         ? ok(blob)
@@ -39,12 +26,53 @@ const undefined_or_null: Decoder<null | void> = define((blob, ok, err) =>
           err('Must be undefined or null'),
 );
 
+interface Maybeish<E> {
+    <T>(decoder: Decoder<T>): Decoder<E | T>;
+    <T, V>(decoder: Decoder<T>, defaultValue: V): Decoder<$NonMaybeType<T> | V>;
+}
+
 /**
  * Accepts whatever the given decoder accepts, or `null`, or `undefined`.
  */
-export function maybe<T>(decoder: Decoder<T>): Decoder<T | null | void> {
-    return either(undefined_or_null, decoder);
+function _maybeish<E>(emptyCase: Decoder<E>): Maybeish<E> {
+    function _inner(decoder /* defaultValue */) {
+        const rv = either(emptyCase, decoder);
+        return (
+            // If a default value is provided...
+            arguments.length >= 2
+                ? // ...then return the default value
+                  rv.transform((value) => value ?? arguments[1])
+                : // Otherwise the "normal" empty case
+                  rv
+        );
+    }
+
+    return (_inner: _Any);
 }
+
+/**
+ * Accepts whatever the given decoder accepts, or `null`.
+ *
+ * If a default value is explicitly provided, return that instead in the `null`
+ * case.
+ */
+export const nullable: Maybeish<null> = _maybeish(null_);
+
+/**
+ * Accepts whatever the given decoder accepts, or `undefined`.
+ *
+ * If a default value is explicitly provided, return that instead in the
+ * `undefined` case.
+ */
+export const optional: Maybeish<void> = _maybeish(undefined_);
+
+/**
+ * Accepts whatever the given decoder accepts, or `null`, or `undefined`.
+ *
+ * If a default value is explicitly provided, return that instead in the
+ * `null`/`undefined` case.
+ */
+export const maybe: Maybeish<null | void> = _maybeish(undefined_or_null);
 
 /**
  * Accepts only the given constant value.
