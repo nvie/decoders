@@ -1,47 +1,66 @@
 ## v2.0.0-beta
 
-This is a breaking change, which brings numerous benefits including speed, bundle size,
-and simplicity. Please see the [migration guide](./MIGRATING-v2.md) for instructions on
-how to adjust your code.
+This is a breaking change, which brings numerous benefits:
 
-Potentially breaking changes:
+-   A **simpler API**
+-   Smaller **bundle size** (67% reduction)
+-   **Tree-shaking** support
+-   Runtime **speed**
+-   Better documentation
+-   Better support for writing your own decoders
 
--   Drop support for all Node versions below 12.x
--   Drop support for Flow versions below 0.142.0
--   Drop support for TypeScript versions below 4.1.0
--   Drop all package dependencies
--   Removed decoders:
-    -   `guard()` no longer exists, see
-        [migration instructions](./MIGRATING-v2.md#guards-are-no-longer-a-thing)
-    -   `eitherN()` (now simply `either()`, see
-        [migration instructions](./MIGRATING-v2.md#eitherN-is-now-simply-either))
-    -   `tupleN()` (now simply `tuple()`, see
-        [migration instructions](./MIGRATING-v2.md#tupleN-is-now-simply-tuple))
--   Renamed decoders:
-    -   `map()` → `transform()` - see
-        [migration instructions](./MIGRATING-v2.md#map-is-now-transform)
-    -   `dispatch()` → `taggedUnion()` - see
-        [migration instructions](./MIGRATING-v2.md#dispatch-is-now-taggedUnion)
--   Decoders that have changed:
-    -   API of `predicate()` has changed - see
-        [migration instructions](./MIGRATING-v2.md#predicate-is-now-a-first-class-citizen)
-    -   API of `url` decoder has changed - see
-        [migration instructions](./MIGRATING-v2.md#url-decoder-has-changed)
+Please see the [migration guide](./MIGRATING-v2.md) for precise instructions on how to
+adjust your code.
 
-New features:
+The main change is the brand new `Decoder<T>` API! The **tl;dr** is:
+
+| Old API (v1)<br /><small>If you're using this pattern...</small> |     | New API (v2)<br /><small>...replace it with this now</small> | Notes                                                                    |
+| :--------------------------------------------------------------- | --- | :----------------------------------------------------------- | :----------------------------------------------------------------------- |
+| `mydecoder(input)`                                               | →   | `mydecoder.decode(input)`                                    |                                                                          |
+| `guard(mydecoder)(input)`                                        | →   | `mydecoder.verify(input)`                                    | [instructions](./MIGRATING-v2.md#guards-are-no-longer-a-thing)           |
+| `map(mydecoder, ...)`                                            | →   | `mydecoder.transform(...)`                                   | [instructions](./MIGRATING-v2.md#map-is-now-transform)                   |
+| `compose(mydecoder, predicate(...))`                             | →   | `mydecoder.refine(...)`                                      | [instructions](./MIGRATING-v2.md#predicate-is-now-a-first-class-citizen) |
+| `describe(mydecoder, ...)`                                       | →   | `mydecoder.describe(...)`                                    |                                                                          |
+| `mydecoder(input).value()`                                       | →   | `mydecoder.value(input)`                                     |                                                                          |
+| `either`, `either3`, ..., `either9`                              | →   | `either`                                                     | [instructions](./MIGRATING-v2.md#eitherN-is-now-simply-either)           |
+| `tuple1`, `tuple2`, ... `tuple6`                                 | →   | `tuple`                                                      | [instructions](./MIGRATING-v2.md#tupleN-is-now-simply-tuple)             |
+| `dispatch`                                                       | →   | `taggedUnion`                                                | [instructions](./MIGRATING-v2.md#dispatch-is-now-taggedUnion)            |
+
+The full documentation is available on [**decoders.cc**](https://decoders.cc).
+
+Other features:
 
 -   Include ES modules in published NPM builds (yay tree-shaking! 🍃)
--   Much smaller total bundle size
--   New decoders:
-    -   [`always`](https://nvie.com/decoders/api#always)
-    -   [`never`](https://nvie.com/decoders/api#never)
-    -   [`prep()`](https://nvie.com/decoders/api#prep)
-    -   [`set()`](https://nvie.com/decoders/api#set)
-    -   [`uuidv1`](https://nvie.com/decoders/api#uuidv1)
-    -   [`uuidv4`](https://nvie.com/decoders/api#uuidv4)
-    -   [`uuid`](https://nvie.com/decoders/api#uuid)
+-   Much smaller total bundle size (**67% smaller** compared to v1 😇)
+
+Other potentially breaking changes:
+
+-   Drop support for all Node versions below 12.x
+-   Drop support for TypeScript versions below 4.1.0
+-   Drop support for Flow versions below 0.142.0
+-   Drop all package dependencies
+-   Direct reliance on `lemons` has been removed
+-   The `url` decoder has a changed signature - see
+    [migration instructions](./MIGRATING-v2.md#url-decoder-has-changed)
+
+New decoders:
+
+-   [`always`](https://decoders.cc/api.html#always)
+-   [`anyNumber`](https://decoders.cc/api.html#anyNumber)
+-   [`never`](https://decoders.cc/api.html#never)
+-   [`prep()`](https://decoders.cc/api.html#prep)
+-   [`set()`](https://decoders.cc/api.html#set)
+-   [`uuid`](https://decoders.cc/api.html#uuid)
+-   [`uuidv1`](https://decoders.cc/api.html#uuidv1)
+-   [`uuidv4`](https://decoders.cc/api.html#uuidv4)
+
+Other improvements:
+
+-   [`optional()`](https://decoders.cc/api.html#optional),
+    [`nullable()`](https://decoders.cc/api.html#nullable), and
+    [`maybe()`](https://decoders.cc/api.html#maybe) now each take an optional 2nd param to
+    specify a default value
 -   Better error messages for nested `either`s
--   Guard API now has a simpler way to specify formatters
 
 Implementation changes:
 

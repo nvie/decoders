@@ -49,6 +49,7 @@ replace" command for these:
 | `dispatch`                                               | →   | [`taggedUnion`](https://decoders.cc/api.html#taggedUnion)                                 |         |
 | `map(YOUR_DECODER, YOUR_FUNC)`                           | →   | `YOUR_DECODER`[`.transform`](https://decoders.cc/Decoder.html#transform)`(YOUR_FUNC)`     |         |
 | `compose(YOUR_DECODER, predicate(YOUR_FUNC, YOUR_MSG))`  | →   | `YOUR_DECODER`[`.refine`](https://decoders.cc/Decoder.html#refine)`(YOUR_FUNC, YOUR_MSG)` |         |
+| `describe(YOUR_DECODER, YOUR_MSG)`                       | →   | `YOUR_DECODER`[`.describe`](https://decoders.cc/Decoder.html#describe)`(YOUR_MSG)`        |         |
 | `url()`                                                  | →   | [`httpsUrl`](https://decoders.cc/api.html#httpsUrl)                                       | See (1) |
 | `url([])`                                                | →   | [`url`](https://decoders.cc/api.html#url)                                                 | See (2) |
 | `url(['git'])`                                           | →   | —                                                                                         | See (3) |
