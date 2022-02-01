@@ -2,8 +2,8 @@
 
 import { annotateObject, merge, updateText } from '../annotate';
 import { define } from '../Decoder';
-import type { _Any } from '../_utils';
 import type { Annotation } from '../annotate';
+import type { _Any as AnyDecoder } from '../_utils';
 import type { Decoder, DecodeResult } from '../Decoder';
 
 function subtract(xs: Set<string>, ys: Set<string>): Set<string> {
@@ -52,7 +52,7 @@ export const pojo: Decoder<{| [string]: mixed |}> = define((blob, ok, err) =>
  * Accepts objects with fields matching the given decoders. Extra fields that
  * exist on the input object are ignored and will not be returned.
  */
-export function object<O: { +[field: string]: Decoder<_Any>, ... }>(
+export function object<O: { +[field: string]: AnyDecoder, ... }>(
     decodersByKey: O,
 ): Decoder<$ObjMap<O, <T>(Decoder<T>) => T>> {
     // Compute this set at decoder definition time
@@ -134,7 +134,7 @@ export function object<O: { +[field: string]: Decoder<_Any>, ... }>(
  * Like `object()`, but will reject inputs that contain extra fields that are
  * not specified explicitly.
  */
-export function exact<O: { +[field: string]: Decoder<_Any>, ... }>(
+export function exact<O: { +[field: string]: AnyDecoder, ... }>(
     decodersByKey: O,
 ): Decoder<$ObjMap<$Exact<O>, <T>(Decoder<T>) => T>> {
     // Compute this set at decoder definition time
@@ -160,7 +160,7 @@ export function exact<O: { +[field: string]: Decoder<_Any>, ... }>(
  * Like `object()`, but will pass through any extra fields on the input object
  * unvalidated that will thus be of `unknown` type statically.
  */
-export function inexact<O: { +[field: string]: Decoder<_Any> }>(
+export function inexact<O: { +[field: string]: AnyDecoder }>(
     decodersByKey: O,
 ): Decoder<$ObjMap<O, <T>(Decoder<T>) => T> & { +[string]: mixed }> {
     return pojo.then((plainObj) => {
