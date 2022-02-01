@@ -22,8 +22,9 @@ Decoders is an elegant and battle-tested validation library for type-safe input 
 <!-- prettier-ignore-end -->
 
 [Get started now](#getting-started){: .btn .btn-primary .fs-6 .mb-4 .mb-md-0 .mr-4 .px-5
-.py-3 } [API Reference](https://nvie.com/decoders/api){: .btn .fs-6 .mb-4 .mb-md-0 .px-5
-.py-3 }
+.py-3 } [Decoder API](https://decoders.cc/Decoder.html){: .btn .fs-6 .mb-4 .mb-md-0 .mr-4
+.px-5 .py-3 } [API Reference](https://decoders.cc/api.html){: .btn .fs-6 .mb-4 .mb-md-0
+.px-5 .py-3 }
 
 ## Getting started
 
