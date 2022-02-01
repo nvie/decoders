@@ -1127,7 +1127,7 @@ Defines a new `Decoder<T>`, by implementing a custom acceptance function. The fu
 2. `ok` - Call `ok(value)` to accept the input and return ``value``
 3. `err` - Call `err(message)` to reject the input with error ``message``
 
-The expected return value should be a `DecodeResult<T>`, which can be obtained by returning the result from the provided `ok` or `err` helper functions.
+The expected return value should be a `DecodeResult<T>`, which can be obtained by returning the resue valuelt from the provided `ok` or `err` helper functions. Please note that `ok()` and `err()` don't perform side effects! You'll need to _return_ those values.
 
 ```typescript
 // NOTE: Please do NOT implement an uppercase decoder like this! 😇
@@ -1244,5 +1244,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: ac6a715254ee9d57c086e2e945ae890a)-->
+<!--[[[end]]] (checksum: 5b2548a22b502b5b3e7cf0ce1bfd8d1b)-->
 <!-- prettier-ignore-end -->
