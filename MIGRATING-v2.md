@@ -15,7 +15,7 @@ for this, and I'm happy to help 🙏 !
 1. If applicable, uninstall debrief: `$ npm uninstall debrief`
 1. If applicable, uninstall lemons: `$ npm uninstall lemons`
 1. Stop "calling" decoders, see [instructions](#stop-calling-decoders).
-1. Rename imports for decoders that have been renamed, see
+1. Rewrite patterns imports for decoders that have been renamed, see
    [instructions](#rename-some-decoders).
 1. Rewrite all uses of `guard()`, see [instructions](#guards-are-no-longer-a-thing).
 1. If applicable, see
@@ -42,25 +42,14 @@ const result = mydecoder.decode(externalData);
 Some decoders have been renamed. See the table below. You can do a simple "search &
 replace" command for these:
 
-| Replace... (v1)                                          |     | with... (v2) ✨                                                                           | Notes   |
-| :------------------------------------------------------- | --- | :---------------------------------------------------------------------------------------- | ------- |
-| `eitherN`<br /><small>`either3`, `either4`, etc.</small> | →   | [`either`](https://decoders.cc/api.html#either)                                           |         |
-| `tupleN`<br /><small>`tuple1`, `tuple2`, etc.</small>    | →   | [`tuple`](https://decoders.cc/api.html#tuple)                                             |         |
-| `dispatch`                                               | →   | [`taggedUnion`](https://decoders.cc/api.html#taggedUnion)                                 |         |
-| `map(YOUR_DECODER, YOUR_FUNC)`                           | →   | `YOUR_DECODER`[`.transform`](https://decoders.cc/Decoder.html#transform)`(YOUR_FUNC)`     |         |
-| `compose(YOUR_DECODER, predicate(YOUR_FUNC, YOUR_MSG))`  | →   | `YOUR_DECODER`[`.refine`](https://decoders.cc/Decoder.html#refine)`(YOUR_FUNC, YOUR_MSG)` |         |
-| `describe(YOUR_DECODER, YOUR_MSG)`                       | →   | `YOUR_DECODER`[`.describe`](https://decoders.cc/Decoder.html#describe)`(YOUR_MSG)`        |         |
-| `url()`                                                  | →   | [`httpsUrl`](https://decoders.cc/api.html#httpsUrl)                                       | See (1) |
-| `url([])`                                                | →   | [`url`](https://decoders.cc/api.html#url)                                                 | See (2) |
-| `url(['git'])`                                           | →   | —                                                                                         | See (3) |
-
-Some notes/comments:
-
-1. `url()` is no longer a function taking a list of schemes.
-2. `url` now returns a `URL` instance, no longer a string.
-3. There's no direct way for decoding custom schemas anymore, but you can
-   [reimplement the old decoder yourself](https://gist.github.com/nvie/9e912992102b44b5c843c26ee3b19450).
-   This is also a great way to enforce other rules, like specific domains, etc.
+| Replace... (v1)                                          |     | with... (v2) ✨                                                                           | Notes |
+| :------------------------------------------------------- | --- | :---------------------------------------------------------------------------------------- | ----- |
+| `eitherN`<br /><small>`either3`, `either4`, etc.</small> | →   | [`either`](https://decoders.cc/api.html#either)                                           |       |
+| `tupleN`<br /><small>`tuple1`, `tuple2`, etc.</small>    | →   | [`tuple`](https://decoders.cc/api.html#tuple)                                             |       |
+| `dispatch`                                               | →   | [`taggedUnion`](https://decoders.cc/api.html#taggedUnion)                                 |       |
+| `map(YOUR_DECODER, YOUR_FUNC)`                           | →   | `YOUR_DECODER`[`.transform`](https://decoders.cc/Decoder.html#transform)`(YOUR_FUNC)`     |       |
+| `compose(YOUR_DECODER, predicate(YOUR_FUNC, YOUR_MSG))`  | →   | `YOUR_DECODER`[`.refine`](https://decoders.cc/Decoder.html#refine)`(YOUR_FUNC, YOUR_MSG)` |       |
+| `describe(YOUR_DECODER, YOUR_MSG)`                       | →   | `YOUR_DECODER`[`.describe`](https://decoders.cc/Decoder.html#describe)`(YOUR_MSG)`        |       |
 
 ## Guards are no longer a thing
 
@@ -83,6 +72,24 @@ const value: Whatever = verify(externalData);
 // ✅ 2.x
 const value: Whatever = whatever.verify(externalData);
 ```
+
+## Signature of `url` has changed
+
+The signature of the old `url` decoder has changed. Compare
+[old](https://github.com/nvie/decoders/blob/v1.25.5/src/string.js#L55-L66) vs
+[new](https://decoders.cc/api.html#url).
+
+1. `url()` is no longer a function taking a list of schemes.
+2. `url` now returns a `URL` instance, no longer a string.
+3. There's no direct way for decoding custom schemas anymore, but you can
+   [reimplement the old decoder yourself](https://gist.github.com/nvie/9e912992102b44b5c843c26ee3b19450).
+   This is also a great way to enforce other rules, like specific domains, etc.
+
+| Rewrite... (v1) |     | to... (v2) ✨                                                                              |
+| :-------------- | --- | :----------------------------------------------------------------------------------------- |
+| `url()`         | →   | [`httpsUrl`](https://decoders.cc/api.html#httpsUrl)                                        |
+| `url([])`       | →   | [`url`](https://decoders.cc/api.html#url)                                                  |
+| `url(['git'])`  | →   | Define manually ([example](https://gist.github.com/nvie/9e912992102b44b5c843c26ee3b19450)) |
 
 ## Rewriting imports from `lemons` or `debrief`
 

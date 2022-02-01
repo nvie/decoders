@@ -25,6 +25,7 @@ The main change is the brand new `Decoder<T>` API! The **tl;dr** is:
 | `either`, `either3`, ..., `either9`                              | →   | `either`                                                     | [migration instructions](./MIGRATING-v2.md#eitherN-is-now-simply-either)           |
 | `tuple1`, `tuple2`, ... `tuple6`                                 | →   | `tuple`                                                      | [migration instructions](./MIGRATING-v2.md#tupleN-is-now-simply-tuple)             |
 | `dispatch`                                                       | →   | `taggedUnion`                                                | [migration instructions](./MIGRATING-v2.md#dispatch-is-now-taggedUnion)            |
+| `url(...)`                                                       | →   | `httpsUrl` / `url` (signature has changed)                   | [migration instructions](./MIGRATING-v2.md#signature-of-url-has-changed)           |
 
 The full documentation is available on [**decoders.cc**](https://decoders.cc).
 
@@ -40,8 +41,6 @@ Other potentially breaking changes:
 -   Drop support for Flow versions below 0.142.0
 -   Drop all package dependencies
 -   Direct reliance on `lemons` has been removed
--   The `url` decoder has a changed signature - see
-    [migration instructions](./MIGRATING-v2.md#url-decoder-has-changed)
 
 New decoders:
 
