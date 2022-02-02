@@ -9,8 +9,9 @@ import type { Result } from './result';
 export type Scalar = string | number | boolean | symbol | void | null;
 
 export type DecodeResult<T> = Result<T, Annotation>;
-export type DecodeFn<T, I = mixed> = (
-    blob: I,
+
+export type AcceptanceFn<T, InputT = mixed> = (
+    blob: InputT,
     ok: (value: T) => DecodeResult<T>,
     err: (msg: string | Annotation) => DecodeResult<T>,
 ) => DecodeResult<T>;
@@ -39,10 +40,10 @@ export type Decoder<T> = {|
     reject(rejectFn: (value: T) => string | Annotation | null): Decoder<T>,
     transform<V>(transformFn: (value: T) => V): Decoder<V>,
     describe(message: string): Decoder<T>,
-    then<V>(next: DecodeFn<V, T>): Decoder<V>,
+    then<V>(next: AcceptanceFn<V, T>): Decoder<V>,
 
     // Experimental APIs (please don't rely on these yet)
-    peek_UNSTABLE<V>(next: DecodeFn<V, [mixed, T]>): Decoder<V>,
+    peek_UNSTABLE<V>(next: AcceptanceFn<V, [mixed, T]>): Decoder<V>,
 |};
 
 function noThrow<T, V>(fn: (value: T) => V): (T) => DecodeResult<V> {
@@ -69,7 +70,7 @@ function noThrow<T, V>(fn: (value: T) => V): (T) => DecodeResult<V> {
  * obtained by returning the result from the provided `ok` or `err` helper
  * functions.
  */
-export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
+export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
     /**
      * Validates the raw/untrusted/unknown input and either accepts or rejects
      * it.
@@ -78,7 +79,7 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
      * instead return a result type.
      */
     function decode(blob: mixed): DecodeResult<T> {
-        return decodeFn(blob, makeOk, (msg: Annotation | string) =>
+        return fn(blob, makeOk, (msg: Annotation | string) =>
             makeErr(typeof msg === 'string' ? annotate(blob, msg) : msg),
         );
     }
@@ -151,25 +152,23 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
     /**
      * Chain together the current decoder with another.
      *
-     * First, the current decoder must accept the input. If so, it will pass
-     * the successfully decoded result to the given ``next`` function to
-     * further decide whether or not the value should get accepted or rejected.
+     * > _**NOTE:** This is an advanced, low-level, API. It's not recommended
+     * > to reach for this construct unless there is no other way. Most cases can
+     * > be covered more elegantly by `.transform()` or `.refine()` instead._
      *
-     * The argument to `.then()` is a decoding function, just like one you
-     * would pass to `define()`. The key difference with `define()` is that
-     * `define()` must always assume an ``unknown`` input, whereas with
-     * a `.then()` call the provided ``next`` function will receive a ``T`` as
-     * its input. This will allow the function to make a stronger assumption
-     * about its input.
+     * If the current decoder accepts an input, the resulting ``T`` value will
+     * get passed into the given ``next`` acceptance function to further decide
+     * whether or not the value should get accepted or rejected.
      *
-     * If it helps, you can think of `define(nextFn)` as equivalent to
-     * `unknown.then(nextFn)`.
+     * This works similar to how you would `define()` a new decoder, except
+     * that the ``blob`` param will now be ``T`` (a known type), rather than
+     * ``unknown``. This will allow the function to make a stronger assumption
+     * about its input and avoid re-refining inputs.
      *
-     * This is an advanced, low-level, decoder. It's not recommended to reach
-     * for this low-level construct when implementing custom decoders. Most
-     * cases can be covered by `.transform()` or `.refine()`.
+     * If it helps, you can think of `define(...)` as equivalent to
+     * `unknown.then(...)`.
      */
-    function then<V>(next: DecodeFn<V, T>): Decoder<V> {
+    function then<V>(next: AcceptanceFn<V, T>): Decoder<V> {
         return define((blob, ok, err) => {
             const result = decode(blob);
             return result.ok ? next(result.value, ok, err) : result;
@@ -227,7 +226,7 @@ export function define<T>(decodeFn: DecodeFn<T>): Decoder<T> {
      *
      * This is an advanced, low-level, decoder.
      */
-    function peek_UNSTABLE<V>(next: DecodeFn<V, [mixed, T]>): Decoder<V> {
+    function peek_UNSTABLE<V>(next: AcceptanceFn<V, [mixed, T]>): Decoder<V> {
         return define((blob, ok, err) => {
             const result = decode(blob);
             return result.ok ? next([blob, result.value], ok, err) : result;

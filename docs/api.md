@@ -1119,23 +1119,32 @@ This is effectively equivalent to `either(A, B)`, but will provide better error 
 ---
 
 <a name="define" href="#define">#</a>
-**define**&lt;<i style="color: #267f99">T</i>&gt;(fn: <i style="color: #267f99">(blob: unknown, ok, err) =&gt; DecodeResult&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L72-L250 'Source')
+**define**&lt;<i style="color: #267f99">T</i>&gt;(fn: <i style="color: #267f99">(blob: unknown, ok, err) =&gt; DecodeResult&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L73-L249 'Source')
 
-Defines a new `Decoder<T>`, by implementing a custom acceptance function. The function receives three arguments:
+Defines a new `Decoder<T>`, by implementing a custom acceptance function.
+
+> _**NOTE:** This is the lowest-level API to define a new decoder, and therefore not recommended unless you have a very good reason for it. Most cases can be covered more elegantly by starting from an existing decoder and using [`.transform()`](/Decoder.html#transform) or [`.refine()`](/Decoder.html#refine) on them instead._
+
+The function receives three arguments:
 
 1. `blob` - the raw/unknown input (aka your external data)
 2. `ok` - Call `ok(value)` to accept the input and return ``value``
 3. `err` - Call `err(message)` to reject the input with error ``message``
 
-The expected return value should be a `DecodeResult<T>`, which can be obtained by returning the resue valuelt from the provided `ok` or `err` helper functions. Please note that `ok()` and `err()` don't perform side effects! You'll need to _return_ those values.
+The expected return value should be a `DecodeResult<T>`, which can be obtained by returning the result of calling the provided `ok` or `err` helper functions. Please note that `ok()` and `err()` don't perform side effects! You'll need to _return_ those values.
 
 ```typescript
 // NOTE: Please do NOT implement an uppercase decoder like this! 😇
 const uppercase: Decoder<string> = define(
-  (blob, ok, err) =>
-    (typeof blob === 'string')
-      ? ok(blob.toUpperCase())
-      : err('I only accept strings as input')
+  (blob, ok, err) => {
+    if (typeof blob === 'string') {
+      // Accept the input
+      return ok(blob.toUpperCase());
+    } else {
+      // Reject the input
+      return err('I only accept strings as input');
+    }
+  }
 );
 
 // 👍
@@ -1244,5 +1253,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 5b2548a22b502b5b3e7cf0ce1bfd8d1b)-->
+<!--[[[end]]] (checksum: 531008e6f8900ae472362feecb29adf2)-->
 <!-- prettier-ignore-end -->

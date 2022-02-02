@@ -1082,21 +1082,30 @@ DECODERS = {
     ],
     'return_type': 'Decoder<T>',
     'markdown': """
-      Defines a new `Decoder<T>`, by implementing a custom acceptance function. The function receives three arguments:
+      Defines a new `Decoder<T>`, by implementing a custom acceptance function.
+
+      > _**NOTE:** This is the lowest-level API to define a new decoder, and therefore not recommended unless you have a very good reason for it. Most cases can be covered more elegantly by starting from an existing decoder and using `.transform()` or `.refine()` on them instead._
+
+      The function receives three arguments:
 
       1. `blob` - the raw/unknown input (aka your external data)
       2. `ok` - Call `ok(value)` to accept the input and return ``value``
       3. `err` - Call `err(message)` to reject the input with error ``message``
 
-      The expected return value should be a `DecodeResult<T>`, which can be obtained by returning the resue valuelt from the provided `ok` or `err` helper functions. Please note that `ok()` and `err()` don't perform side effects! You'll need to _return_ those values.
+      The expected return value should be a `DecodeResult<T>`, which can be obtained by returning the result of calling the provided `ok` or `err` helper functions. Please note that `ok()` and `err()` don't perform side effects! You'll need to _return_ those values.
 
       ```typescript
       // NOTE: Please do NOT implement an uppercase decoder like this! 😇
       const uppercase: Decoder<string> = define(
-        (blob, ok, err) =>
-          (typeof blob === 'string')
-            ? ok(blob.toUpperCase())
-            : err('I only accept strings as input')
+        (blob, ok, err) => {
+          if (typeof blob === 'string') {
+            // Accept the input
+            return ok(blob.toUpperCase());
+          } else {
+            // Reject the input
+            return err('I only accept strings as input');
+          }
+        }
       );
 
       // 👍
@@ -1393,19 +1402,19 @@ DECODER_METHODS = {
   'then': {
     'type_params': ['V'],
     'params': [
-      ('next', 'DecodeFn<V, T>'),
+      ('next', '(blob: T, ok, err) => DecodeResult<V>'),
     ],
     'return_type': 'Decoder<V>',
     'markdown': """
       Chain together the current decoder with another.
 
-      First, the current decoder must accept the input. If so, it will pass the successfully decoded result to the given ``next`` function to further decide whether or not the value should get accepted or rejected.
+      > _**NOTE:** This is an advanced, low-level, API. It's not recommended to reach for this construct unless there is no other way. Most cases can be covered more elegantly by `.transform()` or `.refine()` instead._
 
-      The argument to `.then()` is a decoding function, just like one you would pass to `define()`. The key difference with `define()` is that `define()` must always assume an ``unknown`` input, whereas with a `.then()` call the provided ``next`` function will receive a ``T`` as its input. This will allow the function to make a stronger assumption about its input.
+      If the current decoder accepts an input, the resulting ``T`` value will get passed into the given ``next`` acceptance function to further decide whether or not the value should get accepted or rejected.
 
-      If it helps, you can think of `define(nextFn)` as equivalent to `unknown.then(nextFn)`.
+      This works similar to how you would `define()` a new decoder, except that the ``blob`` param will now be ``T`` (a known type), rather than ``unknown``. This will allow the function to make a stronger assumption about its input and avoid re-refining inputs.
 
-      This is an advanced, low-level, decoder. It's not recommended to reach for this low-level construct when implementing custom decoders. Most cases can be covered by `.transform()` or `.refine()`.
+      If it helps, you can think of `define(...)` as equivalent to `unknown.then(...)`.
     """,
   },
 }

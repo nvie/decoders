@@ -4,8 +4,9 @@ import { Result } from './result';
 export type Scalar = string | number | boolean | symbol | undefined | null;
 
 export type DecodeResult<T> = Result<T, Annotation>;
-export type DecodeFn<T, I = unknown> = (
-    blob: I,
+
+export type AcceptanceFn<T, InputT = unknown> = (
+    blob: InputT,
     ok: (value: T) => DecodeResult<T>,
     err: (msg: string | Annotation) => DecodeResult<T>,
 ) => DecodeResult<T>;
@@ -19,10 +20,10 @@ export interface Decoder<T> {
     reject(rejectFn: (value: T) => string | Annotation | null): Decoder<T>;
     transform<V>(transformFn: (value: T) => V): Decoder<V>;
     describe(message: string): Decoder<T>;
-    then<V>(nextDecodeFn: DecodeFn<V, T>): Decoder<V>;
-    peek<V>(nextDecodeFn: DecodeFn<V, [unknown, T]>): Decoder<V>;
+    then<V>(next: AcceptanceFn<V, T>): Decoder<V>;
+    peek<V>(next: AcceptanceFn<V, [unknown, T]>): Decoder<V>;
 }
 
 export type DecoderType<T> = T extends Decoder<infer V> ? V : never;
 
-export function define<T>(fn: DecodeFn<T>): Decoder<T>;
+export function define<T>(fn: AcceptanceFn<T>): Decoder<T>;
