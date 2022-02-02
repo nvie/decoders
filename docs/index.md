@@ -50,35 +50,38 @@ the decoded value of type `T` as its payload, or an "error" result.
 This way, you can be sure that all untrusted runtime data is always in the shape you
 expect, and that static types can correctly be inferred for dynamic input data.
 
-There are roughly two ways to use a `Decoder<T>` instance:
+To use a decoder on an external input, call one of these three methods on the outermost
+decoder. Which one you want to use will depend on your use case.
 
--   `.verify()` (for convenience)
--   `.decode()` (for programmatically handling the success)
+-   `.verify()` (= recommended)
+-   `.value()` (for best-effort decoding)
+-   `.decode()` (for precise control)
 
-The simplest API is `.verify()`. It will either return the decoded (safe) value on
-success, or throw an error with a friendly message when the decoding failed.
+The simplest and recommended method is [`.verify()`](/Decoder.html#verify). It will either
+return the decoded (safe) value on success, or throw an error with a friendly message when
+the decoding failed.
 
 <img alt="The .verify() method explained" src="./assets/schematic-verify.png" style="max-width: min(592px, 100%)" />
 
-Alternatively, you can use the lower-level `.decode()` method if you want to have more
-programmatic control over the result. It works like `.verify()`, but instead of directly
-returning a value or failing, it returns a "Result" value, which can either have
-`ok: true` (and a value), or `ok: false` and an error annotation.
+Alternatively, you can use the [`.value()`](/Decoder.html#value) method which will not
+throw, but instead return `undefined` when the decoder rejects the input. Use this when
+you don't care about erroring in the face of unexpected input data. For example to use it
+as a "best effort" attempt:
+
+<img alt="The .value() method explained" src="./assets/schematic-value.png" style="max-width: min(592px, 100%)" />
+
+> _**Caveat!** You won't be able to distinguish between a legal `undefined` value or a
+> decoding error this way._
+
+Lastly, you can use the lower-level [`.decode()`](/Decoder.html#decode) method if you want
+to have most programmatic control over the result. It works like
+[`.verify()`](/Decoder.html#verify), but instead of directly returning a value or failing,
+it returns a "Result" value, which can either have `ok: true` (and a value), or
+`ok: false` and an error annotation.
 
 <img alt="The .decode() method explained" src="./assets/schematic-decode.png" style="max-width: min(592px, 100%)" />
 
-This makes it easier to use in `if`-statements, or to fall back to a default value if you
-want to allow graceful failure. For example, you can use it as follows:
-
-```typescript
-// Best-effort attempt to decode, but fall back to 0 if externalData is not
-// a valid positive number.
-positiveNumber.decode(externalData).value ?? 0;
-
-// 42    => 42
-// -1    => 0
-// 'lol' => 0
-```
+You'll typically only use this method directly when implementing your own decoders.
 
 ## Understanding the "type" of a Decoder
 
