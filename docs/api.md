@@ -32,6 +32,8 @@ from _lib import (
 
 # API Reference
 
+All "batteries included" decoders available in the standard library.
+
 <!-- prettier-ignore-start -->
 <!--[[[cog
 for section, names in DECODERS_BY_SECTION.items():
