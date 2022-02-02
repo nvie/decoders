@@ -479,7 +479,7 @@ date.verify('hello');  // throws
 <a name="iso8601" href="#iso8601">#</a>
 **iso8601**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Date&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/dates.js#L29-L40 'Source')
 
-Accepts [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings, returns then as `Date` instances.
+Accepts [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings, returns them as `Date` instances.
 
 This is very useful for working with dates in APIs: serialize them as `.toISOString()` when sending, decode them with [`iso8601`](/api.html#iso8601) when receiving.
 

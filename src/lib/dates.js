@@ -21,7 +21,7 @@ export const date: Decoder<Date> = define((blob, ok, err) => {
 
 /**
  * Accepts [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings,
- * returns then as `Date` instances.
+ * returns them as `Date` instances.
  *
  * This is very useful for working with dates in APIs: serialize them as
  * `.toISOString()` when sending, decode them with `iso8601` when receiving.
