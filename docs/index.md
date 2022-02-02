@@ -92,33 +92,16 @@ tell you what inputs it accepts.
 
 ## Composing decoders
 
-You are encouraged to build large decoders from small building blocks. For example, here
-you can see how four decoders are combined to build a fourth, larger decoder:
+Decoders can be stacked together like LEGO® pieces to build larger decoders. For example,
+here you can see how four decoders can be combined to build a larger decoder:
 
-<!-- prettier-ignore-start -->
-```typescript
-import { array, number, object, positiveInteger, string } from 'decoders';
-
-   object({
-     id: positiveInteger,
-//       ^^^^^^^^^^^^^^^   Decoder<number>                    (1)
-     name: string,
-//         ^^^^^^          Decoder<string>                    (2)
-     items: array(number),
-//                ^^^^^^   Decoder<number>                    (3)
-//          ^^^^^^^^^^^^^  Decoder<number[]>                  (4)
-   })
-// ^^ Decoder<{ id: number, name: string; items: number[] }>  (5)
-```
-<!-- prettier-ignore-end -->
-
-<!--
+![](./assets/decoder-composition.gif)
 
 ## Example
 
 Suppose, for example, you have a webhook endpoint that will receive user payloads:
 
-```json
+```typescript
 import { array, iso8601, number, object, optional, string } from 'decoders';
 
 // External data, for example JSON.parse()'ed from a request payload
@@ -133,7 +116,7 @@ const userDecoder = object({
     id: number,
     name: string,
     createdAt: optional(iso8601),
-    friends: array(string),
+    tags: array(string),
 });
 
 // NOTE: TypeScript will automatically infer this type for the `user` variable
@@ -141,12 +124,18 @@ const userDecoder = object({
 //     id: number;
 //     name: string;
 //     createdAt?: Date;
-//     friends: string[];
+//     tags: string[];
 // }
 
 const user = userDecoder.verify(externalData);
 ```
--->
+
+## Building your own decoders
+
+You are encouraged to build your own decoders that serve your use case. For documentation
+and examples, see [Building your own](/building-your-own.md).
+
+<!--
 
 ## Formatting error messsages
 
@@ -196,3 +185,5 @@ Built-in formatters are:
     ```text
     Decoding error: Value at keypath 0.age: Must be number
     ```
+
+-->
