@@ -682,7 +682,7 @@ DECODERS = {
   'nonEmptyArray': {
     'section': 'Arrays',
     'params': [('decoder', 'Decoder<T>')],
-    'return_type': 'Decoder<T[]>',
+    'return_type': 'Decoder<[T, ...T[]]>',
     'markdown': """
       Like `array()`, but will reject arrays with 0 elements.
 

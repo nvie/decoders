@@ -742,7 +742,7 @@ decoder.verify(['hello', 1.2]);  // throws
 ---
 
 <a name="nonEmptyArray" href="#nonEmptyArray">#</a>
-**nonEmptyArray**(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T[]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/arrays.js#L84-L86 'Source')
+**nonEmptyArray**(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;[T, ...T[]]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/arrays.js#L84-L86 'Source')
 
 Like [`array()`](/api.html#array), but will reject arrays with 0 elements.
 
@@ -1255,5 +1255,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: dcf98a21d2bd8da7f5a95ff38c44e36e) -->
+<!--[[[end]]] (checksum: 8b03ca8bbf7f6b9cc65bf64fa593607d) -->
 <!-- prettier-ignore-end -->
