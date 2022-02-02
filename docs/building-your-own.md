@@ -6,36 +6,44 @@ nav_order: 40
 # Building your own custom decoders
 
 When defining new decoders, it's important to understand the difference between what
-values it **accepts** vs which values it **returns**. In many cases---especially in the
-standard library---these are the same. This can make it confusing to notice there even is
-a difference. (For example, the [`string`](/api.html#string) decoder _accepts_ strings,
-and also _returns_ (those same) strings.)
+values it **accepts** vs which values it **returns**. In many cases these are the same.
+This can make it confusing to notice there even is a difference. For example, the
+[`string`](/api.html#string) decoder _accepts_ strings, and also _returns_ (those same)
+strings.
 
-This isn't always automatically the case, though. Examples:
+This isn't always automatically the case, though. Some random examples:
 
--   `iso8601` **accepts** strings, but **returns** `Date` instances
--   `url` **accepts** strings, but **returns** `URL` instances
--   `truthy` **accepts** all inputs, but **returns** `boolean`s
--   `object(...)` **accepts** objects, but always **returns** a copy of the object
--   `array(...)` **accepts** arrays, but always **returns** a copy of the array
--   `optional(number, 'default')` **accepts** `number` or `undefined`, but **returns** a
-    `number` or `string`
+| This decoder...                | ...accepts | ...but returns | ...so its type is  |
+| :----------------------------- | :--------- | :------------- | :----------------- |
+| [`string`](/api.html#string)   | strings    | strings        | `Decoder<string>`  |
+| [`email`](/api.html#email)     | strings    | strings        | `Decoder<string>`  |
+| [`number`](/api.html#number)   | numbers    | numbers        | `Decoder<number>`  |
+| [`integer`](/api.html#integer) | numbers    | numbers        | `Decoder<number>`  |
+| [`iso8601`](/api.html#iso8601) | strings    | Date instances | `Decoder<Date>`    |
+| [`url`](/api.html#url)         | strings    | URL instances  | `Decoder<URL>`     |
+| [`truthy`](/api.html#truthy)   | anything!  | booleans       | `Decoder<boolean>` |
 
-From the type definition, you can always tell what the decoder will return. A decoder of
-type `Decoder<string>` will always return `string` values. But you cannot tell from the
-type what runtime values it _accepts_. You'll need to read the documentation or look at
-the implementation to know which runtime inputs are going to get accepted or rejected.
+From the type definition, you can always tell what the decoder will _return_. You cannot
+tell from the type what input values it will _accept_. You'll need to read the
+documentation or look at the implementation to know which values are going to get accepted
+or rejected.
 
-The **tl;dr**:
+## Defining a new decoder
 
--   To influence what inputs your custom decoder will _accept_:
-    -   Start from an existing base decoder that already accepts those inputs.
-    -   Use [`.refine()`](/Decoder.html#refine) to add extra acceptance criteria on top of
-        that.
--   To influence what your custom decoder will _return_, use a
-    [`.transform()`](/Decoder.html#transform).
+The easiest way to define a new decoder, is to define it in terms of an existing one that
+already accepts (at least) all of the values you want your new decoder to accept, and then
+narrow it down.
 
-In the next sections, we're going to build a few custom decoders by example.
+The **tl;dr** is:
+
+-   Start from an existing decoder that already accepts (at least) all inputs that you
+    want to be accepting
+-   Optionally, narrow down what will get **accepted** by adding extra criteria with
+    [`.refine()`](/Decoder.html#refine)
+-   Optionally, to change what your custom decoder **returns**, use
+    [`.transform()`](/Decoder.html#transform)
+
+Now, let's build a few custom decoders to illustrate the above.
 
 ## Example 1: a "max length" string
 
