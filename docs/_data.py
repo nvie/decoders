@@ -723,14 +723,28 @@ DECODERS = {
 
   'tuple': {
     'section': 'Arrays',
-    'type_params': ['A', 'B', 'C', '...'],
-    'params': [
-      (None, 'Decoder<A>'),
-      (None, 'Decoder<B>'),
-      (None, 'Decoder<C>'),
-      (None, '...'),
+    'signatures': [
+      {
+        'type_params': ['A'],
+        'params': [(None, 'Decoder<A>')],
+        'return_type': 'Decoder<[A]>',
+      },
+      {
+        'type_params': ['A', 'B'],
+        'params': [(None, 'Decoder<A>'), (None, 'Decoder<B>')],
+        'return_type': 'Decoder<[A, B]>',
+      },
+      {
+        'type_params': ['A', 'B', 'C'],
+        'params': [(None, 'Decoder<A>'), (None, 'Decoder<B>'), (None, 'Decoder<C>')],
+        'return_type': 'Decoder<[A, B, C]>',
+      },
+      {
+        'type_params': ['A', 'B', 'C', '...'],
+        'params': [(None, 'Decoder<A>'), (None, 'Decoder<B>'), (None, 'Decoder<C>'), (None, '...')],
+        'return_type': 'Decoder<[A, B, C, ...]>',
+      },
     ],
-    'return_type': 'Decoder<[A, B, C, ...]>',
     'markdown': """
       Accepts a tuple (an array with exactly _n_ items) of values accepted by the _n_ given decoders.
 
@@ -985,14 +999,32 @@ DECODERS = {
 
   'either': {
     'section': 'Unions',
-    'type_params': ['A', 'B', 'C', '...'],
-    'params': [
-      (None, 'Decoder<A>'),
-      (None, 'Decoder<B>'),
-      (None, 'Decoder<C>'),
-      (None, '...'),
+    'signatures': [
+      {
+        'type_params': ['A', 'B'],
+        'params': [(None, 'Decoder<A>'), (None, 'Decoder<B>')],
+        'return_type': 'Decoder<A | B>',
+      },
+      {
+        'type_params': ['A', 'B', 'C'],
+        'params': [
+          (None, 'Decoder<A>'),
+          (None, 'Decoder<B>'),
+          (None, 'Decoder<C>'),
+        ],
+        'return_type': 'Decoder<A | B | C>',
+      },
+      {
+        'type_params': ['A', 'B', 'C', '...'],
+        'params': [
+          (None, 'Decoder<A>'),
+          (None, 'Decoder<B>'),
+          (None, 'Decoder<C>'),
+          (None, '...'),
+        ],
+        'return_type': 'Decoder<A | B | C | ...>',
+      },
     ],
-    'return_type': 'Decoder<A | B | C | ...>',
     'markdown': """
       Accepts values accepted by any of the given decoders. The decoders are tried on the input one by one, in the given order. The first one that accepts the input "wins". If all decoders reject the input, the input gets rejected.
 
