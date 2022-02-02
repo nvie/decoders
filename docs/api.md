@@ -512,7 +512,8 @@ iso8601.verify(new Date());    // throws (does not accept dates)
 
 Accepts only the given constant value.
 
-⚠️ **NOTE:** Flow, unlike TypeScript, will not infer constants correctly. In TypeScript, the type of `constant(42)` will correctly be inferred as `Decoder<42>`, but in Flow it will get inferred as `Decoder<number>`. To work around this, you should use this syntax in Flow: `constant((42: 42))`.
+> _![](./assets/tiny-flow-logo.png) **Note to Flow users!** Flow will incorrectly infer the type for constants by default! The inferred type for `constant(42)` is `Decoder<number>`. To work around this, always use this syntax in Flow: `constant((42: 42))`._  
+> _![](./assets/tiny-ts-logo.png) **TypeScript** will correctly infer the type of `constant(42)` as `Decoder<42>`._
 
 ```typescript
 const decoder = constant('hello');
@@ -1062,7 +1063,9 @@ decoder.verify(123) === 123;
 decoder.verify(false);  // throws
 ```
 
-**NOTE to Flow users:** In Flow, there is a max of 9 arguments with this construct. (This is no problem in TypeScript.) If you hit the 9 argument limit, you can work around that by stacking, e.g. do `either(<8 arguments here>, either(...))`.
+> _![](./assets/tiny-flow-logo.png) **Note to Flow users!** There is a max of 9 arguments with this construct. If you hit the 9 argument limit, you can work around that by stacking, e.g. do `either(<8 arguments here>, either(...))`._
+
+> _![](./assets/tiny-ts-logo.png) **In TypeScript**, there is no such limit._
 
 ---
 
@@ -1090,7 +1093,8 @@ For example, given an array of strings, like so:
 oneOf(['foo', 'bar']);
 ```
 
-**NOTE to Flow users:** TypeScript is capable of inferring the return type as `Decoder<'foo' | 'bar'>`, but in Flow it will (unfortunately) be `Decoder<string>`. So in Flow, be sure to explicitly annotate the type. Either by doing `oneOf([('foo': 'foo'), ('bar': 'bar')])`, or as `oneOf<'foo' | 'bar'>(['foo', 'bar'])`.
+> _![](./assets/tiny-flow-logo.png) **Note to Flow users!** Flow will (unfortunately) infer the type of this definition as `Decoder<string>`.  To work around this, be sure to explicitly annotate the type. Either by doing `oneOf([('foo': 'foo'), ('bar': 'bar')])`, or as `oneOf<'foo' | 'bar'>(['foo', 'bar'])`._  
+> _![](./assets/tiny-ts-logo.png) **TypeScript** will correctly infer the return type as `Decoder<'foo' | 'bar'>`._
 
 ---
 
@@ -1265,5 +1269,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 27ccf8e19451a375d2035ee5407ee7dd) -->
+<!--[[[end]]] (checksum: ac2b21a89d245cf0930639c83c7f6ac5) -->
 <!-- prettier-ignore-end -->

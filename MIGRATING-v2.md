@@ -21,8 +21,8 @@ for this, and I'm happy to help 🙏 !
 1. If applicable, see
    [migration instructions below](#rewriting-imports-from-lemons-or-debrief) for how to
    rewrite imports from those libraries.
-1. [Flow only] Rewrite use of `$DecoderType`, see
-   [instructions](#rewrite-use-of-decodertype).
+1. ![](./docs/assets/tiny-flow-logo.png) **Flow users only:** Rewrite use of
+   `$DecoderType`, see [instructions](#rewrite-use-of-decodertype).
 
 ## Stop "calling" decoders
 
@@ -209,8 +209,11 @@ mydecoder.verify(externalData); // Might throw
 
 ## Rewrite use of `$DecoderType`
 
-⚠️ **Flow users only!** The helper type `$DecoderType` has now been simplified. The
-`$`-sign has been removed from the name, and you no longer have to `$Call<>` it.
+> _![](./docs/assets/tiny-flow-logo.png) **Flow users only!** The helper type
+> `$DecoderType` has now been simplified. The `$`-sign has been removed from the name, and
+> you no longer have to `$Call<>` it._
+
+> _![](./docs/assets/tiny-ts-logo.png) For **TypeScript users** no changes are needed._
 
 ```js
 const mydecoder = array(whatever);
@@ -221,5 +224,3 @@ type X = $Call<$DecoderType, typeof mydecoder>; // Array<Whatever>
 // ✅
 type X = DecoderType<typeof mydecoder>; // Array<Whatever>
 ```
-
-(In TypeScript, this already worked this way.)
