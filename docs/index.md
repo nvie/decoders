@@ -41,6 +41,49 @@ program's boundaries. This has two benefits: (1) your inputs are getting validat
 (2) you can now statically know for sure the shape of the incoming data. **Decoders help
 solve both of these problems at once.**
 
+## Example
+
+Suppose, for example, you have an endpoint that will receive user data:
+
+```typescript
+import { array, iso8601, number, object, optional, string } from 'decoders';
+
+//
+// Incoming data at runtime
+//
+const externalData = {
+    id: 123,
+    name: 'Alison Roberts',
+    createdAt: '1994-01-11T12:26:37.024Z',
+    tags: ['foo', 'bar'],
+};
+
+//
+// Write the decoder (= what you expect the data to look like)
+//
+const userDecoder = object({
+    id: positiveInteger,
+    name: string,
+    createdAt: optional(iso8601),
+    tags: array(string),
+});
+
+//
+// Call .verify() on the incoming data
+//
+const user = userDecoder.verify(externalData);
+//    ^^^^
+//    TypeScript can automatically infer this type now:
+//
+//    {
+//      id: number;
+//      name: string;
+//      createdAt?: Date;
+//      tags: string[];
+//    }
+//
+```
+
 ## The core idea
 
 The central concept of this library is the Decoder. A `Decoder<T>` has a validation
@@ -99,39 +142,6 @@ Decoders can be stacked together like LEGO® pieces to build larger decoders. Fo
 here you can see how four decoders can be combined to build a larger decoder:
 
 ![](./assets/decoder-composition.gif)
-
-## Example
-
-Suppose, for example, you have a webhook endpoint that will receive user payloads:
-
-```typescript
-import { array, iso8601, number, object, optional, string } from 'decoders';
-
-// External data, for example JSON.parse()'ed from a request payload
-const externalData = {
-    id: 123,
-    name: 'Alison Roberts',
-    createdAt: '1994-01-11T12:26:37.024Z',
-    tags: ['foo', 'bar', 'qux'],
-};
-
-const userDecoder = object({
-    id: number,
-    name: string,
-    createdAt: optional(iso8601),
-    tags: array(string),
-});
-
-// NOTE: TypeScript will automatically infer this type for the `user` variable
-// interface User {
-//     id: number;
-//     name: string;
-//     createdAt?: Date;
-//     tags: string[];
-// }
-
-const user = userDecoder.verify(externalData);
-```
 
 ## Building your own decoders
 
