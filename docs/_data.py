@@ -15,10 +15,7 @@ DECODERS = {
     'section': 'Strings',
     'params': None,
     'return_type': 'Decoder<string>',
-    'markdown': """
-      Accepts and returns strings.
-
-      ```typescript
+    'example': """
       // 👍
       string.verify('hello world') === 'hello world';
       string.verify('🚀') === '🚀';
@@ -28,7 +25,6 @@ DECODERS = {
       string.verify(123);   // throws
       string.verify(true);  // throws
       string.verify(null);  // throws
-      ```
     """,
   },
 
@@ -36,10 +32,7 @@ DECODERS = {
     'section': 'Strings',
     'params': None,
     'return_type': 'Decoder<string>',
-    'markdown': """
-      Like `string`, but will reject the empty string or strings containing only whitespace.
-
-      ```typescript
+    'example': """
       // 👍
       nonEmptyString.verify('hello world') === 'hello world';
       nonEmptyString.verify('🚀') === '🚀';
@@ -48,7 +41,6 @@ DECODERS = {
       nonEmptyString.verify(123);   // throws
       nonEmptyString.verify('  ');  // throws
       nonEmptyString.verify('');    // throws
-      ```
     """,
   },
 
@@ -59,10 +51,7 @@ DECODERS = {
       ('message', 'string'),
     ],
     'return_type': 'Decoder<string>',
-    'markdown': """
-      Accepts and returns strings that match the given regular expression.
-
-      ```typescript
+    'example': """
       const decoder = regex(/^[0-9][0-9]+$/, 'Must be numeric');
 
       // 👍
@@ -73,7 +62,6 @@ DECODERS = {
       decoder.verify('');     // throws
       decoder.verify('1');    // throws
       decoder.verify('foo');  // throws
-      ```
     """,
   },
 
@@ -81,10 +69,7 @@ DECODERS = {
     'section': 'Strings',
     'params': None,
     'return_type': 'Decoder<string>',
-    'markdown': """
-      Accepts and returns strings that are syntactically valid email addresses. (This will not mean that the email address actually exist.)
-
-      ```typescript
+    'example': """
       // 👍
       email.verify('alice@acme.org') === 'alice@acme.org';
 
@@ -92,7 +77,6 @@ DECODERS = {
       email.verify('foo');               // throws
       email.verify('@acme.org');         // throws
       email.verify('alice @ acme.org');  // throws
-      ```
     """,
   },
 
@@ -100,10 +84,7 @@ DECODERS = {
     'section': 'Strings',
     'params': None,
     'return_type': 'Decoder<URL>',
-    'markdown': """
-      Accepts strings that are valid URLs, returns the value as a URL instance.
-
-      ```typescript
+    'example': """
       // 👍
       url.verify('http://nvie.com') === new URL('http://nvie.com/');
       url.verify('https://nvie.com') === new URL('https://nvie.com/');
@@ -114,7 +95,6 @@ DECODERS = {
       url.verify('@acme.org');         // throws
       url.verify('alice @ acme.org');  // throws
       url.verify('/search?q=foo');     // throws
-      ```
     """,
   },
 
@@ -122,9 +102,7 @@ DECODERS = {
     'section': 'Strings',
     'params': None,
     'return_type': 'Decoder<URL>',
-    'markdown': """
-      Accepts strings that are valid URLs, but only HTTPS ones. Returns the value as a URL instance.
-
+    'example': """
       ```typescript
       // 👍
       httpsUrl.verify('https://nvie.com:443') === new URL('https://nvie.com/');
@@ -151,10 +129,7 @@ DECODERS = {
     'section': 'Strings',
     'params': None,
     'return_type': 'Decoder<string>',
-    'markdown': """
-      Accepts strings that are valid [UUIDs](https://en.wikipedia.org/wiki/universally_unique_identifier) (universally unique identifier).
-
-      ```typescript
+    'example': """
       // 👍
       uuid.verify('123e4567-e89b-12d3-a456-426614174000') === '123e4567-e89b-12d3-a456-426614174000'
       uuid.verify('123E4567-E89B-12D3-A456-426614174000') === '123E4567-E89B-12D3-A456-426614174000'
@@ -162,7 +137,6 @@ DECODERS = {
       // 👎
       uuid.verify('123E4567E89B12D3A456426614174000');      // throws
       uuid.verify('abcdefgh-ijkl-mnop-qrst-uvwxyz012345');  // throws
-      ```
     """,
   },
 
@@ -170,16 +144,12 @@ DECODERS = {
     'section': 'Strings',
     'params': None,
     'return_type': 'Decoder<URL>',
-    'markdown': """
-      Like `uuid`, but only accepts [UUIDv1](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_%28date-time_and_MAC_address%29) strings.
-
-      ```typescript
+    'example': """
       // 👍
       uuidv1.verify('123e4567-e89b-12d3-a456-426614174000') === '123e4567-e89b-42d3-a456-426614174000'
 
       // 👎
       uuidv1.verify('123e4567-e89b-42d3-a456-426614174000')  // throws
-      ```
     """,
   },
 
@@ -187,16 +157,12 @@ DECODERS = {
     'section': 'Strings',
     'params': None,
     'return_type': 'Decoder<URL>',
-    'markdown': """
-      Like `uuid`, but only accepts [UUIDv4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_%28random%29) strings.
-
-      ```typescript
+    'example': """
       // 👍
       uuidv4.verify('123e4567-e89b-42d3-a456-426614174000') === '123e4567-e89b-42d3-a456-426614174000'
 
       // 👎
       uuidv4.verify('123e4567-e89b-12d3-a456-426614174000')  // throws
-      ```
     """,
   },
 
@@ -204,10 +170,7 @@ DECODERS = {
     'section': 'Numbers',
     'params': None,
     'return_type': 'Decoder<number>',
-    'markdown': """
-      Accepts finite numbers (can be integer or float values). Values `NaN`, or positive and negative `Infinity` will get rejected.
-
-      ```typescript
+    'example': """
       // 👍
       number.verify(123) === 123;
       number.verify(-3.14) === -3.14;
@@ -216,7 +179,6 @@ DECODERS = {
       number.verify(Infinity);        // throws
       number.verify(NaN);             // throws
       number.verify('not a number');  // throws
-      ```
     """,
   },
 
@@ -224,10 +186,7 @@ DECODERS = {
     'section': 'Numbers',
     'params': None,
     'return_type': 'Decoder<number>',
-    'markdown': """
-      Accepts only finite whole numbers.
-
-      ```typescript
+    'example': """
       // 👍
       integer.verify(123) === 123;
 
@@ -236,7 +195,6 @@ DECODERS = {
       integer.verify(Infinity);        // throws
       integer.verify(NaN);             // throws
       integer.verify('not a integer'); // throws
-      ```
     """,
   },
 
@@ -244,10 +202,7 @@ DECODERS = {
     'section': 'Numbers',
     'params': None,
     'return_type': 'Decoder<number>',
-    'markdown': """
-      Accepts only positive finite numbers.
-
-      ```typescript
+    'example': """
       // 👍
       positiveNumber.verify(123) === 123;
 
@@ -257,7 +212,6 @@ DECODERS = {
       positiveNumber.verify(Infinity);        // throws
       positiveNumber.verify(NaN);             // throws
       positiveNumber.verify('not a number');  // throws
-      ```
     """,
   },
 
@@ -265,10 +219,7 @@ DECODERS = {
     'section': 'Numbers',
     'params': None,
     'return_type': 'Decoder<number>',
-    'markdown': """
-      Accepts only positive finite whole numbers.
-
-      ```typescript
+    'example': """
       // 👍
       positiveInteger.verify(123) === 123;
 
@@ -278,7 +229,6 @@ DECODERS = {
       positiveInteger.verify(Infinity);        // throws
       positiveInteger.verify(NaN);             // throws
       positiveInteger.verify('not a number');  // throws
-      ```
     """,
   },
 
@@ -286,12 +236,7 @@ DECODERS = {
     'section': 'Numbers',
     'params': None,
     'return_type': 'Decoder<number>',
-    'markdown': """
-      Accepts any valid ``number`` value.
-
-      This also accepts special values like `NaN` and `Infinity`. Unless you want to deliberately accept those, you'll likely want to use the `number` decoder instead.
-
-      ```typescript
+    'example': """
       // 👍
       anyNumber.verify(123) === 123;
       anyNumber.verify(-3.14) === -3.14;
@@ -300,7 +245,6 @@ DECODERS = {
 
       // 👎
       anyNumber.verify('not a number');  // throws
-      ```
     """,
   },
 
@@ -308,10 +252,7 @@ DECODERS = {
     'section': 'Booleans',
     'params': None,
     'return_type': 'Decoder<boolean>',
-    'markdown': """
-      Accepts and returns booleans.
-
-      ```typescript
+    'example': """
       // 👍
       boolean.verify(false) === false;
       boolean.verify(true) === true;
@@ -320,7 +261,6 @@ DECODERS = {
       boolean.verify(undefined);      // throws
       boolean.verify('hello world');  // throws
       boolean.verify(123);            // throws
-      ```
     """,
   },
 
@@ -328,10 +268,7 @@ DECODERS = {
     'section': 'Booleans',
     'params': None,
     'return_type': 'Decoder<boolean>',
-    'markdown': """
-      Accepts anything and will return its "truth" value. Will never reject.
-
-      ```typescript
+    'example': """
       // 👍
       truthy.verify(false) === false;
       truthy.verify(true) === true;
@@ -344,7 +281,6 @@ DECODERS = {
 
       // 👎
       // This decoder will never reject an input
-      ```
     """,
   },
 
@@ -352,10 +288,7 @@ DECODERS = {
     'section': 'Booleans',
     'params': None,
     'return_type': 'Decoder<boolean>',
-    'markdown': """
-      Accepts numbers, but return their boolean representation.
-
-      ```typescript
+    'example': """
       // 👍
       numericBoolean.verify(-1) === true;
       numericBoolean.verify(0) === false;
@@ -366,7 +299,6 @@ DECODERS = {
       numericBoolean.verify(true);       // throws
       numericBoolean.verify(undefined);  // throws
       numericBoolean.verify('hello');    // throws
-      ```
     """,
   },
 
@@ -374,10 +306,7 @@ DECODERS = {
     'section': 'Dates',
     'params': None,
     'return_type': 'Decoder<Date>',
-    'markdown': """
-      Accepts and returns `Date` instances.
-
-      ```typescript
+    'example': """
       const now = new Date();
 
       // 👍
@@ -386,7 +315,6 @@ DECODERS = {
       // 👎
       date.verify(123);      // throws
       date.verify('hello');  // throws
-      ```
     """,
   },
 
@@ -394,12 +322,7 @@ DECODERS = {
     'section': 'Dates',
     'params': None,
     'return_type': 'Decoder<Date>',
-    'markdown': """
-      Accepts [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings, returns them as `Date` instances.
-
-      This is very useful for working with dates in APIs: serialize them as `.toISOString()` when sending, decode them with `iso8601` when receiving.
-
-      ```typescript
+    'example': """
       // 👍
       iso8601.verify('2020-06-01T12:00:00Z'); // ≈ new Date('2020-06-01T12:00:00Z')
 
@@ -408,7 +331,6 @@ DECODERS = {
       iso8601.verify('hello');       // throws
       iso8601.verify(123);           // throws
       iso8601.verify(new Date());    // throws (does not accept dates)
-      ```
     """,
   },
 
@@ -417,9 +339,7 @@ DECODERS = {
     'type_params': ['T'],
     'params': [('value', 'T')],
     'return_type': 'Decoder<T>',
-    'markdown': """
-      Accepts only the given constant value.
-
+    'example': """
       > _![](./assets/tiny-flow-logo.png) **Note to Flow users!** Flow will incorrectly infer the type for constants by default! The inferred type for `constant(42)` is `Decoder<number>`. To work around this, always use this syntax in Flow: `constant((42: 42))`._  
       > _![](./assets/tiny-ts-logo.png) **TypeScript** will correctly infer the type of `constant(42)` as `Decoder<42>`._
 
@@ -443,12 +363,7 @@ DECODERS = {
     'params': [('value', 'T')],
     'return_type': 'Decoder<T>',
     'aliases': ['hardcoded'],
-    'markdown': """
-      Accepts anything, completely ignores it, and always returns the provided value instead.
-
-      This is useful to manually add extra fields to object decoders.
-
-      ```typescript
+    'example': """
       const decoder = always(42);
 
       // 👍
@@ -458,7 +373,6 @@ DECODERS = {
 
       // 👎
       // This decoder will never reject an input
-      ```
     """,
   },
 
@@ -466,10 +380,7 @@ DECODERS = {
     'section': 'Optionality',
     'params': None,
     'return_type': 'Decoder<null>',
-    'markdown': """
-      Accepts and returns only the literal `null` value.
-
-      ```typescript
+    'example': """
       // 👍
       null_.verify(null) === null;
 
@@ -477,7 +388,6 @@ DECODERS = {
       null_.verify(false);         // throws
       null_.verify(undefined);     // throws
       null_.verify('hello world'); // throws
-      ```
     """,
   },
 
@@ -485,10 +395,7 @@ DECODERS = {
     'section': 'Optionality',
     'params': None,
     'return_type': 'Decoder<undefined>',
-    'markdown': """
-      Accepts and returns only the literal `undefined` value.
-
-      ```typescript
+    'example': """
       // 👍
       undefined_.verify(undefined) === undefined;
 
@@ -496,7 +403,6 @@ DECODERS = {
       undefined_.verify(null);          // throws
       undefined_.verify(false);         // throws
       undefined_.verify('hello world'); // throws
-      ```
     """,
   },
 
@@ -519,11 +425,7 @@ DECODERS = {
         },
     ],
 
-    'markdown': """
-      Accepts whatever the given decoder accepts, or `undefined`.
-
-      If a default value is explicitly provided, return that instead in the `undefined` case.
-
+    'example': """
       ```typescript
       const decoder = optional(string);
 
@@ -578,12 +480,7 @@ DECODERS = {
       },
     ],
 
-    'markdown': """
-      Accepts whatever the given decoder accepts, or `null`.
-
-      If a default value is explicitly provided, return that instead in the `null` case.
-
-      ```typescript
+    'example': """
       const decoder = nullable(string);
 
       // 👍
@@ -594,7 +491,6 @@ DECODERS = {
       decoder.verify(undefined);  // throws
       decoder.verify(0);          // throws
       decoder.verify(42);         // throws
-      ```
     """,
   },
 
@@ -617,12 +513,7 @@ DECODERS = {
       },
     ],
 
-    'markdown': """
-      Accepts whatever the given decoder accepts, or `null`, or `undefined`.
-
-      If a default value is explicitly provided, return that instead in the `null`/`undefined` case.
-
-      ```typescript
+    'example': """
       const decoder = maybe(string);
 
       // 👍
@@ -633,7 +524,6 @@ DECODERS = {
       // 👎
       decoder.verify(0);   // throws
       decoder.verify(42);  // throws
-      ```
     """,
   },
 
@@ -642,12 +532,7 @@ DECODERS = {
     'params': None,
     'return_type': 'Decoder<unknown>',
     'aliases': ['mixed'],
-    'markdown': """
-      Accepts anything and returns it unchanged.
-
-      Useful for situation in which you don't know or expect a specific type. Of course, the downside is that you won't know the type of the value statically and you'll have to further refine it yourself.
-
-      ```typescript
+    'example': """
       // 👍
       unknown.verify('hello') === 'hello';
       unknown.verify(false) === false;
@@ -656,7 +541,6 @@ DECODERS = {
 
       // 👎
       // This decoder will never reject an input
-      ```
     """,
   },
 
@@ -664,10 +548,7 @@ DECODERS = {
     'section': 'Arrays',
     'params': [('decoder', 'Decoder<T>')],
     'return_type': 'Decoder<T[]>',
-    'markdown': """
-      Accepts arrays of whatever the given decoder accepts.
-
-      ```typescript
+    'example': """
       const decoder = array(string);
 
       // 👍
@@ -676,7 +557,6 @@ DECODERS = {
 
       // 👎
       decoder.verify(['hello', 1.2]);  // throws
-      ```
     """,
   },
 
@@ -684,10 +564,7 @@ DECODERS = {
     'section': 'Arrays',
     'params': [('decoder', 'Decoder<T>')],
     'return_type': 'Decoder<[T, ...T[]]>',
-    'markdown': """
-      Like `array()`, but will reject arrays with 0 elements.
-
-      ```typescript
+    'example': """
       const decoder = nonEmptyArray(string);
 
       // 👍
@@ -696,7 +573,6 @@ DECODERS = {
       // 👎
       decoder.verify(['hello', 1.2]);  // throws
       decoder.verify([]);              // throws
-      ```
     """,
   },
 
@@ -704,12 +580,7 @@ DECODERS = {
     'section': 'Arrays',
     'params': None,
     'return_type': 'Decoder<unknown[]>',
-    'markdown': """
-      Accepts any array, but doesn't validate its items further.
-
-      "poja" means "plain old JavaScript array", a play on `pojo()`.
-
-      ```typescript
+    'example': """
       // 👍
       poja.verify([1, 'hi', true]) === [1, 'hi', true];
       poja.verify(['hello', 'world']) === ['hello', 'world'];
@@ -718,7 +589,6 @@ DECODERS = {
       // 👎
       poja.verify({});    // throws
       poja.verify('hi');  // throws
-      ```
     """,
   },
 
@@ -746,10 +616,7 @@ DECODERS = {
         'return_type': 'Decoder<[A, B, C, ...]>',
       },
     ],
-    'markdown': """
-      Accepts a tuple (an array with exactly _n_ items) of values accepted by the _n_ given decoders.
-
-      ```typescript
+    'example': """
       const decoder = tuple(string, number);
 
       // 👍
@@ -759,7 +626,6 @@ DECODERS = {
       decoder.verify([]);                  // throws, too few items
       decoder.verify(['hello', 'world']);  // throws, not the right types
       decoder.verify(['a', 1, 'c']);       // throws, too many items
-      ```
     """,
   },
 
@@ -768,10 +634,7 @@ DECODERS = {
     'type_params': ['T'],
     'params': [('decoder', 'Decoder<T>')],
     'return_type': 'Decoder<Set<T>>',
-    'markdown': """
-      Similar to [`array()`](#array), but returns the result as an [ES6 Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set).
-
-      ```typescript
+    'example': """
       const decoder = set(string);
 
       // 👍
@@ -780,7 +643,6 @@ DECODERS = {
 
       // 👎
       decoder.verify([1, 2]);         // throws, not the right types
-      ```
     """,
   },
 
@@ -789,9 +651,7 @@ DECODERS = {
     'type_params': ['A','B', '...'],
     'params': [(None, '{ field1: Decoder<A>, field2: Decoder<B>, ... }')],
     'return_type': 'Decoder<{ field1: A, field2: B, ... }>',
-    'markdown': """
-      Accepts objects with fields matching the given decoders. Extra fields that exist on the input object are ignored and will not be returned.
-
+    'example': """
       ```typescript
       const decoder = object({
           x: number,
@@ -815,9 +675,7 @@ DECODERS = {
     'type_params': ['A','B', '...'],
     'params': [(None, '{ field1: Decoder<A>, field2: Decoder<B>, ... }')],
     'return_type': 'Decoder<{ field1: A, field2: B, ... }>',
-    'markdown': """
-      Like `object()`, but will reject inputs that contain extra fields that are not specified explicitly.
-
+    'example': """
       ```typescript
       const decoder = exact({
           x: number,
@@ -841,9 +699,7 @@ DECODERS = {
     'type_params': ['A','B', '...'],
     'params': [(None, '{ field1: Decoder<A>, field2: Decoder<B>, ... }')],
     'return_type': 'Decoder<{ field1: A, field2: B, ... }>',
-    'markdown': """
-      Like `object()`, but will pass through any extra fields on the input object unvalidated that will thus be of `unknown` type statically.
-
+    'example': """
       ```typescript
       const decoder = inexact({
           x: number,
@@ -865,10 +721,7 @@ DECODERS = {
     'section': 'Objects',
     'params': None,
     'return_type': 'Decoder<{ [key: string]: unknown }>',
-    'markdown': """
-      Accepts any "plain old JavaScript object", but doesn't validate its keys or values further.
-
-      ```typescript
+    'example': """
       // 👍
       pojo.verify({}) === {};
       pojo.verify({ name: 'hi' }) === { name: 'hi' };
@@ -878,7 +731,6 @@ DECODERS = {
       pojo.verify([]);          // throws
       pojo.verify(new Date());  // throws
       pojo.verify(null);        // throws
-      ```
     """,
   },
 
@@ -888,17 +740,11 @@ DECODERS = {
     'type_params': ['T'],
     'params': [('decoder', 'Decoder<T>')],
     'return_type': 'Decoder<{ [key: string]: T }>',
-    'markdown': """
-      Accepts objects where all values match the given decoder, and returns the result as a `{ [string]: T }`.
-
-      The main difference between `object()` and `dict()` is that you'd typically use `object()` if this is a record-like object, where all field names are known and the values are heterogeneous. Whereas with `dict()` the keys are typically dynamic and the values homogeneous, like in a dictionary, a lookup table, or a cache.
-
-      ```typescript
+    'example': """
       const decoder = dict(number);
 
       // 👍
       decoder.verify({ red: 1, blue: 2, green: 3 }); // ≈ { red: 1, blue: 2, green: 3 }
-      ```
     """,
   },
 
@@ -907,10 +753,7 @@ DECODERS = {
     'type_params': ['T'],
     'params': [('decoder', 'Decoder<T>')],
     'return_type': 'Decoder<Map<string, T>>',
-    'markdown': """
-      Similar to `dict()`, but returns the result as a `Map<string, T>` (an [ES6 Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)) instead.
-
-      ```typescript
+    'example': """
       const decoder = mapping(number);
 
       // 👍
@@ -920,7 +763,6 @@ DECODERS = {
       //     ['blue', '2'],
       //     ['green', '3'],
       //   ]);
-      ```
     """,
   },
 
@@ -928,22 +770,7 @@ DECODERS = {
     'section': 'JSON values',
     'params': None,
     'return_type': 'Decoder<JSONValue>',
-    'markdown': """
-      Accepts any value that's a valid JSON value.
-
-      In other words: any value returned by `JSON.parse()` should decode without failure.
-
-      ```typescript
-      type JSONValue =
-          | null
-          | string
-          | number
-          | boolean
-          | { [string]: JSONValue }
-          | JSONValue[]
-      ```
-
-      ```typescript
+    'example': """
       // 👍
       json.verify({
           name: 'Amir',
@@ -952,7 +779,6 @@ DECODERS = {
           image: null,
           tags: ['vip', 'staff'],
       });
-      ```
     """,
   },
 
@@ -960,10 +786,7 @@ DECODERS = {
     'section': 'JSON values',
     'params': None,
     'return_type': 'Decoder<{ [string]: JSONValue }>',
-    'markdown': """
-      Like `json`, but will only decode when the JSON value is an object.
-
-      ```typescript
+    'example': """
       // 👍
       jsonObject.verify({});                // ≈ {}
       jsonObject.verify({ name: 'Amir' });  // ≈ { name: 'Amir' }
@@ -973,7 +796,6 @@ DECODERS = {
       jsonObject.verify([{ name: 'Alice' }]);  // throws
       jsonObject.verify('hello');              // throws
       jsonObject.verify(null);                 // throws
-      ```
     """,
   },
 
@@ -981,10 +803,7 @@ DECODERS = {
     'section': 'JSON values',
     'params': None,
     'return_type': 'Decoder<JSONValue[]>',
-    'markdown': """
-      Like `json`, but will only decode when the JSON value is an array.
-
-      ```typescript
+    'example': """
       // 👍
       jsonArray.verify([]);                  // ≈ []
       jsonArray.verify([{ name: 'Amir' }]);  // ≈ [{ name: 'Amir' }]
@@ -994,7 +813,6 @@ DECODERS = {
       jsonArray.verify({ name: 'Alice' });  // throws
       jsonArray.verify('hello');            // throws
       jsonArray.verify(null);               // throws
-      ```
     """,
   },
 
@@ -1026,9 +844,7 @@ DECODERS = {
         'return_type': 'Decoder<A | B | C | ...>',
       },
     ],
-    'markdown': """
-      Accepts values accepted by any of the given decoders. The decoders are tried on the input one by one, in the given order. The first one that accepts the input "wins". If all decoders reject the input, the input gets rejected.
-
+    'example': """
       ```typescript
       const decoder = either(number, string);
 
@@ -1053,9 +869,7 @@ DECODERS = {
       ('values', 'T[]'),
     ],
     'return_type': 'Decoder<T>',
-    'markdown': """
-      Accepts any value that is strictly-equal (using `===`) to one of the specified values.
-
+    'example': """
       ```typescript
       const decoder = oneOf(['foo', 'bar', 3]);
 
@@ -1088,26 +902,8 @@ DECODERS = {
       ('mapping', '{ value1: Decoder<A>, value2: Decoder<B>, ... }'),
     ],
     'return_type': 'Decoder<A | B | ...>',
-    'markdown': """
-      If you are decoding tagged unions you may want to use the `taggedUnion()` decoder instead of the general purpose `either()` decoder to get better error messages and better performance.
-
-      This decoder is optimized for [tagged unions](https://en.wikipedia.org/wiki/Tagged_union), i.e. a union of objects where one field is used as the discriminator.
-
-      ```ts
-      const A = object({ tag: constant('A'), foo: string });
-      const B = object({ tag: constant('B'), bar: number });
-
-      const AorB = taggedUnion('tag', { A, B });
-      //                        ^^^
-      ```
-
-      Decoding now works in two steps:
-
-      1. Look at the given `'tag'` field in the incoming object (this is the field that decides which decoder will be used)
-      2. If the value is `'A'`, then decoder `A` will be used. If it's `'B'`, then decoder `B` will be used. Otherwise, this will fail.
-
-      This is effectively equivalent to `either(A, B)`, but will provide better error messages and is more performant at runtime because it doesn't have to try all decoders one by one.
-    """,
+    # 'example': """
+    # """,
   },
 
   'define': {
@@ -1117,18 +913,9 @@ DECODERS = {
       ('fn', '(blob: unknown, ok, err) => DecodeResult<T>'),
     ],
     'return_type': 'Decoder<T>',
-    'markdown': """
-      Defines a new `Decoder<T>`, by implementing a custom acceptance function.
 
+    'example': """
       > _**NOTE:** This is the lowest-level API to define a new decoder, and therefore not recommended unless you have a very good reason for it. Most cases can be covered more elegantly by starting from an existing decoder and using `.transform()` or `.refine()` on them instead._
-
-      The function receives three arguments:
-
-      1. `blob` - the raw/unknown input (aka your external data)
-      2. `ok` - Call `ok(value)` to accept the input and return ``value``
-      3. `err` - Call `err(message)` to reject the input with error ``message``
-
-      The expected return value should be a `DecodeResult<T>`, which can be obtained by returning the result of calling the provided `ok` or `err` helper functions. Please note that `ok()` and `err()` don't perform side effects! You'll need to _return_ those values.
 
       ```typescript
       // NOTE: Please do NOT implement an uppercase decoder like this! 😇
@@ -1168,10 +955,7 @@ DECODERS = {
       ('decoder', 'Decoder<T>'),
     ],
     'return_type': 'Decoder<T>',
-    'markdown': """
-      Pre-process the raw data input before passing it into the decoder. This gives you the ability to arbitrarily customize the input on the fly before passing it to the decoder. Of course, the input value at that point is still of `unknown` type, so you will have to deal with that accordingly.
-
-      ```typescript
+    'example': """
       const decoder = prep(
         // Will convert any input to an int first, before feeding it to
         // positiveInteger. This will effectively also allow numeric strings
@@ -1188,7 +972,6 @@ DECODERS = {
       // 👎
       decoder.verify('-3');  // throws: not a positive number
       decoder.verify('hi');  // throws: not a number
-      ```
     """,
   },
 
@@ -1197,10 +980,7 @@ DECODERS = {
     'params': None,
     'return_type': 'Decoder<never>',
     'aliases': ['fail'],
-    'markdown': """
-      Rejects all inputs, and always fails with the given error message. May be useful for explicitly disallowing keys, or for testing purposes.
-
-      ```typescript
+    'example': """
       const decoder = object({
         a: string,
         b: optional(never('Key b has been removed')),
@@ -1212,7 +992,6 @@ DECODERS = {
 
       // 👎
       decoder.verify({ a: 'foo', b: 'bar' });  // throws
-      ```
     """,
   },
 
@@ -1223,10 +1002,7 @@ DECODERS = {
       ('klass', 'Class<T>'),
     ],
     'return_type': 'Decoder<T>',
-    'markdown': """
-      Accepts any value that is an ``instanceof`` the given class.
-
-      ```typescript
+    'example': """
       const decoder = instanceOf(Error);
 
       // 👍
@@ -1236,7 +1012,6 @@ DECODERS = {
       // 👎
       decoder.verify('foo');  // throws
       decoder.verify(3);      // throws
-      ```
     """,
   },
 
@@ -1247,10 +1022,7 @@ DECODERS = {
       ('decoderFn', '() => Decoder<T>'),
     ],
     'return_type': 'Decoder<T>',
-    'markdown': """
-      Lazily evaluate the given decoder. This is useful to build self-referential types for recursive data structures. Example:
-
-      ```typescript
+    'example': """
       type Tree = {
           value: string;
           children: Array<Tree>;
@@ -1265,7 +1037,6 @@ DECODERS = {
           //              Use lazy() like this to refer to the treeDecoder which is
           //              getting defined here
       });
-      ```
     """,
   },
 }
@@ -1277,9 +1048,7 @@ DECODER_METHODS = {
   'verify': {
     'params': [('blob', 'mixed')],
     'return_type': 'T',
-    'markdown': """
-      Verified the (raw/untrusted/unknown) input and either accepts or rejects it. When accepted, returns the decoded `T` value directly. Otherwise fail with a runtime error.
-
+    'example': """
       For example, take this simple "number" decoder.
 
       ```typescript
@@ -1295,11 +1064,7 @@ DECODER_METHODS = {
   'value': {
     'params': [('blob', 'mixed')],
     'return_type': 'T | undefined',
-    'markdown': """
-      Verified the (raw/untrusted/unknown) input and either accepts or rejects it. When accepted, returns the decoded `T` value directly. Otherwise returns ``undefined``.
-
-      Use this when you're not interested in programmatically handling the error message.
-
+    'example': """
       ```typescript
       // 👍
       number.value(3);     // 3
@@ -1317,11 +1082,7 @@ DECODER_METHODS = {
   'decode': {
     'params': [('blob', 'mixed')],
     'return_type': 'DecodeResult<T>',
-    'markdown': """
-      Validates the raw/untrusted/unknown input and either accepts or rejects it.
-
-      Contrasted with `.verify()`, calls to `.decode()` will never fail and instead return a result type.
-
+    'example': """
       For example, take this simple “number” decoder. When given an number value, it will return an ok: true result. Otherwise, it will return an ok: false result with the original input value annotated.
 
       ```typescript
@@ -1340,10 +1101,7 @@ DECODER_METHODS = {
         ('transformFn', '(T) => V'),
     ],
     'return_type': 'Decoder<V>',
-    'markdown': """
-      Accepts any value the given decoder accepts, and on success, will call the given function **on the decoded result**. If the transformation function throws an error, the whole decoder will fail using the error message as the failure reason.
-
-      ```typescript
+    'example': """
       const upper = string.transform((s) => s.toUpperCase());
 
       // 👍
@@ -1351,7 +1109,6 @@ DECODER_METHODS = {
 
       // 👎
       upper.verify(4);  // throws
-      ```
     """,
   },
 
@@ -1361,9 +1118,7 @@ DECODER_METHODS = {
       ('message', 'string'),
     ],
     'return_type': 'Decoder<T>',
-    'markdown': """
-      Adds an extra predicate to a decoder. The new decoder is like the original decoder, but only accepts values that also meet the predicate.
-
+    'example': """
       ```typescript
       const odd = number.refine(
         (n) => n % 2 !== 0,
@@ -1387,14 +1142,7 @@ DECODER_METHODS = {
       ('rejectFn', 'T => string | null'),
     ],
     'return_type': 'Decoder<T>',
-    'markdown': """
-      Adds an extra predicate to a decoder. The new decoder is like the original decoder, but only accepts values that aren't rejected by the given function.
-
-      The given function can return `null` to accept the decoded value, or return a specific error message to reject.
-
-      Unlike `.refine()`, you can use this function to return a dynamic error message.
-
-      ```typescript
+    'example': """
       const decoder = pojo
         .reject(
           obj => {
@@ -1410,7 +1158,6 @@ DECODER_METHODS = {
 
       // 👎
       decoder.verify({ id: 123, _name: 'Vincent'  })   // throws: "Disallowed keys: _name"
-      ```
     """,
   },
 
@@ -1441,17 +1188,8 @@ DECODER_METHODS = {
       ('next', '(blob: T, ok, err) => DecodeResult<V>'),
     ],
     'return_type': 'Decoder<V>',
-    'markdown': """
-      Chain together the current decoder with another.
-
-      > _**NOTE:** This is an advanced, low-level, API. It's not recommended to reach for this construct unless there is no other way. Most cases can be covered more elegantly by `.transform()` or `.refine()` instead._
-
-      If the current decoder accepts an input, the resulting ``T`` value will get passed into the given ``next`` acceptance function to further decide whether or not the value should get accepted or rejected.
-
-      This works similar to how you would `define()` a new decoder, except that the ``blob`` param will now be ``T`` (a known type), rather than ``unknown``. This will allow the function to make a stronger assumption about its input and avoid re-refining inputs.
-
-      If it helps, you can think of `define(...)` as equivalent to `unknown.then(...)`.
-    """,
+    # 'example': """
+    # """,
   },
 }
 

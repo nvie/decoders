@@ -67,7 +67,9 @@ for (name, info) in DECODER_METHODS.items():
 <a name="verify" href="#verify">#</a>
 **.verify**(blob: <i style="color: #267f99">mixed</i>): <i style="color: #267f99">T</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L87-L113 'Source')<br />
 
-Verified the (raw/untrusted/unknown) input and either accepts or rejects it. When accepted, returns the decoded `T` value directly. Otherwise fail with a runtime error.
+Verified the (raw/untrusted/unknown) input and either accepts or rejects
+it. When accepted, returns the decoded `T` value directly. Otherwise
+fail with a runtime error.
 
 For example, take this simple "number" decoder.
 
@@ -84,9 +86,12 @@ number.verify('hi');  // throws
 <a name="value" href="#value">#</a>
 **.value**(blob: <i style="color: #267f99">mixed</i>): <i style="color: #267f99">T | undefined</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L115-L125 'Source')<br />
 
-Verified the (raw/untrusted/unknown) input and either accepts or rejects it. When accepted, returns the decoded `T` value directly. Otherwise returns ``undefined``.
+Verified the (raw/untrusted/unknown) input and either accepts or rejects
+it. When accepted, returns the decoded `T` value directly. Otherwise
+returns `undefined`.
 
-Use this when you're not interested in programmatically handling the error message.
+Use this when you're not interested in programmatically handling the
+error message.
 
 ```typescript
 // 👍
@@ -105,9 +110,11 @@ string.value(42);    // undefined
 <a name="decode" href="#decode">#</a>
 **.decode**(blob: <i style="color: #267f99">mixed</i>): <i style="color: #267f99">DecodeResult&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L74-L85 'Source')<br />
 
-Validates the raw/untrusted/unknown input and either accepts or rejects it.
+Validates the raw/untrusted/unknown input and either accepts or rejects
+it.
 
-Contrasted with [`.verify()`](/Decoder.html#verify), calls to [`.decode()`](/Decoder.html#decode) will never fail and instead return a result type.
+Contrasted with [`.verify()`](/Decoder.html#verify), calls to [`.decode()`](/Decoder.html#decode) will never fail and
+instead return a result type.
 
 For example, take this simple “number” decoder. When given an number value, it will return an ok: true result. Otherwise, it will return an ok: false result with the original input value annotated.
 
@@ -124,7 +131,10 @@ number.decode('hi');  // { ok: false, error: { type: 'scalar', value: 'hi', text
 <a name="transform" href="#transform">#</a>
 **.transform**&lt;<i style="color: #267f99">V</i>&gt;(transformFn: <i style="color: #267f99">(T) =&gt; V</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;V&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L127-L135 'Source')<br />
 
-Accepts any value the given decoder accepts, and on success, will call the given function **on the decoded result**. If the transformation function throws an error, the whole decoder will fail using the error message as the failure reason.
+Accepts any value the given decoder accepts, and on success, will call
+the given function **on the decoded result**. If the transformation
+function throws an error, the whole decoder will fail using the error
+message as the failure reason.
 
 ```typescript
 const upper = string.transform((s) => s.toUpperCase());
@@ -141,7 +151,9 @@ upper.verify(4);  // throws
 <a name="refine" href="#refine">#</a>
 **.refine**(predicate: <i style="color: #267f99">T =&gt; boolean</i>, message: <i style="color: #267f99">string</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L137-L150 'Source')<br />
 
-Adds an extra predicate to a decoder. The new decoder is like the original decoder, but only accepts values that also meet the predicate.
+Adds an extra predicate to a decoder. The new decoder is like the
+original decoder, but only accepts values that also meet the
+predicate.
 
 ```typescript
 const odd = number.refine(
@@ -164,11 +176,15 @@ In TypeScript, if you provide a predicate that also is a [type predicate](https:
 <a name="reject" href="#reject">#</a>
 **.reject**(rejectFn: <i style="color: #267f99">T =&gt; string | null</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L178-L196 'Source')<br />
 
-Adds an extra predicate to a decoder. The new decoder is like the original decoder, but only accepts values that aren't rejected by the given function.
+Adds an extra predicate to a decoder. The new decoder is like the
+original decoder, but only accepts values that aren't rejected by the
+given function.
 
-The given function can return `null` to accept the decoded value, or return a specific error message to reject.
+The given function can return `null` to accept the decoded value, or
+return a specific error message to reject.
 
-Unlike [`.refine()`](/Decoder.html#refine), you can use this function to return a dynamic error message.
+Unlike [`.refine()`](/Decoder.html#refine), you can use this function to return a dynamic error
+message.
 
 ```typescript
 const decoder = pojo
@@ -213,13 +229,21 @@ const vowel = decoder.describe('Must be vowel');
 
 Chain together the current decoder with another.
 
-> _**NOTE:** This is an advanced, low-level, API. It's not recommended to reach for this construct unless there is no other way. Most cases can be covered more elegantly by [`.transform()`](/Decoder.html#transform) or [`.refine()`](/Decoder.html#refine) instead._
+> _**NOTE:** This is an advanced, low-level, API. It's not recommended
+> to reach for this construct unless there is no other way. Most cases can
+> be covered more elegantly by [`.transform()`](/Decoder.html#transform) or [`.refine()`](/Decoder.html#refine) instead._
 
-If the current decoder accepts an input, the resulting ``T`` value will get passed into the given ``next`` acceptance function to further decide whether or not the value should get accepted or rejected.
+If the current decoder accepts an input, the resulting ``T`` value will
+get passed into the given ``next`` acceptance function to further decide
+whether or not the value should get accepted or rejected.
 
-This works similar to how you would [`define()`](/api.html#define) a new decoder, except that the ``blob`` param will now be ``T`` (a known type), rather than ``unknown``. This will allow the function to make a stronger assumption about its input and avoid re-refining inputs.
+This works similar to how you would [`define()`](/api.html#define) a new decoder, except
+that the ``blob`` param will now be ``T`` (a known type), rather than
+``unknown``. This will allow the function to make a stronger assumption
+about its input and avoid re-refining inputs.
 
-If it helps, you can think of `define(...)` as equivalent to `unknown.then(...)`.
+If it helps, you can think of `define(...)` as equivalent to
+`unknown.then(...)`.
 
-<!--[[[end]]] (checksum: 169d082bf86e82b71e034c4f3ba2bdf4) -->
+<!--[[[end]]] (checksum: 30a73738ee7b3240bdf37c77015127b5) -->
 <!-- prettier-ignore-end -->

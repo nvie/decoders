@@ -162,7 +162,8 @@ decoder.verify('foo');  // throws
 <a name="email" href="#email">#</a>
 **email**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L37-L45 'Source')
 
-Accepts and returns strings that are syntactically valid email addresses. (This will not mean that the email address actually exist.)
+Accepts and returns strings that are syntactically valid email addresses.
+(This will not mean that the email address actually exist.)
 
 ```typescript
 // 👍
@@ -199,7 +200,8 @@ url.verify('/search?q=foo');     // throws
 <a name="httpsUrl" href="#httpsUrl">#</a>
 **httpsUrl**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L55-L62 'Source')
 
-Accepts strings that are valid URLs, but only HTTPS ones. Returns the value as a URL instance.
+Accepts strings that are valid URLs, but only HTTPS ones. Returns the value
+as a URL instance.
 
 ```typescript
 // 👍
@@ -226,7 +228,9 @@ const gitUrl: Decoder<URL> = url.refine(
 <a name="uuid" href="#uuid">#</a>
 **uuid**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L64-L72 'Source')
 
-Accepts strings that are valid [UUIDs](https://en.wikipedia.org/wiki/universally_unique_identifier) (universally unique identifier).
+Accepts strings that are valid
+[UUIDs](https://en.wikipedia.org/wiki/universally_unique_identifier)
+(universally unique identifier).
 
 ```typescript
 // 👍
@@ -243,7 +247,9 @@ uuid.verify('abcdefgh-ijkl-mnop-qrst-uvwxyz012345');  // throws
 <a name="uuidv1" href="#uuidv1">#</a>
 **uuidv1**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L74-L81 'Source')
 
-Like [`uuid`](/api.html#uuid), but only accepts [UUIDv1](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_%28date-time_and_MAC_address%29) strings.
+Like [`uuid`](/api.html#uuid), but only accepts
+[UUIDv1](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_%28date-time_and_MAC_address%29)
+strings.
 
 ```typescript
 // 👍
@@ -258,7 +264,9 @@ uuidv1.verify('123e4567-e89b-42d3-a456-426614174000')  // throws
 <a name="uuidv4" href="#uuidv4">#</a>
 **uuidv4**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L83-L90 'Source')
 
-Like [`uuid`](/api.html#uuid), but only accepts [UUIDv4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_%28random%29) strings.
+Like [`uuid`](/api.html#uuid), but only accepts
+[UUIDv4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_%28random%29)
+strings.
 
 ```typescript
 // 👍
@@ -282,9 +290,10 @@ uuidv4.verify('123e4567-e89b-12d3-a456-426614174000')  // throws
 ---
 
 <a name="number" href="#number">#</a>
-**number**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L17-L25 'Source')
+**number**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L17-L24 'Source')
 
-Accepts finite numbers (can be integer or float values). Values `NaN`, or positive and negative `Infinity` will get rejected.
+Accepts finite numbers (can be integer or float values). Values `NaN`,
+or positive and negative `Infinity` will get rejected.
 
 ```typescript
 // 👍
@@ -300,7 +309,7 @@ number.verify('not a number');  // throws
 ---
 
 <a name="integer" href="#integer">#</a>
-**integer**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L27-L33 'Source')
+**integer**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L26-L32 'Source')
 
 Accepts only finite whole numbers.
 
@@ -318,7 +327,7 @@ integer.verify('not a integer'); // throws
 ---
 
 <a name="positiveNumber" href="#positiveNumber">#</a>
-**positiveNumber**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L35-L41 'Source')
+**positiveNumber**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L34-L40 'Source')
 
 Accepts only positive finite numbers.
 
@@ -337,7 +346,7 @@ positiveNumber.verify('not a number');  // throws
 ---
 
 <a name="positiveInteger" href="#positiveInteger">#</a>
-**positiveInteger**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L43-L49 'Source')
+**positiveInteger**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L42-L48 'Source')
 
 Accepts only positive finite whole numbers.
 
@@ -360,7 +369,9 @@ positiveInteger.verify('not a number');  // throws
 
 Accepts any valid ``number`` value.
 
-This also accepts special values like `NaN` and `Infinity`. Unless you want to deliberately accept those, you'll likely want to use the [`number`](/api.html#number) decoder instead.
+This also accepts special values like `NaN` and `Infinity`. Unless you
+want to deliberately accept those, you'll likely want to use the
+[`number`](/api.html#number) decoder instead.
 
 ```typescript
 // 👍
@@ -473,9 +484,11 @@ date.verify('hello');  // throws
 <a name="iso8601" href="#iso8601">#</a>
 **iso8601**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Date&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/dates.js#L22-L40 'Source')
 
-Accepts [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings, returns them as `Date` instances.
+Accepts [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings,
+returns them as `Date` instances.
 
-This is very useful for working with dates in APIs: serialize them as `.toISOString()` when sending, decode them with [`iso8601`](/api.html#iso8601) when receiving.
+This is very useful for working with dates in APIs: serialize them as
+`.toISOString()` when sending, decode them with [`iso8601`](/api.html#iso8601) when receiving.
 
 ```typescript
 // 👍
@@ -526,7 +539,8 @@ decoder.verify(undefined);      // throws
 <a name="hardcoded" href="#hardcoded">#</a>
 **hardcoded**&lt;<i style="color: #267f99">T</i>&gt;(value: <i style="color: #267f99">T</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L96-L99 'Source')
 
-Accepts anything, completely ignores it, and always returns the provided value instead.
+Accepts anything, completely ignores it, and always returns the provided
+value instead.
 
 This is useful to manually add extra fields to object decoders.
 
@@ -598,7 +612,8 @@ undefined_.verify('hello world'); // throws
 
 Accepts whatever the given decoder accepts, or `undefined`.
 
-If a default value is explicitly provided, return that instead in the `undefined` case.
+If a default value is explicitly provided, return that instead in the
+`undefined` case.
 
 ```typescript
 const decoder = optional(string);
@@ -642,7 +657,8 @@ Which will decode to type:
 
 Accepts whatever the given decoder accepts, or `null`.
 
-If a default value is explicitly provided, return that instead in the `null` case.
+If a default value is explicitly provided, return that instead in the `null`
+case.
 
 ```typescript
 const decoder = nullable(string);
@@ -666,7 +682,8 @@ decoder.verify(42);         // throws
 
 Accepts whatever the given decoder accepts, or `null`, or `undefined`.
 
-If a default value is explicitly provided, return that instead in the `null`/`undefined` case.
+If a default value is explicitly provided, return that instead in the
+`null`/`undefined` case.
 
 ```typescript
 const decoder = maybe(string);
@@ -690,7 +707,9 @@ decoder.verify(42);  // throws
 
 Accepts anything and returns it unchanged.
 
-Useful for situation in which you don't know or expect a specific type. Of course, the downside is that you won't know the type of the value statically and you'll have to further refine it yourself.
+Useful for situation in which you don't know or expect a specific type. Of
+course, the downside is that you won't know the type of the value statically
+and you'll have to further refine it yourself.
 
 ```typescript
 // 👍
@@ -773,15 +792,16 @@ poja.verify('hi');  // throws
 ---
 
 <a name="tuple" href="#tuple">#</a>
-**tuple**&lt;<i style="color: #267f99">A</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;[A]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/arrays.js#L138 'Source')  
+**tuple**&lt;<i style="color: #267f99">A</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;[A]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/arrays.js#L134-L138 'Source')  
 <a name="tuple" href="#tuple">#</a>
-**tuple**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;[A, B]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/arrays.js#L138 'Source')  
+**tuple**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;[A, B]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/arrays.js#L134-L138 'Source')  
 <a name="tuple" href="#tuple">#</a>
-**tuple**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">C</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;C&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;[A, B, C]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/arrays.js#L138 'Source')  
+**tuple**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">C</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;C&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;[A, B, C]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/arrays.js#L134-L138 'Source')  
 <a name="tuple" href="#tuple">#</a>
-**tuple**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">C</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;C&gt;</i>, <i style="color: #267f99">...</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;[A, B, C, ...]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/arrays.js#L138 'Source')
+**tuple**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">C</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;C&gt;</i>, <i style="color: #267f99">...</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;[A, B, C, ...]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/arrays.js#L134-L138 'Source')
 
-Accepts a tuple (an array with exactly _n_ items) of values accepted by the _n_ given decoders.
+Accepts a tuple (an array with exactly _n_ items) of values accepted by the
+_n_ given decoders.
 
 ```typescript
 const decoder = tuple(string, number);
@@ -800,7 +820,8 @@ decoder.verify(['a', 1, 'c']);       // throws, too many items
 <a name="set" href="#set">#</a>
 **set**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Set&lt;T&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/arrays.js#L88-L94 'Source')
 
-Similar to [`array()`](#array), but returns the result as an [ES6 Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set).
+Similar to [`array()`](/api.html#array), but returns the result as an [ES6
+Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set).
 
 ```typescript
 const decoder = set(string);
@@ -830,7 +851,8 @@ decoder.verify([1, 2]);         // throws, not the right types
 <a name="object" href="#object">#</a>
 **object**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99">{ field1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, field2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ field1: A, field2: B, ... }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L51-L131 'Source')
 
-Accepts objects with fields matching the given decoders. Extra fields that exist on the input object are ignored and will not be returned.
+Accepts objects with fields matching the given decoders. Extra fields that
+exist on the input object are ignored and will not be returned.
 
 ```typescript
 const decoder = object({
@@ -853,7 +875,8 @@ For more information, see also [The difference between ``object``, ``exact``, an
 <a name="exact" href="#exact">#</a>
 **exact**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99">{ field1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, field2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ field1: A, field2: B, ... }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L133-L157 'Source')
 
-Like [`object()`](/api.html#object), but will reject inputs that contain extra fields that are not specified explicitly.
+Like [`object()`](/api.html#object), but will reject inputs that contain extra fields that are
+not specified explicitly.
 
 ```typescript
 const decoder = exact({
@@ -876,7 +899,8 @@ For more information, see also [The difference between ``object``, ``exact``, an
 <a name="inexact" href="#inexact">#</a>
 **inexact**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99">{ field1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, field2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ field1: A, field2: B, ... }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L159-L191 'Source')
 
-Like [`object()`](/api.html#object), but will pass through any extra fields on the input object unvalidated that will thus be of [`unknown`](/api.html#unknown) type statically.
+Like [`object()`](/api.html#object), but will pass through any extra fields on the input object
+unvalidated that will thus be of [`unknown`](/api.html#unknown) type statically.
 
 ```typescript
 const decoder = inexact({
@@ -898,7 +922,8 @@ For more information, see also [The difference between ``object``, ``exact``, an
 <a name="pojo" href="#pojo">#</a>
 **pojo**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ [key: string]: unknown }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L19-L49 'Source')
 
-Accepts any "plain old JavaScript object", but doesn't validate its keys or values further.
+Accepts any "plain old JavaScript object", but doesn't validate its keys or
+values further.
 
 ```typescript
 // 👍
@@ -917,9 +942,14 @@ pojo.verify(null);        // throws
 <a name="dict" href="#dict">#</a>
 **dict**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ [key: string]: T }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L193-L230 'Source')
 
-Accepts objects where all values match the given decoder, and returns the result as a `{ [string]: T }`.
+Accepts objects where all values match the given decoder, and returns the
+result as a `{ [string]: T }`.
 
-The main difference between [`object()`](/api.html#object) and [`dict()`](/api.html#dict) is that you'd typically use [`object()`](/api.html#object) if this is a record-like object, where all field names are known and the values are heterogeneous. Whereas with [`dict()`](/api.html#dict) the keys are typically dynamic and the values homogeneous, like in a dictionary, a lookup table, or a cache.
+The main difference between [`object()`](/api.html#object) and [`dict()`](/api.html#dict) is that you'd typically
+use [`object()`](/api.html#object) if this is a record-like object, where all field names are
+known and the values are heterogeneous. Whereas with [`dict()`](/api.html#dict) the keys are
+typically dynamic and the values homogeneous, like in a dictionary,
+a lookup table, or a cache.
 
 ```typescript
 const decoder = dict(number);
@@ -933,7 +963,9 @@ decoder.verify({ red: 1, blue: 2, green: 3 }); // ≈ { red: 1, blue: 2, green: 
 <a name="mapping" href="#mapping">#</a>
 **mapping**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Map&lt;string, T&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L232-L246 'Source')
 
-Similar to [`dict()`](/api.html#dict), but returns the result as a `Map<string, T>` (an [ES6 Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)) instead.
+Similar to [`dict()`](/api.html#dict), but returns the result as a `Map<string, T>` (an [ES6
+Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map))
+instead.
 
 ```typescript
 const decoder = mapping(number);
@@ -963,7 +995,8 @@ decoder.verify({ red: 1, blue: 2, green: 3 });
 
 Accepts any value that's a valid JSON value.
 
-In other words: any value returned by `JSON.parse()` should decode without failure.
+In other words: any value returned by `JSON.parse()` should decode without
+failure.
 
 ```typescript
 type JSONValue =
@@ -1042,7 +1075,11 @@ jsonArray.verify(null);               // throws
 <a name="either" href="#either">#</a>
 **either**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">C</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;C&gt;</i>, <i style="color: #267f99">...</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | C | ...&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/unions.js#L89-L96 'Source')
 
-Accepts values accepted by any of the given decoders. The decoders are tried on the input one by one, in the given order. The first one that accepts the input "wins". If all decoders reject the input, the input gets rejected.
+Accepts values accepted by any of the given decoders.
+
+The decoders are tried on the input one by one, in the given order. The
+first one that accepts the input "wins". If all decoders reject the input,
+the input gets rejected.
 
 ```typescript
 const decoder = either(number, string);
@@ -1064,7 +1101,8 @@ decoder.verify(false);  // throws
 <a name="oneOf" href="#oneOf">#</a>
 **oneOf**&lt;<i style="color: #267f99">T</i>&gt;(values: <i style="color: #267f99">T[]</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/unions.js#L98-L114 'Source')
 
-Accepts any value that is strictly-equal (using `===`) to one of the specified values.
+Accepts any value that is strictly-equal (using `===`) to one of the
+specified values.
 
 ```typescript
 const decoder = oneOf(['foo', 'bar', 3]);
@@ -1091,11 +1129,15 @@ oneOf(['foo', 'bar']);
 ---
 
 <a name="taggedUnion" href="#taggedUnion">#</a>
-**taggedUnion**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(field: <i style="color: #267f99">string</i>, mapping: <i style="color: #267f99">{ value1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, value2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | ...&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/unions.js#L116-L153 'Source')
+**taggedUnion**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(field: <i style="color: #267f99">string</i>, mapping: <i style="color: #267f99">{ value1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, value2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | ...&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/unions.js#L116-L155 'Source')
 
-If you are decoding tagged unions you may want to use the [`taggedUnion()`](/api.html#taggedUnion) decoder instead of the general purpose [`either()`](/api.html#either) decoder to get better error messages and better performance.
+If you are decoding tagged unions you may want to use the [`taggedUnion()`](/api.html#taggedUnion)
+decoder instead of the general purpose [`either()`](/api.html#either) decoder to get better
+error messages and better performance.
 
-This decoder is optimized for [tagged unions](https://en.wikipedia.org/wiki/Tagged_union), i.e. a union of objects where one field is used as the discriminator.
+This decoder is optimized for [tagged
+unions](https://en.wikipedia.org/wiki/Tagged_union), i.e. a union of
+objects where one field is used as the discriminator.
 
 ```ts
 const A = object({ tag: constant('A'), foo: string });
@@ -1107,10 +1149,14 @@ const AorB = taggedUnion('tag', { A, B });
 
 Decoding now works in two steps:
 
-1. Look at the given `'tag'` field in the incoming object (this is the field that decides which decoder will be used)
-2. If the value is `'A'`, then decoder `A` will be used. If it's `'B'`, then decoder `B` will be used. Otherwise, this will fail.
+1. Look at the `'tag'` field in the incoming object (this is the field
+   that decides which decoder will be used)
+2. If the value is `'A'`, then decoder `A` will be used. If it's `'B'`, then
+   decoder `B` will be used. Otherwise, this will fail.
 
-This is effectively equivalent to `either(A, B)`, but will provide better error messages and is more performant at runtime because it doesn't have to try all decoders one by one.
+This is effectively equivalent to `either(A, B)`, but will provide better
+error messages and is more performant at runtime because it doesn't have to
+try all decoders one by one.
 
 ---
 
@@ -1130,16 +1176,18 @@ This is effectively equivalent to `either(A, B)`, but will provide better error 
 **define**&lt;<i style="color: #267f99">T</i>&gt;(fn: <i style="color: #267f99">(blob: unknown, ok, err) =&gt; DecodeResult&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.js#L60-L249 'Source')
 
 Defines a new `Decoder<T>`, by implementing a custom acceptance function.
-
-> _**NOTE:** This is the lowest-level API to define a new decoder, and therefore not recommended unless you have a very good reason for it. Most cases can be covered more elegantly by starting from an existing decoder and using [`.transform()`](/Decoder.html#transform) or [`.refine()`](/Decoder.html#refine) on them instead._
-
 The function receives three arguments:
 
 1. `blob` - the raw/unknown input (aka your external data)
 2. `ok` - Call `ok(value)` to accept the input and return ``value``
 3. `err` - Call `err(message)` to reject the input with error ``message``
 
-The expected return value should be a `DecodeResult<T>`, which can be obtained by returning the result of calling the provided `ok` or `err` helper functions. Please note that `ok()` and `err()` don't perform side effects! You'll need to _return_ those values.
+The expected return value should be a `DecodeResult<T>`, which can be
+obtained by returning the result of calling the provided `ok` or `err`
+helper functions. Please note that `ok()` and `err()` don't perform side
+effects! You'll need to _return_ those values.
+
+> _**NOTE:** This is the lowest-level API to define a new decoder, and therefore not recommended unless you have a very good reason for it. Most cases can be covered more elegantly by starting from an existing decoder and using [`.transform()`](/Decoder.html#transform) or [`.refine()`](/Decoder.html#refine) on them instead._
 
 ```typescript
 // NOTE: Please do NOT implement an uppercase decoder like this! 😇
@@ -1172,9 +1220,12 @@ const uppercase: Decoder<string> = string.transform(s => s.toUpperCase());
 ---
 
 <a name="prep" href="#prep">#</a>
-**prep**&lt;<i style="color: #267f99">T</i>&gt;(mapperFn: <i style="color: #267f99">(raw: mixed) =&gt; mixed</i>, decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L50-L71 'Source')
+**prep**&lt;<i style="color: #267f99">T</i>&gt;(mapperFn: <i style="color: #267f99">(raw: mixed) =&gt; mixed</i>, decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L31-L52 'Source')
 
-Pre-process the raw data input before passing it into the decoder. This gives you the ability to arbitrarily customize the input on the fly before passing it to the decoder. Of course, the input value at that point is still of [`unknown`](/api.html#unknown) type, so you will have to deal with that accordingly.
+Pre-process the data input before passing it into the decoder. This gives
+you the ability to arbitrarily customize the input on the fly before passing
+it to the decoder. Of course, the input value at that point is still of
+``unknown`` type, so you will have to deal with that accordingly.
 
 ```typescript
 const decoder = prep(
@@ -1198,11 +1249,12 @@ decoder.verify('hi');  // throws: not a number
 ---
 
 <a name="never" href="#never">#</a>
-**never**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;never&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L73-L79 'Source')  
+**never**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;never&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L54-L60 'Source')  
 <a name="fail" href="#fail">#</a>
-**fail**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;never&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L81-L84 'Source')
+**fail**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;never&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L62-L65 'Source')
 
-Rejects all inputs, and always fails with the given error message. May be useful for explicitly disallowing keys, or for testing purposes.
+Rejects all inputs, and always fails with the given error message. May be
+useful for explicitly disallowing keys, or for testing purposes.
 
 ```typescript
 const decoder = object({
@@ -1240,9 +1292,10 @@ decoder.verify(3);      // throws
 ---
 
 <a name="lazy" href="#lazy">#</a>
-**lazy**&lt;<i style="color: #267f99">T</i>&gt;(decoderFn: <i style="color: #267f99">() =&gt; <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L23-L48 'Source')
+**lazy**&lt;<i style="color: #267f99">T</i>&gt;(decoderFn: <i style="color: #267f99">() =&gt; <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L23-L29 'Source')
 
-Lazily evaluate the given decoder. This is useful to build self-referential types for recursive data structures. Example:
+Lazily evaluate the given decoder. This is useful to build self-referential
+types for recursive data structures.
 
 ```typescript
 type Tree = {
@@ -1261,5 +1314,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 26f9218693adcdadefb65c9d2d8141c9) -->
+<!--[[[end]]] (checksum: 44e866035d9fa78dd874a56b7adc98ce) -->
 <!-- prettier-ignore-end -->

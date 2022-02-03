@@ -96,8 +96,8 @@ function _either(...decoders: $ReadOnlyArray<Decoder<mixed>>): Decoder<mixed> {
 export const either: EitherT = (_either: _Any);
 
 /**
- * Accepts any value that is strictly-equal (using ===) to one of the specified
- * values.
+ * Accepts any value that is strictly-equal (using `===`) to one of the
+ * specified values.
  */
 export function oneOf<T: Scalar>(constants: $ReadOnlyArray<T>): Decoder<T> {
     return define((blob, ok, err) => {
@@ -122,11 +122,13 @@ export function oneOf<T: Scalar>(constants: $ReadOnlyArray<T>): Decoder<T> {
  * unions](https://en.wikipedia.org/wiki/Tagged_union), i.e. a union of
  * objects where one field is used as the discriminator.
  *
- *   const A = object({ tag: constant('A'), foo: string });
- *   const B = object({ tag: constant('B'), bar: number });
+ * ```ts
+ * const A = object({ tag: constant('A'), foo: string });
+ * const B = object({ tag: constant('B'), bar: number });
  *
- *   const AorB = taggedUnion('tag', { A, B });
- *   //                        ^^^
+ * const AorB = taggedUnion('tag', { A, B });
+ * //                        ^^^
+ * ```
  *
  * Decoding now works in two steps:
  *

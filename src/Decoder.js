@@ -63,12 +63,12 @@ function noThrow<T, V>(fn: (value: T) => V): (T) => DecodeResult<V> {
  *
  * 1. `blob` - the raw/unknown input (aka your external data)
  * 2. `ok` - Call `ok(value)` to accept the input and return ``value``
- * 3. `err` - Call `err(message)` to reject the input and use "message" in the
- *    annotation
+ * 3. `err` - Call `err(message)` to reject the input with error ``message``
  *
  * The expected return value should be a `DecodeResult<T>`, which can be
- * obtained by returning the result from the provided `ok` or `err` helper
- * functions.
+ * obtained by returning the result of calling the provided `ok` or `err`
+ * helper functions. Please note that `ok()` and `err()` don't perform side
+ * effects! You'll need to _return_ those values.
  */
 export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
     /**

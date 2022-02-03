@@ -12,7 +12,7 @@ export const boolean: Decoder<boolean> = define((blob, ok, err) => {
 });
 
 /**
- * Accepts anything and will return its “truth” value. Will never reject.
+ * Accepts anything and will return its "truth" value. Will never reject.
  */
 export const truthy: Decoder<boolean> = define((blob, ok, _) => ok(!!blob));
 

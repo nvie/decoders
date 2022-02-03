@@ -23,25 +23,6 @@ export function instanceOf<T>(klass: Class<T>): Decoder<T> {
 /**
  * Lazily evaluate the given decoder. This is useful to build self-referential
  * types for recursive data structures.
- *
- * Example:
- *
- * ```ts
- * type Tree = {
- *     value: string;
- *     children: Array<Tree>;
- *     //              ^^^^
- *     //              Self-reference defining a recursive type
- * };
- *
- * const treeDecoder: Decoder<Tree> = object({
- *     value: string,
- *     children: array(lazy(() => treeDecoder)),
- *     //              ^^^^^^^^^^^^^^^^^^^^^^^
- *     //              Use lazy() like this to refer to the treeDecoder which is
- *     //              getting defined here
- * });
- * ```
  */
 export function lazy<T>(decoderFn: () => Decoder<T>): Decoder<T> {
     return define((blob) => decoderFn().decode(blob));
