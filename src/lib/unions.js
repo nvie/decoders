@@ -48,7 +48,7 @@ function nest(errText: string): string {
 }
 
 // prettier-ignore
-interface EitherDecoderSignatures {
+interface EitherT {
   <A>(a: Decoder<A>): Decoder<A>;
   <A, B>(a: Decoder<A>, b: Decoder<B>): Decoder<A | B>;
   <A, B, C>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>): Decoder<A | B | C>;
@@ -93,7 +93,7 @@ function _either(...decoders: $ReadOnlyArray<Decoder<mixed>>): Decoder<mixed> {
  * first one that accepts the input "wins". If all decoders reject the input,
  * the input gets rejected.
  */
-export const either: EitherDecoderSignatures = (_either: _Any);
+export const either: EitherT = (_either: _Any);
 
 /**
  * Accepts any value that is strictly-equal (using ===) to one of the specified

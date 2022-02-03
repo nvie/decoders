@@ -97,7 +97,7 @@ const ntuple = (n: number) =>
     poja.refine((arr) => arr.length === n, `Must be a ${n}-tuple`);
 
 // prettier-ignore
-interface TupleFuncSignature {
+interface TupleT {
     <A>(a: Decoder<A>): Decoder<[A]>;
     <A, B>(a: Decoder<A>, b: Decoder<B>): Decoder<[A, B]>;
     <A, B, C>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>): Decoder<[A, B, C]>;
@@ -106,10 +106,6 @@ interface TupleFuncSignature {
     <A, B, C, D, E, F>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>, e: Decoder<E>, f: Decoder<F>): Decoder<[A, B, C, D, E, F]>;
 }
 
-/**
- * Accepts a tuple (an array with exactly _n_ items) of values accepted by the
- * _n_ given decoders.
- */
 function _tuple(...decoders: $ReadOnlyArray<Decoder<mixed>>): Decoder<Array<mixed>> {
     return ntuple(decoders.length).then((blobs, ok, err) => {
         let allOk = true;
@@ -135,4 +131,8 @@ function _tuple(...decoders: $ReadOnlyArray<Decoder<mixed>>): Decoder<Array<mixe
     });
 }
 
-export const tuple: TupleFuncSignature = (_tuple: _Any);
+/**
+ * Accepts a tuple (an array with exactly _n_ items) of values accepted by the
+ * _n_ given decoders.
+ */
+export const tuple: TupleT = (_tuple: _Any);
