@@ -4,11 +4,14 @@ import { Decoder, DecoderType } from '../Decoder';
 import { AllowImplicit } from './_helpers';
 
 export type ObjectDecoderType<T> = AllowImplicit<{
-    [key in keyof T]: DecoderType<T[key]>;
+        [key in keyof T]: DecoderType<T[key]>;
 }>;
 
 export const pojo: Decoder<{ [key: string]: unknown }>;
 
+export function object<O extends Record<any, never>>(
+    mapping: O,
+): Decoder<Record<any, never>>;
 export function object<O extends { [key: string]: Decoder<any> }>(
     decodersByKey: O,
 ): Decoder<{ [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] }>;
