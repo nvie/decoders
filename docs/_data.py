@@ -1049,14 +1049,20 @@ DECODER_METHODS = {
     'params': [('blob', 'mixed')],
     'return_type': 'T',
     'example': """
-      For example, take this simple "number" decoder.
+      <img alt="The .verify() method explained" src="./assets/schematic-verify.png" style="max-width: min(592px, 100%)" />
+
+      For example, take this simple number decoder.
 
       ```typescript
       // 👍
-      number.verify(3);     // 3
+      number.verify(123);     // 123
+      number.verify(3.1415);  // 3.1415
 
       // 👎
-      number.verify('hi');  // throws
+      number.verify('hi');    // throws
+      // Decoding error:
+      // "hello"
+      // ^^^^^^^ Must be number
       ```
     """,
   },
@@ -1065,6 +1071,8 @@ DECODER_METHODS = {
     'params': [('blob', 'mixed')],
     'return_type': 'T | undefined',
     'example': """
+      <img alt="The .value() method explained" src="./assets/schematic-value.png" style="max-width: min(592px, 100%)" />
+
       ```typescript
       // 👍
       number.value(3);     // 3
@@ -1075,7 +1083,7 @@ DECODER_METHODS = {
       string.value(42);    // undefined
       ```
 
-      **NOTE:** This helper mainly exists for pragmatic reasons, but please note that when you use this on `optional()` decoders, you cannot distinguish a _rejected_ value from a legal ``undefined`` input value.
+      > _**NOTE:** When you use this on `optional()` decoders, you cannot distinguish a _rejected_ value from a valid ``undefined`` input value._
     """,
   },
 
@@ -1083,7 +1091,9 @@ DECODER_METHODS = {
     'params': [('blob', 'mixed')],
     'return_type': 'DecodeResult<T>',
     'example': """
-      For example, take this simple “number” decoder. When given an number value, it will return an ok: true result. Otherwise, it will return an ok: false result with the original input value annotated.
+      <img alt="The .decode() method explained" src="./assets/schematic-decode.png" style="max-width: min(592px, 100%)" />
+
+      For example, take this simple "number" decoder. When given an number value, it will return an ok: true result. Otherwise, it will return an ok: false result with the original input value annotated.
 
       ```typescript
       // 👍

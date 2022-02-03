@@ -71,14 +71,20 @@ Verifies the untrusted/unknown input and either accepts or rejects it.
 When accepted, returns a value of type `T`. Otherwise fail with
 a runtime error.
 
-For example, take this simple "number" decoder.
+<img alt="The .verify() method explained" src="./assets/schematic-verify.png" style="max-width: min(592px, 100%)" />
+
+For example, take this simple number decoder.
 
 ```typescript
 // 👍
-number.verify(3);     // 3
+number.verify(123);     // 123
+number.verify(3.1415);  // 3.1415
 
 // 👎
-number.verify('hi');  // throws
+number.verify('hi');    // throws
+// Decoding error:
+// "hello"
+// ^^^^^^^ Must be number
 ```
 
 ---
@@ -93,6 +99,8 @@ When accepted, returns the decoded `T` value directly. Otherwise returns
 Use this when you're not interested in programmatically handling the
 error message.
 
+<img alt="The .value() method explained" src="./assets/schematic-value.png" style="max-width: min(592px, 100%)" />
+
 ```typescript
 // 👍
 number.value(3);     // 3
@@ -103,7 +111,7 @@ number.value('hi');  // undefined
 string.value(42);    // undefined
 ```
 
-**NOTE:** This helper mainly exists for pragmatic reasons, but please note that when you use this on [`optional()`](/api.html#optional) decoders, you cannot distinguish a _rejected_ value from a legal ``undefined`` input value.
+> _**NOTE:** When you use this on [`optional()`](/api.html#optional) decoders, you cannot distinguish a _rejected_ value from a valid ``undefined`` input value._
 
 ---
 
@@ -115,7 +123,9 @@ Verifies the untrusted/unknown input and either accepts or rejects it.
 Contrasted with [`.verify()`](/Decoder.html#verify), calls to [`.decode()`](/Decoder.html#decode) will never fail and
 instead return a result type.
 
-For example, take this simple “number” decoder. When given an number value, it will return an ok: true result. Otherwise, it will return an ok: false result with the original input value annotated.
+<img alt="The .decode() method explained" src="./assets/schematic-decode.png" style="max-width: min(592px, 100%)" />
+
+For example, take this simple "number" decoder. When given an number value, it will return an ok: true result. Otherwise, it will return an ok: false result with the original input value annotated.
 
 ```typescript
 // 👍
@@ -244,5 +254,5 @@ about its input and avoid re-refining inputs.
 If it helps, you can think of `define(...)` as equivalent to
 `unknown.then(...)`.
 
-<!--[[[end]]] (checksum: 8acfb1d6f27b57d6df4f05a62a0105ad) -->
+<!--[[[end]]] (checksum: 9ba9dcab362cdae971c8de1b2919ebe2) -->
 <!-- prettier-ignore-end -->
