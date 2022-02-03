@@ -88,8 +88,7 @@ function format(err: Annotation, formatter: Formatter): Error {
  */
 export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
     /**
-     * Validates the raw/untrusted/unknown input and either accepts or rejects
-     * it.
+     * Verifies the untrusted/unknown input and either accepts or rejects it.
      *
      * Contrasted with `.verify()`, calls to `.decode()` will never fail and
      * instead return a result type.
@@ -101,9 +100,9 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
     }
 
     /**
-     * Verified the (raw/untrusted/unknown) input and either accepts or rejects
-     * it. When accepted, returns the decoded `T` value directly. Otherwise
-     * fail with a runtime error.
+     * Verifies the untrusted/unknown input and either accepts or rejects it.
+     * When accepted, returns a value of type `T`. Otherwise fail with
+     * a runtime error.
      */
     function verify(blob: mixed, formatter: Formatter = formatInline): T {
         const result = decode(blob);
@@ -115,9 +114,9 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
     }
 
     /**
-     * Verified the (raw/untrusted/unknown) input and either accepts or rejects
-     * it. When accepted, returns the decoded `T` value directly. Otherwise
-     * returns `undefined`.
+     * Verifies the untrusted/unknown input and either accepts or rejects it.
+     * When accepted, returns the decoded `T` value directly. Otherwise returns
+     * `undefined`.
      *
      * Use this when you're not interested in programmatically handling the
      * error message.
