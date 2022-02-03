@@ -22,14 +22,19 @@ solve both of these problems at once.**
 ```typescript
 import { array, iso8601, number, object, optional, string } from 'decoders';
 
-// External data, for example JSON.parse()'ed from a request payload
+//
+// Incoming data at runtime
+//
 const externalData = {
     id: 123,
     name: 'Alison Roberts',
-    createdAt: '2022-01-11T12:26:37.024Z',
-    tags: ['foo', 'bar', 'qux'],
+    createdAt: '1994-01-11T12:26:37.024Z',
+    tags: ['foo', 'bar'],
 };
 
+//
+// Write the decoder (= what you expect the data to look like)
+//
 const userDecoder = object({
     id: number,
     name: string,
@@ -37,15 +42,20 @@ const userDecoder = object({
     tags: array(string),
 });
 
-// NOTE: TypeScript will automatically infer this type for the `user` variable
-// interface User {
-//     id: number;
-//     name: string;
-//     createdAt?: Date;
-//     tags: string[];
-// }
-
+//
+// Call .verify() on the incoming data
+//
 const user = userDecoder.verify(externalData);
+//    ^^^^
+//    TypeScript can automatically infer this type now:
+//
+//    {
+//      id: number;
+//      name: string;
+//      createdAt?: Date;
+//      tags: string[];
+//    }
+//
 ```
 
 ## Documentation

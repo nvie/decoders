@@ -62,7 +62,7 @@ const externalData = {
 // Write the decoder (= what you expect the data to look like)
 //
 const userDecoder = object({
-    id: positiveInteger,
+    id: number,
     name: string,
     createdAt: optional(iso8601),
     tags: array(string),
@@ -86,14 +86,26 @@ const user = userDecoder.verify(externalData);
 
 ## The core idea
 
-The central concept of this library is the Decoder. A `Decoder<T>` has a validation
-function that, when called on an untrusted input, will either return an "ok" result with
-the decoded value of type `T` as its payload, or an "error" result.
+The central concept of this library is the Decoder. A Decoder is a construct that can help
+you verify that untrusted external input matches your expectations. Untrusted data is
+basically any variable of type `any` or `unknown`.
 
 This way, you can be sure that all untrusted runtime data is always in the shape you
 expect, and that static types can correctly be inferred for dynamic input data.
 
-To use a decoder on an external input, call one of these three methods on the outermost
+All decoders have an associated type, for example `Decoder<string>`, or
+`Decoder<number[]>`, etc. When you use a `Decoder<T>` on untrusted input, it will either
+"accept + return" something of type `T`, or "reject" the value.
+
+Generic/small decoders are typically stacked together like LEGO® pieces to build
+larger/custom decoders. In the example above, you have already seen many decoder
+instances!
+
+![](./assets/decoder-composition.gif)
+
+### Using a decoder
+
+To use a decoder on an untrusted input, call one of these three methods on the outermost
 decoder. Which one you want to use will depend on your use case.
 
 -   `.verify()` (= recommended)
@@ -135,13 +147,6 @@ It does **not** mean it will only accept string inputs! Take the `truthy` decode
 example. That one will accept _any_ input value, but return a `boolean`. What values will
 get accepted by a decoder depends on its implementation. The decoder's documentation will
 tell you what inputs it accepts.
-
-## Composing decoders
-
-Decoders can be stacked together like LEGO® pieces to build larger decoders. For example,
-here you can see how four decoders can be combined to build a larger decoder:
-
-![](./assets/decoder-composition.gif)
 
 ## Building your own decoders
 
