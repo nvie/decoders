@@ -18,11 +18,11 @@ import textwrap
 from _data import DECODERS, DECODERS_BY_SECTION, DECODER_METHODS
 from _lib import (
   format_type,
-  linkify,
+  get_markdown,
   methodref,
-  reindent,
   safe,
   source_link,
+  unindent,
 )
 ]]]-->
 <!--[[[end]]] (checksum: d41d8cd98f00b204e9800998ecf8427e) -->
@@ -52,15 +52,15 @@ for (name, info) in DECODER_METHODS.items():
   params = '' if not info['params'] else '(' + ', '.join([f'{safe(pname)}: {format_type(ptype)}' for (pname, ptype) in info['params']]) + ')'
   type_params = '' if not info.get('type_params') else safe('<') + ', '.join([format_type(ptype) for ptype in info['type_params']]) + safe('>')
   return_type = format_type(info['return_type'])
-  markdown = linkify(reindent(info['markdown'], prefix='    '))
-  cog.outl(f"""
+  cog.outl(unindent(f"""
     ---
 
     <a name="{name}" href="#{name}">#</a>
     **.{name}**{type_params}{params}: {return_type} {source_link(name)}<br />
-
-    {markdown}
-  """, dedent=True, trimblanklines=True)
+  """))
+  cog.outl()
+  cog.outl(get_markdown(name))
+  cog.outl()
 ]]]-->
 ---
 
