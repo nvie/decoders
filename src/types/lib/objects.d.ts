@@ -9,6 +9,7 @@ export type ObjectDecoderType<T> = AllowImplicit<{
 
 export const pojo: Decoder<{ [key: string]: unknown }>;
 
+export function object(decodersByKey: Record<any, never>): Decoder<Record<string, never>>; // The "empty object" case
 export function object<O extends { [key: string]: Decoder<any> }>(
     decodersByKey: O,
 ): Decoder<{ [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] }>;
