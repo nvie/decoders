@@ -15,9 +15,7 @@ DECODERS = {
     'section': 'Strings',
     'params': None,
     'return_type': 'Decoder<string>',
-    'markdown': """
-      Accepts and returns strings.
-
+    'example': """
       ```typescript
       // 👍
       string.verify('hello world') === 'hello world';
@@ -36,9 +34,7 @@ DECODERS = {
     'section': 'Strings',
     'params': None,
     'return_type': 'Decoder<string>',
-    'markdown': """
-      Like `string`, but will reject the empty string or strings containing only whitespace.
-
+    'example': """
       ```typescript
       // 👍
       nonEmptyString.verify('hello world') === 'hello world';
@@ -59,9 +55,7 @@ DECODERS = {
       ('message', 'string'),
     ],
     'return_type': 'Decoder<string>',
-    'markdown': """
-      Accepts and returns strings that match the given regular expression.
-
+    'example': """
       ```typescript
       const decoder = regex(/^[0-9][0-9]+$/, 'Must be numeric');
 
@@ -81,9 +75,7 @@ DECODERS = {
     'section': 'Strings',
     'params': None,
     'return_type': 'Decoder<string>',
-    'markdown': """
-      Accepts and returns strings that are syntactically valid email addresses. (This will not mean that the email address actually exist.)
-
+    'example': """
       ```typescript
       // 👍
       email.verify('alice@acme.org') === 'alice@acme.org';
@@ -100,9 +92,7 @@ DECODERS = {
     'section': 'Strings',
     'params': None,
     'return_type': 'Decoder<URL>',
-    'markdown': """
-      Accepts strings that are valid URLs, returns the value as a URL instance.
-
+    'example': """
       ```typescript
       // 👍
       url.verify('http://nvie.com') === new URL('http://nvie.com/');
@@ -122,9 +112,7 @@ DECODERS = {
     'section': 'Strings',
     'params': None,
     'return_type': 'Decoder<URL>',
-    'markdown': """
-      Accepts strings that are valid URLs, but only HTTPS ones. Returns the value as a URL instance.
-
+    'example': """
       ```typescript
       // 👍
       httpsUrl.verify('https://nvie.com:443') === new URL('https://nvie.com/');
@@ -151,9 +139,7 @@ DECODERS = {
     'section': 'Strings',
     'params': None,
     'return_type': 'Decoder<string>',
-    'markdown': """
-      Accepts strings that are valid [UUIDs](https://en.wikipedia.org/wiki/universally_unique_identifier) (universally unique identifier).
-
+    'example': """
       ```typescript
       // 👍
       uuid.verify('123e4567-e89b-12d3-a456-426614174000') === '123e4567-e89b-12d3-a456-426614174000'

@@ -162,7 +162,8 @@ decoder.verify('foo');  // throws
 <a name="email" href="#email">#</a>
 **email**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L37-L45 'Source')
 
-Accepts and returns strings that are syntactically valid email addresses. (This will not mean that the email address actually exist.)
+Accepts and returns strings that are syntactically valid email addresses.
+(This will not mean that the email address actually exist.)
 
 ```typescript
 // 👍
@@ -199,7 +200,8 @@ url.verify('/search?q=foo');     // throws
 <a name="httpsUrl" href="#httpsUrl">#</a>
 **httpsUrl**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L55-L62 'Source')
 
-Accepts strings that are valid URLs, but only HTTPS ones. Returns the value as a URL instance.
+Accepts strings that are valid URLs, but only HTTPS ones. Returns the value
+as a URL instance.
 
 ```typescript
 // 👍
@@ -226,7 +228,9 @@ const gitUrl: Decoder<URL> = url.refine(
 <a name="uuid" href="#uuid">#</a>
 **uuid**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/strings.js#L64-L72 'Source')
 
-Accepts strings that are valid [UUIDs](https://en.wikipedia.org/wiki/universally_unique_identifier) (universally unique identifier).
+Accepts strings that are valid
+[UUIDs](https://en.wikipedia.org/wiki/universally_unique_identifier)
+(universally unique identifier).
 
 ```typescript
 // 👍
@@ -1261,5 +1265,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 26f9218693adcdadefb65c9d2d8141c9) -->
+<!--[[[end]]] (checksum: ab6d9787c0ff126ad1fb74e2f7f49d20) -->
 <!-- prettier-ignore-end -->
