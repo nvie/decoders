@@ -21,7 +21,9 @@ export interface Decoder<T> {
     transform<V>(transformFn: (value: T) => V): Decoder<V>;
     describe(message: string): Decoder<T>;
     then<V>(next: AcceptanceFn<V, T>): Decoder<V>;
-    peek<V>(next: AcceptanceFn<V, [unknown, T]>): Decoder<V>;
+
+    // Experimental APIs (please don't rely on these yet)
+    peek_UNSTABLE<V>(next: AcceptanceFn<V, [unknown, T]>): Decoder<V>;
 }
 
 export type DecoderType<T> = T extends Decoder<infer V> ? V : never;

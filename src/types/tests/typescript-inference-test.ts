@@ -128,7 +128,7 @@ string.value('dummy');
 string.then((value: string) => ok(value.length));
 
 // $ExpectType Decoder<number>
-string.peek(([blob, value]) => ok(value.length));
+string.peek_UNSTABLE(([blob, value]) => ok(value.length));
 
 // $ExpectType Decoder<string>
 string.refine((s) => s.startsWith('x'), 'Must start with x');
