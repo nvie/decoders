@@ -1,4 +1,6 @@
 import { Annotation } from './annotate';
 
-export function formatInline(ann: Annotation): string;
-export function formatShort(ann: Annotation): string;
+export type Formatter = (err: Annotation) => string | Error;
+
+export const formatInline: Formatter;
+export const formatShort: Formatter;

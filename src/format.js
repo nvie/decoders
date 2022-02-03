@@ -3,6 +3,8 @@
 import { summarize as _summarize, asDate, INDENT, indent, isMultiline } from './_utils';
 import type { Annotation, ArrayAnnotation, ObjectAnnotation } from './annotate';
 
+export type Formatter = (err: Annotation) => string | Error;
+
 function serializeString(s: string, width: number = 80): string {
     // Full string
     // Abbreviated to $maxlen i.e. "Vincent Driess..." [truncated]

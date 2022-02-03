@@ -4,6 +4,7 @@ import { annotate } from './annotate';
 import { formatInline } from './format';
 import { err as makeErr, ok as makeOk } from './result';
 import type { Annotation } from './annotate';
+import type { Formatter } from './format';
 import type { Result } from './result';
 
 export type Scalar = string | number | boolean | symbol | void | null;
@@ -33,7 +34,7 @@ export type AcceptanceFn<T, InputT = mixed> = (
 export type DecoderType<D> = $Call<<T>(Decoder<T>) => T, D>;
 
 export type Decoder<T> = {|
-    verify(blob: mixed, formatterFn?: (Annotation) => string | Error): T,
+    verify(blob: mixed, formatterFn?: Formatter): T,
     value(blob: mixed): T | void,
     decode(blob: mixed): DecodeResult<T>,
     refine(predicateFn: (value: T) => boolean, errmsg: string): Decoder<T>,
@@ -55,6 +56,21 @@ function noThrow<T, V>(fn: (value: T) => V): (T) => DecodeResult<V> {
             return makeErr(annotate(t, e instanceof Error ? e.message : String(e)));
         }
     };
+}
+
+function format(err: Annotation, formatter: Formatter): Error {
+    const formatted = formatter(err);
+
+    // Formatter functions may return a string or an error for convenience of
+    // writing them. If it already returns an Error, return it unmodified. If
+    // it returns a string, wrap it in a "Decoding error" instance.
+    if (typeof formatted === 'string') {
+        const err = new Error('\n' + formatted);
+        err.name = 'Decoding error';
+        return err;
+    } else {
+        return formatted;
+    }
 }
 
 /**
@@ -89,26 +105,12 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
      * it. When accepted, returns the decoded `T` value directly. Otherwise
      * fail with a runtime error.
      */
-    function verify(
-        blob: mixed,
-        formatter: (Annotation) => string | Error = formatInline,
-    ): T {
+    function verify(blob: mixed, formatter: Formatter = formatInline): T {
         const result = decode(blob);
         if (result.ok) {
             return result.value;
         } else {
-            // Formatters may return a string or an error for convenience of
-            // writing them. If it already returns an Error, throw it
-            // unmodified. If it returns a string, wrap it in a "Decoding
-            // error" instance from it and throw that.
-            const strOrErr = formatter(result.error);
-            if (typeof strOrErr === 'string') {
-                const err = new Error('\n' + strOrErr);
-                err.name = 'Decoding error';
-                throw err;
-            } else {
-                throw strOrErr;
-            }
+            throw format(result.error, formatter);
         }
     }
 
