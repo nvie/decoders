@@ -81,7 +81,7 @@ number.verify(123);     // 123
 number.verify(3.1415);  // 3.1415
 
 // 👎
-number.verify('hi');    // throws
+number.verify('hello'); // throws
 // Decoding error:
 // "hello"
 // ^^^^^^^ Must be number
@@ -254,5 +254,5 @@ about its input and avoid re-refining inputs.
 If it helps, you can think of `define(...)` as equivalent to
 `unknown.then(...)`.
 
-<!--[[[end]]] (checksum: 9ba9dcab362cdae971c8de1b2919ebe2) -->
+<!--[[[end]]] (checksum: 2e4372ca12a303f15ae1939294f3c594) -->
 <!-- prettier-ignore-end -->

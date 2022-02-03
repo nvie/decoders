@@ -1059,7 +1059,7 @@ DECODER_METHODS = {
       number.verify(3.1415);  // 3.1415
 
       // 👎
-      number.verify('hi');    // throws
+      number.verify('hello'); // throws
       // Decoding error:
       // "hello"
       // ^^^^^^^ Must be number
