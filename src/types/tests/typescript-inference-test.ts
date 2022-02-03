@@ -253,8 +253,8 @@ either(string, string, string, string, string, string, string); // $ExpectType D
 either(string, string, string, string, string, string, string, string); // $ExpectType Decoder<string>
 either(string, string, string, string, string, string, string, string, string); // $ExpectType Decoder<string>
 
-// $ExpectType Decoder<"foo" | "bar" | "qux">
-oneOf(['foo', 'bar', 'qux']);
+// $ExpectType Decoder<"foo" | "bar">
+oneOf(['foo', 'bar']);
 
 interface Rect {
     _type: 'rect';
