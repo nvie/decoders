@@ -1,7 +1,7 @@
 import html
 import re
 import textwrap
-from _data import DECODERS, DECODER_METHODS, LOCATIONS
+from _data import DECODERS, DECODER_METHODS, LOCATIONS, DOC_STRINGS
 
 
 def safe(s):
@@ -23,8 +23,75 @@ def replace_with_link(matchobj):
       return matchobj.group(0)
 
 
+def is_empty(line):
+  return re.match(r'^\s*$', line) is not None
+
+
+def isplitlines(text):
+  # Splits text into lines, and strips off blank lines from the start and end
+  # of the string
+  lines = text.splitlines()
+
+  # Spacer can be `None` or `''`
+  emit_count = 0
+  spacer = None
+
+  for line in lines:
+    if is_empty(line):
+      if emit_count > 0:
+        spacer = ''
+      continue
+    else:
+      if spacer is not None:
+        yield spacer
+        spacer = None
+        emit_count += 1
+      yield line
+      emit_count += 1
+
+
+def unindent(text):
+  # The idea:
+  # - Look at the first non-empty line
+  # - Capture the leading whitespace prefix for that line
+  # - Strip it from all the other lines uniformly
+
+  lines = list(isplitlines(text))
+  if not lines:
+    return text
+
+  ws_prefix = None
+  for line in lines:
+    if is_empty(line):
+      continue
+
+    ws_prefix = re.match(r'^\s*', line).group(0)
+    break
+
+  if ws_prefix:
+    lines = map(
+      lambda line: line[len(ws_prefix):] if line.startswith(ws_prefix) else line,
+      lines,
+    )
+
+  return '\n'.join(lines)
+
+
+def get_raw_markdown(name):
+  info = DECODERS.get(name, None) or DECODER_METHODS.get(name)
+
+  doc_string = unindent(info.get('markdown', None) or DOC_STRINGS.get(name, None) or '')
+  raw_example = unindent(info.get('example', ''))
+  example = f'```typescript\n{raw_example}\n```' if raw_example and '```' not in raw_example else raw_example
+  return '\n\n'.join(filter(lambda x: x, [doc_string, example]))
+
+
+def get_markdown(name):
+  return linkify(get_raw_markdown(name))
+
+
 def linkify(text):
-  return re.sub('([^`[])`[.]?([\w]+)([()]+)?`', replace_with_link, text,)
+  return re.sub(r'([^`[])`[.]?([\w]+)([()]+)?`', replace_with_link, text)
 
 
 def linkify_decoder_class(text):

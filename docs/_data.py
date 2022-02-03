@@ -1469,7 +1469,7 @@ def run_json(cmd):
     return json.loads(output)
 
 
-def find_source_locations():
+def mine_source_code_data():
     locinfo1 = run_json(
       "./bin/linenos src/Decoder.js --remote-url --object-keys --object-methods --json",
     )
@@ -1487,14 +1487,19 @@ def find_source_locations():
         raise Exception(f'Decoder "{name}" not found in source code')
 
     locations = { }
+    doc_strings = { }
     for info in locinfo1:
       locations[info['name']] = info['remote']
+      doc_strings[info['name']] = info['comment']
     for info in locinfo2:
       locations[info['name']] = info['remote']
-    return locations
+      doc_strings[info['name']] = info['comment']
+
+    return (locations, doc_strings)
 
 
-LOCATIONS = find_source_locations()
+# Extract source line locations and doc strings directly from the source code
+(LOCATIONS, DOC_STRINGS) = mine_source_code_data()
 
 
 def expand_aliases():

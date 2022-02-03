@@ -17,15 +17,10 @@ import re
 import textwrap
 from _data import DECODERS, DECODERS_BY_SECTION
 from _lib import (
-  format_type,
+  get_markdown,
   get_signature_html,
-  linkify,
-  methodref,
   ref,
-  reindent,
-  safe,
   slugify,
-  source_link,
 )
 ]]]-->
 <!--[[[end]]] (checksum: d41d8cd98f00b204e9800998ecf8427e) -->
@@ -79,19 +74,16 @@ for section, names in DECODERS_BY_SECTION.items():
     if info.get('alias_of'):
       continue
 
-    markdown = linkify(reindent(info['markdown'], prefix='      '))
-    heading = get_signature_html(name)
+    markdown = get_markdown(name)
 
     cog.outl('---')
 
     cog.outl()
-    cog.outl(heading)
+    cog.outl(get_signature_html(name))
 
     cog.outl()
-    cog.outl(f"""
-      {markdown}
-    """, dedent=True, trimblanklines=True)
-    # <small><a href="#{section}">Back to section</a> | <a href="#api-reference">Back to top</a></small>
+    cog.outl(get_markdown(name))
+    cog.outl()
 ]]]-->
 ---
 
