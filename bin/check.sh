@@ -44,7 +44,7 @@ if ! diff -q "$tmp1" "$tmp2"; then
 fi
 
 list_decoders | while read dec; do
-  if ! grep -qF "$dec" README.md; then
+  if ! grep -qEe "\b$dec\b" README.md; then
       # Cut the either family some slack
       if [ "$dec" = 'either6' -o  "$dec" = 'either7' -o  "$dec" = 'either8' ]; then
           continue
