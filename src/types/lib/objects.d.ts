@@ -21,12 +21,16 @@ export function object<O extends { [key: string]: Decoder<any> }>(
 //         type names from the inferred type here, making this much easier to
 //         work with while developing.
 
+export function exact(decodersByKey: Record<any, never>): Decoder<Record<string, never>>; // The "empty object" case
 export function exact<O extends { [key: string]: Decoder<any> }>(
     decodersByKey: O,
 ): Decoder<{ [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] }>;
 //         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 //         Ditto (see above)
 
+export function inexact(
+    decodersByKey: Record<any, never>,
+): Decoder<{ [extra: string]: unknown }>; // The "empty object" case
 export function inexact<O extends { [key: string]: Decoder<any> }>(
     decodersByKey: O,
 ): Decoder<
