@@ -17,6 +17,20 @@ export type AcceptanceFn<T, InputT = mixed> = (
     err: (msg: string | Annotation) => DecodeResult<T>,
 ) => DecodeResult<T>;
 
+export type Decoder<T> = {|
+    verify(blob: mixed, formatterFn?: Formatter): T,
+    value(blob: mixed): T | void,
+    decode(blob: mixed): DecodeResult<T>,
+    refine(predicateFn: (value: T) => boolean, errmsg: string): Decoder<T>,
+    reject(rejectFn: (value: T) => string | Annotation | null): Decoder<T>,
+    transform<V>(transformFn: (value: T) => V): Decoder<V>,
+    describe(message: string): Decoder<T>,
+    then<V>(next: AcceptanceFn<V, T>): Decoder<V>,
+
+    // Experimental APIs (please don't rely on these yet)
+    peek_UNSTABLE<V>(next: AcceptanceFn<V, [mixed, T]>): Decoder<V>,
+|};
+
 /**
  * Helper type to return the "type" of a Decoder.
  *
@@ -32,20 +46,6 @@ export type AcceptanceFn<T, InputT = mixed> = (
  *
  */
 export type DecoderType<D> = $Call<<T>(Decoder<T>) => T, D>;
-
-export type Decoder<T> = {|
-    verify(blob: mixed, formatterFn?: Formatter): T,
-    value(blob: mixed): T | void,
-    decode(blob: mixed): DecodeResult<T>,
-    refine(predicateFn: (value: T) => boolean, errmsg: string): Decoder<T>,
-    reject(rejectFn: (value: T) => string | Annotation | null): Decoder<T>,
-    transform<V>(transformFn: (value: T) => V): Decoder<V>,
-    describe(message: string): Decoder<T>,
-    then<V>(next: AcceptanceFn<V, T>): Decoder<V>,
-
-    // Experimental APIs (please don't rely on these yet)
-    peek_UNSTABLE<V>(next: AcceptanceFn<V, [mixed, T]>): Decoder<V>,
-|};
 
 function noThrow<T, V>(fn: (value: T) => V): (T) => DecodeResult<V> {
     return (t) => {
