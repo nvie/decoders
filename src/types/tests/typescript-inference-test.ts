@@ -115,6 +115,9 @@ object({
     tags: array(string),
 }).verify('dummy');
 
+// $ExpectType Record<string, never>
+object({}).verify('dummy');
+
 // Style argument
 string.verify('dummy', formatInline);
 string.verify('dummy', formatShort);
@@ -180,20 +183,29 @@ maybe(string, 42); // $ExpectType Decoder<string | 42>
 maybe(maybe(string), 42); // $ExpectType Decoder<string | 42>
 maybe(maybe(string, 42)); // $ExpectType Decoder<string | 42 | null | undefined>
 
-// $ExpectType Decoder<{ bar: { qux: string; }; foo?: string | undefined; }>
+// $ExpectType { bar: { qux: string; }; foo?: string | undefined; }
 object({
     foo: optional(string),
     bar: object({ qux: string }),
-});
+}).verify('dummy');
 
-// $ExpectType Decoder<{ bar: { qux: string; }; foo?: string | undefined; }>
+// $ExpectType Record<string, never>
+object({}).verify('dummy'); // The exact empty object case
+
+// $ExpectType { bar: { qux: string; }; foo?: string | undefined; }
 exact({
     foo: optional(string),
     bar: object({ qux: string }),
-});
+}).verify('dummy');
+
+// $ExpectType Record<string, never>
+exact({}).verify('dummy'); // The exact empty object case
 
 // $ExpectType Decoder<{ id: string; } & { [extra: string]: unknown; }>
 inexact({ id: string });
+
+// $ExpectType Decoder<{ [extra: string]: unknown; }>
+inexact({});
 
 // $ExpectType Decoder<{ [key: string]: unknown; }>
 pojo;
