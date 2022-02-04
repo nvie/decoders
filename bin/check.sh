@@ -11,8 +11,8 @@ list_decoders() {
     "$BIN/linenos" --all --exports src/index.js | cut -f1 | sort -u
 }
 
-tmp1="$(mktemp -t javascript-exports)"
-tmp2="$(mktemp -t typescript-exports)"
+tmp1="$(mktemp)"
+tmp2="$(mktemp)"
 
 list_exports src/index.js > "$tmp1"
 list_exports src/types/index.d.ts > "$tmp2"
@@ -34,9 +34,9 @@ fi
 
 echo "==> Checking documentation" >&2
 list_decoders | while read dec; do
-  if grep -qEe "\'$dec\': {" docs/_data.py; then
+  if grep -qEe "'$dec': {" docs/_data.py; then
       continue
-  elif grep -qEe "\'aliases\':.*\'$dec\'" docs/_data.py; then
+  elif grep -qEe "'aliases':.*'$dec'" docs/_data.py; then
       continue
   else
       echo "❌ $dec" >&2
