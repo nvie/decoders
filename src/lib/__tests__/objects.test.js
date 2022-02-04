@@ -24,6 +24,12 @@ describe('objects', () => {
         });
     });
 
+    it('empty objects', () => {
+        const decoder = object({});
+        expect(decoder.verify({ id: 1, name: 'test' })).toEqual({});
+        expect(decoder.verify({})).toEqual({});
+    });
+
     it('decodes objects and fields (ignore unknown fields)', () => {
         // Unexpected extra keys are ignored
         const decoder = object({
@@ -167,6 +173,12 @@ describe('exact objects', () => {
         ).toThrow('Unexpected extra keys');
     });
 
+    it('empty objects', () => {
+        const decoder = exact({});
+        expect(() => decoder.verify({ id: 1, name: 'test' })).toThrow();
+        expect(decoder.verify({})).toEqual({});
+    });
+
     it('errors on non-objects', () => {
         const decoder = exact({ id: string });
 
@@ -243,6 +255,12 @@ describe('inexact objects', () => {
             extra1: 123,
             extra2: 'hey',
         });
+    });
+
+    it('empty objects', () => {
+        const decoder = inexact({});
+        expect(decoder.verify({ id: 1, name: 'test' })).toEqual({ id: 1, name: 'test' });
+        expect(decoder.verify({})).toEqual({});
     });
 
     it('errors on non-objects', () => {
