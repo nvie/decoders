@@ -98,7 +98,7 @@ number.value('hi');  // undefined
 string.value(42);    // undefined
 ```
 
-> _**NOTE:** When you use this on [`optional()`](/api.html#optional) decoders, you cannot distinguish a _rejected_ value from a valid ``undefined`` input value._
+> _**NOTE:** When you use this on [`optional()`](/api.html#optional) decoders, you cannot distinguish a rejected value from an accepted ``undefined`` input value._
 
 ---
 
@@ -241,5 +241,5 @@ about its input and avoid re-refining inputs.
 If it helps, you can think of `define(...)` as equivalent to
 `unknown.then(...)`.
 
-<!--[[[end]]] (checksum: f94a977220e93866c439ab79e7aa9b03) -->
+<!--[[[end]]] (checksum: 840c751f199ea1d09d20fc35b608a605) -->
 <!-- prettier-ignore-end -->

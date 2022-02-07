@@ -1116,7 +1116,7 @@ DECODER_METHODS = {
       string.value(42);    // undefined
       ```
 
-      > _**NOTE:** When you use this on `optional()` decoders, you cannot distinguish a _rejected_ value from a valid ``undefined`` input value._
+      > _**NOTE:** When you use this on `optional()` decoders, you cannot distinguish a rejected value from an accepted ``undefined`` input value._
     """,
   },
 
