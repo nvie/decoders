@@ -170,18 +170,27 @@ optional(optional(string)); // $ExpectType Decoder<string | undefined>
 optional(string, 42); // $ExpectType Decoder<string | 42>
 optional(optional(string), 42); // $ExpectType Decoder<string | 42>
 optional(optional(string, 42)); // $ExpectType Decoder<string | 42 | undefined>
+optional(string, () => new Date()); // $ExpectType Decoder<string | Date>
+optional(optional(string), () => new Date()); // $ExpectType Decoder<string | Date>
+optional(optional(string, () => new Date())); // $ExpectType Decoder<string | Date | undefined>
 
 nullable(string); // $ExpectType Decoder<string | null>
 nullable(nullable(string)); // $ExpectType Decoder<string | null>
 nullable(string, 42); // $ExpectType Decoder<string | 42>
 nullable(nullable(string), 42); // $ExpectType Decoder<string | 42>
 nullable(nullable(string, 42)); // $ExpectType Decoder<string | 42 | null>
+nullable(string, () => new Date()); // $ExpectType Decoder<string | Date>
+nullable(nullable(string), () => new Date()); // $ExpectType Decoder<string | Date>
+nullable(nullable(string, () => new Date())); // $ExpectType Decoder<string | Date | null>
 
 maybe(string); // $ExpectType Decoder<string | null | undefined>
 maybe(maybe(string)); // $ExpectType Decoder<string | null | undefined>
 maybe(string, 42); // $ExpectType Decoder<string | 42>
 maybe(maybe(string), 42); // $ExpectType Decoder<string | 42>
 maybe(maybe(string, 42)); // $ExpectType Decoder<string | 42 | null | undefined>
+maybe(string, () => new Date()); // $ExpectType Decoder<string | Date>
+maybe(maybe(string), () => new Date()); // $ExpectType Decoder<string | Date>
+maybe(maybe(string, () => new Date())); // $ExpectType Decoder<string | Date | null | undefined>
 
 // $ExpectType { bar: { qux: string; }; foo?: string | undefined; }
 object({

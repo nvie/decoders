@@ -28,23 +28,28 @@ const undefined_or_null: Decoder<null | void> = define((blob, ok, err) =>
 
 interface Maybeish<E> {
     <T>(decoder: Decoder<T>): Decoder<E | T>;
-    <T, V>(decoder: Decoder<T>, defaultValue: V): Decoder<$NonMaybeType<T> | V>;
+    <T, V>(
+        decoder: Decoder<T>,
+        defaultValue: (() => V) | V,
+    ): Decoder<$NonMaybeType<T> | V>;
 }
 
-/**
- * Accepts whatever the given decoder accepts, or `null`, or `undefined`.
- */
 function _maybeish<E>(emptyCase: Decoder<E>): Maybeish<E> {
     function _inner(decoder /* defaultValue */) {
         const rv = either(emptyCase, decoder);
-        return (
+        if (
             // If a default value is provided...
             arguments.length >= 2
-                ? // ...then return the default value
-                  rv.transform((value) => value ?? arguments[1])
-                : // Otherwise the "normal" empty case
-                  rv
-        );
+        ) {
+            // ...then return the default value
+            const _defaultValue = arguments[1];
+            const defaultValue =
+                typeof _defaultValue === 'function' ? _defaultValue() : _defaultValue;
+            return rv.transform((value) => value ?? defaultValue);
+        } else {
+            // Otherwise the "normal" empty case
+            return rv;
+        }
     }
 
     return (_inner: _Any);

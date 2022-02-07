@@ -189,11 +189,20 @@ describe('optional', () => {
     });
 
     it('w/ default value', () => {
-        const DEFAULT_VALUE = 42;
-        const decoder = optional(string, DEFAULT_VALUE);
+        const decoder = optional(string, 42);
         expect(decoder.verify('foo')).toBe('foo');
         expect(decoder.verify('')).toBe('');
-        expect(decoder.verify(undefined)).toBe(DEFAULT_VALUE);
+        expect(decoder.verify(undefined)).toBe(42);
+
+        expect(() => decoder.verify(null)).toThrow();
+        expect(() => decoder.verify(123)).toThrow();
+    });
+
+    it('w/ callable default value', () => {
+        const decoder = optional(string, () => 42);
+        expect(decoder.verify('foo')).toBe('foo');
+        expect(decoder.verify('')).toBe('');
+        expect(decoder.verify(undefined)).toBe(42);
 
         expect(() => decoder.verify(null)).toThrow();
         expect(() => decoder.verify(123)).toThrow();
@@ -221,11 +230,20 @@ describe('nullable', () => {
     });
 
     it('w/ default value', () => {
-        const DEFAULT_VALUE = 42;
-        const decoder = nullable(string, DEFAULT_VALUE);
+        const decoder = nullable(string, 42);
         expect(decoder.verify('foo')).toBe('foo');
         expect(decoder.verify('')).toBe('');
-        expect(decoder.verify(null)).toBe(DEFAULT_VALUE);
+        expect(decoder.verify(null)).toBe(42);
+
+        expect(() => decoder.verify(undefined)).toThrow();
+        expect(() => decoder.verify(123)).toThrow();
+    });
+
+    it('w/ callable default value', () => {
+        const decoder = nullable(string, () => 42);
+        expect(decoder.verify('foo')).toBe('foo');
+        expect(decoder.verify('')).toBe('');
+        expect(decoder.verify(null)).toBe(42);
 
         expect(() => decoder.verify(undefined)).toThrow();
         expect(() => decoder.verify(123)).toThrow();
@@ -265,12 +283,21 @@ describe('maybe', () => {
     });
 
     it('w/ default value', () => {
-        const DEFAULT_VALUE = 42;
-        const decoder = maybe(string, DEFAULT_VALUE);
+        const decoder = maybe(string, 42);
         expect(decoder.verify('foo')).toBe('foo');
         expect(decoder.verify('')).toBe('');
-        expect(decoder.verify(null)).toBe(DEFAULT_VALUE);
-        expect(decoder.verify(undefined)).toBe(DEFAULT_VALUE);
+        expect(decoder.verify(null)).toBe(42);
+        expect(decoder.verify(undefined)).toBe(42);
+
+        expect(() => decoder.verify(123)).toThrow();
+    });
+
+    it('w/ callable default value', () => {
+        const decoder = maybe(string, () => 42);
+        expect(decoder.verify('foo')).toBe('foo');
+        expect(decoder.verify('')).toBe('');
+        expect(decoder.verify(null)).toBe(42);
+        expect(decoder.verify(undefined)).toBe(42);
 
         expect(() => decoder.verify(123)).toThrow();
     });

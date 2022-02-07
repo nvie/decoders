@@ -419,7 +419,7 @@ DECODERS = {
         'type_params': ['T', 'V'],
         'params': [
           ('decoder', 'Decoder<T>'),
-          ('defaultValue', 'V'),
+          ('defaultValue', 'V | (() => V)'),
         ],
         'return_type': 'Decoder<T | V>',
         },
@@ -474,13 +474,14 @@ DECODERS = {
         'type_params': ['T', 'V'],
         'params': [
           ('decoder', 'Decoder<T>'),
-          ('defaultValue', 'V'),
+          ('defaultValue', 'V | (() => V)'),
         ],
         'return_type': 'Decoder<T | V>',
       },
     ],
 
     'example': """
+      ```typescript
       const decoder = nullable(string);
 
       // 👍
@@ -491,6 +492,16 @@ DECODERS = {
       decoder.verify(undefined);  // throws
       decoder.verify(0);          // throws
       decoder.verify(42);         // throws
+      ```
+
+      Or use it with a default value:
+
+      ```typescript
+      const decoder = nullable(iso8601, () => new Date());
+
+      decoder.verify('2022-01-01T12:00:00Z') === '2022-01-01T12:00:00Z';
+      decoder.verify(null);  // the current date
+      ```
     """,
   },
 
@@ -507,13 +518,14 @@ DECODERS = {
         'type_params': ['T', 'V'],
         'params': [
           ('decoder', 'Decoder<T>'),
-          ('defaultValue', 'V'),
+          ('defaultValue', 'V | (() => V)'),
         ],
         'return_type': 'Decoder<T | V>',
       },
     ],
 
     'example': """
+      ```typescript
       const decoder = maybe(string);
 
       // 👍
@@ -524,6 +536,17 @@ DECODERS = {
       // 👎
       decoder.verify(0);   // throws
       decoder.verify(42);  // throws
+      ```
+
+      Or use it with a default value:
+
+      ```typescript
+      const decoder = maybe(string, null);
+
+      decoder.verify('hello') === 'hello';
+      decoder.verify(null) === null;
+      decoder.verify(undefined) === null;
+      ```
     """,
   },
 
