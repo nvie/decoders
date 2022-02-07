@@ -1,6 +1,7 @@
 ---
 title: Building your own
-nav_order: 40
+parent: Guides
+nav_order: 10
 ---
 
 # Building your own custom decoders

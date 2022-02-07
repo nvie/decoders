@@ -1,5 +1,6 @@
 ---
 title: Tips
+parent: Guides
 nav_order: 50
 ---
 
