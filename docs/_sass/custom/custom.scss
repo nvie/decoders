@@ -12,11 +12,18 @@ code {
 p.signature {
     font-size: 22px !important;
     line-height: 34px !important;
-    margin: 16px 0 !important;
     padding: 0 !important;
     letter-spacing: 0.005em !important;
+
+    margin: 0 !important;
+    &:first-child {
+        margin-top: 16px !important;
+    }
+    &:last-child {
+        margin-bottom: 16px !important;
+    }
 }
 
 p:target {
-    background-color: #fff7e0;
+    background-color: #fff8c5;
 }

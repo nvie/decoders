@@ -155,9 +155,9 @@ def get_signature_html(name):
     params = '' if not siginfo['params'] else '(' + ', '.join([(f'{safe(pname)}: {format_type(ptype)}' if pname else f'{format_type(ptype)}') if ptype else f'{safe(pname)}' for (pname, ptype) in siginfo['params']]) + ')'
     type_params = '' if not siginfo.get('type_params') else safe('<') + ', '.join([format_type(ptype) for ptype in siginfo['type_params']]) + safe('>')
     return_type = format_type(siginfo['return_type'])
-    signatures.append(f'<a name="{name}" href="#{name}">#</a> **{name}**{type_params}{params}: {return_type} {source_link(name)}')
+    signatures.append(f'<a href="#{name}">#</a> **{name}**{type_params}{params}: {return_type} {source_link(name)}\n{{: #{name} .signature}}')
     for alias in info.get('aliases', []):
-      aliases.append(f'<a name="{alias}" href="#{alias}">#</a> **{alias}**{type_params}{params}: {return_type} {source_link(alias)}')
+      aliases.append(f'<a href="#{alias}">#</a> **{alias}**{type_params}{params}: {return_type} {source_link(alias)}\n{{: #{alias} .signature}}')
 
-  heading = '  \n'.join([*signatures, *aliases])
-  return heading + '\n{: .signature}'
+  heading = '\n\n'.join([*signatures, *aliases])
+  return heading
