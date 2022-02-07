@@ -13,9 +13,23 @@ list_decoders() {
 
 tmp1="$(mktemp)"
 tmp2="$(mktemp)"
+tmp3="$(mktemp)"
+tmp4="$(mktemp)"
 
 list_exports src/index.js > "$tmp1"
 list_exports src/types/index.d.ts > "$tmp2"
+linenos --json --exports --global-variables --functions src/lib/*.js > "$tmp3"
+linenos --json --exports --global-variables --functions src/types/lib/*.d.ts > "$tmp4"
+
+flow_comment () {
+    decoder="$1"
+    cat "$tmp3" | jq -r ".[] | select(.name == \"$decoder\" and .comment != null) | .comment"
+}
+
+ts_comment () {
+    decoder="$1"
+    cat "$tmp4" | jq -r ".[] | select(.name == \"$decoder\" and .comment != null) | .comment"
+}
 
 echo "==> Checking parity between TypeScript and Flow" >&2
 if ! diff -q "$tmp1" "$tmp2" 2>/dev/null >/dev/null; then
@@ -45,6 +59,28 @@ list_decoders | while read dec; do
       echo "To fix this, please add an entry for it in" >&2
       echo "" >&2
       echo "    docs/_data.py" >&2
+      echo "" >&2
+      exit 3
+  fi
+done
+
+echo "==> Checking documentation parity between TypeScript and Flow" >&2
+list_decoders | while read dec; do
+  comment1="$(ts_comment "$dec")"
+  comment2="$(flow_comment "$dec")"
+  if [ "$comment1" != "$comment2" ]; then
+      echo "❌ $dec" >&2
+      echo "" >&2
+      echo "It looks like the decoder comment for \"$dec\" is different" >&2
+      echo "between TypeScript and Flow:" >&2
+      echo "" >&2
+      echo "<TypeScript comment> ------------------------------------------" >&2
+      echo "$comment1" >&2
+      echo "</TypeScript comment> -----------------------------------------" >&2
+      echo "" >&2
+      echo "<Flow comment> ------------------------------------------------" >&2
+      echo "$comment2" >&2
+      echo "</Flow comment> -----------------------------------------------" >&2
       echo "" >&2
       exit 3
   fi
