@@ -2,8 +2,8 @@
 /* eslint-disable no-restricted-syntax */
 
 import {
+    always,
     constant,
-    hardcoded,
     maybe,
     mixed,
     null_,
@@ -129,7 +129,7 @@ describe('boolean constants #2', () => {
     });
 });
 
-describe('hardcoded value', () => {
+describe('always', () => {
     it('valid', () => {
         // Test all hardcoded inputs...
         for (const hardcodedValue of INPUTS) {
@@ -138,13 +138,19 @@ describe('hardcoded value', () => {
                 continue;
             }
 
-            const decoder = hardcoded(hardcodedValue);
+            const decoder = always(hardcodedValue);
 
             // Against all inputs...
             for (const input of INPUTS) {
                 expect(decoder.verify(input)).toBe(hardcodedValue);
             }
         }
+    });
+
+    it('works with callables', () => {
+        const now = new Date();
+        expect(always(() => 42).verify('dummy')).toBe(42);
+        expect(always(() => now).verify('dummy')).toBe(now);
     });
 
     it('invalid', () => {

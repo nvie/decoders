@@ -94,8 +94,14 @@ export function constant<T: Scalar>(value: T): Decoder<T> {
  *
  * This is useful to manually add extra fields to object decoders.
  */
-export function always<T>(value: T): Decoder<T> {
-    return define((blob /* ignored */, ok, _) => ok(value));
+export function always<T>(value: (() => T) | T): Decoder<T> {
+    return define(
+        typeof value === 'function'
+            ? (blob /* ignored */, ok, _) =>
+                  // $FlowFixMe[incompatible-use]
+                  ok(value())
+            : (blob /* ignored */, ok, _) => ok(value),
+    );
 }
 
 /**

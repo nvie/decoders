@@ -534,8 +534,8 @@ decoder.verify(undefined);      // throws
 
 ---
 
-<a name="always" href="#always">#</a> **always**&lt;<i style="color: #267f99">T</i>&gt;(value: <i style="color: #267f99">T</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L91-L99 'Source')  
-<a name="hardcoded" href="#hardcoded">#</a> **hardcoded**&lt;<i style="color: #267f99">T</i>&gt;(value: <i style="color: #267f99">T</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L101-L104 'Source')
+<a name="always" href="#always">#</a> **always**&lt;<i style="color: #267f99">T</i>&gt;(value: <i style="color: #267f99">T</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L91-L105 'Source')  
+<a name="hardcoded" href="#hardcoded">#</a> **hardcoded**&lt;<i style="color: #267f99">T</i>&gt;(value: <i style="color: #267f99">T</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L107-L110 'Source')
 {: .signature}
 
 Accepts anything, completely ignores it, and always returns the provided
@@ -553,6 +553,14 @@ decoder.verify(undefined) === 42;
 
 // 👎
 // This decoder will never reject an input
+```
+
+Or use it with a function instead of a constant:
+
+```typescript
+const now = always(() => new Date());
+
+now.verify('dummy');  // e.g. new Date('2022-02-07T09:36:58.848Z')
 ```
 
 ---
@@ -715,8 +723,8 @@ decoder.verify(undefined) === null;
 
 ---
 
-<a name="unknown" href="#unknown">#</a> **unknown**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;unknown&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L106-L113 'Source')  
-<a name="mixed" href="#mixed">#</a> **mixed**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;unknown&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L115-L118 'Source')
+<a name="unknown" href="#unknown">#</a> **unknown**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;unknown&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L112-L119 'Source')  
+<a name="mixed" href="#mixed">#</a> **mixed**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;unknown&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/basics.js#L121-L124 'Source')
 {: .signature}
 
 Accepts anything and returns it unchanged.
@@ -1322,5 +1330,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 4243c783c8868ba3a9f0ba00db27c9db) -->
+<!--[[[end]]] (checksum: 2a20c44d31ca8f979363179590354b65) -->
 <!-- prettier-ignore-end -->

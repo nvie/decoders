@@ -364,6 +364,7 @@ DECODERS = {
     'return_type': 'Decoder<T>',
     'aliases': ['hardcoded'],
     'example': """
+      ```typescript
       const decoder = always(42);
 
       // 👍
@@ -373,6 +374,15 @@ DECODERS = {
 
       // 👎
       // This decoder will never reject an input
+      ```
+
+      Or use it with a function instead of a constant:
+
+      ```typescript
+      const now = always(() => new Date());
+
+      now.verify('dummy');  // e.g. new Date('2022-02-07T09:36:58.848Z')
+      ```
     """,
   },
 

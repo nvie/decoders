@@ -69,8 +69,10 @@ function foo(
 
 constant('foo'); // $ExpectType Decoder<"foo">
 hardcoded('foo'); // $ExpectType Decoder<"foo">
+hardcoded(() => new Date()); // $ExpectType Decoder<Date>
 always('foo'); // $ExpectType Decoder<"foo">
 always(42); // $ExpectType Decoder<42>
+always(() => new Date()); // $ExpectType Decoder<Date>
 
 null_; // $ExpectType Decoder<null>
 undefined_; // $ExpectType Decoder<undefined>

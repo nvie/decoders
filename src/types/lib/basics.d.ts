@@ -31,8 +31,8 @@ export function maybe<T, V>(
 ): Decoder<NonNullable<T> | V>;
 export function constant<T extends Scalar>(value: T): Decoder<T>;
 export function always<T extends Scalar>(value: T): Decoder<T>;
-export function always<T>(value: T): Decoder<T>;
+export function always<T>(value: (() => T) | T): Decoder<T>;
 export function hardcoded<T extends Scalar>(value: T): Decoder<T>;
-export function hardcoded<T>(value: T): Decoder<T>;
+export function hardcoded<T>(value: (() => T) | T): Decoder<T>;
 export const mixed: Decoder<unknown>;
 export const unknown: Decoder<unknown>;
