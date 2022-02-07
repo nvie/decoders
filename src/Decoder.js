@@ -18,13 +18,49 @@ export type AcceptanceFn<T, InputT = mixed> = (
 ) => DecodeResult<T>;
 
 export type Decoder<T> = {|
-    verify(blob: mixed, formatterFn?: Formatter): T,
+    /**
+     * Verifies untrusted input. Either returns a value, or throws a decoding
+     * error.
+     */
+    verify(blob: mixed, formatter?: Formatter): T,
+
+    /**
+     * Verifies untrusted input. Either returns a value, or returns undefined.
+     */
     value(blob: mixed): T | void,
+
+    /**
+     * Verifies untrusted input. Always returns a DecodeResult, which is either
+     * an "ok" value or an "error" annotation.
+     */
     decode(blob: mixed): DecodeResult<T>,
+
+    /**
+     * Build a new decoder from the the current one, with an extra acceptance
+     * criterium.
+     */
     refine(predicateFn: (value: T) => boolean, errmsg: string): Decoder<T>,
+
+    /**
+     * Build a new decoder from the current one, with an extra rejection
+     * criterium.
+     */
     reject(rejectFn: (value: T) => string | Annotation | null): Decoder<T>,
+
+    /**
+     * Build a new decoder from the current one, modifying its outputted value.
+     */
     transform<V>(transformFn: (value: T) => V): Decoder<V>,
+
+    /**
+     * Build a new decoder from the current one, with a mutated error message
+     * in case of a rejection.
+     */
     describe(message: string): Decoder<T>,
+
+    /**
+     * Chain together the current decoder with another acceptance function.
+     */
     then<V>(next: AcceptanceFn<V, T>): Decoder<V>,
 
     // Experimental APIs (please don't rely on these yet)
@@ -36,13 +72,13 @@ export type Decoder<T> = {|
  *
  * You can use it on types:
  *
- *   DecoderType<Decoder<string>>       // => string
- *   DecoderType<Decoder<number[]>>     // => number[]
+ *   DecoderType<Decoder<string>>    // string
+ *   DecoderType<Decoder<number[]>>  // number[]
  *
  * Or on "values", by using the `typeof` keyword:
  *
- *   DecoderType<typeof array(string)>  // => string[]
- *   DecoderType<typeof truthy>         // => boolean
+ *   DecoderType<typeof string>      // string
+ *   DecoderType<typeof truthy>      // boolean
  *
  */
 export type DecoderType<D> = $Call<<T>(Decoder<T>) => T, D>;
