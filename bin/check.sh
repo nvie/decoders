@@ -18,8 +18,8 @@ tmp4="$(mktemp)"
 
 list_exports src/index.js > "$tmp1"
 list_exports src/types/index.d.ts > "$tmp2"
-linenos --json --exports --global-variables --functions src/lib/*.js > "$tmp3"
-linenos --json --exports --global-variables --functions src/types/lib/*.d.ts > "$tmp4"
+"$BIN/linenos" --json --exports --global-variables --functions src/lib/*.js > "$tmp3"
+"$BIN/linenos" --json --exports --global-variables --functions src/types/lib/*.d.ts > "$tmp4"
 
 flow_comment () {
     decoder="$1"
