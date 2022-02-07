@@ -1,7 +1,8 @@
 # Migrating to v2
 
-Decoders v2 has been rewritten to be simpler, smaller, and more efficient. Conceptually,
-it still works the same way as v1, but some of the APIs have been rewritten in a backward
+Decoders v2 has been rewritten to be simpler,
+[smaller](./docs/assets/size-comparison@2x.png), and more efficient. Conceptually, it
+still works the same way as v1, but some of the APIs have been rewritten in a backward
 incompatible manner. As such, you may have to make some code changes to migrate to v2.
 
 Please go over this checklist to perform the migration. If you run into issues that aren't

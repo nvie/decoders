@@ -9,6 +9,8 @@ This is a breaking change, which brings numerous benefits:
 -   Better documentation 📚
 -   Better support for writing your own decoders 🛠️
 
+<img alt="Bundle size comparison between v1 and v2" src="./docs/assets/size-comparison@2x.png" style="width: 100%; max-width: 829px" width="829" />
+
 Please see the [migration guide](./MIGRATING-v2.md) for precise instructions on how to
 adjust your v1 code.
 
