@@ -2430,7 +2430,7 @@ color-name@~1.1.4:
   resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.4.tgz#c2a09a87acbde69543de6f63fa3995c826c536a2"
   integrity sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
 
-colors@^1.4.0:
+colors@1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/colors/-/colors-1.4.0.tgz#c50491479d4c1bdaed2c9ced32cf7c7dc2360f78"
   integrity sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA==
@@ -3003,10 +3003,10 @@ flatted@^3.1.0:
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.2.2.tgz#64bfed5cb68fe3ca78b3eb214ad97b63bedce561"
   integrity sha512-JaTY/wtrcSyvXJl4IMFHPKyFur1sE9AUqc0QnhOaJ0CxHtAoIV8pYDzeEfAaNEtGkOfq4gr3LBFmdXW5mOQFnA==
 
-flow-bin@^0.168.0:
-  version "0.168.0"
-  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.168.0.tgz#47efa49e72cfc2fcf9bee022e6748ec971f3d027"
-  integrity sha512-v5c/LUH+hqSmgB0k56NNv1vtOugDa1xUZ48OO1Fgrr6r2dR5jtQaUJH9g0TlQeTIFRB6jffF/C6xvTGoiBnagw==
+flow-bin@^0.171.0:
+  version "0.171.0"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.171.0.tgz#43902cf3ab10704a9c8a96bd16f789d92490ba1c"
+  integrity sha512-2HEiXAyE60ztGs+loFk6XSskL69THL6tSjzopUcbwgfrdbuZ5Jhv23qh1jUKP5AZJh0NNwxaFZ6To2p6xR+GEA==
 
 flow-copy-source@^2.0.9:
   version "2.0.9"
@@ -3019,13 +3019,13 @@ flow-copy-source@^2.0.9:
     kefir "^3.7.3"
     yargs "^15.0.1"
 
-flow-typed@^3.6.0:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/flow-typed/-/flow-typed-3.6.0.tgz#6addad0e85d8a4e4f9ff995c36ff6ebdf0932b03"
-  integrity sha512-PHRMV+cKA4wdcKew39BoNySAULrgjtHR5zPQNfA3g9RX4L66R2jvwoA1NFl+uy1VkCkJRuSq2aUqQYu0MRhu/A==
+flow-typed@^3.6.1:
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/flow-typed/-/flow-typed-3.6.1.tgz#b2fe4e896661f0b786d125977ebed8f0cfc8c0a4"
+  integrity sha512-sqBiG52+qK1mJs+CwVenGZOVgSCY1YVozDnIJ41kukqcx3fWuSxwY5FZoB9pLf/NdmMYtwCMunT9SKjOR56mOg==
   dependencies:
     "@octokit/rest" "^18.12.0"
-    colors "^1.4.0"
+    colors "1.4.0"
     flowgen "^1.10.0"
     fs-extra "^8.1.0"
     glob "^7.1.6"
