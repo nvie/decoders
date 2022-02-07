@@ -1,5 +1,6 @@
 ---
-title: API Reference
+title: Built-in decoders
+parent: API Reference
 nav_order: 20
 ---
 
@@ -25,7 +26,7 @@ from _lib import (
 ]]]-->
 <!--[[[end]]] (checksum: d41d8cd98f00b204e9800998ecf8427e) -->
 
-# API Reference
+# Built-in decoders
 
 All "batteries included" decoders available in the standard library.
 

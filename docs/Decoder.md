@@ -1,5 +1,6 @@
 ---
-title: Decoder API
+title: Decoder class
+parent: API Reference
 nav_order: 10
 ---
 
