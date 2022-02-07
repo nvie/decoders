@@ -77,8 +77,14 @@ def unindent(text):
   return '\n'.join(lines)
 
 
+def get_info(name):
+  info = DECODERS.get(name, None) or DECODER_METHODS.get(name, None)
+  assert info, f'No such decoder or Decoder method name: {name}'
+  return info
+
+
 def get_raw_markdown(name):
-  info = DECODERS.get(name, None) or DECODER_METHODS.get(name)
+  info = get_info(name)
 
   doc_string = unindent(info.get('markdown', None) or DOC_STRINGS.get(name, None) or '')
   raw_example = unindent(info.get('example', ''))
@@ -132,7 +138,7 @@ def is_function(name):
 
 
 def get_signatures(name):
-  info = DECODERS[name]
+  info = get_info(name)
   if signatures := info.get('signatures'):
     return signatures
 
@@ -146,18 +152,19 @@ def get_signatures(name):
 
 
 def get_signature_html(name):
-  info = DECODERS[name]
+  info = get_info(name)
 
   signatures = []
   aliases = []
 
+  dot = '.' if name in DECODER_METHODS else ''
   for siginfo in get_signatures(name):
     params = '' if not siginfo['params'] else '(' + ', '.join([(f'{safe(pname)}: {format_type(ptype)}' if pname else f'{format_type(ptype)}') if ptype else f'{safe(pname)}' for (pname, ptype) in siginfo['params']]) + ')'
     type_params = '' if not siginfo.get('type_params') else safe('<') + ', '.join([format_type(ptype) for ptype in siginfo['type_params']]) + safe('>')
     return_type = format_type(siginfo['return_type'])
-    signatures.append(f'<a href="#{name}">#</a> **{name}**{type_params}{params}: {return_type} {source_link(name)}\n{{: #{name} .signature}}')
+    signatures.append(f'<a href="#{name}">#</a> **{dot}{name}**{type_params}{params}: {return_type} {source_link(name)}\n{{: #{name} .signature}}')
     for alias in info.get('aliases', []):
-      aliases.append(f'<a href="#{alias}">#</a> **{alias}**{type_params}{params}: {return_type} {source_link(alias)}\n{{: #{alias} .signature}}')
+      aliases.append(f'<a href="#{alias}">#</a> **{dot}{alias}**{type_params}{params}: {return_type} {source_link(alias)}\n{{: #{alias} .signature}}')
 
   heading = '\n\n'.join([*signatures, *aliases])
   return heading
