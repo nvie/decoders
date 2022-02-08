@@ -12,7 +12,7 @@ for this, and I'm happy to help 🙏 !
 
 ## 🏁 Checklist
 
-1. Install `$ npm install decoders@beta`
+1. Install `$ npm install decoders`
 1. If applicable, uninstall debrief: `$ npm uninstall debrief`
 1. If applicable, uninstall lemons: `$ npm uninstall lemons`
 1. Stop "calling" decoders, see [instructions](#stop-calling-decoders).

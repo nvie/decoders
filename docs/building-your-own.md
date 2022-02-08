@@ -4,6 +4,13 @@ parent: Guides
 nav_order: 10
 ---
 
+<div style="margin: 0 0 30px 0; padding: 0px 20px; background: #fff8c5; border: 1px solid rgba(212,167,44,0.4); border-radius: 8px; font-size: 1.2em;">
+  <p>You're looking at the documentation for decoders <b>v2.x</b>!<br />
+    You can find <a href="https://github.com/nvie/decoders/tree/v1.25.5#readme">the old 1.x docs</a> here, or read the
+    <a href="https://github.com/nvie/decoders/blob/main/MIGRATING-v2.md">migration instructions</a>.
+  </p>
+</div>
+
 # Building your own custom decoders
 
 When defining new decoders, it's important to understand the difference between what

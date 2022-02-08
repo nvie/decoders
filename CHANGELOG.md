@@ -1,4 +1,4 @@
-## v2.0.0-beta
+## v2.0.0
 
 This is a breaking change, which brings numerous benefits:
 
