@@ -184,7 +184,7 @@ export function inexact<O: { +[field: string]: AnyDecoder }>(
 
 /**
  * Accepts objects where all values match the given decoder, and returns the
- * result as a `{ [string]: T }`.
+ * result as a `Record<string, T>`.
  *
  * The main difference between `object()` and `dict()` is that you'd typically
  * use `object()` if this is a record-like object, where all field names are

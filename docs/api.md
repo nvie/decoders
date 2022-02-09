@@ -979,7 +979,7 @@ pojo.verify(null);        // throws
 {: #dict .signature}
 
 Accepts objects where all values match the given decoder, and returns the
-result as a `{ [string]: T }`.
+result as a `Record<string, T>`.
 
 The main difference between [`object()`](/api.html#object) and [`dict()`](/api.html#dict) is that you'd typically
 use [`object()`](/api.html#object) if this is a record-like object, where all field names are
@@ -1353,5 +1353,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: af1ef5aa2b9a53b010a9b172c2529a3d) -->
+<!--[[[end]]] (checksum: 83a447f561aae869a042c4f2eb0acc66) -->
 <!-- prettier-ignore-end -->

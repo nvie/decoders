@@ -18,7 +18,7 @@ export const pojo: Decoder<Record<string, unknown>>;
  * exist on the input object are ignored and will not be returned.
  */
 export function object(decodersByKey: Record<any, never>): Decoder<Record<string, never>>;
-export function object<O extends { [key: string]: Decoder<any> }>(
+export function object<O extends Record<string, Decoder<any>>>(
     decodersByKey: O,
 ): Decoder<{ [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] }>;
 //         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -34,7 +34,7 @@ export function object<O extends { [key: string]: Decoder<any> }>(
  * not specified explicitly.
  */
 export function exact(decodersByKey: Record<any, never>): Decoder<Record<string, never>>;
-export function exact<O extends { [key: string]: Decoder<any> }>(
+export function exact<O extends Record<string, Decoder<any>>>(
     decodersByKey: O,
 ): Decoder<{ [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] }>;
 //         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -46,18 +46,19 @@ export function exact<O extends { [key: string]: Decoder<any> }>(
  */
 export function inexact(
     decodersByKey: Record<any, never>,
-): Decoder<{ [extra: string]: unknown }>;
-export function inexact<O extends { [key: string]: Decoder<any> }>(
+): Decoder<Record<string, unknown>>;
+export function inexact<O extends Record<string, Decoder<any>>>(
     decodersByKey: O,
 ): Decoder<
-    { [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] } & {
-        [extra: string]: unknown;
-    }
+    { [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] } & Record<
+        string,
+        unknown
+    >
 >;
 
 /**
  * Accepts objects where all values match the given decoder, and returns the
- * result as a `{ [string]: T }`.
+ * result as a `Record<string, T>`.
  *
  * The main difference between `object()` and `dict()` is that you'd typically
  * use `object()` if this is a record-like object, where all field names are
@@ -65,7 +66,7 @@ export function inexact<O extends { [key: string]: Decoder<any> }>(
  * typically dynamic and the values homogeneous, like in a dictionary,
  * a lookup table, or a cache.
  */
-export function dict<T>(decoder: Decoder<T>): Decoder<{ [key: string]: T }>;
+export function dict<T>(decoder: Decoder<T>): Decoder<Record<string, T>>;
 
 /**
  * Similar to `dict()`, but returns the result as a `Map<string, T>` (an [ES6

@@ -49,7 +49,7 @@ export function oneOf<T extends Scalar>(constants: readonly T[]): Decoder<T>;
  * error messages and is more performant at runtime because it doesn't have to
  * try all decoders one by one.
  */
-export function taggedUnion<O extends { [key: string]: Decoder<any> }>(
+export function taggedUnion<O extends Record<string, Decoder<any>>>(
     field: string,
     mapping: O,
 ): Decoder<Values<{ [key in keyof O]: DecoderType<O[key]> }>>;

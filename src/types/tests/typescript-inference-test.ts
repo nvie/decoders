@@ -57,6 +57,11 @@ import {
 import { formatInline, formatShort } from 'decoders/format';
 import { ok } from 'decoders/result';
 
+// Helper function to "run" a decoder on some input, and assert the return type
+function run<T>(decoder: Decoder<T>): T {
+    return decoder.verify('dummy');
+}
+
 const strings = array(string);
 
 // $ExpectType (p: string, q: number[], r: string[], s: boolean) => void
@@ -194,29 +199,56 @@ maybe(string, () => new Date()); // $ExpectType Decoder<string | Date>
 maybe(maybe(string), () => new Date()); // $ExpectType Decoder<string | Date>
 maybe(maybe(string, () => new Date())); // $ExpectType Decoder<string | Date | null | undefined>
 
-// $ExpectType { bar: { qux: string; }; foo?: string | undefined; }
-object({
-    foo: optional(string),
-    bar: object({ qux: string }),
-}).verify('dummy');
+// object()
+{
+    const d = object({
+        foo: optional(string),
+        bar: object({ qux: string }),
+    });
 
-// $ExpectType Record<string, never>
-object({}).verify('dummy'); // The exact empty object case
+    // $ExpectType { bar: { qux: string; }; foo?: string | undefined; }
+    const x = run(d);
+    x.foo; // $ExpectType string | undefined
+    x.bar; // $ExpectType { qux: string; }
+    x.a; // $ExpectError
+    x.b; // $ExpectError
+}
 
-// $ExpectType { bar: { qux: string; }; foo?: string | undefined; }
-exact({
-    foo: optional(string),
-    bar: object({ qux: string }),
-}).verify('dummy');
+// exact() (w/ empty mapping)
+run(object({})); // $ExpectType Record<string, never>
+run(object({})).a; // $ExpectType never
+run(object({})).b; // $ExpectType never
 
-// $ExpectType Record<string, never>
-exact({}).verify('dummy'); // The exact empty object case
+// exact()
+{
+    const d = exact({
+        foo: optional(string),
+        bar: object({ qux: string }),
+    });
 
-// $ExpectType Decoder<{ id: string; } & { [extra: string]: unknown; }>
-inexact({ id: string });
+    // $ExpectType { bar: { qux: string; }; foo?: string | undefined; }
+    const x = run(d);
+    x.foo; // $ExpectType string | undefined
+    x.bar; // $ExpectType { qux: string; }
+    x.a; // $ExpectError
+    x.b; // $ExpectError
+}
 
-// $ExpectType Decoder<{ [extra: string]: unknown; }>
-inexact({});
+// exact() (w/ empty mapping)
+run(exact({})); // $ExpectType Record<string, never>
+run(exact({})).a; // $ExpectType never
+run(exact({})).b; // $ExpectType never
+
+// inexact()
+run(inexact({ id: number })); // $ExpectType { id: number; } & Record<string, unknown>
+run(inexact({ id: number })).id; // $ExpectType number
+run(inexact({ id: number })).a; // $ExpectType unknown
+run(inexact({ id: number })).b; // $ExpectType unknown
+
+// inexact() (w/ empty mapping)
+run(inexact({})); // $ExpectType Record<string, unknown>
+run(inexact({})).a; // $ExpectType unknown
+run(inexact({})).b; // $ExpectType unknown
 
 // $ExpectType Decoder<Record<string, unknown>>
 pojo;
@@ -224,7 +256,7 @@ pojo;
 // $ExpectType Decoder<Map<string, number>>
 mapping(number);
 
-// $ExpectType Decoder<{ [key: string]: number; }>
+// $ExpectType Decoder<Record<string, number>>
 dict(number);
 
 // $ExpectType Decoder<string>
