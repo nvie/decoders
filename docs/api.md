@@ -884,7 +884,7 @@ decoder.verify([1, 2]);         // throws, not the right types
 
 ---
 
-<a href="#object">#</a> **object**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99">{ field1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, field2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ field1: A, field2: B, ... }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L42-L122 'Source')
+<a href="#object">#</a> **object**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99">{ field1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, field2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ field1: A, field2: B, ... }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L43-L123 'Source')
 {: #object .signature}
 
 Accepts objects with fields matching the given decoders. Extra fields that
@@ -908,7 +908,7 @@ For more information, see also [The difference between ``object``, ``exact``, an
 
 ---
 
-<a href="#exact">#</a> **exact**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99">{ field1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, field2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ field1: A, field2: B, ... }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L124-L148 'Source')
+<a href="#exact">#</a> **exact**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99">{ field1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, field2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ field1: A, field2: B, ... }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L125-L149 'Source')
 {: #exact .signature}
 
 Like [`object()`](/api.html#object), but will reject inputs that contain extra fields that are
@@ -932,7 +932,7 @@ For more information, see also [The difference between ``object``, ``exact``, an
 
 ---
 
-<a href="#inexact">#</a> **inexact**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99">{ field1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, field2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ field1: A, field2: B, ... }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L150-L182 'Source')
+<a href="#inexact">#</a> **inexact**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99">{ field1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, field2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ field1: A, field2: B, ... }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L151-L183 'Source')
 {: #inexact .signature}
 
 Like [`object()`](/api.html#object), but will pass through any extra fields on the input object
@@ -955,7 +955,7 @@ For more information, see also [The difference between ``object``, ``exact``, an
 
 ---
 
-<a href="#pojo">#</a> **pojo**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ [key: string]: unknown }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L10-L40 'Source')
+<a href="#pojo">#</a> **pojo**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Record&lt;string, unknown&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L10-L41 'Source')
 {: #pojo .signature}
 
 Accepts any "plain old JavaScript object", but doesn't validate its keys or
@@ -975,7 +975,7 @@ pojo.verify(null);        // throws
 
 ---
 
-<a href="#dict">#</a> **dict**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ [key: string]: T }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L184-L221 'Source')
+<a href="#dict">#</a> **dict**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ [key: string]: T }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L185-L222 'Source')
 {: #dict .signature}
 
 Accepts objects where all values match the given decoder, and returns the
@@ -996,7 +996,7 @@ decoder.verify({ red: 1, blue: 2, green: 3 }); // ≈ { red: 1, blue: 2, green: 
 
 ---
 
-<a href="#mapping">#</a> **mapping**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Map&lt;string, T&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L223-L237 'Source')
+<a href="#mapping">#</a> **mapping**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Map&lt;string, T&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/objects.js#L224-L238 'Source')
 {: #mapping .signature}
 
 Similar to [`dict()`](/api.html#dict), but returns the result as a `Map<string, T>` (an [ES6
@@ -1353,5 +1353,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 00e16a493fb021e8ff3e59dc4e63e5d1) -->
+<!--[[[end]]] (checksum: af1ef5aa2b9a53b010a9b172c2529a3d) -->
 <!-- prettier-ignore-end -->

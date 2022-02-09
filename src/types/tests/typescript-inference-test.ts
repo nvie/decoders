@@ -218,7 +218,7 @@ inexact({ id: string });
 // $ExpectType Decoder<{ [extra: string]: unknown; }>
 inexact({});
 
-// $ExpectType Decoder<{ [key: string]: unknown; }>
+// $ExpectType Decoder<Record<string, unknown>>
 pojo;
 
 // $ExpectType Decoder<Map<string, number>>

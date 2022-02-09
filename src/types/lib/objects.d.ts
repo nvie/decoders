@@ -11,7 +11,7 @@ export type ObjectDecoderType<T> = AllowImplicit<{
  * Accepts any "plain old JavaScript object", but doesn't validate its keys or
  * values further.
  */
-export const pojo: Decoder<{ [key: string]: unknown }>;
+export const pojo: Decoder<Record<string, unknown>>;
 
 /**
  * Accepts objects with fields matching the given decoders. Extra fields that

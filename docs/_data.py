@@ -753,7 +753,7 @@ DECODERS = {
   'pojo': {
     'section': 'Objects',
     'params': None,
-    'return_type': 'Decoder<{ [key: string]: unknown }>',
+    'return_type': 'Decoder<Record<string, unknown>>',
     'example': """
       // 👍
       pojo.verify({}) === {};

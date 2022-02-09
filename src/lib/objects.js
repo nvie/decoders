@@ -34,7 +34,8 @@ export const pojo: Decoder<{| [string]: mixed |}> = define((blob, ok, err) =>
               // way to turn a read-only Object to a writeable one in ES6 seems
               // to be to use object-spread. (Going off this benchmark:
               // https://thecodebarbarian.com/object-assign-vs-object-spread.html)
-              { ...blob },
+              // $FlowFixMe[incompatible-variance]
+              blob,
           )
         : err('Must be an object'),
 );
