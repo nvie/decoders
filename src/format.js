@@ -14,8 +14,8 @@ function serializeString(s: string, width: number = 80): string {
     }
 
     // Cut off a bit
-    const truncated = s.substring(0, width - 15) + '...';
-    ser = JSON.stringify(truncated) + ' [truncated]';
+    const truncated = `${s.substring(0, width - 15)}...`;
+    ser = `${JSON.stringify(truncated)} [truncated]`;
     return ser;
 }
 
@@ -27,13 +27,13 @@ function serializeArray(annotation: ArrayAnnotation, prefix: string): string {
 
     const result = [];
     items.forEach((item) => {
-        const [ser, ann] = serializeAnnotation(item, prefix + INDENT);
-        result.push(prefix + INDENT + ser + ',');
+        const [ser, ann] = serializeAnnotation(item, `${prefix}${INDENT}`);
+        result.push(`${prefix}${INDENT}${ser}${','}`);
         if (ann !== undefined) {
-            result.push(indent(ann, prefix + INDENT));
+            result.push(indent(ann, `${prefix}${INDENT}`));
         }
     });
-    return ['[', ...result, prefix + ']'].join('\n');
+    return ['[', ...result, `${prefix}]`].join('\n');
 }
 
 function serializeObject(annotation: ObjectAnnotation, prefix: string): string {
@@ -49,15 +49,15 @@ function serializeObject(annotation: ObjectAnnotation, prefix: string): string {
         const valueAnnotation = fields[key];
         const kser = serializeValue(key);
 
-        const valPrefix = prefix + INDENT + ' '.repeat(kser.length + 2);
-        const [vser, vann] = serializeAnnotation(valueAnnotation, prefix + INDENT);
+        const valPrefix = `${prefix}${INDENT}${' '.repeat(kser.length + 2)}`;
+        const [vser, vann] = serializeAnnotation(valueAnnotation, `${prefix}${INDENT}`);
 
-        result.push(prefix + INDENT + kser + ': ' + vser + ',');
+        result.push(`${prefix}${INDENT}${kser}: ${vser},`);
         if (vann !== undefined) {
             result.push(indent(vann, valPrefix));
         }
     });
-    return ['{', ...result, prefix + '}'].join('\n');
+    return ['{', ...result, `${prefix}}`].join('\n');
 }
 
 export function serializeValue(value: mixed): string {
@@ -117,7 +117,7 @@ export function serializeAnnotation(
 export function formatInline(ann: Annotation): string {
     const [serialized, annotation] = serializeAnnotation(ann);
     if (annotation !== undefined) {
-        return serialized + '\n' + annotation;
+        return `${serialized}\n${annotation}`;
     } else {
         return serialized;
     }

@@ -13,7 +13,7 @@ const EITHER_PREFIX = 'Either:\n';
  * Indents and adds a dash in front of this (potentially multiline) string.
  */
 function itemize(s: string): string {
-    return '-' + indent(s).substring(1);
+    return `-${indent(s).substring(1)}`;
 }
 
 /**

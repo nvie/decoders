@@ -101,7 +101,7 @@ function format(err: Annotation, formatter: Formatter): Error {
     // writing them. If it already returns an Error, return it unmodified. If
     // it returns a string, wrap it in a "Decoding error" instance.
     if (typeof formatted === 'string') {
-        const err = new Error('\n' + formatted);
+        const err = new Error(`\n${formatted}`);
         err.name = 'Decoding error';
         return err;
     } else {

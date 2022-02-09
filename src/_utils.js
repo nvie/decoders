@@ -36,10 +36,10 @@ export function indent(s: string, prefix: string = INDENT): string {
     if (isMultiline(s)) {
         return s
             .split('\n')
-            .map((line) => prefix + line)
+            .map((line) => `${prefix}${line}`)
             .join('\n');
     } else {
-        return prefix + s;
+        return `${prefix}${s}`;
     }
 }
 
@@ -87,7 +87,7 @@ export function summarize(
                 ? `Value at index ${keypath[0]}: `
                 : `Value at key ${JSON.stringify(keypath[0])}: `;
     } else {
-        prefix = `Value at keypath ${keypath.map((x) => x.toString()).join('.')}: `;
+        prefix = `Value at keypath ${keypath.map(String).join('.')}: `;
     }
-    return [...result, prefix + text];
+    return [...result, `${prefix}${text}`];
 }
