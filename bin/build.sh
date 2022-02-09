@@ -30,9 +30,21 @@ clean() {
     rm -rf "$DIST"
 }
 
+prettier_build_output() {
+    TMP="$1"
+
+    # Strip out block and line comments
+    sr -s '/[*]+(?s).*?[*]/' -r '' "$TMP"
+    sr -s '\s*//.*' -r '' "$TMP"
+
+    # Run prettier over the compiled results
+    prettier --no-semi --single-quote --tab-width=2 --print-width=999 --arrow-parens=avoid --write "$TMP"
+}
+
 build_cjs() {
     TMP=$(mktemp -d -t decoders-cjs)
     BABEL_ENV=commonjs babel -d "$TMP" "$SRC" --ignore '**/__tests__/**'
+    prettier_build_output "$TMP"
     rsync -aqv "$TMP/" "$DIST/"
 }
 
@@ -43,6 +55,7 @@ build_esm() {
       mv "$f" "${f%.js}.mjs"
     done
     sr -s "from '(.*)'" -r "from '\$1.mjs'" "$TMP"
+    prettier_build_output "$TMP"
     rsync -aqv "$TMP/" "$DIST/"
 }
 
