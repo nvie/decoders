@@ -1256,10 +1256,10 @@ def run_json(cmd):
 
 def mine_source_code_data():
     locinfo1 = run_json(
-      "./bin/linenos src/Decoder.js --remote-url --object-keys --object-methods --json",
+      "./bin/linenos src/Decoder.js --remote-url --branch main --object-keys --object-methods --json",
     )
     locinfo2 = run_json(
-      "./bin/linenos src/*.js src/**/*.js --remote-url --functions --global-variables --json",
+      "./bin/linenos src/*.js src/**/*.js --remote-url --branch main --functions --global-variables --json",
     )
 
     # Check the definitions against the found sources
