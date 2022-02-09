@@ -1,12 +1,26 @@
 // @flow strict
 
 import type { Annotation } from './annotate';
+import type { Scalar } from './Decoder';
 
 // $FlowFixMe[unclear-type] - deliberate use of `any`
 export type _Any = any;
 
 // Two spaces of indentation
 export const INDENT = '  ';
+
+/**
+ * Subtract two sets. Why isn't this a standard method on Sets?
+ */
+export function subtract<T: Scalar>(xs: Set<T>, ys: Set<T>): Set<T> {
+    const result = new Set();
+    xs.forEach((x) => {
+        if (!ys.has(x)) {
+            result.add(x);
+        }
+    });
+    return result;
+}
 
 /**
  * Is value is a valid Date instance, then return that. If not, then return

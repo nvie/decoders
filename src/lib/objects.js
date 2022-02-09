@@ -2,19 +2,10 @@
 
 import { annotateObject, merge, updateText } from '../annotate';
 import { define } from '../Decoder';
+import { subtract } from '../_utils';
 import type { Annotation } from '../annotate';
 import type { _Any as AnyDecoder } from '../_utils';
 import type { Decoder, DecodeResult } from '../Decoder';
-
-function subtract(xs: Set<string>, ys: Set<string>): Set<string> {
-    const result = new Set();
-    xs.forEach((x) => {
-        if (!ys.has(x)) {
-            result.add(x);
-        }
-    });
-    return result;
-}
 
 /**
  * Accepts any "plain old JavaScript object", but doesn't validate its keys or
