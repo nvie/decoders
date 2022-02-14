@@ -1,3 +1,11 @@
+## v2.0.1
+
+-   ![](./docs/assets/tiny-ts-logo.png) **TypeScript-only:** Changed return types of
+    `{ [key: string]: T }` to `Record<string, T>`.
+
+-   ![](./docs/assets/tiny-ts-logo.png) **TypeScript-only:** Fine-tune the type of
+    [`instanceOf()`](https://decoders.cc/api.html#instanceOf).
+
 ## v2.0.0
 
 This is a breaking change, which brings numerous benefits:
