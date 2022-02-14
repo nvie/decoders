@@ -1311,7 +1311,7 @@ decoder.verify({ a: 'foo', b: 'bar' });  // throws
 
 ---
 
-<a href="#instanceOf">#</a> **instanceOf**&lt;<i style="color: #267f99">T</i>&gt;(klass: <i style="color: #267f99">Class&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L7-L21 'Source')
+<a href="#instanceOf">#</a> **instanceOf**&lt;<i style="color: #267f99">T</i>&gt;(klass: <i style="color: #267f99">Klass&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/utilities.js#L7-L21 'Source')
 {: #instanceOf .signature}
 
 Accepts any value that is an ``instanceof`` the given class.
@@ -1353,5 +1353,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 83a447f561aae869a042c4f2eb0acc66) -->
+<!--[[[end]]] (checksum: b8792c786fb482ecdab9713f267908a0) -->
 <!-- prettier-ignore-end -->

@@ -1032,7 +1032,7 @@ DECODERS = {
     'section': 'Utilities',
     'type_params': ['T'],
     'params': [
-      ('klass', 'Class<T>'),
+      ('klass', 'Klass<T>'),
     ],
     'return_type': 'Decoder<T>',
     'example': """

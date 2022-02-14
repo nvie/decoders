@@ -273,20 +273,37 @@ test(json); // $ExpectType JSONValue
 test(jsonObject); // $ExpectType JSONObject
 test(jsonArray); // $ExpectType JSONArray
 
-// $ExpectType Decoder<Error>
-instanceOf(Error);
+{
+    interface Animal {
+        name: string;
+    }
+    class Cat implements Animal {
+        name = 'cat';
+    }
+    class Dog implements Animal {
+        name = 'dog';
+    }
+    class Labrador extends Dog {
+        name = 'labrador';
+    }
 
-// $ ExpectType Decoder<TypeError>
-instanceOf(TypeError);
+    test(instanceOf(Labrador)); // $ExpectType Labrador
+    test(instanceOf(Dog)); // $ExpectType Dog
+    test(instanceOf(Cat)); // $ExpectType Cat
 
-// $ExpectType Decoder<RegExp>
-instanceOf(RegExp);
+    // Or use it on existing types
+    test(instanceOf(Error)); // $ExpectType Error
+    test(instanceOf(RegExp)); // $ExpectType RegExp
 
-// $ExpectType Decoder<Promise<string>>
-instanceOf<Promise<string>>(Promise);
+    // Weird case... due to the way the TypeError constructor is defined in the
+    // standard library, this doesn't work for TypeError...
+    // test(instanceOf(TypeError)); // $ExpectType TypeError
 
-// $ExpectError
-instanceOf<Promise<string>>(Set);
+    // Parameterized classes cannot be inferred automatically...
+    test(instanceOf(Promise)); // $ExpectType Promise<unknown>
+    test(instanceOf(Set)); // $ExpectType Set<unknown>
+    test(instanceOf(Map)); // $ExpectType Map<unknown, unknown>
+}
 
 test(date); // $ExpectType Date
 

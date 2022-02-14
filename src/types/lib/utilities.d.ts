@@ -1,9 +1,15 @@
 import { Decoder } from '../Decoder';
 
+export interface Klass<T> extends Function {
+    new (...args: readonly any[]): T;
+}
+
+export type Instance<K> = K extends Klass<infer T> ? T : never;
+
 /**
  * Accepts any value that is an ``instanceof`` the given class.
  */
-export function instanceOf<T>(klass: new (...args: readonly any[]) => T): Decoder<T>;
+export function instanceOf<K extends Klass<any>>(klass: K): Decoder<Instance<K>>;
 
 /**
  * Lazily evaluate the given decoder. This is useful to build self-referential
