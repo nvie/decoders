@@ -57,8 +57,8 @@ import {
 import { formatInline, formatShort } from 'decoders/format';
 import { ok } from 'decoders/result';
 
-// Helper function to "run" a decoder on some input, and assert the return type
-function run<T>(decoder: Decoder<T>): T {
+// Helper function to "test" a decoder on some input, and assert the return type
+function test<T>(decoder: Decoder<T>): T {
     return decoder.verify('dummy');
 }
 
@@ -72,132 +72,144 @@ function foo(
     s: DecoderType<typeof truthy>,
 ) {}
 
-constant('foo'); // $ExpectType Decoder<"foo">
-hardcoded('foo'); // $ExpectType Decoder<"foo">
-hardcoded(() => new Date()); // $ExpectType Decoder<Date>
-always('foo'); // $ExpectType Decoder<"foo">
-always(42); // $ExpectType Decoder<42>
-always(() => new Date()); // $ExpectType Decoder<Date>
+test(constant('foo')); // $ExpectType "foo"
+test(hardcoded('foo')); // $ExpectType "foo"
+test(hardcoded(() => new Date())); // $ExpectType Date
+test(always('foo')); // $ExpectType "foo"
+test(always(42)); // $ExpectType 42
+test(always(() => new Date())); // $ExpectType Date
 
-null_; // $ExpectType Decoder<null>
-undefined_; // $ExpectType Decoder<undefined>
-mixed; // $ExpectType Decoder<unknown>
-unknown; // $ExpectType Decoder<unknown>
+test(null_); // $ExpectType null
+test(undefined_); // $ExpectType undefined
+test(mixed); // $ExpectType unknown
+test(unknown); // $ExpectType unknown
 
-anyNumber; // $ExpectType Decoder<number>
-integer; // $ExpectType Decoder<number>
-number; // $ExpectType Decoder<number>
-positiveInteger; // $ExpectType Decoder<number>
-positiveNumber; // $ExpectType Decoder<number>
+test(anyNumber); // $ExpectType number
+test(integer); // $ExpectType number
+test(number); // $ExpectType number
+test(positiveInteger); // $ExpectType number
+test(positiveNumber); // $ExpectType number
 
-string; // $ExpectType Decoder<string>
-nonEmptyString; // $ExpectType Decoder<string>
-email; // $ExpectType Decoder<string>
-regex(/foo/, 'Must be foo'); // $ExpectType Decoder<string>
-url; // $ExpectType Decoder<URL>
-httpsUrl; // $ExpectType Decoder<URL>
-uuid; // $ExpectType Decoder<string>
-uuidv1; // $ExpectType Decoder<string>
-uuidv4; // $ExpectType Decoder<string>
+test(string); // $ExpectType string
+test(nonEmptyString); // $ExpectType string
+test(email); // $ExpectType string
+test(regex(/foo/, 'Must be foo')); // $ExpectType string
+test(url); // $ExpectType URL
+test(httpsUrl); // $ExpectType URL
+test(uuid); // $ExpectType string
+test(uuidv1); // $ExpectType string
+test(uuidv4); // $ExpectType string
 
-array(string); // $ExpectType Decoder<string[]>
-array(number); // $ExpectType Decoder<number[]>
-array(array(number)); // $ExpectType Decoder<number[][]>
-poja; // $ExpectType Decoder<unknown[]>
-nonEmptyArray(string); // $ExpectType Decoder<[string, ...string[]]>
-nonEmptyArray(number); // $ExpectType Decoder<[number, ...number[]]>
-set(string); // $ExpectType Decoder<Set<string>>
-set(number); // $ExpectType Decoder<Set<number>>
+test(array(string)); // $ExpectType string[]
+test(array(number)); // $ExpectType number[]
+test(array(array(number))); // $ExpectType number[][]
+test(poja); // $ExpectType unknown[]
+test(nonEmptyArray(string)); // $ExpectType [string, ...string[]]
+test(nonEmptyArray(number)); // $ExpectType [number, ...number[]]
+test(set(string)); // $ExpectType Set<string>
+test(set(number)); // $ExpectType Set<number>
 
-tuple(string); // $ExpectType Decoder<[string]>
-tuple(string, number); // $ExpectType Decoder<[string, number]>
-tuple(string, string, number); // $ExpectType Decoder<[string, string, number]>
-tuple(string, string, number, string); // $ExpectType Decoder<[string, string, number, string]>
-tuple(string, string, number, string, number); // $ExpectType Decoder<[string, string, number, string, number]>
-tuple(string, string, number, string, number, string); // $ExpectType Decoder<[string, string, number, string, number, string]>
+test(tuple(string)); // $ExpectType [string]
+test(tuple(string, number)); // $ExpectType [string, number]
+test(tuple(string, string, number)); // $ExpectType [string, string, number]
+test(tuple(string, string, number, string)); // $ExpectType [string, string, number, string]
+test(tuple(string, string, number, string, number)); // $ExpectType [string, string, number, string, number]
+test(tuple(string, string, number, string, number, string)); // $ExpectType [string, string, number, string, number, string]
 
 // $ExpectType { name: string; tags: string[]; }
-object({
-    name: string,
-    tags: array(string),
-}).verify('dummy');
+test(
+    object({
+        name: string,
+        tags: array(string),
+    }),
+);
 
 // $ExpectType Record<string, never>
-object({}).verify('dummy');
+test(object({}));
 
 // Style argument
 string.verify('dummy', formatInline);
 string.verify('dummy', formatShort);
 
-// $ExpectType number | undefined
-number.value('dummy');
-// $ExpectType string | undefined
-string.value('dummy');
+number.value('dummy'); // $ExpectType number | undefined
+string.value('dummy'); // $ExpectType string | undefined
 
-// $ExpectType Decoder<number>
-string.then((value: string) => ok(value.length));
+// $ExpectType number
+test(string.then((value: string) => ok(value.length)));
 
-// $ExpectType Decoder<number>
-string.peek_UNSTABLE(([blob, value]) => ok(value.length));
+// $ExpectType number
+test(string.peek_UNSTABLE(([blob, value]) => ok(value.length)));
 
-// $ExpectType Decoder<string>
-string.refine((s) => s.startsWith('x'), 'Must start with x');
+// $ExpectType string
+test(string.refine((s) => s.startsWith('x'), 'Must start with x'));
 
-// $ExpectType Decoder<string>
-unknown.refine((foo): foo is string => typeof foo === 'string', 'Is string');
+// $ExpectType string
+test(unknown.refine((foo): foo is string => typeof foo === 'string', 'Is string'));
 
-// $ExpectType Decoder<"a" | "b">
-string.refine((foo: string): foo is 'a' | 'b' => foo === 'a' || foo === 'b', 'Is a or b');
-
-// $ExpectType Decoder<number[]>
-array(number).reject((numbers) =>
-    numbers.reduce((acc, n) => acc + n) > 0
-        ? `Sum of ${numbers.join(' + ')} must be positive`
-        : null,
+// $ExpectType "a" | "b"
+test(
+    string.refine(
+        (foo: string): foo is 'a' | 'b' => foo === 'a' || foo === 'b',
+        'Is a or b',
+    ),
 );
 
-prep(Number, string); // $ExpectType Decoder<string>
-prep(String, string); // $ExpectType Decoder<string>
-prep(Number, number); // $ExpectType Decoder<number>
-prep(String, number); // $ExpectType Decoder<number>
-prep(String, either(number, string)); // $ExpectType Decoder<string | number>
-prep(Number, either(number, string)); // $ExpectType Decoder<string | number>
+// $ExpectType number[]
+test(
+    array(number).reject((numbers) =>
+        numbers.reduce((acc, n) => acc + n) > 0
+            ? `Sum of ${numbers.join(' + ')} must be positive`
+            : null,
+    ),
+);
 
-array(string); // $ExpectType Decoder<string[]>
-array(number); // $ExpectType Decoder<number[]>
-array(array(number)); // $ExpectType Decoder<number[][]>
-poja; // $ExpectType Decoder<unknown[]>
+// $ExpectType string
+test(string.describe('xxx'));
+// $ExpectType number
+test(number.describe('xxx'));
 
-boolean.verify('dummy'); // $ExpectType boolean
-truthy.verify('dummy'); // $ExpectType boolean
-numericBoolean.verify('dummy'); // $ExpectType boolean
+test(prep(Number, string)); // $ExpectType string
+test(prep(String, string)); // $ExpectType string
+test(prep(Number, number)); // $ExpectType number
+test(prep(String, number)); // $ExpectType number
+test(prep(String, either(number, string))); // $ExpectType string | number
+test(prep(Number, either(number, string))); // $ExpectType string | number
 
-optional(string); // $ExpectType Decoder<string | undefined>
-optional(optional(string)); // $ExpectType Decoder<string | undefined>
-optional(string, 42); // $ExpectType Decoder<string | 42>
-optional(optional(string), 42); // $ExpectType Decoder<string | 42>
-optional(optional(string, 42)); // $ExpectType Decoder<string | 42 | undefined>
-optional(string, () => new Date()); // $ExpectType Decoder<string | Date>
-optional(optional(string), () => new Date()); // $ExpectType Decoder<string | Date>
-optional(optional(string, () => new Date())); // $ExpectType Decoder<string | Date | undefined>
+test(array(string)); // $ExpectType string[]
+test(array(number)); // $ExpectType number[]
+test(array(array(number))); // $ExpectType number[][]
+test(poja); // $ExpectType unknown[]
 
-nullable(string); // $ExpectType Decoder<string | null>
-nullable(nullable(string)); // $ExpectType Decoder<string | null>
-nullable(string, 42); // $ExpectType Decoder<string | 42>
-nullable(nullable(string), 42); // $ExpectType Decoder<string | 42>
-nullable(nullable(string, 42)); // $ExpectType Decoder<string | 42 | null>
-nullable(string, () => new Date()); // $ExpectType Decoder<string | Date>
-nullable(nullable(string), () => new Date()); // $ExpectType Decoder<string | Date>
-nullable(nullable(string, () => new Date())); // $ExpectType Decoder<string | Date | null>
+test(boolean); // $ExpectType boolean
+test(truthy); // $ExpectType boolean
+test(numericBoolean); // $ExpectType boolean
 
-maybe(string); // $ExpectType Decoder<string | null | undefined>
-maybe(maybe(string)); // $ExpectType Decoder<string | null | undefined>
-maybe(string, 42); // $ExpectType Decoder<string | 42>
-maybe(maybe(string), 42); // $ExpectType Decoder<string | 42>
-maybe(maybe(string, 42)); // $ExpectType Decoder<string | 42 | null | undefined>
-maybe(string, () => new Date()); // $ExpectType Decoder<string | Date>
-maybe(maybe(string), () => new Date()); // $ExpectType Decoder<string | Date>
-maybe(maybe(string, () => new Date())); // $ExpectType Decoder<string | Date | null | undefined>
+test(optional(string)); // $ExpectType string | undefined
+test(optional(optional(string))); // $ExpectType string | undefined
+test(optional(string, 42)); // $ExpectType string | 42
+test(optional(optional(string), 42)); // $ExpectType string | 42
+test(optional(optional(string, 42))); // $ExpectType string | 42 | undefined
+test(optional(string, () => new Date())); // $ExpectType string | Date
+test(optional(optional(string), () => new Date())); // $ExpectType string | Date
+test(optional(optional(string, () => new Date()))); // $ExpectType string | Date | undefined
+
+test(nullable(string)); // $ExpectType string | null
+test(nullable(nullable(string))); // $ExpectType string | null
+test(nullable(string, 42)); // $ExpectType string | 42
+test(nullable(nullable(string), 42)); // $ExpectType string | 42
+test(nullable(nullable(string, 42))); // $ExpectType string | 42 | null
+test(nullable(string, () => new Date())); // $ExpectType string | Date
+test(nullable(nullable(string), () => new Date())); // $ExpectType string | Date
+test(nullable(nullable(string, () => new Date()))); // $ExpectType string | Date | null
+
+test(maybe(string)); // $ExpectType string | null | undefined
+test(maybe(maybe(string))); // $ExpectType string | null | undefined
+test(maybe(string, 42)); // $ExpectType string | 42
+test(maybe(maybe(string), 42)); // $ExpectType string | 42
+test(maybe(maybe(string, 42))); // $ExpectType string | 42 | null | undefined
+test(maybe(string, () => new Date())); // $ExpectType string | Date
+test(maybe(maybe(string), () => new Date())); // $ExpectType string | Date
+test(maybe(maybe(string, () => new Date()))); // $ExpectType string | Date | null | undefined
 
 // object()
 {
@@ -207,7 +219,7 @@ maybe(maybe(string, () => new Date())); // $ExpectType Decoder<string | Date | n
     });
 
     // $ExpectType { bar: { qux: string; }; foo?: string | undefined; }
-    const x = run(d);
+    const x = test(d);
     x.foo; // $ExpectType string | undefined
     x.bar; // $ExpectType { qux: string; }
     x.a; // $ExpectError
@@ -215,9 +227,9 @@ maybe(maybe(string, () => new Date())); // $ExpectType Decoder<string | Date | n
 }
 
 // exact() (w/ empty mapping)
-run(object({})); // $ExpectType Record<string, never>
-run(object({})).a; // $ExpectType never
-run(object({})).b; // $ExpectType never
+test(object({})); // $ExpectType Record<string, never>
+test(object({})).a; // $ExpectType never
+test(object({})).b; // $ExpectType never
 
 // exact()
 {
@@ -227,7 +239,7 @@ run(object({})).b; // $ExpectType never
     });
 
     // $ExpectType { bar: { qux: string; }; foo?: string | undefined; }
-    const x = run(d);
+    const x = test(d);
     x.foo; // $ExpectType string | undefined
     x.bar; // $ExpectType { qux: string; }
     x.a; // $ExpectError
@@ -235,44 +247,31 @@ run(object({})).b; // $ExpectType never
 }
 
 // exact() (w/ empty mapping)
-run(exact({})); // $ExpectType Record<string, never>
-run(exact({})).a; // $ExpectType never
-run(exact({})).b; // $ExpectType never
+test(exact({})); // $ExpectType Record<string, never>
+test(exact({})).a; // $ExpectType never
+test(exact({})).b; // $ExpectType never
 
 // inexact()
-run(inexact({ id: number })); // $ExpectType { id: number; } & Record<string, unknown>
-run(inexact({ id: number })).id; // $ExpectType number
-run(inexact({ id: number })).a; // $ExpectType unknown
-run(inexact({ id: number })).b; // $ExpectType unknown
+test(inexact({ id: number })); // $ExpectType { id: number; } & Record<string, unknown>
+test(inexact({ id: number })).id; // $ExpectType number
+test(inexact({ id: number })).a; // $ExpectType unknown
+test(inexact({ id: number })).b; // $ExpectType unknown
 
 // inexact() (w/ empty mapping)
-run(inexact({})); // $ExpectType Record<string, unknown>
-run(inexact({})).a; // $ExpectType unknown
-run(inexact({})).b; // $ExpectType unknown
+test(inexact({})); // $ExpectType Record<string, unknown>
+test(inexact({})).a; // $ExpectType unknown
+test(inexact({})).b; // $ExpectType unknown
 
-// $ExpectType Decoder<Record<string, unknown>>
-pojo;
+test(pojo); // $ExpectType Record<string, unknown>
+test(mapping(number)); // $ExpectType Map<string, number>
+test(dict(number)); // $ExpectType Record<string, number>
 
-// $ExpectType Decoder<Map<string, number>>
-mapping(number);
+test(lazy(() => string)); // $ExpectType string
+test(lazy(() => number)); // $ExpectType number
 
-// $ExpectType Decoder<Record<string, number>>
-dict(number);
-
-// $ExpectType Decoder<string>
-lazy(() => string);
-
-// $ExpectType Decoder<number>
-lazy(() => number);
-
-// $ExpectType JSONValue
-json.verify('hi');
-
-// $ExpectType JSONObject
-jsonObject.verify({});
-
-// $ExpectType JSONArray
-jsonArray.verify([]);
+test(json); // $ExpectType JSONValue
+test(jsonObject); // $ExpectType JSONObject
+test(jsonArray); // $ExpectType JSONArray
 
 // $ExpectType Decoder<Error>
 instanceOf(Error);
@@ -289,27 +288,28 @@ instanceOf<Promise<string>>(Promise);
 // $ExpectError
 instanceOf<Promise<string>>(Set);
 
-// $ExpectType Decoder<Date>
-date;
+test(date); // $ExpectType Date
 
-// $ExpectType Date
-const d = iso8601.verify('dummy');
-d.getFullYear();
+{
+    // $ExpectType Date
+    const d = test(iso8601);
+    d.getFullYear();
+}
 
-fail('I will never return'); // $ExpectType Decoder<never>
-never('I will never return'); // $ExpectType Decoder<never>
+test(fail('I will never return')); // $ExpectType never
+test(never('I will never return')); // $ExpectType never
 
-either(string, number); // $ExpectType Decoder<string | number>
-either(string, string, number); // $ExpectType Decoder<string | number>
-either(string, boolean, number, array(number)); // $ExpectType Decoder<string | number | boolean | number[]>
-either(string, string, string, string, string); // $ExpectType Decoder<string>
-either(string, string, string, string, string, string); // $ExpectType Decoder<string>
-either(string, string, string, string, string, string, string); // $ExpectType Decoder<string>
-either(string, string, string, string, string, string, string, string); // $ExpectType Decoder<string>
-either(string, string, string, string, string, string, string, string, string); // $ExpectType Decoder<string>
+test(either(string, number)); // $ExpectType string | number
+test(either(string, string, number)); // $ExpectType string | number
+test(either(string, boolean, number, array(number))); // $ExpectType string | number | boolean | number[]
+test(either(string, string, string, string, string)); // $ExpectType string
+test(either(string, string, string, string, string, string)); // $ExpectType string
+test(either(string, string, string, string, string, string, string)); // $ExpectType string
+test(either(string, string, string, string, string, string, string, string)); // $ExpectType string
+test(either(string, string, string, string, string, string, string, string, string)); // $ExpectType string
 
-// $ExpectType Decoder<"foo" | "bar">
-oneOf(['foo', 'bar']);
+// $ExpectType "foo" | "bar"
+test(oneOf(['foo', 'bar']));
 
 interface Rect {
     _type: 'rect';
@@ -343,8 +343,8 @@ const circle: Decoder<Circle> = object({
     radius: number,
 });
 
-// $ExpectType Decoder<Values<{ rect: Rect; circle: Circle; }>>
-taggedUnion('_type', { rect, circle });
+// $ExpectType Values<{ rect: Rect; circle: Circle; }>
+test(taggedUnion('_type', { rect, circle }));
 
 interface Rect1 {
     _type: 0;
@@ -378,10 +378,5 @@ const circle1: Decoder<Circle1> = object({
     radius: number,
 });
 
-// $ExpectType Decoder<Values<{ 0: Rect1; 1: Circle1; }>>
-taggedUnion('_type', { 0: rect1, 1: circle1 });
-
-// $ExpectType Decoder<string>
-string.describe('xxx');
-// $ExpectType Decoder<number>
-number.describe('xxx');
+// $ExpectType Values<{ 0: Rect1; 1: Circle1; }>
+test(taggedUnion('_type', { 0: rect1, 1: circle1 }));
