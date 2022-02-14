@@ -25,11 +25,11 @@ export type JSONArray = JSONValue[];
 export const json: Decoder<JSONValue>;
 
 /**
- * Like `json`, but will only decode when the JSON value is an array.
+ * Accepts arrays that contain only valid JSON values.
  */
 export const jsonArray: Decoder<JSONArray>;
 
 /**
- * Like `json`, but will only decode when the JSON value is an object.
+ * Accepts objects that contain only valid JSON values.
  */
 export const jsonObject: Decoder<JSONObject>;

@@ -15,12 +15,12 @@ export type JSONObject = { [string]: JSONValue };
 export type JSONArray = Array<JSONValue>;
 
 /**
- * Like `json`, but will only decode when the JSON value is an object.
+ * Accepts objects that contain only valid JSON values.
  */
 export const jsonObject: Decoder<JSONObject> = lazy(() => dict(json));
 
 /**
- * Like `json`, but will only decode when the JSON value is an array.
+ * Accepts arrays that contain only valid JSON values.
  */
 export const jsonArray: Decoder<JSONArray> = lazy(() => array(json));
 

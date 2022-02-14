@@ -1060,7 +1060,7 @@ json.verify({
 <a href="#jsonObject">#</a> **jsonObject**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ [string]: JSONValue }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/json.js#L17-L20 'Source')
 {: #jsonObject .signature}
 
-Like [`json`](/api.html#json), but will only decode when the JSON value is an object.
+Accepts objects that contain only valid JSON values.
 
 ```typescript
 // 👍
@@ -1079,7 +1079,7 @@ jsonObject.verify(null);                 // throws
 <a href="#jsonArray">#</a> **jsonArray**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;JSONValue[]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/json.js#L22-L25 'Source')
 {: #jsonArray .signature}
 
-Like [`json`](/api.html#json), but will only decode when the JSON value is an array.
+Accepts arrays that contain only valid JSON values.
 
 ```typescript
 // 👍
@@ -1353,5 +1353,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: b8792c786fb482ecdab9713f267908a0) -->
+<!--[[[end]]] (checksum: eaaa5cb2a280c6b6025ccdbd5c8b5a42) -->
 <!-- prettier-ignore-end -->
