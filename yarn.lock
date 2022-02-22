@@ -2658,9 +2658,9 @@ flow-copy-source@^2.0.9:
     yargs "^15.0.1"
 
 flow-typed@^3.6.1:
-  version "3.6.1"
-  resolved "https://registry.yarnpkg.com/flow-typed/-/flow-typed-3.6.1.tgz#b2fe4e896661f0b786d125977ebed8f0cfc8c0a4"
-  integrity sha512-sqBiG52+qK1mJs+CwVenGZOVgSCY1YVozDnIJ41kukqcx3fWuSxwY5FZoB9pLf/NdmMYtwCMunT9SKjOR56mOg==
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/flow-typed/-/flow-typed-3.7.0.tgz#c3e087cb39de1a3ba303f5c646daca74c9fa8a21"
+  integrity sha512-Mxl4c445SbvX1IBJQ+WRcPsRp3LxRMorHH57db4tBuuzNKg/Qpeo9CwdBQbFr39Xz1lxlOTPOP2ZNFLnCzb0fA==
   dependencies:
     "@octokit/rest" "^18.12.0"
     colors "1.4.0"
