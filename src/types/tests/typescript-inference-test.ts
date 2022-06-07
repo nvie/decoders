@@ -272,6 +272,7 @@ test(lazy(() => number)); // $ExpectType number
 test(json); // $ExpectType JSONValue
 test(jsonObject); // $ExpectType JSONObject
 test(jsonArray); // $ExpectType JSONArray
+test(jsonObject).abc; // $ExpectType JSONValue | undefined
 
 {
     interface Animal {
