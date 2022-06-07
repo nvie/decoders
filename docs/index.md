@@ -152,8 +152,6 @@ tell you what inputs it accepts.
 You are encouraged to build your own decoders that serve your use case. For documentation
 and examples, see [Building your own](/building-your-own.md).
 
-<!--
-
 ## Formatting error messsages
 
 By default, `.verify()` will use the `formatInline` error formatter. You can pass another
@@ -202,5 +200,3 @@ Built-in formatters are:
     ```text
     Decoding error: Value at keypath 0.age: Must be number
     ```
-
--->
