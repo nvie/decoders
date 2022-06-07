@@ -1,5 +1,8 @@
 ## v2.0.1
 
+-   ![](./docs/assets/tiny-ts-logo.png) **TypeScript-only:** Fix definition of JSONObject
+    to reflect that its values might always be `undefined` as well.
+
 -   ![](./docs/assets/tiny-ts-logo.png) **TypeScript-only:** Changed return types of
     `{ [key: string]: T }` to `Record<string, T>`.
 
