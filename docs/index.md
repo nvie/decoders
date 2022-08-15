@@ -31,6 +31,9 @@ Just install the package and you're ready to go.
 
     $ npm install decoders
 
+(If you use decoders with a Node version older than version 10, you may have to
+[manually include some polyfills](https://github.com/nvie/decoders/issues/884#issuecomment-1202054523).)
+
 ## Motivation
 
 Data entering your application from the outside world should not be trusted without
