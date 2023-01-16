@@ -1,3 +1,8 @@
+## v2.0.2
+
+-   ![](./docs/assets/tiny-ts-logo.png) Fix TypeScript types for `formatShort` and
+    `formatInline` helper functions
+
 ## v2.0.1
 
 -   ![](./docs/assets/tiny-ts-logo.png) **TypeScript-only:** Fix definition of JSONObject
