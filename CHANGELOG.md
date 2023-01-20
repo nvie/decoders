@@ -1,3 +1,8 @@
+## v2.0.3
+
+-   ![](./docs/assets/tiny-ts-logo.png) Fix TypeScript types for `Result` type to allow
+    implicit-undefineds.
+
 ## v2.0.2
 
 -   ![](./docs/assets/tiny-ts-logo.png) Fix TypeScript types for `formatShort` and
