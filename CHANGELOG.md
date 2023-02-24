@@ -1,5 +1,8 @@
 ## v2.0.3 (not released yet)
 
+-   Fix bundling issue where TypeScript types would not get picked up correctly in old
+    TypeScript versions. Thanks, @robinchow!
+
 -   ![](./docs/assets/tiny-ts-logo.png) Fix TypeScript types for `Result` type to allow
     implicit-undefineds.
 
