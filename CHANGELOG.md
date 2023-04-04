@@ -1,4 +1,4 @@
-## v2.0.3 (not released yet)
+## v2.0.3
 
 -   Fix bundling issue where TypeScript types would not get picked up correctly in old
     TypeScript versions. Thanks, @robinchow!
