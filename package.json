@@ -130,7 +130,7 @@
         "jest": "^28.1.1",
         "prettier": "^2.7.1",
         "rimraf": "^3.0.2",
-        "typescript": "^4.7.4"
+        "typescript": "^5.0.4"
     },
     "githubUrl": "https://github.com/nvie/decoders",
     "jest": {
