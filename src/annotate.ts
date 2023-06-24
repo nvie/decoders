@@ -1,5 +1,3 @@
-// @flow strict
-
 type cast = $FlowFixMe;
 
 const _register: WeakSet<{ ... }> = new WeakSet();

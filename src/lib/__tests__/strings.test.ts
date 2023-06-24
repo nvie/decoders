@@ -1,4 +1,3 @@
-// @flow strict
 /* globals URL */
 /* eslint-disable no-restricted-syntax */
 

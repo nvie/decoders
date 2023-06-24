@@ -1,5 +1,3 @@
-// @flow strict
-
 import type { Annotation } from './annotate';
 import type { Scalar } from './Decoder';
 

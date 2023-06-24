@@ -1,5 +1,3 @@
-// @flow strict
-
 import { array, nonEmptyArray, set, tuple } from '../arrays';
 import { number } from '../numbers';
 import { object } from '../objects';

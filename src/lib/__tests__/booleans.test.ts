@@ -1,4 +1,3 @@
-// @flow strict
 /* eslint-disable no-restricted-syntax */
 
 import { boolean, numericBoolean, truthy } from '../booleans';

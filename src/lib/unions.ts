@@ -1,5 +1,3 @@
-// @flow strict
-
 import { define } from '../Decoder';
 import { indent, summarize } from '../_utils';
 import { object } from './objects';

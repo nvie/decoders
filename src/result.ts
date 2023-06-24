@@ -1,5 +1,3 @@
-// @flow strict
-
 /**
  * Result <value> <error>
  *     = Ok <value>

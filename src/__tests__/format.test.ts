@@ -1,5 +1,3 @@
-// @flow strict
-
 import { __private_annotate, annotate } from '../annotate';
 import { formatInline, formatShort } from '../format';
 

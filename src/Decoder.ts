@@ -1,5 +1,3 @@
-// @flow strict
-
 import { annotate } from './annotate';
 import { formatInline } from './format';
 import { err as makeErr, ok as makeOk } from './result';

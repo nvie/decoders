@@ -1,5 +1,3 @@
-// @flow strict
-
 import { dict, exact, inexact, mapping, object, pojo } from '../objects';
 import { hardcoded, optional, unknown } from '../basics';
 import { number } from '../numbers';

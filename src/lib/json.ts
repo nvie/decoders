@@ -1,5 +1,3 @@
-// @flow strict
-
 import { array } from './arrays';
 import { boolean } from './booleans';
 import { dict } from './objects';

@@ -1,5 +1,3 @@
-// @flow strict
-
 import { asDate } from '../_utils';
 import { define } from '../Decoder';
 import { regex } from './strings';

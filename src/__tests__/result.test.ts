@@ -1,5 +1,3 @@
-// @flow strict
-
 import { err, ok } from '../result';
 
 describe('Result', () => {

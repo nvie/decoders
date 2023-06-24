@@ -1,5 +1,3 @@
-// @flow strict
-
 import { annotate } from '../annotate';
 import { formatInline, formatShort } from '../format';
 import { number } from '../lib/numbers';

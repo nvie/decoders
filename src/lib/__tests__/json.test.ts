@@ -1,5 +1,3 @@
-// @flow strict
-
 import { json, jsonArray, jsonObject } from '../json';
 
 describe('decoder', () => {

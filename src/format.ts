@@ -1,5 +1,3 @@
-// @flow strict
-
 import { summarize as _summarize, asDate, INDENT, indent, isMultiline } from './_utils';
 import type { Annotation, ArrayAnnotation, ObjectAnnotation } from './annotate';
 

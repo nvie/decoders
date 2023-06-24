@@ -1,5 +1,3 @@
-// @flow strict
-
 const { NODE_ENV, BABEL_ENV } = process.env;
 
 if (BABEL_ENV !== 'esmodules' && BABEL_ENV !== 'commonjs' && !NODE_ENV) {

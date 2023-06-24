@@ -1,5 +1,3 @@
-// @flow strict
-
 import { annotate } from '../annotate';
 import { define } from '../Decoder';
 import type { _Any } from '../_utils';

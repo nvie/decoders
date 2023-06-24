@@ -1,5 +1,3 @@
-// @flow strict
-
 import { annotateObject, merge, updateText } from '../annotate';
 import { define } from '../Decoder';
 import { subtract } from '../_utils';

@@ -1,5 +1,3 @@
-// @flow strict
-
 export type { Decoder, DecodeResult, DecoderType, Scalar } from './Decoder';
 export type { JSONValue, JSONObject, JSONArray } from './lib/json';
 

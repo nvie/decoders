@@ -1,4 +1,3 @@
-// @flow strict
 /* eslint-disable no-restricted-syntax */
 
 import { date, iso8601 } from '../dates';

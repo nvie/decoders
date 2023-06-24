@@ -1,5 +1,3 @@
-// @flow strict
-
 import { define } from '../Decoder';
 import { number } from './numbers';
 import type { Decoder } from '../Decoder';
