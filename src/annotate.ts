@@ -1,40 +1,38 @@
-type cast = $FlowFixMe;
+const _register: WeakSet<Annotation> = new WeakSet();
 
-const _register: WeakSet<{ ... }> = new WeakSet();
+export interface ObjectAnnotation {
+    readonly type: 'object';
+    readonly fields: { readonly [key: string]: Annotation };
+    readonly text?: string;
+}
 
-export type ObjectAnnotation = {
-    readonly type: 'object',
-    readonly fields: { +[key: string]: Annotation },
-    readonly text?: string,
-};
+export interface ArrayAnnotation {
+    readonly type: 'array';
+    readonly items: readonly Annotation[];
+    readonly text?: string;
+}
 
-export type ArrayAnnotation = {
-    readonly type: 'array',
-    readonly items: $ReadOnlyArray<Annotation>,
-    readonly text?: string,
-};
+export interface ScalarAnnotation {
+    readonly type: 'scalar';
+    readonly value: unknown;
+    readonly text?: string;
+}
 
-export type ScalarAnnotation = {
-    readonly type: 'scalar',
-    readonly value: unknown,
-    readonly text?: string,
-};
+export interface FunctionAnnotation {
+    readonly type: 'function';
+    readonly text?: string;
+}
 
-export type FunctionAnnotation = {
-    readonly type: 'function',
-    readonly text?: string,
-};  
+export interface CircularRefAnnotation {
+    readonly type: 'circular-ref';
+    readonly text?: string;
+}
 
-export type CircularRefAnnotation = {
-    readonly type: 'circular-ref',
-    readonly text?: string,
-};  
-
-export type UnknownAnnotation = {
-    readonly type: 'unknown',
-    readonly value: unknown,
-    readonly text?: string,
-};
+export interface UnknownAnnotation {
+    readonly type: 'unknown';
+    readonly value: unknown;
+    readonly text?: string;
+}
 
 export type Annotation =
     | ObjectAnnotation
@@ -50,13 +48,13 @@ function brand<A extends Annotation>(ann: A): A {
 }
 
 export function object(
-    fields: { +[key: string]: Annotation },
+    fields: { readonly [key: string]: Annotation },
     text?: string,
 ): ObjectAnnotation {
     return brand({ type: 'object', fields, text });
 }
 
-export function array(items: $ReadOnlyArray<Annotation>, text?: string): ArrayAnnotation {
+export function array(items: readonly Annotation[], text?: string): ArrayAnnotation {
     return brand({
         type: 'array',
         items,
@@ -110,23 +108,26 @@ export function updateText<A extends Annotation>(annotation: A, text?: string): 
  */
 export function merge(
     objAnnotation: ObjectAnnotation,
-    fields: { +[key: string]: Annotation },
+    fields: { readonly [key: string]: Annotation },
 ): ObjectAnnotation {
     const newFields = { ...objAnnotation.fields, ...fields };
     return object(newFields, objAnnotation.text);
 }
 
 export function asAnnotation(thing: unknown): Annotation | void {
-    return typeof thing === 'object' && thing !== null && _register.has(thing)
-        ? ((thing: cast): Annotation)
+    return typeof thing === 'object' &&
+        thing !== null &&
+        _register.has(thing as Annotation)
+        ? (thing as Annotation)
         : undefined;
 }
 
-type RefSet = WeakSet<{ ... } | $ReadOnlyArray<unknown>>;
+type RefSet = WeakSet<object>;
 
+/** @internal */
 function annotateArray(
-    value: $ReadOnlyArray<unknown>,
-    text?: string,
+    value: readonly unknown[],
+    text: string | undefined,
     seen: RefSet,
 ): ArrayAnnotation | CircularRefAnnotation {
     seen.add(value);
@@ -135,9 +136,10 @@ function annotateArray(
     return array(items, text);
 }
 
+/** @internal */
 function annotateObject(
-    obj: { +[string]: unknown },
-    text?: string,
+    obj: Record<string, unknown>,
+    text: string | undefined,
     seen: RefSet,
 ): ObjectAnnotation {
     seen.add(obj);
@@ -150,7 +152,8 @@ function annotateObject(
     return object(fields, text);
 }
 
-function annotate(value: unknown, text?: string, seen: RefSet): Annotation {
+/** @internal */
+function annotate(value: unknown, text: string | undefined, seen: RefSet): Annotation {
     if (
         value === null ||
         value === undefined ||
@@ -198,7 +201,7 @@ function public_annotate(value: unknown, text?: string): Annotation {
 }
 
 function public_annotateObject(
-    obj: { +[string]: unknown },
+    obj: { readonly [field: string]: unknown },
     text?: string,
 ): ObjectAnnotation {
     return annotateObject(obj, text, new WeakSet());
@@ -209,8 +212,7 @@ export {
     // reference detection) isn't made part of the public API.
     public_annotate as annotate,
     public_annotateObject as annotateObject,
-    //
-    // NOTE: Don't acces theses private APIs directly. They are only exported here
-    // to better enable unit testing.
+
+    /** @internal */
     annotate as __private_annotate,
 };
