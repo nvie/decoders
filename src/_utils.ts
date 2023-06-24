@@ -1,9 +1,6 @@
 import type { Annotation } from './annotate';
 import type { Scalar } from './Decoder';
 
-// $FlowFixMe[unclear-type] - deliberate use of `any`
-export type _Any = any;
-
 // Two spaces of indentation
 export const INDENT = '  ';
 
@@ -35,8 +32,8 @@ export function asDate(value: unknown): Date | null {
     return !!value &&
         // $FlowFixMe[method-unbinding]
         Object.prototype.toString.call(value) === '[object Date]' &&
-        !isNaN(value)
-        ? ((value: _Any): Date)
+        !isNaN(value as number)
+        ? (value as Date)
         : null;
 }
 
@@ -61,7 +58,7 @@ export function indent(s: string, prefix: string = INDENT): string {
  */
 export function summarize(
     ann: Annotation,
-    keypath: $ReadOnlyArray<number | string> = [],
+    keypath: readonly (number | string)[] = [],
 ): string[] {
     const result: string[] = [];
 
