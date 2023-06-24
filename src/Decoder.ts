@@ -79,7 +79,7 @@ export type Decoder<T> = {
  *   DecoderType<typeof truthy>      // boolean
  *
  */
-export type DecoderType<D> = $Call<<T>(Decoder<T>) => T, D>;
+export type DecoderType<D extends Decoder<any>> = D extends Decoder<infer T> ? T : never;
 
 function noThrow<T, V>(fn: (value: T) => V): (T) => DecodeResult<V> {
     return (t) => {
