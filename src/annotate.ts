@@ -3,37 +3,37 @@ type cast = $FlowFixMe;
 const _register: WeakSet<{ ... }> = new WeakSet();
 
 export type ObjectAnnotation = {
-    +type: 'object',
-    +fields: { +[key: string]: Annotation },
-    +text?: string,
+    readonly type: 'object',
+    readonly fields: { +[key: string]: Annotation },
+    readonly text?: string,
 };
 
 export type ArrayAnnotation = {
-    +type: 'array',
-    +items: $ReadOnlyArray<Annotation>,
-    +text?: string,
+    readonly type: 'array',
+    readonly items: $ReadOnlyArray<Annotation>,
+    readonly text?: string,
 };
 
 export type ScalarAnnotation = {
-    +type: 'scalar',
-    +value: unknown,
-    +text?: string,
+    readonly type: 'scalar',
+    readonly value: unknown,
+    readonly text?: string,
 };
 
 export type FunctionAnnotation = {
-    +type: 'function',
-    +text?: string,
-};
+    readonly type: 'function',
+    readonly text?: string,
+};  
 
 export type CircularRefAnnotation = {
-    +type: 'circular-ref',
-    +text?: string,
-};
+    readonly type: 'circular-ref',
+    readonly text?: string,
+};  
 
 export type UnknownAnnotation = {
-    +type: 'unknown',
-    +value: unknown,
-    +text?: string,
+    readonly type: 'unknown',
+    readonly value: unknown,
+    readonly text?: string,
 };
 
 export type Annotation =
