@@ -7,12 +7,12 @@
 type Ok<T> = {
     readonly ok: true;
     readonly value: T;
-    readonly error: void;
+    readonly error?: never;
 };
 
 type Err<E> = {
     readonly ok: false;
-    readonly value: void;
+    readonly value?: never;
     readonly error: E;
 };
 
