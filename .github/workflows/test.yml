@@ -7,7 +7,13 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                node-version: [12.x, 14.x, 16.x, 18.x]
+                node-version: [
+                        12.x,
+                        14.x,
+                        # 16.x,
+                        18.x,
+                        # latest,
+                    ]
 
                 # Some key Flow versions that have seen syntax or semantic changes that
                 # required updates to decoders
@@ -26,8 +32,8 @@ jobs:
               with:
                   python-version: '3.x'
 
-            - name: Install Node dependencies
-              run: npm install
+            - name: Install dependencies
+              run: npm ci
 
             - name: Install Python dependencies (for documentation generation)
               run: pip install cogapp
