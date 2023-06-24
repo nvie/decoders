@@ -27,47 +27,47 @@ jobs:
                   python-version: '3.x'
 
             - name: Install Node dependencies
-              run: yarn install
+              run: npm install
 
             - name: Install Python dependencies (for documentation generation)
               run: pip install cogapp
 
             - name: Install flow version
-              run: yarn add flow-bin@${{ matrix.flow-version }}
+              run: npm install flow-bin@${{ matrix.flow-version }}
               if: matrix.flow-version != 'current'
 
             - name: Clean things
-              run: yarn run -s clean
+              run: npm run clean
               env:
                   CI: true
 
             - name: Test Flow
-              run: yarn run -s test:flow
+              run: npm run test:flow
               env:
                   CI: true
 
             - name: Test TypeScript
-              run: yarn run -s test:typescript
+              run: npm run test:typescript
               env:
                   CI: true
 
             - name: Unit tests
-              run: yarn run -s test:jest
+              run: npm run test:jest
               env:
                   CI: true
 
             - name: Completeness check
-              run: yarn run -s test:completeness
+              run: npm run test:completeness
               env:
                   CI: true
 
             - name: Lints
-              run: yarn run -s check
+              run: npm run check
               env:
                   CI: true
 
             - name: Check docs
-              run: yarn run -s check:docs
+              run: npm run check:docs
               env:
                   CI: true
 
