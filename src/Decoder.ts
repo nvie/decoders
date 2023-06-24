@@ -5,7 +5,7 @@ import type { Annotation } from './annotate';
 import type { Formatter } from './format';
 import type { Result } from './result';
 
-export type Scalar = string | number | boolean | symbol | void | null;
+export type Scalar = string | number | boolean | symbol | undefined | null;
 
 export type DecodeResult<T> = Result<T, Annotation>;
 
@@ -20,49 +20,50 @@ export type Decoder<T> = {
      * Verifies untrusted input. Either returns a value, or throws a decoding
      * error.
      */
-    verify(blob: unknown, formatter?: Formatter): T,
+    verify(blob: unknown, formatterFn?: (ann: Annotation) => string | Error): T;
 
     /**
      * Verifies untrusted input. Either returns a value, or returns undefined.
      */
-    value(blob: unknown): T | void,
+    value(blob: unknown): T | undefined;
 
     /**
      * Verifies untrusted input. Always returns a DecodeResult, which is either
      * an "ok" value or an "error" annotation.
      */
-    decode(blob: unknown): DecodeResult<T>,
+    decode(blob: unknown): DecodeResult<T>;
 
     /**
      * Build a new decoder from the the current one, with an extra acceptance
      * criterium.
      */
-    refine(predicateFn: (value: T) => boolean, errmsg: string): Decoder<T>,
+    refine<N extends T>(predicate: (value: T) => value is N, msg: string): Decoder<N>;
+    refine(predicate: (value: T) => boolean, msg: string): Decoder<T>;
 
     /**
      * Build a new decoder from the current one, with an extra rejection
      * criterium.
      */
-    reject(rejectFn: (value: T) => string | Annotation | null): Decoder<T>,
+    reject(rejectFn: (value: T) => string | Annotation | null): Decoder<T>;
 
     /**
      * Build a new decoder from the current one, modifying its outputted value.
      */
-    transform<V>(transformFn: (value: T) => V): Decoder<V>,
+    transform<V>(transformFn: (value: T) => V): Decoder<V>;
 
     /**
      * Build a new decoder from the current one, with a mutated error message
      * in case of a rejection.
      */
-    describe(message: string): Decoder<T>,
+    describe(message: string): Decoder<T>;
 
     /**
      * Chain together the current decoder with another acceptance function.
      */
-    then<V>(next: AcceptanceFn<V, T>): Decoder<V>,
+    then<V>(next: AcceptanceFn<V, T>): Decoder<V>;
 
     // Experimental APIs (please don't rely on these yet)
-    peek_UNSTABLE<V>(next: AcceptanceFn<V, [unknown, T]>): Decoder<V>,
+    peek_UNSTABLE<V>(next: AcceptanceFn<V, [unknown, T]>): Decoder<V>;
 };
 
 /**
