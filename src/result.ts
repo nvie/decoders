@@ -3,14 +3,13 @@
  *     = Ok <value>
  *     | Err <error>
  */
-
-type Ok<T> = {
+export type Ok<T> = {
     readonly ok: true;
     readonly value: T;
     readonly error?: never;
 };
 
-type Err<E> = {
+export type Err<E> = {
     readonly ok: false;
     readonly value?: never;
     readonly error: E;
