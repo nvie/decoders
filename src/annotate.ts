@@ -122,10 +122,10 @@ export function asAnnotation(thing: unknown): Annotation | void {
         : undefined;
 }
 
-type RefSet = WeakSet<{ ... } | $ReadOnlyArray<mixed>>;
+type RefSet = WeakSet<{ ... } | $ReadOnlyArray<unknown>>;
 
 function annotateArray(
-    value: $ReadOnlyArray<mixed>,
+    value: $ReadOnlyArray<unknown>,
     text?: string,
     seen: RefSet,
 ): ArrayAnnotation | CircularRefAnnotation {

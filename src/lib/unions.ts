@@ -58,7 +58,7 @@ interface EitherT {
   <A, B, C, D, E, F, G, H, I>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>, e: Decoder<E>, f: Decoder<F>, g: Decoder<G>, h: Decoder<H>, i: Decoder<I>): Decoder<A | B | C | D | E | F | G | H | I>;
 }
 
-function _either(...decoders: $ReadOnlyArray<Decoder<mixed>>): Decoder<mixed> {
+function _either(...decoders: $ReadOnlyArray<Decoder<unknown>>): Decoder<unknown> {
     if (decoders.length === 0) {
         throw new Error('Pass at least one decoder to either()');
     }
@@ -68,7 +68,7 @@ function _either(...decoders: $ReadOnlyArray<Decoder<mixed>>): Decoder<mixed> {
         const errors = [];
 
         for (let i = 0; i < decoders.length; i++) {
-            const result: DecodeResult<mixed> = decoders[i].decode(blob);
+            const result: DecodeResult<unknown> = decoders[i].decode(blob);
             if (result.ok) {
                 return result;
             } else {

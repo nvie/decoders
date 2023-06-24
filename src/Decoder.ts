@@ -9,7 +9,7 @@ export type Scalar = string | number | boolean | symbol | void | null;
 
 export type DecodeResult<T> = Result<T, Annotation>;
 
-export type AcceptanceFn<T, InputT = mixed> = (
+export type AcceptanceFn<T, InputT = unknown> = (
     blob: InputT,
     ok: (value: T) => DecodeResult<T>,
     err: (msg: string | Annotation) => DecodeResult<T>,
@@ -62,7 +62,7 @@ export type Decoder<T> = {
     then<V>(next: AcceptanceFn<V, T>): Decoder<V>,
 
     // Experimental APIs (please don't rely on these yet)
-    peek_UNSTABLE<V>(next: AcceptanceFn<V, [mixed, T]>): Decoder<V>,
+    peek_UNSTABLE<V>(next: AcceptanceFn<V, [unknown, T]>): Decoder<V>,
 };
 
 /**
@@ -261,7 +261,7 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
      *
      * This is an advanced, low-level, decoder.
      */
-    function peek_UNSTABLE<V>(next: AcceptanceFn<V, [mixed, T]>): Decoder<V> {
+    function peek_UNSTABLE<V>(next: AcceptanceFn<V, [unknown, T]>): Decoder<V> {
         return define((blob, ok, err) => {
             const result = decode(blob);
             return result.ok ? next([blob, result.value], ok, err) : result;

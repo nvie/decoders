@@ -4,7 +4,7 @@ import {
     always,
     constant,
     maybe,
-    mixed,
+    unknown,
     null_,
     nullable,
     optional,
@@ -160,7 +160,7 @@ describe('always', () => {
 describe('mixed (pass-thru)', () => {
     it('valid', () => {
         // Test all hardcoded inputs...
-        const decoder = mixed;
+        const decoder = unknown;
 
         // Against all inputs...
         for (const input of INPUTS) {

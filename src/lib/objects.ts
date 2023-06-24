@@ -63,7 +63,7 @@ export function object<O extends { +[field: string]: AnyDecoder, ... }>(
         Object.keys(decodersByKey).forEach((key) => {
             const decoder = decodersByKey[key];
             const rawValue = plainObj[key];
-            const result: DecodeResult<mixed> = decoder.decode(rawValue);
+            const result: DecodeResult<unknown> = decoder.decode(rawValue);
 
             if (result.ok) {
                 const value = result.value;

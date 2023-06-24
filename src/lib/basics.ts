@@ -114,9 +114,9 @@ export const hardcoded: <T>(T) => Decoder<T> = always;
  * course, the downside is that you won't know the type of the value statically
  * and you'll have to further refine it yourself.
  */
-export const unknown: Decoder<mixed> = define((blob, ok, _) => ok(blob));
+export const unknown: Decoder<unknown> = define((blob, ok, _) => ok(blob));
 
 /**
  * Alias of unknown.
  */
-export const mixed: Decoder<mixed> = unknown;
+export const unknown: Decoder<unknown> = unknown;

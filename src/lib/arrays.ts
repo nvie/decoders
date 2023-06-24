@@ -35,7 +35,7 @@ export const poja: Decoder<mixed[]> = define((blob, ok, err) => {
  */
 function all<T>(
     items: $ReadOnlyArray<DecodeResult<T>>,
-    blobs: $ReadOnlyArray<mixed>,
+    blobs: $ReadOnlyArray<unknown>,
 
     // TODO: Make this less ugly
     ok: (T[]) => DecodeResult<T[]>,
@@ -70,7 +70,7 @@ function all<T>(
  * Accepts arrays of whatever the given decoder accepts.
  */
 export function array<T>(decoder: Decoder<T>): Decoder<T[]> {
-    return poja.then((blobs: $ReadOnlyArray<mixed>, ok, err) => {
+    return poja.then((blobs: $ReadOnlyArray<unknown>, ok, err) => {
         const results = blobs.map(decoder.decode);
         return all(results, blobs, ok, err);
     });
@@ -104,7 +104,7 @@ interface TupleT {
     <A, B, C, D, E, F>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>, e: Decoder<E>, f: Decoder<F>): Decoder<[A, B, C, D, E, F]>;
 }
 
-function _tuple(...decoders: $ReadOnlyArray<Decoder<mixed>>): Decoder<mixed[]> {
+function _tuple(...decoders: $ReadOnlyArray<Decoder<unknown>>): Decoder<unknown[]> {
     return ntuple(decoders.length).then((blobs, ok, err) => {
         let allOk = true;
 

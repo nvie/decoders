@@ -55,7 +55,7 @@ export const CONSTANTS: null | void[] = [
 ];
 
 // prettier-ignore
-export const INPUTS: mixed[] = [
+export const INPUTS: unknown[] = [
     ...STRINGS,
     ...NUMBERS,
     ...SPECIAL_NUMBERS,

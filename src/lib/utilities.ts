@@ -32,7 +32,7 @@ export function lazy<T>(decoderFn: () => Decoder<T>): Decoder<T> {
  * it to the decoder. Of course, the input value at that point is still of
  * ``unknown`` type, so you will have to deal with that accordingly.
  */
-export function prep<T>(mapperFn: (mixed) => mixed, decoder: Decoder<T>): Decoder<T> {
+export function prep<T>(mapperFn: (unknown) => unknown, decoder: Decoder<T>): Decoder<T> {
     return define((originalInput, _, err) => {
         let blob;
         try {
