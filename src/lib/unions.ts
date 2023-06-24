@@ -97,7 +97,7 @@ export const either: EitherT = (_either: _Any);
  * Accepts any value that is strictly-equal (using `===`) to one of the
  * specified values.
  */
-export function oneOf<T: Scalar>(constants: $ReadOnlyArray<T>): Decoder<T> {
+export function oneOf<T extends Scalar>(constants: $ReadOnlyArray<T>): Decoder<T> {
     return define((blob, ok, err) => {
         const winner = constants.find((c) => c === blob);
         if (winner !== undefined) {
@@ -139,7 +139,7 @@ export function oneOf<T: Scalar>(constants: $ReadOnlyArray<T>): Decoder<T> {
  * error messages and is more performant at runtime because it doesn't have to
  * try all decoders one by one.
  */
-export function taggedUnion<O: { +[field: string]: Decoder<_Any>, ... }>(
+export function taggedUnion<O extends { +[field: string]: Decoder<_Any>, ... }>(
     field: string,
     mapping: O,
 ): Decoder<$Values<$ObjMap<O, <T>(Decoder<T>) => T>>> {

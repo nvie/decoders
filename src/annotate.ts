@@ -44,7 +44,7 @@ export type Annotation =
     | CircularRefAnnotation
     | UnknownAnnotation;
 
-function brand<A: Annotation>(ann: A): A {
+function brand<A extends Annotation>(ann: A): A {
     _register.add(ann);
     return ann;
 }
@@ -97,7 +97,7 @@ export function circularRef(text?: string): CircularRefAnnotation {
 /**
  * Given an existing Annotation, set the annotation's text to a new value.
  */
-export function updateText<A: Annotation>(annotation: A, text?: string): A {
+export function updateText<A extends Annotation>(annotation: A, text?: string): A {
     if (text !== undefined) {
         return brand({ ...annotation, text });
     } else {
