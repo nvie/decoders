@@ -4,10 +4,19 @@
  *     | Err <error>
  */
 
-type Ok<+T> = {| +ok: true, +value: T, +error: void |};
-type Err<+E> = {| +ok: false, +value: void, +error: E |};
+type Ok<T> = {
+    readonly ok: true;
+    readonly value: T;
+    readonly error: void;
+};
 
-export type Result<+T, +E> = Ok<T> | Err<E>;
+type Err<E> = {
+    readonly ok: false;
+    readonly value: void;
+    readonly error: E;
+};
+
+export type Result<T, E> = Ok<T> | Err<E>;
 
 /**
  * Create a new Result instance representing a successful computation.

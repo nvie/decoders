@@ -1,6 +1,6 @@
 ## vNEXT
 
--   ...
+-   Rewrite the source code in TypeScript
 
 ## v2.0.4
 
