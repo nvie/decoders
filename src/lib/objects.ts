@@ -9,7 +9,7 @@ import type { Decoder, DecodeResult } from '../Decoder';
  * Accepts any "plain old JavaScript object", but doesn't validate its keys or
  * values further.
  */
-export const pojo: Decoder<{ [string]: mixed }> = define((blob, ok, err) =>
+export const pojo: Decoder<{ [string]: unknown }> = define((blob, ok, err) =>
     blob !== null &&
     blob !== undefined &&
     typeof blob === 'object' &&
@@ -20,9 +20,9 @@ export const pojo: Decoder<{ [string]: mixed }> = define((blob, ok, err) =>
         ? ok(
               // NOTE:
               // Since Flow 0.98, typeof o === 'object' refines to
-              //     { +[string]: mixed }
+              //     { +[string]: unknown }
               // instead of
-              //     { [string]: mixed }
+              //     { [string]: unknown }
               //
               // For rationale, see https://github.com/facebook/flow/issues/7685.
               // In this case, we don't want to output a read-only version of
@@ -152,7 +152,7 @@ export function exact<O: { +[field: string]: AnyDecoder, ... }>(
  */
 export function inexact<O: { +[field: string]: AnyDecoder }>(
     decodersByKey: O,
-): Decoder<$ObjMap<O, <T>(Decoder<T>) => T> & { +[string]: mixed }> {
+): Decoder<$ObjMap<O, <T>(Decoder<T>) => T> & { +[string]: unknown }> {
     return pojo.then((plainObj) => {
         const allkeys = new Set(Object.keys(plainObj));
         const decoder = object(decodersByKey).transform(

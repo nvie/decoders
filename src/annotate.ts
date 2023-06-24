@@ -16,7 +16,7 @@ export type ArrayAnnotation = {
 
 export type ScalarAnnotation = {
     +type: 'scalar',
-    +value: mixed,
+    +value: unknown,
     +text?: string,
 };
 
@@ -32,7 +32,7 @@ export type CircularRefAnnotation = {
 
 export type UnknownAnnotation = {
     +type: 'unknown',
-    +value: mixed,
+    +value: unknown,
     +text?: string,
 };
 
@@ -71,7 +71,7 @@ export function func(text?: string): FunctionAnnotation {
     });
 }
 
-export function unknown(value: mixed, text?: string): UnknownAnnotation {
+export function unknown(value: unknown, text?: string): UnknownAnnotation {
     return brand({
         type: 'unknown',
         value,
@@ -79,7 +79,7 @@ export function unknown(value: mixed, text?: string): UnknownAnnotation {
     });
 }
 
-export function scalar(value: mixed, text?: string): ScalarAnnotation {
+export function scalar(value: unknown, text?: string): ScalarAnnotation {
     return brand({
         type: 'scalar',
         value,
@@ -116,7 +116,7 @@ export function merge(
     return object(newFields, objAnnotation.text);
 }
 
-export function asAnnotation(thing: mixed): Annotation | void {
+export function asAnnotation(thing: unknown): Annotation | void {
     return typeof thing === 'object' && thing !== null && _register.has(thing)
         ? ((thing: cast): Annotation)
         : undefined;
@@ -136,7 +136,7 @@ function annotateArray(
 }
 
 function annotateObject(
-    obj: { +[string]: mixed },
+    obj: { +[string]: unknown },
     text?: string,
     seen: RefSet,
 ): ObjectAnnotation {
@@ -150,7 +150,7 @@ function annotateObject(
     return object(fields, text);
 }
 
-function annotate(value: mixed, text?: string, seen: RefSet): Annotation {
+function annotate(value: unknown, text?: string, seen: RefSet): Annotation {
     if (
         value === null ||
         value === undefined ||
@@ -193,12 +193,12 @@ function annotate(value: mixed, text?: string, seen: RefSet): Annotation {
     return unknown(value, text);
 }
 
-function public_annotate(value: mixed, text?: string): Annotation {
+function public_annotate(value: unknown, text?: string): Annotation {
     return annotate(value, text, new WeakSet());
 }
 
 function public_annotateObject(
-    obj: { +[string]: mixed },
+    obj: { +[string]: unknown },
     text?: string,
 ): ObjectAnnotation {
     return annotateObject(obj, text, new WeakSet());

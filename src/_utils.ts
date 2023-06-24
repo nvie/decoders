@@ -24,7 +24,7 @@ export function subtract<T: Scalar>(xs: Set<T>, ys: Set<T>): Set<T> {
  * Is value is a valid Date instance, then return that. If not, then return
  * null.
  */
-export function asDate(value: mixed): Date | null {
+export function asDate(value: unknown): Date | null {
     //
     // `x instanceof Date` checks are unreliable across stack frames (that
     // information might get lost by the JS runtime), so we'll have to reside

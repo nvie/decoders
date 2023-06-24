@@ -58,7 +58,7 @@ function serializeObject(annotation: ObjectAnnotation, prefix: string): string {
     return ['{', ...result, `${prefix}}`].join('\n');
 }
 
-export function serializeValue(value: mixed): string {
+export function serializeValue(value: unknown): string {
     // istanbul ignore else
     if (typeof value === 'string') {
         return serializeString(value);

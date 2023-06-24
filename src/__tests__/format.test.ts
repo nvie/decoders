@@ -219,7 +219,7 @@ describe('formatInline', () => {
     });
 });
 
-function checkShort(input: mixed, expected: string) {
+function checkShort(input: unknown, expected: string) {
     expect(formatShort(annotate(input))).toEqual(expected);
 }
 

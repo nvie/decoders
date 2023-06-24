@@ -20,18 +20,18 @@ export type Decoder<T> = {
      * Verifies untrusted input. Either returns a value, or throws a decoding
      * error.
      */
-    verify(blob: mixed, formatter?: Formatter): T,
+    verify(blob: unknown, formatter?: Formatter): T,
 
     /**
      * Verifies untrusted input. Either returns a value, or returns undefined.
      */
-    value(blob: mixed): T | void,
+    value(blob: unknown): T | void,
 
     /**
      * Verifies untrusted input. Always returns a DecodeResult, which is either
      * an "ok" value or an "error" annotation.
      */
-    decode(blob: mixed): DecodeResult<T>,
+    decode(blob: unknown): DecodeResult<T>,
 
     /**
      * Build a new decoder from the the current one, with an extra acceptance
@@ -127,7 +127,7 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
      * Contrasted with `.verify()`, calls to `.decode()` will never fail and
      * instead return a result type.
      */
-    function decode(blob: mixed): DecodeResult<T> {
+    function decode(blob: unknown): DecodeResult<T> {
         return fn(blob, makeOk, (msg: Annotation | string) =>
             makeErr(typeof msg === 'string' ? annotate(blob, msg) : msg),
         );
@@ -138,7 +138,7 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
      * When accepted, returns a value of type `T`. Otherwise fail with
      * a runtime error.
      */
-    function verify(blob: mixed, formatter: Formatter = formatInline): T {
+    function verify(blob: unknown, formatter: Formatter = formatInline): T {
         const result = decode(blob);
         if (result.ok) {
             return result.value;
@@ -155,7 +155,7 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
      * Use this when you're not interested in programmatically handling the
      * error message.
      */
-    function value(blob: mixed): T | void {
+    function value(blob: unknown): T | void {
         return decode(blob).value;
     }
 
