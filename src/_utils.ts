@@ -62,8 +62,8 @@ export function indent(s: string, prefix: string = INDENT): string {
 export function summarize(
     ann: Annotation,
     keypath: $ReadOnlyArray<number | string> = [],
-): Array<string> {
-    const result: Array<string> = [];
+): string[] {
+    const result: string[] = [];
 
     if (ann.type === 'array') {
         const items = ann.items;

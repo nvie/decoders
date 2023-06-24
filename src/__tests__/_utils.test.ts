@@ -4,7 +4,7 @@ import { indent, subtract } from '../_utils';
 import type { Scalar } from '../Decoder';
 
 describe('subtract', () => {
-    const exampleSets: Array<Set<Scalar>> = [
+    const exampleSets: Set<Scalar>[] = [
         new Set(),
         new Set([]),
         new Set(['a', 'b', 'c']),

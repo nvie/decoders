@@ -10,7 +10,7 @@ import type { Decoder } from '../Decoder';
 
 export type JSONValue = null | string | number | boolean | JSONObject | JSONArray;
 export type JSONObject = { [string]: JSONValue };
-export type JSONArray = Array<JSONValue>;
+export type JSONArray = JSONValue[];
 
 /**
  * Accepts objects that contain only valid JSON values.

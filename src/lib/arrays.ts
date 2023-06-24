@@ -9,13 +9,13 @@ import type { Decoder, DecodeResult } from '../Decoder';
  *
  * "poja" means "plain old JavaScript array", a play on `pojo()`.
  */
-export const poja: Decoder<Array<mixed>> = define((blob, ok, err) => {
+export const poja: Decoder<mixed[]> = define((blob, ok, err) => {
     if (!Array.isArray(blob)) {
         return err('Must be an array');
     }
     return ok(
         // NOTE: Since Flow 0.98, Array.isArray() returns $ReadOnlyArray<mixed>
-        // instead of Array<mixed>.  For rationale, see
+        // instead of mixed[].  For rationale, see
         // https://github.com/facebook/flow/issues/7684.  In this case, we
         // don't want to output read-only types because it's up to the user of
         // decoders to determine what they want to do with the decoded output.
@@ -38,10 +38,10 @@ function all<T>(
     blobs: $ReadOnlyArray<mixed>,
 
     // TODO: Make this less ugly
-    ok: (Array<T>) => DecodeResult<Array<T>>,
-    err: (Annotation) => DecodeResult<Array<T>>,
-): DecodeResult<Array<T>> {
-    const results: Array<T> = [];
+    ok: (T[]) => DecodeResult<T[]>,
+    err: (Annotation) => DecodeResult<T[]>,
+): DecodeResult<T[]> {
+    const results: T[] = [];
     for (let index = 0; index < items.length; ++index) {
         const result = items[index];
         if (result.ok) {
@@ -69,7 +69,7 @@ function all<T>(
 /**
  * Accepts arrays of whatever the given decoder accepts.
  */
-export function array<T>(decoder: Decoder<T>): Decoder<Array<T>> {
+export function array<T>(decoder: Decoder<T>): Decoder<T[]> {
     return poja.then((blobs: $ReadOnlyArray<mixed>, ok, err) => {
         const results = blobs.map(decoder.decode);
         return all(results, blobs, ok, err);
@@ -79,7 +79,7 @@ export function array<T>(decoder: Decoder<T>): Decoder<Array<T>> {
 /**
  * Like `array()`, but will reject arrays with 0 elements.
  */
-export function nonEmptyArray<T>(decoder: Decoder<T>): Decoder<Array<T>> {
+export function nonEmptyArray<T>(decoder: Decoder<T>): Decoder<T[]> {
     return array(decoder).refine((arr) => arr.length > 0, 'Must be non-empty array');
 }
 
@@ -104,7 +104,7 @@ interface TupleT {
     <A, B, C, D, E, F>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>, e: Decoder<E>, f: Decoder<F>): Decoder<[A, B, C, D, E, F]>;
 }
 
-function _tuple(...decoders: $ReadOnlyArray<Decoder<mixed>>): Decoder<Array<mixed>> {
+function _tuple(...decoders: $ReadOnlyArray<Decoder<mixed>>): Decoder<mixed[]> {
     return ntuple(decoders.length).then((blobs, ok, err) => {
         let allOk = true;
 

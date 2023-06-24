@@ -74,7 +74,7 @@ describe('lazy', () => {
     it('build self-referential types with variables', () => {
         type Tree<T> = {
             node: T,
-            children: Array<Tree<T>>,
+            children: Tree<T>[],
         };
 
         function tree<T>(decoder: Decoder<T>): Decoder<Tree<T>> {

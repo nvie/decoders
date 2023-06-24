@@ -1,5 +1,5 @@
 // prettier-ignore
-export const STRINGS: Array<string> = [
+export const STRINGS: string[] = [
     '',
     '1',
     '3.14',
@@ -10,7 +10,7 @@ export const STRINGS: Array<string> = [
 ];
 
 // prettier-ignore
-export const NUMBERS: Array<number> = [
+export const NUMBERS: number[] = [
     -317.827682288236872383242082309328432093279,
     -1,
     0,
@@ -23,14 +23,14 @@ export const NUMBERS: Array<number> = [
 ];
 
 // prettier-ignore
-export const SPECIAL_NUMBERS: Array<number> = [
+export const SPECIAL_NUMBERS: number[] = [
     NaN,
     Number.NEGATIVE_INFINITY,
     Number.POSITIVE_INFINITY,
 ];
 
 // prettier-ignore
-export const DATES: Array<Date> = [
+export const DATES: Date[] = [
     new Date('1996-3-17'),
     new Date(1534521367000),
     new Date('2017-11-28T15:56:07+0200'),
@@ -38,24 +38,24 @@ export const DATES: Array<Date> = [
 ];
 
 // prettier-ignore
-export const SPECIAL_DATES: Array<Date> = [
+export const SPECIAL_DATES: Date[] = [
     new Date('not a date'),
 ];
 
 // prettier-ignore
-export const BOOLS: Array<boolean> = [
+export const BOOLS: boolean[] = [
     false,
     true,
 ];
 
 // prettier-ignore
-export const CONSTANTS: Array<null | void> = [
+export const CONSTANTS: null | void[] = [
     null,
     undefined,
 ];
 
 // prettier-ignore
-export const INPUTS: Array<mixed> = [
+export const INPUTS: mixed[] = [
     ...STRINGS,
     ...NUMBERS,
     ...SPECIAL_NUMBERS,
