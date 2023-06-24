@@ -2,39 +2,39 @@ type cast = $FlowFixMe;
 
 const _register: WeakSet<{ ... }> = new WeakSet();
 
-export type ObjectAnnotation = {|
+export type ObjectAnnotation = {
     +type: 'object',
     +fields: { +[key: string]: Annotation },
     +text?: string,
-|};
+};
 
-export type ArrayAnnotation = {|
+export type ArrayAnnotation = {
     +type: 'array',
     +items: $ReadOnlyArray<Annotation>,
     +text?: string,
-|};
+};
 
-export type ScalarAnnotation = {|
+export type ScalarAnnotation = {
     +type: 'scalar',
     +value: mixed,
     +text?: string,
-|};
+};
 
-export type FunctionAnnotation = {|
+export type FunctionAnnotation = {
     +type: 'function',
     +text?: string,
-|};
+};
 
-export type CircularRefAnnotation = {|
+export type CircularRefAnnotation = {
     +type: 'circular-ref',
     +text?: string,
-|};
+};
 
-export type UnknownAnnotation = {|
+export type UnknownAnnotation = {
     +type: 'unknown',
     +value: mixed,
     +text?: string,
-|};
+};
 
 export type Annotation =
     | ObjectAnnotation

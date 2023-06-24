@@ -9,7 +9,7 @@ import type { Decoder, DecodeResult } from '../Decoder';
  * Accepts any "plain old JavaScript object", but doesn't validate its keys or
  * values further.
  */
-export const pojo: Decoder<{| [string]: mixed |}> = define((blob, ok, err) =>
+export const pojo: Decoder<{ [string]: mixed }> = define((blob, ok, err) =>
     blob !== null &&
     blob !== undefined &&
     typeof blob === 'object' &&
@@ -20,9 +20,9 @@ export const pojo: Decoder<{| [string]: mixed |}> = define((blob, ok, err) =>
         ? ok(
               // NOTE:
               // Since Flow 0.98, typeof o === 'object' refines to
-              //     {| +[string]: mixed |}
+              //     { +[string]: mixed }
               // instead of
-              //     {| [string]: mixed |}
+              //     { [string]: mixed }
               //
               // For rationale, see https://github.com/facebook/flow/issues/7685.
               // In this case, we don't want to output a read-only version of
