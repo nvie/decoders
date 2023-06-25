@@ -13,11 +13,11 @@ export const null_: Decoder<null> = define((blob, ok, err) =>
 /**
  * Accepts and returns only the literal `undefined` value.
  */
-export const undefined_: Decoder<void> = define((blob, ok, err) =>
+export const undefined_: Decoder<undefined> = define((blob, ok, err) =>
     blob === undefined ? ok(blob) : err('Must be undefined'),
 );
 
-const undefined_or_null: Decoder<null | void> = define((blob, ok, err) =>
+const undefined_or_null: Decoder<null | undefined> = define((blob, ok, err) =>
     blob === undefined || blob === null
         ? ok(blob)
         : // Combine error message into a single line for readability
@@ -75,7 +75,7 @@ export const optional: Maybeish<void> = _maybeish(undefined_);
  * If a default value is explicitly provided, return that instead in the
  * `null`/`undefined` case.
  */
-export const maybe: Maybeish<null | void> = _maybeish(undefined_or_null);
+export const maybe: Maybeish<null | undefined> = _maybeish(undefined_or_null);
 
 /**
  * Accepts only the given constant value.

@@ -156,7 +156,7 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
      * Use this when you're not interested in programmatically handling the
      * error message.
      */
-    function value(blob: unknown): T | void {
+    function value(blob: unknown): T | undefined {
         return decode(blob).value;
     }
 

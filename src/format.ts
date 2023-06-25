@@ -86,7 +86,7 @@ export function serializeValue(value: unknown): string {
 export function serializeAnnotation(
     ann: Annotation,
     prefix: string = '',
-): [string, string | void] {
+): [string, string | undefined] {
     // The serialized data (the input object echoed back)
     let serialized;
     if (ann.type === 'array') {

@@ -49,7 +49,7 @@ export const BOOLS: boolean[] = [
 ];
 
 // prettier-ignore
-export const CONSTANTS: null | void[] = [
+export const CONSTANTS: (null | undefined)[] = [
     null,
     undefined,
 ];

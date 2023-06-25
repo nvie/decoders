@@ -114,7 +114,7 @@ export function merge(
     return object(newFields, objAnnotation.text);
 }
 
-export function asAnnotation(thing: unknown): Annotation | void {
+export function asAnnotation(thing: unknown): Annotation | undefined {
     return typeof thing === 'object' &&
         thing !== null &&
         _register.has(thing as Annotation)
