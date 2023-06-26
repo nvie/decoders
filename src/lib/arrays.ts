@@ -1,6 +1,5 @@
 import { annotate } from '../annotate';
 import { define } from '../Decoder';
-import type { _Any } from '../_utils';
 import type { Annotation } from '../annotate';
 import type { Decoder, DecodeResult } from '../Decoder';
 
@@ -13,7 +12,7 @@ export const poja: Decoder<unknown[]> = define((blob, ok, err) => {
     if (!Array.isArray(blob)) {
         return err('Must be an array');
     }
-    return ok(blob as unknown[])
+    return ok(blob as unknown[]);
 });
 
 /**
@@ -23,8 +22,8 @@ export const poja: Decoder<unknown[]> = define((blob, ok, err) => {
  * - a new Ok with an array of all unwrapped Ok'ed values
  */
 function all<T>(
-    items: readonly DecodeResult<T>>[],
-    blobs: reaodnly unknown[],
+    items: readonly DecodeResult<T>[],
+    blobs: readonly unknown[],
 
     // TODO: Make this less ugly
     ok: (value: T[]) => DecodeResult<T[]>,
@@ -39,7 +38,7 @@ function all<T>(
             const ann = result.error;
 
             // Rewrite the annotation to include the index information, and inject it into the original blob
-            const clone = [...blobs];
+            const clone = blobs.slice();
             clone.splice(
                 index,
                 1,
@@ -59,8 +58,9 @@ function all<T>(
  * Accepts arrays of whatever the given decoder accepts.
  */
 export function array<T>(decoder: Decoder<T>): Decoder<T[]> {
+    const decodeFn = decoder.decode;
     return poja.then((blobs: readonly unknown[], ok, err) => {
-        const results = blobs.map(decoder.decode);
+        const results = blobs.map(decodeFn);
         return all(results, blobs, ok, err);
     });
 }
@@ -93,7 +93,7 @@ interface TupleT {
     <A, B, C, D, E, F>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>, e: Decoder<E>, f: Decoder<F>): Decoder<[A, B, C, D, E, F]>;
 }
 
-function _tuple(...decoders: $ReadOnlyArray<Decoder<unknown>>): Decoder<unknown[]> {
+function _tuple(...decoders: readonly Decoder<unknown>[]): Decoder<unknown[]> {
     return ntuple(decoders.length).then((blobs, ok, err) => {
         let allOk = true;
 
@@ -122,4 +122,4 @@ function _tuple(...decoders: $ReadOnlyArray<Decoder<unknown>>): Decoder<unknown[
  * Accepts a tuple (an array with exactly _n_ items) of values accepted by the
  * _n_ given decoders.
  */
-export const tuple: TupleT = (_tuple: _Any);
+export const tuple: TupleT = _tuple as any;
