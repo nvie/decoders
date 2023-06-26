@@ -29,7 +29,7 @@ interface Maybeish<E> {
     <T, V>(
         decoder: Decoder<T>,
         defaultValue: (() => V) | V,
-    ): Decoder<$NonMaybeType<T> | V>;
+    ): Decoder<NonNullable<T> | V>;
 }
 
 function _maybeish<E>(emptyCase: Decoder<E>): Maybeish<E> {
