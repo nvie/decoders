@@ -9,22 +9,11 @@ import type { Decoder, DecodeResult } from '../Decoder';
  *
  * "poja" means "plain old JavaScript array", a play on `pojo()`.
  */
-export const poja: Decoder<mixed[]> = define((blob, ok, err) => {
+export const poja: Decoder<unknown[]> = define((blob, ok, err) => {
     if (!Array.isArray(blob)) {
         return err('Must be an array');
     }
-    return ok(
-        // NOTE: Since Flow 0.98, Array.isArray() returns $ReadOnlyArray<mixed>
-        // instead of mixed[].  For rationale, see
-        // https://github.com/facebook/flow/issues/7684.  In this case, we
-        // don't want to output read-only types because it's up to the user of
-        // decoders to determine what they want to do with the decoded output.
-        // If they want to write items into the array, that's fine!
-        // The fastest way to turn a read-only array into a normal array in
-        // Javascript is to use .slice() on it, see this benchmark:
-        // http://jsben.ch/lO6C5
-        blob.slice(),
-    );
+    return ok(blob as unknown[])
 });
 
 /**
@@ -34,12 +23,12 @@ export const poja: Decoder<mixed[]> = define((blob, ok, err) => {
  * - a new Ok with an array of all unwrapped Ok'ed values
  */
 function all<T>(
-    items: $ReadOnlyArray<DecodeResult<T>>,
-    blobs: $ReadOnlyArray<unknown>,
+    items: readonly DecodeResult<T>>[],
+    blobs: reaodnly unknown[],
 
     // TODO: Make this less ugly
-    ok: (T[]) => DecodeResult<T[]>,
-    err: (Annotation) => DecodeResult<T[]>,
+    ok: (value: T[]) => DecodeResult<T[]>,
+    err: (ann: Annotation) => DecodeResult<T[]>,
 ): DecodeResult<T[]> {
     const results: T[] = [];
     for (let index = 0; index < items.length; ++index) {
@@ -70,7 +59,7 @@ function all<T>(
  * Accepts arrays of whatever the given decoder accepts.
  */
 export function array<T>(decoder: Decoder<T>): Decoder<T[]> {
-    return poja.then((blobs: $ReadOnlyArray<unknown>, ok, err) => {
+    return poja.then((blobs: readonly unknown[], ok, err) => {
         const results = blobs.map(decoder.decode);
         return all(results, blobs, ok, err);
     });
