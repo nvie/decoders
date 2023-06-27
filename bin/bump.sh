@@ -21,4 +21,5 @@ else
     cat package.json.orig | jq ". + { \"version\": \"${NEW_VERSION}\" }" > package.json
     prettier --write package.json
     rm package.json.orig
+    npm install
 fi
