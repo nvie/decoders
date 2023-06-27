@@ -1,3 +1,8 @@
+## v2.0.4
+
+-   Fix a bug in the `url` decoder, which could incorrectly reject URLs with a `/` in the
+    query path. Thanks, @gcampax!
+
 ## v2.0.3
 
 -   Fix bundling issue where TypeScript types would not get picked up correctly in old
