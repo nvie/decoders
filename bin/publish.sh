@@ -51,7 +51,7 @@ if [ -z "$OTP" ]; then
     exit 2
 fi
 
-cd "$DIST" && npm publish --new-version "$VERSION" --otp "$OTP" "$@"
+cd "$DIST" && npm publish --otp "$OTP" "$@"
 
 # Open browser tab to create new release
 open "${GITHUB_URL}/blob/v${VERSION}/CHANGELOG.md"
