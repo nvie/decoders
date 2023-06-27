@@ -92,6 +92,9 @@ describe('url', () => {
         expect(decoder.verify('https://nvie.com').toString()).toEqual(
             'https://nvie.com/',
         );
+        expect(decoder.verify('https://example.com/foo?q=foo/bar').toString()).toBe(
+            'https://example.com/foo?q=foo/bar',
+        );
         expect(
             decoder
                 .verify('https://user:pass@nvie.com:443/foo?q=bar&b=baz#qux')
