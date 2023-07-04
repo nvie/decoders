@@ -34,7 +34,6 @@ export function asDate(value: unknown): Date | null {
     // Taken from https://stackoverflow.com/a/44198641
     //
     return !!value &&
-        // $FlowFixMe[method-unbinding]
         Object.prototype.toString.call(value) === '[object Date]' &&
         !isNaN(value as number)
         ? (value as Date)

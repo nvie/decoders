@@ -87,7 +87,6 @@ describe('nested eithers', () => {
 
 describe('either fails without decoders', () => {
     expect(() =>
-        // $FlowFixMe[incompatible-call] - deliberately invalid call
         either(),
     ).toThrow();
 });
