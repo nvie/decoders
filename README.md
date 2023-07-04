@@ -134,5 +134,7 @@ const user = userDecoder.verify(externalData);
 <div id="uuidv4"></div>
 
 Documentation can be found on [https://decoders.cc](https://decoders.cc).  
-(Old v1 documentation can still be found
-[here](https://github.com/nvie/decoders/tree/v1.25.5#readme).)
+
+## Building your own decoders
+
+There is a dedicated page in the docs that explains how to [build your own decoders](https://decoders.cc/building-your-own.html) — it’s fun!
