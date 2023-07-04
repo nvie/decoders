@@ -9,7 +9,7 @@ import { string } from './strings';
 import type { Decoder } from '../Decoder';
 
 export type JSONValue = null | string | number | boolean | JSONObject | JSONArray;
-export type JSONObject = { [string]: JSONValue };
+export type JSONObject = { [key: string]: JSONValue | undefined };
 export type JSONArray = JSONValue[];
 
 /**
