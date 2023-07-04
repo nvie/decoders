@@ -1,6 +1,5 @@
 import { define } from '../Decoder';
 import { either } from './unions';
-import type { _Any } from '../_utils';
 import type { Decoder, Scalar } from '../Decoder';
 
 /**
@@ -26,10 +25,7 @@ const undefined_or_null: Decoder<null | undefined> = define((blob, ok, err) =>
 
 interface Maybeish<E> {
     <T>(decoder: Decoder<T>): Decoder<E | T>;
-    <T, V>(
-        decoder: Decoder<T>,
-        defaultValue: (() => V) | V,
-    ): Decoder<NonNullable<T> | V>;
+    <T, V>(decoder: Decoder<T>, defaultValue: (() => V) | V): Decoder<NonNullable<T> | V>;
 }
 
 function _maybeish<E>(emptyCase: Decoder<E>): Maybeish<E> {
@@ -92,20 +88,19 @@ export function constant<C extends Scalar>(value: C): Decoder<C> {
  *
  * This is useful to manually add extra fields to object decoders.
  */
+export function always<C extends Scalar>(value: C): Decoder<C>;
 export function always<T>(value: (() => T) | T): Decoder<T> {
     return define(
         typeof value === 'function'
-            ? (blob /* ignored */, ok, _) =>
-                  // $FlowFixMe[incompatible-use]
-                  ok(value())
-            : (blob /* ignored */, ok, _) => ok(value),
+            ? (_, ok) => ok((value as () => T)())
+            : (_, ok) => ok(value),
     );
 }
 
 /**
  * Alias of always.
  */
-export const hardcoded: <T>(T) => Decoder<T> = always;
+export const hardcoded = always;
 
 /**
  * Accepts anything and returns it unchanged.
@@ -119,4 +114,4 @@ export const unknown: Decoder<unknown> = define((blob, ok, _) => ok(blob));
 /**
  * Alias of unknown.
  */
-export const unknown: Decoder<unknown> = unknown;
+export const mixed = unknown;
