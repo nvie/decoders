@@ -1,3 +1,5 @@
+/// <reference lib="es6" />
+
 import { annotate } from '../annotate';
 import { define } from '../Decoder';
 import type { Annotation } from '../annotate';
@@ -65,11 +67,15 @@ export function array<T>(decoder: Decoder<T>): Decoder<T[]> {
     });
 }
 
+function isNonEmpty<T>(arr: readonly T[]): arr is [T, ...T[]] {
+    return arr.length > 0;
+}
+
 /**
  * Like `array()`, but will reject arrays with 0 elements.
  */
-export function nonEmptyArray<T>(decoder: Decoder<T>): Decoder<T[]> {
-    return array(decoder).refine((arr) => arr.length > 0, 'Must be non-empty array');
+export function nonEmptyArray<T>(decoder: Decoder<T>): Decoder<[T, ...T[]]> {
+    return array(decoder).refine(isNonEmpty, 'Must be non-empty array');
 }
 
 /**
@@ -83,17 +89,41 @@ export function set<T>(decoder: Decoder<T>): Decoder<Set<T>> {
 const ntuple = (n: number) =>
     poja.refine((arr) => arr.length === n, `Must be a ${n}-tuple`);
 
-// prettier-ignore
-interface TupleT {
-    <A>(a: Decoder<A>): Decoder<[A]>;
-    <A, B>(a: Decoder<A>, b: Decoder<B>): Decoder<[A, B]>;
-    <A, B, C>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>): Decoder<[A, B, C]>;
-    <A, B, C, D>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>): Decoder<[A, B, C, D]>;
-    <A, B, C, D, E>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>, e: Decoder<E>): Decoder<[A, B, C, D, E]>;
-    <A, B, C, D, E, F>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>, e: Decoder<E>, f: Decoder<F>): Decoder<[A, B, C, D, E, F]>;
-}
-
-function _tuple(...decoders: readonly Decoder<unknown>[]): Decoder<unknown[]> {
+/**
+ * Accepts a tuple (an array with exactly _n_ items) of values accepted by the
+ * _n_ given decoders.
+ */
+export function tuple<A>(a: Decoder<A>): Decoder<[A]>;
+export function tuple<A, B>(a: Decoder<A>, b: Decoder<B>): Decoder<[A, B]>;
+export function tuple<A, B, C>(
+    a: Decoder<A>,
+    b: Decoder<B>,
+    c: Decoder<C>,
+): Decoder<[A, B, C]>;
+export function tuple<A, B, C, D>(
+    a: Decoder<A>,
+    b: Decoder<B>,
+    c: Decoder<C>,
+    d: Decoder<D>,
+): Decoder<[A, B, C, D]>;
+export function tuple<A, B, C, D, E>(
+    a: Decoder<A>,
+    b: Decoder<B>,
+    c: Decoder<C>,
+    d: Decoder<D>,
+    e: Decoder<E>,
+): Decoder<[A, B, C, D, E]>;
+export function tuple<A, B, C, D, E, F>(
+    a: Decoder<A>,
+    b: Decoder<B>,
+    c: Decoder<C>,
+    d: Decoder<D>,
+    e: Decoder<E>,
+    f: Decoder<F>,
+): Decoder<[A, B, C, D, E, F]>;
+export function tuple<A, B, C, D, E, F>(
+    ...decoders: readonly Decoder<unknown>[]
+): Decoder<unknown[]> {
     return ntuple(decoders.length).then((blobs, ok, err) => {
         let allOk = true;
 
@@ -117,9 +147,3 @@ function _tuple(...decoders: readonly Decoder<unknown>[]): Decoder<unknown[]> {
         }
     });
 }
-
-/**
- * Accepts a tuple (an array with exactly _n_ items) of values accepted by the
- * _n_ given decoders.
- */
-export const tuple: TupleT = _tuple as any;
