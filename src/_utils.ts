@@ -4,6 +4,10 @@ import type { Scalar } from './Decoder';
 // Two spaces of indentation
 export const INDENT = '  ';
 
+export function lazyval<V>(value: (() => V) | V): V {
+    return typeof value === 'function' ? (value as () => V)() : value;
+}
+
 /**
  * Subtract two sets. Why isn't this a standard method on Sets?
  */

@@ -1,6 +1,7 @@
 import { define } from '../Decoder';
 import { either } from './unions';
 import type { Decoder, Scalar } from '../Decoder';
+import { lazyval } from '../_utils';
 
 /**
  * Accepts and returns only the literal `null` value.
@@ -23,30 +24,23 @@ const undefined_or_null: Decoder<null | undefined> = define((blob, ok, err) =>
           err('Must be undefined or null'),
 );
 
-interface Maybeish<E> {
-    <T>(decoder: Decoder<T>): Decoder<E | T>;
-    <T, V>(decoder: Decoder<T>, defaultValue: (() => V) | V): Decoder<NonNullable<T> | V>;
-}
-
-function _maybeish<E>(emptyCase: Decoder<E>): Maybeish<E> {
-    function _inner(decoder /* defaultValue */) {
-        const rv = either(emptyCase, decoder);
-        if (
-            // If a default value is provided...
-            arguments.length >= 2
-        ) {
-            // ...then return the default value
-            const _defaultValue = arguments[1];
-            const defaultValue =
-                typeof _defaultValue === 'function' ? _defaultValue() : _defaultValue;
-            return rv.transform((value) => value ?? defaultValue);
-        } else {
-            // Otherwise the "normal" empty case
-            return rv;
-        }
-    }
-
-    return (_inner: _Any);
+/**
+ * Accepts whatever the given decoder accepts, or `undefined`.
+ *
+ * If a default value is explicitly provided, return that instead in the
+ * `undefined` case.
+ */
+export function optional<T>(decoder: Decoder<T>): Decoder<T | undefined>;
+export function optional<T, C extends Scalar>(decoder: Decoder<T>, defaultValue: (() => C) | C): Decoder<NonNullable<T> | C>; // prettier-ignore
+export function optional<T, V>(decoder: Decoder<T>, defaultValue: (() => V) | V): Decoder<NonNullable<T> | V>; // prettier-ignore
+export function optional<T, V>(
+    decoder: Decoder<T>,
+    defaultValue?: (() => V) | V,
+): Decoder<T | V | undefined> {
+    const rv = either(undefined_, decoder);
+    return arguments.length >= 2
+        ? rv.transform((value) => value ?? lazyval(defaultValue as (() => V) | V))
+        : rv;
 }
 
 /**
@@ -55,15 +49,18 @@ function _maybeish<E>(emptyCase: Decoder<E>): Maybeish<E> {
  * If a default value is explicitly provided, return that instead in the `null`
  * case.
  */
-export const nullable: Maybeish<null> = _maybeish(null_);
-
-/**
- * Accepts whatever the given decoder accepts, or `undefined`.
- *
- * If a default value is explicitly provided, return that instead in the
- * `undefined` case.
- */
-export const optional: Maybeish<void> = _maybeish(undefined_);
+export function nullable<T>(decoder: Decoder<T>): Decoder<T | null>;
+export function nullable<T, C extends Scalar>(decoder: Decoder<T>, defaultValue: (() => C) | C): Decoder<NonNullable<T> | C>; // prettier-ignore
+export function nullable<T, V>(decoder: Decoder<T>, defaultValue: (() => V) | V): Decoder<NonNullable<T> | V>; // prettier-ignore
+export function nullable<T, V>(
+    decoder: Decoder<T>,
+    defaultValue?: (() => V) | V,
+): Decoder<T | V | null> {
+    const rv = either(null_, decoder);
+    return arguments.length >= 2
+        ? rv.transform((value) => value ?? lazyval(defaultValue as (() => V) | V))
+        : rv;
+}
 
 /**
  * Accepts whatever the given decoder accepts, or `null`, or `undefined`.
@@ -71,7 +68,18 @@ export const optional: Maybeish<void> = _maybeish(undefined_);
  * If a default value is explicitly provided, return that instead in the
  * `null`/`undefined` case.
  */
-export const maybe: Maybeish<null | undefined> = _maybeish(undefined_or_null);
+export function maybe<T>(decoder: Decoder<T>): Decoder<T | null | undefined>;
+export function maybe<T, C extends Scalar>(decoder: Decoder<T>, defaultValue: (() => C) | C): Decoder<NonNullable<T> | C>; // prettier-ignore
+export function maybe<T, V>(decoder: Decoder<T>, defaultValue: (() => V) | V): Decoder<NonNullable<T> | V>; // prettier-ignore
+export function maybe<T, V>(
+    decoder: Decoder<T>,
+    defaultValue?: (() => V) | V,
+): Decoder<T | V | null | undefined> {
+    const rv = either(undefined_or_null, decoder);
+    return arguments.length >= 2
+        ? rv.transform((value) => value ?? lazyval(defaultValue as (() => V) | V))
+        : rv;
+}
 
 /**
  * Accepts only the given constant value.
@@ -89,6 +97,7 @@ export function constant<C extends Scalar>(value: C): Decoder<C> {
  * This is useful to manually add extra fields to object decoders.
  */
 export function always<C extends Scalar>(value: C): Decoder<C>;
+export function always<T>(value: (() => T) | T): Decoder<T>;
 export function always<T>(value: (() => T) | T): Decoder<T> {
     return define(
         typeof value === 'function'
