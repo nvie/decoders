@@ -19,7 +19,7 @@ export function either<T extends ReadonlyArray<Decoder<any>>>(
  * Accepts any value that is strictly-equal (using `===`) to one of the
  * specified values.
  */
-export function oneOf<T extends Scalar>(constants: readonly T[]): Decoder<T>;
+export function oneOf<C extends Scalar>(constants: readonly C[]): Decoder<C>;
 
 /**
  * If you are decoding tagged unions you may want to use the `taggedUnion()`

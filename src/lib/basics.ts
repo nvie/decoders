@@ -80,7 +80,7 @@ export const maybe: Maybeish<null | undefined> = _maybeish(undefined_or_null);
 /**
  * Accepts only the given constant value.
  */
-export function constant<T extends Scalar>(value: T): Decoder<T> {
+export function constant<C extends Scalar>(value: C): Decoder<C> {
     return define((blob, ok, err) =>
         blob === value ? ok(value) : err(`Must be constant ${String(value)}`),
     );

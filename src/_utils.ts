@@ -7,8 +7,8 @@ export const INDENT = '  ';
 /**
  * Subtract two sets. Why isn't this a standard method on Sets?
  */
-export function subtract<T extends Scalar>(xs: Set<T>, ys: Set<T>): Set<T> {
-    const result = new Set<T>();
+export function subtract<C extends Scalar>(xs: Set<C>, ys: Set<C>): Set<C> {
+    const result = new Set<C>();
     xs.forEach((x) => {
         if (!ys.has(x)) {
             result.add(x);

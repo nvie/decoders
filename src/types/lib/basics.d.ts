@@ -17,14 +17,8 @@ export const undefined_: Decoder<undefined>;
  * `undefined` case.
  */
 export function optional<T>(decoder: Decoder<T>): Decoder<T | undefined>;
-export function optional<T, V extends Scalar>(
-    decoder: Decoder<T>,
-    defaultValue: (() => V) | V,
-): Decoder<NonNullable<T> | V>;
-export function optional<T, V>(
-    decoder: Decoder<T>,
-    defaultValue: (() => V) | V,
-): Decoder<NonNullable<T> | V>;
+export function optional<T, C extends Scalar>(decoder: Decoder<T>, defaultValue: (() => C) | C): Decoder<NonNullable<T> | C>; // prettier-ignore
+export function optional<T, V>(decoder: Decoder<T>, defaultValue: (() => V) | V): Decoder<NonNullable<T> | V>; // prettier-ignore
 
 /**
  * Accepts whatever the given decoder accepts, or `null`.
@@ -33,14 +27,8 @@ export function optional<T, V>(
  * case.
  */
 export function nullable<T>(decoder: Decoder<T>): Decoder<T | null>;
-export function nullable<T, V extends Scalar>(
-    decoder: Decoder<T>,
-    defaultValue: (() => V) | V,
-): Decoder<NonNullable<T> | V>;
-export function nullable<T, V>(
-    decoder: Decoder<T>,
-    defaultValue: (() => V) | V,
-): Decoder<NonNullable<T> | V>;
+export function nullable<T, C extends Scalar>(decoder: Decoder<T>, defaultValue: (() => C) | C): Decoder<NonNullable<T> | C>; // prettier-ignore
+export function nullable<T, V>(decoder: Decoder<T>, defaultValue: (() => V) | V): Decoder<NonNullable<T> | V>; // prettier-ignore
 
 /**
  * Accepts whatever the given decoder accepts, or `null`, or `undefined`.
@@ -49,19 +37,13 @@ export function nullable<T, V>(
  * `null`/`undefined` case.
  */
 export function maybe<T>(decoder: Decoder<T>): Decoder<T | null | undefined>;
-export function maybe<T, V extends Scalar>(
-    decoder: Decoder<T>,
-    defaultValue: (() => V) | V,
-): Decoder<NonNullable<T> | V>;
-export function maybe<T, V>(
-    decoder: Decoder<T>,
-    defaultValue: (() => V) | V,
-): Decoder<NonNullable<T> | V>;
+export function maybe<T, C extends Scalar>(decoder: Decoder<T>, defaultValue: (() => C) | C): Decoder<NonNullable<T> | C>; // prettier-ignore
+export function maybe<T, V>(decoder: Decoder<T>, defaultValue: (() => V) | V): Decoder<NonNullable<T> | V>; // prettier-ignore
 
 /**
  * Accepts only the given constant value.
  */
-export function constant<T extends Scalar>(value: T): Decoder<T>;
+export function constant<C extends Scalar>(value: C): Decoder<C>;
 
 /**
  * Accepts anything, completely ignores it, and always returns the provided
@@ -69,13 +51,13 @@ export function constant<T extends Scalar>(value: T): Decoder<T>;
  *
  * This is useful to manually add extra fields to object decoders.
  */
-export function always<T extends Scalar>(value: T): Decoder<T>;
+export function always<C extends Scalar>(value: C): Decoder<C>;
 export function always<T>(value: (() => T) | T): Decoder<T>;
 
 /**
  * Alias of always.
  */
-export function hardcoded<T extends Scalar>(value: T): Decoder<T>;
+export function hardcoded<C extends Scalar>(value: C): Decoder<C>;
 export function hardcoded<T>(value: (() => T) | T): Decoder<T>;
 
 /**

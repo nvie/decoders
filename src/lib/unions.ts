@@ -97,7 +97,7 @@ export const either: EitherT = (_either: _Any);
  * Accepts any value that is strictly-equal (using `===`) to one of the
  * specified values.
  */
-export function oneOf<T extends Scalar>(constants: $ReadOnlyArray<T>): Decoder<T> {
+export function oneOf<C extends Scalar>(constants: $ReadOnlyArray<C>): Decoder<C> {
     return define((blob, ok, err) => {
         const winner = constants.find((c) => c === blob);
         if (winner !== undefined) {
