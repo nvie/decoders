@@ -125,7 +125,7 @@ describe('parsing is idempotent', () => {
 
 describe('annotating circular objects', () => {
     it('circular arrays', () => {
-        var circularArray = ['foo', [42 /* circular ref will go here */]];
+        var circularArray: any[] = ['foo', [42 /* circular ref will go here */]];
         circularArray[1].push(circularArray);
 
         const expected = array([scalar('foo'), array([scalar(42), circularRef()])]);
@@ -141,10 +141,8 @@ describe('annotating circular objects', () => {
             foo: 42,
             bar: { qux: 'hello' },
         };
-        // $FlowFixMe[prop-missing]
-        circularObject.bar.self = circularObject;
-        // $FlowFixMe[prop-missing]
-        circularObject.self = circularObject;
+        (circularObject.bar as any).self = circularObject;
+        (circularObject as any).self = circularObject;
 
         const expected = object({
             foo: scalar(42),

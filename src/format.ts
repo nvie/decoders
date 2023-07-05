@@ -23,7 +23,7 @@ function serializeArray(annotation: ArrayAnnotation, prefix: string): string {
         return '[]';
     }
 
-    const result = [];
+    const result: string[] = [];
     items.forEach((item) => {
         const [ser, ann] = serializeAnnotation(item, `${prefix}${INDENT}`);
         result.push(`${prefix}${INDENT}${ser}${','}`);
@@ -42,7 +42,7 @@ function serializeObject(annotation: ObjectAnnotation, prefix: string): string {
         return '{}';
     }
 
-    const result = [];
+    const result: string[] = [];
     fieldNames.forEach((key) => {
         const valueAnnotation = fields[key];
         const kser = serializeValue(key);

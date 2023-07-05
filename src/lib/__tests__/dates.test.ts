@@ -8,7 +8,7 @@ describe('dates', () => {
     const decoder = date;
     const [okay, not_okay] = partition(
         INPUTS,
-        (o) => Object.prototype.toString.call(o) === '[object Date]' && !isNaN(o),
+        (o) => Object.prototype.toString.call(o) === '[object Date]' && !isNaN(o as any),
     );
 
     it('valid', () => {

@@ -19,7 +19,7 @@ describe('subtract', () => {
 
     it('subtract(∅, x) -> ∅', () => {
         for (const example of exampleSets) {
-            expect(subtract(new Set(), example)).toEqual(new Set());
+            expect(subtract(new Set<Scalar>(), example)).toEqual(new Set());
         }
     });
 

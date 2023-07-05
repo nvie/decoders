@@ -148,7 +148,7 @@ describe('either9', () => {
 describe('oneOf', () => {
     const decoder = oneOf([3, true, null, '1', 'foo']);
     const okay = [3, true, null, '1', 'foo'];
-    const not_okay = INPUTS.filter((x) => !okay.includes(x));
+    const not_okay = INPUTS.filter((x) => !okay.includes(x as any));
 
     it('valid', () => {
         expect(okay.length).not.toBe(0);

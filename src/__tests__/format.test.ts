@@ -16,7 +16,7 @@ export function dedent(value: string): string {
     return dedented.join('\n');
 }
 
-function checkInline(input, expected) {
+function checkInline(input: unknown, expected: string) {
     expect(formatInline(annotate(input))).toEqual(dedent(expected));
 }
 
@@ -118,7 +118,7 @@ describe('formatInline', () => {
 
     it('serializes w/ unknown values', () => {
         const value =
-            // $FlowFixMe[bigint-unsupported] - Flow does not support bigint literals yet
+            // @ts-expect-error - only available in ES2020
             0n;
 
         checkInline(

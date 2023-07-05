@@ -82,7 +82,7 @@ export type Decoder<T> = {
  */
 export type DecoderType<D extends Decoder<any>> = D extends Decoder<infer T> ? T : never;
 
-function noThrow<T, V>(fn: (value: T) => V): (T) => DecodeResult<V> {
+function noThrow<T, V>(fn: (value: T) => V): (blob: T) => DecodeResult<V> {
     return (t) => {
         try {
             const v = fn(t);
@@ -166,7 +166,7 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
      * function throws an error, the whole decoder will fail using the error
      * message as the failure reason.
      */
-    function transform<V>(transformFn: (T) => V): Decoder<V> {
+    function transform<V>(transformFn: (result: T) => V): Decoder<V> {
         return then(noThrow(transformFn));
     }
 
