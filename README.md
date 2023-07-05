@@ -6,7 +6,7 @@
 [![Minified Size](https://badgen.net/bundlephobia/minzip/decoders)](https://bundlephobia.com/result?p=decoders)
 
 Elegant and battle-tested validation library for type-safe input data for
-[TypeScript](https://www.typescriptlang.org/) and [Flow](https://flow.org/).
+[TypeScript](https://www.typescriptlang.org/).
 
 ## Motivation
 
@@ -133,8 +133,9 @@ const user = userDecoder.verify(externalData);
 <div id="uuidv1"></div>
 <div id="uuidv4"></div>
 
-Documentation can be found on [https://decoders.cc](https://decoders.cc).  
+Documentation can be found on [https://decoders.cc](https://decoders.cc).
 
 ## Building your own decoders
 
-There is a dedicated page in the docs that explains how to [build your own decoders](https://decoders.cc/building-your-own.html) — it’s fun!
+There is a dedicated page in the docs that explains how to
+[build your own decoders](https://decoders.cc/building-your-own.html) — it’s fun!

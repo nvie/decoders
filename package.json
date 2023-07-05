@@ -1,7 +1,7 @@
 {
     "name": "decoders",
     "version": "2.0.4",
-    "description": "Elegant and battle-tested validation library for type-safe input data (for TypeScript and Flow)",
+    "description": "Elegant and battle-tested validation library for type-safe input data for TypeScript",
     "license": "MIT",
     "repository": {
         "type": "git",
@@ -28,9 +28,8 @@
         "fix:eslint": "eslint --report-unused-disable-directives --fix src",
         "fix:prettier": "prettier --write 'src/**/*.js'",
         "prepublish": "in-publish && npm run actually-prepublish || not-in-publish",
-        "test": "npm run clean && npm run test:flow && npm run test:typescript && npm run test:jest && npm run test:completeness && npm run check",
+        "test": "npm run clean && npm run test:typescript && npm run test:jest && npm run test:completeness && npm run check",
         "test:completeness": "./bin/check.sh",
-        "test:flow": "flow check",
         "test:jest": "jest --coverage --coverageThreshold '{\"global\": {\"branches\": 100, \"functions\": 100, \"lines\": 100, \"statements\": 100}}'",
         "test:typescript": "dtslint --localTs node_modules/typescript/lib src/types",
         "watch": "jest --watch"
