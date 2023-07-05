@@ -3,10 +3,11 @@ import { indent, summarize } from '../_utils';
 import { object } from './objects';
 import { prep } from './utilities';
 import type { Decoder, DecoderType, DecodeResult, Scalar } from '../Decoder';
+import type { Ok } from '../result';
 
 type Values<T extends object> = T[keyof T];
 
-type DecoderTypes<T> = T extends ReadonlyArray<Decoder<infer U>> ? U : never;
+type DecoderTypes<T> = T extends readonly Decoder<infer U>[] ? U : never;
 
 const EITHER_PREFIX = 'Either:\n';
 
@@ -69,7 +70,7 @@ export function either<T extends readonly Decoder<any>[]>(
         for (let i = 0; i < decoders.length; i++) {
             const result: DecodeResult<unknown> = decoders[i].decode(blob);
             if (result.ok) {
-                return result;
+                return result as Ok<DecoderTypes<T>>;
             } else {
                 errors.push(result.error);
             }

@@ -51,7 +51,7 @@ export function object<O extends Record<string, Decoder<any>>>(
         const missingKeys = subtract(knownKeys, actualKeys);
 
         let record = {};
-        let errors: { [key: string]: Annotation } | null = null;
+        let errors: Record<string, Annotation> | null = null;
 
         Object.keys(decodersByKey).forEach((key) => {
             const decoder = decodersByKey[key];
@@ -213,8 +213,8 @@ export function inexact<O extends Record<string, Decoder<any>>>(
  */
 export function dict<T>(decoder: Decoder<T>): Decoder<Record<string, T>> {
     return pojo.then((plainObj, ok, err) => {
-        let rv: { [key: string]: T } = {};
-        let errors: { [key: string]: Annotation } | null = null;
+        let rv: Record<string, T> = {};
+        let errors: Record<string, Annotation> | null = null;
 
         Object.keys(plainObj).forEach((key: string) => {
             const value = plainObj[key];

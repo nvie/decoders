@@ -146,7 +146,7 @@ function annotateObject(
 ): ObjectAnnotation {
     seen.add(obj);
 
-    const fields: { [key: string]: Annotation } = {};
+    const fields: Record<string, Annotation> = {};
     Object.keys(obj).forEach((key) => {
         const value = obj[key];
         fields[key] = annotate(value, undefined, seen);
