@@ -51,8 +51,8 @@ describe('lazy', () => {
 
     it('build self-referential types with lazy()', () => {
         type StringList = {
-            curr: string,
-            next?: StringList,
+            curr: string;
+            next?: StringList;
         };
 
         const llist: Decoder<StringList> = object({
@@ -73,8 +73,8 @@ describe('lazy', () => {
 
     it('build self-referential types with variables', () => {
         type Tree<T> = {
-            node: T,
-            children: Tree<T>[],
+            node: T;
+            children: Tree<T>[];
         };
 
         function tree<T>(decoder: Decoder<T>): Decoder<Tree<T>> {
@@ -104,7 +104,7 @@ describe('lazy', () => {
 });
 
 describe('prep', () => {
-    const answerToLife = prep((x) => parseInt(x), constant((42: 42)));
+    const answerToLife = prep((x) => parseInt(x as string), constant(42));
     const [okay, not_okay] = partition(INPUTS, (x) => String(x) === '42');
 
     it('valid', () => {

@@ -86,9 +86,7 @@ describe('nested eithers', () => {
 });
 
 describe('either fails without decoders', () => {
-    expect(() =>
-        either(),
-    ).toThrow();
+    expect(() => either()).toThrow();
 });
 
 describe('either3', () => {
@@ -168,18 +166,18 @@ describe('oneOf', () => {
 });
 
 type Rectangle = {
-    type: 'rectangle',
-    x: number,
-    y: number,
-    width: number,
-    height: number,
+    type: 'rectangle';
+    x: number;
+    y: number;
+    width: number;
+    height: number;
 };
 
 type Circle = {
-    type: 'circle',
-    cx: number,
-    cy: number,
-    r: number,
+    type: 'circle';
+    cx: number;
+    cy: number;
+    r: number;
 };
 
 const rectangle: Decoder<Rectangle> = object({
@@ -197,11 +195,11 @@ const circle: Decoder<Circle> = object({
     r: number,
 });
 
-type Alt1 = { type: 1, a: string };
-type Alt2 = { type: 2, b: number };
+type Alt1 = { type: 1; a: string };
+type Alt2 = { type: 2; b: number };
 
-const alt1: Decoder<Alt1> = object({ type: constant((1: 1)), a: string });
-const alt2: Decoder<Alt2> = object({ type: constant((2: 2)), b: number });
+const alt1: Decoder<Alt1> = object({ type: constant(1), a: string });
+const alt2: Decoder<Alt2> = object({ type: constant(2), b: number });
 
 describe('taggedUnion', () => {
     const decoder = taggedUnion('type', { rectangle, circle });
