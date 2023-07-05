@@ -2,7 +2,7 @@
 
 import { annotateObject, merge, updateText } from '../annotate';
 import { define } from '../Decoder';
-import { subtract } from '../_utils';
+import { subtract, isPojo } from '../_utils';
 import type { Annotation } from '../annotate';
 import type { AllowImplicit } from './_helpers';
 import type { Decoder, DecodeResult } from '../Decoder';
@@ -10,18 +10,6 @@ import type { Decoder, DecodeResult } from '../Decoder';
 type ObjectDecoderType<T> = AllowImplicit<{
     [key in keyof T]: T[key] extends Decoder<infer V> ? V : never;
 }>;
-
-function isPojo(value: unknown): value is Record<string, unknown> {
-    return (
-        value !== null &&
-        value !== undefined &&
-        typeof value === 'object' &&
-        // This still seems to be the only reliable way to determine whether
-        // something is a pojo... ¯\_(ツ)_/¯
-        // $FlowFixMe[method-unbinding]
-        Object.prototype.toString.call(value) === '[object Object]'
-    );
-}
 
 /**
  * Accepts any "plain old JavaScript object", but doesn't validate its keys or

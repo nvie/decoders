@@ -40,6 +40,18 @@ export function asDate(value: unknown): Date | null {
         : null;
 }
 
+export function isPojo(value: unknown): value is Record<string, unknown> {
+    return (
+        value !== null &&
+        value !== undefined &&
+        typeof value === 'object' &&
+        // This still seems to be the only reliable way to determine whether
+        // something is a pojo... ¯\_(ツ)_/¯
+        // $FlowFixMe[method-unbinding]
+        Object.prototype.toString.call(value) === '[object Object]'
+    );
+}
+
 export function isMultiline(s: string): boolean {
     return s.indexOf('\n') >= 0;
 }

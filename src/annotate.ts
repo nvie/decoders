@@ -1,3 +1,5 @@
+import { isPojo } from './_utils';
+
 const _register: WeakSet<Annotation> = new WeakSet();
 
 export interface ObjectAnnotation {
@@ -161,7 +163,7 @@ function annotate(value: unknown, text: string | undefined, seen: RefSet): Annot
         typeof value === 'number' ||
         typeof value === 'boolean' ||
         typeof value === 'symbol' ||
-        typeof value.getMonth === 'function'
+        typeof (value as Record<string, unknown>).getMonth === 'function'
     ) {
         return scalar(value, text);
     }
@@ -180,7 +182,7 @@ function annotate(value: unknown, text: string | undefined, seen: RefSet): Annot
         }
     }
 
-    if (typeof value === 'object') {
+    if (isPojo(value)) {
         // "Circular references" can only exist in objects or arrays
         if (seen.has(value)) {
             return circularRef(text);
