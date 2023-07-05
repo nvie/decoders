@@ -4,29 +4,32 @@ import { annotateObject, merge, updateText } from '../annotate';
 import { define } from '../Decoder';
 import { subtract } from '../_utils';
 import type { Annotation } from '../annotate';
-import { AllowImplicit } from './_helpers';
-import type { Decoder, DecodeResult , DecoderType } from '../Decoder';
-
-
-
-//////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
+import type { AllowImplicit } from './_helpers';
+import type { Decoder, DecodeResult } from '../Decoder';
 
 type ObjectDecoderType<T> = AllowImplicit<{
-    [key in keyof T]: DecoderType<T[key]>;
+    [key in keyof T]: T[key] extends Decoder<infer V> ? V : never;
 }>;
+
+function isPojo(value: unknown): value is Record<string, unknown> {
+    return (
+        value !== null &&
+        value !== undefined &&
+        typeof value === 'object' &&
+        // This still seems to be the only reliable way to determine whether
+        // something is a pojo... ¯\_(ツ)_/¯
+        // $FlowFixMe[method-unbinding]
+        Object.prototype.toString.call(value) === '[object Object]'
+    );
+}
 
 /**
  * Accepts any "plain old JavaScript object", but doesn't validate its keys or
  * values further.
  */
-export const pojo: Decoder<Record<string, unknown>>;
+export const pojo: Decoder<Record<string, unknown>> = define((blob, ok, err) =>
+    isPojo(blob) ? ok(blob) : err('Must be an object'),
+);
 
 /**
  * Accepts objects with fields matching the given decoders. Extra fields that
@@ -36,136 +39,17 @@ export function object(decodersByKey: Record<any, never>): Decoder<Record<string
 export function object<O extends Record<string, Decoder<any>>>(
     decodersByKey: O,
 ): Decoder<{ [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] }>;
-//         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//         This is basically just equivalent to:
-//             ObjectDecoderType<O>
-//
-//         But by "resolving" this with a mapped type, we remove the helper
-//         type names from the inferred type here, making this much easier to
-//         work with while developing.
-
-/**
- * Like `object()`, but will reject inputs that contain extra fields that are
- * not specified explicitly.
- */
-export function exact(decodersByKey: Record<any, never>): Decoder<Record<string, never>>;
-export function exact<O extends Record<string, Decoder<any>>>(
+export function object<O extends Record<string, Decoder<any>>>(
     decodersByKey: O,
-): Decoder<{ [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] }>;
-//         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//         Ditto (see above)
+): Decoder<{ [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] }> {
+    //     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    //     This is basically just equivalent to:
+    //         ObjectDecoderType<O>
+    //
+    //     But by "resolving" this with a mapped type, we remove the helper
+    //     type names from the inferred type here, making this much easier to
+    //     work with while developing.
 
-/**
- * Like `object()`, but will pass through any extra fields on the input object
- * unvalidated that will thus be of `unknown` type statically.
- */
-export function inexact(
-    decodersByKey: Record<any, never>,
-): Decoder<Record<string, unknown>>;
-export function inexact<O extends Record<string, Decoder<any>>>(
-    decodersByKey: O,
-): Decoder<
-    { [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] } & Record<
-        string,
-        unknown
-    >
->;
-
-/**
- * Accepts objects where all values match the given decoder, and returns the
- * result as a `Record<string, T>`.
- *
- * The main difference between `object()` and `dict()` is that you'd typically
- * use `object()` if this is a record-like object, where all field names are
- * known and the values are heterogeneous. Whereas with `dict()` the keys are
- * typically dynamic and the values homogeneous, like in a dictionary,
- * a lookup table, or a cache.
- */
-export function dict<T>(decoder: Decoder<T>): Decoder<Record<string, T>>;
-
-/**
- * Similar to `dict()`, but returns the result as a `Map<string, T>` (an [ES6
- * Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map))
- * instead.
- */
-export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>>;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-///////////////////////////////////////////////////////////////
-
-
-
-/**
- * Accepts any "plain old JavaScript object", but doesn't validate its keys or
- * values further.
- */
-export const pojo: Decoder<{ [string]: unknown }> = define((blob, ok, err) =>
-    blob !== null &&
-    blob !== undefined &&
-    typeof blob === 'object' &&
-    // This still seems to be the only reliable way to determine whether
-    // something is a pojo... ¯\_(ツ)_/¯
-    // $FlowFixMe[method-unbinding]
-    Object.prototype.toString.call(blob) === '[object Object]'
-        ? ok(
-              // NOTE:
-              // Since Flow 0.98, typeof o === 'object' refines to
-              //     { +[string]: unknown }
-              // instead of
-              //     { [string]: unknown }
-              //
-              // For rationale, see https://github.com/facebook/flow/issues/7685.
-              // In this case, we don't want to output a read-only version of
-              // the object because it's up to the user of decoders to
-              // determine what they want to do with the decoded output.  If they
-              // want to write items into the array, that's fine!  The fastest
-              // way to turn a read-only Object to a writeable one in ES6 seems
-              // to be to use object-spread. (Going off this benchmark:
-              // https://thecodebarbarian.com/object-assign-vs-object-spread.html)
-              // $FlowFixMe[incompatible-variance]
-              blob,
-          )
-        : err('Must be an object'),
-);
-
-/**
- * Accepts objects with fields matching the given decoders. Extra fields that
- * exist on the input object are ignored and will not be returned.
- */
-export function object<O extends { +[field: string]: AnyDecoder, ... }>(
-    decodersByKey: O,
-): Decoder<$ObjMap<O, <T>(Decoder<T>) => T>> {
     // Compute this set at decoder definition time
     const knownKeys = new Set(Object.keys(decodersByKey));
 
@@ -189,6 +73,7 @@ export function object<O extends { +[field: string]: AnyDecoder, ... }>(
             if (result.ok) {
                 const value = result.value;
                 if (value !== undefined) {
+                    // @ts-expect-error - look into this later
                     record[key] = value;
                 }
 
@@ -237,7 +122,7 @@ export function object<O extends { +[field: string]: AnyDecoder, ... }>(
             return err(objAnn);
         }
 
-        return ok(record);
+        return ok(record as ObjectDecoderType<O>);
     });
 }
 
@@ -245,9 +130,16 @@ export function object<O extends { +[field: string]: AnyDecoder, ... }>(
  * Like `object()`, but will reject inputs that contain extra fields that are
  * not specified explicitly.
  */
-export function exact<O extends { +[field: string]: AnyDecoder, ... }>(
+export function exact(decodersByKey: Record<any, never>): Decoder<Record<string, never>>;
+export function exact<O extends Record<string, Decoder<any>>>(
     decodersByKey: O,
-): Decoder<$ObjMap<$Exact<O>, <T>(Decoder<T>) => T>> {
+): Decoder<{ [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] }>;
+export function exact<O extends Record<string, Decoder<any>>>(
+    decodersByKey: O,
+): Decoder<{ [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] }> {
+    //     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    //     Ditto (see above)
+
     // Compute this set at decoder definition time
     const allowedKeys = new Set(Object.keys(decodersByKey));
 
@@ -271,32 +163,52 @@ export function exact<O extends { +[field: string]: AnyDecoder, ... }>(
  * Like `object()`, but will pass through any extra fields on the input object
  * unvalidated that will thus be of `unknown` type statically.
  */
-export function inexact<O extends { +[field: string]: AnyDecoder }>(
+export function inexact(
+    decodersByKey: Record<any, never>,
+): Decoder<Record<string, unknown>>;
+export function inexact<O extends Record<string, Decoder<any>>>(
     decodersByKey: O,
-): Decoder<$ObjMap<O, <T>(Decoder<T>) => T> & { +[string]: unknown }> {
+): Decoder<
+    { [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] } & Record<
+        string,
+        unknown
+    >
+>;
+export function inexact<O extends Record<string, Decoder<any>>>(
+    decodersByKey: O,
+): Decoder<
+    { [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] } & Record<
+        string,
+        unknown
+    >
+> {
     return pojo.then((plainObj) => {
         const allkeys = new Set(Object.keys(plainObj));
-        const decoder = object(decodersByKey).transform(
-            (safepart: $ObjMap<O, <T>(Decoder<T>) => T>) => {
-                const safekeys = new Set(Object.keys(decodersByKey));
+        const decoder = object(decodersByKey).transform((safepart) => {
+            const safekeys = new Set(Object.keys(decodersByKey));
 
-                // To account for hard-coded keys that aren't part of the input
-                safekeys.forEach((k) => allkeys.add(k));
+            // To account for hard-coded keys that aren't part of the input
+            safekeys.forEach((k) => allkeys.add(k));
 
-                const rv = {};
-                allkeys.forEach((k) => {
-                    if (safekeys.has(k)) {
-                        const value = safepart[k];
-                        if (value !== undefined) {
-                            rv[k] = value;
-                        }
-                    } else {
-                        rv[k] = plainObj[k];
+            const rv = {} as {
+                [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K];
+            } & Record<string, unknown>;
+            allkeys.forEach((k) => {
+                if (safekeys.has(k)) {
+                    const value =
+                        // @ts-expect-error - look into this later
+                        safepart[k];
+                    if (value !== undefined) {
+                        // @ts-expect-error - look into this later
+                        rv[k] = value;
                     }
-                });
-                return rv;
-            },
-        );
+                } else {
+                    // @ts-expect-error - look into this later
+                    rv[k] = plainObj[k];
+                }
+            });
+            return rv;
+        });
         return decoder.decode(plainObj);
     });
 }
@@ -311,7 +223,7 @@ export function inexact<O extends { +[field: string]: AnyDecoder }>(
  * typically dynamic and the values homogeneous, like in a dictionary,
  * a lookup table, or a cache.
  */
-export function dict<T>(decoder: Decoder<T>): Decoder<{ [string]: T }> {
+export function dict<T>(decoder: Decoder<T>): Decoder<Record<string, T>> {
     return pojo.then((plainObj, ok, err) => {
         let rv: { [key: string]: T } = {};
         let errors: { [key: string]: Annotation } | null = null;
