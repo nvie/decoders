@@ -2,8 +2,11 @@ import { define } from '../Decoder';
 import { indent, summarize } from '../_utils';
 import { object } from './objects';
 import { prep } from './utilities';
-import type { _Any } from '../_utils';
-import type { Decoder, DecodeResult, Scalar } from '../Decoder';
+import type { Decoder, DecoderType, DecodeResult, Scalar } from '../Decoder';
+
+type Values<T extends object> = T[keyof T];
+
+type DecoderTypes<T> = T extends ReadonlyArray<Decoder<infer U>> ? U : never;
 
 const EITHER_PREFIX = 'Either:\n';
 
@@ -45,20 +48,16 @@ function nest(errText: string): string {
         : itemize(errText);
 }
 
-// prettier-ignore
-interface EitherT {
-  <A>(a: Decoder<A>): Decoder<A>;
-  <A, B>(a: Decoder<A>, b: Decoder<B>): Decoder<A | B>;
-  <A, B, C>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>): Decoder<A | B | C>;
-  <A, B, C, D>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>): Decoder<A | B | C | D>;
-  <A, B, C, D, E>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>, e: Decoder<E>): Decoder<A | B | C | D | E>;
-  <A, B, C, D, E, F>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>, e: Decoder<E>, f: Decoder<F>): Decoder<A | B | C | D | E | F>;
-  <A, B, C, D, E, F, G>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>, e: Decoder<E>, f: Decoder<F>, g: Decoder<G>): Decoder<A | B | C | D | E | F | G>;
-  <A, B, C, D, E, F, G, H>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>, e: Decoder<E>, f: Decoder<F>, g: Decoder<G>, h: Decoder<H>): Decoder<A | B | C | D | E | F | G | H>;
-  <A, B, C, D, E, F, G, H, I>(a: Decoder<A>, b: Decoder<B>, c: Decoder<C>, d: Decoder<D>, e: Decoder<E>, f: Decoder<F>, g: Decoder<G>, h: Decoder<H>, i: Decoder<I>): Decoder<A | B | C | D | E | F | G | H | I>;
-}
-
-function _either(...decoders: $ReadOnlyArray<Decoder<unknown>>): Decoder<unknown> {
+/**
+ * Accepts values accepted by any of the given decoders.
+ *
+ * The decoders are tried on the input one by one, in the given order. The
+ * first one that accepts the input "wins". If all decoders reject the input,
+ * the input gets rejected.
+ */
+export function either<T extends readonly Decoder<any>[]>(
+    ...decoders: T
+): Decoder<DecoderTypes<T>> {
     if (decoders.length === 0) {
         throw new Error('Pass at least one decoder to either()');
     }
@@ -85,19 +84,10 @@ function _either(...decoders: $ReadOnlyArray<Decoder<unknown>>): Decoder<unknown
 }
 
 /**
- * Accepts values accepted by any of the given decoders.
- *
- * The decoders are tried on the input one by one, in the given order. The
- * first one that accepts the input "wins". If all decoders reject the input,
- * the input gets rejected.
- */
-export const either: EitherT = (_either: _Any);
-
-/**
  * Accepts any value that is strictly-equal (using `===`) to one of the
  * specified values.
  */
-export function oneOf<C extends Scalar>(constants: $ReadOnlyArray<C>): Decoder<C> {
+export function oneOf<C extends Scalar>(constants: readonly C[]): Decoder<C> {
     return define((blob, ok, err) => {
         const winner = constants.find((c) => c === blob);
         if (winner !== undefined) {
@@ -139,10 +129,10 @@ export function oneOf<C extends Scalar>(constants: $ReadOnlyArray<C>): Decoder<C
  * error messages and is more performant at runtime because it doesn't have to
  * try all decoders one by one.
  */
-export function taggedUnion<O extends { +[field: string]: Decoder<_Any>, ... }>(
+export function taggedUnion<O extends Record<string, Decoder<any>>>(
     field: string,
     mapping: O,
-): Decoder<$Values<$ObjMap<O, <T>(Decoder<T>) => T>>> {
+): Decoder<Values<{ [key in keyof O]: DecoderType<O[key]> }>> {
     const base: Decoder<string> = object({
         [field]: prep(String, oneOf(Object.keys(mapping))),
     }).transform((o) => o[field]);
