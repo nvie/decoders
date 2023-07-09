@@ -1,5 +1,3 @@
-/// <reference lib="dom" />
-
 import { define } from '../Decoder';
 import { either } from './unions';
 import { instanceOf } from './utilities';

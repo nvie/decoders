@@ -1,5 +1,3 @@
-/// <reference lib="es6" />
-
 import { annotate } from '../annotate';
 import { define } from '../Decoder';
 import type { Annotation } from '../annotate';

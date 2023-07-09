@@ -1,5 +1,3 @@
-/// <reference lib="es6" />
-
 import { annotateObject, merge, updateText } from '../annotate';
 import { define } from '../Decoder';
 import { subtract, isPojo } from '../_utils';
