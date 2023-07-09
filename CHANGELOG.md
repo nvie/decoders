@@ -13,7 +13,7 @@
     TypeScript projects using decoders are assumed to have `strict: true` in their
     TypeScript configs going forward.
 -   Drop Flow support\*
--   Drop Node 12.x support
+-   Drop Node 14.x support
 
 (\*: I'm still open to bundling Flow types within this package, but only if that can be
 supported in a maintenance-free way, for example by using a script that will generate
