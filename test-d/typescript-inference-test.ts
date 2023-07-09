@@ -7,7 +7,6 @@ import {
     date,
     Decoder,
     DecoderType,
-    define,
     dict,
     either,
     email,
@@ -54,8 +53,10 @@ import {
     uuidv1,
     uuidv4,
 } from 'decoders';
+import type { JSONValue, JSONObject, JSONArray } from 'decoders';
 import { formatInline, formatShort } from 'decoders/format';
 import { ok } from 'decoders/result';
+import { expectType } from 'tsd';
 
 // Helper function to "test" a decoder on some input, and assert the return type
 function test<T>(decoder: Decoder<T>): T {
@@ -64,57 +65,62 @@ function test<T>(decoder: Decoder<T>): T {
 
 const strings = array(string);
 
-// $ExpectType (p: string, q: number[], r: string[], s: boolean) => void
 function foo(
-    p: DecoderType<Decoder<string>>,
-    q: DecoderType<Decoder<number[]>>,
-    r: DecoderType<typeof strings>,
-    s: DecoderType<typeof truthy>,
+    _p: DecoderType<Decoder<string>>,
+    _q: DecoderType<Decoder<number[]>>,
+    _r: DecoderType<typeof strings>,
+    _s: DecoderType<typeof truthy>,
 ) {}
 
-test(constant('foo')); // $ExpectType "foo"
-test(hardcoded('foo')); // $ExpectType "foo"
-test(hardcoded(() => new Date())); // $ExpectType Date
-test(always('foo')); // $ExpectType "foo"
-test(always(42)); // $ExpectType 42
-test(always(() => new Date())); // $ExpectType Date
+expectType<(p: string, q: number[], r: string[], s: boolean) => void>(foo);
 
-test(null_); // $ExpectType null
-test(undefined_); // $ExpectType undefined
-test(mixed); // $ExpectType unknown
-test(unknown); // $ExpectType unknown
+expectType<'foo'>(test(constant('foo')));
+expectType<'foo'>(test(hardcoded('foo')));
+expectType<Date>(test(hardcoded(() => new Date())));
+expectType<'foo'>(test(always('foo')));
+expectType<42>(test(always(42)));
+expectType<Date>(test(always(() => new Date())));
 
-test(anyNumber); // $ExpectType number
-test(integer); // $ExpectType number
-test(number); // $ExpectType number
-test(positiveInteger); // $ExpectType number
-test(positiveNumber); // $ExpectType number
+expectType<null>(test(null_));
+expectType<undefined>(test(undefined_));
+expectType<unknown>(test(mixed));
+expectType<unknown>(test(unknown));
 
-test(string); // $ExpectType string
-test(nonEmptyString); // $ExpectType string
-test(email); // $ExpectType string
-test(regex(/foo/, 'Must be foo')); // $ExpectType string
-test(url); // $ExpectType URL
-test(httpsUrl); // $ExpectType URL
-test(uuid); // $ExpectType string
-test(uuidv1); // $ExpectType string
-test(uuidv4); // $ExpectType string
+expectType<number>(test(anyNumber));
+expectType<number>(test(integer));
+expectType<number>(test(number));
+expectType<number>(test(positiveInteger));
+expectType<number>(test(positiveNumber));
 
-test(array(string)); // $ExpectType string[]
-test(array(number)); // $ExpectType number[]
-test(array(array(number))); // $ExpectType number[][]
-test(poja); // $ExpectType unknown[]
-test(nonEmptyArray(string)); // $ExpectType [string, ...string[]]
-test(nonEmptyArray(number)); // $ExpectType [number, ...number[]]
-test(set(string)); // $ExpectType Set<string>
-test(set(number)); // $ExpectType Set<number>
+expectType<string>(test(string));
+expectType<string>(test(nonEmptyString));
+expectType<string>(test(email));
+expectType<string>(test(regex(/foo/, 'Must be foo')));
+expectType<URL>(test(url));
+expectType<URL>(test(httpsUrl));
+expectType<string>(test(uuid));
+expectType<string>(test(uuidv1));
+expectType<string>(test(uuidv4));
 
-test(tuple(string)); // $ExpectType [string]
-test(tuple(string, number)); // $ExpectType [string, number]
-test(tuple(string, string, number)); // $ExpectType [string, string, number]
-test(tuple(string, string, number, string)); // $ExpectType [string, string, number, string]
-test(tuple(string, string, number, string, number)); // $ExpectType [string, string, number, string, number]
-test(tuple(string, string, number, string, number, string)); // $ExpectType [string, string, number, string, number, string]
+expectType<string[]>(test(array(string)));
+expectType<number[]>(test(array(number)));
+expectType<number[][]>(test(array(array(number))));
+expectType<unknown[]>(test(poja));
+expectType<[string, ...string[]]>(test(nonEmptyArray(string)));
+expectType<[number, ...number[]]>(test(nonEmptyArray(number)));
+expectType<Set<string>>(test(set(string)));
+expectType<Set<number>>(test(set(number)));
+
+expectType<[string]>(test(tuple(string)));
+expectType<[string, number]>(test(tuple(string, number)));
+expectType<[string, string, number]>(test(tuple(string, string, number)));
+expectType<[string, string, number, string]>(test(tuple(string, string, number, string)));
+expectType<[string, string, number, string, number]>(
+    test(tuple(string, string, number, string, number)),
+);
+expectType<[string, string, number, string, number, string]>(
+    test(tuple(string, string, number, string, number, string)),
+);
 
 // $ExpectType { name: string; tags: string[]; }
 test(
@@ -124,27 +130,24 @@ test(
     }),
 );
 
-// $ExpectType Record<string, never>
-test(object({}));
+expectType<Record<string, never>>(test(object({})));
 
 // Style argument
 string.verify('dummy', formatInline);
 string.verify('dummy', formatShort);
 
-number.value('dummy'); // $ExpectType number | undefined
-string.value('dummy'); // $ExpectType string | undefined
+expectType<number | undefined>(number.value('dummy'));
+expectType<string | undefined>(string.value('dummy'));
 
-// $ExpectType number
-test(string.then((value: string) => ok(value.length)));
+expectType<number>(test(string.then((value: string) => ok(value.length))));
 
-// $ExpectType number
-test(string.peek_UNSTABLE(([blob, value]) => ok(value.length)));
+expectType<number>(test(string.peek_UNSTABLE(([_blob, value]) => ok(value.length))));
 
-// $ExpectType string
-test(string.refine((s) => s.startsWith('x'), 'Must start with x'));
+expectType<string>(test(string.refine((s) => s.startsWith('x'), 'Must start with x')));
 
-// $ExpectType string
-test(unknown.refine((foo): foo is string => typeof foo === 'string', 'Is string'));
+expectType<string>(
+    test(unknown.refine((foo): foo is string => typeof foo === 'string', 'Is string')),
+);
 
 // $ExpectType "a" | "b"
 test(
@@ -168,48 +171,50 @@ test(string.describe('xxx'));
 // $ExpectType number
 test(number.describe('xxx'));
 
-test(prep(Number, string)); // $ExpectType string
-test(prep(String, string)); // $ExpectType string
-test(prep(Number, number)); // $ExpectType number
-test(prep(String, number)); // $ExpectType number
-test(prep(String, either(number, string))); // $ExpectType string | number
-test(prep(Number, either(number, string))); // $ExpectType string | number
+expectType<string>(test(prep(Number, string)));
+expectType<string>(test(prep(String, string)));
+expectType<number>(test(prep(Number, number)));
+expectType<number>(test(prep(String, number)));
+expectType<string | number>(test(prep(String, either(number, string))));
+expectType<string | number>(test(prep(Number, either(number, string))));
 
-test(array(string)); // $ExpectType string[]
-test(array(number)); // $ExpectType number[]
-test(array(array(number))); // $ExpectType number[][]
-test(poja); // $ExpectType unknown[]
+expectType<string[]>(test(array(string)));
+expectType<number[]>(test(array(number)));
+expectType<number[][]>(test(array(array(number))));
+expectType<unknown[]>(test(poja));
 
-test(boolean); // $ExpectType boolean
-test(truthy); // $ExpectType boolean
-test(numericBoolean); // $ExpectType boolean
+expectType<boolean>(test(boolean));
+expectType<boolean>(test(truthy));
+expectType<boolean>(test(numericBoolean));
 
-test(optional(string)); // $ExpectType string | undefined
-test(optional(optional(string))); // $ExpectType string | undefined
-test(optional(string, 42)); // $ExpectType string | 42
-test(optional(optional(string), 42)); // $ExpectType string | 42
-test(optional(optional(string, 42))); // $ExpectType string | 42 | undefined
-test(optional(string, () => new Date())); // $ExpectType string | Date
-test(optional(optional(string), () => new Date())); // $ExpectType string | Date
-test(optional(optional(string, () => new Date()))); // $ExpectType string | Date | undefined
+expectType<string | undefined>(test(optional(string)));
+expectType<string | undefined>(test(optional(optional(string))));
+expectType<string | 42>(test(optional(string, 42)));
+expectType<string | 42>(test(optional(optional(string), 42)));
+expectType<string | 42 | undefined>(test(optional(optional(string, 42))));
+expectType<string | Date>(test(optional(string, () => new Date())));
+expectType<string | Date>(test(optional(optional(string), () => new Date())));
+expectType<string | Date | undefined>(test(optional(optional(string, () => new Date()))));
 
-test(nullable(string)); // $ExpectType string | null
-test(nullable(nullable(string))); // $ExpectType string | null
-test(nullable(string, 42)); // $ExpectType string | 42
-test(nullable(nullable(string), 42)); // $ExpectType string | 42
-test(nullable(nullable(string, 42))); // $ExpectType string | 42 | null
-test(nullable(string, () => new Date())); // $ExpectType string | Date
-test(nullable(nullable(string), () => new Date())); // $ExpectType string | Date
-test(nullable(nullable(string, () => new Date()))); // $ExpectType string | Date | null
+expectType<string | null>(test(nullable(string)));
+expectType<string | null>(test(nullable(nullable(string))));
+expectType<string | 42>(test(nullable(string, 42)));
+expectType<string | 42>(test(nullable(nullable(string), 42)));
+expectType<string | 42 | null>(test(nullable(nullable(string, 42))));
+expectType<string | Date>(test(nullable(string, () => new Date())));
+expectType<string | Date>(test(nullable(nullable(string), () => new Date())));
+expectType<string | Date | null>(test(nullable(nullable(string, () => new Date()))));
 
-test(maybe(string)); // $ExpectType string | null | undefined
-test(maybe(maybe(string))); // $ExpectType string | null | undefined
-test(maybe(string, 42)); // $ExpectType string | 42
-test(maybe(maybe(string), 42)); // $ExpectType string | 42
-test(maybe(maybe(string, 42))); // $ExpectType string | 42 | null | undefined
-test(maybe(string, () => new Date())); // $ExpectType string | Date
-test(maybe(maybe(string), () => new Date())); // $ExpectType string | Date
-test(maybe(maybe(string, () => new Date()))); // $ExpectType string | Date | null | undefined
+expectType<string | null | undefined>(test(maybe(string)));
+expectType<string | null | undefined>(test(maybe(maybe(string))));
+expectType<string | 42>(test(maybe(string, 42)));
+expectType<string | 42>(test(maybe(maybe(string), 42)));
+expectType<string | 42 | null | undefined>(test(maybe(maybe(string, 42))));
+expectType<string | Date>(test(maybe(string, () => new Date())));
+expectType<string | Date>(test(maybe(maybe(string), () => new Date())));
+expectType<string | Date | null | undefined>(
+    test(maybe(maybe(string, () => new Date()))),
+);
 
 // object()
 {
@@ -227,9 +232,9 @@ test(maybe(maybe(string, () => new Date()))); // $ExpectType string | Date | nul
 }
 
 // exact() (w/ empty mapping)
-test(object({})); // $ExpectType Record<string, never>
-test(object({})).a; // $ExpectType never
-test(object({})).b; // $ExpectType never
+expectType<Record<string, never>>(test(object({})));
+expectType<never>(test(object({})).a);
+expectType<never>(test(object({})).b);
 
 // exact()
 {
@@ -247,32 +252,32 @@ test(object({})).b; // $ExpectType never
 }
 
 // exact() (w/ empty mapping)
-test(exact({})); // $ExpectType Record<string, never>
-test(exact({})).a; // $ExpectType never
-test(exact({})).b; // $ExpectType never
+expectType<Record<string, never>>(test(exact({})));
+expectType<never>(test(exact({})).a);
+expectType<never>(test(exact({})).b);
 
 // inexact()
-test(inexact({ id: number })); // $ExpectType { id: number; } & Record<string, unknown>
-test(inexact({ id: number })).id; // $ExpectType number
-test(inexact({ id: number })).a; // $ExpectType unknown
-test(inexact({ id: number })).b; // $ExpectType unknown
+expectType<{ id: number } & Record<string, unknown>>(test(inexact({ id: number })));
+expectType<number>(test(inexact({ id: number })).id);
+expectType<unknown>(test(inexact({ id: number })).a);
+expectType<unknown>(test(inexact({ id: number })).b);
 
 // inexact() (w/ empty mapping)
-test(inexact({})); // $ExpectType Record<string, unknown>
-test(inexact({})).a; // $ExpectType unknown
-test(inexact({})).b; // $ExpectType unknown
+expectType<Record<string, unknown>>(test(inexact({})));
+expectType<unknown>(test(inexact({})).a);
+expectType<unknown>(test(inexact({})).b);
 
-test(pojo); // $ExpectType Record<string, unknown>
-test(mapping(number)); // $ExpectType Map<string, number>
-test(dict(number)); // $ExpectType Record<string, number>
+expectType<Record<string, unknown>>(test(pojo));
+expectType<Map<string, number>>(test(mapping(number)));
+expectType<Record<string, number>>(test(dict(number)));
 
-test(lazy(() => string)); // $ExpectType string
-test(lazy(() => number)); // $ExpectType number
+expectType<string>(test(lazy(() => string)));
+expectType<number>(test(lazy(() => number)));
 
-test(json); // $ExpectType JSONValue
-test(jsonObject); // $ExpectType JSONObject
-test(jsonArray); // $ExpectType JSONArray
-test(jsonObject).abc; // $ExpectType JSONValue | undefined
+expectType<JSONValue>(test(json));
+expectType<JSONObject>(test(jsonObject));
+expectType<JSONArray>(test(jsonArray));
+expectType<JSONValue | undefined>(test(jsonObject).abc);
 
 {
     interface Animal {
@@ -306,25 +311,26 @@ test(jsonObject).abc; // $ExpectType JSONValue | undefined
     test(instanceOf(Map)); // $ExpectType Map<unknown, unknown>
 }
 
-test(date); // $ExpectType Date
+expectType<Date>(test(date));
+expectType<Date>(test(iso8601));
 
-{
-    // $ExpectType Date
-    const d = test(iso8601);
-    d.getFullYear();
-}
+expectType<never>(test(fail('I will never return')));
+expectType<never>(test(never('I will never return')));
 
-test(fail('I will never return')); // $ExpectType never
-test(never('I will never return')); // $ExpectType never
-
-test(either(string, number)); // $ExpectType string | number
-test(either(string, string, number)); // $ExpectType string | number
-test(either(string, boolean, number, array(number))); // $ExpectType string | number | boolean | number[]
-test(either(string, string, string, string, string)); // $ExpectType string
-test(either(string, string, string, string, string, string)); // $ExpectType string
-test(either(string, string, string, string, string, string, string)); // $ExpectType string
-test(either(string, string, string, string, string, string, string, string)); // $ExpectType string
-test(either(string, string, string, string, string, string, string, string, string)); // $ExpectType string
+expectType<string | number>(test(either(string, number)));
+expectType<string | number>(test(either(string, string, number)));
+expectType<string | number | boolean | number[]>(
+    test(either(string, boolean, number, array(number))),
+);
+expectType<string>(test(either(string, string, string, string, string)));
+expectType<string>(test(either(string, string, string, string, string, string)));
+expectType<string>(test(either(string, string, string, string, string, string, string)));
+expectType<string>(
+    test(either(string, string, string, string, string, string, string, string)),
+);
+expectType<string>(
+    test(either(string, string, string, string, string, string, string, string, string)),
+);
 
 // $ExpectType "foo" | "bar"
 test(oneOf(['foo', 'bar']));
