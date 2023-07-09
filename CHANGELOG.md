@@ -1,6 +1,24 @@
-## vNEXT
+## v3.0.0
 
--   Rewrite the source code in TypeScript
+**Breaking changes:**
+
+-   [ ] XXX Check this claim: "Support only TypeScript versions >= 4.3"
+-   [ ] XXX Check bundlephobia claim/link
+
+-   Rewritten source code in TypeScript (instead of Flow)
+-   Modern ESM and CJS dual exports (fully tree-shakable when using ESM)
+-   Massively [reduced bundle size](https://bundlephobia.com/package/decoders)
+-   Support only TypeScript versions >= 4.3
+-   Drop support for TypeScript projects that are _not_ using `strict: true`. All
+    TypeScript projects using decoders are assumed to have `strict: true` in their
+    TypeScript configs going forward.
+-   Drop Flow support\*
+-   Drop Node 12.x support
+
+(\*: I'm still open to bundling Flow types within this package, but only if that can be
+supported in a maintenance-free way, for example by using a script that will generate
+`*.flow` files from TypeScript source files. If someone can add support for that, I'm open
+to pull requests! 🙏 )
 
 ## v2.0.4
 
