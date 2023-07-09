@@ -117,12 +117,8 @@ describe('formatInline', () => {
     });
 
     it('serializes w/ unknown values', () => {
-        const value =
-            // @ts-expect-error - only available in ES2020
-            0n;
-
         checkInline(
-            annotate(value, 'xxx'),
+            annotate(0n, 'xxx'),
             `
               ???
               ^^^ xxx

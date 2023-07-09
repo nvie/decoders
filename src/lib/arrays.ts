@@ -119,9 +119,7 @@ export function tuple<A, B, C, D, E, F>(
     e: Decoder<E>,
     f: Decoder<F>,
 ): Decoder<[A, B, C, D, E, F]>;
-export function tuple<A, B, C, D, E, F>(
-    ...decoders: readonly Decoder<unknown>[]
-): Decoder<unknown[]> {
+export function tuple(...decoders: readonly Decoder<unknown>[]): Decoder<unknown[]> {
     return ntuple(decoders.length).then((blobs, ok, err) => {
         let allOk = true;
 

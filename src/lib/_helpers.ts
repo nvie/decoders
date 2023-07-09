@@ -76,4 +76,4 @@ type AllowImplicit<T> = { [K in RequiredKeys<T>]-?: T[K] } & {
     [K in OptionalKeys<T>]+?: Exclude<T[K], undefined>;
 };
 
-export { AllowImplicit };
+export type { AllowImplicit };

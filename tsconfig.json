@@ -4,6 +4,7 @@
         "strict": true,
         "target": "es2020",
         "module": "es2020",
+        "moduleResolution": "node",
         "esModuleInterop": true,
         "stripInternal": true,
         "forceConsistentCasingInFileNames": true,
