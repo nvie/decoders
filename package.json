@@ -15,6 +15,11 @@
     "main": "./dist/index.js",
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.ts",
+    "files": [
+        "dist/**",
+        "LICENSE",
+        "README.md"
+    ],
     "scripts": {
         "actually-prepublish": "echo \"\\n\\nPlease run \\`bin/publish.sh <options>\\` instead.\\n\\n\" && exit 2",
         "build": "./bin/build.sh",
@@ -34,9 +39,6 @@
         "test:typescript": "dtslint --localTs node_modules/typescript/lib src/types",
         "watch": "jest --watch"
     },
-    "files": [
-        "dist/"
-    ],
     "keywords": [
         "decoders",
         "Decoder",
