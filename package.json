@@ -26,6 +26,7 @@
         "docs": "cog -cr docs/*.md",
         "lint": "eslint --report-unused-disable-directives src && prettier --list-different 'src/**/*.js'",
         "lint:docs": "cog -c --check docs/*.md || (npm run docs; git diff; echo 'Error: docs not up-to-date, please re-run \"npm docs\" to update them.' && exit 1)",
+        "lint:package": "publint --strict && attw --pack",
         "format": "eslint --report-unused-disable-directives --fix src && prettier --write 'src/**/*.js'",
         "test": "npm run clean && npm run test:typescript && npm run test:jest && npm run test:completeness && npm run check",
         "test:completeness": "./bin/check.sh",
@@ -107,6 +108,7 @@
         "JSONValue"
     ],
     "devDependencies": {
+        "@arethetypeswrong/cli": "^0.6.0",
         "@types/jest": "^27.5.2",
         "coveralls": "^3.1.1",
         "dtslint": "^4.2.1",
@@ -114,6 +116,7 @@
         "eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
         "itertools": "^2.1.2",
         "prettier": "^3.0.0",
+        "publint": "^0.1.16",
         "ts-jest": "^29.1.1",
         "tsup": "^7.1.0",
         "typescript": "^4.1.6"

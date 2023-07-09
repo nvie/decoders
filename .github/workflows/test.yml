@@ -53,8 +53,18 @@ jobs:
               env:
                   CI: true
 
+            - name: Build
+              run: npm run build
+              env:
+                  CI: true
+
             - name: Lints
               run: npm run lint
+              env:
+                  CI: true
+
+            - name: Lint packages
+              run: npm run lint:package
               env:
                   CI: true
 
