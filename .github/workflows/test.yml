@@ -54,12 +54,12 @@ jobs:
                   CI: true
 
             - name: Lints
-              run: npm run check
+              run: npm run lint
               env:
                   CI: true
 
             - name: Check docs
-              run: npm run check:docs
+              run: npm run lint:docs
               env:
                   CI: true
 
