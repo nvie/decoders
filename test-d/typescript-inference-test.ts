@@ -52,11 +52,11 @@ import {
     uuid,
     uuidv1,
     uuidv4,
-} from 'decoders';
-import type { JSONValue, JSONObject, JSONArray } from 'decoders';
-import { formatInline, formatShort } from 'decoders/format';
-import { ok } from 'decoders/result';
-import { expectType } from 'tsd';
+} from '../dist';
+import type { JSONValue, JSONObject, JSONArray } from '../dist';
+import { formatInline, formatShort } from '../dist/format';
+import { ok } from '../dist/result';
+import { expectError, expectType } from 'tsd';
 
 // Helper function to "test" a decoder on some input, and assert the return type
 function test<T>(decoder: Decoder<T>): T {
@@ -223,12 +223,12 @@ expectType<string | Date | null | undefined>(
         bar: object({ qux: string }),
     });
 
-    // $ExpectType { bar: { qux: string; }; foo?: string | undefined; }
+    expectType<{ bar: { qux: string }; foo?: string | undefined }>(test(d));
     const x = test(d);
-    x.foo; // $ExpectType string | undefined
-    x.bar; // $ExpectType { qux: string; }
-    x.a; // $ExpectError
-    x.b; // $ExpectError
+    expectType<string | undefined>(x.foo);
+    expectType<{ qux: string }>(x.bar);
+    expectError(x.a);
+    expectError(x.b);
 }
 
 // exact() (w/ empty mapping)
@@ -243,12 +243,12 @@ expectType<never>(test(object({})).b);
         bar: object({ qux: string }),
     });
 
-    // $ExpectType { bar: { qux: string; }; foo?: string | undefined; }
+    expectType<{ bar: { qux: string }; foo?: string | undefined }>(test(d));
     const x = test(d);
-    x.foo; // $ExpectType string | undefined
-    x.bar; // $ExpectType { qux: string; }
-    x.a; // $ExpectError
-    x.b; // $ExpectError
+    expectType<string | undefined>(x.foo);
+    expectType<{ qux: string }>(x.bar);
+    expectError(x.a);
+    expectError(x.b);
 }
 
 // exact() (w/ empty mapping)
@@ -293,22 +293,22 @@ expectType<JSONValue | undefined>(test(jsonObject).abc);
         name = 'labrador';
     }
 
-    test(instanceOf(Labrador)); // $ExpectType Labrador
-    test(instanceOf(Dog)); // $ExpectType Dog
-    test(instanceOf(Cat)); // $ExpectType Cat
+    expectType<Labrador>(test(instanceOf(Labrador)));
+    expectType<Dog>(test(instanceOf(Dog)));
+    expectType<Cat>(test(instanceOf(Cat)));
 
     // Or use it on existing types
-    test(instanceOf(Error)); // $ExpectType Error
-    test(instanceOf(RegExp)); // $ExpectType RegExp
+    expectType<Error>(test(instanceOf(Error)));
+    expectType<RegExp>(test(instanceOf(RegExp)));
 
     // Weird case... due to the way the TypeError constructor is defined in the
     // standard library, this doesn't work for TypeError...
-    // test(instanceOf(TypeError)); // $ExpectType TypeError
+    // expectType<TypeError>(test(instanceOf(TypeError)));
 
     // Parameterized classes cannot be inferred automatically...
-    test(instanceOf(Promise)); // $ExpectType Promise<unknown>
-    test(instanceOf(Set)); // $ExpectType Set<unknown>
-    test(instanceOf(Map)); // $ExpectType Map<unknown, unknown>
+    expectType<Promise<unknown>>(test(instanceOf(Promise)));
+    expectType<Set<unknown>>(test(instanceOf(Set)));
+    expectType<Map<unknown, unknown>>(test(instanceOf(Map)));
 }
 
 expectType<Date>(test(date));
@@ -350,7 +350,7 @@ interface Circle {
     radius: number;
 }
 
-type Shape = Rect | Circle;
+// type Shape = Rect | Circle;
 
 const rect: Decoder<Rect> = object({
     _type: constant('rect'),
@@ -385,7 +385,7 @@ interface Circle1 {
     radius: number;
 }
 
-type Shape1 = Rect1 | Circle1;
+// type Shape1 = Rect1 | Circle1;
 
 const rect1: Decoder<Rect1> = object({
     _type: constant(0),
