@@ -3,6 +3,7 @@
 /.direnv
 /coverage
 /dist
+/*.js
 /node_modules
 yarn-error.log
 __pycache__/

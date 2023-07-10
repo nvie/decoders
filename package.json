@@ -52,12 +52,14 @@
     },
     "files": [
         "dist/**",
+        "format.js",
+        "result.js",
         "LICENSE",
         "README.md"
     ],
     "scripts": {
         "actually-prepublish": "echo \"\\n\\nPlease run \\`bin/publish.sh <options>\\` instead.\\n\\n\" && exit 2",
-        "build": "tsup",
+        "build": "tsup && cp dist/{format,result}.js .",
         "docs": "cog -cr docs/*.md",
         "lint": "eslint --report-unused-disable-directives src && prettier --list-different 'src/**/*.js'",
         "lint:docs": "cog -c --check docs/*.md || (npm run docs; git diff; echo 'Error: docs not up-to-date, please re-run \"npm docs\" to update them.' && exit 1)",
