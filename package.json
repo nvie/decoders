@@ -122,7 +122,7 @@
         "eslint": "^7.32.0",
         "eslint-plugin-flowtype": "^6.1.1",
         "eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
-        "flow-bin": "^0.180.1",
+        "flow-bin": "^0.213.1",
         "flow-copy-source": "^2.0.9",
         "flow-typed": "^3.7.0",
         "in-publish": "^2.0.1",
