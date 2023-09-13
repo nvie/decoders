@@ -736,6 +736,7 @@ DECODERS = {
       ```typescript
       const decoder = inexact({
           x: number,
+          y: number,
       });
 
       // 👍

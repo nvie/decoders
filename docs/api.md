@@ -934,6 +934,7 @@ unvalidated that will thus be of [`unknown`](/api.html#unknown) type statically.
 ```typescript
 const decoder = inexact({
     x: number,
+    y: number,
 });
 
 // 👍
@@ -1346,5 +1347,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: eaaa5cb2a280c6b6025ccdbd5c8b5a42) -->
+<!--[[[end]]] (checksum: 143996692adad212d5d3887b8380b3ca) -->
 <!-- prettier-ignore-end -->
