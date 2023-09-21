@@ -15,6 +15,7 @@ export const STRINGS: Array<string> = [
 export const NUMBERS: Array<number> = [
     -317.827682288236872383242082309328432093279,
     -1,
+    -0,
     0,
     1,
     2,

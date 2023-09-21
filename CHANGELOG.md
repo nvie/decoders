@@ -1,3 +1,8 @@
+## v2.0.5
+
+-   The returned value for `positiveInteger(-0)` is now `0`, not `-0`
+-   The returned value for `positiveNumber(-0)` is now `0`, not `-0`
+
 ## v2.0.4
 
 -   Fix a bug in the `url` decoder, which could incorrectly reject URLs with a `/` in the

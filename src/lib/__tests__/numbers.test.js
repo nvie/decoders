@@ -53,7 +53,8 @@ describe('positiveNumber', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(decoder.verify(value)).toBe(value);
+            expect(decoder.verify(value)).toBe(value === 0 ? 0 : value);
+            expect(decoder.verify(value)).not.toBe(-0);
         }
     });
 
@@ -94,7 +95,8 @@ describe('positiveInteger', () => {
     it('valid', () => {
         expect(okay.length).not.toBe(0);
         for (const value of okay) {
-            expect(decoder.verify(value)).toBe(value);
+            expect(decoder.verify(value)).toBe(value === 0 ? 0 : value);
+            expect(decoder.verify(value)).not.toBe(-0);
         }
     });
 

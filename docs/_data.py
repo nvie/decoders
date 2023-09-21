@@ -205,6 +205,8 @@ DECODERS = {
     'example': """
       // 👍
       positiveNumber.verify(123) === 123;
+      positiveNumber.verify(0) === 0;
+      positiveNumber.verify(-0) === 0;
 
       // 👎
       positiveNumber.verify(-42);             // throws
@@ -222,6 +224,8 @@ DECODERS = {
     'example': """
       // 👍
       positiveInteger.verify(123) === 123;
+      positiveInteger.verify(0) === 0;
+      positiveInteger.verify(-0) === 0;
 
       // 👎
       positiveInteger.verify(-3);              // throws
