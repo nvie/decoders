@@ -32,7 +32,7 @@ export const integer: Decoder<number> = number.refine(
 );
 
 /**
- * Accepts only positive finite numbers.
+ * Accepts only non-negative (zero or positive) finite numbers.
  */
 export const positiveNumber: Decoder<number> = number.refine(
     (n) => n >= 0,
@@ -40,7 +40,7 @@ export const positiveNumber: Decoder<number> = number.refine(
 );
 
 /**
- * Accepts only positive finite whole numbers.
+ * Accepts only non-negative (zero or positive) finite whole numbers.
  */
 export const positiveInteger: Decoder<number> = integer.refine(
     (n) => n >= 0,
