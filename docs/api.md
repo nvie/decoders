@@ -323,11 +323,13 @@ integer.verify('not a integer'); // throws
 <a href="#positiveNumber">#</a> **positiveNumber**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L34-L40 'Source')
 {: #positiveNumber .signature}
 
-Accepts only positive finite numbers.
+Accepts only non-negative (zero or positive) finite numbers.
 
 ```typescript
 // 👍
 positiveNumber.verify(123) === 123;
+positiveNumber.verify(0) === 0;
+positiveNumber.verify(-0) === -0;
 
 // 👎
 positiveNumber.verify(-42);             // throws
@@ -342,11 +344,13 @@ positiveNumber.verify('not a number');  // throws
 <a href="#positiveInteger">#</a> **positiveInteger**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L42-L48 'Source')
 {: #positiveInteger .signature}
 
-Accepts only positive finite whole numbers.
+Accepts only non-negative (zero or positive) finite whole numbers.
 
 ```typescript
 // 👍
 positiveInteger.verify(123) === 123;
+positiveInteger.verify(0) === 0;
+positiveInteger.verify(-0) === -0;
 
 // 👎
 positiveInteger.verify(-3);              // throws
@@ -511,7 +515,7 @@ iso8601.verify(new Date());    // throws (does not accept dates)
 
 Accepts only the given constant value.
 
-> _![](./assets/tiny-flow-logo.png) **Note to Flow users!** Flow will incorrectly infer the type for constants by default! The inferred type for `constant(42)` is `Decoder<number>`. To work around this, always use this syntax in Flow: `constant((42: 42))`._  
+> _![](./assets/tiny-flow-logo.png) **Note to Flow users!** Flow will incorrectly infer the type for constants by default! The inferred type for `constant(42)` is `Decoder<number>`. To work around this, always use this syntax in Flow: `constant((42: 42))`._
 > _![](./assets/tiny-ts-logo.png) **TypeScript** will correctly infer the type of `constant(42)` as `Decoder<42>`._
 
 ```typescript
@@ -1155,7 +1159,7 @@ For example, given an array of strings, like so:
 oneOf(['foo', 'bar']);
 ```
 
-> _![](./assets/tiny-flow-logo.png) **Note to Flow users!** Flow will (unfortunately) infer the type of this definition as `Decoder<string>`.  To work around this, be sure to explicitly annotate the type. Either by doing `oneOf([('foo': 'foo'), ('bar': 'bar')])`, or as `oneOf<'foo' | 'bar'>(['foo', 'bar'])`._  
+> _![](./assets/tiny-flow-logo.png) **Note to Flow users!** Flow will (unfortunately) infer the type of this definition as `Decoder<string>`.  To work around this, be sure to explicitly annotate the type. Either by doing `oneOf([('foo': 'foo'), ('bar': 'bar')])`, or as `oneOf<'foo' | 'bar'>(['foo', 'bar'])`._
 > _![](./assets/tiny-ts-logo.png) **TypeScript** will correctly infer the return type as `Decoder<'foo' | 'bar'>`._
 
 ---

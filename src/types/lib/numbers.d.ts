@@ -21,11 +21,11 @@ export const number: Decoder<number>;
 export const integer: Decoder<number>;
 
 /**
- * Accepts only positive finite numbers.
+ * Accepts only non-negative (zero or positive) finite numbers.
  */
 export const positiveNumber: Decoder<number>;
 
 /**
- * Accepts only positive finite whole numbers.
+ * Accepts only non-negative (zero or positive) finite whole numbers.
  */
 export const positiveInteger: Decoder<number>;
