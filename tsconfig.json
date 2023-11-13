@@ -1,22 +1,22 @@
 {
-    "compilerOptions": {
-        "noEmit": true,
-        "strict": true,
-        "target": "es2020",
-        "module": "es2020",
-        "moduleResolution": "node16",
-        "esModuleInterop": true,
-        "stripInternal": true,
-        "forceConsistentCasingInFileNames": true,
-        "allowUnreachableCode": false, // False makes this stricter: errors instead of warns
-        "allowUnusedLabels": false, // False makes this stricter: errors instead of warns
-        "importsNotUsedAsValues": "error",
-        "isolatedModules": true,
-        "noImplicitReturns": true,
-        // "noUncheckedIndexedAccess": true,
-        "noUncheckedIndexedAccess": false,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true
-    },
-    "include": ["./src/"]
+  "compilerOptions": {
+    "noEmit": true,
+    "strict": true,
+    "target": "es2020",
+    "module": "es2020",
+    "moduleResolution": "node16",
+    "esModuleInterop": true,
+    "stripInternal": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowUnreachableCode": false, // False makes this stricter: errors instead of warns
+    "allowUnusedLabels": false, // False makes this stricter: errors instead of warns
+    "importsNotUsedAsValues": "error",
+    "isolatedModules": true,
+    "noImplicitReturns": true,
+    // "noUncheckedIndexedAccess": true,
+    "noUncheckedIndexedAccess": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  },
+  "include": ["./src/"]
 }

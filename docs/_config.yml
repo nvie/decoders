@@ -11,10 +11,10 @@ search_enabled: true
 logo: './assets/logo-small@2x.png'
 
 aux_links:
-    'NPM':
-        - 'https://www.npmjs.com/package/decoders'
-    'GitHub':
-        - 'https://github.com/nvie/decoders'
+  'NPM':
+    - 'https://www.npmjs.com/package/decoders'
+  'GitHub':
+    - 'https://github.com/nvie/decoders'
 
 # Footer "Edit this page on GitHub" link text
 gh_edit_link: true

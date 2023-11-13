@@ -1,57 +1,57 @@
 import {
-    always,
-    anyNumber,
-    array,
-    boolean,
-    constant,
-    date,
-    Decoder,
-    DecoderType,
-    dict,
-    either,
-    email,
-    exact,
-    fail,
-    hardcoded,
-    httpsUrl,
-    inexact,
-    instanceOf,
-    integer,
-    iso8601,
-    json,
-    jsonArray,
-    jsonObject,
-    lazy,
-    mapping,
-    maybe,
-    mixed,
-    never,
-    nonEmptyArray,
-    nonEmptyString,
-    nullable,
-    null_,
-    number,
-    numericBoolean,
-    object,
-    oneOf,
-    optional,
-    poja,
-    pojo,
-    positiveInteger,
-    positiveNumber,
-    prep,
-    regex,
-    set,
-    string,
-    taggedUnion,
-    truthy,
-    tuple,
-    undefined_,
-    unknown,
-    url,
-    uuid,
-    uuidv1,
-    uuidv4,
+  always,
+  anyNumber,
+  array,
+  boolean,
+  constant,
+  date,
+  Decoder,
+  DecoderType,
+  dict,
+  either,
+  email,
+  exact,
+  fail,
+  hardcoded,
+  httpsUrl,
+  inexact,
+  instanceOf,
+  integer,
+  iso8601,
+  json,
+  jsonArray,
+  jsonObject,
+  lazy,
+  mapping,
+  maybe,
+  mixed,
+  never,
+  nonEmptyArray,
+  nonEmptyString,
+  nullable,
+  null_,
+  number,
+  numericBoolean,
+  object,
+  oneOf,
+  optional,
+  poja,
+  pojo,
+  positiveInteger,
+  positiveNumber,
+  prep,
+  regex,
+  set,
+  string,
+  taggedUnion,
+  truthy,
+  tuple,
+  undefined_,
+  unknown,
+  url,
+  uuid,
+  uuidv1,
+  uuidv4,
 } from '../dist';
 import type { JSONValue, JSONObject, JSONArray } from '../dist';
 import { formatInline, formatShort } from '../dist/format';
@@ -60,16 +60,16 @@ import { expectError, expectType } from 'tsd';
 
 // Helper function to "test" a decoder on some input, and assert the return type
 function test<T>(decoder: Decoder<T>): T {
-    return decoder.verify('dummy');
+  return decoder.verify('dummy');
 }
 
 const strings = array(string);
 
 function foo(
-    _p: DecoderType<Decoder<string>>,
-    _q: DecoderType<Decoder<number[]>>,
-    _r: DecoderType<typeof strings>,
-    _s: DecoderType<typeof truthy>,
+  _p: DecoderType<Decoder<string>>,
+  _q: DecoderType<Decoder<number[]>>,
+  _r: DecoderType<typeof strings>,
+  _s: DecoderType<typeof truthy>,
 ) {}
 
 expectType<(p: string, q: number[], r: string[], s: boolean) => void>(foo);
@@ -116,18 +116,18 @@ expectType<[string, number]>(test(tuple(string, number)));
 expectType<[string, string, number]>(test(tuple(string, string, number)));
 expectType<[string, string, number, string]>(test(tuple(string, string, number, string)));
 expectType<[string, string, number, string, number]>(
-    test(tuple(string, string, number, string, number)),
+  test(tuple(string, string, number, string, number)),
 );
 expectType<[string, string, number, string, number, string]>(
-    test(tuple(string, string, number, string, number, string)),
+  test(tuple(string, string, number, string, number, string)),
 );
 
 // $ExpectType { name: string; tags: string[]; }
 test(
-    object({
-        name: string,
-        tags: array(string),
-    }),
+  object({
+    name: string,
+    tags: array(string),
+  }),
 );
 
 expectType<Record<string, never>>(test(object({})));
@@ -146,24 +146,24 @@ expectType<number>(test(string.peek_UNSTABLE(([_blob, value]) => ok(value.length
 expectType<string>(test(string.refine((s) => s.startsWith('x'), 'Must start with x')));
 
 expectType<string>(
-    test(unknown.refine((foo): foo is string => typeof foo === 'string', 'Is string')),
+  test(unknown.refine((foo): foo is string => typeof foo === 'string', 'Is string')),
 );
 
 // $ExpectType "a" | "b"
 test(
-    string.refine(
-        (foo: string): foo is 'a' | 'b' => foo === 'a' || foo === 'b',
-        'Is a or b',
-    ),
+  string.refine(
+    (foo: string): foo is 'a' | 'b' => foo === 'a' || foo === 'b',
+    'Is a or b',
+  ),
 );
 
 // $ExpectType number[]
 test(
-    array(number).reject((numbers) =>
-        numbers.reduce((acc, n) => acc + n) > 0
-            ? `Sum of ${numbers.join(' + ')} must be positive`
-            : null,
-    ),
+  array(number).reject((numbers) =>
+    numbers.reduce((acc, n) => acc + n) > 0
+      ? `Sum of ${numbers.join(' + ')} must be positive`
+      : null,
+  ),
 );
 
 // $ExpectType string
@@ -213,22 +213,22 @@ expectType<string | 42 | null | undefined>(test(maybe(maybe(string, 42))));
 expectType<string | Date>(test(maybe(string, () => new Date())));
 expectType<string | Date>(test(maybe(maybe(string), () => new Date())));
 expectType<string | Date | null | undefined>(
-    test(maybe(maybe(string, () => new Date()))),
+  test(maybe(maybe(string, () => new Date()))),
 );
 
 // object()
 {
-    const d = object({
-        foo: optional(string),
-        bar: object({ qux: string }),
-    });
+  const d = object({
+    foo: optional(string),
+    bar: object({ qux: string }),
+  });
 
-    expectType<{ bar: { qux: string }; foo?: string | undefined }>(test(d));
-    const x = test(d);
-    expectType<string | undefined>(x.foo);
-    expectType<{ qux: string }>(x.bar);
-    expectError(x.a);
-    expectError(x.b);
+  expectType<{ bar: { qux: string }; foo?: string | undefined }>(test(d));
+  const x = test(d);
+  expectType<string | undefined>(x.foo);
+  expectType<{ qux: string }>(x.bar);
+  expectError(x.a);
+  expectError(x.b);
 }
 
 // exact() (w/ empty mapping)
@@ -238,17 +238,17 @@ expectType<never>(test(object({})).b);
 
 // exact()
 {
-    const d = exact({
-        foo: optional(string),
-        bar: object({ qux: string }),
-    });
+  const d = exact({
+    foo: optional(string),
+    bar: object({ qux: string }),
+  });
 
-    expectType<{ bar: { qux: string }; foo?: string | undefined }>(test(d));
-    const x = test(d);
-    expectType<string | undefined>(x.foo);
-    expectType<{ qux: string }>(x.bar);
-    expectError(x.a);
-    expectError(x.b);
+  expectType<{ bar: { qux: string }; foo?: string | undefined }>(test(d));
+  const x = test(d);
+  expectType<string | undefined>(x.foo);
+  expectType<{ qux: string }>(x.bar);
+  expectError(x.a);
+  expectError(x.b);
 }
 
 // exact() (w/ empty mapping)
@@ -280,35 +280,35 @@ expectType<JSONArray>(test(jsonArray));
 expectType<JSONValue | undefined>(test(jsonObject).abc);
 
 {
-    interface Animal {
-        name: string;
-    }
-    class Cat implements Animal {
-        name = 'cat';
-    }
-    class Dog implements Animal {
-        name = 'dog';
-    }
-    class Labrador extends Dog {
-        name = 'labrador';
-    }
+  interface Animal {
+    name: string;
+  }
+  class Cat implements Animal {
+    name = 'cat';
+  }
+  class Dog implements Animal {
+    name = 'dog';
+  }
+  class Labrador extends Dog {
+    name = 'labrador';
+  }
 
-    expectType<Labrador>(test(instanceOf(Labrador)));
-    expectType<Dog>(test(instanceOf(Dog)));
-    expectType<Cat>(test(instanceOf(Cat)));
+  expectType<Labrador>(test(instanceOf(Labrador)));
+  expectType<Dog>(test(instanceOf(Dog)));
+  expectType<Cat>(test(instanceOf(Cat)));
 
-    // Or use it on existing types
-    expectType<Error>(test(instanceOf(Error)));
-    expectType<RegExp>(test(instanceOf(RegExp)));
+  // Or use it on existing types
+  expectType<Error>(test(instanceOf(Error)));
+  expectType<RegExp>(test(instanceOf(RegExp)));
 
-    // Weird case... due to the way the TypeError constructor is defined in the
-    // standard library, this doesn't work for TypeError...
-    // expectType<TypeError>(test(instanceOf(TypeError)));
+  // Weird case... due to the way the TypeError constructor is defined in the
+  // standard library, this doesn't work for TypeError...
+  // expectType<TypeError>(test(instanceOf(TypeError)));
 
-    // Parameterized classes cannot be inferred automatically...
-    expectType<Promise<unknown>>(test(instanceOf(Promise)));
-    expectType<Set<unknown>>(test(instanceOf(Set)));
-    expectType<Map<unknown, unknown>>(test(instanceOf(Map)));
+  // Parameterized classes cannot be inferred automatically...
+  expectType<Promise<unknown>>(test(instanceOf(Promise)));
+  expectType<Set<unknown>>(test(instanceOf(Set)));
+  expectType<Map<unknown, unknown>>(test(instanceOf(Map)));
 }
 
 expectType<Date>(test(date));
@@ -320,86 +320,86 @@ expectType<never>(test(never('I will never return')));
 expectType<string | number>(test(either(string, number)));
 expectType<string | number>(test(either(string, string, number)));
 expectType<string | number | boolean | number[]>(
-    test(either(string, boolean, number, array(number))),
+  test(either(string, boolean, number, array(number))),
 );
 expectType<string>(test(either(string, string, string, string, string)));
 expectType<string>(test(either(string, string, string, string, string, string)));
 expectType<string>(test(either(string, string, string, string, string, string, string)));
 expectType<string>(
-    test(either(string, string, string, string, string, string, string, string)),
+  test(either(string, string, string, string, string, string, string, string)),
 );
 expectType<string>(
-    test(either(string, string, string, string, string, string, string, string, string)),
+  test(either(string, string, string, string, string, string, string, string, string)),
 );
 
 // $ExpectType "foo" | "bar"
 test(oneOf(['foo', 'bar']));
 
 interface Rect {
-    _type: 'rect';
-    x: number;
-    y: number;
-    width: number;
-    height: number;
+  _type: 'rect';
+  x: number;
+  y: number;
+  width: number;
+  height: number;
 }
 
 interface Circle {
-    _type: 'circle';
-    cx: number;
-    cy: number;
-    radius: number;
+  _type: 'circle';
+  cx: number;
+  cy: number;
+  radius: number;
 }
 
 // type Shape = Rect | Circle;
 
 const rect: Decoder<Rect> = object({
-    _type: constant('rect'),
-    x: number,
-    y: number,
-    width: number,
-    height: number,
+  _type: constant('rect'),
+  x: number,
+  y: number,
+  width: number,
+  height: number,
 });
 
 const circle: Decoder<Circle> = object({
-    _type: constant('circle'),
-    cx: number,
-    cy: number,
-    radius: number,
+  _type: constant('circle'),
+  cx: number,
+  cy: number,
+  radius: number,
 });
 
 // $ExpectType Values<{ rect: Rect; circle: Circle; }>
 test(taggedUnion('_type', { rect, circle }));
 
 interface Rect1 {
-    _type: 0;
-    x: number;
-    y: number;
-    width: number;
-    height: number;
+  _type: 0;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
 }
 
 interface Circle1 {
-    _type: 1;
-    cx: number;
-    cy: number;
-    radius: number;
+  _type: 1;
+  cx: number;
+  cy: number;
+  radius: number;
 }
 
 // type Shape1 = Rect1 | Circle1;
 
 const rect1: Decoder<Rect1> = object({
-    _type: constant(0),
-    x: number,
-    y: number,
-    width: number,
-    height: number,
+  _type: constant(0),
+  x: number,
+  y: number,
+  width: number,
+  height: number,
 });
 
 const circle1: Decoder<Circle1> = object({
-    _type: constant(1),
-    cx: number,
-    cy: number,
-    radius: number,
+  _type: constant(1),
+  cx: number,
+  cy: number,
+  radius: number,
 });
 
 // $ExpectType Values<{ 0: Rect1; 1: Circle1; }>

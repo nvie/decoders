@@ -15,7 +15,7 @@ const EITHER_PREFIX = 'Either:\n';
  * Indents and adds a dash in front of this (potentially multiline) string.
  */
 function itemize(s: string): string {
-    return `-${indent(s).substring(1)}`;
+  return `-${indent(s).substring(1)}`;
 }
 
 /**
@@ -44,9 +44,9 @@ function itemize(s: string): string {
  *
  */
 function nest(errText: string): string {
-    return errText.startsWith(EITHER_PREFIX)
-        ? errText.substr(EITHER_PREFIX.length)
-        : itemize(errText);
+  return errText.startsWith(EITHER_PREFIX)
+    ? errText.substr(EITHER_PREFIX.length)
+    : itemize(errText);
 }
 
 /**
@@ -57,31 +57,30 @@ function nest(errText: string): string {
  * the input gets rejected.
  */
 export function either<T extends readonly Decoder<any>[]>(
-    ...decoders: T
+  ...decoders: T
 ): Decoder<DecoderTypes<T>> {
-    if (decoders.length === 0) {
-        throw new Error('Pass at least one decoder to either()');
+  if (decoders.length === 0) {
+    throw new Error('Pass at least one decoder to either()');
+  }
+
+  return define((blob, _, err) => {
+    // Collect errors here along the way
+    const errors = [];
+
+    for (let i = 0; i < decoders.length; i++) {
+      const result: DecodeResult<unknown> = decoders[i].decode(blob);
+      if (result.ok) {
+        return result as Ok<DecoderTypes<T>>;
+      } else {
+        errors.push(result.error);
+      }
     }
 
-    return define((blob, _, err) => {
-        // Collect errors here along the way
-        const errors = [];
-
-        for (let i = 0; i < decoders.length; i++) {
-            const result: DecodeResult<unknown> = decoders[i].decode(blob);
-            if (result.ok) {
-                return result as Ok<DecoderTypes<T>>;
-            } else {
-                errors.push(result.error);
-            }
-        }
-
-        // Decoding all alternatives failed, return the combined error message
-        const text =
-            EITHER_PREFIX +
-            errors.map((err) => nest(summarize(err).join('\n'))).join('\n');
-        return err(text);
-    });
+    // Decoding all alternatives failed, return the combined error message
+    const text =
+      EITHER_PREFIX + errors.map((err) => nest(summarize(err).join('\n'))).join('\n');
+    return err(text);
+  });
 }
 
 /**
@@ -89,17 +88,15 @@ export function either<T extends readonly Decoder<any>[]>(
  * specified values.
  */
 export function oneOf<C extends Scalar>(constants: readonly C[]): Decoder<C> {
-    return define((blob, ok, err) => {
-        const winner = constants.find((c) => c === blob);
-        if (winner !== undefined) {
-            return ok(winner);
-        }
-        return err(
-            `Must be one of ${constants
-                .map((value) => JSON.stringify(value))
-                .join(', ')}`,
-        );
-    });
+  return define((blob, ok, err) => {
+    const winner = constants.find((c) => c === blob);
+    if (winner !== undefined) {
+      return ok(winner);
+    }
+    return err(
+      `Must be one of ${constants.map((value) => JSON.stringify(value)).join(', ')}`,
+    );
+  });
 }
 
 /**
@@ -131,14 +128,14 @@ export function oneOf<C extends Scalar>(constants: readonly C[]): Decoder<C> {
  * try all decoders one by one.
  */
 export function taggedUnion<O extends Record<string, Decoder<any>>>(
-    field: string,
-    mapping: O,
+  field: string,
+  mapping: O,
 ): Decoder<Values<{ [key in keyof O]: DecoderType<O[key]> }>> {
-    const base: Decoder<string> = object({
-        [field]: prep(String, oneOf(Object.keys(mapping))),
-    }).transform((o) => o[field]);
-    return base.peek_UNSTABLE(([blob, key]) => {
-        const decoder = mapping[key];
-        return decoder.decode(blob);
-    });
+  const base: Decoder<string> = object({
+    [field]: prep(String, oneOf(Object.keys(mapping))),
+  }).transform((o) => o[field]);
+  return base.peek_UNSTABLE(([blob, key]) => {
+    const decoder = mapping[key];
+    return decoder.decode(blob);
+  });
 }

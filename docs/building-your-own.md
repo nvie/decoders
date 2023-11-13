@@ -37,12 +37,12 @@ narrow it down.
 
 The **tl;dr** is:
 
--   Start from an existing decoder that already accepts (at least) all inputs that you
-    want to be accepting
--   Optionally, narrow down what will get **accepted** by adding extra criteria with
-    [`.refine()`](/Decoder.html#refine)
--   Optionally, to change what your custom decoder **returns**, use
-    [`.transform()`](/Decoder.html#transform)
+- Start from an existing decoder that already accepts (at least) all inputs that you want
+  to be accepting
+- Optionally, narrow down what will get **accepted** by adding extra criteria with
+  [`.refine()`](/Decoder.html#refine)
+- Optionally, to change what your custom decoder **returns**, use
+  [`.transform()`](/Decoder.html#transform)
 
 Now, let's build a few custom decoders to illustrate the above.
 
@@ -109,7 +109,7 @@ do that by adding a [`.transform()`](/Decoder.html#transform) function:
 
 ```typescript
 function truncated(size: number): Decoder<string> {
-    return string.transform((s) => s.substring(0, size));
+  return string.transform((s) => s.substring(0, size));
 }
 
 const str20 = truncated(20);
@@ -133,8 +133,8 @@ to enforce that these are 5-letter worlds with only alphabetical letters.
 
 We want to build this as a decoder that:
 
--   _Accepts_ strings containing exactly 5 alphabetical characters
--   _Return_ those in uppercased form (even when not inputted as such)
+- _Accepts_ strings containing exactly 5 alphabetical characters
+- _Return_ those in uppercased form (even when not inputted as such)
 
 To define the acceptance criteria, we'll use a [`regex()`](/api.html#regex) decoder. This
 will enforce that only alphabetical chars are used, and that there are exactly 5 of them
@@ -145,7 +145,7 @@ Then, we'll transform any accepted words to uppercase automatically.
 
 ```typescript
 const wordle = regex(/^[a-z]{5}$/i, 'Must be 5-letter word').transform((s) =>
-    s.toUpperCase(),
+  s.toUpperCase(),
 );
 
 // 👍
@@ -170,7 +170,7 @@ easier:
 
 ```typescript
 function uppercase(decoder: Decoder<string>): Decoder<string> {
-    return decoder.transform((s) => s.toUpperCase());
+  return decoder.transform((s) => s.toUpperCase());
 }
 ```
 
@@ -195,8 +195,8 @@ This may make your object definitions super readable:
 const tag = regex(/^\w+$/, 'Must be single word');
 
 const thing = object({
-    email: uppercase(email),
-    labels: array(uppercase(tag)),
+  email: uppercase(email),
+  labels: array(uppercase(tag)),
 });
 
 thing.verify({ email: 'user@example.org', labels: ['easy'] });
@@ -214,11 +214,11 @@ For example, suppose you have an incoming webhook that looks like this:
 
 ```json
 {
-    "events": [
-        { "id": 1, "created_at": "2022-02-01T08:12:29Z", "labels": "urgent, delayed" },
-        { "id": 2, "created_at": null, "labels": "" },
-        { "id": 3, "labels": null }
-    ]
+  "events": [
+    { "id": 1, "created_at": "2022-02-01T08:12:29Z", "labels": "urgent, delayed" },
+    { "id": 2, "created_at": null, "labels": "" },
+    { "id": 3, "labels": null }
+  ]
 }
 ```
 
@@ -237,8 +237,8 @@ define an `id` decoder for this:
 
 ```typescript
 const id: Decoder<string> = either(
-    string,
-    positiveInteger.transform((n) => String(n)),
+  string,
+  positiveInteger.transform((n) => String(n)),
 );
 ```
 

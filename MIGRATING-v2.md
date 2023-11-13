@@ -77,8 +77,8 @@ add additional checks to existing decoders. Predicates have been moved to the
 // ❌ 1.x
 import { compose, number, predicate } from 'decoders';
 const odd = compose(
-    number,
-    predicate((n) => n % 2 !== 0, 'Must be odd'),
+  number,
+  predicate((n) => n % 2 !== 0, 'Must be odd'),
 );
 
 // ✅ 2.x
@@ -89,9 +89,9 @@ const odd = number.refine((n) => n % 2 !== 0, 'Must be odd');
 
 The concept of "guards" has been removed entirely. The following APIs have been removed:
 
--   The function `guard()`
--   The type `Guard<T>`
--   The helper type `GuardType<T>`
+- The function `guard()`
+- The type `Guard<T>`
+- The helper type `GuardType<T>`
 
 Instead, all decoders now have a [`.verify()`](https://decoders.cc/Decoder.html#verify)
 method which does the exact same thing.
@@ -143,7 +143,7 @@ import { annotate } from 'debrief';
 import { Decoder } from 'decoders';
 
 export const buffer: Decoder<Buffer> = (blob) =>
-    Buffer.isBuffer(blob) ? Ok(blob) : Err(annotate(blob, 'Must be Buffer'));
+  Buffer.isBuffer(blob) ? Ok(blob) : Err(annotate(blob, 'Must be Buffer'));
 ```
 
 In 2.x the `ok` and `err` helpers get passed to you by
@@ -156,7 +156,7 @@ cases like this. You can simply return a string `err` message directly.
 import { define } from 'decoders';
 
 export const buffer: Decoder<Buffer> = define((blob, ok, err) =>
-    Buffer.isBuffer(blob) ? ok(blob) : err('Must be Buffer'),
+  Buffer.isBuffer(blob) ? ok(blob) : err('Must be Buffer'),
 );
 ```
 

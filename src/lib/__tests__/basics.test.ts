@@ -1,309 +1,309 @@
 /* eslint-disable no-restricted-syntax */
 
 import {
-    always,
-    constant,
-    maybe,
-    unknown,
-    null_,
-    nullable,
-    optional,
-    undefined_,
+  always,
+  constant,
+  maybe,
+  unknown,
+  null_,
+  nullable,
+  optional,
+  undefined_,
 } from '../basics';
 import { INPUTS } from './_fixtures';
 import { partition } from 'itertools';
 import { string } from '../strings';
 
 describe('null_', () => {
-    const decoder = null_;
-    const [okay, not_okay] = partition(INPUTS, (x) => x === null);
+  const decoder = null_;
+  const [okay, not_okay] = partition(INPUTS, (x) => x === null);
 
-    it('valid', () => {
-        expect(okay.length).not.toBe(0);
-        for (const value of okay) {
-            expect(decoder.verify(value)).toBe(value);
-        }
-    });
+  it('valid', () => {
+    expect(okay.length).not.toBe(0);
+    for (const value of okay) {
+      expect(decoder.verify(value)).toBe(value);
+    }
+  });
 
-    it('invalid', () => {
-        expect(not_okay.length).not.toBe(0);
-        for (const value of not_okay) {
-            expect(decoder.decode(value).ok).toBe(false);
-        }
-    });
+  it('invalid', () => {
+    expect(not_okay.length).not.toBe(0);
+    for (const value of not_okay) {
+      expect(decoder.decode(value).ok).toBe(false);
+    }
+  });
 });
 
 describe('undefined_', () => {
-    const decoder = undefined_;
-    const [okay, not_okay] = partition(INPUTS, (x) => x === undefined);
+  const decoder = undefined_;
+  const [okay, not_okay] = partition(INPUTS, (x) => x === undefined);
 
-    it('valid', () => {
-        expect(okay.length).not.toBe(0);
-        for (const value of okay) {
-            expect(decoder.verify(value)).toBe(value);
-        }
-    });
+  it('valid', () => {
+    expect(okay.length).not.toBe(0);
+    for (const value of okay) {
+      expect(decoder.verify(value)).toBe(value);
+    }
+  });
 
-    it('invalid', () => {
-        expect(not_okay.length).not.toBe(0);
-        for (const value of not_okay) {
-            expect(decoder.decode(value).ok).toBe(false);
-        }
-    });
+  it('invalid', () => {
+    expect(not_okay.length).not.toBe(0);
+    for (const value of not_okay) {
+      expect(decoder.decode(value).ok).toBe(false);
+    }
+  });
 });
 
 describe('string constants', () => {
-    const decoder = constant('foo');
-    const [okay, not_okay] = partition(INPUTS, (x) => x === 'foo');
+  const decoder = constant('foo');
+  const [okay, not_okay] = partition(INPUTS, (x) => x === 'foo');
 
-    it('valid', () => {
-        expect(okay.length).not.toBe(0);
-        for (const value of okay) {
-            expect(decoder.verify(value)).toBe(value);
-        }
-    });
+  it('valid', () => {
+    expect(okay.length).not.toBe(0);
+    for (const value of okay) {
+      expect(decoder.verify(value)).toBe(value);
+    }
+  });
 
-    it('invalid', () => {
-        expect(not_okay.length).not.toBe(0);
-        for (const value of not_okay) {
-            expect(decoder.decode(value).ok).toBe(false);
-        }
-    });
+  it('invalid', () => {
+    expect(not_okay.length).not.toBe(0);
+    for (const value of not_okay) {
+      expect(decoder.decode(value).ok).toBe(false);
+    }
+  });
 });
 
 describe('number constants', () => {
-    const decoder = constant(42);
-    const [okay, not_okay] = partition(INPUTS, (x) => x === 42);
+  const decoder = constant(42);
+  const [okay, not_okay] = partition(INPUTS, (x) => x === 42);
 
-    it('valid', () => {
-        expect(okay.length).not.toBe(0);
-        for (const value of okay) {
-            expect(decoder.verify(value)).toBe(value);
-        }
-    });
+  it('valid', () => {
+    expect(okay.length).not.toBe(0);
+    for (const value of okay) {
+      expect(decoder.verify(value)).toBe(value);
+    }
+  });
 
-    it('invalid', () => {
-        expect(not_okay.length).not.toBe(0);
-        for (const value of not_okay) {
-            expect(decoder.decode(value).ok).toBe(false);
-        }
-    });
+  it('invalid', () => {
+    expect(not_okay.length).not.toBe(0);
+    for (const value of not_okay) {
+      expect(decoder.decode(value).ok).toBe(false);
+    }
+  });
 });
 
 describe('boolean constants #1', () => {
-    const decoder = constant(true);
-    const [okay, not_okay] = partition(INPUTS, (x) => x === true);
+  const decoder = constant(true);
+  const [okay, not_okay] = partition(INPUTS, (x) => x === true);
 
-    it('valid', () => {
-        expect(okay.length).not.toBe(0);
-        for (const value of okay) {
-            expect(decoder.verify(value)).toBe(value);
-        }
-    });
+  it('valid', () => {
+    expect(okay.length).not.toBe(0);
+    for (const value of okay) {
+      expect(decoder.verify(value)).toBe(value);
+    }
+  });
 
-    it('invalid', () => {
-        expect(not_okay.length).not.toBe(0);
-        for (const value of not_okay) {
-            expect(decoder.decode(value).ok).toBe(false);
-        }
-    });
+  it('invalid', () => {
+    expect(not_okay.length).not.toBe(0);
+    for (const value of not_okay) {
+      expect(decoder.decode(value).ok).toBe(false);
+    }
+  });
 });
 
 describe('boolean constants #2', () => {
-    const decoder = constant(false);
-    const [okay, not_okay] = partition(INPUTS, (x) => x === false);
+  const decoder = constant(false);
+  const [okay, not_okay] = partition(INPUTS, (x) => x === false);
 
-    it('valid', () => {
-        expect(okay.length).not.toBe(0);
-        for (const value of okay) {
-            expect(decoder.verify(value)).toBe(value);
-        }
-    });
+  it('valid', () => {
+    expect(okay.length).not.toBe(0);
+    for (const value of okay) {
+      expect(decoder.verify(value)).toBe(value);
+    }
+  });
 
-    it('invalid', () => {
-        expect(not_okay.length).not.toBe(0);
-        for (const value of not_okay) {
-            expect(decoder.decode(value).ok).toBe(false);
-        }
-    });
+  it('invalid', () => {
+    expect(not_okay.length).not.toBe(0);
+    for (const value of not_okay) {
+      expect(decoder.decode(value).ok).toBe(false);
+    }
+  });
 });
 
 describe('always', () => {
-    it('valid', () => {
-        // Test all hardcoded inputs...
-        for (const hardcodedValue of INPUTS) {
-            if (Number.isNaN(hardcodedValue)) {
-                // Skip NaN, as we can't compare those for our test cases...
-                continue;
-            }
+  it('valid', () => {
+    // Test all hardcoded inputs...
+    for (const hardcodedValue of INPUTS) {
+      if (Number.isNaN(hardcodedValue)) {
+        // Skip NaN, as we can't compare those for our test cases...
+        continue;
+      }
 
-            const decoder = always(hardcodedValue);
+      const decoder = always(hardcodedValue);
 
-            // Against all inputs...
-            for (const input of INPUTS) {
-                expect(decoder.verify(input)).toBe(hardcodedValue);
-            }
-        }
-    });
+      // Against all inputs...
+      for (const input of INPUTS) {
+        expect(decoder.verify(input)).toBe(hardcodedValue);
+      }
+    }
+  });
 
-    it('works with callables', () => {
-        const now = new Date();
-        expect(always(() => 42).verify('dummy')).toBe(42);
-        expect(always(() => now).verify('dummy')).toBe(now);
-    });
+  it('works with callables', () => {
+    const now = new Date();
+    expect(always(() => 42).verify('dummy')).toBe(42);
+    expect(always(() => now).verify('dummy')).toBe(now);
+  });
 
-    it('invalid', () => {
-        // hardcoded verifiers never fail
-    });
+  it('invalid', () => {
+    // hardcoded verifiers never fail
+  });
 });
 
 describe('mixed (pass-thru)', () => {
-    it('valid', () => {
-        // Test all hardcoded inputs...
-        const decoder = unknown;
+  it('valid', () => {
+    // Test all hardcoded inputs...
+    const decoder = unknown;
 
-        // Against all inputs...
-        for (const input of INPUTS) {
-            expect(decoder.verify(input)).toBe(input);
-        }
-    });
+    // Against all inputs...
+    for (const input of INPUTS) {
+      expect(decoder.verify(input)).toBe(input);
+    }
+  });
 
-    it('mixed', () => {
-        // mixed verifiers never fail
-    });
+  it('mixed', () => {
+    // mixed verifiers never fail
+  });
 });
 
 describe('optional', () => {
-    const decoder = optional(string);
-    const [okay, not_okay] = partition(INPUTS, (x) => typeof x === 'string');
+  const decoder = optional(string);
+  const [okay, not_okay] = partition(INPUTS, (x) => typeof x === 'string');
 
-    it('valid', () => {
-        expect(okay.length).not.toBe(0);
-        expect(decoder.verify(undefined)).toBe(undefined);
-        for (const value of okay) {
-            expect(decoder.verify(value)).toBe(value);
-        }
-    });
+  it('valid', () => {
+    expect(okay.length).not.toBe(0);
+    expect(decoder.verify(undefined)).toBe(undefined);
+    for (const value of okay) {
+      expect(decoder.verify(value)).toBe(value);
+    }
+  });
 
-    it('invalid', () => {
-        expect(not_okay.length).not.toBe(0);
-        for (const value of not_okay) {
-            if (value === undefined) continue;
-            expect(decoder.decode(value).ok).toBe(false);
-        }
-    });
+  it('invalid', () => {
+    expect(not_okay.length).not.toBe(0);
+    for (const value of not_okay) {
+      if (value === undefined) continue;
+      expect(decoder.decode(value).ok).toBe(false);
+    }
+  });
 
-    it('w/ default value', () => {
-        const decoder = optional(string, 42);
-        expect(decoder.verify('foo')).toBe('foo');
-        expect(decoder.verify('')).toBe('');
-        expect(decoder.verify(undefined)).toBe(42);
+  it('w/ default value', () => {
+    const decoder = optional(string, 42);
+    expect(decoder.verify('foo')).toBe('foo');
+    expect(decoder.verify('')).toBe('');
+    expect(decoder.verify(undefined)).toBe(42);
 
-        expect(() => decoder.verify(null)).toThrow();
-        expect(() => decoder.verify(123)).toThrow();
-    });
+    expect(() => decoder.verify(null)).toThrow();
+    expect(() => decoder.verify(123)).toThrow();
+  });
 
-    it('w/ callable default value', () => {
-        const decoder = optional(string, () => 42);
-        expect(decoder.verify('foo')).toBe('foo');
-        expect(decoder.verify('')).toBe('');
-        expect(decoder.verify(undefined)).toBe(42);
+  it('w/ callable default value', () => {
+    const decoder = optional(string, () => 42);
+    expect(decoder.verify('foo')).toBe('foo');
+    expect(decoder.verify('')).toBe('');
+    expect(decoder.verify(undefined)).toBe(42);
 
-        expect(() => decoder.verify(null)).toThrow();
-        expect(() => decoder.verify(123)).toThrow();
-    });
+    expect(() => decoder.verify(null)).toThrow();
+    expect(() => decoder.verify(123)).toThrow();
+  });
 });
 
 describe('nullable', () => {
-    const decoder = nullable(string);
-    const [okay, not_okay] = partition(INPUTS, (x) => typeof x === 'string');
+  const decoder = nullable(string);
+  const [okay, not_okay] = partition(INPUTS, (x) => typeof x === 'string');
 
-    it('valid', () => {
-        expect(okay.length).not.toBe(0);
-        expect(decoder.verify(null)).toBe(null);
-        for (const value of okay) {
-            expect(decoder.verify(value)).toBe(value);
-        }
-    });
+  it('valid', () => {
+    expect(okay.length).not.toBe(0);
+    expect(decoder.verify(null)).toBe(null);
+    for (const value of okay) {
+      expect(decoder.verify(value)).toBe(value);
+    }
+  });
 
-    it('invalid', () => {
-        expect(not_okay.length).not.toBe(0);
-        for (const value of not_okay) {
-            if (value === null) continue;
-            expect(decoder.decode(value).ok).toBe(false);
-        }
-    });
+  it('invalid', () => {
+    expect(not_okay.length).not.toBe(0);
+    for (const value of not_okay) {
+      if (value === null) continue;
+      expect(decoder.decode(value).ok).toBe(false);
+    }
+  });
 
-    it('w/ default value', () => {
-        const decoder = nullable(string, 42);
-        expect(decoder.verify('foo')).toBe('foo');
-        expect(decoder.verify('')).toBe('');
-        expect(decoder.verify(null)).toBe(42);
+  it('w/ default value', () => {
+    const decoder = nullable(string, 42);
+    expect(decoder.verify('foo')).toBe('foo');
+    expect(decoder.verify('')).toBe('');
+    expect(decoder.verify(null)).toBe(42);
 
-        expect(() => decoder.verify(undefined)).toThrow();
-        expect(() => decoder.verify(123)).toThrow();
-    });
+    expect(() => decoder.verify(undefined)).toThrow();
+    expect(() => decoder.verify(123)).toThrow();
+  });
 
-    it('w/ callable default value', () => {
-        const decoder = nullable(string, () => 42);
-        expect(decoder.verify('foo')).toBe('foo');
-        expect(decoder.verify('')).toBe('');
-        expect(decoder.verify(null)).toBe(42);
+  it('w/ callable default value', () => {
+    const decoder = nullable(string, () => 42);
+    expect(decoder.verify('foo')).toBe('foo');
+    expect(decoder.verify('')).toBe('');
+    expect(decoder.verify(null)).toBe(42);
 
-        expect(() => decoder.verify(undefined)).toThrow();
-        expect(() => decoder.verify(123)).toThrow();
-    });
+    expect(() => decoder.verify(undefined)).toThrow();
+    expect(() => decoder.verify(123)).toThrow();
+  });
 });
 
 describe('maybe', () => {
-    const decoder = maybe(string);
-    const [okay, not_okay] = partition(INPUTS, (x) => typeof x === 'string');
+  const decoder = maybe(string);
+  const [okay, not_okay] = partition(INPUTS, (x) => typeof x === 'string');
 
-    it('valid', () => {
-        expect(okay.length).not.toBe(0);
-        expect(decoder.verify(null)).toBe(null);
-        expect(decoder.verify(undefined)).toBe(undefined);
-        for (const value of okay) {
-            expect(decoder.verify(value)).toBe(value);
-        }
-    });
+  it('valid', () => {
+    expect(okay.length).not.toBe(0);
+    expect(decoder.verify(null)).toBe(null);
+    expect(decoder.verify(undefined)).toBe(undefined);
+    for (const value of okay) {
+      expect(decoder.verify(value)).toBe(value);
+    }
+  });
 
-    it('allowNull', () => {
-        // No difference when decoding undefined
-        expect(decoder.verify(undefined)).toBeUndefined();
-        expect(decoder.verify(null)).toBeNull();
+  it('allowNull', () => {
+    // No difference when decoding undefined
+    expect(decoder.verify(undefined)).toBeUndefined();
+    expect(decoder.verify(null)).toBeNull();
 
-        // No difference when string-decoding
-        expect(decoder.verify('')).toBe('');
-        expect(decoder.verify('foo')).toBe('foo');
-    });
+    // No difference when string-decoding
+    expect(decoder.verify('')).toBe('');
+    expect(decoder.verify('foo')).toBe('foo');
+  });
 
-    it('invalid', () => {
-        expect(not_okay.length).not.toBe(0);
-        for (const value of not_okay) {
-            if (value === undefined) continue;
-            if (value === null) continue;
-            expect(decoder.decode(value).ok).toBe(false);
-        }
-    });
+  it('invalid', () => {
+    expect(not_okay.length).not.toBe(0);
+    for (const value of not_okay) {
+      if (value === undefined) continue;
+      if (value === null) continue;
+      expect(decoder.decode(value).ok).toBe(false);
+    }
+  });
 
-    it('w/ default value', () => {
-        const decoder = maybe(string, 42);
-        expect(decoder.verify('foo')).toBe('foo');
-        expect(decoder.verify('')).toBe('');
-        expect(decoder.verify(null)).toBe(42);
-        expect(decoder.verify(undefined)).toBe(42);
+  it('w/ default value', () => {
+    const decoder = maybe(string, 42);
+    expect(decoder.verify('foo')).toBe('foo');
+    expect(decoder.verify('')).toBe('');
+    expect(decoder.verify(null)).toBe(42);
+    expect(decoder.verify(undefined)).toBe(42);
 
-        expect(() => decoder.verify(123)).toThrow();
-    });
+    expect(() => decoder.verify(123)).toThrow();
+  });
 
-    it('w/ callable default value', () => {
-        const decoder = maybe(string, () => 42);
-        expect(decoder.verify('foo')).toBe('foo');
-        expect(decoder.verify('')).toBe('');
-        expect(decoder.verify(null)).toBe(42);
-        expect(decoder.verify(undefined)).toBe(42);
+  it('w/ callable default value', () => {
+    const decoder = maybe(string, () => 42);
+    expect(decoder.verify('foo')).toBe('foo');
+    expect(decoder.verify('')).toBe('');
+    expect(decoder.verify(null)).toBe(42);
+    expect(decoder.verify(undefined)).toBe(42);
 
-        expect(() => decoder.verify(123)).toThrow();
-    });
+    expect(() => decoder.verify(123)).toThrow();
+  });
 });

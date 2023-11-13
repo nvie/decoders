@@ -11,13 +11,13 @@ import type { Decoder } from '../Decoder';
  * \5 - the path (optional)
  */
 const url_re =
-    /^([A-Za-z]{3,9}(?:[+][A-Za-z]{3,9})?):\/\/(?:([-;:&=+$,\w]+)@)?(?:([A-Za-z0-9.-]+)(?::([0-9]{2,5}))?)(\/(?:[-+~%/.,\w]*)?(?:\?[-+=&;%@.,/\w]*)?(?:#[.,!/\w]*)?)?$/;
+  /^([A-Za-z]{3,9}(?:[+][A-Za-z]{3,9})?):\/\/(?:([-;:&=+$,\w]+)@)?(?:([A-Za-z0-9.-]+)(?::([0-9]{2,5}))?)(\/(?:[-+~%/.,\w]*)?(?:\?[-+=&;%@.,/\w]*)?(?:#[.,!/\w]*)?)?$/;
 
 /**
  * Accepts and returns strings.
  */
 export const string: Decoder<string> = define((blob, ok, err) =>
-    typeof blob === 'string' ? ok(blob) : err('Must be string'),
+  typeof blob === 'string' ? ok(blob) : err('Must be string'),
 );
 
 /**
@@ -29,7 +29,7 @@ export const nonEmptyString: Decoder<string> = regex(/\S/, 'Must be non-empty st
  * Accepts and returns strings that match the given regular expression.
  */
 export function regex(regex: RegExp, msg: string): Decoder<string> {
-    return string.refine((s) => regex.test(s), msg);
+  return string.refine((s) => regex.test(s), msg);
 }
 
 /**
@@ -37,17 +37,17 @@ export function regex(regex: RegExp, msg: string): Decoder<string> {
  * (This will not mean that the email address actually exist.)
  */
 export const email: Decoder<string> = regex(
-    // The almost perfect email regex, taken from https://emailregex.com/
-    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-    'Must be email',
+  // The almost perfect email regex, taken from https://emailregex.com/
+  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+  'Must be email',
 );
 
 /**
  * Accepts strings that are valid URLs, returns the value as a URL instance.
  */
 export const url: Decoder<URL> = either(
-    regex(url_re, 'Must be URL').transform((value) => new URL(value)),
-    instanceOf(URL),
+  regex(url_re, 'Must be URL').transform((value) => new URL(value)),
+  instanceOf(URL),
 );
 
 /**
@@ -55,8 +55,8 @@ export const url: Decoder<URL> = either(
  * as a URL instance.
  */
 export const httpsUrl: Decoder<URL> = url.refine(
-    (value) => value.protocol === 'https:',
-    'Must be an HTTPS URL',
+  (value) => value.protocol === 'https:',
+  'Must be an HTTPS URL',
 );
 
 /**
@@ -65,8 +65,8 @@ export const httpsUrl: Decoder<URL> = url.refine(
  * (universally unique identifier).
  */
 export const uuid: Decoder<string> = regex(
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
-    'Must be uuid',
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+  'Must be uuid',
 );
 
 /**
@@ -75,8 +75,8 @@ export const uuid: Decoder<string> = regex(
  * strings.
  */
 export const uuidv1: Decoder<string> =
-    // https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_(date-time_and_MAC_address)
-    uuid.refine((value) => value[14] === '1', 'Must be uuidv1');
+  // https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_(date-time_and_MAC_address)
+  uuid.refine((value) => value[14] === '1', 'Must be uuidv1');
 
 /**
  * Like `uuid`, but only accepts
@@ -84,5 +84,5 @@ export const uuidv1: Decoder<string> =
  * strings.
  */
 export const uuidv4: Decoder<string> =
-    // https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)
-    uuid.refine((value) => value[14] === '4', 'Must be uuidv4');
+  // https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)
+  uuid.refine((value) => value[14] === '4', 'Must be uuidv4');

@@ -6,7 +6,7 @@ import type { AllowImplicit } from './_helpers';
 import type { Decoder, DecodeResult } from '../Decoder';
 
 type ObjectDecoderType<T> = AllowImplicit<{
-    [key in keyof T]: T[key] extends Decoder<infer V> ? V : never;
+  [key in keyof T]: T[key] extends Decoder<infer V> ? V : never;
 }>;
 
 /**
@@ -14,7 +14,7 @@ type ObjectDecoderType<T> = AllowImplicit<{
  * values further.
  */
 export const pojo: Decoder<Record<string, unknown>> = define((blob, ok, err) =>
-    isPojo(blob) ? ok(blob) : err('Must be an object'),
+  isPojo(blob) ? ok(blob) : err('Must be an object'),
 );
 
 /**
@@ -23,93 +23,93 @@ export const pojo: Decoder<Record<string, unknown>> = define((blob, ok, err) =>
  */
 export function object(decodersByKey: Record<any, never>): Decoder<Record<string, never>>;
 export function object<O extends Record<string, Decoder<any>>>(
-    decodersByKey: O,
+  decodersByKey: O,
 ): Decoder<{ [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] }>;
 export function object<O extends Record<string, Decoder<any>>>(
-    decodersByKey: O,
+  decodersByKey: O,
 ): Decoder<{ [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] }> {
-    //     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    //     This is basically just equivalent to:
-    //         ObjectDecoderType<O>
-    //
-    //     But by "resolving" this with a mapped type, we remove the helper
-    //     type names from the inferred type here, making this much easier to
-    //     work with while developing.
+  //     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  //     This is basically just equivalent to:
+  //         ObjectDecoderType<O>
+  //
+  //     But by "resolving" this with a mapped type, we remove the helper
+  //     type names from the inferred type here, making this much easier to
+  //     work with while developing.
 
-    // Compute this set at decoder definition time
-    const knownKeys = new Set(Object.keys(decodersByKey));
+  // Compute this set at decoder definition time
+  const knownKeys = new Set(Object.keys(decodersByKey));
 
-    return pojo.then((plainObj, ok, err) => {
-        const actualKeys = new Set(Object.keys(plainObj));
+  return pojo.then((plainObj, ok, err) => {
+    const actualKeys = new Set(Object.keys(plainObj));
 
-        // At this point, "missingKeys" will also include all fields that may
-        // validly be optional. We'll let the underlying decoder decide and
-        // remove the key from this missing set if the decoder accepts the
-        // value.
-        const missingKeys = subtract(knownKeys, actualKeys);
+    // At this point, "missingKeys" will also include all fields that may
+    // validly be optional. We'll let the underlying decoder decide and
+    // remove the key from this missing set if the decoder accepts the
+    // value.
+    const missingKeys = subtract(knownKeys, actualKeys);
 
-        let record = {};
-        let errors: Record<string, Annotation> | null = null;
+    let record = {};
+    let errors: Record<string, Annotation> | null = null;
 
-        Object.keys(decodersByKey).forEach((key) => {
-            const decoder = decodersByKey[key];
-            const rawValue = plainObj[key];
-            const result: DecodeResult<unknown> = decoder.decode(rawValue);
+    Object.keys(decodersByKey).forEach((key) => {
+      const decoder = decodersByKey[key];
+      const rawValue = plainObj[key];
+      const result: DecodeResult<unknown> = decoder.decode(rawValue);
 
-            if (result.ok) {
-                const value = result.value;
-                if (value !== undefined) {
-                    // @ts-expect-error - look into this later
-                    record[key] = value;
-                }
-
-                // If this succeeded, remove the key from the missing keys
-                // tracker
-                missingKeys.delete(key);
-            } else {
-                const ann = result.error;
-
-                // Keep track of the annotation, but don't return just yet. We
-                // want to collect more error information.
-                if (rawValue === undefined) {
-                    // Explicitly add it to the missing set if the value is
-                    // undefined.  This covers explicit undefineds to be
-                    // treated the same as implicit undefineds (aka missing
-                    // keys).
-                    missingKeys.add(key);
-                } else {
-                    if (errors === null) {
-                        errors = {};
-                    }
-                    errors[key] = ann;
-                }
-            }
-        });
-
-        // Deal with errors now. There are two classes of errors we want to
-        // report.  First of all, we want to report any inline errors in this
-        // object.  Lastly, any fields that are missing should be annotated on
-        // the outer object itself.
-        if (errors || missingKeys.size > 0) {
-            let objAnn = annotateObject(plainObj);
-
-            if (errors) {
-                objAnn = merge(objAnn, errors);
-            }
-
-            if (missingKeys.size > 0) {
-                const errMsg = Array.from(missingKeys)
-                    .map((key) => `"${key}"`)
-                    .join(', ');
-                const pluralized = missingKeys.size > 1 ? 'keys' : 'key';
-                objAnn = updateText(objAnn, `Missing ${pluralized}: ${errMsg}`);
-            }
-
-            return err(objAnn);
+      if (result.ok) {
+        const value = result.value;
+        if (value !== undefined) {
+          // @ts-expect-error - look into this later
+          record[key] = value;
         }
 
-        return ok(record as ObjectDecoderType<O>);
+        // If this succeeded, remove the key from the missing keys
+        // tracker
+        missingKeys.delete(key);
+      } else {
+        const ann = result.error;
+
+        // Keep track of the annotation, but don't return just yet. We
+        // want to collect more error information.
+        if (rawValue === undefined) {
+          // Explicitly add it to the missing set if the value is
+          // undefined.  This covers explicit undefineds to be
+          // treated the same as implicit undefineds (aka missing
+          // keys).
+          missingKeys.add(key);
+        } else {
+          if (errors === null) {
+            errors = {};
+          }
+          errors[key] = ann;
+        }
+      }
     });
+
+    // Deal with errors now. There are two classes of errors we want to
+    // report.  First of all, we want to report any inline errors in this
+    // object.  Lastly, any fields that are missing should be annotated on
+    // the outer object itself.
+    if (errors || missingKeys.size > 0) {
+      let objAnn = annotateObject(plainObj);
+
+      if (errors) {
+        objAnn = merge(objAnn, errors);
+      }
+
+      if (missingKeys.size > 0) {
+        const errMsg = Array.from(missingKeys)
+          .map((key) => `"${key}"`)
+          .join(', ');
+        const pluralized = missingKeys.size > 1 ? 'keys' : 'key';
+        objAnn = updateText(objAnn, `Missing ${pluralized}: ${errMsg}`);
+      }
+
+      return err(objAnn);
+    }
+
+    return ok(record as ObjectDecoderType<O>);
+  });
 }
 
 /**
@@ -118,31 +118,31 @@ export function object<O extends Record<string, Decoder<any>>>(
  */
 export function exact(decodersByKey: Record<any, never>): Decoder<Record<string, never>>;
 export function exact<O extends Record<string, Decoder<any>>>(
-    decodersByKey: O,
+  decodersByKey: O,
 ): Decoder<{ [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] }>;
 export function exact<O extends Record<string, Decoder<any>>>(
-    decodersByKey: O,
+  decodersByKey: O,
 ): Decoder<{ [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] }> {
-    //     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    //     Ditto (see above)
+  //     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  //     Ditto (see above)
 
-    // Compute this set at decoder definition time
-    const allowedKeys = new Set(Object.keys(decodersByKey));
+  // Compute this set at decoder definition time
+  const allowedKeys = new Set(Object.keys(decodersByKey));
 
-    // Check the inputted object for any unexpected extra keys
-    const checked = pojo.reject((plainObj) => {
-        const actualKeys = new Set(Object.keys(plainObj));
-        const extraKeys = subtract(actualKeys, allowedKeys);
-        return extraKeys.size > 0
-            ? `Unexpected extra keys: ${Array.from(extraKeys).join(', ')}`
-            : // Don't reject
-              null;
-    });
+  // Check the inputted object for any unexpected extra keys
+  const checked = pojo.reject((plainObj) => {
+    const actualKeys = new Set(Object.keys(plainObj));
+    const extraKeys = subtract(actualKeys, allowedKeys);
+    return extraKeys.size > 0
+      ? `Unexpected extra keys: ${Array.from(extraKeys).join(', ')}`
+      : // Don't reject
+        null;
+  });
 
-    // Defer to the "object" decoder for doing the real decoding work.  Since
-    // we made sure there are no superfluous keys in this structure, it's now
-    // safe to force-cast it to an $Exact<> type.
-    return checked.then(object(decodersByKey).decode);
+  // Defer to the "object" decoder for doing the real decoding work.  Since
+  // we made sure there are no superfluous keys in this structure, it's now
+  // safe to force-cast it to an $Exact<> type.
+  return checked.then(object(decodersByKey).decode);
 }
 
 /**
@@ -150,53 +150,47 @@ export function exact<O extends Record<string, Decoder<any>>>(
  * unvalidated that will thus be of `unknown` type statically.
  */
 export function inexact(
-    decodersByKey: Record<any, never>,
+  decodersByKey: Record<any, never>,
 ): Decoder<Record<string, unknown>>;
 export function inexact<O extends Record<string, Decoder<any>>>(
-    decodersByKey: O,
+  decodersByKey: O,
 ): Decoder<
-    { [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] } & Record<
-        string,
-        unknown
-    >
+  { [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] } & Record<string, unknown>
 >;
 export function inexact<O extends Record<string, Decoder<any>>>(
-    decodersByKey: O,
+  decodersByKey: O,
 ): Decoder<
-    { [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] } & Record<
-        string,
-        unknown
-    >
+  { [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] } & Record<string, unknown>
 > {
-    return pojo.then((plainObj) => {
-        const allkeys = new Set(Object.keys(plainObj));
-        const decoder = object(decodersByKey).transform((safepart) => {
-            const safekeys = new Set(Object.keys(decodersByKey));
+  return pojo.then((plainObj) => {
+    const allkeys = new Set(Object.keys(plainObj));
+    const decoder = object(decodersByKey).transform((safepart) => {
+      const safekeys = new Set(Object.keys(decodersByKey));
 
-            // To account for hard-coded keys that aren't part of the input
-            safekeys.forEach((k) => allkeys.add(k));
+      // To account for hard-coded keys that aren't part of the input
+      safekeys.forEach((k) => allkeys.add(k));
 
-            const rv = {} as {
-                [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K];
-            } & Record<string, unknown>;
-            allkeys.forEach((k) => {
-                if (safekeys.has(k)) {
-                    const value =
-                        // @ts-expect-error - look into this later
-                        safepart[k];
-                    if (value !== undefined) {
-                        // @ts-expect-error - look into this later
-                        rv[k] = value;
-                    }
-                } else {
-                    // @ts-expect-error - look into this later
-                    rv[k] = plainObj[k];
-                }
-            });
-            return rv;
-        });
-        return decoder.decode(plainObj);
+      const rv = {} as {
+        [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K];
+      } & Record<string, unknown>;
+      allkeys.forEach((k) => {
+        if (safekeys.has(k)) {
+          const value =
+            // @ts-expect-error - look into this later
+            safepart[k];
+          if (value !== undefined) {
+            // @ts-expect-error - look into this later
+            rv[k] = value;
+          }
+        } else {
+          // @ts-expect-error - look into this later
+          rv[k] = plainObj[k];
+        }
+      });
+      return rv;
     });
+    return decoder.decode(plainObj);
+  });
 }
 
 /**
@@ -210,32 +204,32 @@ export function inexact<O extends Record<string, Decoder<any>>>(
  * a lookup table, or a cache.
  */
 export function dict<T>(decoder: Decoder<T>): Decoder<Record<string, T>> {
-    return pojo.then((plainObj, ok, err) => {
-        let rv: Record<string, T> = {};
-        let errors: Record<string, Annotation> | null = null;
+  return pojo.then((plainObj, ok, err) => {
+    let rv: Record<string, T> = {};
+    let errors: Record<string, Annotation> | null = null;
 
-        Object.keys(plainObj).forEach((key: string) => {
-            const value = plainObj[key];
-            const result = decoder.decode(value);
-            if (result.ok) {
-                if (errors === null) {
-                    rv[key] = result.value;
-                }
-            } else {
-                rv = {}; // Clear the success value so it can get garbage collected early
-                if (errors === null) {
-                    errors = {};
-                }
-                errors[key] = result.error;
-            }
-        });
-
-        if (errors !== null) {
-            return err(merge(annotateObject(plainObj), errors));
-        } else {
-            return ok(rv);
+    Object.keys(plainObj).forEach((key: string) => {
+      const value = plainObj[key];
+      const result = decoder.decode(value);
+      if (result.ok) {
+        if (errors === null) {
+          rv[key] = result.value;
         }
+      } else {
+        rv = {}; // Clear the success value so it can get garbage collected early
+        if (errors === null) {
+          errors = {};
+        }
+        errors[key] = result.error;
+      }
     });
+
+    if (errors !== null) {
+      return err(merge(annotateObject(plainObj), errors));
+    } else {
+      return ok(rv);
+    }
+  });
 }
 
 /**
@@ -244,12 +238,12 @@ export function dict<T>(decoder: Decoder<T>): Decoder<Record<string, T>> {
  * instead.
  */
 export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
-    return dict(decoder).transform(
-        (obj) =>
-            new Map(
-                // This is effectively Object.entries(obj), but in a way that Flow
-                // will know the types are okay
-                Object.keys(obj).map((key) => [key, obj[key]]),
-            ),
-    );
+  return dict(decoder).transform(
+    (obj) =>
+      new Map(
+        // This is effectively Object.entries(obj), but in a way that Flow
+        // will know the types are okay
+        Object.keys(obj).map((key) => [key, obj[key]]),
+      ),
+  );
 }

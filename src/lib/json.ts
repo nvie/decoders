@@ -39,10 +39,10 @@ export const jsonArray: Decoder<JSONArray> = lazy(() => array(json));
  * ```
  */
 export const json: Decoder<JSONValue> = either(
-    null_,
-    string,
-    number,
-    boolean,
-    jsonObject,
-    jsonArray,
+  null_,
+  string,
+  number,
+  boolean,
+  jsonObject,
+  jsonArray,
 ).describe('Must be valid JSON value');

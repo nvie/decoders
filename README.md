@@ -26,20 +26,20 @@ import { array, iso8601, number, object, optional, string } from 'decoders';
 // Incoming data at runtime
 //
 const externalData = {
-    id: 123,
-    name: 'Alison Roberts',
-    createdAt: '1994-01-11T12:26:37.024Z',
-    tags: ['foo', 'bar'],
+  id: 123,
+  name: 'Alison Roberts',
+  createdAt: '1994-01-11T12:26:37.024Z',
+  tags: ['foo', 'bar'],
 };
 
 //
 // Write the decoder (= what you expect the data to look like)
 //
 const userDecoder = object({
-    id: number,
-    name: string,
-    createdAt: optional(iso8601),
-    tags: array(string),
+  id: number,
+  name: string,
+  createdAt: optional(iso8601),
+  tags: array(string),
 });
 
 //

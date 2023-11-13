@@ -1,170 +1,170 @@
 {
-    "name": "decoders",
-    "version": "2.0.5",
-    "description": "Elegant and battle-tested validation library for type-safe input data for TypeScript",
-    "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/nvie/decoders.git"
+  "name": "decoders",
+  "version": "2.0.5",
+  "description": "Elegant and battle-tested validation library for type-safe input data for TypeScript",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nvie/decoders.git"
+  },
+  "author": "Vincent Driessen",
+  "homepage": "https://github.com/nvie/decoders#readme",
+  "bugs": {
+    "url": "https://github.com/nvie/decoders/issues"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "module": "./dist/index.mjs",
+        "default": "./dist/index.js"
+      }
     },
-    "author": "Vincent Driessen",
-    "homepage": "https://github.com/nvie/decoders#readme",
-    "bugs": {
-        "url": "https://github.com/nvie/decoders/issues"
+    "./format": {
+      "import": {
+        "types": "./dist/format.d.mts",
+        "default": "./dist/format.mjs"
+      },
+      "require": {
+        "types": "./dist/format.d.ts",
+        "module": "./dist/format.mjs",
+        "default": "./dist/format.js"
+      }
     },
-    "main": "./dist/index.js",
-    "module": "./dist/index.mjs",
-    "types": "./dist/index.d.ts",
-    "exports": {
-        ".": {
-            "import": {
-                "types": "./dist/index.d.mts",
-                "default": "./dist/index.mjs"
-            },
-            "require": {
-                "types": "./dist/index.d.ts",
-                "module": "./dist/index.mjs",
-                "default": "./dist/index.js"
-            }
-        },
-        "./format": {
-            "import": {
-                "types": "./dist/format.d.mts",
-                "default": "./dist/format.mjs"
-            },
-            "require": {
-                "types": "./dist/format.d.ts",
-                "module": "./dist/format.mjs",
-                "default": "./dist/format.js"
-            }
-        },
-        "./result": {
-            "import": {
-                "types": "./dist/result.d.mts",
-                "default": "./dist/result.mjs"
-            },
-            "require": {
-                "types": "./dist/result.d.ts",
-                "module": "./dist/result.mjs",
-                "default": "./dist/result.js"
-            }
-        }
-    },
-    "files": [
-        "dist/**",
-        "format.js",
-        "result.js",
-        "LICENSE",
-        "README.md"
-    ],
-    "scripts": {
-        "actually-prepublish": "echo \"\\n\\nPlease run \\`bin/publish.sh <options>\\` instead.\\n\\n\" && exit 2",
-        "build": "tsup && cp dist/{format,result}.js .",
-        "docs": "cog -cr docs/*.md",
-        "lint": "eslint --report-unused-disable-directives src && prettier --list-different 'src/**/*.js'",
-        "lint:docs": "cog -c --check docs/*.md || (npm run docs; git diff; echo 'Error: docs not up-to-date, please re-run \"npm docs\" to update them.' && exit 1)",
-        "lint:package": "publint --strict && attw --pack",
-        "format": "eslint --report-unused-disable-directives --fix src && prettier --write 'src/**/*.js'",
-        "test": "npm run clean && npm run test:typescript && npm run test:jest && npm run test:completeness && npm run check",
-        "test:completeness": "./bin/check.sh",
-        "test:jest": "jest --coverage --coverageThreshold '{\"global\": {\"branches\": 100, \"functions\": 100, \"lines\": 100, \"statements\": 100}}'",
-        "test:types": "tsd",
-        "watch": "jest --watch"
-    },
-    "keywords": [
-        "decoders",
-        "Decoder",
-        "always",
-        "and",
-        "array",
-        "boolean",
-        "then",
-        "compose",
-        "constant",
-        "date",
-        "decode",
-        "decoder",
-        "decoders",
-        "define",
-        "describe",
-        "dict",
-        "either",
-        "email",
-        "exact",
-        "fail",
-        "hardcoded",
-        "httpsUrl",
-        "inexact",
-        "instanceOf",
-        "integer",
-        "iso8601",
-        "json",
-        "jsonArray",
-        "jsonObject",
-        "lazy",
-        "map",
-        "mapping",
-        "maybe",
-        "mixed",
-        "mixedarray",
-        "never",
-        "nonEmptyArray",
-        "nonEmptyString",
-        "nullable",
-        "null_",
-        "number",
-        "numericBoolean",
-        "object",
-        "oneOf",
-        "optional",
-        "poja",
-        "pojo",
-        "positiveInteger",
-        "positiveNumber",
-        "predicate",
-        "prep",
-        "regex",
-        "set",
-        "string",
-        "taggedUnion",
-        "transform",
-        "truthy",
-        "tuple",
-        "tuple2",
-        "undefined_",
-        "unknown",
-        "url",
-        "uuid",
-        "uuidv1",
-        "uuidv4",
-        "verify",
-        "DecodeResult",
-        "DecoderType",
-        "JSONArray",
-        "JSONObject",
-        "JSONValue"
-    ],
-    "devDependencies": {
-        "@arethetypeswrong/cli": "^0.6.0",
-        "@types/jest": "^27.5.2",
-        "coveralls": "^3.1.1",
-        "eslint": "^7.32.0",
-        "eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
-        "itertools": "^2.1.2",
-        "prettier": "^3.0.0",
-        "publint": "^0.1.16",
-        "ts-jest": "^29.1.1",
-        "tsd": "^0.28.1",
-        "tsup": "^7.1.0",
-        "typescript": "^4.1.6"
-    },
-    "githubUrl": "https://github.com/nvie/decoders",
-    "jest": {
-        "testPathIgnorePatterns": [
-            "node_modules",
-            "fixtures.js",
-            ".skip.js"
-        ]
-    },
-    "sideEffects": false
+    "./result": {
+      "import": {
+        "types": "./dist/result.d.mts",
+        "default": "./dist/result.mjs"
+      },
+      "require": {
+        "types": "./dist/result.d.ts",
+        "module": "./dist/result.mjs",
+        "default": "./dist/result.js"
+      }
+    }
+  },
+  "files": [
+    "dist/**",
+    "format.js",
+    "result.js",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "actually-prepublish": "echo \"\\n\\nPlease run \\`bin/publish.sh <options>\\` instead.\\n\\n\" && exit 2",
+    "build": "tsup && cp dist/{format,result}.js .",
+    "docs": "cog -cr docs/*.md",
+    "lint": "eslint --report-unused-disable-directives src && prettier --list-different 'src/**/*.js'",
+    "lint:docs": "cog -c --check docs/*.md || (npm run docs; git diff; echo 'Error: docs not up-to-date, please re-run \"npm docs\" to update them.' && exit 1)",
+    "lint:package": "publint --strict && attw --pack",
+    "format": "eslint --report-unused-disable-directives --fix src && prettier --write 'src/**/*.js'",
+    "test": "npm run clean && npm run test:typescript && npm run test:jest && npm run test:completeness && npm run check",
+    "test:completeness": "./bin/check.sh",
+    "test:jest": "jest --coverage --coverageThreshold '{\"global\": {\"branches\": 100, \"functions\": 100, \"lines\": 100, \"statements\": 100}}'",
+    "test:types": "tsd",
+    "watch": "jest --watch"
+  },
+  "keywords": [
+    "decoders",
+    "Decoder",
+    "always",
+    "and",
+    "array",
+    "boolean",
+    "then",
+    "compose",
+    "constant",
+    "date",
+    "decode",
+    "decoder",
+    "decoders",
+    "define",
+    "describe",
+    "dict",
+    "either",
+    "email",
+    "exact",
+    "fail",
+    "hardcoded",
+    "httpsUrl",
+    "inexact",
+    "instanceOf",
+    "integer",
+    "iso8601",
+    "json",
+    "jsonArray",
+    "jsonObject",
+    "lazy",
+    "map",
+    "mapping",
+    "maybe",
+    "mixed",
+    "mixedarray",
+    "never",
+    "nonEmptyArray",
+    "nonEmptyString",
+    "nullable",
+    "null_",
+    "number",
+    "numericBoolean",
+    "object",
+    "oneOf",
+    "optional",
+    "poja",
+    "pojo",
+    "positiveInteger",
+    "positiveNumber",
+    "predicate",
+    "prep",
+    "regex",
+    "set",
+    "string",
+    "taggedUnion",
+    "transform",
+    "truthy",
+    "tuple",
+    "tuple2",
+    "undefined_",
+    "unknown",
+    "url",
+    "uuid",
+    "uuidv1",
+    "uuidv4",
+    "verify",
+    "DecodeResult",
+    "DecoderType",
+    "JSONArray",
+    "JSONObject",
+    "JSONValue"
+  ],
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.6.0",
+    "@types/jest": "^27.5.2",
+    "coveralls": "^3.1.1",
+    "eslint": "^7.32.0",
+    "eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
+    "itertools": "^2.1.2",
+    "prettier": "^3.0.0",
+    "publint": "^0.1.16",
+    "ts-jest": "^29.1.1",
+    "tsd": "^0.28.1",
+    "tsup": "^7.1.0",
+    "typescript": "^4.1.6"
+  },
+  "githubUrl": "https://github.com/nvie/decoders",
+  "jest": {
+    "testPathIgnorePatterns": [
+      "node_modules",
+      "fixtures.js",
+      ".skip.js"
+    ]
+  },
+  "sideEffects": false
 }

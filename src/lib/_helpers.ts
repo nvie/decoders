@@ -22,10 +22,10 @@
 type Compact<T> = { [K in IsDefined<T, keyof T>]: T[K] };
 
 type IsDefined<T, K extends keyof T> = K extends any
-    ? T[K] extends undefined
-        ? never
-        : K
-    : never;
+  ? T[K] extends undefined
+    ? never
+    : K
+  : never;
 
 //
 // HACK:
@@ -44,11 +44,11 @@ type StrictNullChecks = undefined extends string ? undefined : 1;
 //                      ^^^^^^^^^^^^^^^^^^^^^^^^
 
 export type RequiredKeys<T> = keyof Compact<{
-    [K in keyof T]: undefined extends T[K] ? NoStrictNullChecks : 1;
+  [K in keyof T]: undefined extends T[K] ? NoStrictNullChecks : 1;
 }>;
 
 export type OptionalKeys<T> = keyof Compact<{
-    [K in keyof T]: undefined extends T[K] ? 1 : StrictNullChecks;
+  [K in keyof T]: undefined extends T[K] ? 1 : StrictNullChecks;
 }>;
 
 /**
@@ -73,7 +73,7 @@ export type OptionalKeys<T> = keyof Compact<{
  *   }
  */
 type AllowImplicit<T> = { [K in RequiredKeys<T>]-?: T[K] } & {
-    [K in OptionalKeys<T>]+?: Exclude<T[K], undefined>;
+  [K in OptionalKeys<T>]+?: Exclude<T[K], undefined>;
 };
 
 export type { AllowImplicit };

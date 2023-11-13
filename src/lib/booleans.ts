@@ -6,7 +6,7 @@ import type { Decoder } from '../Decoder';
  * Accepts and returns booleans.
  */
 export const boolean: Decoder<boolean> = define((blob, ok, err) => {
-    return typeof blob === 'boolean' ? ok(blob) : err('Must be boolean');
+  return typeof blob === 'boolean' ? ok(blob) : err('Must be boolean');
 });
 
 /**
