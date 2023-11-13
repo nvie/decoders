@@ -21,13 +21,13 @@ export const pojo: Decoder<Record<string, unknown>> = define((blob, ok, err) =>
  * Accepts objects with fields matching the given decoders. Extra fields that
  * exist on the input object are ignored and will not be returned.
  */
-export function object(decodersByKey: Record<any, never>): Decoder<Record<string, never>>;
+// export function object(decodersByKey: Record<any, never>): Decoder<Record<string, never>>;
+//export function object<O extends Record<string, Decoder<any>>>(
+//decodersByKey: O,
+//): Decoder<{ [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] }>;
 export function object<O extends Record<string, Decoder<any>>>(
   decodersByKey: O,
-): Decoder<{ [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] }>;
-export function object<O extends Record<string, Decoder<any>>>(
-  decodersByKey: O,
-): Decoder<{ [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] }> {
+): Decoder<ObjectDecoderType<O>> {
   //     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   //     This is basically just equivalent to:
   //         ObjectDecoderType<O>
