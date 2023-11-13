@@ -320,14 +320,16 @@ integer.verify('not a integer'); // throws
 
 ---
 
-<a href="#positiveNumber">#</a> **positiveNumber**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L34-L40 'Source')
+<a href="#positiveNumber">#</a> **positiveNumber**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L34-L39 'Source')
 {: #positiveNumber .signature}
 
-Accepts only positive finite numbers.
+Accepts only non-negative (zero or positive) finite numbers.
 
 ```typescript
 // 👍
 positiveNumber.verify(123) === 123;
+positiveNumber.verify(0) === 0;
+positiveNumber.verify(-0) === 0;
 
 // 👎
 positiveNumber.verify(-42);             // throws
@@ -339,14 +341,16 @@ positiveNumber.verify('not a number');  // throws
 
 ---
 
-<a href="#positiveInteger">#</a> **positiveInteger**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L42-L48 'Source')
+<a href="#positiveInteger">#</a> **positiveInteger**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/lib/numbers.js#L41-L46 'Source')
 {: #positiveInteger .signature}
 
-Accepts only positive finite whole numbers.
+Accepts only non-negative (zero or positive) finite whole numbers.
 
 ```typescript
 // 👍
 positiveInteger.verify(123) === 123;
+positiveInteger.verify(0) === 0;
+positiveInteger.verify(-0) === 0;
 
 // 👎
 positiveInteger.verify(-3);              // throws
@@ -1347,5 +1351,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 143996692adad212d5d3887b8380b3ca) -->
+<!--[[[end]]] (checksum: add40a56e2d8eeedecc0bf78e720db4b) -->
 <!-- prettier-ignore-end -->

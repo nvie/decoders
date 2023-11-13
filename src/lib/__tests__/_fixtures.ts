@@ -13,6 +13,7 @@ export const STRINGS: string[] = [
 export const NUMBERS: number[] = [
     -317.827682288236872383242082309328432093279,
     -1,
+    -0,
     0,
     1,
     2,

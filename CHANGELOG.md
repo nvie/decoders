@@ -20,6 +20,11 @@ supported in a maintenance-free way, for example by using a script that will gen
 `*.flow` files from TypeScript source files. If someone can add support for that, I'm open
 to pull requests! 🙏 )
 
+## v2.0.5
+
+-   The returned value for `positiveInteger(-0)` is now `0`, not `-0`
+-   The returned value for `positiveNumber(-0)` is now `0`, not `-0`
+
 ## v2.0.4
 
 -   Fix a bug in the `url` decoder, which could incorrectly reject URLs with a `/` in the
@@ -443,7 +448,7 @@ to upgrade:
     ```javascript
     const mydecoder: Decoder<string> = predicate(
         (s) => s.startsWith('x'),
-        'Must start with "x"',
+        'Must start with "x"'
     );
     ```
 
@@ -453,7 +458,7 @@ to upgrade:
     const mydecoder: Decoder<string, string> = predicate(
         //                               ^^^^^^ Provide the input type to predicate() decoders
         (s) => s.startsWith('x'),
-        'Must start with "x"',
+        'Must start with "x"'
     );
     ```
 
@@ -677,6 +682,6 @@ to upgrade:
         object({
             name: string,
             age: number,
-        }),
+        })
     );
     ```

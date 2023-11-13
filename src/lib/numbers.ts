@@ -30,17 +30,15 @@ export const integer: Decoder<number> = number.refine(
 );
 
 /**
- * Accepts only positive finite numbers.
+ * Accepts only non-negative (zero or positive) finite numbers.
  */
-export const positiveNumber: Decoder<number> = number.refine(
-    (n) => n >= 0,
-    'Number must be positive',
-);
+export const positiveNumber: Decoder<number> = number
+    .refine((n) => n >= 0, 'Number must be positive')
+    .transform(Math.abs); // Just here to handle the -0 case
 
 /**
- * Accepts only positive finite whole numbers.
+ * Accepts only non-negative (zero or positive) finite whole numbers.
  */
-export const positiveInteger: Decoder<number> = integer.refine(
-    (n) => n >= 0,
-    'Number must be positive',
-);
+export const positiveInteger: Decoder<number> = integer
+    .refine((n) => n >= 0, 'Number must be positive')
+    .transform(Math.abs); // Just here to handle the -0 case
