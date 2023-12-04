@@ -1,7 +1,7 @@
 ## v2.1.0
 
 -   Officially drop Node 12 and 14 support (they may still work)
--   Remove unintentional inclusion of `lib.dom.d.ts` in TypeScript
+-   Fix unintentional inclusion of `lib.dom.d.ts` in TypeScript
 
 ## v2.0.5
 
