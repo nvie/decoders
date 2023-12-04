@@ -1,3 +1,7 @@
+## v2.1.0
+
+-   Officially drop Node 12 and 14 support (they may still work)
+
 ## v2.0.5
 
 -   The returned value for `positiveInteger(-0)` is now `0`, not `-0`

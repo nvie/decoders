@@ -7,7 +7,11 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                node-version: [12.x, 14.x, 16.x, 18.x]
+                node-version: [
+                        16.x, # EoL by 2023-09-11
+                        18.x, # EoL by 2025-04-30
+                        20.x, # EoL by 2026-04-30
+                    ]
 
                 # Some key Flow versions that have seen syntax or semantic changes that
                 # required updates to decoders
