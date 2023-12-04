@@ -1,5 +1,3 @@
-/// <reference lib="dom" />
-
 import { Decoder } from '../Decoder';
 
 /**
