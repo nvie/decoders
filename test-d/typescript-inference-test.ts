@@ -229,6 +229,10 @@ expectType<string | Date | null | undefined>(
   expectType<{ qux: string }>(x.bar);
   expectError(x.a);
   expectError(x.b);
+
+  // With "never" fields
+  expectType<{ nope: never }>(test(object({ nope: fail('not allowed') })));
+  expectType<{ nope?: never }>(test(object({ nope: optional(fail('not allowed')) })));
 }
 
 // exact() (w/ empty mapping)
