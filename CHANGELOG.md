@@ -20,6 +20,11 @@ supported in a maintenance-free way, for example by using a script that will gen
 `*.flow` files from TypeScript source files. If someone can add support for that, I'm open
 to pull requests! 🙏 )
 
+## v2.1.0
+
+- Officially drop Node 12 and 14 support (they may still work)
+- Fix unintentional inclusion of `lib.dom.d.ts` in TypeScript
+
 ## v2.0.5
 
 - The returned value for `positiveInteger(-0)` is now `0`, not `-0`
