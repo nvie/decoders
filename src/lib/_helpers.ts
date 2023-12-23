@@ -37,26 +37,3 @@ export type AllowImplicit<T> = Resolve<
 export type Resolve<T> = T extends (...args: unknown[]) => unknown
   ? T
   : { [K in keyof T]: T[K] };
-
-// type X = {
-//   x1: string;
-//   x2?: string;
-//   x3: string | undefined;
-//   x4?: string | undefined;
-//   x5: string | null;
-//   x6?: string | null;
-//   x7: string | undefined | null;
-//   x8?: string | undefined | null;
-//   x9: never; //       *
-//   x10?: never; //     *
-//   x11: undefined; //  *
-//   x12?: undefined; // *
-//   x13: null;
-//   x14?: null;
-//   x15: undefined | null;
-//   x16?: undefined | null;
-// };
-
-// type RRR = RequiredKeys<X>;
-// type OOO = OptionalKeys<X>;
-// type AAA = AllowImplicit<X>;
