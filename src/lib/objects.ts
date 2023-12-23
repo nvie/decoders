@@ -3,13 +3,14 @@
 import { annotateObject, merge, updateText } from '../annotate';
 import { define } from '../Decoder';
 import { subtract, isPojo } from '../_utils';
-import type { AllowImplicit } from './_helpers';
 import type { Annotation } from '../annotate';
 import type { Decoder, DecodeResult } from '../Decoder';
 
-type ObjectDecoderType<T> = AllowImplicit<{
+// TODO: Restore AllowImplicit here somehow
+// import type { AllowImplicit } from './_helpers';
+type ObjectDecoderType<T> = {
   [K in keyof T]: T[K] extends Decoder<infer V> ? V : never;
-}>;
+};
 
 /**
  * Accepts any "plain old JavaScript object", but doesn't validate its keys or
@@ -169,9 +170,7 @@ export function inexact<O extends Record<string, Decoder<any>>>(
       } & Record<string, unknown>;
       allkeys.forEach((k) => {
         if (safekeys.has(k)) {
-          const value =
-            // @ts-expect-error - look into this later
-            safepart[k];
+          const value = safepart[k];
           if (value !== undefined) {
             // @ts-expect-error - look into this later
             rv[k] = value;
