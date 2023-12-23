@@ -166,9 +166,7 @@ export function inexact<O extends Record<string, Decoder<any>>>(
       } & Record<string, unknown>;
       allkeys.forEach((k) => {
         if (safekeys.has(k)) {
-          const value =
-            // @ts-expect-error - look into this later
-            safepart[k];
+          const value = safepart[k];
           if (value !== undefined) {
             // @ts-expect-error - look into this later
             rv[k] = value;
