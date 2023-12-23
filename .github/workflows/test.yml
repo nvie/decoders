@@ -34,11 +34,6 @@ jobs:
       - name: Install Python dependencies (for documentation generation)
         run: pip install cogapp
 
-      - name: Clean things
-        run: npm run clean
-        env:
-          CI: true
-
       - name: Test TypeScript
         run: npm run test:typescript
         env:
