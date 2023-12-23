@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { annotateObject, merge, updateText } from '../annotate';
 import { define } from '../Decoder';
 import { subtract, isPojo } from '../_utils';
@@ -39,7 +41,7 @@ export function object<DS extends Record<string, Decoder<any>>>(
     // value.
     const missingKeys = subtract(knownKeys, actualKeys);
 
-    let record = {};
+    const record = {};
     let errors: Record<string, Annotation> | null = null;
 
     Object.keys(decodersByKey).forEach((key) => {

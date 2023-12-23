@@ -4,7 +4,7 @@ import { formatInline, formatShort } from '../format';
 const whitespace_re = /^\s*$/;
 
 export function dedent(value: string): string {
-  let lines = value.split('\n');
+  const lines = value.split('\n');
   if (lines.length > 0 && whitespace_re.test(lines[0])) {
     lines.shift();
   }

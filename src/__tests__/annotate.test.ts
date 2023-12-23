@@ -1,4 +1,5 @@
 /* eslint-disable no-restricted-syntax */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { annotate, array, circularRef, merge, object, scalar } from '../annotate';
 
@@ -125,7 +126,7 @@ describe('parsing is idempotent', () => {
 
 describe('annotating circular objects', () => {
   it('circular arrays', () => {
-    var circularArray: any[] = ['foo', [42 /* circular ref will go here */]];
+    const circularArray: any[] = ['foo', [42 /* circular ref will go here */]];
     circularArray[1].push(circularArray);
 
     const expected = array([scalar('foo'), array([scalar(42), circularRef()])]);
@@ -137,7 +138,7 @@ describe('annotating circular objects', () => {
   });
 
   it('circular objects', () => {
-    var circularObject = {
+    const circularObject = {
       foo: 42,
       bar: { qux: 'hello' },
     };

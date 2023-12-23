@@ -56,6 +56,7 @@ function nest(errText: string): string {
  * first one that accepts the input "wins". If all decoders reject the input,
  * the input gets rejected.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function either<T extends readonly Decoder<any>[]>(
   ...decoders: T
 ): Decoder<DecoderTypes<T>> {
@@ -127,6 +128,7 @@ export function oneOf<C extends Scalar>(constants: readonly C[]): Decoder<C> {
  * error messages and is more performant at runtime because it doesn't have to
  * try all decoders one by one.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function taggedUnion<O extends Record<string, Decoder<any>>>(
   field: string,
   mapping: O,
