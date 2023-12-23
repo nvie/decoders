@@ -40,7 +40,13 @@ export function prep<T>(
     try {
       blob = mapperFn(originalInput);
     } catch (e: unknown) {
-      return err(annotate(originalInput, e instanceof Error ? e.message : String(e)));
+      return err(
+        annotate(
+          originalInput,
+          // istanbul ignore next
+          e instanceof Error ? e.message : String(e),
+        ),
+      );
     }
 
     const r = decoder.decode(blob);
