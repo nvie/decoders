@@ -3,12 +3,13 @@
 import { annotateObject, merge, updateText } from '../annotate';
 import { define } from '../Decoder';
 import { subtract, isPojo } from '../_utils';
+import type { AllowImplicit } from './_helpers';
 import type { Annotation } from '../annotate';
 import type { Decoder, DecodeResult } from '../Decoder';
 
-type ObjectDecoderType<T> = {
+type ObjectDecoderType<T> = AllowImplicit<{
   [K in keyof T]: T[K] extends Decoder<infer V> ? V : never;
-};
+}>;
 
 /**
  * Accepts any "plain old JavaScript object", but doesn't validate its keys or
@@ -22,10 +23,10 @@ export const pojo: Decoder<Record<string, unknown>> = define((blob, ok, err) =>
  * Accepts objects with fields matching the given decoders. Extra fields that
  * exist on the input object are ignored and will not be returned.
  */
-// export function object(decodersByKey: Record<any, never>): Decoder<Record<string, never>>;
-//export function object<O extends Record<string, Decoder<any>>>(
-//decodersByKey: O,
-//): Decoder<{ [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] }>;
+export function object(decodersByKey: Record<any, never>): Decoder<Record<string, never>>;
+export function object<DS extends Record<string, Decoder<any>>>(
+  decodersByKey: DS,
+): Decoder<ObjectDecoderType<DS>>;
 export function object<DS extends Record<string, Decoder<any>>>(
   decodersByKey: DS,
 ): Decoder<ObjectDecoderType<DS>> {
@@ -168,7 +169,9 @@ export function inexact<O extends Record<string, Decoder<any>>>(
       } & Record<string, unknown>;
       allkeys.forEach((k) => {
         if (safekeys.has(k)) {
-          const value = safepart[k];
+          const value =
+            // @ts-expect-error - look into this later
+            safepart[k];
           if (value !== undefined) {
             // @ts-expect-error - look into this later
             rv[k] = value;
