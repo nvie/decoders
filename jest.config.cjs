@@ -2,5 +2,5 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  testPathIgnorePatterns: ['node_modules', '_fixtures.ts'],
+  testPathIgnorePatterns: ['node_modules', '_fixtures.ts', 'test-d'],
 };
