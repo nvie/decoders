@@ -2,12 +2,11 @@ import { annotateObject, merge, updateText } from '../annotate';
 import { define } from '../Decoder';
 import { subtract, isPojo } from '../_utils';
 import type { Annotation } from '../annotate';
-import type { AllowImplicit } from './_helpers';
 import type { Decoder, DecodeResult } from '../Decoder';
 
-type ObjectDecoderType<T> = AllowImplicit<{
-  [key in keyof T]: T[key] extends Decoder<infer V> ? V : never;
-}>;
+type ObjectDecoderType<T> = {
+  [K in keyof T]: T[K] extends Decoder<infer V> ? V : never;
+};
 
 /**
  * Accepts any "plain old JavaScript object", but doesn't validate its keys or
@@ -25,17 +24,9 @@ export const pojo: Decoder<Record<string, unknown>> = define((blob, ok, err) =>
 //export function object<O extends Record<string, Decoder<any>>>(
 //decodersByKey: O,
 //): Decoder<{ [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] }>;
-export function object<O extends Record<string, Decoder<any>>>(
-  decodersByKey: O,
-): Decoder<ObjectDecoderType<O>> {
-  //     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  //     This is basically just equivalent to:
-  //         ObjectDecoderType<O>
-  //
-  //     But by "resolving" this with a mapped type, we remove the helper
-  //     type names from the inferred type here, making this much easier to
-  //     work with while developing.
-
+export function object<DS extends Record<string, Decoder<any>>>(
+  decodersByKey: DS,
+): Decoder<ObjectDecoderType<DS>> {
   // Compute this set at decoder definition time
   const knownKeys = new Set(Object.keys(decodersByKey));
 
@@ -108,7 +99,7 @@ export function object<O extends Record<string, Decoder<any>>>(
       return err(objAnn);
     }
 
-    return ok(record as ObjectDecoderType<O>);
+    return ok(record as ObjectDecoderType<DS>);
   });
 }
 
