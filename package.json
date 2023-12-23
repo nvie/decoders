@@ -65,9 +65,8 @@
     "lint:docs": "cog -c --check docs/*.md || (npm run docs; git diff; echo 'Error: docs not up-to-date, please re-run \"npm docs\" to update them.' && exit 1)",
     "lint:package": "publint --strict && attw --pack",
     "format": "eslint --report-unused-disable-directives --fix src && prettier --write 'src/**/*.js'",
-    "test": "npm run test:typescript && npm run test:jest && npm run test:completeness && npm run check",
+    "test": "jest --coverage --coverageThreshold '{\"global\": {\"branches\": 100, \"functions\": 100, \"lines\": 100, \"statements\": 100}}'",
     "test:completeness": "./bin/check.sh",
-    "test:jest": "jest --coverage --coverageThreshold '{\"global\": {\"branches\": 100, \"functions\": 100, \"lines\": 100, \"statements\": 100}}'",
     "test:typescript": "tsc --noEmit",
     "test:types": "tsd",
     "watch": "jest --watch"
