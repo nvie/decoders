@@ -31,9 +31,9 @@ done
 
 echo "==> Checking type inference tests" >&2
 list_decoders | while read dec; do
-  if ! grep -qF "$dec" "test-d/inference.test.ts"; then
+  if ! grep -qF "$dec" "test-d/inference-test.ts"; then
       echo "❌ $dec" >&2
-      echo "There is no type inference test for Decoder \"$dec\" in src/types/tests/typescript-inference-test.ts yet." >&2
+      echo "There is no type inference test for Decoder \"$dec\" in test-d/inference-test.ts yet." >&2
       exit 4
   fi
 done
