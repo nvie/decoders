@@ -1,6 +1,12 @@
 /* eslint-disable no-restricted-syntax */
 
-import { anyNumber, integer, number, positiveInteger, positiveNumber } from '../numbers';
+import {
+  anyNumber,
+  integer,
+  number,
+  positiveInteger,
+  positiveNumber,
+} from '~/lib/numbers';
 import { INPUTS } from './_fixtures';
 import { partition } from 'itertools';
 

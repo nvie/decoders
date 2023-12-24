@@ -1,4 +1,4 @@
-import { err, ok } from '../result';
+import { err, ok } from '~/result';
 
 describe('Result', () => {
   const r1 = ok(42);

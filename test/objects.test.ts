@@ -1,7 +1,7 @@
-import { dict, exact, inexact, mapping, object, pojo } from '../objects';
-import { hardcoded, optional, unknown } from '../basics';
-import { number } from '../numbers';
-import { string } from '../strings';
+import { dict, exact, inexact, mapping, object, pojo } from '~/lib/objects';
+import { hardcoded, optional, unknown } from '~/lib/basics';
+import { number } from '~/lib/numbers';
+import { string } from '~/lib/strings';
 
 describe('objects', () => {
   it('decodes objects and fields', () => {

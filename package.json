@@ -61,7 +61,7 @@
     "actually-prepublish": "echo \"\\n\\nPlease run \\`bin/publish.sh <options>\\` instead.\\n\\n\" && exit 2",
     "build": "tsup && cp dist/format.js . && cp dist/result.js .",
     "docs": "cog -cr docs/*.md",
-    "lint": "eslint --color --report-unused-disable-directives src/**/*.ts && prettier --list-different src test-d",
+    "lint": "eslint --color --report-unused-disable-directives src/**/*.ts test/**/*.ts && prettier --list-different src/ test/ test-d/",
     "lint:docs": "cog -c --check docs/*.md || (npm run docs; git diff; echo 'Error: docs not up-to-date, please re-run \"npm docs\" to update them.' && exit 1)",
     "lint:package": "publint --strict && attw --pack",
     "format": "eslint --report-unused-disable-directives --fix src && prettier --write 'src/**/*.js'",

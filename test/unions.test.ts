@@ -1,15 +1,15 @@
 /* eslint-disable no-restricted-syntax */
 
-import { boolean } from '../booleans';
-import { constant, undefined_ } from '../basics';
-import { either, oneOf } from '../unions';
+import { boolean } from '~/lib/booleans';
+import { constant, undefined_ } from '~/lib/basics';
+import { either, oneOf } from '~/lib/unions';
 import { INPUTS } from './_fixtures';
-import { number } from '../numbers';
-import { object } from '../objects';
+import { number } from '~/lib/numbers';
+import { object } from '~/lib/objects';
 import { partition } from 'itertools';
-import { regex, string } from '../strings';
-import { taggedUnion } from '../unions';
-import type { Decoder } from '../../Decoder';
+import { regex, string } from '~/lib/strings';
+import { taggedUnion } from '~/lib/unions';
+import type { Decoder } from '~/Decoder';
 
 describe('either', () => {
   const stringOrBooleanDecoder = either(string, boolean);

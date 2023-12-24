@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 
-import { boolean, numericBoolean, truthy } from '../booleans';
+import { boolean, numericBoolean, truthy } from '~/lib/booleans';
 import { INPUTS } from './_fixtures';
 import { partition } from 'itertools';
 

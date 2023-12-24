@@ -1,15 +1,15 @@
 /* eslint-disable no-restricted-syntax */
 
-import { array } from '../arrays';
-import { constant } from '../basics';
-import { fail, instanceOf, lazy, never, prep } from '../utilities';
+import { array } from '~/lib/arrays';
+import { constant } from '~/lib/basics';
+import { fail, instanceOf, lazy, never, prep } from '~/lib/utilities';
 import { INPUTS } from './_fixtures';
-import { number } from '../numbers';
-import { object } from '../objects';
-import { optional } from '../basics';
+import { number } from '~/lib/numbers';
+import { object } from '~/lib/objects';
+import { optional } from '~/lib/basics';
 import { partition } from 'itertools';
-import { string } from '../strings';
-import type { Decoder } from '../../Decoder';
+import { string } from '~/lib/strings';
+import type { Decoder } from '~/Decoder';
 
 describe('instanceOf', () => {
   const errorDecoder = instanceOf(Error);

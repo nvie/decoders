@@ -16,7 +16,11 @@
     // "noUncheckedIndexedAccess": true,
     "noUncheckedIndexedAccess": false,
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+    "paths": {
+      "~": ["./src"],
+      "~/*": ["./src/*"]
+    }
   },
   "include": ["src", "test"],
   "exclude": ["node_modules", "dist"]

@@ -11,7 +11,7 @@ import {
   uuid,
   uuidv1,
   uuidv4,
-} from '../strings';
+} from '~/lib/strings';
 import { INPUTS } from './_fixtures';
 import { partition } from 'itertools';
 

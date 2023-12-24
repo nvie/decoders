@@ -1,4 +1,4 @@
-import { json, jsonArray, jsonObject } from '../json';
+import { json, jsonArray, jsonObject } from '~/lib/json';
 
 describe('decoder', () => {
   const decoder = json;

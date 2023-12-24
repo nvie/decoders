@@ -1,7 +1,7 @@
-import { array, nonEmptyArray, set, tuple } from '../arrays';
-import { number } from '../numbers';
-import { object } from '../objects';
-import { string } from '../strings';
+import { array, nonEmptyArray, set, tuple } from '~/lib/arrays';
+import { number } from '~/lib/numbers';
+import { object } from '~/lib/objects';
+import { string } from '~/lib/strings';
 
 describe('array', () => {
   it('empty array', () => {

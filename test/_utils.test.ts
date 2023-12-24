@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 
-import { indent, subtract } from '../_utils';
-import type { Scalar } from '../Decoder';
+import { indent, subtract } from '~/_utils';
+import type { Scalar } from '~/Decoder';
 
 describe('subtract', () => {
   const exampleSets: Set<Scalar>[] = [

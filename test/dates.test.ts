@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 
-import { date, iso8601 } from '../dates';
+import { date, iso8601 } from '~/lib/dates';
 import { INPUTS } from './_fixtures';
 import { partition } from 'itertools';
 

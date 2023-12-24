@@ -1,8 +1,8 @@
-import { annotate } from '../annotate';
-import { formatInline, formatShort } from '../format';
-import { number } from '../lib/numbers';
-import { pojo } from '../lib/objects';
-import { string } from '../lib/strings';
+import { annotate } from '~/annotate';
+import { formatInline, formatShort } from '~/format';
+import { number } from '~/lib/numbers';
+import { pojo } from '~/lib/objects';
+import { string } from '~/lib/strings';
 
 describe('.decode', () => {
   // .decode() is tested implicitly because it's used _everywhere_

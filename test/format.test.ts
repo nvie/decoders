@@ -1,5 +1,5 @@
-import { __private_annotate, annotate } from '../annotate';
-import { formatInline, formatShort } from '../format';
+import { __private_annotate, annotate } from '~/annotate';
+import { formatInline, formatShort } from '~/format';
 
 const whitespace_re = /^\s*$/;
 

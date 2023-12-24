@@ -9,10 +9,10 @@ import {
   nullable,
   optional,
   undefined_,
-} from '../basics';
+} from '~/lib/basics';
 import { INPUTS } from './_fixtures';
 import { partition } from 'itertools';
-import { string } from '../strings';
+import { string } from '~/lib/strings';
 
 describe('null_', () => {
   const decoder = null_;

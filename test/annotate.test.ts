@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { annotate, array, circularRef, merge, object, scalar } from '../annotate';
+import { annotate, array, circularRef, merge, object, scalar } from '~/annotate';
 
 describe('parsing (scalars)', () => {
   it('strings', () => {
