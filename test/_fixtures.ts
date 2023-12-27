@@ -11,7 +11,7 @@ export const STRINGS: string[] = [
 
 // prettier-ignore
 export const NUMBERS: number[] = [
-    -317.827682288236872383242082309328432093279,
+    -317.827682288236872,
     -1,
     -0,
     0,
