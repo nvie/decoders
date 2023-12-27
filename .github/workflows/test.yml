@@ -73,20 +73,3 @@ jobs:
         run: npm run lint:docs
         env:
           CI: true
-
-      - name: Upload coverage report to Coveralls
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.github_token }}
-          parallel: true
-
-  coveralls:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Coveralls finished
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.github_token }}
-          parallel-finished: true
