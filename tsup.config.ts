@@ -5,7 +5,7 @@ export default defineConfig({
   dts: true,
   splitting: true,
   clean: true,
-  target: 'es2020',
+  // target: /* what tsconfig specifies */,
   format: ['esm', 'cjs'],
   sourcemap: true,
 });

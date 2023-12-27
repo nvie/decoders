@@ -4,13 +4,13 @@
     "strict": true,
     "target": "es2020",
     "module": "es2020",
-    "moduleResolution": "node16",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "stripInternal": true,
     "forceConsistentCasingInFileNames": true,
     "allowUnreachableCode": false, // False makes this stricter: errors instead of warns
     "allowUnusedLabels": false, // False makes this stricter: errors instead of warns
-    "importsNotUsedAsValues": "error",
+    "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "noImplicitReturns": true,
     // "noUncheckedIndexedAccess": true,
