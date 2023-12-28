@@ -1,3 +1,4 @@
+import type { Decoder, DecoderType } from '../dist';
 import {
   always,
   anyNumber,
@@ -5,8 +6,6 @@ import {
   boolean,
   constant,
   date,
-  Decoder,
-  DecoderType,
   dict,
   either,
   email,
@@ -130,7 +129,7 @@ test(
   }),
 );
 
-expectType<Map<string, never>>(test(object({})));
+expectType<Record<string, never>>(test(object({})));
 
 // Style argument
 string.verify('dummy', formatInline);

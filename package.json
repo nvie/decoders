@@ -69,7 +69,7 @@
     "test": "vitest run --coverage",
     "test:completeness": "./bin/check.sh",
     "test:typescript": "tsc --noEmit",
-    "test:types": "tsd"
+    "test:types": "npm run build && tsd --typings ./dist/index.d.ts"
   },
   "keywords": [
     "decoders",
