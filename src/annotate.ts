@@ -145,10 +145,10 @@ function annotateObject(
   seen.add(obj);
 
   const fields: Record<string, Annotation> = {};
-  Object.keys(obj).forEach((key) => {
+  for (const key of Object.keys(obj)) {
     const value = obj[key];
     fields[key] = annotate(value, undefined, seen);
-  });
+  }
   return object(fields, text);
 }
 

@@ -13,11 +13,11 @@ export function lazyval<V>(value: (() => V) | V): V {
  */
 export function subtract<C extends Scalar>(xs: Set<C>, ys: Set<C>): Set<C> {
   const result = new Set<C>();
-  xs.forEach((x) => {
+  for (const x of xs) {
     if (!ys.has(x)) {
       result.add(x);
     }
-  });
+  }
   return result;
 }
 
@@ -79,21 +79,21 @@ export function summarize(
   if (ann.type === 'array') {
     const items = ann.items;
     let index = 0;
-    items.forEach((ann) => {
-      summarize(ann, [...keypath, index++]).forEach((item) =>
+    for (const ann of items) {
+      for (const item of summarize(ann, [...keypath, index++])) {
         // Collect to results
-        result.push(item),
-      );
-    });
+        result.push(item);
+      }
+    }
   } else if (ann.type === 'object') {
     const fields = ann.fields;
-    Object.keys(fields).forEach((key) => {
+    for (const key of Object.keys(fields)) {
       const value = fields[key];
-      summarize(value, [...keypath, key]).forEach((item) =>
+      for (const item of summarize(value, [...keypath, key])) {
         // Collect to results
-        result.push(item),
-      );
-    });
+        result.push(item);
+      }
+    }
   }
 
   const text = ann.text;

@@ -45,7 +45,7 @@ export function object<DS extends Record<string, Decoder<any>>>(
     const record = {};
     let errors: Record<string, Annotation> | null = null;
 
-    Object.keys(decodersByKey).forEach((key) => {
+    for (const key of Object.keys(decodersByKey)) {
       const decoder = decodersByKey[key];
       const rawValue = plainObj[key];
       const result: DecodeResult<unknown> = decoder.decode(rawValue);
@@ -78,7 +78,7 @@ export function object<DS extends Record<string, Decoder<any>>>(
           errors[key] = ann;
         }
       }
-    });
+    }
 
     // Deal with errors now. There are two classes of errors we want to
     // report.  First of all, we want to report any inline errors in this
@@ -162,12 +162,12 @@ export function inexact<O extends Record<string, Decoder<any>>>(
       const safekeys = new Set(Object.keys(decodersByKey));
 
       // To account for hard-coded keys that aren't part of the input
-      safekeys.forEach((k) => allkeys.add(k));
+      for (const k of safekeys) allkeys.add(k);
 
       const rv = {} as {
         [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K];
       } & Record<string, unknown>;
-      allkeys.forEach((k) => {
+      for (const k of allkeys) {
         if (safekeys.has(k)) {
           const value = safepart[k];
           if (value !== undefined) {
@@ -178,7 +178,7 @@ export function inexact<O extends Record<string, Decoder<any>>>(
           // @ts-expect-error - look into this later
           rv[k] = plainObj[k];
         }
-      });
+      }
       return rv;
     });
     return decoder.decode(plainObj);
@@ -200,7 +200,7 @@ export function dict<T>(decoder: Decoder<T>): Decoder<Record<string, T>> {
     let rv: Record<string, T> = {};
     let errors: Record<string, Annotation> | null = null;
 
-    Object.keys(plainObj).forEach((key: string) => {
+    for (const key of Object.keys(plainObj)) {
       const value = plainObj[key];
       const result = decoder.decode(value);
       if (result.ok) {
@@ -214,7 +214,7 @@ export function dict<T>(decoder: Decoder<T>): Decoder<Record<string, T>> {
         }
         errors[key] = result.error;
       }
-    });
+    }
 
     if (errors !== null) {
       return err(merge(annotateObject(plainObj), errors));

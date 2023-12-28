@@ -34,14 +34,9 @@ module.exports = {
     'no-restricted-syntax': [
       'error',
       {
-        selector: 'ForOfStatement',
-        message:
-          'Avoid for..of loops in libraries, because they generate unneeded Babel iterator runtime support code in the bundle',
-      },
-      {
         selector: 'ForInStatement',
         message:
-          'for..in loops are never what you want. Loop over Object.keys() instead.',
+          'for..in loops are never what you want. Use for..of, or use a .forEach() instead.',
       },
     ],
   },
@@ -52,7 +47,6 @@ module.exports = {
       files: ['test/**'],
       rules: {
         '@typescript-eslint/no-explicit-any': 'off',
-        'no-restricted-syntax': 'off',
       },
     },
   ],
