@@ -3,12 +3,8 @@ set -eu
 
 BIN=$(dirname "$0")
 
-list_exports() {
-    "$BIN/linenos" --all --types --exports "$1" | cut -f1 | sort -u
-}
-
 list_decoders() {
-    "$BIN/linenos" --all --exports src/index.ts | cut -f1 | sort -u
+    node bin/exported-decoders.mjs | sort -u
 }
 
 echo "==> Checking documentation" >&2
