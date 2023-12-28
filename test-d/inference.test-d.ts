@@ -130,7 +130,7 @@ test(
   }),
 );
 
-expectType<Record<string, never>>(test(object({})));
+expectType<Map<string, never>>(test(object({})));
 
 // Style argument
 string.verify('dummy', formatInline);
