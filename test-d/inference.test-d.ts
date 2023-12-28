@@ -219,15 +219,30 @@ expectType<string | Date | null | undefined>(
 {
   const d = object({
     foo: optional(string),
-    bar: object({ qux: string }),
+    fooOrNull1: optional(nullable(string)),
+    fooOrNull2: nullable(optional(string)),
+    bar: object({ baz: string }),
+    qux: never('No way, Jose'),
+    quxx: optional(never('No way, Jose')),
   });
 
-  expectType<{ bar: { qux: string }; foo?: string | undefined }>(test(d));
+  expectType<{
+    foo?: string;
+    fooOrNull1?: string | null;
+    fooOrNull2?: string | null;
+    bar: { baz: string };
+    qux: never;
+    quxx?: never;
+  }>(test(d));
   const x = test(d);
   expectType<string | undefined>(x.foo);
-  expectType<{ qux: string }>(x.bar);
+  expectType<string | null | undefined>(x.fooOrNull1);
+  expectType<string | null | undefined>(x.fooOrNull2);
+  expectType<{ baz: string }>(x.bar);
   expectError(x.a);
   expectError(x.b);
+  expectType<never>(x.qux);
+  expectType<undefined>(x.quxx);
 
   // With "never" fields
   expectType<{ nope: never }>(test(object({ nope: fail('not allowed') })));
@@ -246,7 +261,7 @@ expectType<never>(test(object({})).b);
     bar: object({ qux: string }),
   });
 
-  expectType<{ bar: { qux: string }; foo?: string | undefined }>(test(d));
+  expectType<{ bar: { qux: string }; foo?: string }>(test(d));
   const x = test(d);
   expectType<string | undefined>(x.foo);
   expectType<{ qux: string }>(x.bar);
