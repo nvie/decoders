@@ -59,7 +59,6 @@ function serializeObject(annotation: ObjectAnnotation, prefix: string): string {
 }
 
 export function serializeValue(value: unknown): string {
-  // istanbul ignore else
   if (typeof value === 'string') {
     return serializeString(value);
   } else if (typeof value === 'number' || typeof value === 'boolean') {

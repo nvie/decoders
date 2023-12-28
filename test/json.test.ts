@@ -1,30 +1,31 @@
+import { describe, expect, test } from 'vitest';
 import { json, jsonArray, jsonObject } from '~/lib/json';
 
 describe('decoder', () => {
   const decoder = json;
 
-  it('decodes null', () => {
+  test('decodes null', () => {
     expect(decoder.verify(null)).toEqual(null);
   });
 
-  it('decodes strings', () => {
+  test('decodes strings', () => {
     expect(decoder.verify('')).toEqual('');
     expect(decoder.verify('hello')).toEqual('hello');
   });
 
-  it('decodes numbers', () => {
+  test('decodes numbers', () => {
     expect(decoder.verify(0)).toEqual(0);
     expect(decoder.verify(0.0)).toEqual(0.0);
     expect(decoder.verify(3.141529)).toEqual(3.141529);
     expect(decoder.verify(-3.141529)).toEqual(-3.141529);
   });
 
-  it('decodes booleans', () => {
+  test('decodes booleans', () => {
     expect(decoder.verify(true)).toEqual(true);
     expect(decoder.verify(false)).toEqual(false);
   });
 
-  it('decodes JSON arrays', () => {
+  test('decodes JSON arrays', () => {
     expect(decoder.verify([])).toEqual([]);
     expect(decoder.verify([1, true, 'hi'])).toEqual([1, true, 'hi']);
     expect(decoder.verify([[1], [[true, 'hi']]])).toEqual([[1], [[true, 'hi']]]);
@@ -34,7 +35,7 @@ describe('decoder', () => {
     ]);
   });
 
-  it('decodes JSON objects', () => {
+  test('decodes JSON objects', () => {
     expect(decoder.verify({})).toEqual({});
     expect(decoder.verify({ a: 1, b: true, c: 'hi' })).toEqual({
       a: 1,
@@ -46,7 +47,7 @@ describe('decoder', () => {
     });
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     expect(() => decoder.verify(undefined)).toThrow();
     expect(() => decoder.verify(NaN)).toThrow();
     expect(() => decoder.verify(new Date())).toThrow();
@@ -58,7 +59,7 @@ describe('decoder', () => {
 describe('jsonObject', () => {
   const decoder = jsonObject;
 
-  it('decodes JSON objects', () => {
+  test('decodes JSON objects', () => {
     expect(decoder.verify({})).toEqual({});
     expect(decoder.verify({ a: 1, b: true, c: 'hi' })).toEqual({
       a: 1,
@@ -70,7 +71,7 @@ describe('jsonObject', () => {
     });
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     expect(() => decoder.verify(null)).toThrow();
     expect(() => decoder.verify('')).toThrow();
     expect(() => decoder.verify('hi')).toThrow();
@@ -93,7 +94,7 @@ describe('jsonObject', () => {
 describe('jsonArray', () => {
   const decoder = jsonArray;
 
-  it('decodes JSON arrays', () => {
+  test('decodes JSON arrays', () => {
     expect(decoder.verify([])).toEqual([]);
     expect(decoder.verify([1, true, 'hi'])).toEqual([1, true, 'hi']);
     expect(decoder.verify([[1], [[true, 'hi']]])).toEqual([[1], [[true, 'hi']]]);
@@ -103,7 +104,7 @@ describe('jsonArray', () => {
     ]);
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     expect(() => decoder.verify(null)).toThrow();
     expect(() => decoder.verify('')).toThrow();
     expect(() => decoder.verify('hi')).toThrow();

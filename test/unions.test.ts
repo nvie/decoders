@@ -1,5 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 
+import { describe, expect, test } from 'vitest';
 import { boolean } from '~/lib/booleans';
 import { constant, undefined_ } from '~/lib/basics';
 import { either, oneOf } from '~/lib/unions';
@@ -18,25 +19,25 @@ describe('either', () => {
     (x) => typeof x === 'string' || typeof x === 'boolean',
   );
 
-  it('valid', () => {
+  test('valid', () => {
     expect(okay.length).not.toBe(0);
     for (const value of okay) {
       expect(stringOrBooleanDecoder.verify(value)).toBe(value);
     }
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     expect(not_okay.length).not.toBe(0);
     for (const value of not_okay) {
       expect(() => stringOrBooleanDecoder.verify(value)).toThrow();
     }
   });
 
-  it('errors nicely in trivial eithers', () => {
+  test('errors nicely in trivial eithers', () => {
     expect(() => stringOrBooleanDecoder.verify(42)).toThrow('Either:');
   });
 
-  it('errors nicely in common, simple eithers (ie optional)', () => {
+  test('errors nicely in common, simple eithers (ie optional)', () => {
     // Either undefined or string
     const d1 = either(undefined_, string);
     expect(() => d1.verify(42)).toThrow('Either:\n- Must be undefined\n- Must be string');
@@ -54,7 +55,7 @@ describe('either', () => {
     expect(() => d3.verify('foobar')).toThrow('Either');
   });
 
-  it('errors in complex eithers (with two wildly different branches)', () => {
+  test('errors in complex eithers (with two wildly different branches)', () => {
     const decoder = either(object({ foo: string }), object({ bar: number }));
     expect(() =>
       decoder.verify({
@@ -74,14 +75,14 @@ Either:
   });
 });
 
-describe('nested eithers', () => {
+test('nested eithers', () => {
   const decoder = either(either(string, boolean), either(number, undefined_));
   expect(() => decoder.verify(null)).toThrow(
     'Either:\n- Must be string\n- Must be boolean\n- Must be number\n- Must be undefined',
   );
 });
 
-describe('either fails without decoders', () => {
+test('either fails without decoders', () => {
   expect(() => either()).toThrow();
 });
 
@@ -96,14 +97,14 @@ describe('either3', () => {
       Number.isFinite(x),
   );
 
-  it('valid', () => {
+  test('valid', () => {
     expect(okay.length).not.toBe(0);
     for (const value of okay) {
       expect(decoder.verify(value)).toBe(value);
     }
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     expect(not_okay.length).not.toBe(0);
     for (const value of not_okay) {
       expect(() => decoder.verify(value)).toThrow();
@@ -126,14 +127,14 @@ describe('either9', () => {
   const okay = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
   const not_okay = INPUTS;
 
-  it('valid', () => {
+  test('valid', () => {
     expect(okay.length).not.toBe(0);
     for (const value of okay) {
       expect(decoder.verify(value)).toBe(value);
     }
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     expect(not_okay.length).not.toBe(0);
     for (const value of not_okay) {
       expect(decoder.decode(value).ok).toBe(false);
@@ -146,14 +147,14 @@ describe('oneOf', () => {
   const okay = [3, true, null, '1', 'foo'];
   const not_okay = INPUTS.filter((x) => !okay.includes(x as any));
 
-  it('valid', () => {
+  test('valid', () => {
     expect(okay.length).not.toBe(0);
     for (const value of okay) {
       expect(decoder.verify(value)).toBe(value);
     }
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     expect(not_okay.length).not.toBe(0);
     for (const value of not_okay) {
       expect(decoder.decode(value).ok).toBe(false);
@@ -200,7 +201,7 @@ const alt2: Decoder<Alt2> = object({ type: constant(2), b: number });
 describe('taggedUnion', () => {
   const decoder = taggedUnion('type', { rectangle, circle });
 
-  it('allows conditional decoding', () => {
+  test('allows conditional decoding', () => {
     const r = { type: 'rectangle', x: 3, y: 5, width: 80, height: 100 };
     expect(decoder.verify(r)).toEqual(r);
 
@@ -208,7 +209,7 @@ describe('taggedUnion', () => {
     expect(decoder.verify(c)).toEqual(c);
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     expect(() => decoder.verify('foo')).toThrow('Must be an object');
     expect(() => decoder.verify({})).toThrow('Missing key: "type"');
     expect(() => decoder.verify({ type: 'blah' })).toThrow(
@@ -225,7 +226,7 @@ describe('taggedUnion with numeric keys', () => {
   //                                    ^^^        ^^^
   //                                    Support both of these syntaxes
 
-  it('allows conditional decoding', () => {
+  test('allows conditional decoding', () => {
     const a = { type: 1, a: 'hi' };
     expect(decoder.verify(a)).toEqual(a);
 
@@ -233,7 +234,7 @@ describe('taggedUnion with numeric keys', () => {
     expect(decoder.verify(b)).toEqual(b);
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     expect(() => decoder.verify('foo')).toThrow('Must be an object');
     expect(() => decoder.verify({})).toThrow('Missing key: "type"');
     expect(() => decoder.verify({ type: 'blah' })).toThrow(/Must be one of.*1.*2/);

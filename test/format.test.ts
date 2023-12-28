@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { __private_annotate, annotate } from '~/annotate';
 import { formatInline, formatShort } from '~/format';
 
@@ -16,12 +17,16 @@ export function dedent(value: string): string {
   return dedented.join('\n');
 }
 
+class DefinitelyNotADate {
+  getMonth() {}
+}
+
 function checkInline(input: unknown, expected: string) {
   expect(formatInline(annotate(input))).toEqual(dedent(expected));
 }
 
 describe('formatInline', () => {
-  it('serializes scalar values', () => {
+  test('serializes scalar values', () => {
     checkInline(undefined, 'undefined');
     checkInline(null, 'null');
     checkInline(1234, '1234');
@@ -37,12 +42,12 @@ describe('formatInline', () => {
     );
   });
 
-  it('serializes functions', () => {
+  test('serializes functions', () => {
     checkInline(function () {}, '<function>');
     checkInline(() => {}, '<function>');
   });
 
-  it('serializes annotated primitives', () => {
+  test('serializes annotated primitives', () => {
     checkInline(
       annotate(123, 'a number'),
       `
@@ -79,6 +84,13 @@ describe('formatInline', () => {
             `,
     );
     checkInline(
+      annotate(new DefinitelyNotADate(), 'Nope'),
+      `
+              (unserializable)
+              ^^^^^^^^^^^^^^^^ Nope
+            `,
+    );
+    checkInline(
       annotate([], 'must not be empty'),
       `
               []
@@ -101,7 +113,7 @@ describe('formatInline', () => {
     );
   });
 
-  it('serializes w/ cyclical refs', () => {
+  test('serializes w/ cyclical refs', () => {
     const value = {}; // just a dummy ref
 
     // Construct a fake circular ref by modifying the seen set directly
@@ -116,7 +128,7 @@ describe('formatInline', () => {
     );
   });
 
-  it('serializes w/ unknown values', () => {
+  test('serializes w/ unknown values', () => {
     checkInline(
       annotate(0n, 'xxx'),
       `
@@ -126,7 +138,7 @@ describe('formatInline', () => {
     );
   });
 
-  it('cannot format custom objects out of the box', () => {
+  test('cannot format custom objects out of the box', () => {
     checkInline(
       annotate(Number.NEGATIVE_INFINITY, 'Not finite'),
       `
@@ -136,7 +148,7 @@ describe('formatInline', () => {
     );
   });
 
-  it('prints annotations with multiple lines', () => {
+  test('prints annotations with multiple lines', () => {
     checkInline(
       [annotate(123, 'Must be one of:\n1. a float\n2. a string')],
       `
@@ -163,7 +175,7 @@ describe('formatInline', () => {
     );
   });
 
-  it('cuts off long strings beyond a certain length', () => {
+  test('cuts off long strings beyond a certain length', () => {
     checkInline(
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Etiam lacus ligula, accumsan id imperdiet rhoncus, dapibus vitae arcu.  Nulla non quam erat, luctus consequat nisi.  Integer hendrerit lacus sagittis erat fermentum tincidunt.  Cras vel dui neque.  In sagittis commodo luctus.  Mauris non metus dolor, ut suscipit dui.  Aliquam mauris lacus, laoreet et consequat quis, bibendum id ipsum.  Donec gravida, diam id imperdiet cursus, nunc nisl bibendum sapien, eget tempor neque elit in tortor.',
       `
@@ -172,7 +184,7 @@ describe('formatInline', () => {
     );
   });
 
-  it('serializes data inside arrays', () => {
+  test('serializes data inside arrays', () => {
     checkInline(
       [[annotate(1234, 'ABC')], annotate(true, 'not false')],
       `
@@ -188,7 +200,7 @@ describe('formatInline', () => {
     );
   });
 
-  it('objects that are themselves annotated', () => {
+  test('objects that are themselves annotated', () => {
     checkInline(
       [annotate({ name: 123 }, 'Missing key "foo"')],
       `
@@ -202,7 +214,7 @@ describe('formatInline', () => {
     );
   });
 
-  it('serializes data inside objects', () => {
+  test('serializes data inside objects', () => {
     checkInline(
       { name: annotate(123, 'The name should be a string') },
       `
@@ -220,20 +232,20 @@ function checkShort(input: unknown, expected: string) {
 }
 
 describe('formatShort', () => {
-  it('summarizes normal JS values', () => {
+  test('summarizes normal JS values', () => {
     checkShort(1234, '');
     checkShort(true, '');
     checkShort('foo', '');
     checkShort(['foo', 123], '');
   });
 
-  it('serializes annotated primitives', () => {
+  test('serializes annotated primitives', () => {
     checkShort(annotate(123, 'a number'), 'a number');
     checkShort(annotate(true, 'not false'), 'not false');
     checkShort(annotate('foo', 'This is a foo'), 'This is a foo');
   });
 
-  it('prints annotations with multiple lines', () => {
+  test('prints annotations with multiple lines', () => {
     checkShort([annotate(123, 'Must be string')], 'Value at index 0: Must be string');
     checkShort(
       { name: annotate(123, 'Must be string') },
@@ -241,14 +253,14 @@ describe('formatShort', () => {
     );
   });
 
-  it('multiple annotations, deeply nested', () => {
+  test('multiple annotations, deeply nested', () => {
     checkShort(
       [[{ name: annotate(1234, 'ABC') }], annotate(true, 'not false')],
       'Value at keypath 0.0.name: ABC\nValue at index 1: not false',
     );
   });
 
-  it('objects/arrays that are themselves annotated', () => {
+  test('objects/arrays that are themselves annotated', () => {
     checkShort(
       [
         {

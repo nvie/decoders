@@ -1,15 +1,16 @@
+import { describe, expect, test } from 'vitest';
 import { annotate } from '~/annotate';
 import { formatInline, formatShort } from '~/format';
 import { number } from '~/lib/numbers';
 import { pojo } from '~/lib/objects';
 import { string } from '~/lib/strings';
 
-describe('.decode', () => {
+test('.decode', () => {
   // .decode() is tested implicitly because it's used _everywhere_
 });
 
 describe('.verify', () => {
-  it('valid', () => {
+  test('valid', () => {
     const decoder = number;
     expect(decoder.verify(0)).toBe(0);
     expect(decoder.verify(1)).toBe(1);
@@ -18,12 +19,12 @@ describe('.verify', () => {
     expect(decoder.verify(-3.14)).toBe(-3.14);
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     const decoder = number;
     expect(() => decoder.verify('foo')).toThrow('Must be number');
   });
 
-  it('different erroring styles', () => {
+  test('different erroring styles', () => {
     const decoder = number;
 
     // Default
@@ -47,7 +48,7 @@ describe('.verify', () => {
 });
 
 describe('.value', () => {
-  it('valid', () => {
+  test('valid', () => {
     const decoder = number;
     expect(decoder.value(0)).toBe(0);
     expect(decoder.value(1)).toBe(1);
@@ -56,7 +57,7 @@ describe('.value', () => {
     expect(decoder.value(-3.14)).toBe(-3.14);
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     const decoder = number;
     expect(decoder.value('foo')).toBeUndefined();
   });
@@ -74,30 +75,30 @@ describe('.then', () => {
       },
     );
 
-  it('valid type of decode result', () => {
+  test('valid type of decode result', () => {
     expect(hex.verify('100')).toEqual(256);
     expect(hex.verify('DEADC0DE')).toEqual(0xdeadc0de);
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     expect(() => hex.verify('no good hex value')).toThrow('Nope');
   });
 });
 
 describe('.transform', () => {
-  it('change type of decode result', () => {
+  test('change type of decode result', () => {
     const len = string.transform((s) => s.length);
     expect(len.verify('foo')).toEqual(3);
     expect(len.verify('Lorem ipsum dolor sit amet.')).toEqual(27);
   });
 
-  it('change value, not type, of decoded results', () => {
+  test('change value, not type, of decoded results', () => {
     const upcase = string.transform((s) => s.toUpperCase());
     expect(upcase.verify('123')).toEqual('123');
     expect(upcase.verify('I am Hulk')).toEqual('I AM HULK');
   });
 
-  it('a failing transformation function will fail the decoder', () => {
+  test('a failing transformation function will fail the decoder', () => {
     const odd = number.transform((n) => {
       if (n % 2 !== 0) return n;
       throw new Error('Must be odd');
@@ -120,7 +121,7 @@ describe('.transform', () => {
 describe('.refine', () => {
   const odd = number.refine((n) => n % 2 !== 0, 'Must be odd');
 
-  it('valid', () => {
+  test('valid', () => {
     expect(odd.decode(0).ok).toEqual(false);
     expect(odd.decode(1).ok).toEqual(true);
     expect(odd.decode(2).ok).toEqual(false);
@@ -141,7 +142,7 @@ describe('.reject (simple)', () => {
     return badKeys.length > 0 ? `Disallowed keys: ${badKeys.join(', ')}` : null;
   });
 
-  it('valid', () => {
+  test('valid', () => {
     expect(decoder.decode({ id: 123, name: 'Bob' }).ok).toEqual(true);
     expect(() => decoder.verify({ id: 123, _x: 123, _y: 'Bob' })).toThrow(
       /Disallowed keys: _x, _y/,
@@ -154,7 +155,7 @@ describe('.reject (w/ Annotation)', () => {
     n % 2 === 0 ? annotate('***', "Can't show ya, but this must be odd") : null,
   );
 
-  it('valid', () => {
+  test('valid', () => {
     expect(odd.decode(0).ok).toEqual(false);
     expect(odd.decode(1).ok).toEqual(true);
     expect(odd.decode(2).ok).toEqual(false);
@@ -172,12 +173,12 @@ describe('.reject (w/ Annotation)', () => {
 describe('.describe', () => {
   const decoder = string.describe('Must be text');
 
-  it('valid', () => {
+  test('valid', () => {
     expect(decoder.verify('foo')).toBe('foo');
     expect(decoder.verify('')).toBe('');
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     expect(() => decoder.verify(0)).toThrow(/Must be text/);
   });
 });

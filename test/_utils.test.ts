@@ -1,5 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 
+import { describe, expect, test } from 'vitest';
 import { indent, subtract } from '~/_utils';
 import type { Scalar } from '~/Decoder';
 
@@ -11,25 +12,25 @@ describe('subtract', () => {
     new Set([1, 2, 3]),
   ];
 
-  it('subtract(x, ∅) -> x', () => {
+  test('subtract(x, ∅) -> x', () => {
     for (const example of exampleSets) {
       expect(subtract(example, new Set())).toEqual(example);
     }
   });
 
-  it('subtract(∅, x) -> ∅', () => {
+  test('subtract(∅, x) -> ∅', () => {
     for (const example of exampleSets) {
       expect(subtract(new Set<Scalar>(), example)).toEqual(new Set());
     }
   });
 
-  it('subtract(x, x) -> ∅', () => {
+  test('subtract(x, x) -> ∅', () => {
     for (const example of exampleSets) {
       expect(subtract(example, example)).toEqual(new Set());
     }
   });
 
-  it('subtract(x, y)', () => {
+  test('subtract(x, y)', () => {
     expect(subtract(new Set(['a', 'b', 'c']), new Set(['b', 'c']))).toEqual(
       new Set(['a']),
     );
@@ -43,7 +44,7 @@ describe('subtract', () => {
 });
 
 describe('indent', () => {
-  it('simple', () => {
+  test('simple', () => {
     expect(indent('foo')).toBe('  foo');
     expect(indent('foo', '    ')).toBe('    foo');
   });

@@ -1,5 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 
+import { describe, expect, test } from 'vitest';
 import { array } from '~/lib/arrays';
 import { constant } from '~/lib/basics';
 import { fail, instanceOf, lazy, never, prep } from '~/lib/utilities';
@@ -15,7 +16,7 @@ describe('instanceOf', () => {
   const errorDecoder = instanceOf(Error);
   const typeErrorDecoder = instanceOf(TypeError);
 
-  it('accepts', () => {
+  test('accepts', () => {
     const e = new Error('foo');
     const t = new TypeError('bar'); // Subclasses are also allowed
 
@@ -28,7 +29,7 @@ describe('instanceOf', () => {
     expect(() => typeErrorDecoder.verify(e)).toThrow('Must be TypeError instance');
   });
 
-  it('rejects', () => {
+  test('rejects', () => {
     expect(() => errorDecoder.verify('123')).toThrow('Must be Error instance');
     expect(() => errorDecoder.verify(123)).toThrow('Must be Error instance');
     expect(() => errorDecoder.verify({})).toThrow('Must be Error instance');
@@ -38,7 +39,7 @@ describe('instanceOf', () => {
 });
 
 describe('lazy', () => {
-  it('lazy(() => string) is same as string', () => {
+  test('lazy(() => string) is same as string', () => {
     const eagerDecoder = string;
     const lazyDecoder = lazy(() => string);
     for (const input of INPUTS) {
@@ -49,7 +50,7 @@ describe('lazy', () => {
     }
   });
 
-  it('build self-referential types with lazy()', () => {
+  test('build self-referential types with lazy()', () => {
     type StringList = {
       curr: string;
       next?: StringList;
@@ -71,7 +72,7 @@ describe('lazy', () => {
     expect(llist.decode(v2).value).toEqual(v2);
   });
 
-  it('build self-referential types with variables', () => {
+  test('build self-referential types with variables', () => {
     type Tree<T> = {
       node: T;
       children: Tree<T>[];
@@ -107,21 +108,21 @@ describe('prep', () => {
   const answerToLife = prep((x) => parseInt(x as string), constant(42));
   const [okay, not_okay] = partition(INPUTS, (x) => String(x) === '42');
 
-  it('valid', () => {
+  test('valid', () => {
     expect(okay.length).not.toBe(0);
     for (const value of okay) {
       expect(answerToLife.verify(value)).toBe(42);
     }
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     expect(not_okay.length).not.toBe(0);
     for (const value of not_okay) {
       expect(answerToLife.decode(value).ok).toBe(false);
     }
   });
 
-  it('invalid when prep mapper function throws', () => {
+  test('invalid when prep mapper function throws', () => {
     expect(answerToLife.decode(Symbol('foo')).ok).toBe(false);
     //                  ^^^^^^^^^^^^^ This will cause the `Number(x)` call to throw
   });
@@ -131,11 +132,11 @@ describe('fail', () => {
   const decoder = fail('I always fail');
   const not_okay = INPUTS;
 
-  it('accepts nothing', () => {
+  test('accepts nothing', () => {
     // Nothing is valid for a failing decoder :)
   });
 
-  it('rejects everything', () => {
+  test('rejects everything', () => {
     expect(not_okay.length).not.toBe(0);
     for (const value of not_okay) {
       expect(decoder.decode(value).ok).toBe(false);
@@ -147,11 +148,11 @@ describe('never', () => {
   const decoder = never('I always fail');
   const not_okay = INPUTS;
 
-  it('accepts nothing', () => {
+  test('accepts nothing', () => {
     // Nothing is valid for a failing decoder :)
   });
 
-  it('rejects everything', () => {
+  test('rejects everything', () => {
     expect(not_okay.length).not.toBe(0);
     for (const value of not_okay) {
       expect(decoder.decode(value).ok).toBe(false);

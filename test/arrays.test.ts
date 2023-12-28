@@ -1,17 +1,18 @@
+import { describe, expect, test } from 'vitest';
 import { array, nonEmptyArray, set, tuple } from '~/lib/arrays';
 import { number } from '~/lib/numbers';
 import { object } from '~/lib/objects';
 import { string } from '~/lib/strings';
 
 describe('array', () => {
-  it('empty array', () => {
+  test('empty array', () => {
     // What type it is does not matter if the array is empty
     expect(array(string).verify([])).toEqual([]);
     expect(array(number).verify([])).toEqual([]);
     expect(array(array(array(array(number)))).verify([])).toEqual([]);
   });
 
-  it('simple nesting', () => {
+  test('simple nesting', () => {
     const verifier1 = array(string);
     expect(verifier1.verify([])).toEqual([]);
     expect(verifier1.verify(['foo', 'bar'])).toEqual(['foo', 'bar']);
@@ -21,14 +22,14 @@ describe('array', () => {
     expect(verifier2.verify([0, 1, 2, Math.PI])).toEqual([0, 1, 2, Math.PI]);
   });
 
-  it('complex nesting decoding', () => {
+  test('complex nesting decoding', () => {
     const decoder = array(array(number));
     expect(decoder.verify([])).toEqual([]);
     expect(decoder.verify([[]])).toEqual([[]]);
     expect(decoder.verify([[1, 2], [], [3, 4, 5]])).toEqual([[1, 2], [], [3, 4, 5]]);
   });
 
-  it('failure to unpack', () => {
+  test('failure to unpack', () => {
     const decoder = array(string);
     expect(() => decoder.verify('boop')).toThrow('Must be an array');
     expect(() => decoder.verify([42])).toThrow('Must be string (at index 0)');
@@ -45,7 +46,7 @@ describe('nonEmptyArray', () => {
   const strings = nonEmptyArray(string);
   const numbers = nonEmptyArray(number);
 
-  it('works like normal array', () => {
+  test('works like normal array', () => {
     expect(strings.verify(['foo', 'bar'])).toEqual(['foo', 'bar']);
     expect(numbers.verify([1, 2, 3])).toEqual([1, 2, 3]);
 
@@ -53,7 +54,7 @@ describe('nonEmptyArray', () => {
     expect(() => numbers.verify(['foo'])).toThrow('Must be number');
   });
 
-  it('but empty array throw, too', () => {
+  test('but empty array throw, too', () => {
     expect(() => strings.verify([])).toThrow('Must be non-empty array');
     expect(() => numbers.verify([])).toThrow('Must be non-empty array');
   });
@@ -62,25 +63,25 @@ describe('nonEmptyArray', () => {
 describe('set', () => {
   const decoder = set(string);
 
-  it('empty set', () => {
+  test('empty set', () => {
     expect(decoder.verify([]).size).toBe(0);
   });
 
-  it('accepts', () => {
+  test('accepts', () => {
     const r = decoder.verify(['foo', 'bar']);
     expect(r.has('foo')).toBe(true);
     expect(r.has('bar')).toBe(true);
     expect(r.size).toBe(2);
   });
 
-  it('rejects', () => {
+  test('rejects', () => {
     expect(decoder.decode([1]).ok).toBe(false);
     expect(decoder.decode(1).ok).toBe(false);
   });
 });
 
 describe('tuples', () => {
-  it('1-tuples', () => {
+  test('1-tuples', () => {
     const decoder = tuple(string);
     expect(decoder.verify(['foo'])).toEqual(['foo']);
     expect(decoder.decode(['foo', 'bar']).ok).toBe(false);
@@ -96,7 +97,7 @@ describe('tuples', () => {
     expect(decoder.decode(['foo', 42, true]).ok).toBe(false);
   });
 
-  it('2-tuples', () => {
+  test('2-tuples', () => {
     const decoder = tuple(string, number);
     expect(decoder.verify(['foo', 42])).toEqual(['foo', 42]);
     expect(decoder.decode(['foo', 'bar']).ok).toBe(false);
@@ -113,7 +114,7 @@ describe('tuples', () => {
     expect(decoder.decode(['foo', 42, true]).ok).toBe(false);
   });
 
-  it('3-tuples', () => {
+  test('3-tuples', () => {
     const decoder = tuple(number, number, number);
     expect(decoder.decode([1, 2, 3]).ok).toBe(true);
     expect(decoder.decode([]).ok).toBe(false);
@@ -124,7 +125,7 @@ describe('tuples', () => {
     expect(decoder.decode(['foo', 1, 2]).ok).toBe(false);
   });
 
-  it('4-tuples', () => {
+  test('4-tuples', () => {
     const decoder = tuple(number, number, number, number);
     expect(decoder.decode([1, 2, 3, 4]).ok).toBe(true);
     expect(decoder.decode([]).ok).toBe(false);
@@ -137,7 +138,7 @@ describe('tuples', () => {
     expect(decoder.decode(['foo', 1, 2, 3]).ok).toBe(false);
   });
 
-  it('5-tuples', () => {
+  test('5-tuples', () => {
     const decoder = tuple(number, number, number, number, number);
     expect(decoder.decode([1, 2, 3, 4, 5]).ok).toBe(true);
     expect(decoder.decode([]).ok).toBe(false);
@@ -152,7 +153,7 @@ describe('tuples', () => {
     expect(decoder.decode(['foo', 1, 2, 3, 4]).ok).toBe(false);
   });
 
-  it('6-tuples', () => {
+  test('6-tuples', () => {
     const decoder = tuple(number, number, number, number, number, number);
     expect(decoder.decode([1, 2, 3, 4, 5, 6]).ok).toBe(true);
     expect(decoder.decode([]).ok).toBe(false);

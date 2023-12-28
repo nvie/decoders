@@ -1,5 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 
+import { describe, expect, test } from 'vitest';
 import {
   anyNumber,
   integer,
@@ -14,14 +15,14 @@ describe('number', () => {
   const decoder = number;
   const [okay, not_okay] = partition(INPUTS, (n) => Number.isFinite(n));
 
-  it('valid', () => {
+  test('valid', () => {
     expect(okay.length).not.toBe(0);
     for (const value of okay) {
       expect(decoder.verify(value)).toBe(value);
     }
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     expect(not_okay.length).not.toBe(0);
     for (const value of not_okay) {
       expect(decoder.decode(value).ok).toBe(false);
@@ -33,14 +34,14 @@ describe('anyNumber', () => {
   const decoder = anyNumber;
   const [okay, not_okay] = partition(INPUTS, (n) => typeof n === 'number');
 
-  it('valid', () => {
+  test('valid', () => {
     expect(okay.length).not.toBe(0);
     for (const value of okay) {
       expect(decoder.verify(value)).toBe(value);
     }
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     expect(not_okay.length).not.toBe(0);
     for (const value of not_okay) {
       expect(decoder.decode(value).ok).toBe(false);
@@ -55,7 +56,7 @@ describe('positiveNumber', () => {
     (n) => typeof n === 'number' && Number.isFinite(n) && n >= 0,
   );
 
-  it('valid', () => {
+  test('valid', () => {
     expect(okay.length).not.toBe(0);
     for (const value of okay) {
       expect(decoder.verify(value)).toBe(value === 0 ? 0 : value);
@@ -63,7 +64,7 @@ describe('positiveNumber', () => {
     }
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     expect(not_okay.length).not.toBe(0);
     for (const value of not_okay) {
       expect(decoder.decode(value).ok).toBe(false);
@@ -75,14 +76,14 @@ describe('integer', () => {
   const decoder = integer;
   const [okay, not_okay] = partition(INPUTS, (n) => Number.isInteger(n));
 
-  it('valid', () => {
+  test('valid', () => {
     expect(okay.length).not.toBe(0);
     for (const value of okay) {
       expect(decoder.verify(value)).toBe(value);
     }
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     expect(not_okay.length).not.toBe(0);
     for (const value of not_okay) {
       expect(decoder.decode(value).ok).toBe(false);
@@ -97,7 +98,7 @@ describe('positiveInteger', () => {
     (n) => typeof n === 'number' && Number.isInteger(n) && n >= 0,
   );
 
-  it('valid', () => {
+  test('valid', () => {
     expect(okay.length).not.toBe(0);
     for (const value of okay) {
       expect(decoder.verify(value)).toBe(value === 0 ? 0 : value);
@@ -105,7 +106,7 @@ describe('positiveInteger', () => {
     }
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     expect(not_okay.length).not.toBe(0);
     for (const value of not_okay) {
       expect(decoder.decode(value).ok).toBe(false);

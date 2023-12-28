@@ -1,5 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 
+import { describe, expect, test } from 'vitest';
 import { date, iso8601 } from '~/lib/dates';
 import { INPUTS } from './_fixtures';
 import { partition } from 'itertools';
@@ -11,14 +12,14 @@ describe('dates', () => {
     (o) => Object.prototype.toString.call(o) === '[object Date]' && !isNaN(o as any),
   );
 
-  it('valid', () => {
+  test('valid', () => {
     expect(okay.length).not.toBe(0);
     for (const value of okay) {
       expect(decoder.verify(value)).toBe(value);
     }
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     expect(not_okay.length).not.toBe(0);
     for (const value of not_okay) {
       expect(() => decoder.verify(value)).toThrow();
@@ -29,7 +30,7 @@ describe('dates', () => {
 describe('iso8601 dates', () => {
   const decoder = iso8601;
 
-  it('invalid', () => {
+  test('invalid', () => {
     // None of the values in INPUTS are valid ISO8601 strings
     const not_okay = INPUTS;
     for (const value of not_okay) {
@@ -37,7 +38,7 @@ describe('iso8601 dates', () => {
     }
   });
 
-  it('decodes ISO dates', () => {
+  test('decodes ISO dates', () => {
     expect(decoder.verify('2020-06-22T10:57:33Z')).toEqual(
       new Date('2020-06-22T10:57:33Z'),
     );
@@ -51,7 +52,7 @@ describe('iso8601 dates', () => {
     );
   });
 
-  it('rejects invalid dates', () => {
+  test('rejects invalid dates', () => {
     // Syntactically invalid
     expect(() => decoder.verify('03/04/2000')).toThrow();
     expect(() => decoder.verify('2020-06-22T10:57:33')).toThrow();

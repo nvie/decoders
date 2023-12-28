@@ -1,45 +1,46 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { describe, expect, test } from 'vitest';
 import { annotate, array, circularRef, merge, object, scalar } from '~/annotate';
 
 describe('parsing (scalars)', () => {
-  it('strings', () => {
+  test('strings', () => {
     expect(annotate('foo')).toEqual(scalar('foo'));
     expect(annotate('foo', '')).toEqual(scalar('foo', ''));
     expect(annotate('foo', 'great')).toEqual(scalar('foo', 'great'));
   });
 
-  it('booleans', () => {
+  test('booleans', () => {
     expect(annotate(true)).toEqual(scalar(true));
     expect(annotate(true, '')).toEqual(scalar(true, ''));
     expect(annotate(false, 'lies!')).toEqual(scalar(false, 'lies!'));
   });
 
-  it('numbers', () => {
+  test('numbers', () => {
     expect(annotate(123)).toEqual(scalar(123));
     expect(annotate(234, '')).toEqual(scalar(234, ''));
     expect(annotate(314, '100x π')).toEqual(scalar(314, '100x π'));
   });
 
-  it('dates', () => {
+  test('dates', () => {
     const nyd = new Date(2018, 0, 1);
     expect(annotate(nyd)).toEqual(scalar(nyd));
     expect(annotate(nyd, '')).toEqual(scalar(nyd, ''));
     expect(annotate(nyd, "new year's day")).toEqual(scalar(nyd, "new year's day"));
   });
 
-  it('null', () => {
+  test('null', () => {
     expect(annotate(null)).toEqual(scalar(null));
     expect(annotate(null, 'foo')).toEqual(scalar(null, 'foo'));
   });
 
-  it('undefined', () => {
+  test('undefined', () => {
     expect(annotate(undefined)).toEqual(scalar(undefined));
     expect(annotate(undefined, 'foo')).toEqual(scalar(undefined, 'foo'));
   });
 
-  it('symbols', () => {
+  test('symbols', () => {
     const sym1 = Symbol.for('xyz');
     const sym2 = Symbol();
     const sym3 = Symbol('hi');
@@ -51,7 +52,7 @@ describe('parsing (scalars)', () => {
 });
 
 describe('parsing (composite)', () => {
-  it('arrays', () => {
+  test('arrays', () => {
     const arr1 = [1, 'foo'];
     expect(annotate(arr1)).toEqual(array([scalar(1), scalar('foo')]));
 
@@ -59,7 +60,7 @@ describe('parsing (composite)', () => {
     expect(annotate(arr2)).toEqual(array([scalar(1, 'uno'), scalar('foo')]));
   });
 
-  it('objects', () => {
+  test('objects', () => {
     const obj = { name: 'Frank' };
     expect(annotate(obj)).toEqual(
       object({
@@ -68,7 +69,7 @@ describe('parsing (composite)', () => {
     );
   });
 
-  it('objects (values annotated)', () => {
+  test('objects (values annotated)', () => {
     const obj = { name: annotate('nvie', 'Vincent'), age: 36 };
     expect(annotate(obj)).toEqual(
       object({
@@ -78,7 +79,7 @@ describe('parsing (composite)', () => {
     );
   });
 
-  it('annotates fields in object', () => {
+  test('annotates fields in object', () => {
     // Annotate with a simple string
     const objAnn = object({ name: scalar(null) });
     expect(merge(objAnn, { name: scalar(null, 'Missing!') })).toEqual(
@@ -97,7 +98,7 @@ describe('parsing (composite)', () => {
     );
   });
 
-  it('annotates missing fields in object', () => {
+  test('annotates missing fields in object', () => {
     // Annotate with a simple string
     const obj = object({ foo: scalar('hello') });
     expect(merge(obj, { bar: scalar(undefined, 'Missing') })).toEqual(
@@ -110,7 +111,7 @@ describe('parsing (composite)', () => {
 });
 
 describe('parsing is idempotent', () => {
-  it('parsing an annotation returns itself', () => {
+  test('parsing an annotation returns itself', () => {
     for (const value of ['a string', 42, [], {}, function () {}]) {
       // Annotated once yields an Annotation, but annotating it more often
       // has no effect on the result
@@ -125,7 +126,7 @@ describe('parsing is idempotent', () => {
 });
 
 describe('annotating circular objects', () => {
-  it('circular arrays', () => {
+  test('circular arrays', () => {
     const circularArray: any[] = ['foo', [42 /* circular ref will go here */]];
     circularArray[1].push(circularArray);
 
@@ -137,7 +138,7 @@ describe('annotating circular objects', () => {
     expect(annotate(annotate(annotate(circularArray)))).toEqual(expected);
   });
 
-  it('circular objects', () => {
+  test('circular objects', () => {
     const circularObject = {
       foo: 42,
       bar: { qux: 'hello' },

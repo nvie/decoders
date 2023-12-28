@@ -1,10 +1,11 @@
+import { describe, expect, test } from 'vitest';
 import { dict, exact, inexact, mapping, object, pojo } from '~/lib/objects';
 import { hardcoded, optional, unknown } from '~/lib/basics';
 import { number } from '~/lib/numbers';
 import { string } from '~/lib/strings';
 
 describe('objects', () => {
-  it('decodes objects and fields', () => {
+  test('decodes objects and fields', () => {
     const decoder = object({
       id: number,
       name: string,
@@ -22,13 +23,13 @@ describe('objects', () => {
     });
   });
 
-  it('empty objects', () => {
+  test('empty objects', () => {
     const decoder = object({});
     expect(decoder.verify({ id: 1, name: 'test' })).toEqual({});
     expect(decoder.verify({})).toEqual({});
   });
 
-  it('decodes objects and fields (ignore unknown fields)', () => {
+  test('decodes objects and fields (ignore unknown fields)', () => {
     // Unexpected extra keys are ignored
     const decoder = object({
       id: number,
@@ -47,7 +48,7 @@ describe('objects', () => {
     });
   });
 
-  it('objects with optional fields will be implicit-undefined', () => {
+  test('objects with optional fields will be implicit-undefined', () => {
     const defaults = {
       extra: 'default',
     };
@@ -68,7 +69,7 @@ describe('objects', () => {
     });
   });
 
-  it('reports all errors at once', () => {
+  test('reports all errors at once', () => {
     const decoder = object({
       id: number,
       name: string,
@@ -116,7 +117,7 @@ describe('objects', () => {
     expect(() => decoder.verify({ name: 42, id: 'hi' })).toThrow();
   });
 
-  it('errors on non-objects', () => {
+  test('errors on non-objects', () => {
     const decoder = object({ id: string });
 
     expect(decoder.decode('foo').ok).toBe(false);
@@ -130,7 +131,7 @@ describe('objects', () => {
 });
 
 describe('exact objects', () => {
-  it('decodes objects and fields', () => {
+  test('decodes objects and fields', () => {
     const decoder = exact({ id: number, name: string });
     expect(decoder.verify({ id: 1, name: 'test' })).toEqual({
       id: 1,
@@ -138,14 +139,14 @@ describe('exact objects', () => {
     });
   });
 
-  it('fails on superfluous keys', () => {
+  test('fails on superfluous keys', () => {
     const decoder = exact({ id: number, name: string });
     expect(() =>
       decoder.verify({ id: 1, name: 'test', superfluous: 'abundance' }),
     ).toThrow('Unexpected extra keys');
   });
 
-  it('retains extra hardcoded fields', () => {
+  test('retains extra hardcoded fields', () => {
     const decoder = exact({
       id: number,
       name: string,
@@ -169,13 +170,13 @@ describe('exact objects', () => {
     ).toThrow('Unexpected extra keys');
   });
 
-  it('empty objects', () => {
+  test('empty objects', () => {
     const decoder = exact({});
     expect(() => decoder.verify({ id: 1, name: 'test' })).toThrow();
     expect(decoder.verify({})).toEqual({});
   });
 
-  it('errors on non-objects', () => {
+  test('errors on non-objects', () => {
     const decoder = exact({ id: string });
 
     expect(decoder.decode('foo').ok).toBe(false);
@@ -187,7 +188,7 @@ describe('exact objects', () => {
     expect(decoder.decode({ id: 3 }).ok).toBe(false); // Invalid field value for "id"
   });
 
-  it('exact objects with optional fields will be implicit-undefined', () => {
+  test('exact objects with optional fields will be implicit-undefined', () => {
     const defaults = {
       extra: 'default',
     };
@@ -210,7 +211,7 @@ describe('exact objects', () => {
 });
 
 describe('inexact objects', () => {
-  it('decodes objects and fields', () => {
+  test('decodes objects and fields', () => {
     const decoder = inexact({ id: number, name: string });
     expect(decoder.verify({ id: 1, name: 'test' })).toEqual({
       id: 1,
@@ -226,7 +227,7 @@ describe('inexact objects', () => {
     });
   });
 
-  it('retains extra hardcoded fields', () => {
+  test('retains extra hardcoded fields', () => {
     const decoder = inexact({ id: number, name: string, extra: hardcoded('extra') });
     expect(decoder.verify({ id: 1, name: 'test', extra: 42 })).toEqual({
       id: 1,
@@ -249,13 +250,13 @@ describe('inexact objects', () => {
     });
   });
 
-  it('empty objects', () => {
+  test('empty objects', () => {
     const decoder = inexact({});
     expect(decoder.verify({ id: 1, name: 'test' })).toEqual({ id: 1, name: 'test' });
     expect(decoder.verify({})).toEqual({});
   });
 
-  it('errors on non-objects', () => {
+  test('errors on non-objects', () => {
     const decoder = inexact({ id: string });
 
     expect(decoder.decode('foo').ok).toBe(false);
@@ -267,7 +268,7 @@ describe('inexact objects', () => {
     expect(decoder.decode({ id: 3 }).ok).toBe(false); // Invalid field value for "id"
   });
 
-  it('inexact objects with optional fields will be implicit-undefined', () => {
+  test('inexact objects with optional fields will be implicit-undefined', () => {
     const defaults = {
       foo: 'default',
       bar: 'default',
@@ -288,7 +289,7 @@ describe('inexact objects', () => {
 });
 
 describe('pojo', () => {
-  it('decodes objects and fields', () => {
+  test('decodes objects and fields', () => {
     const decoder = pojo;
     expect(decoder.verify({})).toEqual({});
     expect(decoder.verify({ a: 1 })).toEqual({ a: 1 });
@@ -305,7 +306,7 @@ describe('objects w/ circular refs', () => {
   const self = value;
   (value as any).self = self;
 
-  it('valid', () => {
+  test('valid', () => {
     expect(object({ foo: number }).verify(value)).toEqual({ foo: 42 });
     expect(object({ foo: number, self: unknown }).verify(value)).toEqual({
       foo: 42,
@@ -340,7 +341,7 @@ describe('objects w/ circular refs', () => {
     });
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     expect(object({ foo: string }).decode(value).ok).toBe(false);
     expect(object({ foo: string, self: unknown }).decode(value).ok).toBe(false);
     expect(object({ foo: string, self: pojo }).decode(value).ok).toBe(false);
@@ -365,19 +366,19 @@ describe('arrays are not objects', () => {
     opt: optional(string),
   });
 
-  it('valid', () => {
+  test('valid', () => {
     expect(decoder1.verify({ what: 'ever' })).toEqual({});
     expect(decoder2.verify({ what: 'ever' })).toEqual({});
   });
 
-  it('invalid (basic types)', () => {
+  test('invalid (basic types)', () => {
     expect(() => decoder1.verify([])).toThrow('Must be an object');
     expect(() => decoder2.verify([])).toThrow('Must be an object');
     expect(() => decoder1.verify('an string')).toThrow('Must be an object');
     expect(() => decoder2.verify('an string')).toThrow('Must be an object');
   });
 
-  it('invalid (custom classes)', () => {
+  test('invalid (custom classes)', () => {
     expect(() => decoder1.verify(new String())).toThrow('Must be an object');
     expect(() => decoder2.verify(new String())).toThrow('Must be an object');
     expect(() => decoder1.verify(new Error('foo'))).toThrow('Must be an object');
@@ -390,7 +391,7 @@ describe('arrays are not objects', () => {
 describe('mapping', () => {
   const decoder = mapping(object({ name: string }));
 
-  it('valid', () => {
+  test('valid', () => {
     const input = {
       '18': { name: 'foo' },
       '23': { name: 'bar' },
@@ -404,7 +405,7 @@ describe('mapping', () => {
     expect(decoder.verify(input)).toEqual(output);
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     expect(() => decoder.verify('foo')).toThrow('Must be an object');
     expect(() => decoder.verify({ foo: 1 })).toThrow('Must be an object');
     expect(() => decoder.verify({ foo: {} })).toThrow('Missing key: "name"');
@@ -423,7 +424,7 @@ describe('mapping', () => {
 describe('dict', () => {
   const decoder = dict(object({ name: string }));
 
-  it('valid', () => {
+  test('valid', () => {
     const input = {
       '18': { name: 'foo' },
       '23': { name: 'bar' },
@@ -432,7 +433,7 @@ describe('dict', () => {
     expect(decoder.verify(input)).toEqual(input);
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     expect(() => decoder.verify('foo')).toThrow('Must be an object');
     expect(() => decoder.verify({ foo: 1 })).toThrow('Must be an object');
     expect(() => decoder.verify({ foo: {} })).toThrow('Missing key: "name"');

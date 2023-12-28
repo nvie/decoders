@@ -1,6 +1,7 @@
 /* globals URL */
 /* eslint-disable no-restricted-syntax */
 
+import { describe, expect, test } from 'vitest';
 import {
   email,
   httpsUrl,
@@ -19,14 +20,14 @@ describe('string', () => {
   const decoder = string;
   const [okay, not_okay] = partition(INPUTS, (x) => typeof x === 'string');
 
-  it('valid', () => {
+  test('valid', () => {
     expect(okay.length).not.toBe(0);
     for (const value of okay) {
       expect(decoder.verify(value)).toBe(value);
     }
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     expect(not_okay.length).not.toBe(0);
     for (const value of not_okay) {
       expect(() => decoder.verify(value)).toThrow();
@@ -37,7 +38,7 @@ describe('string', () => {
 describe('regex', () => {
   const decoder = regex(/[0-9]{4}-[0-9]{2}-[0-9]{2}/, 'Must be YYYY-MM-DD');
 
-  it('valid', () => {
+  test('valid', () => {
     expect(decoder.verify('2017-12-16')).toBe('2017-12-16');
     expect(decoder.verify('1999-99-55')).toBe('1999-99-55'); // Remember, just regexes not valid dates! ;)
     expect(decoder.verify("Party like it's 1999-01-01")).toBe(
@@ -45,7 +46,7 @@ describe('regex', () => {
     ); // Remember, regex is unbounded
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     expect(() => decoder.verify(42)).toThrow('Must be string'); // All regexes must be strings
     expect(() => decoder.verify('11-22-33')).toThrow('Must be YYYY-MM-DD');
     expect(() => decoder.verify('invalid')).toThrow('Must be YYYY-MM-DD');
@@ -55,7 +56,7 @@ describe('regex', () => {
 describe('email', () => {
   const decoder = email;
 
-  it('valid', () => {
+  test('valid', () => {
     const valids = [
       'test@yahoo.com',
       'foo-BAR@gmail.com',
@@ -67,7 +68,7 @@ describe('email', () => {
     }
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     const invalids = [
       '',
       'foo',
@@ -84,7 +85,7 @@ describe('email', () => {
 describe('url', () => {
   const decoder = url;
 
-  it('valid', () => {
+  test('valid', () => {
     expect(decoder.verify(new URL('https://nvie.com/')).toString()).toEqual(
       'https://nvie.com/',
     );
@@ -100,7 +101,7 @@ describe('url', () => {
     );
   });
 
-  it('custom URL schemes', () => {
+  test('custom URL schemes', () => {
     const decoder = url.refine(
       (value) => ['http:', 'git+ssh:', 'ftp:'].includes(value.protocol),
       'Must be http, git+ssh, or ftp URL',
@@ -112,7 +113,7 @@ describe('url', () => {
     );
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     const decoder = httpsUrl;
 
     // HTTP URLs are not accepted by default
@@ -131,7 +132,7 @@ describe('url', () => {
 describe('nonEmptyString', () => {
   const decoder = nonEmptyString;
 
-  it('valid', () => {
+  test('valid', () => {
     expect(decoder.verify('x')).toBe('x');
     expect(decoder.verify(' x')).toBe(' x');
     expect(decoder.verify('x ')).toBe('x ');
@@ -141,7 +142,7 @@ describe('nonEmptyString', () => {
     expect(decoder.verify(' hi   ')).toBe(' hi   ');
   });
 
-  it('invalid', () => {
+  test('invalid', () => {
     expect(() => decoder.verify('')).toThrow();
     expect(() => decoder.verify(' ')).toThrow();
     expect(() => decoder.verify('	')).toThrow();
@@ -153,7 +154,7 @@ describe('nonEmptyString', () => {
 describe('uuid', () => {
   const decoder = uuid;
 
-  it('accepts', () => {
+  test('accepts', () => {
     expect(decoder.verify('123e4567-e89b-12d3-a456-426614174000')).toBe(
       '123e4567-e89b-12d3-a456-426614174000',
     );
@@ -168,7 +169,7 @@ describe('uuid', () => {
     );
   });
 
-  it('rejects', () => {
+  test('rejects', () => {
     expect(decoder.decode('123e4567-e89b-12d3-a456-42661417400x').ok).toBe(false);
     expect(decoder.decode('123e4567e89b12d3a456426614174000').ok).toBe(false);
   });
@@ -177,7 +178,7 @@ describe('uuid', () => {
 describe('uuidv1', () => {
   const decoder = uuidv1;
 
-  it('accepts', () => {
+  test('accepts', () => {
     expect(uuidv1.verify('123e4567-e89b-12d3-a456-426614174000')).toBe(
       '123e4567-e89b-12d3-a456-426614174000',
     );
@@ -186,7 +187,7 @@ describe('uuidv1', () => {
     );
   });
 
-  it('rejects', () => {
+  test('rejects', () => {
     expect(decoder.decode('123e4567-e89b-12d3-a456-42661417400x').ok).toBe(false);
     expect(decoder.decode('123e4567e89b12d3a456426614174000').ok).toBe(false);
   });
@@ -195,7 +196,7 @@ describe('uuidv1', () => {
 describe('uuidv4', () => {
   const decoder = uuidv4;
 
-  it('accepts', () => {
+  test('accepts', () => {
     expect(decoder.verify('123e4567-e89b-42d3-a456-426614174000')).toBe(
       '123e4567-e89b-42d3-a456-426614174000',
     );
@@ -204,7 +205,7 @@ describe('uuidv4', () => {
     );
   });
 
-  it('rejects', () => {
+  test('rejects', () => {
     expect(decoder.decode('123e4567-e89b-42d3-a456-42661417400x').ok).toBe(false);
     expect(decoder.decode('123E4567-E89B-12d3-A456-426614174000').ok).toBe(false);
     expect(decoder.decode('123e4567e89b42d3a456426614174000').ok).toBe(false);
