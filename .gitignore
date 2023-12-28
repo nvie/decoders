@@ -8,7 +8,5 @@ yarn-error.log
 __pycache__/
 
 # Packaging hack
-/format.js
-/result.js
-/format.cjs
-/result.cjs
+/*.js
+/*.d.ts

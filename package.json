@@ -12,55 +12,55 @@
   "bugs": {
     "url": "https://github.com/nvie/decoders/issues"
   },
-  "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.cts",
+  "type": "commonjs",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
       },
       "require": {
-        "types": "./dist/index.d.cts",
-        "module": "./dist/index.js",
-        "default": "./dist/index.cjs"
+        "types": "./dist/index.d.ts",
+        "module": "./dist/index.mjs",
+        "default": "./dist/index.js"
       }
     },
     "./format": {
       "import": {
-        "types": "./dist/format.d.ts",
-        "default": "./dist/format.js"
+        "types": "./dist/format.d.mts",
+        "default": "./dist/format.mjs"
       },
       "require": {
-        "types": "./dist/format.d.cts",
-        "module": "./dist/format.js",
-        "default": "./dist/format.cjs"
+        "types": "./dist/format.d.ts",
+        "module": "./dist/format.mjs",
+        "default": "./dist/format.js"
       }
     },
     "./result": {
       "import": {
-        "types": "./dist/result.d.ts",
-        "default": "./dist/result.js"
+        "types": "./dist/result.d.mts",
+        "default": "./dist/result.mjs"
       },
       "require": {
-        "types": "./dist/result.d.cts",
-        "module": "./dist/result.js",
-        "default": "./dist/result.cjs"
+        "types": "./dist/result.d.ts",
+        "module": "./dist/result.mjs",
+        "default": "./dist/result.js"
       }
     }
   },
   "files": [
     "dist/**",
-    "format.cjs",
-    "result.cjs",
+    "*.js",
+    "*.d.ts",
     "LICENSE",
     "README.md"
   ],
   "scripts": {
     "actually-prepublish": "echo \"\\n\\nPlease run \\`bin/publish.sh <options>\\` instead.\\n\\n\" && exit 2",
-    "build": "tsup && cp dist/format.cjs . && cp dist/result.cjs .",
+    "build": "tsup && cp dist/*.js dist/*.d.ts .",
     "docs": "cog -cr docs/*.md",
     "lint": "eslint --color --report-unused-disable-directives src/**/*.ts test/**/*.ts && prettier --list-different src/ test/ test-d/",
     "lint:docs": "cog -c --check docs/*.md || (npm run docs; git diff; echo 'Error: docs not up-to-date, please re-run \"npm docs\" to update them.' && exit 1)",
