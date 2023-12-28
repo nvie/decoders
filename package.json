@@ -69,7 +69,8 @@
     "test": "vitest run --coverage",
     "test:completeness": "./bin/check.sh",
     "test:typescript": "tsc --noEmit",
-    "test:types": "npm run build && tsd --typings ./dist/index.d.ts"
+    "test:types": "npm run build && tsd --typings ./dist/index.d.ts",
+    "release": "npm run test && npm run lint && npm run lint:docs && npm run build && npm run lint:package && release-it"
   },
   "keywords": [
     "decoders",
@@ -155,6 +156,7 @@
     "itertools": "^2.2.0",
     "prettier": "^3.1.1",
     "publint": "^0.2.7",
+    "release-it": "^17.0.1",
     "tsd": "^0.30.1",
     "tsup": "^8.0.1",
     "typescript": "^5.3.3",
