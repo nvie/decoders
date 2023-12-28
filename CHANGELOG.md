@@ -1,19 +1,21 @@
-## v3.0.0
+## v2.2.0
 
 **Breaking changes:**
 
 - [ ] XXX Check this claim: "Support only TypeScript versions >= 4.3"
 - [ ] XXX Check bundlephobia claim/link
 
-- Rewritten source code in TypeScript (instead of Flow)
+- Rewritten source code in TypeScript (previously Flow)
+- Rewritten test suite in Vitest (previously Jest)
 - Modern ESM and CJS dual exports (fully tree-shakable when using ESM)
 - Massively [reduced bundle size](https://bundlephobia.com/package/decoders)
 - Support only TypeScript versions >= 4.3
 - Drop support for TypeScript projects that are _not_ using `strict: true`. All TypeScript
   projects using decoders are assumed to have `strict: true` in their TypeScript configs
   going forward.
+- Related, greatly simplified complex internal typing magic to make it work in projects
+  with and without `strict` mode.
 - Drop Flow support\*
-- Drop Node 14.x support
 
 (\*: I'm still open to bundling Flow types within this package, but only if that can be
 supported in a maintenance-free way, for example by using a script that will generate
