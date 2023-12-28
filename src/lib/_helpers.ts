@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 type RequiredKeys<T extends object> = {
   [K in keyof T]: undefined extends T[K] ? never : K;
 }[keyof T];

@@ -1,5 +1,3 @@
-/* eslint-disable no-restricted-syntax */
-
 import { describe, expect, test } from 'vitest';
 import { indent, subtract } from '~/_utils';
 import type { Scalar } from '~/Decoder';

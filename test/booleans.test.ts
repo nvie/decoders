@@ -1,5 +1,3 @@
-/* eslint-disable no-restricted-syntax */
-
 import { describe, expect, test } from 'vitest';
 import { boolean, numericBoolean, truthy } from '~/lib/booleans';
 import { INPUTS } from './_fixtures';

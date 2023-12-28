@@ -45,4 +45,15 @@ module.exports = {
       },
     ],
   },
+
+  // Relax ESLint a bit in tests
+  overrides: [
+    {
+      files: ['test/**'],
+      rules: {
+        '@typescript-eslint/no-explicit-any': 'off',
+        'no-restricted-syntax': 'off',
+      },
+    },
+  ],
 };

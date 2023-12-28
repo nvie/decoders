@@ -1,5 +1,3 @@
-/* eslint-disable no-restricted-syntax */
-
 import { describe, expect, test } from 'vitest';
 import { boolean } from '~/lib/booleans';
 import { constant, undefined_ } from '~/lib/basics';

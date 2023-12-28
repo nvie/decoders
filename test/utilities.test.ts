@@ -1,5 +1,3 @@
-/* eslint-disable no-restricted-syntax */
-
 import { describe, expect, test } from 'vitest';
 import { array } from '~/lib/arrays';
 import { constant } from '~/lib/basics';

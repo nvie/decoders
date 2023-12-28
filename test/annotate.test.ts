@@ -1,6 +1,3 @@
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { describe, expect, test } from 'vitest';
 import { annotate, array, circularRef, merge, object, scalar } from '~/annotate';
 

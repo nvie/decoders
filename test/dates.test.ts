@@ -1,5 +1,3 @@
-/* eslint-disable no-restricted-syntax */
-
 import { describe, expect, test } from 'vitest';
 import { date, iso8601 } from '~/lib/dates';
 import { INPUTS } from './_fixtures';
