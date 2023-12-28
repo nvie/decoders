@@ -29,4 +29,6 @@ export type UndefinedToOptional<T extends object> = Resolve<
   Pick<Required<T>, RequiredKeys<T>> & Partial<T>
 >;
 
-export type Resolve<T> = T extends Function ? T : { [K in keyof T]: T[K] };
+export type Resolve<T> = T extends (...args: readonly unknown[]) => unknown
+  ? T
+  : { [K in keyof T]: T[K] };
