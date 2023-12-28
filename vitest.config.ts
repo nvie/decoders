@@ -7,6 +7,7 @@ export default defineConfig({
     coverage: {
       provider: 'istanbul',
       reporter: ['text', 'html'],
+      exclude: ['*.cjs', 'test/', 'test-d/'],
 
       // Require 100% test coverage
       lines: 100,
