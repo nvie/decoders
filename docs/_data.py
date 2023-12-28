@@ -1260,12 +1260,8 @@ def run_json(cmd):
 
 
 def mine_source_code_data():
-    locinfo1 = run_json(
-      "./bin/linenos src/Decoder.ts --remote-url --branch main --object-keys --object-methods --json",
-    )
-    locinfo2 = run_json(
-      "./bin/linenos src/*.ts src/**/*.ts --remote-url --branch main --functions --global-variables --json",
-    )
+    locinfo1 = run_json("node bin/linenos-Decoder-class.mjs")
+    locinfo2 = run_json("node bin/linenos-decoders.mjs")
 
     # Check the definitions against the found sources
     for method in DECODER_METHODS:
