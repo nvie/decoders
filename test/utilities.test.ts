@@ -74,7 +74,7 @@ describe('lazy', () => {
 
   test('build self-referential types with variables', () => {
     type Tree<T> = {
-      node: T;
+      node?: T;
       children: Tree<T>[];
     };
 

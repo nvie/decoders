@@ -244,6 +244,9 @@ expectType<string | Date | null | undefined>(
   expectType<never>(x.qux);
   expectType<undefined>(x.quxx);
 
+  // With "unknown" fields (which implicitly contain "undefined")
+  expectType<{ a?: unknown }>(test(object({ a: unknown })));
+
   // With "never" fields
   expectType<{ nope: never }>(test(object({ nope: fail('not allowed') })));
   expectType<{ nope?: never }>(test(object({ nope: optional(fail('not allowed')) })));

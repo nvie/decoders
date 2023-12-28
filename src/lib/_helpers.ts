@@ -1,13 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-/**
- * Returns all the keys from T where `undefined` can be assigned to.
- */
-type OptionalKeys<T> = {
-  [K in keyof T]-?: K extends any ? (undefined extends T[K] ? K : never) : never;
+type RequiredKeys<T extends object> = {
+  [K in keyof T]: undefined extends T[K] ? never : K;
 }[keyof T];
-
-type RequiredKeys<T> = Exclude<keyof T, OptionalKeys<T>>;
 
 /**
  * Transforms an object type, by marking all fields that contain "undefined"
@@ -21,21 +16,17 @@ type RequiredKeys<T> = Exclude<keyof T, OptionalKeys<T>>;
  *     age: number | null | undefined;
  *   }
  *
- * Then AllowImplicit<User> will become equivalent to:
+ * Then UndefinedToOptional<User> will become equivalent to:
  *
  *   {
  *     name: string;
- *     age?: number | null;
+ *     age?: number | null | undefined;
  *        ^
  *        Note the question mark
  *   }
  */
-export type AllowImplicit<T> = Resolve<
-  { [K in RequiredKeys<T>]-?: T[K] } & {
-    [K in OptionalKeys<T>]+?: Exclude<T[K], undefined>;
-  }
+export type UndefinedToOptional<T extends object> = Resolve<
+  Pick<Required<T>, RequiredKeys<T>> & Partial<T>
 >;
 
-export type Resolve<T> = T extends (...args: unknown[]) => unknown
-  ? T
-  : { [K in keyof T]: T[K] };
+export type Resolve<T> = T extends Function ? T : { [K in keyof T]: T[K] };

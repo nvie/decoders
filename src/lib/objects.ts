@@ -5,12 +5,11 @@ import { define } from '../Decoder';
 import { subtract, isPojo } from '../_utils';
 import type { Annotation } from '../annotate';
 import type { Decoder, DecodeResult } from '../Decoder';
+import type { UndefinedToOptional } from './_helpers';
 
-// TODO: Restore AllowImplicit here somehow
-// import type { AllowImplicit } from './_helpers';
-type ObjectDecoderType<T> = {
+type ObjectDecoderType<T> = UndefinedToOptional<{
   [K in keyof T]: T[K] extends Decoder<infer V> ? V : never;
-};
+}>;
 
 /**
  * Accepts any "plain old JavaScript object", but doesn't validate its keys or
