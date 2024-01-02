@@ -27,40 +27,16 @@
         "module": "./dist/index.mjs",
         "default": "./dist/index.js"
       }
-    },
-    "./format": {
-      "import": {
-        "types": "./dist/format.d.mts",
-        "default": "./dist/format.mjs"
-      },
-      "require": {
-        "types": "./dist/format.d.ts",
-        "module": "./dist/format.mjs",
-        "default": "./dist/format.js"
-      }
-    },
-    "./result": {
-      "import": {
-        "types": "./dist/result.d.mts",
-        "default": "./dist/result.mjs"
-      },
-      "require": {
-        "types": "./dist/result.d.ts",
-        "module": "./dist/result.mjs",
-        "default": "./dist/result.js"
-      }
     }
   },
   "files": [
     "dist/**",
-    "*.js",
-    "*.d.ts",
     "LICENSE",
     "README.md"
   ],
   "scripts": {
     "actually-prepublish": "echo \"\\n\\nPlease run \\`bin/publish.sh <options>\\` instead.\\n\\n\" && exit 2",
-    "build": "tsup && cp dist/*.js dist/*.d.ts .",
+    "build": "tsup",
     "docs": "cog -cr docs/*.md",
     "lint": "eslint --color --report-unused-disable-directives src/**/*.ts test/**/*.ts && prettier --list-different src/ test/ test-d/",
     "lint:docs": "cog -c --check docs/*.md || (npm run docs; git diff; echo 'Error: docs not up-to-date, please re-run \"npm docs\" to update them.' && exit 1)",

@@ -1,19 +1,32 @@
 ## v2.2.0
 
-**Breaking changes:**
+**Breaking change:** Dropped Flow support\*.
 
-- [ ] XXX Check this claim: "Support only TypeScript versions >= 4.3"
-- [ ] XXX Check bundlephobia claim/link
+**Breaking change:** Projects that are not yet using `strict: true` in their
+`tsconfig.json` files files are _no longer supported_. Previously, decoders went to great
+lenghts to support both configurations, but the internal typing magic was getting too
+complex to maintain without much benefit.
+
+**Breaking change:** A small breaking change is introduced that removes the need for some
+packaging workarounds to support projects using old TypeScript/Node versions. It’s now
+simpler to use, and simpler to maintain:
+
+```diff
+-import { formatInline, formatShort } from 'decoders/format'; // ❌
++import { formatInline, formatShort } from 'decoders'; // ✅
+```
+
+```diff
+-import { Result, ok, err } from 'decoders/result'; // ❌
++import { Result, ok, err } from 'decoders'; // ✅
+```
+
+Other, smaller changes, mostly internal:
 
 - Rewritten source code in TypeScript (previously Flow)
-- Drop Flow support\*
 - Rewritten test suite in Vitest (previously Jest)
 - Modern ESM and CJS dual exports (fully tree-shakable when using ESM)
 - Further [reduced bundle size](https://bundlephobia.com/package/decoders)
-- Support only TypeScript versions >= 4.3
-- Drop support for TypeScript projects that are _not_ using `strict: true`. All TypeScript
-  projects using decoders are assumed to have `strict: true` in their TypeScript configs
-  going forward.
 - Related, greatly simplified complex internal typing magic to make it work in projects
   with and without `strict` mode.
 

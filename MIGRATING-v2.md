@@ -173,7 +173,7 @@ of the `ok`, `value`, and `error` properties are now favored.
 Suggested changes:
 
 ```typescript
-import { err, ok } from 'decoders/result';
+import { err, ok } from 'decoders';
 ```
 
 | Replace this v1 pattern... |     | ...with this v2 API                             |

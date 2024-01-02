@@ -161,13 +161,12 @@ Built-in formatters are:
   smartly. Example:
 
   ```typescript
-  import { array, object, string } from 'decoders';
-  import { formatInline } from 'decoders/format';
+  import { array, object, string, formatInline } from 'decoders';
 
   const mydecoder = array(object({ name: string, age: number }));
 
   const externalData = [{ name: 'Alice', age: '33' }];
-  mydecoder.verify(externalData, formatInline);
+  mydecoder.verify(externalData, formatInline); // same as mydecoder.verify(externalData)
   ```
 
   Will throw the following error message:
@@ -187,7 +186,7 @@ Built-in formatters are:
   Example:
 
   ```typescript
-  import { formatShort } from 'decoders/format';
+  import { formatShort } from 'decoders';
   mydecoder.verify(externalData, formatShort);
   ```
 

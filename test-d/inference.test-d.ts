@@ -1,5 +1,6 @@
-import type { Decoder, DecoderType } from '../dist';
+import type { Decoder, DecoderType, JSONValue, JSONObject, JSONArray } from '../dist';
 import {
+  // Decoders
   always,
   anyNumber,
   array,
@@ -51,10 +52,14 @@ import {
   uuid,
   uuidv1,
   uuidv4,
+
+  // Formatters
+  formatInline,
+  formatShort,
+
+  // Results
+  ok,
 } from '../dist';
-import type { JSONValue, JSONObject, JSONArray } from '../dist';
-import { formatInline, formatShort } from '../dist/format';
-import { ok } from '../dist/result';
 import { expectError, expectType } from 'tsd';
 
 // Helper function to "test" a decoder on some input, and assert the return type

@@ -41,6 +41,10 @@ export {
 } from './lib/numbers';
 export { json, jsonObject, jsonArray } from './lib/json';
 
-// Previously to be imported from "./format"
+// Previously to be imported from "decoders/format"
 export type { Formatter } from './format';
 export { formatInline, formatShort } from './format';
+
+// Previously to be imported from "decoders/result"
+export type { Result, Ok, Err } from './result';
+export { ok, err } from './result';
