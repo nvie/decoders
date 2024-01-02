@@ -6,9 +6,7 @@ export { define } from './Decoder';
 export {
   always,
   constant,
-  hardcoded,
   maybe,
-  mixed,
   fail,
   never,
   nullable,
@@ -42,6 +40,9 @@ export {
   positiveNumber,
 } from './lib/numbers';
 export { json, jsonObject, jsonArray } from './lib/json';
+
+// Deprecated aliases
+export { hardcoded, mixed } from './lib/basics';
 
 // Previously to be imported from "decoders/format"
 export type { Formatter } from './format';

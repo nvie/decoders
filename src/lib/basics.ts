@@ -120,6 +120,7 @@ export function never(msg: string): Decoder<never> {
 export const fail = never;
 
 /**
+ * @deprecated
  * Alias of always.
  */
 export const hardcoded = always;
@@ -134,6 +135,7 @@ export const hardcoded = always;
 export const unknown: Decoder<unknown> = define((blob, ok, _) => ok(blob));
 
 /**
+ * @deprecated
  * Alias of unknown.
  */
 export const mixed = unknown;
