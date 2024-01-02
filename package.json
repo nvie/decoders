@@ -126,7 +126,7 @@
         "flow-copy-source": "^2.0.9",
         "flow-typed": "^3.7.0",
         "in-publish": "^2.0.1",
-        "itertools": "^1.7.1",
+        "itertools": "^2.2.0",
         "jest": "^28.1.1",
         "prettier": "^2.8.8",
         "rimraf": "^3.0.2",
