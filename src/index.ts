@@ -40,3 +40,7 @@ export {
   positiveNumber,
 } from './lib/numbers';
 export { json, jsonObject, jsonArray } from './lib/json';
+
+// Previously to be imported from "./format"
+export type { Formatter } from './format';
+export { formatInline, formatShort } from './format';

@@ -15,6 +15,18 @@ const NOT_DECODERS = new Set([
   'JSONObject',
   'JSONValue',
   'Scalar',
+
+  // Formatters
+  'Formatter',
+  'formatInline',
+  'formatShort',
+
+  // Results
+  'Result',
+  'Err',
+  'err',
+  'Ok',
+  'ok',
 ]);
 
 for (const src of project.getSourceFiles('src/index.ts')) {
