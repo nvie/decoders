@@ -2,9 +2,11 @@ import { describe, expect, test } from 'vitest';
 import {
   always,
   constant,
+  fail,
   maybe,
-  nullable,
+  never,
   null_,
+  nullable,
   optional,
   undefined_,
   unknown,
@@ -310,5 +312,37 @@ describe('maybe', () => {
     expect(decoder.verify(undefined)).toBe(42);
 
     expect(() => decoder.verify(123)).toThrow();
+  });
+});
+
+describe('fail', () => {
+  const decoder = fail('I always fail');
+  const not_okay = INPUTS;
+
+  test('accepts nothing', () => {
+    // Nothing is valid for a failing decoder :)
+  });
+
+  test('rejects everything', () => {
+    expect(not_okay.length).not.toBe(0);
+    for (const value of not_okay) {
+      expect(decoder.decode(value).ok).toBe(false);
+    }
+  });
+});
+
+describe('never', () => {
+  const decoder = never('I always fail');
+  const not_okay = INPUTS;
+
+  test('accepts nothing', () => {
+    // Nothing is valid for a failing decoder :)
+  });
+
+  test('rejects everything', () => {
+    expect(not_okay.length).not.toBe(0);
+    for (const value of not_okay) {
+      expect(decoder.decode(value).ok).toBe(false);
+    }
   });
 });

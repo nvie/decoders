@@ -9,6 +9,8 @@ export {
   hardcoded,
   maybe,
   mixed,
+  fail,
+  never,
   nullable,
   null_,
   optional,
@@ -31,7 +33,7 @@ export {
   uuidv1,
   uuidv4,
 } from './lib/strings';
-export { fail, instanceOf, lazy, never, prep } from './lib/utilities';
+export { instanceOf, lazy, prep } from './lib/utilities';
 export {
   anyNumber,
   integer,

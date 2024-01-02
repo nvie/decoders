@@ -58,16 +58,3 @@ export function prep<T>(
     //                             (instead of echoing back blob)
   });
 }
-
-/**
- * Rejects all inputs, and always fails with the given error message. May be
- * useful for explicitly disallowing keys, or for testing purposes.
- */
-export function never(msg: string): Decoder<never> {
-  return define((_, __, err) => err(msg));
-}
-
-/**
- * Alias of never().
- */
-export const fail = never;

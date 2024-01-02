@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { array } from '~/lib/arrays';
 import { constant } from '~/lib/basics';
-import { fail, instanceOf, lazy, never, prep } from '~/lib/utilities';
+import { instanceOf, lazy, prep } from '~/lib/utilities';
 import { INPUTS } from './_fixtures';
 import { number } from '~/lib/numbers';
 import { object } from '~/lib/objects';
@@ -123,37 +123,5 @@ describe('prep', () => {
   test('invalid when prep mapper function throws', () => {
     expect(answerToLife.decode(Symbol('foo')).ok).toBe(false);
     //                  ^^^^^^^^^^^^^ This will cause the `Number(x)` call to throw
-  });
-});
-
-describe('fail', () => {
-  const decoder = fail('I always fail');
-  const not_okay = INPUTS;
-
-  test('accepts nothing', () => {
-    // Nothing is valid for a failing decoder :)
-  });
-
-  test('rejects everything', () => {
-    expect(not_okay.length).not.toBe(0);
-    for (const value of not_okay) {
-      expect(decoder.decode(value).ok).toBe(false);
-    }
-  });
-});
-
-describe('never', () => {
-  const decoder = never('I always fail');
-  const not_okay = INPUTS;
-
-  test('accepts nothing', () => {
-    // Nothing is valid for a failing decoder :)
-  });
-
-  test('rejects everything', () => {
-    expect(not_okay.length).not.toBe(0);
-    for (const value of not_okay) {
-      expect(decoder.decode(value).ok).toBe(false);
-    }
   });
 });
