@@ -8,4 +8,5 @@ export default defineConfig({
   // target: /* what tsconfig specifies */,
   format: ['esm', 'cjs'],
   sourcemap: true,
+  minify: true,
 });
