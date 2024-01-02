@@ -4,7 +4,7 @@ set -eu
 BIN=$(dirname "$0")
 
 list_decoders() {
-    node bin/exported-decoders.mjs | sort -u
+    node bin/exported-decoders.js | sort -u
 }
 
 echo "==> Checking documentation" >&2
