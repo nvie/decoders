@@ -7,7 +7,7 @@
 Elegant and battle-tested validation library for type-safe input data for
 [TypeScript](https://www.typescriptlang.org/).
 
-## Motivation
+## Introduction
 
 Data entering your application from the outside world should not be trusted without
 validation and often is of the `any` type, effectively disabling your type checker around
@@ -16,14 +16,12 @@ program's boundaries. This has two benefits: (1) your inputs are getting validat
 (2) you can now statically know for sure the shape of the incoming data. **Decoders help
 solve both of these problems at once.**
 
-## Example
+## Basic example
 
 ```typescript
 import { array, iso8601, number, object, optional, string } from 'decoders';
 
-//
 // Incoming data at runtime
-//
 const externalData = {
   id: 123,
   name: 'Alison Roberts',
@@ -31,9 +29,7 @@ const externalData = {
   tags: ['foo', 'bar'],
 };
 
-//
 // Write the decoder (= what you expect the data to look like)
-//
 const userDecoder = object({
   id: number,
   name: string,
@@ -41,20 +37,36 @@ const userDecoder = object({
   tags: array(string),
 });
 
-//
 // Call .verify() on the incoming data
-//
 const user = userDecoder.verify(externalData);
 //    ^^^^
-//    TypeScript can automatically infer this type now:
-//
+//    TypeScript automatically infers this type as:
 //    {
 //      id: number;
 //      name: string;
 //      createdAt?: Date;
 //      tags: string[];
 //    }
-//
+```
+
+## Installation
+
+```bash
+npm install decoders
+```
+
+## Requirements
+
+You must set `strict: true` in your `tsconfig.json` in order for type inference to work
+correctly!
+
+```js
+// tsconfig.json
+{
+  "compilerOptions": {
+    "strict": true
+  }
+}
 ```
 
 ## Documentation
