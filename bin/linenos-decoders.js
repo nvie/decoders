@@ -1,8 +1,7 @@
 import path from 'path';
 import { Project } from 'ts-morph';
 
-// const branch = 'main';
-const branch = 'rewrite-in-ts';
+const branch = 'main';
 let output = [];
 
 const project = new Project({

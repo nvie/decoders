@@ -44,7 +44,7 @@ for name in DECODER_METHODS:
 ]]]-->
 ---
 
-<a href="#verify">#</a> **.verify**(blob: <i style="color: #267f99">mixed</i>): <i style="color: #267f99">T</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/rewrite-in-ts/src/Decoder.ts#L137-L149 'Source')
+<a href="#verify">#</a> **.verify**(blob: <i style="color: #267f99">mixed</i>): <i style="color: #267f99">T</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.ts#L137-L149 'Source')
 {: #verify .signature}
 
 Verifies the untrusted/unknown input and either accepts or rejects it.
@@ -69,7 +69,7 @@ number.verify('hello'); // throws
 
 ---
 
-<a href="#value">#</a> **.value**(blob: <i style="color: #267f99">mixed</i>): <i style="color: #267f99">T | undefined</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/rewrite-in-ts/src/Decoder.ts#L151-L161 'Source')
+<a href="#value">#</a> **.value**(blob: <i style="color: #267f99">mixed</i>): <i style="color: #267f99">T | undefined</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.ts#L151-L161 'Source')
 {: #value .signature}
 
 Verifies the untrusted/unknown input and either accepts or rejects it.
@@ -95,7 +95,7 @@ string.value(42);    // undefined
 
 ---
 
-<a href="#decode">#</a> **.decode**(blob: <i style="color: #267f99">mixed</i>): <i style="color: #267f99">DecodeResult&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/rewrite-in-ts/src/Decoder.ts#L125-L135 'Source')
+<a href="#decode">#</a> **.decode**(blob: <i style="color: #267f99">mixed</i>): <i style="color: #267f99">DecodeResult&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.ts#L125-L135 'Source')
 {: #decode .signature}
 
 Verifies the untrusted/unknown input and either accepts or rejects it.
@@ -117,7 +117,7 @@ number.decode('hi');  // { ok: false, error: { type: 'scalar', value: 'hi', text
 
 ---
 
-<a href="#transform">#</a> **.transform**&lt;<i style="color: #267f99">V</i>&gt;(transformFn: <i style="color: #267f99">(T) =&gt; V</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;V&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/rewrite-in-ts/src/Decoder.ts#L163-L171 'Source')
+<a href="#transform">#</a> **.transform**&lt;<i style="color: #267f99">V</i>&gt;(transformFn: <i style="color: #267f99">(T) =&gt; V</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;V&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.ts#L163-L171 'Source')
 {: #transform .signature}
 
 Accepts any value the given decoder accepts, and on success, will call
@@ -137,7 +137,7 @@ upper.verify(4);  // throws
 
 ---
 
-<a href="#refine">#</a> **.refine**(predicate: <i style="color: #267f99">T =&gt; boolean</i>, message: <i style="color: #267f99">string</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/rewrite-in-ts/src/Decoder.ts#L173-L186 'Source')
+<a href="#refine">#</a> **.refine**(predicate: <i style="color: #267f99">T =&gt; boolean</i>, message: <i style="color: #267f99">string</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.ts#L173-L186 'Source')
 {: #refine .signature}
 
 Adds an extra predicate to a decoder. The new decoder is like the
@@ -162,7 +162,7 @@ In TypeScript, if you provide a predicate that also is a [type predicate](https:
 
 ---
 
-<a href="#reject">#</a> **.reject**(rejectFn: <i style="color: #267f99">T =&gt; string | null</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/rewrite-in-ts/src/Decoder.ts#L214-L232 'Source')
+<a href="#reject">#</a> **.reject**(rejectFn: <i style="color: #267f99">T =&gt; string | null</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.ts#L214-L232 'Source')
 {: #reject .signature}
 
 Adds an extra predicate to a decoder. The new decoder is like the
@@ -195,7 +195,7 @@ decoder.verify({ id: 123, _name: 'Vincent'  })   // throws: "Disallowed keys: _n
 
 ---
 
-<a href="#describe">#</a> **.describe**(message: <i style="color: #267f99">string</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/rewrite-in-ts/src/Decoder.ts#L234-L251 'Source')
+<a href="#describe">#</a> **.describe**(message: <i style="color: #267f99">string</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.ts#L234-L251 'Source')
 {: #describe .signature}
 
 Uses the given decoder, but will use an alternative error message in case it rejects. This can be used to simplify or shorten otherwise long or low-level/technical errors.
@@ -213,7 +213,7 @@ const vowel = decoder.describe('Must be vowel');
 
 ---
 
-<a href="#then">#</a> **.then**&lt;<i style="color: #267f99">V</i>&gt;(next: <i style="color: #267f99">(blob: T, ok, err) =&gt; DecodeResult&lt;V&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;V&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/rewrite-in-ts/src/Decoder.ts#L188-L212 'Source')
+<a href="#then">#</a> **.then**&lt;<i style="color: #267f99">V</i>&gt;(next: <i style="color: #267f99">(blob: T, ok, err) =&gt; DecodeResult&lt;V&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;V&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/Decoder.ts#L188-L212 'Source')
 {: #then .signature}
 
 Chain together the current decoder with another.
@@ -234,5 +234,5 @@ about its input and avoid re-refining inputs.
 If it helps, you can think of `define(...)` as equivalent to
 `unknown.then(...)`.
 
-<!--[[[end]]] (checksum: d299550dc63a0cc8f9074670098ca3c8) -->
+<!--[[[end]]] (checksum: 583383d6cdc631fa4aa793aba079e14b) -->
 <!-- prettier-ignore-end -->
