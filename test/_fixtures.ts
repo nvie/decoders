@@ -6,6 +6,11 @@ export const STRINGS: string[] = [
   ' 1 2 3 ',
   'not a number',
   '42',
+
+  // Emojis
+  '🔥',
+  '🦊',
+  '😶‍🌫', // emoji combo
 ];
 
 export const NUMBERS: number[] = [
@@ -45,11 +50,17 @@ export const DATES: Date[] = [
   new Date(),
 ];
 
-export const SPECIAL_DATES: Date[] = [new Date('not a date')];
+export const SPECIAL_DATES = [
+  new Date('not a date'),
+  new Date(Number.POSITIVE_INFINITY),
+  new Date(Number.NEGATIVE_INFINITY),
+];
 
-export const BOOLS: boolean[] = [false, true];
+export const BOOLS = [false, true];
 
-export const CONSTANTS: (null | undefined)[] = [null, undefined];
+export const CONSTANTS = [null, undefined];
+
+export const SYMBOLS = [Symbol.for('x'), Symbol('x'), Symbol('x')];
 
 export const INPUTS: unknown[] = [
   ...STRINGS,
@@ -60,4 +71,5 @@ export const INPUTS: unknown[] = [
   ...SPECIAL_DATES,
   ...BOOLS,
   ...CONSTANTS,
+  ...SYMBOLS,
 ];
