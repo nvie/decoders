@@ -109,7 +109,11 @@ function serializeObject(annotation: ObjectAnnotation, prefix: string): string {
 export function serializeValue(value: unknown): string {
   if (typeof value === 'string') {
     return serializeString(value);
-  } else if (typeof value === 'number' || typeof value === 'boolean') {
+  } else if (
+    typeof value === 'number' ||
+    typeof value === 'boolean' ||
+    typeof value === 'symbol'
+  ) {
     return value.toString();
   } else if (value === null) {
     return 'null';
