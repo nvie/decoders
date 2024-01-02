@@ -24,10 +24,7 @@ Just install the package and you're ready to go.
 
     $ npm install decoders
 
-(If you use decoders with a Node version older than version 10, you may have to
-[manually include some polyfills](https://github.com/nvie/decoders/issues/884#issuecomment-1202054523).)
-
-## Motivation
+## Introduction
 
 Data entering your application from the outside world should not be trusted without
 validation and often is of the `any` type, effectively disabling your type checker around
@@ -36,16 +33,15 @@ program's boundaries. This has two benefits: (1) your inputs are getting validat
 (2) you can now statically know for sure the shape of the incoming data. **Decoders help
 solve both of these problems at once.**
 
-## Example
+## Basic Example
 
 Suppose, for example, you have an endpoint that will receive user data:
 
 ```typescript
 import { array, iso8601, number, object, optional, string } from 'decoders';
 
-//
-// Incoming data at runtime
-//
+// Incoming data at runtime, e.g. the request body
+// The point is that this data is untrusted and its type unknown
 const externalData = {
   id: 123,
   name: 'Alison Roberts',
@@ -53,9 +49,7 @@ const externalData = {
   tags: ['foo', 'bar'],
 };
 
-//
 // Write the decoder (= what you expect the data to look like)
-//
 const userDecoder = object({
   id: number,
   name: string,
@@ -63,13 +57,10 @@ const userDecoder = object({
   tags: array(string),
 });
 
-//
 // Call .verify() on the incoming data
-//
 const user = userDecoder.verify(externalData);
 //    ^^^^
-//    TypeScript can automatically infer this type now:
-//
+//    TypeScript will infer this type as:
 //    {
 //      id: number;
 //      name: string;
