@@ -6,16 +6,16 @@
 - [ ] XXX Check bundlephobia claim/link
 
 - Rewritten source code in TypeScript (previously Flow)
+- Drop Flow support\*
 - Rewritten test suite in Vitest (previously Jest)
 - Modern ESM and CJS dual exports (fully tree-shakable when using ESM)
-- Massively [reduced bundle size](https://bundlephobia.com/package/decoders)
+- Further [reduced bundle size](https://bundlephobia.com/package/decoders)
 - Support only TypeScript versions >= 4.3
 - Drop support for TypeScript projects that are _not_ using `strict: true`. All TypeScript
   projects using decoders are assumed to have `strict: true` in their TypeScript configs
   going forward.
 - Related, greatly simplified complex internal typing magic to make it work in projects
   with and without `strict` mode.
-- Drop Flow support\*
 
 (\*: I'm still open to bundling Flow types within this package, but only if that can be
 supported in a maintenance-free way, for example by using a script that will generate
