@@ -15,7 +15,7 @@ export type AcceptanceFn<T, InputT = unknown> = (
   err: (msg: string | Annotation) => DecodeResult<T>,
 ) => DecodeResult<T>;
 
-export type Decoder<T> = {
+export interface Decoder<T> {
   /**
    * Verifies untrusted input. Either returns a value, or throws a decoding
    * error.
@@ -64,7 +64,7 @@ export type Decoder<T> = {
 
   // Experimental APIs (please don't rely on these yet)
   peek_UNSTABLE<V>(next: AcceptanceFn<V, [unknown, T]>): Decoder<V>;
-};
+}
 
 /**
  * Helper type to return the "type" of a Decoder.
