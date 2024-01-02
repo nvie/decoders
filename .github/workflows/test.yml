@@ -3,91 +3,73 @@ name: test
 on: [push]
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                node-version: [
-                        16.x, # EoL by 2023-09-11
-                        18.x, # EoL by 2025-04-30
-                        20.x, # EoL by 2026-04-30
-                    ]
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [
+            # From https://github.com/nodejs/Release
+            '16.x', # EoL 2023-09-11
+            '18.x', # EoL 2025-04-30
+            '20.x', # EoL by 2026-04-30
+            'latest',
+          ]
 
-                # Some key Flow versions that have seen syntax or semantic changes that
-                # required updates to decoders
-                flow-version: [0.142.0, current]
+    steps:
+      - uses: actions/checkout@v4
 
-        steps:
-            - uses: actions/checkout@v1
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
 
-            - name: Set up Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v1
-              with:
-                  node-version: ${{ matrix.node-version }}
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
 
-            - name: Set up Python
-              uses: actions/setup-python@v2
-              with:
-                  python-version: '3.x'
+      - name: Install dependencies
+        run: npm ci
 
-            - name: Install Node dependencies
-              run: npm install
+      - name: Install Python dependencies (for documentation generation)
+        run: pip install cogapp
 
-            - name: Install Python dependencies (for documentation generation)
-              run: pip install cogapp
+      - name: Test TypeScript
+        run: npm run test:typescript
+        env:
+          CI: true
 
-            - name: Install flow version
-              run: npm install flow-bin@${{ matrix.flow-version }}
-              if: matrix.flow-version != 'current'
+      - name: Unit tests
+        run: npm run test
+        env:
+          CI: true
 
-            - name: Clean things
-              run: npm run clean
-              env:
-                  CI: true
+      - name: Completeness check
+        run: npm run test:completeness
+        env:
+          CI: true
 
-            - name: Test Flow
-              run: npm run test:flow
-              env:
-                  CI: true
+      - name: Lints
+        run: npm run lint
+        env:
+          CI: true
 
-            - name: Test TypeScript
-              run: npm run test:typescript
-              env:
-                  CI: true
+      - name: Build
+        run: npm run build
+        env:
+          CI: true
 
-            - name: Unit tests
-              run: npm run test:jest
-              env:
-                  CI: true
+      - name: Test type inference
+        run: npm run test:types
+        env:
+          CI: true
 
-            - name: Completeness check
-              run: npm run test:completeness
-              env:
-                  CI: true
+      - name: Lint packages
+        run: npm run lint:package
+        env:
+          CI: true
 
-            - name: Lints
-              run: npm run check
-              env:
-                  CI: true
-
-            - name: Check docs
-              run: npm run check:docs
-              env:
-                  CI: true
-
-            - name: Upload coverage report to Coveralls
-              uses: coverallsapp/github-action@master
-              with:
-                  github-token: ${{ secrets.github_token }}
-                  parallel: true
-
-    coveralls:
-        needs: build
-        runs-on: ubuntu-latest
-
-        steps:
-            - name: Coveralls finished
-              uses: coverallsapp/github-action@master
-              with:
-                  github-token: ${{ secrets.github_token }}
-                  parallel-finished: true
+      - name: Lint docs
+        run: npm run lint:docs
+        env:
+          CI: true

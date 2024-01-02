@@ -2,13 +2,12 @@
 
 [![npm](https://img.shields.io/npm/v/decoders.svg)](https://www.npmjs.com/package/decoders)
 [![Build Status](https://github.com/nvie/decoders/workflows/test/badge.svg)](https://github.com/nvie/decoders/actions)
-[![Coverage Status](https://img.shields.io/coveralls/nvie/decoders/main.svg)](https://coveralls.io/github/nvie/decoders?branch=main)
 [![Minified Size](https://badgen.net/bundlephobia/minzip/decoders)](https://bundlephobia.com/result?p=decoders)
 
 Elegant and battle-tested validation library for type-safe input data for
-[TypeScript](https://www.typescriptlang.org/) and [Flow](https://flow.org/).
+[TypeScript](https://www.typescriptlang.org/).
 
-## Motivation
+## Introduction
 
 Data entering your application from the outside world should not be trusted without
 validation and often is of the `any` type, effectively disabling your type checker around
@@ -17,45 +16,57 @@ program's boundaries. This has two benefits: (1) your inputs are getting validat
 (2) you can now statically know for sure the shape of the incoming data. **Decoders help
 solve both of these problems at once.**
 
-## Example
+## Basic example
 
 ```typescript
 import { array, iso8601, number, object, optional, string } from 'decoders';
 
-//
 // Incoming data at runtime
-//
 const externalData = {
-    id: 123,
-    name: 'Alison Roberts',
-    createdAt: '1994-01-11T12:26:37.024Z',
-    tags: ['foo', 'bar'],
+  id: 123,
+  name: 'Alison Roberts',
+  createdAt: '1994-01-11T12:26:37.024Z',
+  tags: ['foo', 'bar'],
 };
 
-//
 // Write the decoder (= what you expect the data to look like)
-//
 const userDecoder = object({
-    id: number,
-    name: string,
-    createdAt: optional(iso8601),
-    tags: array(string),
+  id: number,
+  name: string,
+  createdAt: optional(iso8601),
+  tags: array(string),
 });
 
-//
 // Call .verify() on the incoming data
-//
 const user = userDecoder.verify(externalData);
 //    ^^^^
-//    TypeScript can automatically infer this type now:
-//
+//    TypeScript automatically infers this type as:
 //    {
 //      id: number;
 //      name: string;
 //      createdAt?: Date;
 //      tags: string[];
 //    }
-//
+```
+
+## Installation
+
+```bash
+npm install decoders
+```
+
+## Requirements
+
+You must set `strict: true` in your `tsconfig.json` in order for type inference to work
+correctly!
+
+```js
+// tsconfig.json
+{
+  "compilerOptions": {
+    "strict": true
+  }
+}
 ```
 
 ## Documentation
@@ -133,8 +144,9 @@ const user = userDecoder.verify(externalData);
 <div id="uuidv1"></div>
 <div id="uuidv4"></div>
 
-Documentation can be found on [https://decoders.cc](https://decoders.cc).  
+Documentation can be found on [https://decoders.cc](https://decoders.cc).
 
 ## Building your own decoders
 
-There is a dedicated page in the docs that explains how to [build your own decoders](https://decoders.cc/building-your-own.html) — it’s fun!
+There is a dedicated page in the docs that explains how to
+[build your own decoders](https://decoders.cc/building-your-own.html) — it’s fun!

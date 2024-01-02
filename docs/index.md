@@ -47,20 +47,20 @@ import { array, iso8601, number, object, optional, string } from 'decoders';
 // Incoming data at runtime
 //
 const externalData = {
-    id: 123,
-    name: 'Alison Roberts',
-    createdAt: '1994-01-11T12:26:37.024Z',
-    tags: ['foo', 'bar'],
+  id: 123,
+  name: 'Alison Roberts',
+  createdAt: '1994-01-11T12:26:37.024Z',
+  tags: ['foo', 'bar'],
 };
 
 //
 // Write the decoder (= what you expect the data to look like)
 //
 const userDecoder = object({
-    id: number,
-    name: string,
-    createdAt: optional(iso8601),
-    tags: array(string),
+  id: number,
+  name: string,
+  createdAt: optional(iso8601),
+  tags: array(string),
 });
 
 //
@@ -103,9 +103,9 @@ instances!
 To use a decoder on an untrusted input, call one of these three methods on the outermost
 decoder. Which one you want to use will depend on your use case.
 
--   `.verify()` (= recommended)
--   `.value()` (for best-effort decoding)
--   `.decode()` (for precise control)
+- `.verify()` (= recommended)
+- `.value()` (for best-effort decoding)
+- `.decode()` (for precise control)
 
 The simplest and recommended method is [`.verify()`](/Decoder.html#verify). It will either
 return the decoded (safe) value on success, or throw an error with a friendly message when
@@ -157,42 +157,41 @@ reporting.)
 
 Built-in formatters are:
 
--   `formatInline` (default) — will echo back the input object and inline error messages
-    smartly. Example:
+- `formatInline` (default) — will echo back the input object and inline error messages
+  smartly. Example:
 
-    ```typescript
-    import { array, object, string } from 'decoders';
-    import { formatInline } from 'decoders/format';
+  ```typescript
+  import { array, object, string, formatInline } from 'decoders';
 
-    const mydecoder = array(object({ name: string, age: number }));
+  const mydecoder = array(object({ name: string, age: number }));
 
-    const externalData = [{ name: 'Alice', age: '33' }];
-    mydecoder.verify(externalData, formatInline);
-    ```
+  const externalData = [{ name: 'Alice', age: '33' }];
+  mydecoder.verify(externalData, formatInline); // same as mydecoder.verify(externalData)
+  ```
 
-    Will throw the following error message:
+  Will throw the following error message:
 
-    ```text
-    Decoding error:
-    [
-      {
-        name: 'Alice',
-        age: '33',
-             ^^^^ Must be number
-      },
-    ]
-    ```
+  ```text
+  Decoding error:
+  [
+    {
+      name: 'Alice',
+      age: '33',
+           ^^^^ Must be number
+    },
+  ]
+  ```
 
--   `formatShort` — will report the _path_ into the object where the error happened.
-    Example:
+- `formatShort` — will report the _path_ into the object where the error happened.
+  Example:
 
-    ```typescript
-    import { formatShort } from 'decoders/format';
-    mydecoder.verify(externalData, formatShort);
-    ```
+  ```typescript
+  import { formatShort } from 'decoders';
+  mydecoder.verify(externalData, formatShort);
+  ```
 
-    Will throw the following error message:
+  Will throw the following error message:
 
-    ```text
-    Decoding error: Value at keypath 0.age: Must be number
-    ```
+  ```text
+  Decoding error: Value at keypath 0.age: Must be number
+  ```

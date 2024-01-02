@@ -1,29 +1,29 @@
 code {
-    padding: 0.2em 0.4em !important;
-    font-size: 0.87em !important;
+  padding: 0.2em 0.4em !important;
+  font-size: 0.87em !important;
 }
 
 .nav-list {
-    .nav-list-item {
-        font-size: 16px !important;
-    }
+  .nav-list-item {
+    font-size: 16px !important;
+  }
 }
 
 p.signature {
-    font-size: 22px !important;
-    line-height: 34px !important;
-    padding: 0 !important;
-    letter-spacing: 0.005em !important;
+  font-size: 22px !important;
+  line-height: 34px !important;
+  padding: 0 !important;
+  letter-spacing: 0.005em !important;
 
-    margin: 0 !important;
-    &:first-child {
-        margin-top: 16px !important;
-    }
-    &:last-child {
-        margin-bottom: 16px !important;
-    }
+  margin: 0 !important;
+  &:first-child {
+    margin-top: 16px !important;
+  }
+  &:last-child {
+    margin-bottom: 16px !important;
+  }
 }
 
 p:target {
-    background-color: #fff8c5;
+  background-color: #fff8c5;
 }

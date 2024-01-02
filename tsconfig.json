@@ -1,8 +1,27 @@
 {
-    "compilerOptions": {
-        "lib": ["es6"],
-        "baseUrl": "./src/",
-        "typeRoots": ["./src/"]
-    },
-    "files": ["index.d.ts"]
+  "compilerOptions": {
+    "noEmit": true,
+    "strict": true,
+    "target": "es2020",
+    "module": "es2020",
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "stripInternal": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowUnreachableCode": false, // False makes this stricter: errors instead of warns
+    "allowUnusedLabels": false, // False makes this stricter: errors instead of warns
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "noImplicitReturns": true,
+    // "noUncheckedIndexedAccess": true,
+    "noUncheckedIndexedAccess": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "paths": {
+      "~": ["./src"],
+      "~/*": ["./src/*"]
+    }
+  },
+  "include": ["src", "test"],
+  "exclude": ["node_modules", "dist"]
 }

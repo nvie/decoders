@@ -1,7 +1,12 @@
 .DS_Store
+*.tsbuildinfo
 /.direnv
 /coverage
 /dist
 /node_modules
 yarn-error.log
 __pycache__/
+
+# Packaging hack
+/*.js
+/*.d.ts
