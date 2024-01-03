@@ -1,4 +1,5 @@
-import { asDate, INDENT, indent, isMultiline } from '~/lib/utils';
+import { INDENT, indent, isMultiline } from '~/lib/text';
+import { isDate } from '~/lib/utils';
 
 import type { Annotation, ArrayAnnotation, ObjectAnnotation } from './annotate';
 
@@ -118,12 +119,11 @@ export function serializeValue(value: unknown): string {
   } else if (value === undefined) {
     return 'undefined';
   } else {
-    const valueAsDate = asDate(value);
-    if (valueAsDate !== null) {
-      return `new Date(${JSON.stringify(valueAsDate.toISOString())})`;
+    if (isDate(value)) {
+      return `new Date(${JSON.stringify(value.toISOString())})`;
     } else if (value instanceof Date) {
       // NOTE: Using `instanceof Date` is unreliable way of checking dates.
-      // If this case occurs (and it didn't pass the prior asDate())
+      // If this case occurs (and it didn't pass the prior isDate())
       // check, then this must be the case where it's an invalid date.
       return '(Invalid Date)';
     } else {

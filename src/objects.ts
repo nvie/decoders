@@ -2,7 +2,8 @@
 
 import type { Annotation, Decoder, DecodeResult } from '~/core';
 import { annotateObject, define, merge, updateText } from '~/core';
-import { isPojo, subtract } from '~/lib/utils';
+import { difference } from '~/lib/set-methods';
+import { isPojo } from '~/lib/utils';
 
 type RequiredKeys<T extends object> = {
   [K in keyof T]: undefined extends T[K] ? never : K;
@@ -70,7 +71,7 @@ export function object<DS extends Record<string, Decoder<any>>>(
     // validly be optional. We'll let the underlying decoder decide and
     // remove the key from this missing set if the decoder accepts the
     // value.
-    const missingKeys = subtract(knownKeys, actualKeys);
+    const missingKeys = difference(knownKeys, actualKeys);
 
     const record = {};
     let errors: Record<string, Annotation> | null = null;
@@ -156,7 +157,7 @@ export function exact<O extends Record<string, Decoder<any>>>(
   // Check the inputted object for any unexpected extra keys
   const checked = pojo.reject((plainObj) => {
     const actualKeys = new Set(Object.keys(plainObj));
-    const extraKeys = subtract(actualKeys, allowedKeys);
+    const extraKeys = difference(actualKeys, allowedKeys);
     return extraKeys.size > 0
       ? `Unexpected extra keys: ${Array.from(extraKeys).join(', ')}`
       : // Don't reject

@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest';
 
+import { difference } from '~/lib/set-methods';
+import { indent } from '~/lib/text';
 import type { Scalar } from '~/lib/types';
-import { indent, subtract } from '~/lib/utils';
 
 describe('subtract', () => {
   const exampleSets: Set<Scalar>[] = [
@@ -13,30 +14,30 @@ describe('subtract', () => {
 
   test('subtract(x, ∅) -> x', () => {
     for (const example of exampleSets) {
-      expect(subtract(example, new Set())).toEqual(example);
+      expect(difference(example, new Set())).toEqual(example);
     }
   });
 
   test('subtract(∅, x) -> ∅', () => {
     for (const example of exampleSets) {
-      expect(subtract(new Set<Scalar>(), example)).toEqual(new Set());
+      expect(difference(new Set<Scalar>(), example)).toEqual(new Set());
     }
   });
 
   test('subtract(x, x) -> ∅', () => {
     for (const example of exampleSets) {
-      expect(subtract(example, example)).toEqual(new Set());
+      expect(difference(example, example)).toEqual(new Set());
     }
   });
 
   test('subtract(x, y)', () => {
-    expect(subtract(new Set(['a', 'b', 'c']), new Set(['b', 'c']))).toEqual(
+    expect(difference(new Set(['a', 'b', 'c']), new Set(['b', 'c']))).toEqual(
       new Set(['a']),
     );
     expect(
-      subtract(new Set(['a', 'b', 'c']), new Set(['b', 'b', 'b', 'b', 'c'])),
+      difference(new Set(['a', 'b', 'c']), new Set(['b', 'b', 'b', 'b', 'c'])),
     ).toEqual(new Set(['a']));
-    expect(subtract(new Set(['a', 'b', 'c']), new Set(['d', 'e', 'f']))).toEqual(
+    expect(difference(new Set(['a', 'b', 'c']), new Set(['d', 'e', 'f']))).toEqual(
       new Set(['a', 'b', 'c']),
     );
   });

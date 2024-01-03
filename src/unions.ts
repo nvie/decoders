@@ -1,7 +1,7 @@
 import type { Decoder, DecodeResult, DecoderType, Ok } from '~/core';
 import { define, summarize } from '~/core';
+import { indent } from '~/lib/text';
 import type { Scalar } from '~/lib/types';
-import { indent } from '~/lib/utils';
 
 import { prep } from './misc';
 import { object } from './objects';

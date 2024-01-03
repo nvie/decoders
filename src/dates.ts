@@ -1,6 +1,6 @@
 import type { Decoder } from '~/core';
 import { define } from '~/core';
-import { asDate } from '~/lib/utils';
+import { isDate } from '~/lib/utils';
 
 import { regex } from './strings';
 
@@ -14,8 +14,7 @@ const iso8601_re =
  * Accepts and returns `Date` instances.
  */
 export const date: Decoder<Date> = define((blob, ok, err) => {
-  const date = asDate(blob);
-  return date !== null ? ok(date) : err('Must be a Date');
+  return isDate(blob) ? ok(blob) : err('Must be a Date');
 });
 
 /**
