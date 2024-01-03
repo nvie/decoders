@@ -33,13 +33,13 @@ export {
 export { either, oneOf, taggedUnion } from './unions';
 
 // Core functionality
-export type { Scalar } from '~/lib/types';
 export type { Decoder, DecodeResult, DecoderType } from '~/core';
 export type { Err, Ok, Result } from '~/core';
 export type { Formatter } from '~/core';
 export { define } from '~/core';
 export { err, ok } from '~/core';
 export { formatInline, formatShort } from '~/core';
+export type { Scalar } from '~/lib/types';
 
 // Deprecated aliases
 export { hardcoded, maybe, mixed } from './basics';

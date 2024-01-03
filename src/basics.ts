@@ -1,6 +1,6 @@
 import type { Decoder } from '~/core';
-import type { Scalar } from '~/lib/types';
 import { define } from '~/core';
+import type { Scalar } from '~/lib/types';
 
 import { either } from './unions';
 

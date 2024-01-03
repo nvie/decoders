@@ -1,4 +1,5 @@
 import { asDate, INDENT, indent, isMultiline } from '~/lib/utils';
+
 import type { Annotation, ArrayAnnotation, ObjectAnnotation } from './annotate';
 
 export type Formatter = (err: Annotation) => string | Error;
