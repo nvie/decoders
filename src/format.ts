@@ -1,4 +1,4 @@
-import { summarize as _summarize, asDate, INDENT, indent, isMultiline } from './_utils';
+import { summarize, asDate, INDENT, indent, isMultiline } from './_utils';
 import type { Annotation, ArrayAnnotation, ObjectAnnotation } from './annotate';
 
 export type Formatter = (err: Annotation) => string | Error;
@@ -121,5 +121,5 @@ export function formatInline(ann: Annotation): string {
 }
 
 export function formatShort(ann: Annotation): string {
-  return _summarize(ann, []).join('\n');
+  return summarize(ann, []).join('\n');
 }
