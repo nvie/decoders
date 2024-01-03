@@ -8,7 +8,7 @@ import subprocess
 from operator import itemgetter
 
 #
-# These lists the available decoders, as configured in src/lib/*.js.
+# These lists the available decoders, as configured in src/*.ts.
 #
 DECODERS = {
   'string': {
@@ -1081,7 +1081,7 @@ DECODERS = {
 }
 
 #
-# These lists the methods, as configured in src/Decoder.js.
+# These lists the methods, as configured in src/core/Decoder.ts.
 #
 DECODER_METHODS = {
   'verify': {

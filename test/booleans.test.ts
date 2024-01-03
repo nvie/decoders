@@ -1,7 +1,9 @@
-import { describe, expect, test } from 'vitest';
-import { boolean, numericBoolean, truthy } from '~/lib/booleans';
-import { INPUTS } from './_fixtures';
 import { partition } from 'itertools';
+import { describe, expect, test } from 'vitest';
+
+import { boolean, numericBoolean, truthy } from '~/booleans';
+
+import { INPUTS } from './_fixtures';
 
 describe('booleans', () => {
   const decoder = boolean;

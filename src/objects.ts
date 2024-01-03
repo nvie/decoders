@@ -1,11 +1,42 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { annotateObject, merge, updateText } from '../annotate';
-import { define } from '../Decoder';
-import { subtract, isPojo } from '../_utils';
-import type { Annotation } from '../annotate';
-import type { Decoder, DecodeResult } from '../Decoder';
-import type { UndefinedToOptional } from './_helpers';
+import type { Annotation, Decoder, DecodeResult } from '~/core';
+import { annotateObject, define, merge, updateText } from '~/core';
+import { difference } from '~/lib/set-methods';
+import { isPojo } from '~/lib/utils';
+
+type RequiredKeys<T extends object> = {
+  [K in keyof T]: undefined extends T[K] ? never : K;
+}[keyof T];
+
+type Resolve<T> = T extends (...args: readonly unknown[]) => unknown
+  ? T
+  : { [K in keyof T]: T[K] };
+
+/**
+ * Transforms an object type, by marking all fields that contain "undefined"
+ * with a question mark, i.e. allowing implicit-undefineds when
+ * explicit-undefined are also allowed.
+ *
+ * For example, if:
+ *
+ *   type User = {
+ *     name: string;
+ *     age: number | null | undefined;
+ *   }
+ *
+ * Then UndefinedToOptional<User> will become equivalent to:
+ *
+ *   {
+ *     name: string;
+ *     age?: number | null | undefined;
+ *        ^
+ *        Note the question mark
+ *   }
+ */
+type UndefinedToOptional<T extends object> = Resolve<
+  Pick<Required<T>, RequiredKeys<T>> & Partial<T>
+>;
 
 type ObjectDecoderType<T> = UndefinedToOptional<{
   [K in keyof T]: T[K] extends Decoder<infer V> ? V : never;
@@ -40,7 +71,7 @@ export function object<DS extends Record<string, Decoder<any>>>(
     // validly be optional. We'll let the underlying decoder decide and
     // remove the key from this missing set if the decoder accepts the
     // value.
-    const missingKeys = subtract(knownKeys, actualKeys);
+    const missingKeys = difference(knownKeys, actualKeys);
 
     const record = {};
     let errors: Record<string, Annotation> | null = null;
@@ -126,7 +157,7 @@ export function exact<O extends Record<string, Decoder<any>>>(
   // Check the inputted object for any unexpected extra keys
   const checked = pojo.reject((plainObj) => {
     const actualKeys = new Set(Object.keys(plainObj));
-    const extraKeys = subtract(actualKeys, allowedKeys);
+    const extraKeys = difference(actualKeys, allowedKeys);
     return extraKeys.size > 0
       ? `Unexpected extra keys: ${Array.from(extraKeys).join(', ')}`
       : // Don't reject

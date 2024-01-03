@@ -1,7 +1,9 @@
-import { describe, expect, test } from 'vitest';
-import { date, iso8601 } from '~/lib/dates';
-import { INPUTS } from './_fixtures';
 import { partition } from 'itertools';
+import { describe, expect, test } from 'vitest';
+
+import { date, iso8601 } from '~/dates';
+
+import { INPUTS } from './_fixtures';
 
 describe('dates', () => {
   const decoder = date;

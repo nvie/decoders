@@ -1,17 +1,19 @@
 import * as fc from 'fast-check';
-import type { Decoder } from '~/Decoder';
-import { boolean } from '~/lib/booleans';
-import { constant, undefined_ } from '~/lib/basics';
-import { describe, expect, test } from 'vitest';
-import { either, oneOf } from '~/lib/unions';
-import { INPUTS } from './_fixtures';
-import { number } from '~/lib/numbers';
-import { object } from '~/lib/objects';
 import { partition } from 'itertools';
-import { regex, string } from '~/lib/strings';
-import { taggedUnion } from '~/lib/unions';
+import { describe, expect, test } from 'vitest';
 
-function fuzz(testFn: (blob: unknown) => void) {
+import { constant, undefined_ } from '~/basics';
+import { boolean } from '~/booleans';
+import type { Decoder } from '~/core';
+import { number } from '~/numbers';
+import { object } from '~/objects';
+import { regex, string } from '~/strings';
+import { either, oneOf, taggedUnion } from '~/unions';
+
+import { INPUTS } from './_fixtures';
+
+// XXX Move into test utils
+export function fuzz(testFn: (blob: unknown) => void) {
   return fc.assert(
     fc.property(
       fc.anything({
@@ -110,7 +112,7 @@ test('either fails without decoders', () => {
   expect(() => either()).toThrow();
 });
 
-describe('either3', () => {
+describe('either with 4 decoders', () => {
   const decoder = either(string, boolean, number, undefined_);
   const [okay, not_okay] = partition(
     INPUTS,
@@ -136,7 +138,7 @@ describe('either3', () => {
   });
 });
 
-describe('either9', () => {
+describe('either with many decoders', () => {
   const decoder = either(
     constant('one'),
     constant('two'),

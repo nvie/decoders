@@ -1,7 +1,58 @@
-import { summarize as _summarize, asDate, INDENT, indent, isMultiline } from './_utils';
+import { INDENT, indent, isMultiline } from '~/lib/text';
+import { isDate } from '~/lib/utils';
+
 import type { Annotation, ArrayAnnotation, ObjectAnnotation } from './annotate';
 
 export type Formatter = (err: Annotation) => string | Error;
+
+/**
+ * Walks the annotation tree and emits the annotation's key path within the
+ * object tree, and the message as a series of messages (array of strings).
+ */
+export function summarize(
+  ann: Annotation,
+  keypath: readonly (number | string)[] = [],
+): string[] {
+  const result: string[] = [];
+
+  if (ann.type === 'array') {
+    const items = ann.items;
+    let index = 0;
+    for (const ann of items) {
+      for (const item of summarize(ann, [...keypath, index++])) {
+        // Collect to results
+        result.push(item);
+      }
+    }
+  } else if (ann.type === 'object') {
+    const fields = ann.fields;
+    for (const key of Object.keys(fields)) {
+      const value = fields[key];
+      for (const item of summarize(value, [...keypath, key])) {
+        // Collect to results
+        result.push(item);
+      }
+    }
+  }
+
+  const text = ann.text;
+  if (!text) {
+    return result;
+  }
+
+  let prefix: string;
+  if (keypath.length === 0) {
+    prefix = '';
+  } else if (keypath.length === 1) {
+    prefix =
+      typeof keypath[0] === 'number'
+        ? `Value at index ${keypath[0]}: `
+        : `Value at key ${JSON.stringify(keypath[0])}: `;
+  } else {
+    prefix = `Value at keypath ${keypath.map(String).join('.')}: `;
+  }
+  return [...result, `${prefix}${text}`];
+}
 
 function serializeString(s: string, width: number = 80): string {
   // Full string
@@ -68,12 +119,11 @@ export function serializeValue(value: unknown): string {
   } else if (value === undefined) {
     return 'undefined';
   } else {
-    const valueAsDate = asDate(value);
-    if (valueAsDate !== null) {
-      return `new Date(${JSON.stringify(valueAsDate.toISOString())})`;
+    if (isDate(value)) {
+      return `new Date(${JSON.stringify(value.toISOString())})`;
     } else if (value instanceof Date) {
       // NOTE: Using `instanceof Date` is unreliable way of checking dates.
-      // If this case occurs (and it didn't pass the prior asDate())
+      // If this case occurs (and it didn't pass the prior isDate())
       // check, then this must be the case where it's an invalid date.
       return '(Invalid Date)';
     } else {
@@ -121,5 +171,5 @@ export function formatInline(ann: Annotation): string {
 }
 
 export function formatShort(ann: Annotation): string {
-  return _summarize(ann, []).join('\n');
+  return summarize(ann, []).join('\n');
 }

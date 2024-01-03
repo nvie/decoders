@@ -1,10 +1,10 @@
-import { isPojo } from './_utils';
+import { isPojo } from '~/lib/utils';
 
 const _register: WeakSet<Annotation> = new WeakSet();
 
 export interface ObjectAnnotation {
   readonly type: 'object';
-  readonly fields: { readonly [key: string]: Annotation };
+  readonly fields: Readonly<Record<string, Annotation>>;
   readonly text?: string;
 }
 
@@ -57,41 +57,23 @@ export function object(
 }
 
 export function array(items: readonly Annotation[], text?: string): ArrayAnnotation {
-  return brand({
-    type: 'array',
-    items,
-    text,
-  });
+  return brand({ type: 'array', items, text });
 }
 
 export function func(text?: string): FunctionAnnotation {
-  return brand({
-    type: 'function',
-    text,
-  });
+  return brand({ type: 'function', text });
 }
 
 export function unknown(value: unknown, text?: string): UnknownAnnotation {
-  return brand({
-    type: 'unknown',
-    value,
-    text,
-  });
+  return brand({ type: 'unknown', value, text });
 }
 
 export function scalar(value: unknown, text?: string): ScalarAnnotation {
-  return brand({
-    type: 'scalar',
-    value,
-    text,
-  });
+  return brand({ type: 'scalar', value, text });
 }
 
 export function circularRef(text?: string): CircularRefAnnotation {
-  return brand({
-    type: 'circular-ref',
-    text,
-  });
+  return brand({ type: 'circular-ref', text });
 }
 
 /**
@@ -110,16 +92,16 @@ export function updateText<A extends Annotation>(annotation: A, text?: string): 
  */
 export function merge(
   objAnnotation: ObjectAnnotation,
-  fields: { readonly [key: string]: Annotation },
+  fields: Readonly<Record<string, Annotation>>,
 ): ObjectAnnotation {
   const newFields = { ...objAnnotation.fields, ...fields };
   return object(newFields, objAnnotation.text);
 }
 
-export function asAnnotation(thing: unknown): Annotation | undefined {
-  return typeof thing === 'object' && thing !== null && _register.has(thing as Annotation)
-    ? (thing as Annotation)
-    : undefined;
+export function isAnnotation(thing: unknown): thing is Annotation {
+  return (
+    typeof thing === 'object' && thing !== null && _register.has(thing as Annotation)
+  );
 }
 
 type RefSet = WeakSet<object>;
@@ -143,7 +125,7 @@ function annotateArray(
 
 /** @internal */
 function annotateObject(
-  obj: Record<string, unknown>,
+  obj: Readonly<Record<string, unknown>>,
   text: string | undefined,
   seen: RefSet,
 ): ObjectAnnotation {
@@ -171,9 +153,8 @@ function annotate(value: unknown, text: string | undefined, seen: RefSet): Annot
     return scalar(value, text);
   }
 
-  const ann = asAnnotation(value);
-  if (ann) {
-    return updateText(ann, text);
+  if (isAnnotation(value)) {
+    return updateText(value, text);
   }
 
   if (Array.isArray(value)) {
@@ -206,18 +187,17 @@ function public_annotate(value: unknown, text?: string): Annotation {
 }
 
 function public_annotateObject(
-  obj: { readonly [field: string]: unknown },
+  obj: Readonly<Record<string, unknown>>,
   text?: string,
 ): ObjectAnnotation {
   return annotateObject(obj, text, new WeakSet());
 }
 
 export {
+  /** @internal */
+  annotate as __private_annotate,
   // This construct just ensures the "seen" weakmap (used for circular
   // reference detection) isn't made part of the public API.
   public_annotate as annotate,
   public_annotateObject as annotateObject,
-
-  /** @internal */
-  annotate as __private_annotate,
 };

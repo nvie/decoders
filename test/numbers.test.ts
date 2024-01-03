@@ -1,13 +1,9 @@
-import { describe, expect, test } from 'vitest';
-import {
-  anyNumber,
-  integer,
-  number,
-  positiveInteger,
-  positiveNumber,
-} from '~/lib/numbers';
-import { INPUTS } from './_fixtures';
 import { partition } from 'itertools';
+import { describe, expect, test } from 'vitest';
+
+import { anyNumber, integer, number, positiveInteger, positiveNumber } from '~/numbers';
+
+import { INPUTS } from './_fixtures';
 
 describe('number', () => {
   const decoder = number;

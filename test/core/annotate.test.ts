@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
-import { annotate, array, circularRef, merge, object, scalar } from '~/annotate';
+
+import { annotate, array, circularRef, merge, object, scalar } from '~/core';
 
 describe('parsing (scalars)', () => {
   test('strings', () => {

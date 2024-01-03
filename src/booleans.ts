@@ -1,6 +1,7 @@
-import { define } from '../Decoder';
+import type { Decoder } from '~/core';
+import { define } from '~/core';
+
 import { number } from './numbers';
-import type { Decoder } from '../Decoder';
 
 /**
  * Accepts and returns booleans.

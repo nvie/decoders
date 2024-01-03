@@ -1,7 +1,8 @@
-import { asDate } from '../_utils';
-import { define } from '../Decoder';
+import type { Decoder } from '~/core';
+import { define } from '~/core';
+import { isDate } from '~/lib/utils';
+
 import { regex } from './strings';
-import type { Decoder } from '../Decoder';
 
 // Only matches the shape.  This "over-matches" some values that still aren't
 // valid dates (like 9999-99-99), but those will be caught by JS Date's
@@ -13,8 +14,7 @@ const iso8601_re =
  * Accepts and returns `Date` instances.
  */
 export const date: Decoder<Date> = define((blob, ok, err) => {
-  const date = asDate(blob);
-  return date !== null ? ok(date) : err('Must be a Date');
+  return isDate(blob) ? ok(blob) : err('Must be a Date');
 });
 
 /**

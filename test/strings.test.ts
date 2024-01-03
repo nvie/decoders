@@ -1,4 +1,6 @@
+import { partition } from 'itertools';
 import { describe, expect, test } from 'vitest';
+
 import {
   email,
   httpsUrl,
@@ -9,9 +11,9 @@ import {
   uuid,
   uuidv1,
   uuidv4,
-} from '~/lib/strings';
+} from '~/strings';
+
 import { INPUTS } from './_fixtures';
-import { partition } from 'itertools';
 
 describe('string', () => {
   const decoder = string;

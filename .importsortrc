@@ -1,6 +1,0 @@
-{
-  ".js": {
-    "parser": "babylon",
-    "style": "module"
-  }
-}

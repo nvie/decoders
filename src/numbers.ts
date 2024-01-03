@@ -1,5 +1,5 @@
-import { define } from '../Decoder';
-import type { Decoder } from '../Decoder';
+import type { Decoder } from '~/core';
+import { define } from '~/core';
 
 /**
  * Accepts any valid ``number`` value.

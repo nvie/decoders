@@ -1,7 +1,12 @@
-import { define } from '../Decoder';
+import type { Decoder } from '~/core';
+import { define } from '~/core';
+import type { Scalar } from '~/lib/types';
+
 import { either } from './unions';
-import type { Decoder, Scalar } from '../Decoder';
-import { lazyval } from '../_utils';
+
+function lazyval<V>(value: (() => V) | V): V {
+  return typeof value === 'function' ? (value as () => V)() : value;
+}
 
 /**
  * Accepts and returns only the literal `null` value.

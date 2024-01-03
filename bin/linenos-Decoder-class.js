@@ -8,7 +8,7 @@ const project = new Project({
   tsConfigFilePath: './tsconfig.json',
 });
 
-for (const src of project.getSourceFiles('src/Decoder.ts')) {
+for (const src of project.getSourceFiles('src/core/Decoder.ts')) {
   const func = src.getFunction('define');
   const members = func.getFunctions();
 

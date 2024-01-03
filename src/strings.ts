@@ -1,7 +1,8 @@
-import { define } from '../Decoder';
+import type { Decoder } from '~/core';
+import { define } from '~/core';
+
+import { instanceOf } from './misc';
 import { either } from './unions';
-import { instanceOf } from './utilities';
-import type { Decoder } from '../Decoder';
 
 /** Match groups in this regex:
  * \1 - the scheme

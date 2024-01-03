@@ -1,14 +1,18 @@
 ## [Unreleased]
 
-Renamed decoders for better consistency with TypeScript/JavaScript nomenclature:
+**New decoders:**
 
-- `maybe` → `nullish`
+- `nullish` (replaces `maybe`)
 
-Started deprecating some aliases:
+**Deprecated decoders:**
 
-- `hardcoded` (alias of `always`)
-- `mixed` (alias of `unknown`)
-- `maybe` (alias of `nullish`)
+- `hardcoded` (prefer `always`)
+- `mixed` (prefer `unknown`)
+- `maybe` (prefer `nullish`)
+
+**Other changes:**
+
+- Reorganized internal module structure
 
 ## [2.2.0]
 
