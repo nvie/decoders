@@ -251,13 +251,13 @@ We'll want to look at the `created_at` field as a `Date | null` value. So let's 
 following decoder:
 
 ```typescript
-maybe(iso8601, null);
+nullish(iso8601, null);
 ```
 
 Wait, why not use `nullable(iso8601)` here?! The reason is the third event in the example.
 Because the field can legally be missing, we'll have to explicitly accept both `undefined`
-and `null` inputs. That's what the [`maybe()`](/api.html#maybe) decoder does! Its second
-argument is a convenience default value that nullish values will get normalized to.
+and `null` inputs. That's what the [`nullish()`](/api.html#nullish) decoder does! Its
+second argument is a convenience default value that nullish values will get normalized to.
 
 ### Handling the `labels` field
 
@@ -279,7 +279,7 @@ const eventsDecoder = object({
     events: array(
         object({
             id,
-            created_at: maybe(iso8601, null),
+            created_at: nullish(iso8601, null),
             labels: nullable(commaSeparated, []),
         }),
     ),

@@ -29,6 +29,7 @@ import {
   nonEmptyArray,
   nonEmptyString,
   nullable,
+  nullish,
   null_,
   number,
   numericBoolean,
@@ -211,6 +212,18 @@ expectType<string | Date>(test(nullable(string, () => new Date())));
 expectType<string | Date>(test(nullable(nullable(string), () => new Date())));
 expectType<string | Date | null>(test(nullable(nullable(string, () => new Date()))));
 
+expectType<string | null | undefined>(test(nullish(string)));
+expectType<string | null | undefined>(test(nullish(nullish(string))));
+expectType<string | 42>(test(nullish(string, 42)));
+expectType<string | 42>(test(nullish(nullish(string), 42)));
+expectType<string | 42 | null | undefined>(test(nullish(nullish(string, 42))));
+expectType<string | Date>(test(nullish(string, () => new Date())));
+expectType<string | Date>(test(nullish(nullish(string), () => new Date())));
+expectType<string | Date | null | undefined>(
+  test(nullish(nullish(string, () => new Date()))),
+);
+
+// Alias of nullish
 expectType<string | null | undefined>(test(maybe(string)));
 expectType<string | null | undefined>(test(maybe(maybe(string))));
 expectType<string | 42>(test(maybe(string, 42)));

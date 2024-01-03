@@ -25,6 +25,8 @@ module.exports = {
   },
 
   rules: {
+    '@typescript-eslint/no-explicit-any': ['error', { ignoreRestArgs: true }],
+
     '@typescript-eslint/no-unused-vars': [
       'warn',
       // Unused variables are fine if they start with an underscore

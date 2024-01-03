@@ -6,19 +6,15 @@ import { lazyval } from '../_utils';
 /**
  * Accepts and returns only the literal `null` value.
  */
-export const null_: Decoder<null> = define((blob, ok, err) =>
-  blob === null ? ok(blob) : err('Must be null'),
-);
+export const null_ = constant(null);
 
 /**
  * Accepts and returns only the literal `undefined` value.
  */
-export const undefined_: Decoder<undefined> = define((blob, ok, err) =>
-  blob === undefined ? ok(blob) : err('Must be undefined'),
-);
+export const undefined_ = constant(undefined);
 
-const undefined_or_null: Decoder<null | undefined> = define((blob, ok, err) =>
-  blob === undefined || blob === null
+const nullish_: Decoder<null | undefined> = define((blob, ok, err) =>
+  blob == null /* or undefined */
     ? ok(blob)
     : // Combine error message into a single line for readability
       err('Must be undefined or null'),
@@ -63,19 +59,25 @@ export function nullable<T, V>(
 }
 
 /**
+ * @deprecated
+ * Alias of nullish().
+ */
+export const maybe = nullish;
+
+/**
  * Accepts whatever the given decoder accepts, or `null`, or `undefined`.
  *
  * If a default value is explicitly provided, return that instead in the
  * `null`/`undefined` case.
  */
-export function maybe<T>(decoder: Decoder<T>): Decoder<T | null | undefined>;
-export function maybe<T, C extends Scalar>(decoder: Decoder<T>, defaultValue: (() => C) | C): Decoder<NonNullable<T> | C>; // prettier-ignore
-export function maybe<T, V>(decoder: Decoder<T>, defaultValue: (() => V) | V): Decoder<NonNullable<T> | V>; // prettier-ignore
-export function maybe<T, V>(
+export function nullish<T>(decoder: Decoder<T>): Decoder<T | null | undefined>;
+export function nullish<T, C extends Scalar>(decoder: Decoder<T>, defaultValue: (() => C) | C): Decoder<NonNullable<T> | C>; // prettier-ignore
+export function nullish<T, V>(decoder: Decoder<T>, defaultValue: (() => V) | V): Decoder<NonNullable<T> | V>; // prettier-ignore
+export function nullish<T, V>(
   decoder: Decoder<T>,
   defaultValue?: (() => V) | V,
 ): Decoder<T | V | null | undefined> {
-  const rv = either(undefined_or_null, decoder);
+  const rv = either(nullish_, decoder);
   return arguments.length >= 2
     ? rv.transform((value) => value ?? lazyval(defaultValue as (() => V) | V))
     : rv;
@@ -86,7 +88,7 @@ export function maybe<T, V>(
  */
 export function constant<C extends Scalar>(value: C): Decoder<C> {
   return define((blob, ok, err) =>
-    blob === value ? ok(value) : err(`Must be constant ${String(value)}`),
+    blob === value ? ok(value) : err(`Must be ${JSON.stringify(value)}`),
   );
 }
 
@@ -107,6 +109,20 @@ export function always<T>(value: (() => T) | T): Decoder<T> {
 }
 
 /**
+ * Rejects all inputs, and always fails with the given error message. May be
+ * useful for explicitly disallowing keys, or for testing purposes.
+ */
+export function never(msg: string): Decoder<never> {
+  return define((_, __, err) => err(msg));
+}
+
+/**
+ * Alias of never().
+ */
+export const fail = never;
+
+/**
+ * @deprecated
  * Alias of always.
  */
 export const hardcoded = always;
@@ -121,6 +137,7 @@ export const hardcoded = always;
 export const unknown: Decoder<unknown> = define((blob, ok, _) => ok(blob));
 
 /**
+ * @deprecated
  * Alias of unknown.
  */
 export const mixed = unknown;

@@ -6,10 +6,10 @@ export { define } from './Decoder';
 export {
   always,
   constant,
-  hardcoded,
-  maybe,
-  mixed,
+  fail,
+  never,
   nullable,
+  nullish,
   null_,
   optional,
   undefined_,
@@ -31,7 +31,7 @@ export {
   uuidv1,
   uuidv4,
 } from './lib/strings';
-export { fail, instanceOf, lazy, never, prep } from './lib/utilities';
+export { instanceOf, lazy, prep } from './lib/utilities';
 export {
   anyNumber,
   integer,
@@ -40,6 +40,9 @@ export {
   positiveNumber,
 } from './lib/numbers';
 export { json, jsonObject, jsonArray } from './lib/json';
+
+// Deprecated aliases
+export { hardcoded, maybe, mixed } from './lib/basics';
 
 // Previously to be imported from "decoders/format"
 export type { Formatter } from './format';
