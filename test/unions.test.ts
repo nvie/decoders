@@ -11,7 +11,8 @@ import { partition } from 'itertools';
 import { regex, string } from '~/lib/strings';
 import { taggedUnion } from '~/lib/unions';
 
-function fuzz(testFn: (blob: unknown) => void) {
+// XXX Move into test utils
+export function fuzz(testFn: (blob: unknown) => void) {
   return fc.assert(
     fc.property(
       fc.anything({
