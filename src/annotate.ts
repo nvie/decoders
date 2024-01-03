@@ -4,7 +4,7 @@ const _register: WeakSet<Annotation> = new WeakSet();
 
 export interface ObjectAnnotation {
   readonly type: 'object';
-  readonly fields: { readonly [key: string]: Annotation };
+  readonly fields: Readonly<Record<string, Annotation>>;
   readonly text?: string;
 }
 
@@ -95,7 +95,7 @@ export function updateText<A extends Annotation>(annotation: A, text?: string): 
  */
 export function merge(
   objAnnotation: ObjectAnnotation,
-  fields: { readonly [key: string]: Annotation },
+  fields: Readonly<Record<string, Annotation>>,
 ): ObjectAnnotation {
   const newFields = { ...objAnnotation.fields, ...fields };
   return object(newFields, objAnnotation.text);
@@ -128,7 +128,7 @@ function annotateArray(
 
 /** @internal */
 function annotateObject(
-  obj: Record<string, unknown>,
+  obj: Readonly<Record<string, unknown>>,
   text: string | undefined,
   seen: RefSet,
 ): ObjectAnnotation {
@@ -191,7 +191,7 @@ function public_annotate(value: unknown, text?: string): Annotation {
 }
 
 function public_annotateObject(
-  obj: { readonly [field: string]: unknown },
+  obj: Readonly<Record<string, unknown>>,
   text?: string,
 ): ObjectAnnotation {
   return annotateObject(obj, text, new WeakSet());
