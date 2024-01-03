@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { array } from '~/lib/arrays';
 import { constant } from '~/lib/basics';
-import { instanceOf, lazy, prep } from '~/lib/utilities';
+import { instanceOf, lazy, prep } from '~/lib/misc';
 import { INPUTS } from './_fixtures';
 import { number } from '~/lib/numbers';
 import { object } from '~/lib/objects';

@@ -1,6 +1,6 @@
 import { define } from '../Decoder';
 import { either } from './unions';
-import { instanceOf } from './utilities';
+import { instanceOf } from './misc';
 import type { Decoder } from '../Decoder';
 
 /** Match groups in this regex:

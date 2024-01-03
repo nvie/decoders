@@ -31,7 +31,7 @@ export {
   uuidv1,
   uuidv4,
 } from './lib/strings';
-export { instanceOf, lazy, prep } from './lib/utilities';
+export { instanceOf, lazy, prep } from './lib/misc';
 export {
   anyNumber,
   integer,

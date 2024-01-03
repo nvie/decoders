@@ -1,7 +1,7 @@
 import { define } from '../Decoder';
 import { indent, summarize } from '../_utils';
 import { object } from './objects';
-import { prep } from './utilities';
+import { prep } from './misc';
 import type { Decoder, DecoderType, DecodeResult, Scalar } from '../Decoder';
 import type { Ok } from '../result';
 
