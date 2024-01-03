@@ -126,12 +126,13 @@ expectType<[string, string, number, string, number, string]>(
   test(tuple(string, string, number, string, number, string)),
 );
 
-// $ExpectType { name: string; tags: string[]; }
-test(
-  object({
-    name: string,
-    tags: array(string),
-  }),
+expectType<{ name: string; tags: string[] }>(
+  test(
+    object({
+      name: string,
+      tags: array(string),
+    }),
+  ),
 );
 
 expectType<Record<string, never>>(test(object({})));
@@ -153,33 +154,34 @@ expectType<string>(
   test(unknown.refine((foo): foo is string => typeof foo === 'string', 'Is string')),
 );
 
-// $ExpectType "a" | "b"
-test(
-  string.refine(
-    (foo: string): foo is 'a' | 'b' => foo === 'a' || foo === 'b',
-    'Is a or b',
+expectType<'a' | 'b'>(
+  test(
+    string.refine(
+      (foo: string): foo is 'a' | 'b' => foo === 'a' || foo === 'b',
+      'Is a or b',
+    ),
   ),
 );
 
-// $ExpectType number[]
-test(
-  array(number).reject((numbers) =>
-    numbers.reduce((acc, n) => acc + n) > 0
-      ? `Sum of ${numbers.join(' + ')} must be positive`
-      : null,
+expectType<number[]>(
+  test(
+    array(number).reject((numbers) =>
+      numbers.reduce((acc, n) => acc + n) > 0
+        ? `Sum of ${numbers.join(' + ')} must be positive`
+        : null,
+    ),
   ),
 );
 
-// $ExpectType string
-test(string.describe('xxx'));
-// $ExpectType number
-test(number.describe('xxx'));
+expectType<string>(test(string.describe('xxx')));
+expectType<number>(test(number.describe('xxx')));
 
 expectType<string>(test(prep(Number, string)));
 expectType<string>(test(prep(String, string)));
 expectType<number>(test(prep(Number, number)));
 expectType<number>(test(prep(String, number)));
 expectType<string | number>(test(prep(String, either(number, string))));
+
 expectType<string | number>(test(prep(Number, either(number, string))));
 
 expectType<string[]>(test(array(string)));
@@ -358,8 +360,7 @@ expectType<string>(
   test(either(string, string, string, string, string, string, string, string, string)),
 );
 
-// $ExpectType "foo" | "bar"
-test(oneOf(['foo', 'bar']));
+expectType<'foo' | 'bar'>(test(oneOf(['foo', 'bar'])));
 
 interface Rect {
   _type: 'rect';
@@ -376,7 +377,7 @@ interface Circle {
   radius: number;
 }
 
-// type Shape = Rect | Circle;
+type Shape = Rect | Circle;
 
 const rect: Decoder<Rect> = object({
   _type: constant('rect'),
@@ -393,8 +394,7 @@ const circle: Decoder<Circle> = object({
   radius: number,
 });
 
-// $ExpectType Values<{ rect: Rect; circle: Circle; }>
-test(taggedUnion('_type', { rect, circle }));
+expectType<Shape>(test(taggedUnion('_type', { rect, circle })));
 
 interface Rect1 {
   _type: 0;
@@ -411,7 +411,7 @@ interface Circle1 {
   radius: number;
 }
 
-// type Shape1 = Rect1 | Circle1;
+type Shape1 = Rect1 | Circle1;
 
 const rect1: Decoder<Rect1> = object({
   _type: constant(0),
@@ -428,5 +428,4 @@ const circle1: Decoder<Circle1> = object({
   radius: number,
 });
 
-// $ExpectType Values<{ 0: Rect1; 1: Circle1; }>
-test(taggedUnion('_type', { 0: rect1, 1: circle1 }));
+expectType<Shape1>(test(taggedUnion('_type', { 0: rect1, 1: circle1 })));

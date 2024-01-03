@@ -133,9 +133,7 @@ export function exact<O extends Record<string, Decoder<any>>>(
         null;
   });
 
-  // Defer to the "object" decoder for doing the real decoding work.  Since
-  // we made sure there are no superfluous keys in this structure, it's now
-  // safe to force-cast it to an $Exact<> type.
+  // Defer to the "object" decoder for doing the real decoding work
   return checked.then(object(decodersByKey).decode);
 }
 
