@@ -1,13 +1,11 @@
-import type { Scalar } from './types';
-
 // Two spaces of indentation
 export const INDENT = '  ';
 
 /**
  * Subtract two sets. Why isn't this a standard method on Sets?
  */
-export function subtract<C extends Scalar>(xs: Set<C>, ys: Set<C>): Set<C> {
-  const result = new Set<C>();
+export function subtract<T>(xs: Set<T>, ys: Set<T>): Set<T> {
+  const result = new Set<T>();
   for (const x of xs) {
     if (!ys.has(x)) {
       result.add(x);
