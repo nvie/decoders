@@ -536,9 +536,6 @@ iso8601.verify(new Date());    // throws (does not accept dates)
 
 Accepts only the given constant value.
 
-> _![](./assets/tiny-flow-logo.png) **Note to Flow users!** Flow will incorrectly infer the type for constants by default! The inferred type for `constant(42)` is `Decoder<number>`. To work around this, always use this syntax in Flow: `constant((42: 42))`._  
-> _![](./assets/tiny-ts-logo.png) **TypeScript** will correctly infer the type of `constant(42)` as `Decoder<42>`._
-
 ```typescript
 const decoder = constant('hello');
 
@@ -1156,10 +1153,6 @@ decoder.verify(123) === 123;
 decoder.verify(false);  // throws
 ```
 
-> _![](./assets/tiny-flow-logo.png) **Note to Flow users!** There is a max of 9 arguments with this construct. If you hit the 9 argument limit, you can work around that by stacking, e.g. do `either(<8 arguments here>, either(...))`._
-
-> _![](./assets/tiny-ts-logo.png) **In TypeScript**, there is no such limit._
-
 ---
 
 <a href="#oneOf">#</a> **oneOf**&lt;<i style="color: #267f99">T</i>&gt;(values: <i style="color: #267f99">T[]</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/unions.ts#L84-L98 'Source')
@@ -1186,9 +1179,6 @@ For example, given an array of strings, like so:
 ```typescript
 oneOf(['foo', 'bar']);
 ```
-
-> _![](./assets/tiny-flow-logo.png) **Note to Flow users!** Flow will (unfortunately) infer the type of this definition as `Decoder<string>`.  To work around this, be sure to explicitly annotate the type. Either by doing `oneOf([('foo': 'foo'), ('bar': 'bar')])`, or as `oneOf<'foo' | 'bar'>(['foo', 'bar'])`._  
-> _![](./assets/tiny-ts-logo.png) **TypeScript** will correctly infer the return type as `Decoder<'foo' | 'bar'>`._
 
 ---
 
@@ -1379,5 +1369,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 467be516bfbc62e70d73378597ae12bb)-->
+<!--[[[end]]] (checksum: 46007e9dfdc3067cf952f4c61d222994)-->
 <!-- prettier-ignore-end -->
