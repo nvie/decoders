@@ -1,14 +1,10 @@
-import type { Decoder, DecodeResult, DecoderType, Ok } from '~/core';
+import type { Decoder, DecoderType } from '~/core';
 import { define, summarize } from '~/core';
 import { indent } from '~/lib/text';
 import type { Scalar } from '~/lib/types';
 
 import { prep } from './misc';
 import { object } from './objects';
-
-type Values<T extends object> = T[keyof T];
-
-type DecoderTypes<T> = T extends readonly Decoder<infer U>[] ? U : never;
 
 const EITHER_PREFIX = 'Either:\n';
 
@@ -57,22 +53,22 @@ function nest(errText: string): string {
  * first one that accepts the input "wins". If all decoders reject the input,
  * the input gets rejected.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function either<T extends readonly Decoder<any>[]>(
-  ...decoders: T
-): Decoder<DecoderTypes<T>> {
+export function either<
+  TDecoders extends readonly Decoder<unknown>[],
+  T = DecoderType<TDecoders[number]>,
+>(...decoders: TDecoders): Decoder<T> {
   if (decoders.length === 0) {
     throw new Error('Pass at least one decoder to either()');
   }
 
-  return define((blob, _, err) => {
+  return define<T>((blob, _, err) => {
     // Collect errors here along the way
     const errors = [];
 
     for (let i = 0; i < decoders.length; i++) {
-      const result: DecodeResult<unknown> = decoders[i].decode(blob);
+      const result = (decoders[i] as Decoder<T>).decode(blob);
       if (result.ok) {
-        return result as Ok<DecoderTypes<T>>;
+        return result;
       } else {
         errors.push(result.error);
       }
@@ -129,16 +125,15 @@ export function oneOf<C extends Scalar>(constants: readonly C[]): Decoder<C> {
  * error messages and is more performant at runtime because it doesn't have to
  * try all decoders one by one.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function taggedUnion<O extends Record<string, Decoder<any>>>(
-  field: string,
-  mapping: O,
-): Decoder<Values<{ [key in keyof O]: DecoderType<O[key]> }>> {
+export function taggedUnion<
+  O extends Record<string, Decoder<unknown>>,
+  T = DecoderType<O[keyof O]>,
+>(field: string, mapping: O): Decoder<T> {
   const base: Decoder<string> = object({
     [field]: prep(String, oneOf(Object.keys(mapping))),
   }).transform((o) => o[field]);
   return base.peek_UNSTABLE(([blob, key]) => {
-    const decoder = mapping[key];
+    const decoder = mapping[key] as Decoder<T>;
     return decoder.decode(blob);
   });
 }
