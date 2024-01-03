@@ -57,34 +57,19 @@ export function object(
 }
 
 export function array(items: readonly Annotation[], text?: string): ArrayAnnotation {
-  return brand({
-    type: 'array',
-    items,
-    text,
-  });
+  return brand({ type: 'array', items, text });
 }
 
 export function func(text?: string): FunctionAnnotation {
-  return brand({
-    type: 'function',
-    text,
-  });
+  return brand({ type: 'function', text });
 }
 
 export function unknown(value: unknown, text?: string): UnknownAnnotation {
-  return brand({
-    type: 'unknown',
-    value,
-    text,
-  });
+  return brand({ type: 'unknown', value, text });
 }
 
 export function scalar(value: unknown, text?: string): ScalarAnnotation {
-  return brand({
-    type: 'scalar',
-    value,
-    text,
-  });
+  return brand({ type: 'scalar', value, text });
 }
 
 export function circularRef(text?: string): CircularRefAnnotation {
