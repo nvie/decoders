@@ -1,8 +1,9 @@
 import { describe, expect, test } from 'vitest';
-import { dict, exact, inexact, mapping, object, pojo } from '~/lib/objects';
-import { hardcoded, optional, unknown } from '~/lib/basics';
-import { number } from '~/lib/numbers';
-import { string } from '~/lib/strings';
+
+import { hardcoded, optional, unknown } from '~/basics';
+import { number } from '~/numbers';
+import { dict, exact, inexact, mapping, object, pojo } from '~/objects';
+import { string } from '~/strings';
 
 describe('objects', () => {
   test('decodes objects and fields', () => {

@@ -1,12 +1,13 @@
+import type { Decoder } from '~/core';
+
 import { array } from './arrays';
-import { boolean } from './booleans';
-import { dict } from './objects';
-import { either } from './unions';
-import { lazy } from './misc';
 import { null_ } from './basics';
+import { boolean } from './booleans';
+import { lazy } from './misc';
 import { number } from './numbers';
+import { dict } from './objects';
 import { string } from './strings';
-import type { Decoder } from '../Decoder';
+import { either } from './unions';
 
 export type JSONValue = null | string | number | boolean | JSONObject | JSONArray;
 export type JSONObject = { [key: string]: JSONValue | undefined };

@@ -1,11 +1,41 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { annotateObject, merge, updateText } from '../annotate';
-import { define } from '../Decoder';
-import { subtract, isPojo } from '../_utils';
-import type { Annotation } from '../annotate';
-import type { Decoder, DecodeResult } from '../Decoder';
-import type { UndefinedToOptional } from './_helpers';
+import type { Annotation, Decoder, DecodeResult } from '~/core';
+import { annotateObject, define, merge, updateText } from '~/core';
+import { isPojo, subtract } from '~/lib/utils';
+
+type RequiredKeys<T extends object> = {
+  [K in keyof T]: undefined extends T[K] ? never : K;
+}[keyof T];
+
+type Resolve<T> = T extends (...args: readonly unknown[]) => unknown
+  ? T
+  : { [K in keyof T]: T[K] };
+
+/**
+ * Transforms an object type, by marking all fields that contain "undefined"
+ * with a question mark, i.e. allowing implicit-undefineds when
+ * explicit-undefined are also allowed.
+ *
+ * For example, if:
+ *
+ *   type User = {
+ *     name: string;
+ *     age: number | null | undefined;
+ *   }
+ *
+ * Then UndefinedToOptional<User> will become equivalent to:
+ *
+ *   {
+ *     name: string;
+ *     age?: number | null | undefined;
+ *        ^
+ *        Note the question mark
+ *   }
+ */
+type UndefinedToOptional<T extends object> = Resolve<
+  Pick<Required<T>, RequiredKeys<T>> & Partial<T>
+>;
 
 type ObjectDecoderType<T> = UndefinedToOptional<{
   [K in keyof T]: T[K] extends Decoder<infer V> ? V : never;

@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest';
-import { indent, subtract } from '~/_utils';
-import type { Scalar } from '~/Decoder';
+
+import type { Scalar } from '~/lib/types';
+import { indent, subtract } from '~/lib/utils';
 
 describe('subtract', () => {
   const exampleSets: Set<Scalar>[] = [

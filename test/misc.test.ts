@@ -1,14 +1,15 @@
-import { describe, expect, test } from 'vitest';
-import { array } from '~/lib/arrays';
-import { constant } from '~/lib/basics';
-import { instanceOf, lazy, prep } from '~/lib/misc';
-import { INPUTS } from './_fixtures';
-import { number } from '~/lib/numbers';
-import { object } from '~/lib/objects';
-import { optional } from '~/lib/basics';
 import { partition } from 'itertools';
-import { string } from '~/lib/strings';
-import type { Decoder } from '~/Decoder';
+import { describe, expect, test } from 'vitest';
+
+import { array } from '~/arrays';
+import { constant, optional } from '~/basics';
+import type { Decoder } from '~/core';
+import { instanceOf, lazy, prep } from '~/misc';
+import { number } from '~/numbers';
+import { object } from '~/objects';
+import { string } from '~/strings';
+
+import { INPUTS } from './_fixtures';
 
 describe('instanceOf', () => {
   const errorDecoder = instanceOf(Error);

@@ -1,6 +1,5 @@
-import { annotate } from '../annotate';
-import { define } from '../Decoder';
-import type { Decoder } from '../Decoder';
+import type { Decoder } from '~/core';
+import { annotate, define } from '~/core';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export interface Klass<T> extends Function {

@@ -1,9 +1,10 @@
-import { define } from '../Decoder';
-import { indent, summarize } from '../_utils';
-import { object } from './objects';
+import type { Decoder, DecodeResult, DecoderType, Ok } from '~/core';
+import { define, summarize } from '~/core';
+import { indent } from '~/lib/utils';
+import type { Scalar } from '~/lib/types';
+
 import { prep } from './misc';
-import type { Decoder, DecoderType, DecodeResult, Scalar } from '../Decoder';
-import type { Ok } from '../result';
+import { object } from './objects';
 
 type Values<T extends object> = T[keyof T];
 

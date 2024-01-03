@@ -1,7 +1,5 @@
-import { annotate } from '../annotate';
-import { define } from '../Decoder';
-import type { Annotation } from '../annotate';
-import type { Decoder, DecodeResult } from '../Decoder';
+import type { Annotation, Decoder, DecodeResult } from '~/core';
+import { annotate, define } from '~/core';
 
 /**
  * Accepts any array, but doesn't validate its items further.

@@ -1,11 +1,9 @@
-import { annotate } from './annotate';
-import { formatInline } from './format';
-import { err as makeErr, ok as makeOk } from './result';
 import type { Annotation } from './annotate';
+import { annotate } from './annotate';
 import type { Formatter } from './format';
-import type { Result } from './result';
-
-export type Scalar = string | number | boolean | symbol | undefined | null;
+import { formatInline } from './format';
+import type { Result } from './Result';
+import { err as makeErr, ok as makeOk } from './Result';
 
 export type DecodeResult<T> = Result<T, Annotation>;
 

@@ -1,4 +1,4 @@
-import { isPojo } from './_utils';
+import { isPojo } from '~/lib/utils';
 
 const _register: WeakSet<Annotation> = new WeakSet();
 
@@ -198,11 +198,10 @@ function public_annotateObject(
 }
 
 export {
+  /** @internal */
+  annotate as __private_annotate,
   // This construct just ensures the "seen" weakmap (used for circular
   // reference detection) isn't made part of the public API.
   public_annotate as annotate,
   public_annotateObject as annotateObject,
-
-  /** @internal */
-  annotate as __private_annotate,
 };

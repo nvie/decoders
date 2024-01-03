@@ -1,7 +1,56 @@
-import { summarize, asDate, INDENT, indent, isMultiline } from './_utils';
+import { asDate, INDENT, indent, isMultiline } from '~/lib/utils';
 import type { Annotation, ArrayAnnotation, ObjectAnnotation } from './annotate';
 
 export type Formatter = (err: Annotation) => string | Error;
+
+/**
+ * Walks the annotation tree and emits the annotation's key path within the
+ * object tree, and the message as a series of messages (array of strings).
+ */
+export function summarize(
+  ann: Annotation,
+  keypath: readonly (number | string)[] = [],
+): string[] {
+  const result: string[] = [];
+
+  if (ann.type === 'array') {
+    const items = ann.items;
+    let index = 0;
+    for (const ann of items) {
+      for (const item of summarize(ann, [...keypath, index++])) {
+        // Collect to results
+        result.push(item);
+      }
+    }
+  } else if (ann.type === 'object') {
+    const fields = ann.fields;
+    for (const key of Object.keys(fields)) {
+      const value = fields[key];
+      for (const item of summarize(value, [...keypath, key])) {
+        // Collect to results
+        result.push(item);
+      }
+    }
+  }
+
+  const text = ann.text;
+  if (!text) {
+    return result;
+  }
+
+  let prefix: string;
+  if (keypath.length === 0) {
+    prefix = '';
+  } else if (keypath.length === 1) {
+    prefix =
+      typeof keypath[0] === 'number'
+        ? `Value at index ${keypath[0]}: `
+        : `Value at key ${JSON.stringify(keypath[0])}: `;
+  } else {
+    prefix = `Value at keypath ${keypath.map(String).join('.')}: `;
+  }
+  return [...result, `${prefix}${text}`];
+}
 
 function serializeString(s: string, width: number = 80): string {
   // Full string

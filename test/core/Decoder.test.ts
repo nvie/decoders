@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'vitest';
-import { annotate } from '~/annotate';
-import { formatInline, formatShort } from '~/format';
-import { number } from '~/lib/numbers';
-import { pojo } from '~/lib/objects';
-import { string } from '~/lib/strings';
+
+import { annotate, formatInline, formatShort } from '~/core';
+import { number } from '~/numbers';
+import { pojo } from '~/objects';
+import { string } from '~/strings';
 
 test('.decode', () => {
   // .decode() is tested implicitly because it's used _everywhere_

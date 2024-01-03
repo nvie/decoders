@@ -1,20 +1,22 @@
+import { partition } from 'itertools';
 import { describe, expect, test } from 'vitest';
+
 import {
   always,
   constant,
   fail,
   maybe,
   never,
+  null_,
   nullable,
   nullish,
-  null_,
   optional,
   undefined_,
   unknown,
-} from '~/lib/basics';
+} from '~/basics';
+import { string } from '~/strings';
+
 import { INPUTS } from './_fixtures';
-import { partition } from 'itertools';
-import { string } from '~/lib/strings';
 
 describe('null_', () => {
   const decoder = null_;

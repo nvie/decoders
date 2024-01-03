@@ -1,12 +1,7 @@
-import type { Annotation } from './annotate';
-import type { Scalar } from './Decoder';
+import type { Scalar } from './types';
 
 // Two spaces of indentation
 export const INDENT = '  ';
-
-export function lazyval<V>(value: (() => V) | V): V {
-  return typeof value === 'function' ? (value as () => V)() : value;
-}
 
 /**
  * Subtract two sets. Why isn't this a standard method on Sets?
@@ -64,53 +59,4 @@ export function indent(s: string, prefix: string = INDENT): string {
   } else {
     return `${prefix}${s}`;
   }
-}
-
-/**
- * Walks the annotation tree and emits the annotation's key path within the
- * object tree, and the message as a series of messages (array of strings).
- */
-export function summarize(
-  ann: Annotation,
-  keypath: readonly (number | string)[] = [],
-): string[] {
-  const result: string[] = [];
-
-  if (ann.type === 'array') {
-    const items = ann.items;
-    let index = 0;
-    for (const ann of items) {
-      for (const item of summarize(ann, [...keypath, index++])) {
-        // Collect to results
-        result.push(item);
-      }
-    }
-  } else if (ann.type === 'object') {
-    const fields = ann.fields;
-    for (const key of Object.keys(fields)) {
-      const value = fields[key];
-      for (const item of summarize(value, [...keypath, key])) {
-        // Collect to results
-        result.push(item);
-      }
-    }
-  }
-
-  const text = ann.text;
-  if (!text) {
-    return result;
-  }
-
-  let prefix: string;
-  if (keypath.length === 0) {
-    prefix = '';
-  } else if (keypath.length === 1) {
-    prefix =
-      typeof keypath[0] === 'number'
-        ? `Value at index ${keypath[0]}: `
-        : `Value at key ${JSON.stringify(keypath[0])}: `;
-  } else {
-    prefix = `Value at keypath ${keypath.map(String).join('.')}: `;
-  }
-  return [...result, `${prefix}${text}`];
 }
