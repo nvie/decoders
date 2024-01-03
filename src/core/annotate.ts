@@ -73,10 +73,7 @@ export function scalar(value: unknown, text?: string): ScalarAnnotation {
 }
 
 export function circularRef(text?: string): CircularRefAnnotation {
-  return brand({
-    type: 'circular-ref',
-    text,
-  });
+  return brand({ type: 'circular-ref', text });
 }
 
 /**
@@ -101,10 +98,10 @@ export function merge(
   return object(newFields, objAnnotation.text);
 }
 
-export function asAnnotation(thing: unknown): Annotation | undefined {
-  return typeof thing === 'object' && thing !== null && _register.has(thing as Annotation)
-    ? (thing as Annotation)
-    : undefined;
+export function isAnnotation(thing: unknown): thing is Annotation {
+  return (
+    typeof thing === 'object' && thing !== null && _register.has(thing as Annotation)
+  );
 }
 
 type RefSet = WeakSet<object>;
@@ -156,9 +153,8 @@ function annotate(value: unknown, text: string | undefined, seen: RefSet): Annot
     return scalar(value, text);
   }
 
-  const ann = asAnnotation(value);
-  if (ann) {
-    return updateText(ann, text);
+  if (isAnnotation(value)) {
+    return updateText(value, text);
   }
 
   if (Array.isArray(value)) {
