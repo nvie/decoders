@@ -1,4 +1,6 @@
-## v2.2.0
+## [Unreleased]
+
+## [2.2.0]
 
 **Breaking change:** Dropped Flow support\*.
 
@@ -35,22 +37,22 @@ supported in a maintenance-free way, for example by using a script that will gen
 `*.flow` files from TypeScript source files. If someone can add support for that, I'm open
 to pull requests! 🙏 )
 
-## v2.1.0
+## [2.1.0]
 
 - Officially drop Node 12 and 14 support (they may still work)
 - Fix unintentional inclusion of `lib.dom.d.ts` in TypeScript
 
-## v2.0.5
+## [2.0.5]
 
 - The returned value for `positiveInteger(-0)` is now `0`, not `-0`
 - The returned value for `positiveNumber(-0)` is now `0`, not `-0`
 
-## v2.0.4
+## [2.0.4]
 
 - Fix a bug in the `url` decoder, which could incorrectly reject URLs with a `/` in the
   query path. Thanks, @gcampax!
 
-## v2.0.3
+## [2.0.3]
 
 - Fix bundling issue where TypeScript types would not get picked up correctly in old
   TypeScript versions. Thanks, @robinchow!
@@ -58,12 +60,12 @@ to pull requests! 🙏 )
 - ![](./docs/assets/tiny-ts-logo.png) Fix TypeScript types for `Result` type to allow
   implicit-undefineds.
 
-## v2.0.2
+## [2.0.2]
 
 - ![](./docs/assets/tiny-ts-logo.png) Fix TypeScript types for `formatShort` and
   `formatInline` helper functions
 
-## v2.0.1
+## [2.0.1]
 
 - ![](./docs/assets/tiny-ts-logo.png) **TypeScript-only:** Fix definition of JSONObject to
   reflect that its values might always be `undefined` as well.
@@ -74,7 +76,7 @@ to pull requests! 🙏 )
 - ![](./docs/assets/tiny-ts-logo.png) **TypeScript-only:** Fine-tune the type of
   [`instanceOf()`](https://decoders.cc/api.html#instanceOf).
 
-## v2.0.0
+## [2.0.0]
 
 This is a breaking change, which brings numerous benefits:
 
@@ -144,32 +146,32 @@ Implementation changes:
 - Major reorganization of internal module structure
 - Various simplification of internals
 
-## v1.25.5
+## [1.25.5]
 
 - Fix compatibility issue with TypeScript projects configured with
   `strictNullChecks: false` (or `strict: false`) (Thanks, @stevekrouse and @djlauk!)
 
 - Officially support Node 16.x
 
-## v1.25.4
+## [1.25.4]
 
 - Expose `nonEmptyArray` function in TypeScript (Thanks, @mszczepanczyk!)
 
-## v1.25.3
+## [1.25.3]
 
 - Argument to `constant(...)` now has to be scalar value in both Flow and TypeScript,
   which matches its intended purpose.
 
-## v1.25.2
+## [1.25.2]
 
 - Avoid the need for having to manually specify "as const" in TypeScript when using
   `constant()`. (Thanks, @schmod!)
 
-## v1.25.1
+## [1.25.1]
 
 - Add support for Flow 0.154.0
 
-## v1.25.0
+## [1.25.0]
 
 - Fix signature of `oneOf()` to reflect it can only be used with scalar/constant values
 
@@ -178,11 +180,11 @@ Implementation changes:
 
 - Drop support for Flow versions < 0.115.0
 
-## v1.24.1
+## [1.24.1]
 
 - Tighten up signature types to indicate that incoming arrays won't get mutated
 
-## v1.24.0
+## [1.24.0]
 
 - **New decoders:**
 
@@ -193,34 +195,34 @@ Implementation changes:
 
 - Drop support for Node 13.x (unstable)
 
-## v1.23.5
+## [1.23.5]
 
 TypeScript types:
 
 - Add missing export for `tuple1`
 
-## v1.23.4
+## [1.23.4]
 
 TypeScript types:
 
 - Add missing export for `nonEmptyString`
 
-## v1.23.3
+## [1.23.3]
 
 - Returned objects that are the result from `object()`, `inexact()`, and `exact()`
   decoders will no longer contain explicit `undefined` values for optional keys, but
   instead those keys will be missing in the returned object entirely. (#574, thanks
   @w01fgang!)
 
-## v1.23.2
+## [1.23.2]
 
 - Add missing exports for `nonEmptyArray` and `nonEmptyString` (for TypeScript)
 
-## v1.23.1
+## [1.23.1]
 
 - Include an error code with every FlowFixMe suppression (Flow 0.132.x compatibility)
 
-## v1.23.0
+## [1.23.0]
 
 - **New decoders:**
 
@@ -232,7 +234,7 @@ TypeScript types:
   - [`jsonArray`](https://github.com/nvie/decoders#jsonArray): decodes any valid JSON
     array
 
-## v1.22.2
+## [1.22.2]
 
 - **New decoders:**
 
@@ -251,42 +253,42 @@ TypeScript types:
 - `GuardType` (and `$GuardType`) is a new type function to extract the type of a guard
   instance
 
-## v1.21.0
+## [1.21.0]
 
 - **New decoder** [`lazy()`](https://github.com/nvie/decoders#lazy): lazily-evaluated
   decoder, suitable to define self-referential types.
 
 - Fix compatibility with Flow 0.127.0
 
-## v1.20.2
+## [1.20.2]
 
 - Fix compatibility with Flow 0.126.0+
 
-## v1.20.1
+## [1.20.1]
 
 - Upgrade debrief to correct (final) version
 
-## v1.20.0
+## [1.20.0]
 
 - Fix issue where infinite recursion occurs when input object (the object being validated)
   contains a circular reference
 
-## v1.19.1
+## [1.19.1]
 
 - Republish due to an NPM outage
 
-## v1.19.0
+## [1.19.0]
 
 **New decoders:**
 
 - To complement the tuple family of decoders, there's now also `tuple1` (thanks
   @sfarthin!)
 
-## v1.18.1
+## [1.18.1]
 
 - Also fix Flow type bugs when Flow option `exact_by_default=true` in `debrief` dependency
 
-## v1.18.0
+## [1.18.0]
 
 **New decoders:**
 
@@ -299,26 +301,26 @@ TypeScript types:
 
 - Fix Flow type bugs when Flow option `exact_by_default=true` is enabled
 
-## v1.17.0
+## [1.17.0]
 
 May cause breakage for Flow users:
 
 - Fix subtle bug in `object()` and `exact()` Flow type definitions that could cause Flow
   to leak `any` under rare circumstances.
 
-## v1.16.1
+## [1.16.1]
 
 - Internal change to make the code Flow 0.105.x compatible. Basically stops using array
   spreads (`[...things]`) in favor of `Array.from()`.
 
-## v1.16.0
+## [1.16.0]
 
 **New feature:**
 
 - Allow `map()` calls to throw an exception in the mapper function to reject the decoder.
   Previously, these mapper functions were not expected to ever throw.
 
-## v1.15.0
+## [1.15.0]
 
 **New features:**
 
@@ -331,7 +333,7 @@ May cause breakage for Flow users:
 
 - Add support for Flow >= 0.101.0
 
-## v1.14.0
+## [1.14.0]
 
 **Potential breaking changes:**
 
@@ -342,13 +344,13 @@ May cause breakage for Flow users:
 
 - Add support for Flow 0.98+
 
-## v1.13.1
+## [1.13.1]
 
 **Fixes:**
 
 - Don't reject URLs that contains commas (`,`)
 
-## v1.13.0
+## [1.13.0]
 
 **Breaking changes:**
 
@@ -394,7 +396,7 @@ May cause breakage for Flow users:
   - More robust test suite for TypeScript
   - 100% TypeScript test coverage
 
-## v1.12.0
+## [1.12.0]
 
 **New decoders:**
 
@@ -402,13 +404,13 @@ May cause breakage for Flow users:
 - `instanceOf(...)` will return only values that are instances of the given class. For
   example: `instanceOf(TypeError)`.
 
-## v1.11.1
+## [1.11.1]
 
 - Reduce bundle size for web builds
 - New build system
 - Cleaner package output
 
-## v1.11.0
+## [1.11.0]
 
 **Potentially breaking changes:**
 
@@ -484,23 +486,23 @@ to upgrade:
    This now explicitly records that `predicate()` makes assumptions about its input
    type—previously this wasn’t get caught correctly.
 
-## v1.10.6
+## [1.10.6]
 
 - Make Flow 0.85 compatible
 
-## v1.10.5
+## [1.10.5]
 
 - Update to latest debrief (which fixes a TypeScript bug)
 
-## v1.10.4
+## [1.10.4]
 
 - Drop dependency on babel-runtime to reduce bundle size
 
-## v1.10.3
+## [1.10.3]
 
 - Fix minor declaration issue in TypeScript definitions
 
-## v1.10.2
+## [1.10.2]
 
 - Tuple decoder error messages now show decoder errors in all positions, not just the
   first occurrence.
@@ -511,18 +513,18 @@ to upgrade:
 - `unknown` decoder is an alias of `mixed`, which may be more recognizable for TypeScript
   users.
 
-## v1.10.1
+## [1.10.1]
 
 - TypeScript support
 
-## v1.10.0
+## [1.10.0]
 
 **Breaking:**
 
 - Private helper function `undefined_or_null` was accidentally exported in the package.
   This is a private API.
 
-## v1.9.0
+## [1.9.0]
 
 **New decoder:**
 
@@ -533,7 +535,7 @@ to upgrade:
 
 - `optional(..., /* allowNull */ true)` has been removed (was deprecated since 1.8.3)
 
-## v1.8.3
+## [1.8.3]
 
 **New decoder:**
 
@@ -543,38 +545,38 @@ to upgrade:
 
 - `optional(..., /* allowNull */ true)` is now deprecated in favor of `maybe(...)`
 
-## v1.8.2
+## [1.8.2]
 
 **Improved error reporting:**
 
 - Fix bug where empty error branches could be shown in complex either expressions (fixes
   #83)
 
-## v1.8.1
+## [1.8.1]
 
 - Fix: revert accidentally emitting \$ReadOnlyArray types in array decoders
 
-## v1.8.0
+## [1.8.0]
 
 - Drop support for Node 7
 - Declare inputted arrays will not be modified (treated as read-only)
 
-## v1.7.0
+## [1.7.0]
 
 - Make decoders fully [Flow Strict](https://flow.org/en/docs/strict/) compatible
 
-## v1.6.1
+## [1.6.1]
 
 - Upgraded debrief dependency
 - Behave better in projects that have Flow's `experimental.const_params` setting turned on
 
-## v1.6.0
+## [1.6.0]
 
 - **New decoders!**
   - `exact()` is like `object()`, but will fail if the inputted object contains
     superfluous keys (keys that aren't in the object definition).
 
-## v1.5.0
+## [1.5.0]
 
 - Collect and report all nested errors in an object() at once (rather than error on the
   first error).
@@ -583,95 +585,95 @@ to upgrade:
 
 - Remove deprecated `message` argument to `object()`
 
-## v1.4.6
+## [1.4.6]
 
 - Add missing documentation
 
-## v1.4.5
+## [1.4.5]
 
 - Upgrade second-level dependencies
 
-## v1.4.4
+## [1.4.4]
 
 - Declare library to be side effect free (to help optimize webpack v4 builds)
 - Upgrade dependencies
 
-## v1.4.1
+## [1.4.1]
 
 - Improve internals of the error message serializer (debrief)
 
-## v1.4.0
+## [1.4.0]
 
 - **New decoders!**
   - `email` validator based on the [almost perfect email regex](http://emailregex.com/)
   - `url` validator for validating HTTPS URLs (most common use case)
   - `anyUrl` validator for validating any URL scheme
 
-## v1.3.1
+## [1.3.1]
 
 - Fix bug where dates, or arrays (or any other Object subclass) could pass for a record
   with merely optional fields.
 
-## v1.3.0
+## [1.3.0]
 
 - Much improved error messages! They were redesigned to look great in terminals and to
   summarize only the relevant bits of the error message, striking a balance between all
   the details and the high level summary.
 
-## v1.2.4
+## [1.2.4]
 
 - **New features**:
   - `truthy` takes any input and returns whether the value is truthy
   - `numericBoolean` takes only numbers as input, and returns their boolean interpretation
     (0 = false, non-0 = true)
 
-## v1.2.2, v1.2.3
+## [1.2.2, 1.2.3]
 
 - **New feature** `mixed` decoder, for unverified pass-thru of any values
 
-## v1.2.1
+## [1.2.1]
 
 - **Fix** Expose the following decoders publicly:
   - `integer`
   - `positiveInteger`
   - `positiveNumber`
 
-## v1.2.0
+## [1.2.0]
 
 - **New feature** `regex()`, for building custom string decoders
 - Tiny tweaks to improve error messages (more structural improvements are on the roadmap)
 
-## v1.1.0
+## [1.1.0]
 
 - Expose pojo() decoder, for plain old objects (with mixed contents)
 - Expose poja() decoder, for plain old arrays (with mixed contents)
 - Perf: make `tuple2()` decoder lazier
 
-## v1.0.1
+## [1.0.1]
 
 - Expose new "either" decoders at the too level
 
-## v1.0.0
+## [1.0.0]
 
 - **BREAKING** Removes the old public ("compat") API
 - Finalize/settle on public API
 
-## v0.1.3
+## [0.1.3]
 
 - Add whole series for either, either3, either4, ..., either9
 - Updated dev dependencies
 
-## v0.1.2
+## [0.1.2]
 
 - Add `date` decoder, which decodes `Date` instances
 - Improve error output detail when throwing errors
 
-## v0.1.1
+## [0.1.1]
 
 - Export `g2d()` helper function that can help adoption to new-style APIs by converting
   old-style decoders (now called guards) to new-style decoders.
 
-## v0.1.0
+## [0.1.0]
 
 - **Breaking change** New API: simplified names, split up decoders from guards. What used
   to be called "decoders" in 0.0.x ("things that either return a value or throw a runtime

@@ -62,6 +62,7 @@
   ],
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.13.5",
+    "@release-it/keep-a-changelog": "^5.0.0",
     "@typescript-eslint/eslint-plugin": "^6.17.0",
     "@typescript-eslint/parser": "^6.17.0",
     "@vitest/coverage-istanbul": "^1.1.1",
