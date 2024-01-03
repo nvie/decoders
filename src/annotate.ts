@@ -126,13 +126,18 @@ type RefSet = WeakSet<object>;
 
 /** @internal */
 function annotateArray(
-  value: readonly unknown[],
+  arr: readonly unknown[],
   text: string | undefined,
   seen: RefSet,
 ): ArrayAnnotation | CircularRefAnnotation {
-  seen.add(value);
+  seen.add(arr);
 
-  const items = value.map((v) => annotate(v, undefined, seen));
+  // Cannot use .map() here because it won't work correctly if `arr` is
+  // a sparse array.
+  const items = [];
+  for (const value of arr) {
+    items.push(annotate(value, undefined, seen));
+  }
   return array(items, text);
 }
 
