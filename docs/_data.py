@@ -519,8 +519,9 @@ DECODERS = {
     """,
   },
 
-  'maybe': {
+  'nullish': {
     'section': 'Optionality',
+    'aliases': ['maybe'],
 
     'signatures': [
       {
@@ -540,7 +541,7 @@ DECODERS = {
 
     'example': """
       ```typescript
-      const decoder = maybe(string);
+      const decoder = nullish(string);
 
       // 👍
       decoder.verify('hello') === 'hello';
@@ -555,7 +556,7 @@ DECODERS = {
       Or use it with a default value:
 
       ```typescript
-      const decoder = maybe(string, null);
+      const decoder = nullish(string, null);
 
       decoder.verify('hello') === 'hello';
       decoder.verify(null) === null;

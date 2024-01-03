@@ -6,10 +6,10 @@ export { define } from './Decoder';
 export {
   always,
   constant,
-  maybe,
   fail,
   never,
   nullable,
+  nullish,
   null_,
   optional,
   undefined_,
@@ -42,7 +42,7 @@ export {
 export { json, jsonObject, jsonArray } from './lib/json';
 
 // Deprecated aliases
-export { hardcoded, mixed } from './lib/basics';
+export { hardcoded, maybe, mixed } from './lib/basics';
 
 // Previously to be imported from "decoders/format"
 export type { Formatter } from './format';
