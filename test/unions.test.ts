@@ -110,7 +110,7 @@ test('either fails without decoders', () => {
   expect(() => either()).toThrow();
 });
 
-describe('either3', () => {
+describe('either with 4 decoders', () => {
   const decoder = either(string, boolean, number, undefined_);
   const [okay, not_okay] = partition(
     INPUTS,
@@ -136,7 +136,7 @@ describe('either3', () => {
   });
 });
 
-describe('either9', () => {
+describe('either with many decoders', () => {
   const decoder = either(
     constant('one'),
     constant('two'),
