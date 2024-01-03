@@ -1,3 +1,15 @@
+## [Unreleased]
+
+Renamed decoders for better consistency with TypeScript/JavaScript nomenclature:
+
+- `maybe` → `nullish`
+
+Started deprecating some aliases:
+
+- `hardcoded` (alias of `always`)
+- `mixed` (alias of `unknown`)
+- `maybe` (alias of `nullish`)
+
 ## v2.2.0
 
 **Breaking change:** Dropped Flow support\*.
