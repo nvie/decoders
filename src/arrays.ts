@@ -1,4 +1,4 @@
-import type { Annotation, Decoder, DecodeResult } from '~/core';
+import type { Annotation, Decoder, DecodeResult, DecoderType } from '~/core';
 import { annotate, define } from '~/core';
 
 /**
@@ -82,39 +82,17 @@ export function set<T>(decoder: Decoder<T>): Decoder<Set<T>> {
 const ntuple = (n: number) =>
   poja.refine((arr) => arr.length === n, `Must be a ${n}-tuple`);
 
+type TupleDecoderType<Ds extends readonly Decoder<unknown>[]> = {
+  [K in keyof Ds]: DecoderType<Ds[K]>;
+};
+
 /**
  * Accepts a tuple (an array with exactly _n_ items) of values accepted by the
  * _n_ given decoders.
  */
-export function tuple<A>(a: Decoder<A>): Decoder<[A]>;
-export function tuple<A, B>(a: Decoder<A>, b: Decoder<B>): Decoder<[A, B]>;
-export function tuple<A, B, C>(
-  a: Decoder<A>,
-  b: Decoder<B>,
-  c: Decoder<C>,
-): Decoder<[A, B, C]>;
-export function tuple<A, B, C, D>(
-  a: Decoder<A>,
-  b: Decoder<B>,
-  c: Decoder<C>,
-  d: Decoder<D>,
-): Decoder<[A, B, C, D]>;
-export function tuple<A, B, C, D, E>(
-  a: Decoder<A>,
-  b: Decoder<B>,
-  c: Decoder<C>,
-  d: Decoder<D>,
-  e: Decoder<E>,
-): Decoder<[A, B, C, D, E]>;
-export function tuple<A, B, C, D, E, F>(
-  a: Decoder<A>,
-  b: Decoder<B>,
-  c: Decoder<C>,
-  d: Decoder<D>,
-  e: Decoder<E>,
-  f: Decoder<F>,
-): Decoder<[A, B, C, D, E, F]>;
-export function tuple(...decoders: readonly Decoder<unknown>[]): Decoder<unknown[]> {
+export function tuple<
+  Ds extends readonly [first: Decoder<unknown>, ...rest: readonly Decoder<unknown>[]],
+>(...decoders: Ds): Decoder<TupleDecoderType<Ds>> {
   return ntuple(decoders.length).then((blobs, ok, err) => {
     let allOk = true;
 
@@ -130,7 +108,7 @@ export function tuple(...decoders: readonly Decoder<unknown>[]): Decoder<unknown
     });
 
     if (allOk) {
-      return ok(rvs);
+      return ok(rvs as TupleDecoderType<Ds>);
     } else {
       // If a decoder error has happened while unwrapping all the
       // results, try to construct a good error message
