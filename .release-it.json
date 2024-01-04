@@ -2,12 +2,11 @@
   "plugins": {
     "@release-it/keep-a-changelog": {
       "filename": "CHANGELOG.md",
-      "addUnreleased": true,
-      "addVersionUrl": true
+      "addUnreleased": true
     }
   },
   "github": {
     "release": true,
-    "releaseName": "${version}"
+    "releaseName": "v${version}"
   }
 }
