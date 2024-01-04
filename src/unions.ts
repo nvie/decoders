@@ -129,13 +129,13 @@ export function taggedUnion<
   O extends Record<string, Decoder<unknown>>,
   T = DecoderType<O[keyof O]>,
 >(field: string, mapping: O): Decoder<T> {
-  const scout: Decoder<string> = object({
+  const scout = object({
     [field]: prep(String, oneOf(Object.keys(mapping))),
   }).transform((o) => o[field]);
-  return scout.peek(([blob, key]) => {
-    const decoder = mapping[key] as Decoder<T>;
-    return decoder.decode(blob);
-  });
+  return select(
+    scout, // peek...
+    (key) => mapping[key] as Decoder<T>, // ...then select
+  );
 }
 
 /**
