@@ -65,18 +65,18 @@ export interface Decoder<T> {
 }
 
 /**
- * Helper type to return the "type" of a Decoder.
+ * Helper type to return the output type of a Decoder.
+ * It’s the inverse of Decoder<T>.
  *
- * You can use it on types:
+ * You can use it at the type level:
  *
  *   DecoderType<Decoder<string>>    // string
  *   DecoderType<Decoder<number[]>>  // number[]
  *
- * Or on "values", by using the `typeof` keyword:
+ * Or on decoder instances, by using the `typeof` keyword:
  *
  *   DecoderType<typeof string>      // string
  *   DecoderType<typeof truthy>      // boolean
- *
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type DecoderType<D extends Decoder<any>> = D extends Decoder<infer T> ? T : never;
