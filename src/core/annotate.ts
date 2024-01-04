@@ -112,9 +112,7 @@ export function merge(
 
 /** @internal */
 export function isAnnotation(thing: unknown): thing is Annotation {
-  return (
-    typeof thing === 'object' && thing !== null && _register.has(thing as Annotation)
-  );
+  return _register.has(thing as Annotation);
 }
 
 type RefSet = WeakSet<object>;
