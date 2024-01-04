@@ -6,8 +6,6 @@ import type { Scalar } from '~/lib/types';
 import { prep } from './misc';
 import { object } from './objects';
 
-type Values<T extends object> = T[keyof T];
-
 type DecoderTypes<T> = T extends readonly Decoder<infer U>[] ? U : never;
 
 const EITHER_PREFIX = 'Either:\n';
@@ -133,7 +131,7 @@ export function oneOf<C extends Scalar>(constants: readonly C[]): Decoder<C> {
 export function taggedUnion<O extends Record<string, Decoder<any>>>(
   field: string,
   mapping: O,
-): Decoder<Values<{ [key in keyof O]: DecoderType<O[key]> }>> {
+): Decoder<DecoderType<O[keyof O]>> {
   const base: Decoder<string> = object({
     [field]: prep(String, oneOf(Object.keys(mapping))),
   }).transform((o) => o[field]);
