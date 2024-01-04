@@ -5,6 +5,10 @@
 - `bigint`
 - `nullish` (replaces `maybe`)
 
+**New features:**
+
+- Better support for symbols in `constant()` and `oneOf()`
+
 **Deprecated decoders:**
 
 - `hardcoded` (prefer `always`)

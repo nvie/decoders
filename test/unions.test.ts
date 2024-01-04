@@ -175,8 +175,9 @@ describe('either with many decoders', () => {
 });
 
 describe('oneOf', () => {
-  const decoder = oneOf([3, true, null, '1', 'foo']);
-  const okay = [3, true, null, '1', 'foo'];
+  const sym = Symbol();
+  const decoder = oneOf([3, true, null, '1', 'foo', sym]);
+  const okay = [3, true, null, '1', 'foo', sym];
   const not_okay = INPUTS.filter((x) => !okay.includes(x as any));
 
   test('valid', () => {

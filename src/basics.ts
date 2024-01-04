@@ -93,7 +93,11 @@ export function nullish<T, V>(
  */
 export function constant<C extends Scalar>(value: C): Decoder<C> {
   return define((blob, ok, err) =>
-    blob === value ? ok(value) : err(`Must be ${JSON.stringify(value)}`),
+    blob === value
+      ? ok(value)
+      : err(
+          `Must be ${typeof value === 'symbol' ? String(value) : JSON.stringify(value)}`,
+        ),
   );
 }
 
