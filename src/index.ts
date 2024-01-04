@@ -31,7 +31,7 @@ export {
   uuidv1,
   uuidv4,
 } from './strings';
-export { either, oneOf, taggedUnion } from './unions';
+export { either, oneOf, select, taggedUnion } from './unions';
 
 // Core functionality
 export type { Decoder, DecodeResult, DecoderType } from '~/core';

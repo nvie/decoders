@@ -37,9 +37,9 @@ for section, names in DECODERS_BY_SECTION.items():
 - [**Arrays**](#arrays): [`array()`](/api.html#array), [`nonEmptyArray()`](/api.html#nonEmptyArray), [`poja`](/api.html#poja), [`tuple()`](/api.html#tuple), [`set()`](/api.html#set)
 - [**Objects**](#objects): [`object()`](/api.html#object), [`exact()`](/api.html#exact), [`inexact()`](/api.html#inexact), [`pojo`](/api.html#pojo), [`dict()`](/api.html#dict), [`mapping()`](/api.html#mapping)
 - [**JSON values**](#json-values): [`json`](/api.html#json), [`jsonObject`](/api.html#jsonObject), [`jsonArray`](/api.html#jsonArray)
-- [**Unions**](#unions): [`either()`](/api.html#either), [`oneOf()`](/api.html#oneOf), [`taggedUnion()`](/api.html#taggedUnion)
+- [**Unions**](#unions): [`either()`](/api.html#either), [`oneOf()`](/api.html#oneOf), [`taggedUnion()`](/api.html#taggedUnion), [`select()`](/api.html#select)
 - [**Utilities**](#utilities): [`define()`](/api.html#define), [`prep()`](/api.html#prep), [`never`](/api.html#never), [`instanceOf()`](/api.html#instanceOf), [`lazy()`](/api.html#lazy), [`fail`](/api.html#fail)
-<!--[[[end]]] (checksum: abe01c14cfde45ddf744d4a0f986c304) -->
+<!--[[[end]]] (checksum: 2bb03add0cc4785ee4a1bc1e25c66ddd) -->
 
 <!--[[[cog
 for section, names in DECODERS_BY_SECTION.items():
@@ -1124,6 +1124,7 @@ jsonArray.verify(null);               // throws
 - [`either()`](/api.html#either)
 - [`oneOf()`](/api.html#oneOf)
 - [`taggedUnion()`](/api.html#taggedUnion)
+- [`select()`](/api.html#select)
 
 ---
 
@@ -1214,6 +1215,37 @@ try all decoders one by one.
 
 ---
 
+<a href="#select">#</a> **select**&lt;<i style="color: #267f99">T</i>, <i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(scout: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>, selectFn: <i style="color: #267f99">(result: T) =&gt; <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt; | <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt; | ...</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | ...&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/unions.ts#L141-L158 'Source')
+{: #select .signature}
+
+Briefly peek at a runtime input using a "scout" decoder first, then decide
+which decoder to run on the (original) input, based on the information that
+the "scout" extracted.
+
+It serves a similar purpose as [`taggedUnion()`](/api.html#taggedUnion), but is a generalization that
+works even if there isn't a single discriminator, or the discriminator isn't
+a string.
+
+```typescript
+const decoder = select(
+  // First, validate/extract the minimal information to make a decision
+  object({ version: optional(number) }),
+
+  // Then select which decoder to run
+  (obj) => {
+    switch (obj.version) {
+      case undefined: return v1Decoder; // Suppose v1 doesn't have a discriminating field
+      case 2:         return v2Decoder;
+      case 3:         return v3Decoder;
+      default:        return never('Invalid version');
+    }
+  },
+);
+// Decoder<V1 | V2 | V3>
+```
+
+---
+
 ## Utilities
 
 
@@ -1226,7 +1258,7 @@ try all decoders one by one.
 
 ---
 
-<a href="#define">#</a> **define**&lt;<i style="color: #267f99">T</i>&gt;(fn: <i style="color: #267f99">(blob: unknown, ok, err) =&gt; DecodeResult&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/core/Decoder.ts#L129-L303 'Source')
+<a href="#define">#</a> **define**&lt;<i style="color: #267f99">T</i>&gt;(fn: <i style="color: #267f99">(blob: unknown, ok, err) =&gt; DecodeResult&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/core/Decoder.ts#L134-L304 'Source')
 {: #define .signature}
 
 Defines a new `Decoder<T>`, by implementing a custom acceptance function.
@@ -1369,5 +1401,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 4e2b484d2fba403a268d7d0dc8ac95bc)-->
+<!--[[[end]]] (checksum: 5c969879f34b36cd42d207d50db00456)-->
 <!-- prettier-ignore-end -->

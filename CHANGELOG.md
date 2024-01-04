@@ -2,8 +2,9 @@
 
 **New decoders:**
 
-- `bigint`
-- `nullish` (replaces `maybe`)
+- `select()` (see [docs](https://decoders.cc/api.html#select))
+- `bigint` (see [docs](https://decoders.cc/api.html#bigint))
+- `nullish()` (see [docs](https://decoders.cc/api.html#nullish), replaces `maybe()`)
 
 **New features:**
 
@@ -11,9 +12,9 @@
 
 **Deprecated decoders:**
 
-- `hardcoded` (prefer `always`)
+- `hardcoded()` (prefer `always()`)
 - `mixed` (prefer `unknown`)
-- `maybe` (prefer `nullish`)
+- `maybe()` (prefer `nullish()`)
 
 **Other changes:**
 

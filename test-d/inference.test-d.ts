@@ -43,6 +43,7 @@ import {
   positiveNumber,
   prep,
   regex,
+  select,
   set,
   string,
   taggedUnion,
@@ -149,8 +150,6 @@ expectType<number | undefined>(number.value('dummy'));
 expectType<string | undefined>(string.value('dummy'));
 
 expectType<number>(test(string.then((value: string) => ok(value.length))));
-
-expectType<number>(test(string.peek_UNSTABLE(([_blob, value]) => ok(value.length))));
 
 expectType<string>(test(string.refine((s) => s.startsWith('x'), 'Must start with x')));
 
@@ -411,6 +410,8 @@ const circle: Decoder<Circle> = object({
 });
 
 expectType<Shape>(test(taggedUnion('_type', { rect, circle })));
+
+expectType<Shape>(test(select(unknown, (_) => (Math.random() < 0.5 ? rect : circle))));
 
 interface Rect1 {
   _type: 0;

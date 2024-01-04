@@ -129,11 +129,30 @@ export function taggedUnion<
   O extends Record<string, Decoder<unknown>>,
   T = DecoderType<O[keyof O]>,
 >(field: string, mapping: O): Decoder<T> {
-  const base: Decoder<string> = object({
+  const scout = object({
     [field]: prep(String, oneOf(Object.keys(mapping))),
   }).transform((o) => o[field]);
-  return base.peek_UNSTABLE(([blob, key]) => {
-    const decoder = mapping[key] as Decoder<T>;
+  return select(
+    scout, // peek...
+    (key) => mapping[key] as Decoder<T>, // ...then select
+  );
+}
+
+/**
+ * Briefly peek at a runtime input using a "scout" decoder first, then decide
+ * which decoder to run on the (original) input, based on the information that
+ * the "scout" extracted.
+ *
+ * It serves a similar purpose as `taggedUnion()`, but is a generalization that
+ * works even if there isn't a single discriminator, or the discriminator isn't
+ * a string.
+ */
+export function select<T, D extends Decoder<unknown>>(
+  scout: Decoder<T>,
+  selectFn: (result: T) => D,
+): Decoder<DecoderType<D>> {
+  return scout.peek(([blob, peekResult]) => {
+    const decoder = selectFn(peekResult);
     return decoder.decode(blob);
-  });
+  }) as Decoder<DecoderType<D>>;
 }

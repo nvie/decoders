@@ -2,13 +2,13 @@ import * as fc from 'fast-check';
 import { partition } from 'itertools';
 import { describe, expect, test } from 'vitest';
 
-import { constant, undefined_ } from '~/basics';
+import { constant, optional, undefined_ } from '~/basics';
 import { boolean } from '~/booleans';
 import type { Decoder } from '~/core';
 import { number } from '~/numbers';
 import { object } from '~/objects';
 import { regex, string } from '~/strings';
-import { either, oneOf, taggedUnion } from '~/unions';
+import { either, oneOf, select, taggedUnion } from '~/unions';
 
 import { INPUTS } from './_fixtures';
 
@@ -279,5 +279,39 @@ describe('taggedUnion with numeric keys', () => {
     expect(() => decoder.verify({ type: 'blah' })).toThrow(/Must be one of.*1.*2/);
     expect(() => decoder.verify({ type: 1, x: 1 })).toThrow(/Missing key: "a"/);
     expect(() => decoder.verify({ type: 2, x: 1 })).toThrow(/Missing key: "b"/);
+  });
+});
+
+describe('select', () => {
+  const v1Decoder = object({ title: string });
+  const v2Decoder = object({ version: constant(2), title: string, text: string });
+  const v3Decoder = object({ version: constant(3), text: string });
+
+  const decoder = select(
+    object({ version: optional(oneOf([2, 3])) }),
+
+    (obj) =>
+      obj.version === undefined ? v1Decoder : obj.version === 2 ? v2Decoder : v3Decoder,
+  );
+
+  test('allows conditional decoding', () => {
+    const valid_inputs = [
+      { title: 'yo' },
+      { version: 2, title: 'yo', text: 'hi' },
+      { version: 3, text: 'hi' },
+    ];
+    for (const input of valid_inputs) {
+      expect(decoder.verify(input)).toEqual(input);
+    }
+  });
+
+  test('invalid', () => {
+    expect(() => decoder.verify('foo')).toThrow('Must be an object');
+    expect(() => decoder.verify({ ver: 1 })).toThrow('Missing key: "title"');
+    expect(() => decoder.verify({ version: 7 })).toThrow('Must be one of 2, 3');
+    expect(() => decoder.verify({ version: 'hi' })).toThrow('Must be one of 2, 3');
+    expect(() => decoder.verify({ version: 2 })).toThrow('Missing keys: "title", "text"');
+    expect(() => decoder.verify({ version: 3 })).toThrow('Missing key: "text"');
+    expect(() => decoder.verify({ version: -7 })).toThrow('Must be one of 2, 3');
   });
 });
