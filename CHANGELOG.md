@@ -13,6 +13,7 @@
 **Other changes:**
 
 - Reorganized internal module structure
+- Simplified some of the more complicated internal types
 
 ## [2.2.0]
 
