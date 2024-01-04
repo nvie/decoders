@@ -1,14 +1,14 @@
 import { describe, expect, test } from 'vitest';
 
+import type { Annotation, ObjectAnnotation } from '~/core/annotate';
 import {
   annotate,
   makeArrayAnn,
   makeCircularRefAnn,
-  merge as mergeOriginal,
   makeObjectAnn as makeObjectAnnOriginal,
   makeScalarAnn,
+  merge as mergeOriginal,
 } from '~/core/annotate';
-import type { Annotation, ObjectAnnotation } from '~/core/annotate';
 
 function makeObjectAnn(obj: Record<string, Annotation>, text?: string) {
   return makeObjectAnnOriginal(new Map(Object.entries(obj)), text);
