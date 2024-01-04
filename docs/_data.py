@@ -649,24 +649,9 @@ DECODERS = {
     'section': 'Arrays',
     'signatures': [
       {
-        'type_params': ['A'],
-        'params': [(None, 'Decoder<A>')],
-        'return_type': 'Decoder<[A]>',
-      },
-      {
-        'type_params': ['A', 'B'],
-        'params': [(None, 'Decoder<A>'), (None, 'Decoder<B>')],
-        'return_type': 'Decoder<[A, B]>',
-      },
-      {
-        'type_params': ['A', 'B', 'C'],
-        'params': [(None, 'Decoder<A>'), (None, 'Decoder<B>'), (None, 'Decoder<C>')],
-        'return_type': 'Decoder<[A, B, C]>',
-      },
-      {
-        'type_params': ['A', 'B', 'C', '...'],
-        'params': [(None, 'Decoder<A>'), (None, 'Decoder<B>'), (None, 'Decoder<C>'), (None, '...')],
-        'return_type': 'Decoder<[A, B, C, ...]>',
+        'type_params': ['A', 'B', '...'],
+        'params': [(None, 'Decoder<A>'), (None, 'Decoder<B>'), (None, '...')],
+        'return_type': 'Decoder<[A, B, ...]>',
       },
     ],
     'example': """

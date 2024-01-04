@@ -846,16 +846,7 @@ poja.verify('hi');  // throws
 
 ---
 
-<a href="#tuple">#</a> **tuple**&lt;<i style="color: #267f99">A</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;[A]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/arrays.ts#L85-L140 'Source')
-{: #tuple .signature}
-
-<a href="#tuple">#</a> **tuple**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;[A, B]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/arrays.ts#L85-L140 'Source')
-{: #tuple .signature}
-
-<a href="#tuple">#</a> **tuple**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">C</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;C&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;[A, B, C]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/arrays.ts#L85-L140 'Source')
-{: #tuple .signature}
-
-<a href="#tuple">#</a> **tuple**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">C</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;C&gt;</i>, <i style="color: #267f99">...</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;[A, B, C, ...]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/arrays.ts#L85-L140 'Source')
+<a href="#tuple">#</a> **tuple**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;</i>, <i style="color: #267f99">...</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;[A, B, ...]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/arrays.ts#L85-L140 'Source')
 {: #tuple .signature}
 
 Accepts a tuple (an array with exactly _n_ items) of values accepted by the
@@ -1395,5 +1386,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 4e0700e313358b5d6f0d819b81e1b5c1)-->
+<!--[[[end]]] (checksum: bb1ab9f48c461d37408ef2ff033d75f4)-->
 <!-- prettier-ignore-end -->
