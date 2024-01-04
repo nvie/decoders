@@ -55,15 +55,15 @@ export const pojo: Decoder<Record<string, unknown>> = define((blob, ok, err) =>
  * Accepts objects with fields matching the given decoders. Extra fields that
  * exist on the input object are ignored and will not be returned.
  */
-export function object(decodersByKey: Record<any, never>): Decoder<Record<string, never>>;
-export function object<Ds extends Record<string, Decoder<any>>>(
-  decodersByKey: Ds,
+export function object(decoders: Record<any, never>): Decoder<Record<string, never>>;
+export function object<Ds extends Record<string, Decoder<unknown>>>(
+  decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds>>;
-export function object<Ds extends Record<string, Decoder<any>>>(
-  decodersByKey: Ds,
+export function object<Ds extends Record<string, Decoder<unknown>>>(
+  decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds>> {
   // Compute this set at decoder definition time
-  const knownKeys = new Set(Object.keys(decodersByKey));
+  const knownKeys = new Set(Object.keys(decoders));
 
   return pojo.then((plainObj, ok, err) => {
     const actualKeys = new Set(Object.keys(plainObj));
@@ -77,8 +77,8 @@ export function object<Ds extends Record<string, Decoder<any>>>(
     const record = {};
     let errors: Map<string, Annotation> | null = null;
 
-    for (const key of Object.keys(decodersByKey)) {
-      const decoder = decodersByKey[key];
+    for (const key of Object.keys(decoders)) {
+      const decoder = decoders[key];
       const rawValue = plainObj[key];
       const result: DecodeResult<unknown> = decoder.decode(rawValue);
 
@@ -142,18 +142,15 @@ export function object<Ds extends Record<string, Decoder<any>>>(
  * Like `object()`, but will reject inputs that contain extra fields that are
  * not specified explicitly.
  */
-export function exact(decodersByKey: Record<any, never>): Decoder<Record<string, never>>;
-export function exact<O extends Record<string, Decoder<any>>>(
-  decodersByKey: O,
-): Decoder<{ [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] }>;
-export function exact<O extends Record<string, Decoder<any>>>(
-  decodersByKey: O,
-): Decoder<{ [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] }> {
-  //     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  //     Ditto (see above)
-
+export function exact(decoders: Record<any, never>): Decoder<Record<string, never>>;
+export function exact<Ds extends Record<string, Decoder<unknown>>>(
+  decoders: Ds,
+): Decoder<ObjectDecoderType<Ds>>;
+export function exact<Ds extends Record<string, Decoder<unknown>>>(
+  decoders: Ds,
+): Decoder<ObjectDecoderType<Ds>> {
   // Compute this set at decoder definition time
-  const allowedKeys = new Set(Object.keys(decodersByKey));
+  const allowedKeys = new Set(Object.keys(decoders));
 
   // Check the inputted object for any unexpected extra keys
   const checked = pojo.reject((plainObj) => {
@@ -166,37 +163,29 @@ export function exact<O extends Record<string, Decoder<any>>>(
   });
 
   // Defer to the "object" decoder for doing the real decoding work
-  return checked.then(object(decodersByKey).decode);
+  return checked.then(object(decoders).decode);
 }
 
 /**
  * Like `object()`, but will pass through any extra fields on the input object
  * unvalidated that will thus be of `unknown` type statically.
  */
-export function inexact(
-  decodersByKey: Record<any, never>,
-): Decoder<Record<string, unknown>>;
-export function inexact<O extends Record<string, Decoder<any>>>(
-  decodersByKey: O,
-): Decoder<
-  { [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] } & Record<string, unknown>
->;
-export function inexact<O extends Record<string, Decoder<any>>>(
-  decodersByKey: O,
-): Decoder<
-  { [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K] } & Record<string, unknown>
-> {
+export function inexact(decoders: Record<any, never>): Decoder<Record<string, unknown>>;
+export function inexact<Ds extends Record<string, Decoder<unknown>>>(
+  decoders: Ds,
+): Decoder<ObjectDecoderType<Ds> & Record<string, unknown>>;
+export function inexact<Ds extends Record<string, Decoder<unknown>>>(
+  decoders: Ds,
+): Decoder<ObjectDecoderType<Ds> & Record<string, unknown>> {
   return pojo.then((plainObj) => {
     const allkeys = new Set(Object.keys(plainObj));
-    const decoder = object(decodersByKey).transform((safepart) => {
-      const safekeys = new Set(Object.keys(decodersByKey));
+    const decoder = object(decoders).transform((safepart) => {
+      const safekeys = new Set(Object.keys(decoders));
 
       // To account for hard-coded keys that aren't part of the input
       for (const k of safekeys) allkeys.add(k);
 
-      const rv = {} as {
-        [K in keyof ObjectDecoderType<O>]: ObjectDecoderType<O>[K];
-      } & Record<string, unknown>;
+      const rv = {} as ObjectDecoderType<Ds> & Record<string, unknown>;
       for (const k of allkeys) {
         if (safekeys.has(k)) {
           const value = safepart[k];
