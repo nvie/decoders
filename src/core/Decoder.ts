@@ -82,7 +82,8 @@ export interface Decoder<T> {
   /**
    * @internal
    * Chain together the current decoder with another acceptance function, but
-   * also pass along the original input.
+   * also pass along the original input. Don't call this method directly.
+   * You'll probably want to use the higher-level `select()` decoder instead.
    */
   peek<V>(next: AcceptanceFn<V, [unknown, T]>): Decoder<V>;
 }
@@ -279,7 +280,8 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
    * This is like `.then()`, but instead of this function receiving just
    * the decoded result ``T``, it also receives the original input.
    *
-   * This is an advanced, low-level, decoder.
+   * This is an advanced, low-level, decoder. Don't call this method directly.
+   * Use the `select()` decoder instead.
    */
   function peek<V>(next: AcceptanceFn<V, [unknown, T]>): Decoder<V> {
     return define((blob, ok, err) => {

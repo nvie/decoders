@@ -43,6 +43,7 @@ import {
   positiveNumber,
   prep,
   regex,
+  select,
   set,
   string,
   taggedUnion,
@@ -409,6 +410,8 @@ const circle: Decoder<Circle> = object({
 });
 
 expectType<Shape>(test(taggedUnion('_type', { rect, circle })));
+
+expectType<Shape>(test(select(unknown, (_) => (Math.random() < 0.5 ? rect : circle))));
 
 interface Rect1 {
   _type: 0;

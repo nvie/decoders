@@ -953,6 +953,35 @@ DECODERS = {
     # """,
   },
 
+  'select': {
+    'section': 'Unions',
+    'type_params': ['T', 'A', 'B', '...'],
+    'params': [
+      ('scout', 'Decoder<T>'),
+      ('selectFn', '(result: T) => Decoder<A> | Decoder<B> | ...'),
+    ],
+    'return_type': 'Decoder<A | B | ...>',
+    'example': """
+    ```typescript
+    const decoder = select(
+      // First, validate/extract the minimal information to make a decision
+      object({ version: optional(number) }),
+
+      // Then select which decoder to run
+      (obj) => {
+        switch (obj.version) {
+          case undefined: return v1Decoder; // Suppose v1 doesn't have a discriminating field
+          case 2:         return v2Decoder;
+          case 3:         return v3Decoder;
+          default:        return never('Invalid version');
+        }
+      },
+    );
+    // Decoder<V1 | V2 | V3>
+    ```
+    """,
+  },
+
   'define': {
     'section': 'Utilities',
     'type_params': ['T'],
