@@ -42,3 +42,10 @@ export const positiveNumber: Decoder<number> = number
 export const positiveInteger: Decoder<number> = integer
   .refine((n) => n >= 0, 'Number must be positive')
   .transform(Math.abs); // Just here to handle the -0 case
+
+/**
+ * Accepts any valid ``bigint`` value.
+ */
+export const bigint: Decoder<bigint> = define((blob, ok, err) =>
+  typeof blob === 'bigint' ? ok(blob) : err('Must be bigint'),
+);

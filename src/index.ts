@@ -18,6 +18,7 @@ export type { JSONArray, JSONObject, JSONValue } from './json';
 export { json, jsonArray, jsonObject } from './json';
 export { instanceOf, lazy, prep } from './misc';
 export { anyNumber, integer, number, positiveInteger, positiveNumber } from './numbers';
+export { bigint } from './numbers';
 export { dict, exact, inexact, mapping, object, pojo } from './objects';
 export {
   email,

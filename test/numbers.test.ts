@@ -1,7 +1,14 @@
 import { partition } from 'itertools';
 import { describe, expect, test } from 'vitest';
 
-import { anyNumber, integer, number, positiveInteger, positiveNumber } from '~/numbers';
+import {
+  anyNumber,
+  bigint,
+  integer,
+  number,
+  positiveInteger,
+  positiveNumber,
+} from '~/numbers';
 
 import { INPUTS } from './_fixtures';
 
@@ -97,6 +104,25 @@ describe('positiveInteger', () => {
     for (const value of okay) {
       expect(decoder.verify(value)).toBe(value === 0 ? 0 : value);
       expect(decoder.verify(value)).not.toBe(-0);
+    }
+  });
+
+  test('invalid', () => {
+    expect(not_okay.length).not.toBe(0);
+    for (const value of not_okay) {
+      expect(decoder.decode(value).ok).toBe(false);
+    }
+  });
+});
+
+describe('bigint', () => {
+  const decoder = bigint;
+  const [okay, not_okay] = partition(INPUTS, (n) => typeof n === 'bigint');
+
+  test('valid', () => {
+    expect(okay.length).not.toBe(0);
+    for (const value of okay) {
+      expect(decoder.verify(value)).toBe(value);
     }
   });
 
