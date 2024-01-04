@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { Annotation, Decoder, DecodeResult } from '~/core';
+import type { Annotation, Decoder, DecodeResult, DecoderType } from '~/core';
 import { annotateObject, define, merge, updateText } from '~/core';
 import { difference } from '~/lib/set-methods';
 import { isPojo } from '~/lib/utils';
@@ -38,9 +38,10 @@ type UndefinedToOptional<T extends object> = Resolve<
   Pick<Required<T>, RequiredKeys<T>> & Partial<T>
 >;
 
-type ObjectDecoderType<T> = UndefinedToOptional<{
-  [K in keyof T]: T[K] extends Decoder<infer V> ? V : never;
-}>;
+type ObjectDecoderType<Ds extends Record<string, Decoder<unknown>>> =
+  UndefinedToOptional<{
+    [K in keyof Ds]: DecoderType<Ds[K]>;
+  }>;
 
 /**
  * Accepts any "plain old JavaScript object", but doesn't validate its keys or
@@ -55,12 +56,12 @@ export const pojo: Decoder<Record<string, unknown>> = define((blob, ok, err) =>
  * exist on the input object are ignored and will not be returned.
  */
 export function object(decodersByKey: Record<any, never>): Decoder<Record<string, never>>;
-export function object<DS extends Record<string, Decoder<any>>>(
-  decodersByKey: DS,
-): Decoder<ObjectDecoderType<DS>>;
-export function object<DS extends Record<string, Decoder<any>>>(
-  decodersByKey: DS,
-): Decoder<ObjectDecoderType<DS>> {
+export function object<Ds extends Record<string, Decoder<any>>>(
+  decodersByKey: Ds,
+): Decoder<ObjectDecoderType<Ds>>;
+export function object<Ds extends Record<string, Decoder<any>>>(
+  decodersByKey: Ds,
+): Decoder<ObjectDecoderType<Ds>> {
   // Compute this set at decoder definition time
   const knownKeys = new Set(Object.keys(decodersByKey));
 
@@ -133,7 +134,7 @@ export function object<DS extends Record<string, Decoder<any>>>(
       return err(objAnn);
     }
 
-    return ok(record as ObjectDecoderType<DS>);
+    return ok(record as ObjectDecoderType<Ds>);
   });
 }
 
