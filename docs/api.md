@@ -1128,13 +1128,7 @@ jsonArray.verify(null);               // throws
 
 ---
 
-<a href="#either">#</a> **either**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/unions.ts#L49-L82 'Source')
-{: #either .signature}
-
-<a href="#either">#</a> **either**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">C</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;C&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | C&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/unions.ts#L49-L82 'Source')
-{: #either .signature}
-
-<a href="#either">#</a> **either**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">C</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;C&gt;</i>, <i style="color: #267f99">...</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | C | ...&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/unions.ts#L49-L82 'Source')
+<a href="#either">#</a> **either**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;</i>, <i style="color: #267f99">...</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | ...&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/unions.ts#L49-L82 'Source')
 {: #either .signature}
 
 Accepts values accepted by any of the given decoders.
@@ -1401,5 +1395,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 5c969879f34b36cd42d207d50db00456)-->
+<!--[[[end]]] (checksum: 4e0700e313358b5d6f0d819b81e1b5c1)-->
 <!-- prettier-ignore-end -->
