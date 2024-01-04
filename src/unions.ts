@@ -125,16 +125,15 @@ export function oneOf<C extends Scalar>(constants: readonly C[]): Decoder<C> {
  * error messages and is more performant at runtime because it doesn't have to
  * try all decoders one by one.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function taggedUnion<O extends Record<string, Decoder<any>>>(
-  field: string,
-  mapping: O,
-): Decoder<DecoderType<O[keyof O]>> {
+export function taggedUnion<
+  O extends Record<string, Decoder<unknown>>,
+  T = DecoderType<O[keyof O]>,
+>(field: string, mapping: O): Decoder<T> {
   const base: Decoder<string> = object({
     [field]: prep(String, oneOf(Object.keys(mapping))),
   }).transform((o) => o[field]);
   return base.peek_UNSTABLE(([blob, key]) => {
-    const decoder = mapping[key];
+    const decoder = mapping[key] as Decoder<T>;
     return decoder.decode(blob);
   });
 }
