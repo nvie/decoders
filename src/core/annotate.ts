@@ -4,7 +4,7 @@ const _register: WeakSet<Annotation> = new WeakSet();
 
 export interface ObjectAnnotation {
   readonly type: 'object';
-  readonly fields: Readonly<Record<string, Annotation>>;
+  readonly fields: ReadonlyMap<string, Annotation>;
   readonly text?: string;
 }
 
@@ -44,39 +44,50 @@ export type Annotation =
   | CircularRefAnnotation
   | UnknownAnnotation;
 
+/** @internal */
 function brand<A extends Annotation>(ann: A): A {
   _register.add(ann);
   return ann;
 }
 
-export function object(
-  fields: { readonly [key: string]: Annotation },
+/** @internal */
+export function makeObjectAnn(
+  fields: ReadonlyMap<string, Annotation>,
   text?: string,
 ): ObjectAnnotation {
   return brand({ type: 'object', fields, text });
 }
 
-export function array(items: readonly Annotation[], text?: string): ArrayAnnotation {
+/** @internal */
+export function makeArrayAnn(
+  items: readonly Annotation[],
+  text?: string,
+): ArrayAnnotation {
   return brand({ type: 'array', items, text });
 }
 
-export function func(text?: string): FunctionAnnotation {
+/** @internal */
+export function makeFunctionAnn(text?: string): FunctionAnnotation {
   return brand({ type: 'function', text });
 }
 
-export function unknown(value: unknown, text?: string): UnknownAnnotation {
+/** @internal */
+export function makeUnknownAnn(value: unknown, text?: string): UnknownAnnotation {
   return brand({ type: 'unknown', value, text });
 }
 
-export function scalar(value: unknown, text?: string): ScalarAnnotation {
+/** @internal */
+export function makeScalarAnn(value: unknown, text?: string): ScalarAnnotation {
   return brand({ type: 'scalar', value, text });
 }
 
-export function circularRef(text?: string): CircularRefAnnotation {
+/** @internal */
+export function makeCircularRefAnn(text?: string): CircularRefAnnotation {
   return brand({ type: 'circular-ref', text });
 }
 
 /**
+ * @internal
  * Given an existing Annotation, set the annotation's text to a new value.
  */
 export function updateText<A extends Annotation>(annotation: A, text?: string): A {
@@ -88,20 +99,20 @@ export function updateText<A extends Annotation>(annotation: A, text?: string): 
 }
 
 /**
+ * @internal
  * Given an existing ObjectAnnotation, merges new Annotations in there.
  */
 export function merge(
   objAnnotation: ObjectAnnotation,
-  fields: Readonly<Record<string, Annotation>>,
+  fields: ReadonlyMap<string, Annotation>,
 ): ObjectAnnotation {
-  const newFields = { ...objAnnotation.fields, ...fields };
-  return object(newFields, objAnnotation.text);
+  const newFields = new Map([...objAnnotation.fields, ...fields]);
+  return makeObjectAnn(newFields, objAnnotation.text);
 }
 
+/** @internal */
 export function isAnnotation(thing: unknown): thing is Annotation {
-  return (
-    typeof thing === 'object' && thing !== null && _register.has(thing as Annotation)
-  );
+  return _register.has(thing as Annotation);
 }
 
 type RefSet = WeakSet<object>;
@@ -120,7 +131,7 @@ function annotateArray(
   for (const value of arr) {
     items.push(annotate(value, undefined, seen));
   }
-  return array(items, text);
+  return makeArrayAnn(items, text);
 }
 
 /** @internal */
@@ -131,12 +142,11 @@ function annotateObject(
 ): ObjectAnnotation {
   seen.add(obj);
 
-  const fields: Record<string, Annotation> = {};
-  for (const key of Object.keys(obj)) {
-    const value = obj[key];
-    fields[key] = annotate(value, undefined, seen);
+  const fields = new Map<string, Annotation>();
+  for (const [key, value] of Object.entries(obj)) {
+    fields.set(key, annotate(value, undefined, seen));
   }
-  return object(fields, text);
+  return makeObjectAnn(fields, text);
 }
 
 /** @internal */
@@ -150,7 +160,7 @@ function annotate(value: unknown, text: string | undefined, seen: RefSet): Annot
     typeof value === 'symbol' ||
     typeof (value as Record<string, unknown>).getMonth === 'function'
   ) {
-    return scalar(value, text);
+    return makeScalarAnn(value, text);
   }
 
   if (isAnnotation(value)) {
@@ -160,7 +170,7 @@ function annotate(value: unknown, text: string | undefined, seen: RefSet): Annot
   if (Array.isArray(value)) {
     // "Circular references" can only exist in objects or arrays
     if (seen.has(value)) {
-      return circularRef(text);
+      return makeCircularRefAnn(text);
     } else {
       return annotateArray(value, text, seen);
     }
@@ -169,17 +179,17 @@ function annotate(value: unknown, text: string | undefined, seen: RefSet): Annot
   if (isPojo(value)) {
     // "Circular references" can only exist in objects or arrays
     if (seen.has(value)) {
-      return circularRef(text);
+      return makeCircularRefAnn(text);
     } else {
       return annotateObject(value, text, seen);
     }
   }
 
   if (typeof value === 'function') {
-    return func(text);
+    return makeFunctionAnn(text);
   }
 
-  return unknown(value, text);
+  return makeUnknownAnn(value, text);
 }
 
 function public_annotate(value: unknown, text?: string): Annotation {

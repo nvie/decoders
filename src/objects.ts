@@ -74,7 +74,7 @@ export function object<DS extends Record<string, Decoder<any>>>(
     const missingKeys = difference(knownKeys, actualKeys);
 
     const record = {};
-    let errors: Record<string, Annotation> | null = null;
+    let errors: Map<string, Annotation> | null = null;
 
     for (const key of Object.keys(decodersByKey)) {
       const decoder = decodersByKey[key];
@@ -104,9 +104,9 @@ export function object<DS extends Record<string, Decoder<any>>>(
           missingKeys.add(key);
         } else {
           if (errors === null) {
-            errors = {};
+            errors = new Map();
           }
-          errors[key] = ann;
+          errors.set(key, ann);
         }
       }
     }
@@ -227,7 +227,7 @@ export function inexact<O extends Record<string, Decoder<any>>>(
 export function dict<T>(decoder: Decoder<T>): Decoder<Record<string, T>> {
   return pojo.then((plainObj, ok, err) => {
     let rv: Record<string, T> = {};
-    let errors: Record<string, Annotation> | null = null;
+    let errors: Map<string, Annotation> | null = null;
 
     for (const key of Object.keys(plainObj)) {
       const value = plainObj[key];
@@ -239,9 +239,9 @@ export function dict<T>(decoder: Decoder<T>): Decoder<Record<string, T>> {
       } else {
         rv = {}; // Clear the success value so it can get garbage collected early
         if (errors === null) {
-          errors = {};
+          errors = new Map();
         }
-        errors[key] = result.error;
+        errors.set(key, result.error);
       }
     }
 

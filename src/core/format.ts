@@ -26,8 +26,7 @@ export function summarize(
     }
   } else if (ann.type === 'object') {
     const fields = ann.fields;
-    for (const key of Object.keys(fields)) {
-      const value = fields[key];
+    for (const [key, value] of fields) {
       for (const item of summarize(value, [...keypath, key])) {
         // Collect to results
         result.push(item);
@@ -88,14 +87,12 @@ function serializeArray(annotation: ArrayAnnotation, prefix: string): string {
 function serializeObject(annotation: ObjectAnnotation, prefix: string): string {
   const { fields } = annotation;
 
-  const fieldNames = Object.keys(fields);
-  if (fieldNames.length === 0) {
+  if (fields.size === 0) {
     return '{}';
   }
 
   const result: string[] = [];
-  for (const key of fieldNames) {
-    const valueAnnotation = fields[key];
+  for (const [key, valueAnnotation] of fields) {
     const kser = serializeValue(key);
 
     const valPrefix = `${prefix}${INDENT}${' '.repeat(kser.length + 2)}`;

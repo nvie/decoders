@@ -1,5 +1,5 @@
 import type { Annotation } from './annotate';
-import { annotate } from './annotate';
+import { annotate, isAnnotation } from './annotate';
 import type { Formatter } from './format';
 import { formatInline } from './format';
 import type { Result } from './Result';
@@ -129,7 +129,7 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
    */
   function decode(blob: unknown): DecodeResult<T> {
     return fn(blob, makeOk, (msg: Annotation | string) =>
-      makeErr(typeof msg === 'string' ? annotate(blob, msg) : msg),
+      makeErr(isAnnotation(msg) ? msg : annotate(blob, msg)),
     );
   }
 
@@ -222,11 +222,11 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
    * message.
    */
   function reject(rejectFn: (value: T) => string | Annotation | null): Decoder<T> {
-    return then((value, ok, err) => {
-      const errmsg = rejectFn(value);
+    return then((blob, ok, err) => {
+      const errmsg = rejectFn(blob);
       return errmsg === null
-        ? ok(value)
-        : err(typeof errmsg === 'string' ? annotate(value, errmsg) : errmsg);
+        ? ok(blob)
+        : err(typeof errmsg === 'string' ? annotate(blob, errmsg) : errmsg);
     });
   }
 
