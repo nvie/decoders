@@ -150,8 +150,6 @@ expectType<string | undefined>(string.value('dummy'));
 
 expectType<number>(test(string.then((value: string) => ok(value.length))));
 
-expectType<number>(test(string.peek_UNSTABLE(([_blob, value]) => ok(value.length))));
-
 expectType<string>(test(string.refine((s) => s.startsWith('x'), 'Must start with x')));
 
 expectType<string>(
