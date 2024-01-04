@@ -4,6 +4,7 @@ import {
   always,
   anyNumber,
   array,
+  bigint,
   boolean,
   constant,
   date,
@@ -96,6 +97,8 @@ expectType<number>(test(integer));
 expectType<number>(test(number));
 expectType<number>(test(positiveInteger));
 expectType<number>(test(positiveNumber));
+
+expectType<bigint>(test(bigint));
 
 expectType<string>(test(string));
 expectType<string>(test(nonEmptyString));

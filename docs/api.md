@@ -29,7 +29,7 @@ for section, names in DECODERS_BY_SECTION.items():
   cog.outl(f'- [**{section}**](#{slugify(section)}): {", ".join(ref(name) for name in names)}')
 ]]]-->
 - [**Strings**](#strings): [`string`](/api.html#string), [`nonEmptyString`](/api.html#nonEmptyString), [`regex()`](/api.html#regex), [`email`](/api.html#email), [`url`](/api.html#url), [`httpsUrl`](/api.html#httpsUrl), [`uuid`](/api.html#uuid), [`uuidv1`](/api.html#uuidv1), [`uuidv4`](/api.html#uuidv4)
-- [**Numbers**](#numbers): [`number`](/api.html#number), [`integer`](/api.html#integer), [`positiveNumber`](/api.html#positiveNumber), [`positiveInteger`](/api.html#positiveInteger), [`anyNumber`](/api.html#anyNumber)
+- [**Numbers**](#numbers): [`number`](/api.html#number), [`integer`](/api.html#integer), [`positiveNumber`](/api.html#positiveNumber), [`positiveInteger`](/api.html#positiveInteger), [`anyNumber`](/api.html#anyNumber), [`bigint`](/api.html#bigint)
 - [**Booleans**](#booleans): [`boolean`](/api.html#boolean), [`truthy`](/api.html#truthy), [`numericBoolean`](/api.html#numericBoolean)
 - [**Dates**](#dates): [`date`](/api.html#date), [`iso8601`](/api.html#iso8601)
 - [**Constants**](#constants): [`constant()`](/api.html#constant), [`always()`](/api.html#always), [`hardcoded()`](/api.html#hardcoded)
@@ -39,7 +39,7 @@ for section, names in DECODERS_BY_SECTION.items():
 - [**JSON values**](#json-values): [`json`](/api.html#json), [`jsonObject`](/api.html#jsonObject), [`jsonArray`](/api.html#jsonArray)
 - [**Unions**](#unions): [`either()`](/api.html#either), [`oneOf()`](/api.html#oneOf), [`taggedUnion()`](/api.html#taggedUnion)
 - [**Utilities**](#utilities): [`define()`](/api.html#define), [`prep()`](/api.html#prep), [`never`](/api.html#never), [`instanceOf()`](/api.html#instanceOf), [`lazy()`](/api.html#lazy), [`fail`](/api.html#fail)
-<!--[[[end]]] (checksum: b5155abbed2c5fb557ab11eac9b5c385) -->
+<!--[[[end]]] (checksum: abe01c14cfde45ddf744d4a0f986c304) -->
 
 <!--[[[cog
 for section, names in DECODERS_BY_SECTION.items():
@@ -280,6 +280,7 @@ uuidv4.verify('123e4567-e89b-12d3-a456-426614174000')  // throws
 - [`positiveNumber`](/api.html#positiveNumber)
 - [`positiveInteger`](/api.html#positiveInteger)
 - [`anyNumber`](/api.html#anyNumber)
+- [`bigint`](/api.html#bigint)
 
 ---
 
@@ -380,6 +381,26 @@ anyNumber.verify(NaN) === NaN;
 
 // 👎
 anyNumber.verify('not a number');  // throws
+```
+
+---
+
+<a href="#bigint">#</a> **bigint**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;bigint&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/numbers.ts#L46-L51 'Source')
+{: #bigint .signature}
+
+Accepts any valid ``bigint`` value.
+
+```typescript
+// 👍
+bigint.verify(123n) === 123n;
+bigint.verify(-4543000000n) === -4543000000n;
+
+// 👎
+bigint.verify(123);             // throws
+bigint.verify(-3.14);           // throws
+bigint.verify(Infinity);        // throws
+bigint.verify(NaN);             // throws
+bigint.verify('not a number');  // throws
 ```
 
 ---
@@ -1347,5 +1368,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 48491dc3afaaebd86cf29c7d49b76079)-->
+<!--[[[end]]] (checksum: 78f0cc682fbb75ede0be7a0a30e1b753)-->
 <!-- prettier-ignore-end -->

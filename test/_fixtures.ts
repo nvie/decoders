@@ -21,6 +21,17 @@ export const NUMBERS: number[] = [
   42,
 ];
 
+export const BIGINTS: bigint[] = [
+  0n,
+  1n,
+  42n,
+  100n,
+  -4543000000n,
+  BigInt(
+    '12345678901234567890123456789012345678901234567890123456789012345678901234567890',
+  ),
+];
+
 export const SPECIAL_NUMBERS: number[] = [
   NaN,
   Number.NEGATIVE_INFINITY,
@@ -43,6 +54,7 @@ export const CONSTANTS: (null | undefined)[] = [null, undefined];
 export const INPUTS: unknown[] = [
   ...STRINGS,
   ...NUMBERS,
+  ...BIGINTS,
   ...SPECIAL_NUMBERS,
   ...DATES,
   ...SPECIAL_DATES,

@@ -2,6 +2,7 @@
 
 **New decoders:**
 
+- `bigint`
 - `nullish` (replaces `maybe`)
 
 **Deprecated decoders:**
