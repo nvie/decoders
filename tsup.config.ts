@@ -7,5 +7,4 @@ export default defineConfig({
   clean: true,
   // target: /* what tsconfig specifies */,
   format: ['esm', 'cjs'],
-  sourcemap: true,
 });
