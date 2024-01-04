@@ -7,6 +7,11 @@ import { err as makeErr, ok as makeOk } from './Result';
 
 export type DecodeResult<T> = Result<T, Annotation>;
 
+/**
+ * A function taking a untrusted input, and returning a DecodeResult<T>. The
+ * `ok()` and `err()` constructor functions are provided as the 2nd and 3rd
+ * param. One of these should be called and its value returned.
+ */
 export type AcceptanceFn<T, InputT = unknown> = (
   blob: InputT,
   ok: (value: T) => DecodeResult<T>,
@@ -56,7 +61,21 @@ export interface Decoder<T> {
   describe(message: string): Decoder<T>;
 
   /**
-   * Chain together the current decoder with another acceptance function.
+   * Send the output of the current decoder into another acceptance function.
+   * The given acceptance function will receive the output of the current
+   * decoder as its input, making it partially trusted.
+   *
+   * This works similar to how you would `define()` a new decoder, except
+   * that the ``blob`` param will now be ``T`` (a known type), rather than
+   * ``unknown``. This will allow the function to make a stronger assumption
+   * about its input and avoid re-refining inputs.
+   *
+   * > _**NOTE:** This is an advanced, low-level, API. It's not recommended
+   * > to reach for this construct unless there is no other way. Most cases can
+   * > be covered more elegantly by `.transform()` or `.refine()` instead._
+   *
+   * If it helps, you can think of `define(...)` as equivalent to
+   * `unknown.then(...)`.
    */
   then<V>(next: AcceptanceFn<V, T>): Decoder<V>;
 

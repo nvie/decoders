@@ -118,8 +118,8 @@ DECODERS = {
       import { url } from 'decoders';
 
       const gitUrl: Decoder<URL> = url.refine(
-          (value) => value.protocol === 'git:',
-          'Must be a git:// URL',
+        (value) => value.protocol === 'git:',
+        'Must be a git:// URL',
       );
       ```
     """,
@@ -472,9 +472,9 @@ DECODERS = {
 
       ```typescript
       object({
-          id: number,
-          name: string,
-          address: optional(string),
+        id: number,
+        name: string,
+        address: optional(string),
       });
       ```
 
@@ -707,8 +707,8 @@ DECODERS = {
     'example': """
       ```typescript
       const decoder = object({
-          x: number,
-          y: number,
+        x: number,
+        y: number,
       });
 
       // 👍
@@ -731,8 +731,8 @@ DECODERS = {
     'example': """
       ```typescript
       const decoder = exact({
-          x: number,
-          y: number,
+        x: number,
+        y: number,
       });
 
       // 👍
@@ -755,8 +755,8 @@ DECODERS = {
     'example': """
       ```typescript
       const decoder = inexact({
-          x: number,
-          y: number,
+        x: number,
+        y: number,
       });
 
       // 👍
@@ -827,11 +827,11 @@ DECODERS = {
     'example': """
       // 👍
       json.verify({
-          name: 'Amir',
-          age: 27,
-          admin: true,
-          image: null,
-          tags: ['vip', 'staff'],
+        name: 'Amir',
+        age: 27,
+        admin: true,
+        image: null,
+        tags: ['vip', 'staff'],
       });
     """,
   },
@@ -1071,18 +1071,18 @@ DECODERS = {
     'return_type': 'Decoder<T>',
     'example': """
       type Tree = {
-          value: string;
-          children: Array<Tree>;
-          //              ^^^^
-          //              Self-reference defining a recursive type
+        value: string;
+        children: Array<Tree>;
+        //              ^^^^
+        //              Self-reference defining a recursive type
       };
 
       const treeDecoder: Decoder<Tree> = object({
-          value: string,
-          children: array(lazy(() => treeDecoder)),
-          //              ^^^^^^^^^^^^^^^^^^^^^^^
-          //              Use lazy() like this to refer to the treeDecoder which is
-          //              getting defined here
+        value: string,
+        children: array(lazy(() => treeDecoder)),
+        //              ^^^^^^^^^^^^^^^^^^^^^^^
+        //              Use lazy() like this to refer to the treeDecoder which is
+        //              getting defined here
       });
     """,
   },
@@ -1227,14 +1227,8 @@ DECODER_METHODS = {
       Uses the given decoder, but will use an alternative error message in case it rejects. This can be used to simplify or shorten otherwise long or low-level/technical errors.
 
       ```typescript
-      const decoder = either(
-          constant('a'),
-          constant('e'),
-          constant('i'),
-          constant('o'),
-          constant('u'),
-      );
-      const vowel = decoder.describe('Must be vowel');
+      const vowel = oneOf(['a', 'e', 'i', 'o', 'u'])
+        .describe('Must be vowel');
       ```
     """,
   },

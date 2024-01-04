@@ -212,8 +212,8 @@ httpsUrl.verify('git+ssh://user@github.com/foo/bar.git');  // throws, not HTTPS
 import { url } from 'decoders';
 
 const gitUrl: Decoder<URL> = url.refine(
-    (value) => value.protocol === 'git:',
-    'Must be a git:// URL',
+  (value) => value.protocol === 'git:',
+  'Must be a git:// URL',
 );
 ```
 
@@ -659,9 +659,9 @@ A typical case where [`optional()`](/api.html#optional) is useful is in decoding
 
 ```typescript
 object({
-    id: number,
-    name: string,
-    address: optional(string),
+  id: number,
+  name: string,
+  address: optional(string),
 });
 ```
 
@@ -914,8 +914,8 @@ exist on the input object are ignored and will not be returned.
 
 ```typescript
 const decoder = object({
-    x: number,
-    y: number,
+  x: number,
+  y: number,
 });
 
 // 👍
@@ -938,8 +938,8 @@ not specified explicitly.
 
 ```typescript
 const decoder = exact({
-    x: number,
-    y: number,
+  x: number,
+  y: number,
 });
 
 // 👍
@@ -962,8 +962,8 @@ unvalidated that will thus be of [`unknown`](/api.html#unknown) type statically.
 
 ```typescript
 const decoder = inexact({
-    x: number,
-    y: number,
+  x: number,
+  y: number,
 });
 
 // 👍
@@ -1070,11 +1070,11 @@ type JSONValue =
 ```typescript
 // 👍
 json.verify({
-    name: 'Amir',
-    age: 27,
-    admin: true,
-    image: null,
-    tags: ['vip', 'staff'],
+  name: 'Amir',
+  age: 27,
+  admin: true,
+  image: null,
+  tags: ['vip', 'staff'],
 });
 ```
 
@@ -1226,7 +1226,7 @@ try all decoders one by one.
 
 ---
 
-<a href="#define">#</a> **define**&lt;<i style="color: #267f99">T</i>&gt;(fn: <i style="color: #267f99">(blob: unknown, ok, err) =&gt; DecodeResult&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/core/Decoder.ts#L110-L284 'Source')
+<a href="#define">#</a> **define**&lt;<i style="color: #267f99">T</i>&gt;(fn: <i style="color: #267f99">(blob: unknown, ok, err) =&gt; DecodeResult&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/core/Decoder.ts#L129-L303 'Source')
 {: #define .signature}
 
 Defines a new `Decoder<T>`, by implementing a custom acceptance function.
@@ -1354,20 +1354,20 @@ types for recursive data structures.
 
 ```typescript
 type Tree = {
-    value: string;
-    children: Array<Tree>;
-    //              ^^^^
-    //              Self-reference defining a recursive type
+  value: string;
+  children: Array<Tree>;
+  //              ^^^^
+  //              Self-reference defining a recursive type
 };
 
 const treeDecoder: Decoder<Tree> = object({
-    value: string,
-    children: array(lazy(() => treeDecoder)),
-    //              ^^^^^^^^^^^^^^^^^^^^^^^
-    //              Use lazy() like this to refer to the treeDecoder which is
-    //              getting defined here
+  value: string,
+  children: array(lazy(() => treeDecoder)),
+  //              ^^^^^^^^^^^^^^^^^^^^^^^
+  //              Use lazy() like this to refer to the treeDecoder which is
+  //              getting defined here
 });
 ```
 
-<!--[[[end]]] (checksum: 7eb734e907b81680a4759a4fdf312d17)-->
+<!--[[[end]]] (checksum: 4e2b484d2fba403a268d7d0dc8ac95bc)-->
 <!-- prettier-ignore-end -->
