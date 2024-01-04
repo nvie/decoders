@@ -46,7 +46,7 @@ function itemize(s: string): string {
  */
 function nest(errText: string): string {
   return errText.startsWith(EITHER_PREFIX)
-    ? errText.substr(EITHER_PREFIX.length)
+    ? errText.substring(EITHER_PREFIX.length)
     : itemize(errText);
 }
 
