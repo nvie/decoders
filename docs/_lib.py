@@ -88,7 +88,7 @@ def get_raw_markdown(name):
 
   doc_string = unindent(info.get('markdown', None) or DOC_STRINGS.get(name, None) or '')
   raw_example = unindent(info.get('example', ''))
-  example = f'```typescript\n{raw_example}\n```' if raw_example and '```' not in raw_example else raw_example
+  example = f'```ts\n{raw_example}\n```' if raw_example and '```' not in raw_example else raw_example
   return '\n\n'.join(filter(lambda x: x, [doc_string, example]))
 
 

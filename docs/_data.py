@@ -16,7 +16,6 @@ DECODERS = {
     'params': None,
     'return_type': 'Decoder<string>',
     'example': """
-      ```typescript
       // 👍
       string.verify('hello world') === 'hello world';
       string.verify('🚀') === '🚀';
@@ -26,7 +25,6 @@ DECODERS = {
       string.verify(123);   // throws
       string.verify(true);  // throws
       string.verify(null);  // throws
-      ```
     """,
   },
 
@@ -35,7 +33,6 @@ DECODERS = {
     'params': None,
     'return_type': 'Decoder<string>',
     'example': """
-      ```typescript
       // 👍
       nonEmptyString.verify('hello world') === 'hello world';
       nonEmptyString.verify('🚀') === '🚀';
@@ -44,7 +41,6 @@ DECODERS = {
       nonEmptyString.verify(123);   // throws
       nonEmptyString.verify('  ');  // throws
       nonEmptyString.verify('');    // throws
-      ```
     """,
   },
 
@@ -56,7 +52,6 @@ DECODERS = {
     ],
     'return_type': 'Decoder<string>',
     'example': """
-      ```typescript
       const decoder = regex(/^[0-9][0-9]+$/, 'Must be numeric');
 
       // 👍
@@ -67,7 +62,6 @@ DECODERS = {
       decoder.verify('');     // throws
       decoder.verify('1');    // throws
       decoder.verify('foo');  // throws
-      ```
     """,
   },
 
@@ -75,7 +69,6 @@ DECODERS = {
     'section': 'Strings',
     'return_type': 'Decoder<string>',
     'example': """
-      ```typescript
       const decoder = decimal;
 
       // 👍
@@ -87,7 +80,6 @@ DECODERS = {
       decoder.verify('123abc');  // throws
       decoder.verify('foo');     // throws
       decoder.verify(123);       // throws (not a string)
-      ```
     """,
   },
 
@@ -95,7 +87,6 @@ DECODERS = {
     'section': 'Strings',
     'return_type': 'Decoder<string>',
     'example': """
-      ```typescript
       const decoder = hexadecimal;
 
       // 👍
@@ -106,7 +97,6 @@ DECODERS = {
       decoder.verify('abcdefghijklm');  // throws (not hexadecimal)
       decoder.verify('');     // throws
       decoder.verify('1');    // throws
-      ```
     """,
   },
 
@@ -114,7 +104,6 @@ DECODERS = {
     'section': 'Strings',
     'return_type': 'Decoder<number>',
     'example': """
-      ```typescript
       const decoder = numeric;
 
       // 👍
@@ -126,7 +115,6 @@ DECODERS = {
       decoder.verify('123abc');  // throws
       decoder.verify('foo');     // throws
       decoder.verify(123);       // throws (not a string)
-      ```
     """,
   },
 
@@ -168,7 +156,6 @@ DECODERS = {
     'params': None,
     'return_type': 'Decoder<URL>',
     'example': """
-      ```typescript
       // 👍
       httpsUrl.verify('https://nvie.com:443') === new URL('https://nvie.com/');
 
@@ -179,14 +166,13 @@ DECODERS = {
 
       **Tip!** If you need to limit URLs to different protocols than HTTP, you can do as the HTTPS decoder is implemented: by adding further conditions using an `.refine()` call.
 
-      ```typescript
+      ```ts
       import { url } from 'decoders';
 
       const gitUrl: Decoder<URL> = url.refine(
         (value) => value.protocol === 'git:',
         'Must be a git:// URL',
       );
-      ```
     """,
   },
 
@@ -236,7 +222,6 @@ DECODERS = {
     'params': None,
     'return_type': 'Decoder<number>',
     'example': """
-      ```typescript
       // 👍
       number.verify(123) === 123;
       number.verify(-3.14) === -3.14;
@@ -245,7 +230,6 @@ DECODERS = {
       number.verify(Infinity);        // throws
       number.verify(NaN);             // throws
       number.verify('not a number');  // throws
-      ```
     """,
   },
 
@@ -254,7 +238,6 @@ DECODERS = {
     'params': None,
     'return_type': 'Decoder<number>',
     'example': """
-      ```typescript
       // 👍
       integer.verify(123) === 123;
 
@@ -263,7 +246,6 @@ DECODERS = {
       integer.verify(Infinity);        // throws
       integer.verify(NaN);             // throws
       integer.verify('not a integer'); // throws
-      ```
     """,
   },
 
@@ -272,7 +254,6 @@ DECODERS = {
     'params': None,
     'return_type': 'Decoder<number>',
     'example': """
-      ```typescript
       // 👍
       positiveNumber.verify(123) === 123;
       positiveNumber.verify(0) === 0;
@@ -284,7 +265,6 @@ DECODERS = {
       positiveNumber.verify(Infinity);        // throws
       positiveNumber.verify(NaN);             // throws
       positiveNumber.verify('not a number');  // throws
-      ```
     """,
   },
 
@@ -293,7 +273,6 @@ DECODERS = {
     'params': None,
     'return_type': 'Decoder<number>',
     'example': """
-      ```typescript
       // 👍
       positiveInteger.verify(123) === 123;
       positiveInteger.verify(0) === 0;
@@ -305,7 +284,6 @@ DECODERS = {
       positiveInteger.verify(Infinity);        // throws
       positiveInteger.verify(NaN);             // throws
       positiveInteger.verify('not a number');  // throws
-      ```
     """,
   },
 
@@ -314,7 +292,6 @@ DECODERS = {
     'params': None,
     'return_type': 'Decoder<number>',
     'example': """
-      ```typescript
       // 👍
       anyNumber.verify(123) === 123;
       anyNumber.verify(-3.14) === -3.14;
@@ -323,7 +300,6 @@ DECODERS = {
 
       // 👎
       anyNumber.verify('not a number');  // throws
-      ```
     """,
   },
 
@@ -332,7 +308,6 @@ DECODERS = {
     'params': None,
     'return_type': 'Decoder<bigint>',
     'example': """
-      ```typescript
       // 👍
       bigint.verify(123n) === 123n;
       bigint.verify(-4543000000n) === -4543000000n;
@@ -343,7 +318,6 @@ DECODERS = {
       bigint.verify(Infinity);        // throws
       bigint.verify(NaN);             // throws
       bigint.verify('not a number');  // throws
-      ```
     """,
   },
 
@@ -439,7 +413,6 @@ DECODERS = {
     'params': [('value', 'T')],
     'return_type': 'Decoder<T>',
     'example': """
-      ```typescript
       const decoder = constant('hello');
 
       // 👍
@@ -449,7 +422,6 @@ DECODERS = {
       decoder.verify('this breaks');  // throws
       decoder.verify(false);          // throws
       decoder.verify(undefined);      // throws
-      ```
     """,
   },
 
@@ -460,7 +432,7 @@ DECODERS = {
     'return_type': 'Decoder<T>',
     'aliases': ['hardcoded'],
     'example': """
-      ```typescript
+      ```ts
       const decoder = always(42);
 
       // 👍
@@ -474,7 +446,7 @@ DECODERS = {
 
       Or use it with a function instead of a constant:
 
-      ```typescript
+      ```ts
       const now = always(() => new Date());
 
       now.verify('dummy');  // e.g. new Date('2022-02-07T09:36:58.848Z')
@@ -532,7 +504,7 @@ DECODERS = {
     ],
 
     'example': """
-      ```typescript
+      ```ts
       const decoder = optional(string);
 
       // 👍
@@ -547,7 +519,7 @@ DECODERS = {
 
       A typical case where `optional` is useful is in decoding objects with optional fields:
 
-      ```typescript
+      ```ts
       object({
         id: number,
         name: string,
@@ -557,7 +529,7 @@ DECODERS = {
 
       Which will decode to type:
 
-      ```typescript
+      ```ts
       {
         id: number;
         name: string;
@@ -587,7 +559,7 @@ DECODERS = {
     ],
 
     'example': """
-      ```typescript
+      ```ts
       const decoder = nullable(string);
 
       // 👍
@@ -602,7 +574,7 @@ DECODERS = {
 
       Or use it with a default value:
 
-      ```typescript
+      ```ts
       const decoder = nullable(iso8601, () => new Date());
 
       decoder.verify('2022-01-01T12:00:00Z') === '2022-01-01T12:00:00Z';
@@ -632,7 +604,7 @@ DECODERS = {
     ],
 
     'example': """
-      ```typescript
+      ```ts
       const decoder = nullish(string);
 
       // 👍
@@ -647,7 +619,7 @@ DECODERS = {
 
       Or use it with a default value:
 
-      ```typescript
+      ```ts
       const decoder = nullish(string, null);
 
       decoder.verify('hello') === 'hello';
@@ -767,7 +739,7 @@ DECODERS = {
     'params': [(None, '{ field1: Decoder<A>, field2: Decoder<B>, ... }')],
     'return_type': 'Decoder<{ field1: A, field2: B, ... }>',
     'example': """
-      ```typescript
+      ```ts
       const decoder = object({
         x: number,
         y: number,
@@ -791,7 +763,7 @@ DECODERS = {
     'params': [(None, '{ field1: Decoder<A>, field2: Decoder<B>, ... }')],
     'return_type': 'Decoder<{ field1: A, field2: B, ... }>',
     'example': """
-      ```typescript
+      ```ts
       const decoder = exact({
         x: number,
         y: number,
@@ -815,7 +787,7 @@ DECODERS = {
     'params': [(None, '{ field1: Decoder<A>, field2: Decoder<B>, ... }')],
     'return_type': 'Decoder<{ field1: A, field2: B, ... }>',
     'example': """
-      ```typescript
+      ```ts
       const decoder = inexact({
         x: number,
         y: number,
@@ -942,7 +914,7 @@ DECODERS = {
       },
     ],
     'example': """
-      ```typescript
+      ```ts
       const decoder = either(number, string);
 
       // 👍
@@ -963,7 +935,7 @@ DECODERS = {
     ],
     'return_type': 'Decoder<T>',
     'example': """
-      ```typescript
+      ```ts
       const decoder = oneOf(['foo', 'bar', 3]);
 
       // 👍
@@ -978,7 +950,7 @@ DECODERS = {
 
       For example, given an array of strings, like so:
 
-      ```typescript
+      ```ts
       oneOf(['foo', 'bar']);
       ```
     """,
@@ -1005,7 +977,7 @@ DECODERS = {
     ],
     'return_type': 'Decoder<A | B | ...>',
     'example': """
-    ```typescript
+    ```ts
     const decoder = select(
       // First, validate/extract the minimal information to make a decision
       object({ version: optional(number) }),
@@ -1036,7 +1008,7 @@ DECODERS = {
     'example': """
       > _**NOTE:** This is the lowest-level API to define a new decoder, and therefore not recommended unless you have a very good reason for it. Most cases can be covered more elegantly by starting from an existing decoder and using `.transform()` or `.refine()` on them instead._
 
-      ```typescript
+      ```ts
       // NOTE: Please do NOT implement an uppercase decoder like this! 😇
       const uppercase: Decoder<string> = define(
         (blob, ok, err) => {
@@ -1172,7 +1144,7 @@ DECODER_METHODS = {
 
       For example, take this simple number decoder.
 
-      ```typescript
+      ```ts
       // 👍
       number.verify(123);     // 123
       number.verify(3.1415);  // 3.1415
@@ -1192,7 +1164,7 @@ DECODER_METHODS = {
     'example': """
       <img alt="The .value() method explained" src="./assets/schematic-value.png" style="max-width: min(592px, 100%)" />
 
-      ```typescript
+      ```ts
       // 👍
       number.value(3);     // 3
       string.value('hi');  // 'hi'
@@ -1214,7 +1186,7 @@ DECODER_METHODS = {
 
       For example, take this simple "number" decoder. When given an number value, it will return an ok: true result. Otherwise, it will return an ok: false result with the original input value annotated.
 
-      ```typescript
+      ```ts
       // 👍
       number.decode(3);     // { ok: true, value: 3 };
 
@@ -1248,7 +1220,7 @@ DECODER_METHODS = {
     ],
     'return_type': 'Decoder<T>',
     'example': """
-      ```typescript
+      ```ts
       const odd = number.refine(
         (n) => n % 2 !== 0,
         'Must be odd'
@@ -1298,7 +1270,7 @@ DECODER_METHODS = {
     'markdown': """
       Uses the given decoder, but will use an alternative error message in case it rejects. This can be used to simplify or shorten otherwise long or low-level/technical errors.
 
-      ```typescript
+      ```ts
       const vowel = oneOf(['a', 'e', 'i', 'o', 'u'])
         .describe('Must be vowel');
       ```

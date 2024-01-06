@@ -104,7 +104,7 @@ for section, names in DECODERS_BY_SECTION.items():
 
 Accepts and returns strings.
 
-```typescript
+```ts
 // 👍
 string.verify('hello world') === 'hello world';
 string.verify('🚀') === '🚀';
@@ -123,7 +123,7 @@ string.verify(null);  // throws
 
 Like [`string`](/api.html#string), but will reject the empty string or strings containing only whitespace.
 
-```typescript
+```ts
 // 👍
 nonEmptyString.verify('hello world') === 'hello world';
 nonEmptyString.verify('🚀') === '🚀';
@@ -141,7 +141,7 @@ nonEmptyString.verify('');    // throws
 
 Accepts and returns strings that match the given regular expression.
 
-```typescript
+```ts
 const decoder = regex(/^[0-9][0-9]+$/, 'Must be numeric');
 
 // 👍
@@ -162,7 +162,7 @@ decoder.verify('foo');  // throws
 Accepts and returns strings with decimal digits only (base-10).
 To convert these to numbers, use the [`numeric`](/api.html#numeric) decoder.
 
-```typescript
+```ts
 const decoder = decimal;
 
 // 👍
@@ -183,7 +183,7 @@ decoder.verify(123);       // throws (not a string)
 
 Accepts and returns strings with hexadecimal digits only (base-16).
 
-```typescript
+```ts
 const decoder = hexadecimal;
 
 // 👍
@@ -205,7 +205,7 @@ Accepts valid numerical strings (in base-10) and returns them as a number.
 To only accept numerical strings and keep them as string values, use the
 [`decimal`](/api.html#decimal) decoder.
 
-```typescript
+```ts
 const decoder = numeric;
 
 // 👍
@@ -227,7 +227,7 @@ decoder.verify(123);       // throws (not a string)
 Accepts and returns strings that are syntactically valid email addresses.
 (This will not mean that the email address actually exist.)
 
-```typescript
+```ts
 // 👍
 email.verify('alice@acme.org') === 'alice@acme.org';
 
@@ -244,7 +244,7 @@ email.verify('alice @ acme.org');  // throws
 
 Accepts strings that are valid URLs, returns the value as a URL instance.
 
-```typescript
+```ts
 // 👍
 url.verify('http://nvie.com') === new URL('http://nvie.com/');
 url.verify('https://nvie.com') === new URL('https://nvie.com/');
@@ -265,7 +265,6 @@ url.verify('/search?q=foo');     // throws
 Accepts strings that are valid URLs, but only HTTPS ones. Returns the value
 as a URL instance.
 
-```typescript
 // 👍
 httpsUrl.verify('https://nvie.com:443') === new URL('https://nvie.com/');
 
@@ -276,14 +275,13 @@ httpsUrl.verify('git+ssh://user@github.com/foo/bar.git');  // throws, not HTTPS
 
 **Tip!** If you need to limit URLs to different protocols than HTTP, you can do as the HTTPS decoder is implemented: by adding further conditions using an [`.refine()`](/Decoder.html#refine) call.
 
-```typescript
+```ts
 import { url } from 'decoders';
 
 const gitUrl: Decoder<URL> = url.refine(
   (value) => value.protocol === 'git:',
   'Must be a git:// URL',
 );
-```
 
 ---
 
@@ -294,7 +292,7 @@ Accepts strings that are valid
 [UUIDs](https://en.wikipedia.org/wiki/universally_unique_identifier)
 (universally unique identifier).
 
-```typescript
+```ts
 // 👍
 uuid.verify('123e4567-e89b-12d3-a456-426614174000') === '123e4567-e89b-12d3-a456-426614174000'
 uuid.verify('123E4567-E89B-12D3-A456-426614174000') === '123E4567-E89B-12D3-A456-426614174000'
@@ -313,7 +311,7 @@ Like [`uuid`](/api.html#uuid), but only accepts
 [UUIDv1](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_%28date-time_and_MAC_address%29)
 strings.
 
-```typescript
+```ts
 // 👍
 uuidv1.verify('123e4567-e89b-12d3-a456-426614174000') === '123e4567-e89b-42d3-a456-426614174000'
 
@@ -330,7 +328,7 @@ Like [`uuid`](/api.html#uuid), but only accepts
 [UUIDv4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_%28random%29)
 strings.
 
-```typescript
+```ts
 // 👍
 uuidv4.verify('123e4567-e89b-42d3-a456-426614174000') === '123e4567-e89b-42d3-a456-426614174000'
 
@@ -358,7 +356,7 @@ uuidv4.verify('123e4567-e89b-12d3-a456-426614174000')  // throws
 Accepts finite numbers (can be integer or float values). Values `NaN`,
 or positive and negative `Infinity` will get rejected.
 
-```typescript
+```ts
 // 👍
 number.verify(123) === 123;
 number.verify(-3.14) === -3.14;
@@ -376,7 +374,7 @@ number.verify('not a number');  // throws
 
 Accepts only finite whole numbers.
 
-```typescript
+```ts
 // 👍
 integer.verify(123) === 123;
 
@@ -394,7 +392,7 @@ integer.verify('not a integer'); // throws
 
 Accepts only non-negative (zero or positive) finite numbers.
 
-```typescript
+```ts
 // 👍
 positiveNumber.verify(123) === 123;
 positiveNumber.verify(0) === 0;
@@ -415,7 +413,7 @@ positiveNumber.verify('not a number');  // throws
 
 Accepts only non-negative (zero or positive) finite whole numbers.
 
-```typescript
+```ts
 // 👍
 positiveInteger.verify(123) === 123;
 positiveInteger.verify(0) === 0;
@@ -440,7 +438,7 @@ This also accepts special values like `NaN` and `Infinity`. Unless you
 want to deliberately accept those, you'll likely want to use the
 [`number`](/api.html#number) decoder instead.
 
-```typescript
+```ts
 // 👍
 anyNumber.verify(123) === 123;
 anyNumber.verify(-3.14) === -3.14;
@@ -458,7 +456,7 @@ anyNumber.verify('not a number');  // throws
 
 Accepts any valid ``bigint`` value.
 
-```typescript
+```ts
 // 👍
 bigint.verify(123n) === 123n;
 bigint.verify(-4543000000n) === -4543000000n;
@@ -487,7 +485,7 @@ bigint.verify('not a number');  // throws
 
 Accepts and returns booleans.
 
-```typescript
+```ts
 // 👍
 boolean.verify(false) === false;
 boolean.verify(true) === true;
@@ -505,7 +503,7 @@ boolean.verify(123);            // throws
 
 Accepts anything and will return its "truth" value. Will never reject.
 
-```typescript
+```ts
 // 👍
 truthy.verify(false) === false;
 truthy.verify(true) === true;
@@ -527,7 +525,7 @@ truthy.verify(null) === false;
 
 Accepts numbers, but return their boolean representation.
 
-```typescript
+```ts
 // 👍
 numericBoolean.verify(-1) === true;
 numericBoolean.verify(0) === false;
@@ -555,7 +553,7 @@ numericBoolean.verify('hello');    // throws
 
 Accepts and returns `Date` instances.
 
-```typescript
+```ts
 const now = new Date();
 
 // 👍
@@ -577,7 +575,7 @@ returns them as `Date` instances.
 This is very useful for working with dates in APIs: serialize them as
 `.toISOString()` when sending, decode them with [`iso8601`](/api.html#iso8601) when receiving.
 
-```typescript
+```ts
 // 👍
 iso8601.verify('2020-06-01T12:00:00Z'); // ≈ new Date('2020-06-01T12:00:00Z')
 
@@ -604,7 +602,7 @@ iso8601.verify(new Date());    // throws (does not accept dates)
 
 Accepts only the given constant value.
 
-```typescript
+```ts
 const decoder = constant('hello');
 
 // 👍
@@ -629,7 +627,7 @@ value instead.
 
 This is useful to manually add extra fields to object decoders.
 
-```typescript
+```ts
 const decoder = always(42);
 
 // 👍
@@ -643,7 +641,7 @@ decoder.verify(undefined) === 42;
 
 Or use it with a function instead of a constant:
 
-```typescript
+```ts
 const now = always(() => new Date());
 
 now.verify('dummy');  // e.g. new Date('2022-02-07T09:36:58.848Z')
@@ -670,7 +668,7 @@ now.verify('dummy');  // e.g. new Date('2022-02-07T09:36:58.848Z')
 
 Accepts and returns only the literal `null` value.
 
-```typescript
+```ts
 // 👍
 null_.verify(null) === null;
 
@@ -687,7 +685,7 @@ null_.verify('hello world'); // throws
 
 Accepts and returns only the literal `undefined` value.
 
-```typescript
+```ts
 // 👍
 undefined_.verify(undefined) === undefined;
 
@@ -710,7 +708,7 @@ Accepts whatever the given decoder accepts, or `undefined`.
 If a default value is explicitly provided, return that instead in the
 `undefined` case.
 
-```typescript
+```ts
 const decoder = optional(string);
 
 // 👍
@@ -725,7 +723,7 @@ decoder.verify(42);    // throws
 
 A typical case where [`optional()`](/api.html#optional) is useful is in decoding objects with optional fields:
 
-```typescript
+```ts
 object({
   id: number,
   name: string,
@@ -735,7 +733,7 @@ object({
 
 Which will decode to type:
 
-```typescript
+```ts
 {
   id: number;
   name: string;
@@ -756,7 +754,7 @@ Accepts whatever the given decoder accepts, or `null`.
 If a default value is explicitly provided, return that instead in the `null`
 case.
 
-```typescript
+```ts
 const decoder = nullable(string);
 
 // 👍
@@ -771,7 +769,7 @@ decoder.verify(42);         // throws
 
 Or use it with a default value:
 
-```typescript
+```ts
 const decoder = nullable(iso8601, () => new Date());
 
 decoder.verify('2022-01-01T12:00:00Z') === '2022-01-01T12:00:00Z';
@@ -797,7 +795,7 @@ Accepts whatever the given decoder accepts, or `null`, or `undefined`.
 If a default value is explicitly provided, return that instead in the
 `null`/`undefined` case.
 
-```typescript
+```ts
 const decoder = nullish(string);
 
 // 👍
@@ -812,7 +810,7 @@ decoder.verify(42);  // throws
 
 Or use it with a default value:
 
-```typescript
+```ts
 const decoder = nullish(string, null);
 
 decoder.verify('hello') === 'hello';
@@ -834,7 +832,7 @@ Useful for situation in which you don't know or expect a specific type. Of
 course, the downside is that you won't know the type of the value statically
 and you'll have to further refine it yourself.
 
-```typescript
+```ts
 // 👍
 unknown.verify('hello') === 'hello';
 unknown.verify(false) === false;
@@ -863,7 +861,7 @@ unknown.verify([1, 2]) === [1, 2];
 
 Accepts arrays of whatever the given decoder accepts.
 
-```typescript
+```ts
 const decoder = array(string);
 
 // 👍
@@ -881,7 +879,7 @@ decoder.verify(['hello', 1.2]);  // throws
 
 Like [`array()`](/api.html#array), but will reject arrays with 0 elements.
 
-```typescript
+```ts
 const decoder = nonEmptyArray(string);
 
 // 👍
@@ -901,7 +899,7 @@ Accepts any array, but doesn't validate its items further.
 
 "poja" means "plain old JavaScript array", a play on [`pojo`](/api.html#pojo).
 
-```typescript
+```ts
 // 👍
 poja.verify([1, 'hi', true]) === [1, 'hi', true];
 poja.verify(['hello', 'world']) === ['hello', 'world'];
@@ -920,7 +918,7 @@ poja.verify('hi');  // throws
 Accepts a tuple (an array with exactly _n_ items) of values accepted by the
 _n_ given decoders.
 
-```typescript
+```ts
 const decoder = tuple(string, number);
 
 // 👍
@@ -940,7 +938,7 @@ decoder.verify(['a', 1, 'c']);       // throws, too many items
 Similar to [`array()`](/api.html#array), but returns the result as an [ES6
 Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set).
 
-```typescript
+```ts
 const decoder = set(string);
 
 // 👍
@@ -971,7 +969,7 @@ decoder.verify([1, 2]);         // throws, not the right types
 Accepts objects with fields matching the given decoders. Extra fields that
 exist on the input object are ignored and will not be returned.
 
-```typescript
+```ts
 const decoder = object({
   x: number,
   y: number,
@@ -995,7 +993,7 @@ For more information, see also [The difference between ``object``, ``exact``, an
 Like [`object()`](/api.html#object), but will reject inputs that contain extra fields that are
 not specified explicitly.
 
-```typescript
+```ts
 const decoder = exact({
   x: number,
   y: number,
@@ -1019,7 +1017,7 @@ For more information, see also [The difference between ``object``, ``exact``, an
 Like [`object()`](/api.html#object), but will pass through any extra fields on the input object
 unvalidated that will thus be of [`unknown`](/api.html#unknown) type statically.
 
-```typescript
+```ts
 const decoder = inexact({
   x: number,
   y: number,
@@ -1043,7 +1041,7 @@ For more information, see also [The difference between ``object``, ``exact``, an
 Accepts any "plain old JavaScript object", but doesn't validate its keys or
 values further.
 
-```typescript
+```ts
 // 👍
 pojo.verify({}) === {};
 pojo.verify({ name: 'hi' }) === { name: 'hi' };
@@ -1069,7 +1067,7 @@ known and the values are heterogeneous. Whereas with [`dict()`](/api.html#dict) 
 typically dynamic and the values homogeneous, like in a dictionary,
 a lookup table, or a cache.
 
-```typescript
+```ts
 const decoder = dict(number);
 
 // 👍
@@ -1085,7 +1083,7 @@ Similar to [`dict()`](/api.html#dict), but returns the result as a `Map<string, 
 Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map))
 instead.
 
-```typescript
+```ts
 const decoder = mapping(number);
 
 // 👍
@@ -1126,7 +1124,7 @@ type JSONValue =
     | JSONValue[]
 ```
 
-```typescript
+```ts
 // 👍
 json.verify({
   name: 'Amir',
@@ -1144,7 +1142,7 @@ json.verify({
 
 Accepts objects that contain only valid JSON values.
 
-```typescript
+```ts
 // 👍
 jsonObject.verify({});                // ≈ {}
 jsonObject.verify({ name: 'Amir' });  // ≈ { name: 'Amir' }
@@ -1163,7 +1161,7 @@ jsonObject.verify(null);                 // throws
 
 Accepts arrays that contain only valid JSON values.
 
-```typescript
+```ts
 // 👍
 jsonArray.verify([]);                  // ≈ []
 jsonArray.verify([{ name: 'Amir' }]);  // ≈ [{ name: 'Amir' }]
@@ -1196,7 +1194,7 @@ The decoders are tried on the input one by one, in the given order. The
 first one that accepts the input "wins". If all decoders reject the input,
 the input gets rejected.
 
-```typescript
+```ts
 const decoder = either(number, string);
 
 // 👍
@@ -1215,7 +1213,7 @@ decoder.verify(false);  // throws
 Accepts any value that is strictly-equal (using `===`) to one of the
 specified values.
 
-```typescript
+```ts
 const decoder = oneOf(['foo', 'bar', 3]);
 
 // 👍
@@ -1230,7 +1228,7 @@ decoder.verify(false);    // throws
 
 For example, given an array of strings, like so:
 
-```typescript
+```ts
 oneOf(['foo', 'bar']);
 ```
 
@@ -1279,7 +1277,7 @@ It serves a similar purpose as [`taggedUnion()`](/api.html#taggedUnion), but is 
 works even if there isn't a single discriminator, or the discriminator isn't
 a string.
 
-```typescript
+```ts
 const decoder = select(
   // First, validate/extract the minimal information to make a decision
   object({ version: optional(number) }),
@@ -1328,7 +1326,7 @@ effects! You'll need to _return_ those values.
 
 > _**NOTE:** This is the lowest-level API to define a new decoder, and therefore not recommended unless you have a very good reason for it. Most cases can be covered more elegantly by starting from an existing decoder and using [`.transform()`](/Decoder.html#transform) or [`.refine()`](/Decoder.html#refine) on them instead._
 
-```typescript
+```ts
 // NOTE: Please do NOT implement an uppercase decoder like this! 😇
 const uppercase: Decoder<string> = define(
   (blob, ok, err) => {
@@ -1366,7 +1364,7 @@ you the ability to arbitrarily customize the input on the fly before passing
 it to the decoder. Of course, the input value at that point is still of
 ``unknown`` type, so you will have to deal with that accordingly.
 
-```typescript
+```ts
 const decoder = prep(
   // Will convert any input to an int first, before feeding it to
   // positiveInteger. This will effectively also allow numeric strings
@@ -1396,7 +1394,7 @@ decoder.verify('hi');  // throws: not a number
 Rejects all inputs, and always fails with the given error message. May be
 useful for explicitly disallowing keys, or for testing purposes.
 
-```typescript
+```ts
 const decoder = object({
   a: string,
   b: optional(never('Key b has been removed')),
@@ -1417,7 +1415,7 @@ decoder.verify({ a: 'foo', b: 'bar' });  // throws
 
 Accepts any value that is an ``instanceof`` the given class.
 
-```typescript
+```ts
 const decoder = instanceOf(Error);
 
 // 👍
@@ -1437,7 +1435,7 @@ decoder.verify(3);      // throws
 Lazily evaluate the given decoder. This is useful to build self-referential
 types for recursive data structures.
 
-```typescript
+```ts
 type Tree = {
   value: string;
   children: Array<Tree>;
@@ -1454,5 +1452,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 95eee416871e9a5b75296b07edebfca7)-->
+<!--[[[end]]] (checksum: da8ad6ff58d6dbf6c47894751b24f1a7)-->
 <!-- prettier-ignore-end -->

@@ -55,7 +55,7 @@ a runtime error.
 
 For example, take this simple number decoder.
 
-```typescript
+```ts
 // 👍
 number.verify(123);     // 123
 number.verify(3.1415);  // 3.1415
@@ -81,7 +81,7 @@ error message.
 
 <img alt="The .value() method explained" src="./assets/schematic-value.png" style="max-width: min(592px, 100%)" />
 
-```typescript
+```ts
 // 👍
 number.value(3);     // 3
 string.value('hi');  // 'hi'
@@ -107,7 +107,7 @@ instead return a result type.
 
 For example, take this simple "number" decoder. When given an number value, it will return an ok: true result. Otherwise, it will return an ok: false result with the original input value annotated.
 
-```typescript
+```ts
 // 👍
 number.decode(3);     // { ok: true, value: 3 };
 
@@ -125,7 +125,7 @@ the given function **on the decoded result**. If the transformation
 function throws an error, the whole decoder will fail using the error
 message as the failure reason.
 
-```typescript
+```ts
 const upper = string.transform((s) => s.toUpperCase());
 
 // 👍
@@ -144,7 +144,7 @@ Adds an extra predicate to a decoder. The new decoder is like the
 original decoder, but only accepts values that also meet the
 predicate.
 
-```typescript
+```ts
 const odd = number.refine(
   (n) => n % 2 !== 0,
   'Must be odd'
@@ -175,7 +175,7 @@ return a specific error message to reject.
 Unlike [`.refine()`](/Decoder.html#refine), you can use this function to return a dynamic error
 message.
 
-```typescript
+```ts
 const decoder = pojo
   .reject(
     obj => {
@@ -200,7 +200,7 @@ decoder.verify({ id: 123, _name: 'Vincent'  })   // throws: "Disallowed keys: _n
 
 Uses the given decoder, but will use an alternative error message in case it rejects. This can be used to simplify or shorten otherwise long or low-level/technical errors.
 
-```typescript
+```ts
 const vowel = oneOf(['a', 'e', 'i', 'o', 'u'])
   .describe('Must be vowel');
 ```
@@ -228,5 +228,5 @@ about its input and avoid re-refining inputs.
 If it helps, you can think of `define(...)` as equivalent to
 `unknown.then(...)`.
 
-<!--[[[end]]] (checksum: 2017e386f9661b9f8688721bb56afe71) -->
+<!--[[[end]]] (checksum: 291a1600755cc7b28b42fc11c7638e9a) -->
 <!-- prettier-ignore-end -->
