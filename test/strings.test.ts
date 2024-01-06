@@ -1,10 +1,14 @@
+import * as fc from 'fast-check';
 import { partition } from 'itertools';
 import { describe, expect, test } from 'vitest';
 
 import {
+  decimal,
   email,
+  hexadecimal,
   httpsUrl,
   nonEmptyString,
+  numeric,
   regex,
   string,
   url,
@@ -147,6 +151,91 @@ describe('nonEmptyString', () => {
     expect(() => decoder.verify('	')).toThrow();
     expect(() => decoder.verify('\n')).toThrow();
     expect(() => decoder.verify('     \n ')).toThrow();
+  });
+});
+
+describe('numeric', () => {
+  const decoder = numeric;
+
+  test('valid', () => {
+    expect(decoder.verify('1234567890')).toBe(1234567890);
+    expect(decoder.verify('0013')).toBe(13);
+  });
+
+  test('invalid', () => {
+    expect(() => decoder.verify('')).toThrow();
+    expect(() => decoder.verify('1x')).toThrow();
+    expect(() => decoder.verify('0x1')).toThrow();
+    expect(() => decoder.verify('7e4')).toThrow();
+  });
+
+  test('fuzz', () => {
+    return fc.assert(
+      fc.property(fc.anything(), (input) => {
+        if (typeof input === 'string' && !isNaN(Number(input)) && input !== '') {
+          expect(decoder.verify(input)).toBe(Number(input));
+        } else {
+          expect(() => decoder.verify(input)).toThrow();
+        }
+      }),
+    );
+  });
+});
+
+describe('decimal', () => {
+  const decoder = decimal;
+
+  test('valid', () => {
+    expect(decoder.verify('1234567890')).toBe('1234567890');
+    expect(decoder.verify('1')).toBe('1');
+  });
+
+  test('invalid', () => {
+    expect(() => decoder.verify('')).toThrow();
+    expect(() => decoder.verify('1x')).toThrow();
+    expect(() => decoder.verify('0x1')).toThrow();
+  });
+
+  test('fuzz', () => {
+    return fc.assert(
+      fc.property(
+        fc.anything().filter((x) => typeof x !== 'string' || !/^[0-9]+$/.test(x)),
+        (input) => {
+          expect(() => decoder.verify(input)).toThrow();
+        },
+      ),
+    );
+  });
+});
+
+describe('hexadecimal', () => {
+  const decoder = hexadecimal;
+
+  test('valid', () => {
+    expect(decoder.verify('1234567890abcdef')).toBe('1234567890abcdef');
+    expect(decoder.verify('1234567890ABCDEF')).toBe('1234567890ABCDEF');
+    expect(decoder.verify('1234567890')).toBe('1234567890');
+    expect(decoder.verify('deadBEEF')).toBe('deadBEEF');
+    expect(decoder.verify('badCAFE')).toBe('badCAFE');
+    expect(decoder.verify('0ff1ce')).toBe('0ff1ce');
+    expect(decoder.verify('1')).toBe('1');
+  });
+
+  test('invalid', () => {
+    expect(() => decoder.verify('')).toThrow();
+    expect(() => decoder.verify('1x')).toThrow();
+    expect(() => decoder.verify('0xdeadbeef')).toThrow();
+  });
+
+  test('fuzz', () => {
+    return fc.assert(
+      fc.property(
+        fc.anything().filter((x) => typeof x !== 'string' || !/^[0-9a-fA-F]+$/.test(x)),
+        (input) => {
+          expect(() => decoder.verify(input)).toThrow();
+        },
+      ),
+    );
   });
 });
 
