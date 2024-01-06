@@ -20,17 +20,9 @@ export { instanceOf, lazy, prep } from './misc';
 export { anyNumber, integer, number, positiveInteger, positiveNumber } from './numbers';
 export { bigint } from './numbers';
 export { dict, exact, inexact, mapping, object, pojo } from './objects';
-export {
-  email,
-  httpsUrl,
-  nonEmptyString,
-  regex,
-  string,
-  url,
-  uuid,
-  uuidv1,
-  uuidv4,
-} from './strings';
+export { nonEmptyString, regex, string } from './strings';
+export { email, httpsUrl, url, uuid, uuidv1, uuidv4 } from './strings';
+export { decimal, hexadecimal, numeric } from './strings';
 export { either, oneOf, select, taggedUnion } from './unions';
 
 // Core functionality

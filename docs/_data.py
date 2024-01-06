@@ -16,6 +16,7 @@ DECODERS = {
     'params': None,
     'return_type': 'Decoder<string>',
     'example': """
+      ```typescript
       // 👍
       string.verify('hello world') === 'hello world';
       string.verify('🚀') === '🚀';
@@ -25,6 +26,7 @@ DECODERS = {
       string.verify(123);   // throws
       string.verify(true);  // throws
       string.verify(null);  // throws
+      ```
     """,
   },
 
@@ -33,6 +35,7 @@ DECODERS = {
     'params': None,
     'return_type': 'Decoder<string>',
     'example': """
+      ```typescript
       // 👍
       nonEmptyString.verify('hello world') === 'hello world';
       nonEmptyString.verify('🚀') === '🚀';
@@ -41,6 +44,7 @@ DECODERS = {
       nonEmptyString.verify(123);   // throws
       nonEmptyString.verify('  ');  // throws
       nonEmptyString.verify('');    // throws
+      ```
     """,
   },
 
@@ -52,6 +56,7 @@ DECODERS = {
     ],
     'return_type': 'Decoder<string>',
     'example': """
+      ```typescript
       const decoder = regex(/^[0-9][0-9]+$/, 'Must be numeric');
 
       // 👍
@@ -62,6 +67,66 @@ DECODERS = {
       decoder.verify('');     // throws
       decoder.verify('1');    // throws
       decoder.verify('foo');  // throws
+      ```
+    """,
+  },
+
+  'decimal': {
+    'section': 'Strings',
+    'return_type': 'Decoder<string>',
+    'example': """
+      ```typescript
+      const decoder = decimal;
+
+      // 👍
+      decoder.verify('42') === '42';
+      decoder.verify('83401648364738') === '83401648364738';
+
+      // 👎
+      decoder.verify('');        // throws
+      decoder.verify('123abc');  // throws
+      decoder.verify('foo');     // throws
+      decoder.verify(123);       // throws (not a string)
+      ```
+    """,
+  },
+
+  'hexadecimal': {
+    'section': 'Strings',
+    'return_type': 'Decoder<string>',
+    'example': """
+      ```typescript
+      const decoder = hexadecimal;
+
+      // 👍
+      decoder.verify('0123456789ABCDEF') === '0123456789ABCDEF';
+      decoder.verify('deadbeef') === 'deadbeef';
+
+      // 👎
+      decoder.verify('abcdefghijklm');  // throws (not hexadecimal)
+      decoder.verify('');     // throws
+      decoder.verify('1');    // throws
+      ```
+    """,
+  },
+
+  'numeric': {
+    'section': 'Strings',
+    'return_type': 'Decoder<number>',
+    'example': """
+      ```typescript
+      const decoder = numeric;
+
+      // 👍
+      decoder.verify('42') === 42;
+      decoder.verify('83401648364738') === 83401648364738;
+
+      // 👎
+      decoder.verify('');        // throws
+      decoder.verify('123abc');  // throws
+      decoder.verify('foo');     // throws
+      decoder.verify(123);       // throws (not a string)
+      ```
     """,
   },
 
@@ -171,6 +236,7 @@ DECODERS = {
     'params': None,
     'return_type': 'Decoder<number>',
     'example': """
+      ```typescript
       // 👍
       number.verify(123) === 123;
       number.verify(-3.14) === -3.14;
@@ -179,6 +245,7 @@ DECODERS = {
       number.verify(Infinity);        // throws
       number.verify(NaN);             // throws
       number.verify('not a number');  // throws
+      ```
     """,
   },
 
@@ -187,6 +254,7 @@ DECODERS = {
     'params': None,
     'return_type': 'Decoder<number>',
     'example': """
+      ```typescript
       // 👍
       integer.verify(123) === 123;
 
@@ -195,6 +263,7 @@ DECODERS = {
       integer.verify(Infinity);        // throws
       integer.verify(NaN);             // throws
       integer.verify('not a integer'); // throws
+      ```
     """,
   },
 
@@ -203,6 +272,7 @@ DECODERS = {
     'params': None,
     'return_type': 'Decoder<number>',
     'example': """
+      ```typescript
       // 👍
       positiveNumber.verify(123) === 123;
       positiveNumber.verify(0) === 0;
@@ -214,6 +284,7 @@ DECODERS = {
       positiveNumber.verify(Infinity);        // throws
       positiveNumber.verify(NaN);             // throws
       positiveNumber.verify('not a number');  // throws
+      ```
     """,
   },
 
@@ -222,6 +293,7 @@ DECODERS = {
     'params': None,
     'return_type': 'Decoder<number>',
     'example': """
+      ```typescript
       // 👍
       positiveInteger.verify(123) === 123;
       positiveInteger.verify(0) === 0;
@@ -233,6 +305,7 @@ DECODERS = {
       positiveInteger.verify(Infinity);        // throws
       positiveInteger.verify(NaN);             // throws
       positiveInteger.verify('not a number');  // throws
+      ```
     """,
   },
 
@@ -241,6 +314,7 @@ DECODERS = {
     'params': None,
     'return_type': 'Decoder<number>',
     'example': """
+      ```typescript
       // 👍
       anyNumber.verify(123) === 123;
       anyNumber.verify(-3.14) === -3.14;
@@ -249,6 +323,7 @@ DECODERS = {
 
       // 👎
       anyNumber.verify('not a number');  // throws
+      ```
     """,
   },
 
@@ -257,6 +332,7 @@ DECODERS = {
     'params': None,
     'return_type': 'Decoder<bigint>',
     'example': """
+      ```typescript
       // 👍
       bigint.verify(123n) === 123n;
       bigint.verify(-4543000000n) === -4543000000n;
@@ -267,6 +343,7 @@ DECODERS = {
       bigint.verify(Infinity);        // throws
       bigint.verify(NaN);             // throws
       bigint.verify('not a number');  // throws
+      ```
     """,
   },
 
