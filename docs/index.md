@@ -10,7 +10,7 @@ nav_order: 0
 
 <!-- prettier-ignore-start -->
 Decoders is an elegant and battle-tested validation library for type-safe input data for
-[TypeScript](https://www.typescriptlang.org/) and [Flow](https://flow.org/).
+[TypeScript](https://www.typescriptlang.org/).
 {: .fs-6 .fw-300 }
 <!-- prettier-ignore-end -->
 
