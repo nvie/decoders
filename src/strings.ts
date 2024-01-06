@@ -3,6 +3,7 @@ import { define } from '~/core';
 
 import { instanceOf } from './misc';
 import { either } from './unions';
+import { isString } from '~/lib/utils';
 
 /** Match groups in this regex:
  * \1 - the scheme
@@ -18,7 +19,7 @@ const url_re =
  * Accepts and returns strings.
  */
 export const string: Decoder<string> = define((blob, ok, err) =>
-  typeof blob === 'string' ? ok(blob) : err('Must be string'),
+  isString(blob) ? ok(blob) : err('Must be string'),
 );
 
 /**

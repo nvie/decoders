@@ -23,7 +23,7 @@ export { dict, exact, inexact, mapping, object, pojo } from './objects';
 export { nonEmptyString, regex, string } from './strings';
 export { email, httpsUrl, url, uuid, uuidv1, uuidv4 } from './strings';
 export { decimal, hexadecimal, numeric } from './strings';
-export { either, oneOf, select, taggedUnion } from './unions';
+export { either, enum_, oneOf, select, taggedUnion } from './unions';
 
 // Core functionality
 export type { Decoder, DecodeResult, DecoderType } from '~/core';
