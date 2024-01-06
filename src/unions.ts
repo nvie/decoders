@@ -2,10 +2,10 @@ import type { Decoder, DecoderType } from '~/core';
 import { define, summarize } from '~/core';
 import { indent } from '~/lib/text';
 import type { Scalar } from '~/lib/types';
+import { isNumber, isString } from '~/lib/utils';
 
 import { prep } from './misc';
 import { object } from './objects';
-import { isNumber, isString } from '~/lib/utils';
 
 const EITHER_PREFIX = 'Either:\n';
 

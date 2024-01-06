@@ -1,9 +1,9 @@
 import type { Decoder } from '~/core';
 import { define } from '~/core';
+import { isString } from '~/lib/utils';
 
 import { instanceOf } from './misc';
 import { either } from './unions';
-import { isString } from '~/lib/utils';
 
 /** Match groups in this regex:
  * \1 - the scheme
