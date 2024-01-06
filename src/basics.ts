@@ -19,10 +19,8 @@ export const null_ = constant(null);
 export const undefined_ = constant(undefined);
 
 const nullish_: Decoder<null | undefined> = define((blob, ok, err) =>
-  blob == null /* or undefined */
-    ? ok(blob)
-    : // Combine error message into a single line for readability
-      err('Must be undefined or null'),
+  // Equiv to either(undefined_, null_), but combined for better error message
+  blob == null ? ok(blob) : err('Must be undefined or null'),
 );
 
 /**
