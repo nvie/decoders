@@ -172,7 +172,7 @@ describe('numeric', () => {
   test('fuzz', () => {
     return fc.assert(
       fc.property(fc.anything(), (input) => {
-        if (typeof input === 'string' && !isNaN(Number(input)) && input !== '') {
+        if (typeof input === 'string' && !isNaN(Number(input)) && /\S/.test(input)) {
           expect(decoder.verify(input)).toBe(Number(input));
         } else {
           expect(() => decoder.verify(input)).toThrow();

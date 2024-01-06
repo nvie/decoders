@@ -914,7 +914,6 @@ DECODERS = {
       },
     ],
     'example': """
-      ```ts
       const decoder = either(number, string);
 
       // 👍
@@ -923,7 +922,6 @@ DECODERS = {
 
       // 👎
       decoder.verify(false);  // throws
-      ```
     """,
   },
 
