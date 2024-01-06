@@ -87,3 +87,24 @@ export const uuidv1: Decoder<string> =
 export const uuidv4: Decoder<string> =
   // https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)
   uuid.refine((value) => value[14] === '4', 'Must be uuidv4');
+
+/**
+ * Accepts and returns strings with decimal digits only (base-10).
+ * To convert these to numbers, use the `numeric` decoder.
+ */
+export const decimal: Decoder<string> = regex(/^[0-9]+$/, 'Must only contain digits');
+
+/**
+ * Accepts and returns strings with hexadecimal digits only (base-16).
+ */
+export const hexadecimal: Decoder<string> = regex(
+  /^[0-9a-f]+$/i,
+  'Must only contain hexadecimal digits',
+);
+
+/**
+ * Accepts valid numerical strings (in base-10) and returns them as a number.
+ * To only accept numerical strings and keep them as string values, use the
+ * `decimal` decoder.
+ */
+export const numeric: Decoder<number> = decimal.transform(Number);

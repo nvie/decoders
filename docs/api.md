@@ -28,7 +28,7 @@ All "batteries included" decoders available in the standard library.
 for section, names in DECODERS_BY_SECTION.items():
   cog.outl(f'- [**{section}**](#{slugify(section)}): {", ".join(ref(name) for name in names)}')
 ]]]-->
-- [**Strings**](#strings): [`string`](/api.html#string), [`nonEmptyString`](/api.html#nonEmptyString), [`regex()`](/api.html#regex), [`email`](/api.html#email), [`url`](/api.html#url), [`httpsUrl`](/api.html#httpsUrl), [`uuid`](/api.html#uuid), [`uuidv1`](/api.html#uuidv1), [`uuidv4`](/api.html#uuidv4)
+- [**Strings**](#strings): [`string`](/api.html#string), [`nonEmptyString`](/api.html#nonEmptyString), [`regex()`](/api.html#regex), [`decimal`](/api.html#decimal), [`hexadecimal`](/api.html#hexadecimal), [`numeric`](/api.html#numeric), [`email`](/api.html#email), [`url`](/api.html#url), [`httpsUrl`](/api.html#httpsUrl), [`uuid`](/api.html#uuid), [`uuidv1`](/api.html#uuidv1), [`uuidv4`](/api.html#uuidv4)
 - [**Numbers**](#numbers): [`number`](/api.html#number), [`integer`](/api.html#integer), [`positiveNumber`](/api.html#positiveNumber), [`positiveInteger`](/api.html#positiveInteger), [`anyNumber`](/api.html#anyNumber), [`bigint`](/api.html#bigint)
 - [**Booleans**](#booleans): [`boolean`](/api.html#boolean), [`truthy`](/api.html#truthy), [`numericBoolean`](/api.html#numericBoolean)
 - [**Dates**](#dates): [`date`](/api.html#date), [`iso8601`](/api.html#iso8601)
@@ -39,7 +39,7 @@ for section, names in DECODERS_BY_SECTION.items():
 - [**JSON values**](#json-values): [`json`](/api.html#json), [`jsonObject`](/api.html#jsonObject), [`jsonArray`](/api.html#jsonArray)
 - [**Unions**](#unions): [`either()`](/api.html#either), [`oneOf()`](/api.html#oneOf), [`taggedUnion()`](/api.html#taggedUnion), [`select()`](/api.html#select)
 - [**Utilities**](#utilities): [`define()`](/api.html#define), [`prep()`](/api.html#prep), [`never`](/api.html#never), [`instanceOf()`](/api.html#instanceOf), [`lazy()`](/api.html#lazy), [`fail`](/api.html#fail)
-<!--[[[end]]] (checksum: 2bb03add0cc4785ee4a1bc1e25c66ddd) -->
+<!--[[[end]]] (checksum: 31c937e1960485cba47c0873f74e1b02) -->
 
 <!--[[[cog
 for section, names in DECODERS_BY_SECTION.items():
@@ -87,6 +87,9 @@ for section, names in DECODERS_BY_SECTION.items():
 - [`string`](/api.html#string)
 - [`nonEmptyString`](/api.html#nonEmptyString)
 - [`regex()`](/api.html#regex)
+- [`decimal`](/api.html#decimal)
+- [`hexadecimal`](/api.html#hexadecimal)
+- [`numeric`](/api.html#numeric)
 - [`email`](/api.html#email)
 - [`url`](/api.html#url)
 - [`httpsUrl`](/api.html#httpsUrl)
@@ -149,6 +152,71 @@ decoder.verify('83401648364738') === '83401648364738';
 decoder.verify('');     // throws
 decoder.verify('1');    // throws
 decoder.verify('foo');  // throws
+```
+
+---
+
+<a href="#decimal">#</a> **decimal**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L91-L95 'Source')
+{: #decimal .signature}
+
+Accepts and returns strings with decimal digits only (base-10).
+To convert these to numbers, use the [`numeric`](/api.html#numeric) decoder.
+
+```typescript
+const decoder = decimal;
+
+// 👍
+decoder.verify('42') === '42';
+decoder.verify('83401648364738') === '83401648364738';
+
+// 👎
+decoder.verify('');        // throws
+decoder.verify('123abc');  // throws
+decoder.verify('foo');     // throws
+decoder.verify(123);       // throws (not a string)
+```
+
+---
+
+<a href="#hexadecimal">#</a> **hexadecimal**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L97-L103 'Source')
+{: #hexadecimal .signature}
+
+Accepts and returns strings with hexadecimal digits only (base-16).
+
+```typescript
+const decoder = hexadecimal;
+
+// 👍
+decoder.verify('0123456789ABCDEF') === '0123456789ABCDEF';
+decoder.verify('deadbeef') === 'deadbeef';
+
+// 👎
+decoder.verify('abcdefghijklm');  // throws (not hexadecimal)
+decoder.verify('');     // throws
+decoder.verify('1');    // throws
+```
+
+---
+
+<a href="#numeric">#</a> **numeric**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L105-L110 'Source')
+{: #numeric .signature}
+
+Accepts valid numerical strings (in base-10) and returns them as a number.
+To only accept numerical strings and keep them as string values, use the
+[`decimal`](/api.html#decimal) decoder.
+
+```typescript
+const decoder = numeric;
+
+// 👍
+decoder.verify('42') === 42;
+decoder.verify('83401648364738') === 83401648364738;
+
+// 👎
+decoder.verify('');        // throws
+decoder.verify('123abc');  // throws
+decoder.verify('foo');     // throws
+decoder.verify(123);       // throws (not a string)
 ```
 
 ---
@@ -1386,5 +1454,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: f10002c5c4df3d27d2f9a58481040fbe)-->
+<!--[[[end]]] (checksum: 95eee416871e9a5b75296b07edebfca7)-->
 <!-- prettier-ignore-end -->

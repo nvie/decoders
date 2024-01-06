@@ -8,12 +8,14 @@ import {
   boolean,
   constant,
   date,
+  decimal,
   dict,
   either,
   email,
   exact,
   fail,
   hardcoded,
+  hexadecimal,
   httpsUrl,
   inexact,
   instanceOf,
@@ -33,6 +35,7 @@ import {
   nullish,
   null_,
   number,
+  numeric,
   numericBoolean,
   object,
   oneOf,
@@ -98,11 +101,13 @@ expectType<number>(test(integer));
 expectType<number>(test(number));
 expectType<number>(test(positiveInteger));
 expectType<number>(test(positiveNumber));
-
+expectType<number>(test(numeric));
 expectType<bigint>(test(bigint));
 
 expectType<string>(test(string));
 expectType<string>(test(nonEmptyString));
+expectType<string>(test(decimal));
+expectType<string>(test(hexadecimal));
 expectType<string>(test(email));
 expectType<string>(test(regex(/foo/, 'Must be foo')));
 expectType<URL>(test(url));
