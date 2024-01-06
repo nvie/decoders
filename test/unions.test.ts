@@ -267,6 +267,7 @@ describe('enums', () => {
   describe('string enums with duplicate values', () => {
     enum Fruit {
       Apple = 'apple',
+      // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
       AlsoApple = 'apple',
     }
 
