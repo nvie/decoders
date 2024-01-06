@@ -2,6 +2,7 @@ import type { Decoder, DecoderType } from '~/core';
 import { define, summarize } from '~/core';
 import { indent } from '~/lib/text';
 import type { Scalar } from '~/lib/types';
+import { isNumber, isString } from '~/lib/utils';
 
 import { prep } from './misc';
 import { object } from './objects';
@@ -95,6 +96,29 @@ export function oneOf<C extends Scalar>(constants: readonly C[]): Decoder<C> {
       `Must be one of ${constants.map((value) => JSON.stringify(value)).join(', ')}`,
     );
   });
+}
+
+/**
+ * Accepts and return an enum value.
+ */
+export function enum_<TEnum extends Record<string, string | number>>(
+  enumObj: TEnum,
+): Decoder<TEnum[keyof TEnum]> {
+  const values = Object.values(enumObj);
+  if (!values.some(isNumber)) {
+    return oneOf(values) as Decoder<TEnum[keyof TEnum]>;
+  } else {
+    // Numeric enums (or mixed enums) require a bit more work. We'll definitely
+    // want to allow all the numeric values.
+    const nums = values.filter(isNumber);
+    const ignore = new Set(nums.map((val) => enumObj[val]));
+
+    // But don't keep the string values that are the key names for the
+    // numeric values we already covered
+    const strings = values.filter(isString).filter((val) => !ignore.has(val));
+
+    return oneOf([...nums, ...strings]) as Decoder<TEnum[keyof TEnum]>;
+  }
 }
 
 /**

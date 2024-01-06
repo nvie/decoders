@@ -2,11 +2,12 @@
 
 **New decoders:**
 
+- `enum_` (see [docs](https://decoders.cc/api.html#enum_))
+- `select()` (see [docs](https://decoders.cc/api.html#select))
 - `bigint` (see [docs](https://decoders.cc/api.html#bigint))
 - `decimal` (see [docs](https://decoders.cc/api.html#decimal))
 - `hexadecimal` (see [docs](https://decoders.cc/api.html#hexadecimal))
 - `numeric` (see [docs](https://decoders.cc/api.html#numeric))
-- `select()` (see [docs](https://decoders.cc/api.html#select))
 
 **Renamed decoders:**
 

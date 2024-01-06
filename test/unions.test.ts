@@ -8,7 +8,7 @@ import type { Decoder } from '~/core';
 import { number } from '~/numbers';
 import { object } from '~/objects';
 import { regex, string } from '~/strings';
-import { either, oneOf, select, taggedUnion } from '~/unions';
+import { either, enum_, oneOf, select, taggedUnion } from '~/unions';
 
 import { INPUTS } from './_fixtures';
 
@@ -199,6 +199,240 @@ describe('oneOf', () => {
       const expected = okay.includes(blob as never);
       expect(decoder.decode(blob).ok).toBe(expected);
     }));
+});
+
+describe('enums', () => {
+  describe('string enums', () => {
+    enum Fruit {
+      Apple = 'apple',
+      Banana = 'banana',
+      Cherry = 'cherry',
+    }
+
+    const decoder = enum_(Fruit);
+
+    test('valid', () => {
+      expect(decoder.verify(Fruit.Apple)).toBe(Fruit.Apple);
+      expect(decoder.verify(Fruit.Banana)).toBe(Fruit.Banana);
+      expect(decoder.verify(Fruit.Cherry)).toBe(Fruit.Cherry);
+      expect(decoder.verify('apple')).toBe(Fruit.Apple);
+      expect(decoder.verify('banana')).toBe(Fruit.Banana);
+      expect(decoder.verify('cherry')).toBe(Fruit.Cherry);
+    });
+
+    test('invalid', () => {
+      expect(() => decoder.verify('xx')).toThrow(
+        /Must be one of "apple", "banana", "cherry"/,
+      );
+      expect(() => decoder.verify('Apple')).toThrow();
+      expect(() => decoder.verify('Banana')).toThrow();
+      expect(() => decoder.verify('Cherry')).toThrow();
+      expect(() => decoder.verify(0)).toThrow();
+      expect(() => decoder.verify(1)).toThrow();
+      expect(() => decoder.verify(2)).toThrow();
+      expect(() => decoder.verify(3)).toThrow();
+    });
+  });
+
+  describe('string enums where keys and values are equal', () => {
+    enum Fruit {
+      Apple = 'Apple',
+      Banana = 'Banana',
+      Cherry = 'Cherry',
+    }
+
+    const decoder = enum_(Fruit);
+
+    test('valid', () => {
+      expect(decoder.verify(Fruit.Apple)).toBe(Fruit.Apple);
+      expect(decoder.verify(Fruit.Banana)).toBe(Fruit.Banana);
+      expect(decoder.verify(Fruit.Cherry)).toBe(Fruit.Cherry);
+      expect(decoder.verify('Apple')).toBe(Fruit.Apple);
+      expect(decoder.verify('Banana')).toBe(Fruit.Banana);
+      expect(decoder.verify('Cherry')).toBe(Fruit.Cherry);
+    });
+
+    test('invalid', () => {
+      expect(() => decoder.verify('xx')).toThrow(
+        /Must be one of "Apple", "Banana", "Cherry"/,
+      );
+      expect(() => decoder.verify('Peach')).toThrow();
+      expect(() => decoder.verify(0)).toThrow();
+      expect(() => decoder.verify(1)).toThrow();
+      expect(() => decoder.verify(2)).toThrow();
+      expect(() => decoder.verify(3)).toThrow();
+    });
+  });
+
+  describe('string enums with duplicate values', () => {
+    enum Fruit {
+      Apple = 'apple',
+      // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
+      AlsoApple = 'apple',
+    }
+
+    const decoder = enum_(Fruit);
+
+    test('valid', () => {
+      expect(decoder.verify(Fruit.Apple)).toBe(Fruit.Apple);
+      expect(decoder.verify(Fruit.AlsoApple)).toBe(Fruit.AlsoApple);
+      expect(decoder.verify('apple')).toBe(Fruit.Apple);
+      expect(decoder.verify('apple')).toBe(Fruit.AlsoApple);
+    });
+
+    test('invalid', () => {
+      expect(() => decoder.verify('xx')).toThrow(/Must be one of "apple", "apple"/);
+      expect(() => decoder.verify('Apple')).toThrow();
+      expect(() => decoder.verify('AlsoApple')).toThrow();
+      expect(() => decoder.verify(0)).toThrow();
+      expect(() => decoder.verify(1)).toThrow();
+      expect(() => decoder.verify(2)).toThrow();
+      expect(() => decoder.verify(3)).toThrow();
+    });
+  });
+
+  describe('numeric enums', () => {
+    enum Fruit {
+      Apple,
+      Banana,
+      Cherry,
+    }
+
+    const decoder = enum_(Fruit);
+
+    test('valid', () => {
+      expect(decoder.verify(Fruit.Apple)).toBe(Fruit.Apple);
+      expect(decoder.verify(Fruit.Banana)).toBe(Fruit.Banana);
+      expect(decoder.verify(Fruit.Cherry)).toBe(Fruit.Cherry);
+      expect(decoder.verify(0)).toBe(Fruit.Apple);
+      expect(decoder.verify(1)).toBe(Fruit.Banana);
+      expect(decoder.verify(2)).toBe(Fruit.Cherry);
+    });
+
+    test('invalid', () => {
+      expect(() => decoder.verify('xx')).toThrow(/Must be one of 0, 1, 2/);
+      expect(() => decoder.verify('Apple')).toThrow();
+      expect(() => decoder.verify('Banana')).toThrow();
+      expect(() => decoder.verify('Cherry')).toThrow();
+      expect(() => decoder.verify('apple')).toThrow();
+      expect(() => decoder.verify('banana')).toThrow();
+      expect(() => decoder.verify('cherry')).toThrow();
+      expect(() => decoder.verify(-1)).toThrow();
+      expect(() => decoder.verify(3)).toThrow();
+    });
+  });
+
+  describe('number enums with explicit auto-incrementing nums', () => {
+    enum Fruit {
+      Apple = 1,
+      Banana,
+    }
+
+    const decoder = enum_(Fruit);
+
+    test('valid', () => {
+      expect(decoder.verify(Fruit.Apple)).toBe(Fruit.Apple);
+      expect(decoder.verify(Fruit.Banana)).toBe(Fruit.Banana);
+      expect(decoder.verify(1)).toBe(Fruit.Apple);
+      expect(decoder.verify(2)).toBe(Fruit.Banana);
+    });
+
+    test('invalid', () => {
+      expect(() => decoder.verify('xx')).toThrow(/Must be one of 1, 2/);
+      expect(() => decoder.verify('Apple')).toThrow();
+      expect(() => decoder.verify('Banana')).toThrow();
+      expect(() => decoder.verify('apple')).toThrow();
+      expect(() => decoder.verify('banana')).toThrow();
+      expect(() => decoder.verify(-1)).toThrow();
+      expect(() => decoder.verify(0)).toThrow();
+      expect(() => decoder.verify(3)).toThrow();
+    });
+  });
+
+  describe('number enums with explicit nums', () => {
+    enum Fruit {
+      Apple = 42,
+      Banana = 13,
+    }
+
+    const decoder = enum_(Fruit);
+
+    test('valid', () => {
+      expect(decoder.verify(Fruit.Apple)).toBe(Fruit.Apple);
+      expect(decoder.verify(Fruit.Banana)).toBe(Fruit.Banana);
+      expect(decoder.verify(42)).toBe(Fruit.Apple);
+      expect(decoder.verify(13)).toBe(Fruit.Banana);
+    });
+
+    test('invalid', () => {
+      expect(() => decoder.verify('xx')).toThrow(/Must be one of 42, 13/);
+      expect(() => decoder.verify('Apple')).toThrow();
+      expect(() => decoder.verify('Banana')).toThrow();
+      expect(() => decoder.verify('apple')).toThrow();
+      expect(() => decoder.verify('banana')).toThrow();
+      expect(() => decoder.verify(-1)).toThrow();
+      expect(() => decoder.verify(0)).toThrow();
+      expect(() => decoder.verify(1)).toThrow();
+      expect(() => decoder.verify(2)).toThrow();
+    });
+  });
+
+  describe('mixed enums', () => {
+    enum Fruit {
+      Apple = 'apple',
+      Banana = 3,
+      Cherry = 'Cherry',
+    }
+
+    const decoder = enum_(Fruit);
+
+    test('valid', () => {
+      expect(decoder.verify(Fruit.Apple)).toBe(Fruit.Apple);
+      expect(decoder.verify(Fruit.Banana)).toBe(Fruit.Banana);
+      expect(decoder.verify('apple')).toBe(Fruit.Apple);
+      expect(decoder.verify(3)).toBe(Fruit.Banana);
+    });
+
+    test('invalid', () => {
+      expect(() => decoder.verify('xx')).toThrow(/Must be one of 3, "apple", "Cherry"/);
+      expect(() => decoder.verify('Apple')).toThrow();
+      expect(() => decoder.verify('Banana')).toThrow();
+      expect(() => decoder.verify('banana')).toThrow();
+      expect(() => decoder.verify(0)).toThrow();
+      expect(() => decoder.verify(1)).toThrow();
+      expect(() => decoder.verify(2)).toThrow();
+      expect(() => decoder.verify(4)).toThrow();
+    });
+  });
+
+  describe('manual enum constants', () => {
+    const Fruit = {
+      Apple: 'apple',
+      Banana: 'banana',
+      Cherry: 3,
+    } as const;
+
+    const decoder = enum_(Fruit);
+
+    test('valid', () => {
+      expect(decoder.verify(Fruit.Apple)).toBe(Fruit.Apple);
+      expect(decoder.verify(Fruit.Banana)).toBe(Fruit.Banana);
+      expect(decoder.verify(Fruit.Cherry)).toBe(Fruit.Cherry);
+      expect(decoder.verify('apple')).toBe(Fruit.Apple);
+      expect(decoder.verify('banana')).toBe(Fruit.Banana);
+      expect(decoder.verify(3)).toBe(Fruit.Cherry);
+    });
+
+    test('invalid', () => {
+      expect(() => decoder.verify('xx')).toThrow(/Must be one of 3, "apple", "banana"/);
+      expect(() => decoder.verify('Apple')).toThrow();
+      expect(() => decoder.verify('Banana')).toThrow();
+      expect(() => decoder.verify(0)).toThrow();
+      expect(() => decoder.verify(1)).toThrow();
+      expect(() => decoder.verify(2)).toThrow();
+      expect(() => decoder.verify(4)).toThrow();
+    });
+  });
 });
 
 type Rectangle = {

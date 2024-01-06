@@ -1,5 +1,6 @@
 import type { Decoder } from '~/core';
 import { define } from '~/core';
+import { isBigInt, isNumber } from '~/lib/utils';
 
 /**
  * Accepts any valid ``number`` value.
@@ -9,7 +10,7 @@ import { define } from '~/core';
  * `number` decoder instead.
  */
 export const anyNumber: Decoder<number> = define((blob, ok, err) =>
-  typeof blob === 'number' ? ok(blob) : err('Must be number'),
+  isNumber(blob) ? ok(blob) : err('Must be number'),
 );
 
 /**
@@ -47,5 +48,5 @@ export const positiveInteger: Decoder<number> = integer
  * Accepts any valid ``bigint`` value.
  */
 export const bigint: Decoder<bigint> = define((blob, ok, err) =>
-  typeof blob === 'bigint' ? ok(blob) : err('Must be bigint'),
+  isBigInt(blob) ? ok(blob) : err('Must be bigint'),
 );

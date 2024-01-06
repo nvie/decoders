@@ -12,6 +12,7 @@ import {
   dict,
   either,
   email,
+  enum_,
   exact,
   fail,
   hardcoded,
@@ -66,7 +67,7 @@ import {
   // Results
   ok,
 } from '../dist';
-import { expectError, expectType } from 'tsd';
+import { expectError, expectType, expectAssignable } from 'tsd';
 
 // Helper function to "test" a decoder on some input, and assert the return type
 function test<T>(decoder: Decoder<T>): T {
@@ -381,6 +382,33 @@ expectType<string>(
 );
 
 expectType<'foo' | 'bar'>(test(oneOf(['foo', 'bar'])));
+
+enum Fruit {
+  Apple = 'a',
+  Banana = 'b',
+  Cherry = 'c',
+}
+
+enum Primes {
+  Five = 5,
+  Three = 3,
+  Eleven = 11,
+}
+
+// Not sure why this isn't strictly expectType?
+// TypeScript thinks these aren't equal types.
+expectAssignable<Fruit>(test(enum_(Fruit)));
+expectAssignable<Primes>(test(enum_(Primes)));
+
+const ConstEnum = {
+  Five: 'five',
+  Three: 3,
+  Nine: 9,
+} as const;
+
+type MixedConstEnumType = (typeof ConstEnum)[keyof typeof ConstEnum];
+
+expectType<MixedConstEnumType>(test(enum_(ConstEnum)));
 
 interface Rect {
   _type: 'rect';
