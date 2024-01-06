@@ -403,6 +403,35 @@ describe('enums', () => {
       expect(() => decoder.verify(4)).toThrow();
     });
   });
+
+  describe('manual enum constants', () => {
+    const Fruit = {
+      Apple: 'apple',
+      Banana: 'banana',
+      Cherry: 3,
+    } as const;
+
+    const decoder = enum_(Fruit);
+
+    test('valid', () => {
+      expect(decoder.verify(Fruit.Apple)).toBe(Fruit.Apple);
+      expect(decoder.verify(Fruit.Banana)).toBe(Fruit.Banana);
+      expect(decoder.verify(Fruit.Cherry)).toBe(Fruit.Cherry);
+      expect(decoder.verify('apple')).toBe(Fruit.Apple);
+      expect(decoder.verify('banana')).toBe(Fruit.Banana);
+      expect(decoder.verify(3)).toBe(Fruit.Cherry);
+    });
+
+    test('invalid', () => {
+      expect(() => decoder.verify('xx')).toThrow(/Must be one of 3, "apple", "banana"/);
+      expect(() => decoder.verify('Apple')).toThrow();
+      expect(() => decoder.verify('Banana')).toThrow();
+      expect(() => decoder.verify(0)).toThrow();
+      expect(() => decoder.verify(1)).toThrow();
+      expect(() => decoder.verify(2)).toThrow();
+      expect(() => decoder.verify(4)).toThrow();
+    });
+  });
 });
 
 type Rectangle = {
