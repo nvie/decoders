@@ -63,7 +63,7 @@ export function nullable<T, V>(
 
 /**
  * @deprecated
- * Alias of nullish().
+ * Alias of `nullish()`.
  */
 export const maybe = nullish;
 
@@ -124,13 +124,13 @@ export function never(msg: string): Decoder<never> {
 }
 
 /**
- * Alias of never().
+ * Alias of `never()`.
  */
 export const fail = never;
 
 /**
  * @deprecated
- * Alias of always.
+ * Alias of `always()`.
  */
 export const hardcoded = always;
 
@@ -145,6 +145,6 @@ export const unknown: Decoder<unknown> = define((blob, ok, _) => ok(blob));
 
 /**
  * @deprecated
- * Alias of unknown.
+ * Alias of `unknown`.
  */
 export const mixed = unknown;

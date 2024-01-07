@@ -232,7 +232,7 @@ expectType<string | Date | null | undefined>(
   test(nullish(nullish(string, () => new Date()))),
 );
 
-// Alias of nullish
+// Alias of `nullish()`
 expectType<string | null | undefined>(test(maybe(string)));
 expectType<string | null | undefined>(test(maybe(maybe(string))));
 expectType<string | 42>(test(maybe(string, 42)));
