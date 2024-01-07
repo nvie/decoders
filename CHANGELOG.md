@@ -5,6 +5,7 @@
 - All `enum` types are now supported ([docs](https://decoders.cc/api.html#enum_))
 - Record decoder now supports both `record(values)` and `record(keys, values)` forms
   ([docs](https://decoders.cc/api.html#record))
+- Add `datelike` decoder ([docs](https://decoders.cc/api.html#datelike))
 - Add support for `bigint` ([docs](https://decoders.cc/api.html#bigint))
 - Add built-in support for common string validations
 - Better support for symbols in `constant()` and `oneOf()`
@@ -15,6 +16,7 @@
 - `record()` (see [docs](https://decoders.cc/api.html#record))
 - `select()` (see [docs](https://decoders.cc/api.html#select))
 - `bigint` (see [docs](https://decoders.cc/api.html#bigint))
+- `datelike` (see [docs](https://decoders.cc/api.html#datelike))
 - `decimal` (see [docs](https://decoders.cc/api.html#decimal))
 - `hexadecimal` (see [docs](https://decoders.cc/api.html#hexadecimal))
 - `numeric` (see [docs](https://decoders.cc/api.html#numeric))

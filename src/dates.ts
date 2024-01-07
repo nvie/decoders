@@ -3,6 +3,7 @@ import { define } from '~/core';
 import { isDate } from '~/lib/utils';
 
 import { regex } from './strings';
+import { either } from './unions';
 
 // Only matches the shape.  This "over-matches" some values that still aren't
 // valid dates (like 9999-99-99), but those will be caught by JS Date's
@@ -36,3 +37,10 @@ export const iso8601: Decoder<Date> =
       return date;
     },
   );
+
+/**
+ * Accepts either a Date, or an ISO date string, returns a Date instance.
+ * This is commonly useful to build decoders that can be reused to validate
+ * object with Date instances as well as objects coming from JSON payloads.
+ */
+export const datelike = either(date, iso8601).describe('Must be a Date or date string');

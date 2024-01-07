@@ -4,7 +4,7 @@ export { always, constant, fail, never, unknown } from './basics';
 export { null_, nullable, nullish, optional, undefined_ } from './basics';
 export { boolean, truthy } from './booleans';
 export { mapping, record, set } from './collections';
-export { date, iso8601 } from './dates';
+export { date, datelike, iso8601 } from './dates';
 export type { JSONArray, JSONObject, JSONValue } from './json';
 export { json, jsonArray, jsonObject } from './json';
 export { instanceOf, lazy, prep } from './misc';

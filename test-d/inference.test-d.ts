@@ -8,6 +8,7 @@ import {
   boolean,
   constant,
   date,
+  datelike,
   decimal,
   dict,
   either,
@@ -382,6 +383,7 @@ expectType<JSONValue | undefined>(test(jsonObject).abc);
 
 expectType<Date>(test(date));
 expectType<Date>(test(iso8601));
+expectType<Date>(test(datelike));
 
 expectType<never>(test(fail('I will never return')));
 expectType<never>(test(never('I will never return')));

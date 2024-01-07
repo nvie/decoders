@@ -407,6 +407,22 @@ DECODERS = {
     """,
   },
 
+  'datelike': {
+    'section': 'Dates',
+    'params': None,
+    'return_type': 'Decoder<Date>',
+    'example': """
+      // 👍
+      datelike.verify('2024-01-08T12:00:00Z'); // strings...
+      datelike.verify(new Date());             // ...or Date instances
+
+      // 👎
+      datelike.verify('2020-06-01');  // throws
+      datelike.verify('hello');       // throws
+      datelike.verify(123);           // throws
+    """,
+  },
+
   'constant': {
     'section': 'Constants',
     'type_params': ['T'],
