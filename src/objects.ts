@@ -206,22 +206,21 @@ export function inexact<Ds extends Record<string, Decoder<unknown>>>(
 
 /**
  * Accepts objects where all values match the given decoder, and returns the
- * result as a `Record<string, T>`.
- *
- * The main difference between `object()` and `record()` is that you'd
- * typically use `object()` if this is a record-like object, where all field
- * names are known and the values are heterogeneous. Whereas with `record()`
- * the keys are typically dynamic and the values homogeneous, like in
- * a dictionary, a lookup table, or a cache.
+ * result as a `Record<string, V>`.
  */
 export function record<V>(valueDecoder: Decoder<V>): Decoder<Record<string, V>>;
-export function record<K extends string, V>( keyDecoder: Decoder<K>, valueDecoder: Decoder<V>): Decoder<Record<K, V>>; // prettier-ignore
+/**
+ * Accepts objects where all keys and values match the given decoders, and
+ * returns the result as a `Record<K, V>`. The given key decoder must return
+ * strings.
+ */
+export function record<K extends string, V>(keyDecoder: Decoder<K>, valueDecoder: Decoder<V>): Decoder<Record<K, V>>; // prettier-ignore
 export function record<K extends string, V>(
-  fst: Decoder<unknown>,
-  snd?: Decoder<unknown>,
+  fst: Decoder<K> | Decoder<V>,
+  snd?: Decoder<V>,
 ): Decoder<Record<K, V>> {
   const keyDecoder = snd !== undefined ? (fst as Decoder<K>) : undefined;
-  const valueDecoder = snd !== undefined ? (snd as Decoder<V>) : (fst as Decoder<V>);
+  const valueDecoder = snd !== undefined ? snd : (fst as Decoder<V>);
   return pojo.then((rec, ok, err) => {
     let rv = {} as Record<K, V>;
     const errors: Map<string, Annotation> = new Map();
