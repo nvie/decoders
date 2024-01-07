@@ -319,11 +319,26 @@ expectType<unknown>(test(inexact({})).b);
 
 expectType<Record<string, unknown>>(test(pojo));
 expectType<Map<string, number>>(test(mapping(number)));
+
+// Single-argument form (validate values only)
 expectType<Record<string, number>>(test(record(number)));
+
+// Two-argument form (validate keys and values)
 expectType<Record<'foo' | 'bar', number>>(
   test(record(oneOf(['foo', 'bar'] as const), number)),
 );
+expectType<Record<string, number>>(test(record(decimal, number)));
+expectType<Record<string, boolean>>(test(record(email, boolean)));
+
+// Single-argument form (validate values only)
 expectType<Record<string, number>>(test(dict(number)));
+
+// Two-argument form (validate keys and values)
+expectType<Record<'foo' | 'bar', number>>(
+  test(dict(oneOf(['foo', 'bar'] as const), number)),
+);
+expectType<Record<string, number>>(test(dict(decimal, number)));
+expectType<Record<string, boolean>>(test(dict(email, boolean)));
 
 expectType<string>(test(lazy(() => string)));
 expectType<number>(test(lazy(() => number)));
