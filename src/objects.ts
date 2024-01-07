@@ -214,14 +214,13 @@ export function inexact<Ds extends Record<string, Decoder<unknown>>>(
  * the keys are typically dynamic and the values homogeneous, like in
  * a dictionary, a lookup table, or a cache.
  */
-export function record<T>(decoder: Decoder<T>): Decoder<Record<string, T>> {
-  return pojo.then((plainObj, ok, err) => {
-    let rv: Record<string, T> = {};
+export function record<V>(valueDecoder: Decoder<V>): Decoder<Record<string, V>> {
+  return pojo.then((rec, ok, err) => {
+    let rv: Record<string, V> = {};
     let errors: Map<string, Annotation> | null = null;
 
-    for (const key of Object.keys(plainObj)) {
-      const value = plainObj[key];
-      const result = decoder.decode(value);
+    for (const [key, value] of Object.entries(rec)) {
+      const result = valueDecoder.decode(value);
       if (result.ok) {
         if (errors === null) {
           rv[key] = result.value;
@@ -236,7 +235,7 @@ export function record<T>(decoder: Decoder<T>): Decoder<Record<string, T>> {
     }
 
     if (errors !== null) {
-      return err(merge(annotateObject(plainObj), errors));
+      return err(merge(annotateObject(rec), errors));
     } else {
       return ok(rv);
     }
