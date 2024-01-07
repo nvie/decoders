@@ -35,11 +35,11 @@ for section, names in DECODERS_BY_SECTION.items():
 - [**Constants**](#constants): [`constant()`](/api.html#constant), [`always()`](/api.html#always), [`hardcoded()`](/api.html#hardcoded)
 - [**Optionality**](#optionality): [`null_`](/api.html#null_), [`undefined_`](/api.html#undefined_), [`optional()`](/api.html#optional), [`nullable()`](/api.html#nullable), [`nullish()`](/api.html#nullish), [`unknown`](/api.html#unknown), [`maybe()`](/api.html#maybe), [`mixed`](/api.html#mixed)
 - [**Arrays**](#arrays): [`array()`](/api.html#array), [`nonEmptyArray()`](/api.html#nonEmptyArray), [`poja`](/api.html#poja), [`tuple()`](/api.html#tuple), [`set()`](/api.html#set)
-- [**Objects**](#objects): [`object()`](/api.html#object), [`exact()`](/api.html#exact), [`inexact()`](/api.html#inexact), [`pojo`](/api.html#pojo), [`dict()`](/api.html#dict), [`mapping()`](/api.html#mapping)
+- [**Objects**](#objects): [`object()`](/api.html#object), [`exact()`](/api.html#exact), [`inexact()`](/api.html#inexact), [`pojo`](/api.html#pojo), [`record()`](/api.html#record), [`dict()`](/api.html#dict), [`mapping()`](/api.html#mapping)
 - [**JSON values**](#json-values): [`json`](/api.html#json), [`jsonObject`](/api.html#jsonObject), [`jsonArray`](/api.html#jsonArray)
 - [**Unions**](#unions): [`either()`](/api.html#either), [`oneOf()`](/api.html#oneOf), [`enum_()`](/api.html#enum_), [`taggedUnion()`](/api.html#taggedUnion), [`select()`](/api.html#select)
 - [**Utilities**](#utilities): [`define()`](/api.html#define), [`prep()`](/api.html#prep), [`never`](/api.html#never), [`instanceOf()`](/api.html#instanceOf), [`lazy()`](/api.html#lazy), [`fail`](/api.html#fail)
-<!--[[[end]]] (checksum: 4623c37c1951846290664e89d0c8120a) -->
+<!--[[[end]]] (checksum: c0be8a7e7dcec98c939db298da5ce37c) -->
 
 <!--[[[cog
 for section, names in DECODERS_BY_SECTION.items():
@@ -958,6 +958,7 @@ decoder.verify([1, 2]);         // throws, not the right types
 - [`exact()`](/api.html#exact)
 - [`inexact()`](/api.html#inexact)
 - [`pojo`](/api.html#pojo)
+- [`record()`](/api.html#record)
 - [`dict()`](/api.html#dict)
 - [`mapping()`](/api.html#mapping)
 
@@ -1055,31 +1056,68 @@ pojo.verify(null);        // throws
 
 ---
 
-<a href="#dict">#</a> **dict**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;{ [key: string]: T }&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/objects.ts#L207-L244 'Source')
-{: #dict .signature}
+<a href="#record">#</a> **record**&lt;<i style="color: #267f99">V</i>&gt;(values: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;V&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Record&lt;string, V&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/objects.ts#L207-L258 'Source')
+{: #record .signature}
+
+<a href="#record">#</a> **record**&lt;<i style="color: #267f99">K</i>, <i style="color: #267f99">V</i>&gt;(keys: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;K&gt;</i>, values: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;V&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Record&lt;K, V&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/objects.ts#L207-L258 'Source')
+{: #record .signature}
 
 Accepts objects where all values match the given decoder, and returns the
-result as a `Record<string, T>`.
+result as a `Record<string, V>`.
 
-The main difference between [`object()`](/api.html#object) and [`dict()`](/api.html#dict) is that you'd typically
-use [`object()`](/api.html#object) if this is a record-like object, where all field names are
-known and the values are heterogeneous. Whereas with [`dict()`](/api.html#dict) the keys are
-typically dynamic and the values homogeneous, like in a dictionary,
-a lookup table, or a cache.
+This is useful to validate inputs like `{ [key: string]: V }`.
+
+#### Decoding values only
+
+The default call takes a single argument and will validate all _values_.
+For example, to validate that all values in the object are numbers:
 
 ```ts
-const decoder = dict(number);
+const decoder = record(number);
+//                        \ 
+//                      Values must be numbers
 
 // 👍
-decoder.verify({ red: 1, blue: 2, green: 3 }); // ≈ { red: 1, blue: 2, green: 3 }
+decoder.verify({ red: 1, blue: 2, green: 3 });
+
+// 👎
+decoder.verify({ hi: 'not a number' });
+```
+
+#### Decoding keys and values
+
+If you also want to validate that keys are of a specific form, use the
+two-argument form: `record(key, value)`. Note that the given key decoder
+must return strings.
+
+For example, to enforce that all keys are emails:
+
+```ts
+const decoder = record(email, number);
+//                      /        \ 
+//              Keys must        Values must
+//             be emails           be numbers
+
+// 👍
+decoder.verify({ "me@nvie.com": 1 });
+
+// 👎
+decoder.verify({ "no-email": 1 });
 ```
 
 ---
 
-<a href="#mapping">#</a> **mapping**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Map&lt;string, T&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/objects.ts#L246-L260 'Source')
+<a href="#dict">#</a> **dict**&lt;<i style="color: #267f99">V</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Record&lt;string, V&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/objects.ts#L260-L264 'Source')
+{: #dict .signature}
+
+Alias of [`record()`](/api.html#record).
+
+---
+
+<a href="#mapping">#</a> **mapping**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Map&lt;string, T&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/objects.ts#L266-L273 'Source')
 {: #mapping .signature}
 
-Similar to [`dict()`](/api.html#dict), but returns the result as a `Map<string, T>` (an [ES6
+Similar to [`record()`](/api.html#record), but returns the result as a `Map<string, T>` (an [ES6
 Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map))
 instead.
 
@@ -1512,5 +1550,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 2b713ba4b32a533c8c8c2f7018d808db)-->
+<!--[[[end]]] (checksum: a9678e5481bff7a7c38fc2875fc19d1f)-->
 <!-- prettier-ignore-end -->

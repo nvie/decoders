@@ -46,6 +46,7 @@ import {
   positiveInteger,
   positiveNumber,
   prep,
+  record,
   regex,
   select,
   set,
@@ -231,7 +232,7 @@ expectType<string | Date | null | undefined>(
   test(nullish(nullish(string, () => new Date()))),
 );
 
-// Alias of nullish
+// Alias of `nullish()`
 expectType<string | null | undefined>(test(maybe(string)));
 expectType<string | null | undefined>(test(maybe(maybe(string))));
 expectType<string | 42>(test(maybe(string, 42)));
@@ -318,7 +319,26 @@ expectType<unknown>(test(inexact({})).b);
 
 expectType<Record<string, unknown>>(test(pojo));
 expectType<Map<string, number>>(test(mapping(number)));
+
+// Single-argument form (validate values only)
+expectType<Record<string, number>>(test(record(number)));
+
+// Two-argument form (validate keys and values)
+expectType<Record<'foo' | 'bar', number>>(
+  test(record(oneOf(['foo', 'bar'] as const), number)),
+);
+expectType<Record<string, number>>(test(record(decimal, number)));
+expectType<Record<string, boolean>>(test(record(email, boolean)));
+
+// Single-argument form (validate values only)
 expectType<Record<string, number>>(test(dict(number)));
+
+// Two-argument form (validate keys and values)
+expectType<Record<'foo' | 'bar', number>>(
+  test(dict(oneOf(['foo', 'bar'] as const), number)),
+);
+expectType<Record<string, number>>(test(dict(decimal, number)));
+expectType<Record<string, boolean>>(test(dict(email, boolean)));
 
 expectType<string>(test(lazy(() => string)));
 expectType<number>(test(lazy(() => number)));

@@ -5,7 +5,7 @@ import { null_ } from './basics';
 import { boolean } from './booleans';
 import { lazy } from './misc';
 import { number } from './numbers';
-import { dict } from './objects';
+import { record } from './objects';
 import { string } from './strings';
 import { either } from './unions';
 
@@ -16,7 +16,7 @@ export type JSONArray = JSONValue[];
 /**
  * Accepts objects that contain only valid JSON values.
  */
-export const jsonObject: Decoder<JSONObject> = lazy(() => dict(json));
+export const jsonObject: Decoder<JSONObject> = lazy(() => record(json));
 
 /**
  * Accepts arrays that contain only valid JSON values.
