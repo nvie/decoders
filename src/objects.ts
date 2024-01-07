@@ -208,13 +208,13 @@ export function inexact<Ds extends Record<string, Decoder<unknown>>>(
  * Accepts objects where all values match the given decoder, and returns the
  * result as a `Record<string, T>`.
  *
- * The main difference between `object()` and `dict()` is that you'd typically
- * use `object()` if this is a record-like object, where all field names are
- * known and the values are heterogeneous. Whereas with `dict()` the keys are
- * typically dynamic and the values homogeneous, like in a dictionary,
- * a lookup table, or a cache.
+ * The main difference between `object()` and `record()` is that you'd
+ * typically use `object()` if this is a record-like object, where all field
+ * names are known and the values are heterogeneous. Whereas with `record()`
+ * the keys are typically dynamic and the values homogeneous, like in
+ * a dictionary, a lookup table, or a cache.
  */
-export function dict<T>(decoder: Decoder<T>): Decoder<Record<string, T>> {
+export function record<T>(decoder: Decoder<T>): Decoder<Record<string, T>> {
   return pojo.then((plainObj, ok, err) => {
     let rv: Record<string, T> = {};
     let errors: Map<string, Annotation> | null = null;
@@ -244,17 +244,16 @@ export function dict<T>(decoder: Decoder<T>): Decoder<Record<string, T>> {
 }
 
 /**
- * Similar to `dict()`, but returns the result as a `Map<string, T>` (an [ES6
+ * @deprecated
+ * Alias of record().
+ */
+export const dict = record;
+
+/**
+ * Similar to `record()`, but returns the result as a `Map<string, T>` (an [ES6
  * Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map))
  * instead.
  */
 export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
-  return dict(decoder).transform(
-    (obj) =>
-      new Map(
-        // This is effectively Object.entries(obj), but in a way that Flow
-        // will know the types are okay
-        Object.keys(obj).map((key) => [key, obj[key]]),
-      ),
-  );
+  return record(decoder).transform((obj) => new Map(Object.entries(obj)));
 }

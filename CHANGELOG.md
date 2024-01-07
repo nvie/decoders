@@ -11,6 +11,7 @@
 
 **Renamed decoders:**
 
+- `record()` (see [docs](https://decoders.cc/api.html#record), replaces `dict()`)
 - `nullish()` (see [docs](https://decoders.cc/api.html#nullish), replaces `maybe()`)
 
 **New features:**

@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest';
 
 import { hardcoded, optional, unknown } from '~/basics';
 import { number } from '~/numbers';
-import { dict, exact, inexact, mapping, object, pojo } from '~/objects';
+import { record, exact, inexact, mapping, object, pojo } from '~/objects';
 import { string } from '~/strings';
 
 describe('objects', () => {
@@ -422,8 +422,8 @@ describe('mapping', () => {
   });
 });
 
-describe('dict', () => {
-  const decoder = dict(object({ name: string }));
+describe('record', () => {
+  const decoder = record(object({ name: string }));
 
   test('valid', () => {
     const input = {

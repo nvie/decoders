@@ -822,14 +822,14 @@ DECODERS = {
     """,
   },
 
-  # TODO: Rename to "record"
-  'dict': {
+  'record': {
     'section': 'Objects',
     'type_params': ['T'],
     'params': [('decoder', 'Decoder<T>')],
     'return_type': 'Decoder<{ [key: string]: T }>',
+    'aliases': ['dict'],
     'example': """
-      const decoder = dict(number);
+      const decoder = record(number);
 
       // 👍
       decoder.verify({ red: 1, blue: 2, green: 3 }); // ≈ { red: 1, blue: 2, green: 3 }
