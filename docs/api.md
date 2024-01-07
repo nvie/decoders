@@ -578,7 +578,7 @@ This is very useful for working with dates in APIs: serialize them as
 
 ```ts
 // 👍
-iso8601.verify('2020-06-01T12:00:00Z'); // ≈ new Date('2020-06-01T12:00:00Z')
+iso8601.verify('2020-06-01T12:00:00Z'); // new Date('2020-06-01T12:00:00Z')
 
 // 👎
 iso8601.verify('2020-06-01');  // throws
@@ -1114,11 +1114,11 @@ const decoder = mapping(number);
 
 // 👍
 decoder.verify({ red: 1, blue: 2, green: 3 });
-// ≈ Map([
-//     ['red', '1'],
-//     ['blue', '2'],
-//     ['green', '3'],
-//   ]);
+// Map([
+//   ['red', '1'],
+//   ['blue', '2'],
+//   ['green', '3'],
+// ]);
 ```
 
 ---
@@ -1133,8 +1133,8 @@ Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Ob
 const decoder = set(string);
 
 // 👍
-decoder.verify(['abc', 'pqr'])  // ≈ new Set(['abc', 'pqr'])
-decoder.verify([])              // ≈ new Set([])
+decoder.verify(['abc', 'pqr'])  // new Set(['abc', 'pqr'])
+decoder.verify([])              // new Set([])
 
 // 👎
 decoder.verify([1, 2]);         // throws, not the right types
@@ -1189,8 +1189,8 @@ Accepts objects that contain only valid JSON values.
 
 ```ts
 // 👍
-jsonObject.verify({});                // ≈ {}
-jsonObject.verify({ name: 'Amir' });  // ≈ { name: 'Amir' }
+jsonObject.verify({});                // {}
+jsonObject.verify({ name: 'Amir' });  // { name: 'Amir' }
 
 // 👎
 jsonObject.verify([]);                   // throws
@@ -1208,8 +1208,8 @@ Accepts arrays that contain only valid JSON values.
 
 ```ts
 // 👍
-jsonArray.verify([]);                  // ≈ []
-jsonArray.verify([{ name: 'Amir' }]);  // ≈ [{ name: 'Amir' }]
+jsonArray.verify([]);                  // []
+jsonArray.verify([{ name: 'Amir' }]);  // [{ name: 'Amir' }]
 
 // 👎
 jsonArray.verify({});                 // throws
@@ -1506,8 +1506,8 @@ const decoder = object({
 });
 
 // 👍
-decoder.verify({ a: 'foo' });            // ≈ { a: 'foo' };
-decoder.verify({ a: 'foo', c: 'bar' });  // ≈ { a: 'foo' };
+decoder.verify({ a: 'foo' });            // { a: 'foo' };
+decoder.verify({ a: 'foo', c: 'bar' });  // { a: 'foo' };
 
 // 👎
 decoder.verify({ a: 'foo', b: 'bar' });  // throws
@@ -1557,5 +1557,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: bebc7562bb5c430ffbb49d414407eeee)-->
+<!--[[[end]]] (checksum: 6181f5d90903c7e6286ebffa725c86a5)-->
 <!-- prettier-ignore-end -->

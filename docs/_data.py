@@ -397,7 +397,7 @@ DECODERS = {
     'return_type': 'Decoder<Date>',
     'example': """
       // 👍
-      iso8601.verify('2020-06-01T12:00:00Z'); // ≈ new Date('2020-06-01T12:00:00Z')
+      iso8601.verify('2020-06-01T12:00:00Z'); // new Date('2020-06-01T12:00:00Z')
 
       // 👎
       iso8601.verify('2020-06-01');  // throws
@@ -886,11 +886,11 @@ DECODERS = {
 
       // 👍
       decoder.verify({ red: 1, blue: 2, green: 3 });
-      // ≈ Map([
-      //     ['red', '1'],
-      //     ['blue', '2'],
-      //     ['green', '3'],
-      //   ]);
+      // Map([
+      //   ['red', '1'],
+      //   ['blue', '2'],
+      //   ['green', '3'],
+      // ]);
     """,
   },
 
@@ -903,8 +903,8 @@ DECODERS = {
       const decoder = set(string);
 
       // 👍
-      decoder.verify(['abc', 'pqr'])  // ≈ new Set(['abc', 'pqr'])
-      decoder.verify([])              // ≈ new Set([])
+      decoder.verify(['abc', 'pqr'])  // new Set(['abc', 'pqr'])
+      decoder.verify([])              // new Set([])
 
       // 👎
       decoder.verify([1, 2]);         // throws, not the right types
@@ -934,8 +934,8 @@ DECODERS = {
     'return_type': 'Decoder<{ [string]: JSONValue }>',
     'example': """
       // 👍
-      jsonObject.verify({});                // ≈ {}
-      jsonObject.verify({ name: 'Amir' });  // ≈ { name: 'Amir' }
+      jsonObject.verify({});                // {}
+      jsonObject.verify({ name: 'Amir' });  // { name: 'Amir' }
 
       // 👎
       jsonObject.verify([]);                   // throws
@@ -951,8 +951,8 @@ DECODERS = {
     'return_type': 'Decoder<JSONValue[]>',
     'example': """
       // 👍
-      jsonArray.verify([]);                  // ≈ []
-      jsonArray.verify([{ name: 'Amir' }]);  // ≈ [{ name: 'Amir' }]
+      jsonArray.verify([]);                  // []
+      jsonArray.verify([{ name: 'Amir' }]);  // [{ name: 'Amir' }]
 
       // 👎
       jsonArray.verify({});                 // throws
@@ -1197,8 +1197,8 @@ DECODERS = {
       });
 
       // 👍
-      decoder.verify({ a: 'foo' });            // ≈ { a: 'foo' };
-      decoder.verify({ a: 'foo', c: 'bar' });  // ≈ { a: 'foo' };
+      decoder.verify({ a: 'foo' });            // { a: 'foo' };
+      decoder.verify({ a: 'foo', c: 'bar' });  // { a: 'foo' };
 
       // 👎
       decoder.verify({ a: 'foo', b: 'bar' });  // throws
