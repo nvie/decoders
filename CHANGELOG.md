@@ -22,6 +22,7 @@
 - `hardcoded()` (prefer `always()`)
 - `mixed` (prefer `unknown`)
 - `maybe()` (prefer `nullish()`)
+- `numericBoolean()` (you can still use `truthy` to get almost the same effect)
 
 **Other changes:**
 

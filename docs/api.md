@@ -520,7 +520,7 @@ truthy.verify(null) === false;
 
 ---
 
-<a href="#numericBoolean">#</a> **numericBoolean**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;boolean&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/booleans.ts#L18-L21 'Source')
+<a href="#numericBoolean">#</a> **numericBoolean**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;boolean&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/booleans.ts#L18-L24 'Source')
 {: #numericBoolean .signature}
 
 Accepts numbers, but return their boolean representation.
@@ -1512,5 +1512,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 167f7d4fa7935ce2590166e430d75023)-->
+<!--[[[end]]] (checksum: 2b713ba4b32a533c8c8c2f7018d808db)-->
 <!-- prettier-ignore-end -->
