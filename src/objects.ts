@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import type { Annotation, Decoder, DecodeResult, DecoderType } from '~/core';
-import { annotateObject, define, merge, updateText } from '~/core';
+import { annotate, annotateObject, define, formatShort, merge, updateText } from '~/core';
 import { difference } from '~/lib/set-methods';
 import { isPojo } from '~/lib/utils';
 
@@ -214,27 +214,43 @@ export function inexact<Ds extends Record<string, Decoder<unknown>>>(
  * the keys are typically dynamic and the values homogeneous, like in
  * a dictionary, a lookup table, or a cache.
  */
-export function record<V>(valueDecoder: Decoder<V>): Decoder<Record<string, V>> {
+export function record<V>(valueDecoder: Decoder<V>): Decoder<Record<string, V>>;
+export function record<K extends string, V>( keyDecoder: Decoder<K>, valueDecoder: Decoder<V>): Decoder<Record<K, V>>; // prettier-ignore
+export function record<K extends string, V>(
+  fst: Decoder<unknown>,
+  snd?: Decoder<unknown>,
+): Decoder<Record<K, V>> {
+  const keyDecoder = snd !== undefined ? (fst as Decoder<K>) : undefined;
+  const valueDecoder = snd !== undefined ? (snd as Decoder<V>) : (fst as Decoder<V>);
   return pojo.then((rec, ok, err) => {
-    let rv: Record<string, V> = {};
-    let errors: Map<string, Annotation> | null = null;
+    let rv = {} as Record<K, V>;
+    const errors: Map<string, Annotation> = new Map();
 
     for (const [key, value] of Object.entries(rec)) {
+      const keyResult = keyDecoder?.decode(key);
+      if (keyResult?.ok === false) {
+        return err(
+          annotate(
+            rec,
+            `Invalid key ${JSON.stringify(key)}: ${formatShort(keyResult.error)}`,
+          ),
+        );
+      }
+
+      const k = keyResult?.value ?? (key as K);
+
       const result = valueDecoder.decode(value);
       if (result.ok) {
-        if (errors === null) {
-          rv[key] = result.value;
+        if (errors.size === 0) {
+          rv[k] = result.value;
         }
       } else {
-        rv = {}; // Clear the success value so it can get garbage collected early
-        if (errors === null) {
-          errors = new Map();
-        }
         errors.set(key, result.error);
+        rv = {} as Record<K, V>; // Clear the success value so it can get garbage collected early
       }
     }
 
-    if (errors !== null) {
+    if (errors.size > 0) {
       return err(merge(annotateObject(rec), errors));
     } else {
       return ok(rv);
@@ -244,7 +260,7 @@ export function record<V>(valueDecoder: Decoder<V>): Decoder<Record<string, V>> 
 
 /**
  * @deprecated
- * Alias of record().
+ * Alias of `record()`.
  */
 export const dict = record;
 

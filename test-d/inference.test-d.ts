@@ -320,6 +320,9 @@ expectType<unknown>(test(inexact({})).b);
 expectType<Record<string, unknown>>(test(pojo));
 expectType<Map<string, number>>(test(mapping(number)));
 expectType<Record<string, number>>(test(record(number)));
+expectType<Record<'foo' | 'bar', number>>(
+  test(record(oneOf(['foo', 'bar'] as const), number)),
+);
 expectType<Record<string, number>>(test(dict(number)));
 
 expectType<string>(test(lazy(() => string)));

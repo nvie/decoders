@@ -1,9 +1,10 @@
 import { describe, expect, test } from 'vitest';
 
 import { hardcoded, optional, unknown } from '~/basics';
+import { boolean } from '~/booleans';
 import { number } from '~/numbers';
-import { record, exact, inexact, mapping, object, pojo } from '~/objects';
-import { string } from '~/strings';
+import { exact, inexact, mapping, object, pojo, record } from '~/objects';
+import { decimal, regex, string } from '~/strings';
 
 describe('objects', () => {
   test('decodes objects and fields', () => {
@@ -422,6 +423,7 @@ describe('mapping', () => {
   });
 });
 
+// Single-argument form of record() only specifies value type
 describe('record', () => {
   const decoder = record(object({ name: string }));
 
@@ -444,5 +446,51 @@ describe('record', () => {
         '125': { name: 'bar' },
       }),
     ).toThrow('Missing key: "name"');
+  });
+});
+
+// Two-argument form of record() specifies keys and value types
+describe('record with key validation', () => {
+  const decoder = record(decimal, boolean);
+
+  test('valid', () => {
+    const input = { '1': false, '2': true };
+    expect(decoder.verify(input)).toEqual(input);
+  });
+
+  test('valid (another example)', () => {
+    const key = regex(/^a+$/, "Must be all a's");
+    const decoder = record(key, boolean);
+    expect(decoder.verify({ a: true })).toEqual({ a: true });
+    expect(decoder.verify({ aa: true })).toEqual({ aa: true });
+    expect(decoder.verify({ aaaaa: true })).toEqual({ aaaaa: true });
+    expect(() => decoder.verify({ abc: true })).toThrow(
+      'Invalid key "abc": Must be all a\'s',
+    );
+  });
+
+  test('valid (another example with key transformations)', () => {
+    const key = regex(/^a+$/, "Must be all a's");
+    const decoder = record(
+      key.transform(() => 'a'),
+      boolean,
+    );
+    expect(decoder.verify({ a: true })).toEqual({ a: true });
+    expect(decoder.verify({ a: true, aa: false })).toEqual({ a: false });
+    expect(() => decoder.verify({ a: true, 1: false })).toThrow(
+      'Invalid key "1": Must be all a\'s',
+    );
+  });
+
+  test('invalid', () => {
+    expect(() => decoder.verify('foo')).toThrow('Must be an object');
+    expect(() => decoder.verify({ 13: 1 })).toThrow('Must be boolean');
+    expect(() => decoder.verify({ 42: {} })).toThrow('Must be boolean');
+    expect(() => decoder.verify({ x: true })).toThrow(
+      'Invalid key "x": Must only contain digits',
+    );
+    expect(() => decoder.verify({ '': true })).toThrow(
+      'Invalid key "": Must only contain digits',
+    );
   });
 });
