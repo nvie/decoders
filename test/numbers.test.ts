@@ -65,6 +65,11 @@ describe('positiveNumber', () => {
     }
   });
 
+  test('rejects -0', () => {
+    expect(decoder.decode(0).ok).toBe(true);
+    expect(decoder.decode(-0).ok).toBe(false);
+  });
+
   test('invalid', () => {
     expect(not_okay.length).not.toBe(0);
     for (const value of not_okay) {
@@ -105,6 +110,11 @@ describe('positiveInteger', () => {
       expect(decoder.verify(value)).toBe(value === 0 ? 0 : value);
       expect(decoder.verify(value)).not.toBe(-0);
     }
+  });
+
+  test('rejects -0', () => {
+    expect(decoder.decode(0).ok).toBe(true);
+    expect(decoder.decode(-0).ok).toBe(false);
   });
 
   test('invalid', () => {

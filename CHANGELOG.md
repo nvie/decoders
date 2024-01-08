@@ -43,6 +43,7 @@ decoders version.
 
 **Other changes:**
 
+- Fix: `positiveNumber` and `positiveInteger` no longer accept `-0` as valid inputs
 - Reorganized internal module structure
 - Simplified some of the more complicated internal types
 

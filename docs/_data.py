@@ -257,7 +257,6 @@ DECODERS = {
       // 👍
       positiveNumber.verify(123) === 123;
       positiveNumber.verify(0) === 0;
-      positiveNumber.verify(-0) === 0;
 
       // 👎
       positiveNumber.verify(-42);             // throws
@@ -265,6 +264,7 @@ DECODERS = {
       positiveNumber.verify(Infinity);        // throws
       positiveNumber.verify(NaN);             // throws
       positiveNumber.verify('not a number');  // throws
+      positiveNumber.verify(-0);              // throws
     """,
   },
 
@@ -276,7 +276,6 @@ DECODERS = {
       // 👍
       positiveInteger.verify(123) === 123;
       positiveInteger.verify(0) === 0;
-      positiveInteger.verify(-0) === 0;
 
       // 👎
       positiveInteger.verify(-3);              // throws
@@ -284,6 +283,7 @@ DECODERS = {
       positiveInteger.verify(Infinity);        // throws
       positiveInteger.verify(NaN);             // throws
       positiveInteger.verify('not a number');  // throws
+      positiveInteger.verify(-0);              // throws
     """,
   },
 

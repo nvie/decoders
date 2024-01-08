@@ -388,7 +388,7 @@ integer.verify('not a integer'); // throws
 
 ---
 
-<a href="#positiveNumber">#</a> **positiveNumber**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/numbers.ts#L33-L38 'Source')
+<a href="#positiveNumber">#</a> **positiveNumber**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/numbers.ts#L33-L39 'Source')
 {: #positiveNumber .signature}
 
 Accepts only non-negative (zero or positive) finite numbers.
@@ -397,7 +397,6 @@ Accepts only non-negative (zero or positive) finite numbers.
 // 👍
 positiveNumber.verify(123) === 123;
 positiveNumber.verify(0) === 0;
-positiveNumber.verify(-0) === 0;
 
 // 👎
 positiveNumber.verify(-42);             // throws
@@ -405,11 +404,12 @@ positiveNumber.verify(3.14);            // throws
 positiveNumber.verify(Infinity);        // throws
 positiveNumber.verify(NaN);             // throws
 positiveNumber.verify('not a number');  // throws
+positiveNumber.verify(-0);              // throws
 ```
 
 ---
 
-<a href="#positiveInteger">#</a> **positiveInteger**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/numbers.ts#L40-L45 'Source')
+<a href="#positiveInteger">#</a> **positiveInteger**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/numbers.ts#L41-L47 'Source')
 {: #positiveInteger .signature}
 
 Accepts only non-negative (zero or positive) finite whole numbers.
@@ -418,7 +418,6 @@ Accepts only non-negative (zero or positive) finite whole numbers.
 // 👍
 positiveInteger.verify(123) === 123;
 positiveInteger.verify(0) === 0;
-positiveInteger.verify(-0) === 0;
 
 // 👎
 positiveInteger.verify(-3);              // throws
@@ -426,6 +425,7 @@ positiveInteger.verify(3.14);            // throws
 positiveInteger.verify(Infinity);        // throws
 positiveInteger.verify(NaN);             // throws
 positiveInteger.verify('not a number');  // throws
+positiveInteger.verify(-0);              // throws
 ```
 
 ---
@@ -452,7 +452,7 @@ anyNumber.verify('not a number');  // throws
 
 ---
 
-<a href="#bigint">#</a> **bigint**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;bigint&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/numbers.ts#L47-L52 'Source')
+<a href="#bigint">#</a> **bigint**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;bigint&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/numbers.ts#L49-L54 'Source')
 {: #bigint .signature}
 
 Accepts any valid ``bigint`` value.
@@ -1578,5 +1578,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: b6aa2937b768cdc65b87c722308ec35f)-->
+<!--[[[end]]] (checksum: a3e8989779becbac4730576cf7cbeed3)-->
 <!-- prettier-ignore-end -->

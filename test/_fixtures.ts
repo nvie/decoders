@@ -16,7 +16,6 @@ export const STRINGS: string[] = [
 export const NUMBERS: number[] = [
   -317.827682288236872,
   -1,
-  -0,
   0,
   1,
   2,
