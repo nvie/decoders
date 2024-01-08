@@ -258,7 +258,8 @@ export function record<K extends string, V>(
 }
 
 /**
- * @deprecated
+ * @deprecated Will get removed in a future version.
+ *
  * Alias of `record()`.
  */
 export const dict = record;
@@ -268,7 +269,7 @@ export const dict = record;
  * Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map))
  * instead.
  *
- * @deprecated Will get removed in a future decoders version.
+ * @deprecated Will get removed in a future version.
  */
 export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
   return record(decoder).transform((obj) => new Map(Object.entries(obj)));

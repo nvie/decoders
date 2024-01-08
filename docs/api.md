@@ -597,7 +597,7 @@ iso8601.verify(new Date());    // throws (does not accept dates)
 
 ---
 
-<a href="#constant">#</a> **constant**&lt;<i style="color: #267f99">T</i>&gt;(value: <i style="color: #267f99">T</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/basics.ts#L89-L100 'Source')
+<a href="#constant">#</a> **constant**&lt;<i style="color: #267f99">T</i>&gt;(value: <i style="color: #267f99">T</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/basics.ts#L90-L101 'Source')
 {: #constant .signature}
 
 Accepts only the given constant value.
@@ -616,10 +616,10 @@ decoder.verify(undefined);      // throws
 
 ---
 
-<a href="#always">#</a> **always**&lt;<i style="color: #267f99">T</i>&gt;(value: <i style="color: #267f99">T</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/basics.ts#L102-L116 'Source')
+<a href="#always">#</a> **always**&lt;<i style="color: #267f99">T</i>&gt;(value: <i style="color: #267f99">T</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/basics.ts#L103-L117 'Source')
 {: #always .signature}
 
-<a href="#hardcoded">#</a> **hardcoded**&lt;<i style="color: #267f99">T</i>&gt;(value: <i style="color: #267f99">T</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/basics.ts#L131-L135 'Source')
+<a href="#hardcoded">#</a> **hardcoded**&lt;<i style="color: #267f99">T</i>&gt;(value: <i style="color: #267f99">T</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/basics.ts#L132-L137 'Source')
 {: #hardcoded .signature}
 
 Accepts anything, completely ignores it, and always returns the provided
@@ -778,16 +778,16 @@ decoder.verify(null);  // the current date
 
 ---
 
-<a href="#nullish">#</a> **nullish**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T | null | undefined&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/basics.ts#L70-L87 'Source')
+<a href="#nullish">#</a> **nullish**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T | null | undefined&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/basics.ts#L71-L88 'Source')
 {: #nullish .signature}
 
-<a href="#nullish">#</a> **nullish**&lt;<i style="color: #267f99">T</i>, <i style="color: #267f99">V</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>, defaultValue: <i style="color: #267f99">V | (() =&gt; V)</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T | V&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/basics.ts#L70-L87 'Source')
+<a href="#nullish">#</a> **nullish**&lt;<i style="color: #267f99">T</i>, <i style="color: #267f99">V</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>, defaultValue: <i style="color: #267f99">V | (() =&gt; V)</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T | V&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/basics.ts#L71-L88 'Source')
 {: #nullish .signature}
 
-<a href="#maybe">#</a> **maybe**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T | null | undefined&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/basics.ts#L64-L68 'Source')
+<a href="#maybe">#</a> **maybe**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T | null | undefined&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/basics.ts#L64-L69 'Source')
 {: #maybe .signature}
 
-<a href="#maybe">#</a> **maybe**&lt;<i style="color: #267f99">T</i>, <i style="color: #267f99">V</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>, defaultValue: <i style="color: #267f99">V | (() =&gt; V)</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T | V&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/basics.ts#L64-L68 'Source')
+<a href="#maybe">#</a> **maybe**&lt;<i style="color: #267f99">T</i>, <i style="color: #267f99">V</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>, defaultValue: <i style="color: #267f99">V | (() =&gt; V)</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T | V&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/basics.ts#L64-L69 'Source')
 {: #maybe .signature}
 
 Accepts whatever the given decoder accepts, or `null`, or `undefined`.
@@ -820,10 +820,10 @@ decoder.verify(undefined) === null;
 
 ---
 
-<a href="#unknown">#</a> **unknown**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;unknown&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/basics.ts#L137-L144 'Source')
+<a href="#unknown">#</a> **unknown**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;unknown&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/basics.ts#L139-L146 'Source')
 {: #unknown .signature}
 
-<a href="#mixed">#</a> **mixed**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;unknown&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/basics.ts#L146-L150 'Source')
+<a href="#mixed">#</a> **mixed**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;unknown&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/basics.ts#L148-L153 'Source')
 {: #mixed .signature}
 
 Accepts anything and returns it unchanged.
@@ -1107,14 +1107,14 @@ decoder.verify({ "no-email": 1 });
 
 ---
 
-<a href="#dict">#</a> **dict**&lt;<i style="color: #267f99">V</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Record&lt;string, V&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/objects.ts#L260-L264 'Source')
+<a href="#dict">#</a> **dict**&lt;<i style="color: #267f99">V</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Record&lt;string, V&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/objects.ts#L260-L265 'Source')
 {: #dict .signature}
 
 Alias of [`record()`](/api.html#record).
 
 ---
 
-<a href="#mapping">#</a> **mapping**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Map&lt;string, T&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/objects.ts#L266-L275 'Source')
+<a href="#mapping">#</a> **mapping**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Map&lt;string, T&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/objects.ts#L267-L276 'Source')
 {: #mapping .signature}
 
 Similar to [`record()`](/api.html#record), but returns the result as a `Map<string, T>` (an [ES6
@@ -1483,10 +1483,10 @@ decoder.verify('hi');  // throws: not a number
 
 ---
 
-<a href="#never">#</a> **never**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;never&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/basics.ts#L118-L124 'Source')
+<a href="#never">#</a> **never**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;never&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/basics.ts#L119-L125 'Source')
 {: #never .signature}
 
-<a href="#fail">#</a> **fail**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;never&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/basics.ts#L126-L129 'Source')
+<a href="#fail">#</a> **fail**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;never&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/basics.ts#L127-L130 'Source')
 {: #fail .signature}
 
 Rejects all inputs, and always fails with the given error message. May be
@@ -1550,5 +1550,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: ae42370c723e3c1070c7740392a9b799)-->
+<!--[[[end]]] (checksum: 47209c4fe25a48597c7ade87889cd43b)-->
 <!-- prettier-ignore-end -->

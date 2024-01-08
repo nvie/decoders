@@ -1,5 +1,14 @@
 ## [Unreleased]
 
+**New features:**
+
+- All `enum` types are now supported ([docs](https://decoders.cc/api.html#enum_))
+- Record decoder now supports both `record(values)` and `record(keys, values)` forms
+  ([docs](https://decoders.cc/api.html#record))
+- Add support for `bigint` ([docs](https://decoders.cc/api.html#bigint))
+- Add built-in support for common string validations
+- Better support for symbols in `constant()` and `oneOf()`
+
 **New decoders:**
 
 - `enum_` (see [docs](https://decoders.cc/api.html#enum_))
@@ -11,19 +20,19 @@
 
 **Renamed decoders:**
 
-- `record()` (see [docs](https://decoders.cc/api.html#record), replaces `dict()`)
-- `nullish()` (see [docs](https://decoders.cc/api.html#nullish), replaces `maybe()`)
-
-**New features:**
-
-- Better support for symbols in `constant()` and `oneOf()`
+- `record()` (previously `dict()`)
+- `nullish()` (previously `maybe()`)
 
 **Deprecated decoders:**
+
+The following decoders are deprecated because they’re not commonly used (too specific).
+They are scheduled for removal in a future decoders version.
 
 - `hardcoded()` (prefer `always()`)
 - `mixed` (prefer `unknown`)
 - `maybe()` (prefer `nullish()`)
 - `numericBoolean()` (you can still use `truthy` to get almost the same effect)
+- `mapping()`
 
 **Other changes:**
 
