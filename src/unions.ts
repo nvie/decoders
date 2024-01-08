@@ -54,14 +54,14 @@ function nest(errText: string): string {
  * first one that accepts the input "wins". If all decoders reject the input,
  * the input gets rejected.
  */
-export function either<
-  TDecoders extends readonly Decoder<unknown>[],
-  T = DecoderType<TDecoders[number]>,
->(...decoders: TDecoders): Decoder<T> {
+export function either<TDecoders extends readonly Decoder<unknown>[]>(
+  ...decoders: TDecoders
+): Decoder<DecoderType<TDecoders[number]>> {
   if (decoders.length === 0) {
     throw new Error('Pass at least one decoder to either()');
   }
 
+  type T = DecoderType<TDecoders[number]>;
   return define<T>((blob, _, err) => {
     // Collect errors here along the way
     const errors = [];

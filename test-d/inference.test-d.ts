@@ -195,6 +195,11 @@ expectType<string | number>(test(prep(String, either(number, string))));
 
 expectType<string | number>(test(prep(Number, either(number, string))));
 
+// Ensure regression from https://github.com/nvie/decoders/issues/941 doesn't play up again
+expectType<{ a: string; b: string; c: string } | { a: string }>(
+  test(either(object({ a: string, b: string, c: string }), object({ a: string }))),
+);
+
 expectType<string[]>(test(array(string)));
 expectType<number[]>(test(array(number)));
 expectType<number[][]>(test(array(array(number))));

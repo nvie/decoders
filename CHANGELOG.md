@@ -44,6 +44,8 @@ decoders version.
 **Other changes:**
 
 - Fix: `positiveNumber` and `positiveInteger` no longer accept `-0` as valid inputs
+- Fix: `either` return type would sometimes get inferred incorrectly if members partially
+  overlapped (see #941)
 - Reorganized internal module structure
 - Simplified some of the more complicated internal types
 
