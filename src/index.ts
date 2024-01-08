@@ -1,25 +1,15 @@
 // All built-in decoders
 export { array, nonEmptyArray, poja, set, tuple } from './arrays';
-export {
-  always,
-  constant,
-  fail,
-  never,
-  null_,
-  nullable,
-  nullish,
-  optional,
-  undefined_,
-  unknown,
-} from './basics';
-export { boolean, numericBoolean, truthy } from './booleans';
+export { always, constant, fail, never, unknown } from './basics';
+export { null_, nullable, nullish, optional, undefined_ } from './basics';
+export { boolean, truthy } from './booleans';
 export { date, iso8601 } from './dates';
 export type { JSONArray, JSONObject, JSONValue } from './json';
 export { json, jsonArray, jsonObject } from './json';
 export { instanceOf, lazy, prep } from './misc';
 export { anyNumber, integer, number, positiveInteger, positiveNumber } from './numbers';
 export { bigint } from './numbers';
-export { dict, exact, inexact, mapping, object, pojo, record } from './objects';
+export { exact, inexact, object, pojo, record } from './objects';
 export { nonEmptyString, regex, string } from './strings';
 export { email, httpsUrl, url, uuid, uuidv1, uuidv4 } from './strings';
 export { decimal, hexadecimal, numeric } from './strings';
@@ -34,5 +24,7 @@ export { err, ok } from '~/core';
 export { formatInline, formatShort } from '~/core';
 export type { Scalar } from '~/lib/types';
 
-// Deprecated aliases
+// Deprecated aliases (will get removed in a future version)
 export { hardcoded, maybe, mixed } from './basics';
+export { numericBoolean } from './booleans';
+export { dict, mapping } from './objects';

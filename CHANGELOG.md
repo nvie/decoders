@@ -12,6 +12,7 @@
 **New decoders:**
 
 - `enum_` (see [docs](https://decoders.cc/api.html#enum_))
+- `record()` (see [docs](https://decoders.cc/api.html#record))
 - `select()` (see [docs](https://decoders.cc/api.html#select))
 - `bigint` (see [docs](https://decoders.cc/api.html#bigint))
 - `decimal` (see [docs](https://decoders.cc/api.html#decimal))
@@ -20,19 +21,27 @@
 
 **Renamed decoders:**
 
-- `record()` (previously `dict()`)
-- `nullish()` (previously `maybe()`)
+Some decoders have been renamed because their names were based on Flowisms. Names have
+been updated to better reflect TypeScript terminology:
+
+- `dict()` → `record()`
+- `maybe()` → `nullish()`
 
 **Deprecated decoders:**
 
-The following decoders are deprecated because they’re not commonly used (too specific).
-They are scheduled for removal in a future decoders version.
+The following decoders are deprecated because they were not commonly used, and a bit too
+specific to be in the standard library. They are also scheduled for removal in a future
+decoders version.
 
-- `hardcoded()` (prefer `always()`)
-- `mixed` (prefer `unknown`)
-- `maybe()` (prefer `nullish()`)
 - `numericBoolean()` (you can still use `truthy` to get almost the same effect)
-- `mapping()`
+- `mapping()` (if you relied on this, you can
+  [copy its definition](https://github.com/nvie/decoders/blob/e43ebc4a6a4e2afeacf809aba0110d3f50c58e32/src/objects.ts#L266-L273)
+  into your own project as a custom decoder)
+
+Old aliases that are scheduled for removal in a future version:
+
+- `hardcoded()`
+- `mixed`
 
 **Other changes:**
 
