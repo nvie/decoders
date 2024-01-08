@@ -2,8 +2,9 @@ import { describe, expect, test } from 'vitest';
 
 import { hardcoded, optional, unknown } from '~/basics';
 import { boolean } from '~/booleans';
+import { mapping, record } from '~/collections';
 import { number } from '~/numbers';
-import { exact, inexact, mapping, object, pojo, record } from '~/objects';
+import { exact, inexact, object, pojo } from '~/objects';
 import { decimal, regex, string } from '~/strings';
 
 describe('objects', () => {

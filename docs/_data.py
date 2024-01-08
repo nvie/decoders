@@ -716,23 +716,6 @@ DECODERS = {
     """,
   },
 
-  'set': {
-    'section': 'Arrays',
-    'type_params': ['T'],
-    'params': [('decoder', 'Decoder<T>')],
-    'return_type': 'Decoder<Set<T>>',
-    'example': """
-      const decoder = set(string);
-
-      // 👍
-      decoder.verify(['abc', 'pqr'])  // ≈ new Set(['abc', 'pqr'])
-      decoder.verify([])              // ≈ new Set([])
-
-      // 👎
-      decoder.verify([1, 2]);         // throws, not the right types
-    """,
-  },
-
   'object': {
     'section': 'Objects',
     'type_params': ['A','B', '...'],
@@ -822,8 +805,9 @@ DECODERS = {
     """,
   },
 
+
   'record': {
-    'section': 'Objects',
+    'section': 'Collections',
     'signatures': [
       {
         'type_params': ['V'],
@@ -879,7 +863,7 @@ DECODERS = {
   },
 
   'dict': {
-    'section': 'Objects',
+    'section': 'Collections',
     'signatures': [
       {
         'type_params': ['V'],
@@ -893,7 +877,7 @@ DECODERS = {
   },
 
   'mapping': {
-    'section': 'Objects',
+    'section': 'Collections',
     'type_params': ['T'],
     'params': [('decoder', 'Decoder<T>')],
     'return_type': 'Decoder<Map<string, T>>',
@@ -909,6 +893,24 @@ DECODERS = {
       //   ]);
     """,
   },
+
+  'set': {
+    'section': 'Collections',
+    'type_params': ['T'],
+    'params': [('decoder', 'Decoder<T>')],
+    'return_type': 'Decoder<Set<T>>',
+    'example': """
+      const decoder = set(string);
+
+      // 👍
+      decoder.verify(['abc', 'pqr'])  // ≈ new Set(['abc', 'pqr'])
+      decoder.verify([])              // ≈ new Set([])
+
+      // 👎
+      decoder.verify([1, 2]);         // throws, not the right types
+    """,
+  },
+
 
   'json': {
     'section': 'JSON values',

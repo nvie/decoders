@@ -33,15 +33,11 @@ The following decoders are deprecated because they were not commonly used, and a
 specific to be in the standard library. They are also scheduled for removal in a future
 decoders version.
 
-- `numericBoolean()` (you can still use `truthy` to get almost the same effect)
-- `mapping()` (if you relied on this, you can
-  [copy its definition](https://github.com/nvie/decoders/blob/e43ebc4a6a4e2afeacf809aba0110d3f50c58e32/src/objects.ts#L266-L273)
-  into your own project as a custom decoder)
-
-Old aliases that are scheduled for removal in a future version:
-
-- `hardcoded()`
-- `mixed`
+- `dict()` (prefer `record()`)
+- `hardcoded()` (prefer `always()`)
+- `maybe()` (prefer `nullish()`)
+- `mixed` (prefer `unknown`)
+- `numericBoolean()`
 
 **Other changes:**
 

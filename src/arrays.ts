@@ -71,14 +71,6 @@ export function nonEmptyArray<T>(decoder: Decoder<T>): Decoder<[T, ...T[]]> {
   return array(decoder).refine(isNonEmpty, 'Must be non-empty array');
 }
 
-/**
- * Similar to `array()`, but returns the result as an [ES6
- * Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set).
- */
-export function set<T>(decoder: Decoder<T>): Decoder<Set<T>> {
-  return array(decoder).transform((items) => new Set(items));
-}
-
 const ntuple = (n: number) =>
   poja.refine((arr) => arr.length === n, `Must be a ${n}-tuple`);
 

@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest';
 
-import { array, nonEmptyArray, set, tuple } from '~/arrays';
+import { array, nonEmptyArray, tuple } from '~/arrays';
+import { set } from '~/collections';
 import { number } from '~/numbers';
 import { object } from '~/objects';
 import { string } from '~/strings';

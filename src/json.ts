@@ -3,9 +3,9 @@ import type { Decoder } from '~/core';
 import { array } from './arrays';
 import { null_ } from './basics';
 import { boolean } from './booleans';
+import { record } from './collections';
 import { lazy } from './misc';
 import { number } from './numbers';
-import { record } from './objects';
 import { string } from './strings';
 import { either } from './unions';
 
