@@ -267,6 +267,8 @@ export const dict = record;
  * Similar to `record()`, but returns the result as a `Map<string, T>` (an [ES6
  * Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map))
  * instead.
+ *
+ * @deprecated Will get removed in a future decoders version.
  */
 export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
   return record(decoder).transform((obj) => new Map(Object.entries(obj)));

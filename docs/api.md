@@ -1114,7 +1114,7 @@ Alias of [`record()`](/api.html#record).
 
 ---
 
-<a href="#mapping">#</a> **mapping**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Map&lt;string, T&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/objects.ts#L266-L273 'Source')
+<a href="#mapping">#</a> **mapping**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Map&lt;string, T&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/objects.ts#L266-L275 'Source')
 {: #mapping .signature}
 
 Similar to [`record()`](/api.html#record), but returns the result as a `Map<string, T>` (an [ES6
@@ -1550,5 +1550,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: a9678e5481bff7a7c38fc2875fc19d1f)-->
+<!--[[[end]]] (checksum: ae42370c723e3c1070c7740392a9b799)-->
 <!-- prettier-ignore-end -->
