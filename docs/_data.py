@@ -915,7 +915,6 @@ DECODERS = {
     'type_params': ['T'],
     'params': [('decoder', 'Decoder<T>')],
     'return_type': 'Decoder<Set<T>>',
-    'aliases': ['set'],
     'example': """
       const decoder = set(string);
 
@@ -928,6 +927,18 @@ DECODERS = {
     """,
   },
 
+  'set': {
+    'section': 'Collections',
+    'type_params': ['T'],
+    'params': [('decoder', 'Decoder<T>')],
+    'return_type': 'Decoder<Set<T>>',
+    'markdown': """
+      An alias of `setFromArray()`.
+
+      ⚠️ **IMPORTANT!** This decoder will change its behavior in a future
+      version! If you rely on this decoder, use `setFromArray()` instead.
+    """,
+  },
 
   'json': {
     'section': 'JSON values',

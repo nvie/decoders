@@ -1062,7 +1062,7 @@ pojo.verify(null);        // throws
 - [`dict()`](/api.html#dict)
 - [`mapping()`](/api.html#mapping)
 - [`setFromArray()`](/api.html#setFromArray)
-- [`set()`](/api.html#set) (alias of [`setFromArray()`](/api.html#setFromArray))
+- [`set()`](/api.html#set)
 
 ---
 
@@ -1148,9 +1148,6 @@ decoder.verify({ red: 1, blue: 2, green: 3 });
 <a href="#setFromArray">#</a> **setFromArray**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Set&lt;T&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/collections.ts#L67-L73 'Source')
 {: #setFromArray .signature}
 
-<a href="#set">#</a> **set**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Set&lt;T&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/collections.ts#L75-L81 'Source')
-{: #set .signature}
-
 Similar to [`array()`](/api.html#array), but returns the result as an [ES6
 Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set).
 
@@ -1164,6 +1161,16 @@ decoder.verify([])              // new Set([])
 // 👎
 decoder.verify([1, 2]);         // throws, not the right types
 ```
+
+---
+
+<a href="#set">#</a> **set**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Set&lt;T&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/collections.ts#L75-L81 'Source')
+{: #set .signature}
+
+An alias of [`setFromArray()`](/api.html#setFromArray).
+
+⚠️ **IMPORTANT!** This decoder will change its behavior in a future
+version! If you rely on this decoder, use [`setFromArray()`](/api.html#setFromArray) instead.
 
 ---
 
@@ -1582,5 +1589,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: b3a9c6334b522652493f1ebbb60219d8)-->
+<!--[[[end]]] (checksum: 469225723d883f90d803d8f4f602fa85)-->
 <!-- prettier-ignore-end -->
