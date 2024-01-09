@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [2.3.0] - 2024-01-09
+
 **New features:**
 
 - All `enum` types are now supported ([docs](https://decoders.cc/api.html#enum_))
