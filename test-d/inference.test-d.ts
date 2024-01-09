@@ -51,6 +51,7 @@ import {
   regex,
   select,
   set,
+  setFromArray,
   string,
   taggedUnion,
   truthy,
@@ -125,6 +126,8 @@ expectType<number[][]>(test(array(array(number))));
 expectType<unknown[]>(test(poja));
 expectType<[string, ...string[]]>(test(nonEmptyArray(string)));
 expectType<[number, ...number[]]>(test(nonEmptyArray(number)));
+expectType<Set<string>>(test(setFromArray(string)));
+expectType<Set<number>>(test(setFromArray(number)));
 expectType<Set<string>>(test(set(string)));
 expectType<Set<number>>(test(set(number)));
 

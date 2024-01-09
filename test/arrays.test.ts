@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 
 import { array, nonEmptyArray, tuple } from '~/arrays';
-import { set } from '~/collections';
+import { setFromArray } from '~/collections';
 import { number } from '~/numbers';
 import { object } from '~/objects';
 import { string } from '~/strings';
@@ -63,7 +63,7 @@ describe('nonEmptyArray', () => {
 });
 
 describe('set', () => {
-  const decoder = set(string);
+  const decoder = setFromArray(string);
 
   test('empty set', () => {
     expect(decoder.verify([]).size).toBe(0);

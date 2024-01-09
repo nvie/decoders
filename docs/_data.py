@@ -910,11 +910,12 @@ DECODERS = {
     """,
   },
 
-  'set': {
+  'setFromArray': {
     'section': 'Collections',
     'type_params': ['T'],
     'params': [('decoder', 'Decoder<T>')],
     'return_type': 'Decoder<Set<T>>',
+    'aliases': ['set'],
     'example': """
       const decoder = set(string);
 

@@ -36,11 +36,11 @@ for section, names in DECODERS_BY_SECTION.items():
 - [**Optionality**](#optionality): [`null_`](/api.html#null_), [`undefined_`](/api.html#undefined_), [`optional()`](/api.html#optional), [`nullable()`](/api.html#nullable), [`nullish()`](/api.html#nullish), [`unknown`](/api.html#unknown), [`maybe()`](/api.html#maybe), [`mixed`](/api.html#mixed)
 - [**Arrays**](#arrays): [`array()`](/api.html#array), [`nonEmptyArray()`](/api.html#nonEmptyArray), [`poja`](/api.html#poja), [`tuple()`](/api.html#tuple)
 - [**Objects**](#objects): [`object()`](/api.html#object), [`exact()`](/api.html#exact), [`inexact()`](/api.html#inexact), [`pojo`](/api.html#pojo)
-- [**Collections**](#collections): [`record()`](/api.html#record), [`dict()`](/api.html#dict), [`mapping()`](/api.html#mapping), [`set()`](/api.html#set)
+- [**Collections**](#collections): [`record()`](/api.html#record), [`dict()`](/api.html#dict), [`mapping()`](/api.html#mapping), [`setFromArray()`](/api.html#setFromArray), [`set()`](/api.html#set)
 - [**JSON values**](#json-values): [`json`](/api.html#json), [`jsonObject`](/api.html#jsonObject), [`jsonArray`](/api.html#jsonArray)
 - [**Unions**](#unions): [`either()`](/api.html#either), [`oneOf()`](/api.html#oneOf), [`enum_()`](/api.html#enum_), [`taggedUnion()`](/api.html#taggedUnion), [`select()`](/api.html#select)
 - [**Utilities**](#utilities): [`define()`](/api.html#define), [`prep()`](/api.html#prep), [`never`](/api.html#never), [`instanceOf()`](/api.html#instanceOf), [`lazy()`](/api.html#lazy), [`fail`](/api.html#fail)
-<!--[[[end]]] (checksum: 0b41bb45903651b73f860c8a20efed42) -->
+<!--[[[end]]] (checksum: 3d697d3ff538b75208869a95c2826bbc) -->
 
 <!--[[[cog
 for section, names in DECODERS_BY_SECTION.items():
@@ -1061,7 +1061,8 @@ pojo.verify(null);        // throws
 - [`record()`](/api.html#record)
 - [`dict()`](/api.html#dict)
 - [`mapping()`](/api.html#mapping)
-- [`set()`](/api.html#set)
+- [`setFromArray()`](/api.html#setFromArray)
+- [`set()`](/api.html#set) (alias of [`setFromArray()`](/api.html#setFromArray))
 
 ---
 
@@ -1123,7 +1124,7 @@ Alias of [`record()`](/api.html#record).
 
 ---
 
-<a href="#mapping">#</a> **mapping**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Map&lt;string, T&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/collections.ts#L75-L82 'Source')
+<a href="#mapping">#</a> **mapping**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Map&lt;string, T&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/collections.ts#L83-L90 'Source')
 {: #mapping .signature}
 
 Similar to [`record()`](/api.html#record), but returns the result as a `Map<string, T>` (an [ES6
@@ -1144,7 +1145,10 @@ decoder.verify({ red: 1, blue: 2, green: 3 });
 
 ---
 
-<a href="#set">#</a> **set**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Set&lt;T&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/collections.ts#L67-L73 'Source')
+<a href="#setFromArray">#</a> **setFromArray**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Set&lt;T&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/collections.ts#L67-L73 'Source')
+{: #setFromArray .signature}
+
+<a href="#set">#</a> **set**&lt;<i style="color: #267f99">T</i>&gt;(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Set&lt;T&gt;&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/collections.ts#L75-L81 'Source')
 {: #set .signature}
 
 Similar to [`array()`](/api.html#array), but returns the result as an [ES6
@@ -1578,5 +1582,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: a3e8989779becbac4730576cf7cbeed3)-->
+<!--[[[end]]] (checksum: b3a9c6334b522652493f1ebbb60219d8)-->
 <!-- prettier-ignore-end -->

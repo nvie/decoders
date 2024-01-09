@@ -3,7 +3,7 @@ export { array, nonEmptyArray, poja, tuple } from './arrays';
 export { always, constant, fail, never, unknown } from './basics';
 export { null_, nullable, nullish, optional, undefined_ } from './basics';
 export { boolean, truthy } from './booleans';
-export { mapping, record, set } from './collections';
+export { mapping, record, set, setFromArray } from './collections';
 export { date, datelike, iso8601 } from './dates';
 export type { JSONArray, JSONObject, JSONValue } from './json';
 export { json, jsonArray, jsonObject } from './json';

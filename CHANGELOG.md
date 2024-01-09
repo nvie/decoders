@@ -28,6 +28,8 @@ been updated to better reflect TypeScript terminology:
 
 - `dict()` → `record()`
 - `maybe()` → `nullish()`
+- `set()` → `setFromArray()` (to make room for a better `set()` decoder in a future
+  version)
 
 **Deprecated decoders:**
 

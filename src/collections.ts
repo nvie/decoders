@@ -68,9 +68,17 @@ export const dict = record;
  * Similar to `array()`, but returns the result as an [ES6
  * Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set).
  */
-export function set<T>(decoder: Decoder<T>): Decoder<Set<T>> {
+export function setFromArray<T>(decoder: Decoder<T>): Decoder<Set<T>> {
   return array(decoder).transform((items) => new Set(items));
 }
+
+/**
+ * Renamed to `setFromArray` to make room for a future `set()` decoder that
+ * works differently.
+ *
+ * @deprecated This decoder will change behavior in a future version.
+ */
+export const set = setFromArray;
 
 /**
  * Similar to `record()`, but returns the result as a `Map<string, T>` (an [ES6
