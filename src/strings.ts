@@ -62,6 +62,24 @@ export const httpsUrl: Decoder<URL> = url.refine(
 );
 
 /**
+ * Accepts and returns [nanoid](https://zelark.github.io/nano-id-cc) string
+ * values. It assumes the default nanoid alphabet. If you're using a custom
+ * alphabet, use `regex()` instead.
+ */
+export function nanoid(min: number, max: number): Decoder<string>;
+export function nanoid(size?: number): Decoder<string>;
+export function nanoid(minOrSize: number = 21, max_?: number): Decoder<string> {
+  const max = max_ ?? minOrSize;
+  const atLeast = minOrSize === max ? '' : 'at least ';
+  const atMost = minOrSize === max ? '' : 'at most ';
+  const tooShort = `Too short, must be ${atLeast}${minOrSize} chars`;
+  const tooLong = `Too long, must be ${atMost}${max} chars`;
+  return regex(/^[a-z0-9_-]+$/i, 'Must be nano ID').reject((s) =>
+    s.length < minOrSize ? tooShort : s.length > max ? tooLong : null,
+  );
+}
+
+/**
  * Accepts strings that are valid
  * [UUIDs](https://en.wikipedia.org/wiki/universally_unique_identifier)
  * (universally unique identifier).

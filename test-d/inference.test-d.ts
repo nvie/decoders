@@ -30,6 +30,7 @@ import {
   mapping,
   maybe,
   mixed,
+  nanoid,
   never,
   nonEmptyArray,
   nonEmptyString,
@@ -116,6 +117,7 @@ expectType<string>(test(email));
 expectType<string>(test(regex(/foo/, 'Must be foo')));
 expectType<URL>(test(url));
 expectType<URL>(test(httpsUrl));
+expectType<string>(test(nanoid));
 expectType<string>(test(uuid));
 expectType<string>(test(uuidv1));
 expectType<string>(test(uuidv4));

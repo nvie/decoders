@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Add new `nanoid()` decoder ([docs](https://decoders.cc/api.html#nanoid))
+
 ## [2.3.0] - 2024-01-09
 
 **New features:**
