@@ -259,6 +259,14 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
    * `unknown.then(...)`.
    */
   function then<V>(next: Next<V, T>): Decoder<V> {
+    //
+    // XXX Maybe split .then() into three pieces now?
+    //
+    //   - .pipe(nextDecoder)
+    //   - .thenFn(nextAcceptanceFn)
+    //   - .thenDecode(nextFnReturningDecoder) aka a better .peek()???
+    //
+
     // XXX Shorten!
     return define((blob, ok, err) => {
       const res1 = decode(blob);
