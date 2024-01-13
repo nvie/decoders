@@ -123,6 +123,25 @@ describe('.then directly taking a decoder', () => {
   });
 });
 
+describe('.pipe (same as .then(decoder))', () => {
+  const decoder =
+    // We already know how to decode strings...
+    string.transform(Number).pipe(positiveInteger);
+
+  test('valid type of decode result', () => {
+    expect(decoder.verify('100')).toEqual(100);
+    expect(decoder.verify(' 123  ')).toEqual(123);
+    expect(decoder.verify('2387213979')).toEqual(2387213979);
+  });
+
+  test('invalid', () => {
+    expect(() => decoder.verify('not a numeric string')).toThrow('Number must be finite');
+    expect(() => decoder.verify(42)).toThrow('Must be string');
+    expect(() => decoder.verify('-123')).toThrow('Number must be positive');
+    expect(() => decoder.verify('3.14')).toThrow('Number must be an integer');
+  });
+});
+
 describe('.transform', () => {
   test('change type of decode result', () => {
     const len = string.transform((s) => s.length);

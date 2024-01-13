@@ -5,6 +5,9 @@
 - Make `.then()` multi-functional. Previously, it took an "acceptance function", but its
   argument can now also be, or return, a `Decoder<V>`. This makes piping a lot easier in
   practice.
+- A new `.pipe()` operation on Decoder. Using `first.pipe(second)` is now technically
+  equivalent to `first.then(second)` (because of the point above), but its type is more
+  ergonomic and clear.
 - The `formatShort` formatter will now quote error positions with single quotes, which
   makes them more human-readable in JSON responses.
 

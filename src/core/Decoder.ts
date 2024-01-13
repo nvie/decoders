@@ -93,6 +93,24 @@ export interface Decoder<T> {
   then<V>(next: Next<V, T>): Decoder<V>;
 
   /**
+   * If the current (first) decoder accepts the input, sends its output into
+   * the next (second) decoder, and return its results.
+   *
+   * This can be useful to validate the results of a previous transform, so in
+   * a typical example, you do something like this:
+   *
+   *   string
+   *     .transform(s => Number(s))
+   *     .pipe(positiveInteger)
+   *
+   * Note that the given decoder does not know anything about the given
+   * returned value. In the example above, for example, TypeScript knows that
+   * the input to the `positiveInteger` decoder will be of type `number`, but
+   * to the `positiveInteger` its input is completely opaque.
+   */
+  pipe<V>(next: Decoder<V>): Decoder<V>;
+
+  /**
    * @internal
    * Chain together the current decoder with another acceptance function, but
    * also pass along the original input. Don't call this method directly.
@@ -260,6 +278,27 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
   }
 
   /**
+   * If the current (first) decoder accepts the input, sends its output into
+   * the next (second) decoder, and return its results.
+   *
+   * This can be useful to validate the results of a previous transform, so in
+   * a typical example, you do something like this:
+   *
+   *   string
+   *     .transform(s => Number(s))
+   *     .pipe(positiveInteger)
+   *
+   * Note that the given decoder does not know anything about the given
+   * returned value. In the example above, for example, TypeScript knows that
+   * the input to the `positiveInteger` decoder will be of type `number`, but
+   * to the `positiveInteger` its input is completely opaque.
+   */
+  function pipe<V>(next: Decoder<V>): Decoder<V> {
+    // .pipe() is technically an alias of .then(), but has a simpler type signature
+    return then(next);
+  }
+
+  /**
    * Adds an extra predicate to a decoder. The new decoder is like the
    * original decoder, but only accepts values that aren't rejected by the
    * given function.
@@ -324,6 +363,7 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
     reject,
     describe,
     then,
+    pipe,
     peek,
   });
 }

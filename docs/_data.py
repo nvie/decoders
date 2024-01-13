@@ -1472,6 +1472,16 @@ DECODER_METHODS = {
     # 'example': """
     # """,
   },
+
+  'pipe': {
+    'type_params': ['V'],
+    'params': [
+      ('next', 'Decoder<V>'),
+    ],
+    'return_type': 'Decoder<V>',
+    # 'example': """
+    # """,
+  },
 }
 
 

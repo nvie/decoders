@@ -182,6 +182,10 @@ expectType<boolean>(test(string.transform(Number).transform(String).then(truthy.
 //   test(string.transform(Number).then(Math.random() < 0.5 ? positiveInteger : string)),
 // );
 
+// .pipe()
+expectType<number>(test(string.transform(Number).pipe(positiveInteger)));
+expectType<boolean>(test(string.transform(Number).transform(String).pipe(truthy)));
+
 expectType<string>(test(string.refine((s) => s.startsWith('x'), 'Must start with x')));
 
 expectType<string>(
