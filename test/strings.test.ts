@@ -7,6 +7,7 @@ import {
   email,
   hexadecimal,
   httpsUrl,
+  nanoid,
   nonEmptyString,
   numeric,
   regex,
@@ -236,6 +237,42 @@ describe('hexadecimal', () => {
         },
       ),
     );
+  });
+});
+
+describe('nanoid', () => {
+  test('default accepts', () => {
+    expect(nanoid().verify('1-QskICa3CaPGcKuYYTm1')).toEqual('1-QskICa3CaPGcKuYYTm1');
+    expect(nanoid().verify('vA4mt7CUWnouU6jTGbMP_')).toEqual('vA4mt7CUWnouU6jTGbMP_');
+    expect(nanoid(7).verify('yH8mx-7')).toEqual('yH8mx-7');
+    expect(nanoid(7, 10).verify('yH8mx-7')).toEqual('yH8mx-7');
+    expect(nanoid(7, 10).verify('yH8mx-7890')).toEqual('yH8mx-7890');
+  });
+
+  test('rejects', () => {
+    expect(() => nanoid().verify('x'.repeat(22))).toThrow(/Too long, must be 21 chars/);
+    expect(() => nanoid().verify('x'.repeat(20))).toThrow(/Too short, must be 21 chars/);
+
+    // 21 is the default
+    expect(() => nanoid(21).verify('x'.repeat(22))).toThrow(/Too long, must be 21 chars/);
+    expect(() => nanoid(21).verify('x'.repeat(20))).toThrow(
+      /Too short, must be 21 chars/,
+    );
+
+    // other size
+    expect(() => nanoid(7).verify('x'.repeat(20))).toThrow(/Too long, must be 7 chars/);
+    expect(() => nanoid(7).verify('x'.repeat(5))).toThrow(/Too short, must be 7 chars/);
+
+    // range
+    expect(() => nanoid(3, 10).verify('x')).toThrow(
+      /Too short, must be at least 3 chars/,
+    );
+    expect(() => nanoid(3, 10).verify('x'.repeat(12))).toThrow(
+      /Too long, must be at most 10 chars/,
+    );
+
+    expect(() => nanoid(5).verify('$'.repeat(5))).toThrow(/Must be nano ID/);
+    expect(() => nanoid().verify(42)).toThrow(/Must be string/);
   });
 });
 
