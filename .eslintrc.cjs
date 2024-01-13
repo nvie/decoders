@@ -47,6 +47,12 @@ module.exports = {
           'for..in loops are never what you want. Use for..of, or use a .forEach() instead.',
       },
     ],
+
+    // --------------------------------------------------------------
+    // "The Code is the To-Do List"
+    // https://www.executeprogram.com/blog/the-code-is-the-to-do-list
+    // --------------------------------------------------------------
+    'no-warning-comments': ['error', { terms: ['xxx'], location: 'anywhere' }],
   },
 
   // Relax ESLint a bit in tests
