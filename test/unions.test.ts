@@ -12,7 +12,7 @@ import { either, enum_, oneOf, select, taggedUnion } from '~/unions';
 
 import { INPUTS } from './_fixtures';
 
-// XXX Move into test utils
+// TODO Move into test utils
 export function fuzz(testFn: (blob: unknown) => void) {
   return fc.assert(
     fc.property(
