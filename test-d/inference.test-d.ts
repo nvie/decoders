@@ -68,9 +68,6 @@ import {
   // Formatters
   formatInline,
   formatShort,
-
-  // Results
-  ok,
 } from '../dist';
 import { expectError, expectType, expectAssignable } from 'tsd';
 
@@ -166,7 +163,24 @@ string.verify('dummy', formatShort);
 expectType<number | undefined>(number.value('dummy'));
 expectType<string | undefined>(string.value('dummy'));
 
-expectType<number>(test(string.then((value: string) => ok(value.length))));
+expectType<number>(test(string.then((value: string, ok) => ok(value.length))));
+expectType<number>(
+  test(
+    string.then((value: string, ok, err) =>
+      Math.random() < 0.5 ? ok(value.length) : err('Nope'),
+    ),
+  ),
+);
+
+// .then()
+expectType<number>(test(string.transform(Number).then(positiveInteger)));
+expectType<number>(test(string.transform(Number).then(positiveInteger.decode)));
+expectType<boolean>(test(string.transform(Number).transform(String).then(truthy)));
+expectType<boolean>(test(string.transform(Number).transform(String).then(truthy.decode)));
+// XXX It would be HUGE if we could make this inference work!!!!!!!!
+// expectType<number | string>(
+//   test(string.transform(Number).then(Math.random() < 0.5 ? positiveInteger : string)),
+// );
 
 expectType<string>(test(string.refine((s) => s.startsWith('x'), 'Must start with x')));
 

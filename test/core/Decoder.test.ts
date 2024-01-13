@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 
 import { annotate, formatInline, formatShort } from '~/core';
-import { number } from '~/numbers';
+import { number, positiveInteger } from '~/numbers';
 import { pojo } from '~/objects';
 import { string } from '~/strings';
 
@@ -63,7 +63,7 @@ describe('.value', () => {
   });
 });
 
-describe('.then', () => {
+describe('.then with acceptance function', () => {
   const hex =
     // We already know how to decode strings...
     string.then(
@@ -82,6 +82,44 @@ describe('.then', () => {
 
   test('invalid', () => {
     expect(() => hex.verify('no good hex value')).toThrow('Nope');
+  });
+});
+
+describe('.then with acceptance function returning a decoder', () => {
+  const decoder =
+    // We already know how to decode strings...
+    string.transform(Number).then(() => positiveInteger);
+
+  test('valid type of decode result', () => {
+    expect(decoder.verify('100')).toEqual(100);
+    expect(decoder.verify(' 123  ')).toEqual(123);
+    expect(decoder.verify('2387213979')).toEqual(2387213979);
+  });
+
+  test('invalid', () => {
+    expect(() => decoder.verify('not a numeric string')).toThrow('Number must be finite');
+    expect(() => decoder.verify(42)).toThrow('Must be string');
+    expect(() => decoder.verify('-123')).toThrow('Number must be positive');
+    expect(() => decoder.verify('3.14')).toThrow('Number must be an integer');
+  });
+});
+
+describe('.then directly taking a decoder', () => {
+  const decoder =
+    // We already know how to decode strings...
+    string.transform(Number).then(positiveInteger);
+
+  test('valid type of decode result', () => {
+    expect(decoder.verify('100')).toEqual(100);
+    expect(decoder.verify(' 123  ')).toEqual(123);
+    expect(decoder.verify('2387213979')).toEqual(2387213979);
+  });
+
+  test('invalid', () => {
+    expect(() => decoder.verify('not a numeric string')).toThrow('Number must be finite');
+    expect(() => decoder.verify(42)).toThrow('Must be string');
+    expect(() => decoder.verify('-123')).toThrow('Number must be positive');
+    expect(() => decoder.verify('3.14')).toThrow('Number must be an integer');
   });
 });
 

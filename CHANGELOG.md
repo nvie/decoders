@@ -2,6 +2,9 @@
 
 **New features:**
 
+- Make `.then()` multi-functional. Previously, it took an "acceptance function", but its
+  argument can now also be, or return, a `Decoder<V>`. This makes piping a lot easier in
+  practice.
 - The `formatShort` formatter will now quote error positions with single quotes, which
   makes them more human-readable in JSON responses.
 

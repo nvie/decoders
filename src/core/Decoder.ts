@@ -18,6 +18,19 @@ export type AcceptanceFn<T, InputT = unknown> = (
   err: (msg: string | Annotation) => DecodeResult<T>,
 ) => DecodeResult<T>;
 
+type AcceptanceFn2<TOutput, TInput> =
+  // XXX How to name this thing?
+  (
+    blob: TInput,
+    ok: (value: TOutput) => DecodeResult<TOutput>,
+    err: (msg: string | Annotation) => DecodeResult<TOutput>,
+  ) => DecodeResult<TOutput> | Decoder<TOutput>;
+
+// XXX Rename + document
+type Next<TOutput, TInput = unknown> =
+  | Decoder<TOutput> // or...
+  | AcceptanceFn2<TOutput, TInput>;
+
 export interface Decoder<T> {
   /**
    * Verifies untrusted input. Either returns a value, or throws a decoding
@@ -77,7 +90,7 @@ export interface Decoder<T> {
    * If it helps, you can think of `define(...)` as equivalent to
    * `unknown.then(...)`.
    */
-  then<V>(next: AcceptanceFn<V, T>): Decoder<V>;
+  then<V>(next: Next<V, T>): Decoder<V>;
 
   /**
    * @internal
@@ -227,10 +240,22 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
    * If it helps, you can think of `define(...)` as equivalent to
    * `unknown.then(...)`.
    */
-  function then<V>(next: AcceptanceFn<V, T>): Decoder<V> {
+  function then<V>(next: Next<V, T>): Decoder<V> {
+    // XXX Shorten!
     return define((blob, ok, err) => {
-      const result = decode(blob);
-      return result.ok ? next(result.value, ok, err) : result;
+      const res1 = decode(blob);
+      if (res1.ok) {
+        const res2 = isDecoder(next)
+          ? next // It's a decoder
+          : next(res1.value, ok, err); // It's an acceptance function (which can also maybe return a decoder)
+        if (isDecoder(res2)) {
+          return res2.decode(res1.value);
+        } else {
+          return res2;
+        }
+      } else {
+        return res1;
+      }
     });
   }
 
@@ -290,7 +315,7 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
     });
   }
 
-  return Object.freeze({
+  return brand({
     verify,
     value,
     decode,
@@ -301,4 +326,18 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
     then,
     peek,
   });
+}
+
+/** @internal */
+const _register: WeakSet<Decoder<unknown>> = new WeakSet();
+
+/** @internal */
+function brand<A extends Decoder<unknown>>(ann: A): A {
+  _register.add(ann);
+  return ann;
+}
+
+/** @internal */
+function isDecoder(thing: unknown): thing is Decoder<unknown> {
+  return _register.has(thing as Decoder<unknown>);
 }
