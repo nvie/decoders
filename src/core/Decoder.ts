@@ -90,6 +90,7 @@ export interface Decoder<T> {
    * If it helps, you can think of `define(...)` as equivalent to
    * `unknown.then(...)`.
    */
+  // XXX Not so low-level anymore! Maybe change the docs here?
   then<V>(next: Next<V, T>): Decoder<V>;
 
   /**
@@ -258,6 +259,7 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
    * If it helps, you can think of `define(...)` as equivalent to
    * `unknown.then(...)`.
    */
+  // XXX Not so low-level anymore! Maybe change the docs here?
   function then<V>(next: Next<V, T>): Decoder<V> {
     //
     // XXX Maybe split .then() into three pieces now?
@@ -267,21 +269,12 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
     //   - .thenDecode(nextFnReturningDecoder) aka a better .peek()???
     //
 
-    // XXX Shorten!
     return define((blob, ok, err) => {
-      const res1 = decode(blob);
-      if (res1.ok) {
-        const res2 = isDecoder(next)
-          ? next // It's a decoder
-          : next(res1.value, ok, err); // It's an acceptance function (which can also maybe return a decoder)
-        if (isDecoder(res2)) {
-          return res2.decode(res1.value);
-        } else {
-          return res2;
-        }
-      } else {
-        return res1;
-      }
+      const r1 = decode(blob);
+      if (!r1.ok) return r1; // Rejected
+
+      const r2 = isDecoder(next) ? next : next(r1.value, ok, err);
+      return isDecoder(r2) ? r2.decode(r1.value) : r2;
     });
   }
 
@@ -302,7 +295,8 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
    * to the `positiveInteger` its input is completely opaque.
    */
   function pipe<V>(next: Decoder<V>): Decoder<V> {
-    // .pipe() is technically an alias of .then(), but has a simpler type signature
+    // .pipe() is technically an alias of .then(), it just has a simpler type
+    // signature, making it friendlier to use
     return then(next);
   }
 
@@ -355,6 +349,7 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
    * This is an advanced, low-level, decoder. Don't call this method directly.
    * Use the `select()` decoder instead.
    */
+  // XXX I _think_ we can remove .peek() and move its implementation into select() directly
   function peek<V>(next: AcceptanceFn<V, [unknown, T]>): Decoder<V> {
     return define((blob, ok, err) => {
       const result = decode(blob);
