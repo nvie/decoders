@@ -12,24 +12,16 @@ export type DecodeResult<T> = Result<T, Annotation>;
  * `ok()` and `err()` constructor functions are provided as the 2nd and 3rd
  * param. One of these should be called and its value returned.
  */
-export type AcceptanceFn<T, InputT = unknown> = (
-  blob: InputT,
-  ok: (value: T) => DecodeResult<T>,
-  err: (msg: string | Annotation) => DecodeResult<T>,
-) => DecodeResult<T>;
-
-type AcceptanceFn2<TOutput, TInput> =
-  // XXX How to name this thing?
-  (
-    blob: TInput,
-    ok: (value: TOutput) => DecodeResult<TOutput>,
-    err: (msg: string | Annotation) => DecodeResult<TOutput>,
-  ) => DecodeResult<TOutput> | Decoder<TOutput>;
+export type AcceptanceFn<TOutput, TInput = unknown> = (
+  blob: TInput,
+  ok: (value: TOutput) => DecodeResult<TOutput>,
+  err: (msg: string | Annotation) => DecodeResult<TOutput>,
+) => DecodeResult<TOutput> | Decoder<TOutput>;
 
 // XXX Rename + document
 type Next<TOutput, TInput = unknown> =
   | Decoder<TOutput> // or...
-  | AcceptanceFn2<TOutput, TInput>;
+  | AcceptanceFn<TOutput, TInput>;
 
 export interface Decoder<T> {
   /**
