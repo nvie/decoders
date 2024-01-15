@@ -176,6 +176,26 @@ DECODERS = {
     """,
   },
 
+  'identifier': {
+    'section': 'Strings',
+    'params': None,
+    'return_type': 'Decoder<string>',
+    'example': """
+      // 👍
+      identifier.verify('x') === 'x'
+      identifier.verify('abc123') === 'abc123'
+      identifier.verify('_123') === '_123'
+      identifier.verify('a_b_c_1_2_3') === 'a_b_c_1_2_3'
+
+      // 👎
+      identifier.verify('123xyz');   // cannot start with digit
+      identifier.verify('x-y');      // invalid chars
+      identifier.verify('!@#$%^&*()=+');  // invalid chars
+      identifier.verify('🤯');       // invalid chars
+      identifier.verify(42);         // not a string
+    """,
+  },
+
   'nanoid': {
     'section': 'Strings',
     'params': None,

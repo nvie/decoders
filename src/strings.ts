@@ -62,6 +62,15 @@ export const httpsUrl: Decoder<URL> = url.refine(
 );
 
 /**
+ * Accepts and returns strings that are valid identifiers in most programming
+ * languages.
+ */
+export const identifier: Decoder<string> = regex(
+  /^[a-z_][a-z0-9_]*$/i,
+  'Must be valid identifier',
+);
+
+/**
  * Accepts and returns [nanoid](https://zelark.github.io/nano-id-cc) string
  * values. It assumes the default nanoid alphabet. If you're using a custom
  * alphabet, use `regex()` instead.

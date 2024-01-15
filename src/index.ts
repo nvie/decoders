@@ -12,7 +12,8 @@ export { anyNumber, integer, number, positiveInteger, positiveNumber } from './n
 export { bigint } from './numbers';
 export { exact, inexact, object, pojo } from './objects';
 export { nonEmptyString, regex, string } from './strings';
-export { email, httpsUrl, nanoid, url, uuid, uuidv1, uuidv4 } from './strings';
+export { identifier, nanoid, uuid, uuidv1, uuidv4 } from './strings';
+export { email, httpsUrl, url } from './strings';
 export { decimal, hexadecimal, numeric } from './strings';
 export { either, enum_, oneOf, select, taggedUnion } from './unions';
 
