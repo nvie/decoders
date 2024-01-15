@@ -4,6 +4,7 @@ import { annotate, formatInline, formatShort } from '~/core';
 import { number, positiveInteger } from '~/numbers';
 import { pojo } from '~/objects';
 import { string } from '~/strings';
+import { always } from '~/basics';
 
 test('.decode', () => {
   // .decode() is tested implicitly because it's used _everywhere_
@@ -123,7 +124,7 @@ describe('.then directly taking a decoder', () => {
   });
 });
 
-describe('.pipe (same as .then(decoder))', () => {
+describe('.pipe with single decoder arg', () => {
   const decoder =
     // We already know how to decode strings...
     string.transform(Number).pipe(positiveInteger);
@@ -132,6 +133,30 @@ describe('.pipe (same as .then(decoder))', () => {
     expect(decoder.verify('100')).toEqual(100);
     expect(decoder.verify(' 123  ')).toEqual(123);
     expect(decoder.verify('2387213979')).toEqual(2387213979);
+  });
+
+  test('invalid', () => {
+    expect(() => decoder.verify('not a numeric string')).toThrow('Number must be finite');
+    expect(() => decoder.verify(42)).toThrow('Must be string');
+    expect(() => decoder.verify('-123')).toThrow('Number must be positive');
+    expect(() => decoder.verify('3.14')).toThrow('Number must be an integer');
+  });
+});
+
+describe('.pipe with decoder function arg', () => {
+  const decoder =
+    // We already know how to decode strings...
+    string
+      .transform(Number)
+      .pipe((x) => (isNaN(x) || x <= 999 ? positiveInteger : always('A big number!')));
+
+  test('valid type of decode result', () => {
+    expect(decoder.verify('0')).toEqual(0);
+    expect(decoder.verify('100')).toEqual(100);
+    expect(decoder.verify(' 123  ')).toEqual(123);
+    expect(decoder.verify('999')).toEqual(999);
+    expect(decoder.verify(' 1000 ')).toEqual('A big number!');
+    expect(decoder.verify('2387213979')).toEqual('A big number!');
   });
 
   test('invalid', () => {

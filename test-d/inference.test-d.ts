@@ -192,8 +192,19 @@ expectType<boolean>(test(string.transform(Number).transform(String).then(truthy.
 // .pipe()
 expectType<number>(test(string.transform(Number).pipe(positiveInteger)));
 expectType<boolean>(test(string.transform(Number).transform(String).pipe(truthy)));
+// .pipe() with branch infers decoder from both branches
 expectType<number | string>(
   test(string.transform(Number).pipe(Math.random() < 0.5 ? positiveInteger : string)),
+);
+// .pipe() with function with branches infers decoder from both branches
+expectType<number | string>(
+  test(
+    string.transform(Number).pipe(() => (Math.random() < 0.5 ? positiveInteger : string)),
+  ),
+);
+// .pipe() with input function with branches infers decoder from both branches
+expectType<number | string>(
+  test(string.transform(Number).pipe((x) => (x < 0.5 ? positiveInteger : string))),
 );
 
 expectType<string>(test(string.refine((s) => s.startsWith('x'), 'Must start with x')));

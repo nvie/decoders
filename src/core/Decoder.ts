@@ -74,28 +74,19 @@ export interface Decoder<T> {
   describe(message: string): Decoder<T>;
 
   /**
-   * Send the output of the current decoder into another acceptance function.
-   * The given acceptance function will receive the output of the current
-   * decoder as its input, making it partially trusted.
-   *
-   * This works similar to how you would `define()` a new decoder, except
-   * that the ``blob`` param will now be ``T`` (a known type), rather than
-   * ``unknown``. This will allow the function to make a stronger assumption
-   * about its input and avoid re-refining inputs.
+   * Send the output of the current decoder into another decoder or acceptance
+   * function. The given acceptance function will receive the output of the
+   * current decoder as its input, making it partially trusted.
    *
    * > _**NOTE:** This is an advanced, low-level, API. It's not recommended
    * > to reach for this construct unless there is no other way. Most cases can
    * > be covered more elegantly by `.transform()` or `.refine()` instead._
-   *
-   * If it helps, you can think of `define(...)` as equivalent to
-   * `unknown.then(...)`.
    */
-  // XXX Not so low-level anymore! Maybe change the docs here?
   then<V>(next: Next<V, T>): Decoder<V>;
 
   /**
    * If the current (first) decoder accepts the input, sends its output into
-   * the next (second) decoder, and return its results.
+   * the next (second) decoder, and return the second decoder's results.
    *
    * This can be useful to validate the results of a previous transform, so in
    * a typical example, you do something like this:
@@ -110,6 +101,7 @@ export interface Decoder<T> {
    * to the `positiveInteger` its input is completely opaque.
    */
   pipe<V, D extends Decoder<V>>(next: D): Decoder<DecoderType<D>>;
+  pipe<V, D extends Decoder<V>>(next: (blob: T) => D): Decoder<DecoderType<D>>;
 
   /**
    * @internal
@@ -241,34 +233,15 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
   }
 
   /**
-   * Chain together the current decoder with another.
+   * Send the output of the current decoder into another decoder or acceptance
+   * function. The given acceptance function will receive the output of the
+   * current decoder as its input, making it partially trusted.
    *
    * > _**NOTE:** This is an advanced, low-level, API. It's not recommended
    * > to reach for this construct unless there is no other way. Most cases can
    * > be covered more elegantly by `.transform()` or `.refine()` instead._
-   *
-   * If the current decoder accepts an input, the resulting ``T`` value will
-   * get passed into the given ``next`` acceptance function to further decide
-   * whether or not the value should get accepted or rejected.
-   *
-   * This works similar to how you would `define()` a new decoder, except
-   * that the ``blob`` param will now be ``T`` (a known type), rather than
-   * ``unknown``. This will allow the function to make a stronger assumption
-   * about its input and avoid re-refining inputs.
-   *
-   * If it helps, you can think of `define(...)` as equivalent to
-   * `unknown.then(...)`.
    */
-  // XXX Not so low-level anymore! Maybe change the docs here?
   function then<V>(next: Next<V, T>): Decoder<V> {
-    //
-    // XXX Maybe split .then() into three pieces now?
-    //
-    //   - .pipe(nextDecoder)
-    //   - .thenFn(nextAcceptanceFn)
-    //   - .thenDecode(nextFnReturningDecoder) aka a better .peek()???
-    //
-
     return define((blob, ok, err) => {
       const r1 = decode(blob);
       if (!r1.ok) return r1; // Rejected
@@ -279,8 +252,7 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
   }
 
   /**
-   * If the current (first) decoder accepts the input, sends its output into
-   * the next (second) decoder, and return its results.
+   * Send the output of the current decoder to another decoder.
    *
    * This can be useful to validate the results of a previous transform, so in
    * a typical example, you do something like this:
@@ -294,10 +266,11 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
    * the input to the `positiveInteger` decoder will be of type `number`, but
    * to the `positiveInteger` its input is completely opaque.
    */
-  function pipe<V, D extends Decoder<V>>(next: D): Decoder<DecoderType<D>> {
-    // .pipe() is technically an alias of .then(), it just has a simpler type
-    // signature, making it friendlier to use
-    return then(next) as any;
+  function pipe<V, D extends Decoder<V>>(
+    next: D | ((blob: T) => D),
+  ): Decoder<DecoderType<D>> {
+    // .pipe() is technically an alias of .then()
+    return then(next) as Decoder<DecoderType<D>>;
   }
 
   /**
