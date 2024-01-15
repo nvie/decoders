@@ -15,3 +15,9 @@ export function indent(s: string, prefix: string = INDENT): string {
     return `${prefix}${s}`;
   }
 }
+
+const quotePattern = /'/g;
+
+export function quote(s: string): string {
+  return "'" + s.replace(quotePattern, "\\'") + "'";
+}
