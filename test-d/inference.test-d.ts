@@ -171,6 +171,17 @@ expectType<number>(
     ),
   ),
 );
+expectType<number | string>(
+  test(
+    string.then((value: string, ok, err) =>
+      Math.random() < 0.3
+        ? ok(value.length)
+        : Math.random() < 0.5
+          ? ok(value)
+          : err('Nope'),
+    ),
+  ),
+);
 
 // .then()
 expectType<number>(test(string.transform(Number).then(positiveInteger)));
