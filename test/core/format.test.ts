@@ -249,14 +249,14 @@ describe('formatShort', () => {
     checkShort([annotate(123, 'Must be string')], 'Value at index 0: Must be string');
     checkShort(
       { name: annotate(123, 'Must be string') },
-      'Value at key "name": Must be string',
+      "Value at key 'name': Must be string",
     );
   });
 
   test('multiple annotations, deeply nested', () => {
     checkShort(
       [[{ name: annotate(1234, 'ABC') }], annotate(true, 'not false')],
-      'Value at keypath 0.0.name: ABC\nValue at index 1: not false',
+      "Value at keypath '0.0.name': ABC\nValue at index 1: not false",
     );
   });
 
@@ -270,11 +270,11 @@ describe('formatShort', () => {
           ),
         },
       ],
-      'Value at keypath 0.name.2: Must be number\nValue at keypath 0.name: Must have at most 2 values',
+      "Value at keypath '0.name.2': Must be number\nValue at keypath '0.name': Must have at most 2 values",
     );
     checkShort(
-      [annotate({ name: annotate(123, 'Must be number') }, 'Missing key "foo"')],
-      'Value at keypath 0.name: Must be number\nValue at index 0: Missing key "foo"',
+      [annotate({ name: annotate(123, 'Must be number') }, "Missing key 'foo'")],
+      "Value at keypath '0.name': Must be number\nValue at index 0: Missing key 'foo'",
     );
   });
 });

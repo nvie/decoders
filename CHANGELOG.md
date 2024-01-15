@@ -1,5 +1,10 @@
 ## [Unreleased]
 
+**New features:**
+
+- The `formatShort` formatter will now quote error positions with single quotes, which
+  makes them more human-readable in JSON responses.
+
 **New decoders:**
 
 - `identifier` ([docs](https://decoders.cc/api.html#identifier))

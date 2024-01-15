@@ -89,8 +89,8 @@ describe('either', () => {
 }
 ^
 Either:
-- Value at key "foo": Must be string
-- Value at key "bar": Must be number`,
+- Value at key 'foo': Must be string
+- Value at key 'bar': Must be number`,
     );
   });
 

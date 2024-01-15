@@ -1,4 +1,4 @@
-import { INDENT, indent, isMultiline } from '~/lib/text';
+import { INDENT, indent, isMultiline, quote } from '~/lib/text';
 import { isDate } from '~/lib/utils';
 
 import type { Annotation, ArrayAnnotation, ObjectAnnotation } from './annotate';
@@ -46,9 +46,9 @@ export function summarize(
     prefix =
       typeof keypath[0] === 'number'
         ? `Value at index ${keypath[0]}: `
-        : `Value at key ${JSON.stringify(keypath[0])}: `;
+        : `Value at key ${quote(keypath[0])}: `;
   } else {
-    prefix = `Value at keypath ${keypath.map(String).join('.')}: `;
+    prefix = `Value at keypath ${quote(keypath.map(String).join('.'))}: `;
   }
   return [...result, `${prefix}${text}`];
 }
