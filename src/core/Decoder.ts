@@ -12,8 +12,8 @@ export type DecodeResult<T> = Result<T, Annotation>;
  * `ok()` and `err()` constructor functions are passed in as the 2nd and 3rd
  * arguments for convenience. Return the result of calling one of these.
  *
- * The function may also return a Decoder<T> instance, in which case the same
- * input will be passed to the next decoder.
+ * The function may also return a Decoder<T> instance, in which case decoding
+ * will be deferred to that decoder instead.
  */
 export type AcceptanceFn<TOutput, TInput = unknown> = (
   blob: TInput,
