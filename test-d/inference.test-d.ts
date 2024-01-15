@@ -188,14 +188,13 @@ expectType<number>(test(string.transform(Number).then(positiveInteger)));
 expectType<number>(test(string.transform(Number).then(positiveInteger.decode)));
 expectType<boolean>(test(string.transform(Number).transform(String).then(truthy)));
 expectType<boolean>(test(string.transform(Number).transform(String).then(truthy.decode)));
-// XXX It would be HUGE if we could make this inference work!!!!!!!!
-// expectType<number | string>(
-//   test(string.transform(Number).then(Math.random() < 0.5 ? positiveInteger : string)),
-// );
 
 // .pipe()
 expectType<number>(test(string.transform(Number).pipe(positiveInteger)));
 expectType<boolean>(test(string.transform(Number).transform(String).pipe(truthy)));
+expectType<number | string>(
+  test(string.transform(Number).pipe(Math.random() < 0.5 ? positiveInteger : string)),
+);
 
 expectType<string>(test(string.refine((s) => s.startsWith('x'), 'Must start with x')));
 

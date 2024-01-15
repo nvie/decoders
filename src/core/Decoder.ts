@@ -109,7 +109,7 @@ export interface Decoder<T> {
    * the input to the `positiveInteger` decoder will be of type `number`, but
    * to the `positiveInteger` its input is completely opaque.
    */
-  pipe<V>(next: Decoder<V>): Decoder<V>;
+  pipe<V, D extends Decoder<V>>(next: D): Decoder<DecoderType<D>>;
 
   /**
    * @internal
@@ -294,10 +294,10 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
    * the input to the `positiveInteger` decoder will be of type `number`, but
    * to the `positiveInteger` its input is completely opaque.
    */
-  function pipe<V>(next: Decoder<V>): Decoder<V> {
+  function pipe<V, D extends Decoder<V>>(next: D): Decoder<DecoderType<D>> {
     // .pipe() is technically an alias of .then(), it just has a simpler type
     // signature, making it friendlier to use
-    return then(next);
+    return then(next) as any;
   }
 
   /**
