@@ -7,6 +7,7 @@ import {
   email,
   hexadecimal,
   httpsUrl,
+  identifier,
   nanoid,
   nonEmptyString,
   numeric,
@@ -232,6 +233,40 @@ describe('hexadecimal', () => {
     return fc.assert(
       fc.property(
         fc.anything().filter((x) => typeof x !== 'string' || !/^[0-9a-fA-F]+$/.test(x)),
+        (input) => {
+          expect(() => decoder.verify(input)).toThrow();
+        },
+      ),
+    );
+  });
+});
+
+describe('identifier', () => {
+  const decoder = identifier;
+
+  test('default accepts', () => {
+    expect(decoder.verify('x')).toEqual('x');
+    expect(decoder.verify('abc123')).toEqual('abc123');
+    expect(decoder.verify('ABC123')).toEqual('ABC123');
+    expect(decoder.verify('_123')).toEqual('_123');
+    expect(decoder.verify('a_b_C_1_2_3')).toEqual('a_b_C_1_2_3');
+  });
+
+  test('rejects', () => {
+    expect(() => decoder.verify('1x')).toThrow();
+    expect(() => decoder.verify('123xyz')).toThrow();
+    expect(() => decoder.verify('xyz$')).toThrow();
+    expect(() => decoder.verify('xyz ')).toThrow();
+    expect(() => decoder.verify(' xyz')).toThrow();
+    expect(() => decoder.verify('!@#$%^&*()=+')).toThrow();
+    expect(() => decoder.verify('🤯')).toThrow();
+    expect(() => decoder.verify(42)).toThrow();
+  });
+
+  test('fuzz', () => {
+    return fc.assert(
+      fc.property(
+        fc.anything().filter((x) => typeof x !== 'string'),
         (input) => {
           expect(() => decoder.verify(input)).toThrow();
         },
