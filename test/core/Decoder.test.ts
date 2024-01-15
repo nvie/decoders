@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { annotate, formatInline, formatShort } from '~/core';
+import { annotate, define, formatInline, formatShort } from '~/core';
 import { number, positiveInteger } from '~/numbers';
 import { pojo } from '~/objects';
 import { string } from '~/strings';
@@ -8,6 +8,32 @@ import { always } from '~/basics';
 
 test('.decode', () => {
   // .decode() is tested implicitly because it's used _everywhere_
+});
+
+describe('define', () => {
+  const decoder = define((blob, ok, err) =>
+    blob === 123
+      ? ok(123) // Either a decode result
+      : blob === 'now'
+        ? ok(new Date())
+        : blob === 'crash'
+          ? err('fail!')
+          : string,
+  );
+
+  test('accepts', () => {
+    expect(decoder.verify(123)).toEqual(123);
+    expect(decoder.verify('now')).toEqual(expect.any(Date));
+    expect(decoder.verify('abc')).toEqual('abc');
+    expect(decoder.verify('hey')).toEqual('hey');
+  });
+
+  test('rejects', () => {
+    expect(() => decoder.verify(0)).toThrow();
+    expect(() => decoder.verify(new Date())).toThrow();
+    expect(() => decoder.verify([])).toThrow();
+    expect(() => decoder.verify('crash')).toThrow(/fail!/);
+  });
 });
 
 describe('.verify', () => {

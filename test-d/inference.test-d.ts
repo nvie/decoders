@@ -10,6 +10,7 @@ import {
   date,
   datelike,
   decimal,
+  define,
   dict,
   either,
   email,
@@ -84,6 +85,8 @@ function foo(
   _r: DecoderType<typeof strings>,
   _s: DecoderType<typeof truthy>,
 ) {}
+
+expectType<123 | string>(test(define((blob, ok) => (blob === 123 ? ok(123) : string))));
 
 expectType<(p: string, q: number[], r: string[], s: boolean) => void>(foo);
 
