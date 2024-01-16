@@ -1464,23 +1464,64 @@ DECODER_METHODS = {
   },
 
   'then': {
-    'type_params': ['V'],
-    'params': [
-      ('next', '(blob: T, ok, err) => DecodeResult<V>'),
+    'signatures': [
+      {
+        'type_params': ['V'],
+        'params': [
+          ('next', '(blob: T, ok, err) => DecodeResult<V> | Decoder<V>'),
+        ],
+        'return_type': 'Decoder<V>',
+      },
+      {
+        'type_params': ['V'],
+        'params': [
+          ('next', 'Decoder<V>'),
+        ],
+        'return_type': 'Decoder<V>',
+        },
     ],
-    'return_type': 'Decoder<V>',
+
     # 'example': """
     # """,
   },
 
   'pipe': {
     'type_params': ['V'],
-    'params': [
-      ('next', 'Decoder<V>'),
+
+    'signatures': [
+      {
+        'type_params': ['V'],
+        'params': [('next', 'Decoder<V>')],
+        'return_type': 'Decoder<V>',
+      },
+      {
+        'type_params': ['V'],
+        'params': [
+          ('next', '(blob: T) => Decoder<V>'),
+        ],
+        'return_type': 'Decoder<V>',
+      },
     ],
-    'return_type': 'Decoder<V>',
-    # 'example': """
-    # """,
+
+    'example': """
+      // XXX Double-check if this is the best example
+      const decoder =
+        string
+          .transform(s => Number(s))
+          .pipe(positiveInteger);
+
+      // 👍
+      decoder.verify('7') === 7;
+      decoder.verify('123') === 123;
+
+      // 👎
+      decoder.verify('🚀');   // not a number
+      decoder.verify('3.14'); // not a whole number
+      decoder.verify('-3');   // not a positive number
+      decoder.verify(123);    // not a string
+      decoder.verify(true);   // not a string
+      decoder.verify(null);   // not a string
+    """,
   },
 }
 
