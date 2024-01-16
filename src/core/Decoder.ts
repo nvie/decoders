@@ -64,6 +64,8 @@ export interface Decoder<T> {
   describe(message: string): Decoder<T>;
 
   /**
+   * XXX Double-check these docs!
+   * XXX Keep these docs in sync!
    * Send the output of the current decoder into another decoder or acceptance
    * function. The given acceptance function will receive the output of the
    * current decoder as its input, making it partially trusted.
@@ -75,6 +77,8 @@ export interface Decoder<T> {
   then<V>(next: Decoder<V> | AcceptanceFn<V, T>): Decoder<V>;
 
   /**
+   * XXX Double-check these docs!
+   * XXX Keep these docs in sync!
    * If the current (first) decoder accepts the input, sends its output into
    * the next (second) decoder, and return the second decoder's results.
    *
@@ -224,6 +228,8 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
   }
 
   /**
+   * XXX Double-check these docs!
+   * XXX Keep these docs in sync!
    * Send the output of the current decoder into another decoder or acceptance
    * function. The given acceptance function will receive the output of the
    * current decoder as its input, making it partially trusted.
@@ -243,6 +249,8 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
   }
 
   /**
+   * XXX Double-check these docs!
+   * XXX Keep these docs in sync!
    * Send the output of the current decoder to another decoder.
    *
    * This can be useful to validate the results of a previous transform, so in
