@@ -17,23 +17,19 @@ describe('define()', () => {
         ? ok(123) // Either a decode result...
         : blob === 'now'
           ? ok(new Date()) // ...or another...
-          : blob === 'crash'
-            ? err('fail!') // ...or a failure...
-            : string, // ...or another decoder entirely
+          : err('fail!'), // ...or a failure...
   );
 
   test('accepts', () => {
     expect(decoder.verify(123)).toEqual(123);
     expect(decoder.verify('now')).toEqual(expect.any(Date));
-    expect(decoder.verify('abc')).toEqual('abc');
-    expect(decoder.verify('hey')).toEqual('hey');
   });
 
   test('rejects', () => {
     expect(() => decoder.verify(0)).toThrow();
     expect(() => decoder.verify(new Date())).toThrow();
     expect(() => decoder.verify([])).toThrow();
-    expect(() => decoder.verify('crash')).toThrow(/fail!/);
+    expect(() => decoder.verify('hey')).toThrow(/fail!/);
   });
 });
 

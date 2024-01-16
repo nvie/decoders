@@ -86,7 +86,14 @@ function foo(
   _s: DecoderType<typeof truthy>,
 ) {}
 
-expectType<123 | string>(test(define((blob, ok) => (blob === 123 ? ok(123) : string))));
+expectType<123 | 'hi'>(
+  test(
+    define((blob, ok, err) => {
+      expectType<unknown>(blob);
+      return Math.random() < 0.5 ? ok(123) : Math.random() < 0.5 ? ok('hi') : err('fail');
+    }),
+  ),
+);
 
 expectType<(p: string, q: number[], r: string[], s: boolean) => void>(foo);
 

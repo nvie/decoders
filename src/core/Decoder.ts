@@ -11,15 +11,20 @@ export type DecodeResult<T> = Result<T, Annotation>;
  * A function taking a untrusted input, and returning a DecodeResult<T>. The
  * `ok()` and `err()` constructor functions are passed in as the 2nd and 3rd
  * arguments for convenience. Return the result of calling one of these.
- *
- * The function may also return a Decoder<T> instance, in which case decoding
- * will be deferred to that decoder instead.
  */
 export type AcceptanceFn<TOutput, TInput = unknown> = (
   blob: TInput,
   ok: (value: TOutput) => DecodeResult<TOutput>,
   err: (msg: string | Annotation) => DecodeResult<TOutput>,
-) => DecodeResult<TOutput> | Decoder<TOutput>;
+) => DecodeResult<TOutput>;
+
+export type Next<TOutput, TInput = unknown> =
+  | Decoder<TOutput>
+  | ((
+      blob: TInput,
+      ok: (value: TOutput) => DecodeResult<TOutput>,
+      err: (msg: string | Annotation) => DecodeResult<TOutput>,
+    ) => DecodeResult<TOutput> | Decoder<TOutput>);
 
 export interface Decoder<T> {
   /**
@@ -74,7 +79,7 @@ export interface Decoder<T> {
    * > to reach for this construct unless there is no other way. Most cases can
    * > be covered more elegantly by `.transform()` or `.refine()` instead._
    */
-  then<V>(next: Decoder<V> | AcceptanceFn<V, T>): Decoder<V>;
+  then<V>(next: Next<V, T>): Decoder<V>;
 
   /**
    * XXX Double-check these docs!
@@ -170,10 +175,9 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
    * instead return a result type.
    */
   function decode(blob: unknown): DecodeResult<T> {
-    const res = fn(blob, makeOk, (msg: Annotation | string) =>
+    return fn(blob, makeOk, (msg: Annotation | string) =>
       makeErr(isAnnotation(msg) ? msg : annotate(blob, msg)),
     );
-    return isDecoder(res) ? res.decode(blob) : res;
   }
 
   /**
@@ -238,7 +242,7 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
    * > to reach for this construct unless there is no other way. Most cases can
    * > be covered more elegantly by `.transform()` or `.refine()` instead._
    */
-  function then<V>(next: Decoder<V> | AcceptanceFn<V, T>): Decoder<V> {
+  function then<V>(next: Next<V, T>): Decoder<V> {
     return define((blob, ok, err) => {
       const r1 = decode(blob);
       if (!r1.ok) return r1; // Rejected
