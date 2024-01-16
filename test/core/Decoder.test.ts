@@ -10,15 +10,16 @@ test('.decode', () => {
   // .decode() is tested implicitly because it's used _everywhere_
 });
 
-describe('define', () => {
-  const decoder = define((blob, ok, err) =>
-    blob === 123
-      ? ok(123) // Either a decode result
-      : blob === 'now'
-        ? ok(new Date())
-        : blob === 'crash'
-          ? err('fail!')
-          : string,
+describe('define()', () => {
+  const decoder = define(
+    (blob, ok, err) =>
+      blob === 123
+        ? ok(123) // Either a decode result...
+        : blob === 'now'
+          ? ok(new Date()) // ...or another...
+          : blob === 'crash'
+            ? err('fail!') // ...or a failure...
+            : string, // ...or another decoder entirely
   );
 
   test('accepts', () => {
@@ -36,7 +37,7 @@ describe('define', () => {
   });
 });
 
-describe('.verify', () => {
+describe('.verify()', () => {
   test('valid', () => {
     const decoder = number;
     expect(decoder.verify(0)).toBe(0);
@@ -74,7 +75,7 @@ describe('.verify', () => {
   });
 });
 
-describe('.value', () => {
+describe('.value()', () => {
   test('valid', () => {
     const decoder = number;
     expect(decoder.value(0)).toBe(0);
@@ -90,7 +91,7 @@ describe('.value', () => {
   });
 });
 
-describe('.then with acceptance function', () => {
+describe('.then() with acceptance function', () => {
   const hex =
     // We already know how to decode strings...
     string.then(
@@ -112,10 +113,8 @@ describe('.then with acceptance function', () => {
   });
 });
 
-describe('.then with acceptance function returning a decoder', () => {
-  const decoder =
-    // We already know how to decode strings...
-    string.transform(Number).then(() => positiveInteger);
+describe('.then() with acceptance function returning a decoder', () => {
+  const decoder = string.transform(Number).then(() => positiveInteger);
 
   test('valid type of decode result', () => {
     expect(decoder.verify('100')).toEqual(100);
@@ -131,10 +130,8 @@ describe('.then with acceptance function returning a decoder', () => {
   });
 });
 
-describe('.then directly taking a decoder', () => {
-  const decoder =
-    // We already know how to decode strings...
-    string.transform(Number).then(positiveInteger);
+describe('.then() directly taking a decoder', () => {
+  const decoder = string.transform(Number).then(positiveInteger);
 
   test('valid type of decode result', () => {
     expect(decoder.verify('100')).toEqual(100);
@@ -150,10 +147,8 @@ describe('.then directly taking a decoder', () => {
   });
 });
 
-describe('.pipe with single decoder arg', () => {
-  const decoder =
-    // We already know how to decode strings...
-    string.transform(Number).pipe(positiveInteger);
+describe('.pipe() with single decoder arg', () => {
+  const decoder = string.transform(Number).pipe(positiveInteger);
 
   test('valid type of decode result', () => {
     expect(decoder.verify('100')).toEqual(100);
@@ -169,12 +164,10 @@ describe('.pipe with single decoder arg', () => {
   });
 });
 
-describe('.pipe with decoder function arg', () => {
-  const decoder =
-    // We already know how to decode strings...
-    string
-      .transform(Number)
-      .pipe((x) => (isNaN(x) || x <= 999 ? positiveInteger : always('A big number!')));
+describe('.pipe() with decoder function arg', () => {
+  const decoder = string
+    .transform(Number)
+    .pipe((x) => (isNaN(x) || x <= 999 ? positiveInteger : always('A big number!')));
 
   test('valid type of decode result', () => {
     expect(decoder.verify('0')).toEqual(0);
@@ -193,7 +186,7 @@ describe('.pipe with decoder function arg', () => {
   });
 });
 
-describe('.transform', () => {
+describe('.transform()', () => {
   test('change type of decode result', () => {
     const len = string.transform((s) => s.length);
     expect(len.verify('foo')).toEqual(3);
@@ -226,7 +219,7 @@ describe('.transform', () => {
   });
 });
 
-describe('.refine', () => {
+describe('.refine()', () => {
   const odd = number.refine((n) => n % 2 !== 0, 'Must be odd');
 
   test('valid', () => {
@@ -244,7 +237,7 @@ describe('.refine', () => {
   });
 });
 
-describe('.reject (simple)', () => {
+describe('.reject() (simple)', () => {
   const decoder = pojo.reject((obj) => {
     const badKeys = Object.keys(obj).filter((key) => key.startsWith('_'));
     return badKeys.length > 0 ? `Disallowed keys: ${badKeys.join(', ')}` : null;
@@ -258,7 +251,7 @@ describe('.reject (simple)', () => {
   });
 });
 
-describe('.reject (w/ Annotation)', () => {
+describe('.reject() (w/ Annotation)', () => {
   const odd = number.reject((n) =>
     n % 2 === 0 ? annotate('***', "Can't show ya, but this must be odd") : null,
   );
@@ -278,7 +271,7 @@ describe('.reject (w/ Annotation)', () => {
   });
 });
 
-describe('.describe', () => {
+describe('.describe()', () => {
   const decoder = string.describe('Must be text');
 
   test('valid', () => {
