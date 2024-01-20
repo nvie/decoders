@@ -99,14 +99,6 @@ export interface Decoder<T> {
    */
   pipe<V, D extends Decoder<V>>(next: D): Decoder<DecoderType<D>>;
   pipe<V, D extends Decoder<V>>(next: (blob: T) => D): Decoder<DecoderType<D>>;
-
-  /**
-   * @internal
-   * Chain together the current decoder with another acceptance function, but
-   * also pass along the original input. Don't call this method directly.
-   * You'll probably want to use the higher-level `select()` decoder instead.
-   */
-  peek<V>(next: AcceptanceFn<V, [unknown, T]>): Decoder<V>;
 }
 
 /**
@@ -310,24 +302,6 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
     });
   }
 
-  /**
-   * Chain together the current decoder with another acceptance function, but
-   * also pass along the original input.
-   *
-   * This is like `.then()`, but instead of this function receiving just
-   * the decoded result ``T``, it also receives the original input.
-   *
-   * This is an advanced, low-level, decoder. Don't call this method directly.
-   * Use the `select()` decoder instead.
-   */
-  // XXX I _think_ we can remove .peek() and move its implementation into select() directly
-  function peek<V>(next: AcceptanceFn<V, [unknown, T]>): Decoder<V> {
-    return define((blob, ok, err) => {
-      const result = decode(blob);
-      return result.ok ? next([blob, result.value], ok, err) : result;
-    });
-  }
-
   return brand({
     verify,
     value,
@@ -338,7 +312,6 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
     describe,
     then,
     pipe,
-    peek,
   });
 }
 

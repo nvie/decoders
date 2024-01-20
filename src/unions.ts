@@ -175,8 +175,8 @@ export function select<T, D extends Decoder<unknown>>(
   scout: Decoder<T>,
   selectFn: (result: T) => D,
 ): Decoder<DecoderType<D>> {
-  return scout.peek(([blob, peekResult]) => {
-    const decoder = selectFn(peekResult);
-    return decoder.decode(blob);
+  return define((blob) => {
+    const result = scout.decode(blob);
+    return result.ok ? selectFn(result.value).decode(blob) : result;
   }) as Decoder<DecoderType<D>>;
 }
