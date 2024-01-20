@@ -2,12 +2,26 @@
 
 **New features:**
 
-- Make `.then()` multi-functional. Previously, it took an "acceptance function", but its
-  argument can now also be, or return, a `Decoder<V>`. This makes piping a lot easier in
-  practice.
-- A new `.pipe()` operation on Decoder. Using `first.pipe(second)` is now technically
-  equivalent to `first.then(second)` (because of the point above), but its type is more
-  ergonomic and clear.
+- A new `.pipe()` method on Decoder allows you to pass the output of one decoder as input
+  to another:
+  ```tsx
+  string
+    .transform((s) => s.split(',')) // transform first...
+    .pipe(array(nonEmptyString)); //   ...then validate that result
+  ```
+  This was previously possible already with `.then`, but it was hard to work with.
+- The new `.pipe()` can also dynamically select another decoder, based on the input:
+  ```tsx
+  string
+    .transform((s) => s.split(',').map(Number)) // transform first...
+    .pipe((tup) =>
+      tup.length === 2
+        ? point2d
+        : tup.length === 3
+          ? point3d
+          : never('Invalid coordinate'),
+    );
+  ```
 - The `formatShort` formatter will now quote error positions with single quotes, which
   makes them more human-readable in JSON responses.
 

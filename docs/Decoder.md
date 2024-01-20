@@ -231,19 +231,7 @@ current decoder as its input.
 <a href="#pipe">#</a> **.pipe**&lt;<i style="color: #267f99">V</i>&gt;(next: <i style="color: #267f99">(blob: T) =&gt; <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;V&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;V&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/core/Decoder.ts#L252-L272 'Source')
 {: #pipe .signature}
 
-Send the output of this decoder as input to another decoder.
-
-This can be useful to validate the results of a transform, i.e.:
-
-  string
-    .transform((s) => s.split(','))
-    .pipe(array(nonEmptyString))
-
-You can also conditionally pipe:
-
-  string.pipe((s) => s.startsWith('@') ? username : email)
-
-```ts
+```tsx
 const decoder =
   string
     .transform((s) => s.split(',').map(Number))
@@ -262,5 +250,21 @@ decoder.verify(true);   // not a string
 decoder.verify(null);   // not a string
 ```
 
-<!--[[[end]]] (checksum: 2deee52ed374299960eadd32fa2b3797) -->
+#### Dynamic decoder selection with ``.pipe()``
+
+With [`.pipe()`](/Decoder.html#pipe) you can also dynamically select another decoder, based on dynamic runtime value.
+
+```tsx
+string
+  .transform((s) => s.split(',').map(Number))
+  .pipe((tup) =>
+    tup.length === 2
+      ? point2d
+      : tup.length === 3
+        ? point3d
+        : never('Invalid coordinate'),
+  );
+```
+
+<!--[[[end]]] (checksum: 4f942dcffed13c1c0521ed0a080087b4) -->
 <!-- prettier-ignore-end -->

@@ -1502,23 +1502,41 @@ DECODER_METHODS = {
       },
     ],
 
-    'example': """
-      const decoder =
-        string
-          .transform((s) => s.split(',').map(Number))
-          .pipe(array(positiveInteger));
+    'markdown': """
+    ```tsx
+    const decoder =
+      string
+        .transform((s) => s.split(',').map(Number))
+        .pipe(array(positiveInteger));
 
-      // 👍
-      decoder.verify('7') === [7];
-      decoder.verify('1,2,3') === [1, 2, 3];
+    // 👍
+    decoder.verify('7') === [7];
+    decoder.verify('1,2,3') === [1, 2, 3];
 
-      // 👎
-      decoder.verify('1,-3')  // -3 is not positive
-      decoder.verify('🚀');   // not a number
-      decoder.verify('3.14'); // not a whole number
-      decoder.verify(123);    // not a string
-      decoder.verify(true);   // not a string
-      decoder.verify(null);   // not a string
+    // 👎
+    decoder.verify('1,-3')  // -3 is not positive
+    decoder.verify('🚀');   // not a number
+    decoder.verify('3.14'); // not a whole number
+    decoder.verify(123);    // not a string
+    decoder.verify(true);   // not a string
+    decoder.verify(null);   // not a string
+    ```
+
+    #### Dynamic decoder selection with ``.pipe()``
+
+    With `.pipe()` you can also dynamically select another decoder, based on dynamic runtime value.
+
+    ```tsx
+    string
+      .transform((s) => s.split(',').map(Number))
+      .pipe((tup) =>
+        tup.length === 2
+          ? point2d
+          : tup.length === 3
+            ? point3d
+            : never('Invalid coordinate'),
+      );
+    ```
     """,
   },
 }
