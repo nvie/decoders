@@ -184,5 +184,5 @@ Built-in formatters are:
   Will throw the following error message:
 
   ```text
-  Decoding error: Value at keypath 0.age: Must be number
+  Decoding error: Value at keypath '0.age': Must be number
   ```
