@@ -9,22 +9,26 @@ export type DecodeResult<T> = Result<T, Annotation>;
 
 /**
  * A function taking a untrusted input, and returning a DecodeResult<T>. The
- * `ok()` and `err()` constructor functions are passed in as the 2nd and 3rd
- * arguments for convenience. Return the result of calling one of these.
+ * `ok()` and `err()` constructor functions are provided as the 2nd and 3rd
+ * param. One of these should be called and its value returned.
  */
-export type AcceptanceFn<TOutput, TInput = unknown> = (
-  blob: TInput,
-  ok: (value: TOutput) => DecodeResult<TOutput>,
-  err: (msg: string | Annotation) => DecodeResult<TOutput>,
-) => DecodeResult<TOutput>;
+//                  Output  Input
+//                      \    /
+export type AcceptanceFn<O, I = unknown> = (
+  blob: I,
+  ok: (value: O) => DecodeResult<O>,
+  err: (msg: string | Annotation) => DecodeResult<O>,
+) => DecodeResult<O>;
 
-export type Next<TOutput, TInput = unknown> =
-  | Decoder<TOutput>
+//          Output  Input
+//              \    /
+export type Next<O, I = unknown> =
+  | Decoder<O>
   | ((
-      blob: TInput,
-      ok: (value: TOutput) => DecodeResult<TOutput>,
-      err: (msg: string | Annotation) => DecodeResult<TOutput>,
-    ) => DecodeResult<TOutput> | Decoder<TOutput>);
+      blob: I,
+      ok: (value: O) => DecodeResult<O>,
+      err: (msg: string | Annotation) => DecodeResult<O>,
+    ) => DecodeResult<O> | Decoder<O>);
 
 export interface Decoder<T> {
   /**
@@ -82,22 +86,17 @@ export interface Decoder<T> {
   then<V>(next: Next<V, T>): Decoder<V>;
 
   /**
-   * XXX Double-check these docs!
-   * XXX Keep these docs in sync!
-   * If the current (first) decoder accepts the input, sends its output into
-   * the next (second) decoder, and return the second decoder's results.
+   * Send the output of this decoder as input to another decoder.
    *
-   * This can be useful to validate the results of a previous transform, so in
-   * a typical example, you do something like this:
+   * This can be useful to validate the results of a transform, i.e.:
    *
    *   string
-   *     .transform(s => Number(s))
-   *     .pipe(positiveInteger)
+   *     .transform((s) => s.split(','))
+   *     .pipe(array(nonEmptyString))
    *
-   * Note that the given decoder does not know anything about the given
-   * returned value. In the example above, for example, TypeScript knows that
-   * the input to the `positiveInteger` decoder will be of type `number`, but
-   * to the `positiveInteger` its input is completely opaque.
+   * You can also conditionally pipe:
+   *
+   *   string.pipe((s) => s.startsWith('@') ? username : email)
    */
   pipe<V, D extends Decoder<V>>(next: D): Decoder<DecoderType<D>>;
   pipe<V, D extends Decoder<V>>(next: (blob: T) => D): Decoder<DecoderType<D>>;
@@ -253,26 +252,24 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
   }
 
   /**
-   * XXX Double-check these docs!
-   * XXX Keep these docs in sync!
-   * Send the output of the current decoder to another decoder.
+   * Send the output of this decoder as input to another decoder.
    *
-   * This can be useful to validate the results of a previous transform, so in
-   * a typical example, you do something like this:
+   * This can be useful to validate the results of a transform, i.e.:
    *
    *   string
-   *     .transform(s => Number(s))
-   *     .pipe(positiveInteger)
+   *     .transform((s) => s.split(','))
+   *     .pipe(array(nonEmptyString))
    *
-   * Note that the given decoder does not know anything about the given
-   * returned value. In the example above, for example, TypeScript knows that
-   * the input to the `positiveInteger` decoder will be of type `number`, but
-   * to the `positiveInteger` its input is completely opaque.
+   * You can also conditionally pipe:
+   *
+   *   string.pipe((s) => s.startsWith('@') ? username : email)
    */
   function pipe<V, D extends Decoder<V>>(
     next: D | ((blob: T) => D),
   ): Decoder<DecoderType<D>> {
-    // .pipe() is technically an alias of .then()
+    // Technically, .pipe() is just an alias of .then(), but its signature is
+    // more focused on the more convenient use case of working with Decoders
+    // directly.
     return then(next) as Decoder<DecoderType<D>>;
   }
 
