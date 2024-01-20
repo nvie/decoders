@@ -73,15 +73,14 @@ export interface Decoder<T> {
   describe(message: string): Decoder<T>;
 
   /**
-   * XXX Double-check these docs!
-   * XXX Keep these docs in sync!
    * Send the output of the current decoder into another decoder or acceptance
    * function. The given acceptance function will receive the output of the
-   * current decoder as its input, making it partially trusted.
+   * current decoder as its input.
    *
    * > _**NOTE:** This is an advanced, low-level, API. It's not recommended
    * > to reach for this construct unless there is no other way. Most cases can
-   * > be covered more elegantly by `.transform()` or `.refine()` instead._
+   * > be covered more elegantly by `.transform()`, `.refine()`, or `.pipe()`
+   * > instead._
    */
   then<V>(next: Next<V, T>): Decoder<V>;
 
@@ -231,15 +230,14 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
   }
 
   /**
-   * XXX Double-check these docs!
-   * XXX Keep these docs in sync!
    * Send the output of the current decoder into another decoder or acceptance
    * function. The given acceptance function will receive the output of the
-   * current decoder as its input, making it partially trusted.
+   * current decoder as its input.
    *
    * > _**NOTE:** This is an advanced, low-level, API. It's not recommended
    * > to reach for this construct unless there is no other way. Most cases can
-   * > be covered more elegantly by `.transform()` or `.refine()` instead._
+   * > be covered more elegantly by `.transform()`, `.refine()`, or `.pipe()`
+   * > instead._
    */
   function then<V>(next: Next<V, T>): Decoder<V> {
     return define((blob, ok, err) => {

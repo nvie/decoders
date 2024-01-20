@@ -1480,7 +1480,6 @@ DECODER_METHODS = {
         'return_type': 'Decoder<V>',
         },
     ],
-
     # 'example': """
     # """,
   },
@@ -1504,20 +1503,19 @@ DECODER_METHODS = {
     ],
 
     'example': """
-      // XXX Double-check if this is the best example
       const decoder =
         string
-          .transform(s => Number(s))
-          .pipe(positiveInteger);
+          .transform((s) => s.split(',').map(Number))
+          .pipe(array(positiveInteger));
 
       // 👍
-      decoder.verify('7') === 7;
-      decoder.verify('123') === 123;
+      decoder.verify('7') === [7];
+      decoder.verify('1,2,3') === [1, 2, 3];
 
       // 👎
+      decoder.verify('1,-3')  // -3 is not positive
       decoder.verify('🚀');   // not a number
       decoder.verify('3.14'); // not a whole number
-      decoder.verify('-3');   // not a positive number
       decoder.verify(123);    // not a string
       decoder.verify(true);   // not a string
       decoder.verify(null);   // not a string
