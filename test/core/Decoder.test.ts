@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest';
 
-import { annotate, formatInline, formatShort } from '~/core';
-import { number } from '~/numbers';
+import { always } from '~/basics';
+import { annotate, define, formatInline, formatShort } from '~/core';
+import { number, positiveInteger } from '~/numbers';
 import { pojo } from '~/objects';
 import { string } from '~/strings';
 
@@ -9,7 +10,30 @@ test('.decode', () => {
   // .decode() is tested implicitly because it's used _everywhere_
 });
 
-describe('.verify', () => {
+describe('define()', () => {
+  const decoder = define(
+    (blob, ok, err) =>
+      blob === 123
+        ? ok(123) // Either a decode result...
+        : blob === 'now'
+          ? ok(new Date()) // ...or another...
+          : err('fail!'), // ...or a failure...
+  );
+
+  test('accepts', () => {
+    expect(decoder.verify(123)).toEqual(123);
+    expect(decoder.verify('now')).toEqual(expect.any(Date));
+  });
+
+  test('rejects', () => {
+    expect(() => decoder.verify(0)).toThrow();
+    expect(() => decoder.verify(new Date())).toThrow();
+    expect(() => decoder.verify([])).toThrow();
+    expect(() => decoder.verify('hey')).toThrow(/fail!/);
+  });
+});
+
+describe('.verify()', () => {
   test('valid', () => {
     const decoder = number;
     expect(decoder.verify(0)).toBe(0);
@@ -47,7 +71,7 @@ describe('.verify', () => {
   });
 });
 
-describe('.value', () => {
+describe('.value()', () => {
   test('valid', () => {
     const decoder = number;
     expect(decoder.value(0)).toBe(0);
@@ -63,7 +87,7 @@ describe('.value', () => {
   });
 });
 
-describe('.then', () => {
+describe('.then() with acceptance function', () => {
   const hex =
     // We already know how to decode strings...
     string.then(
@@ -85,7 +109,80 @@ describe('.then', () => {
   });
 });
 
-describe('.transform', () => {
+describe('.then() with acceptance function returning a decoder', () => {
+  const decoder = string.transform(Number).then(() => positiveInteger);
+
+  test('valid type of decode result', () => {
+    expect(decoder.verify('100')).toEqual(100);
+    expect(decoder.verify(' 123  ')).toEqual(123);
+    expect(decoder.verify('2387213979')).toEqual(2387213979);
+  });
+
+  test('invalid', () => {
+    expect(() => decoder.verify('not a numeric string')).toThrow('Number must be finite');
+    expect(() => decoder.verify(42)).toThrow('Must be string');
+    expect(() => decoder.verify('-123')).toThrow('Number must be positive');
+    expect(() => decoder.verify('3.14')).toThrow('Number must be an integer');
+  });
+});
+
+describe('.then() directly taking a decoder', () => {
+  const decoder = string.transform(Number).then(positiveInteger);
+
+  test('valid type of decode result', () => {
+    expect(decoder.verify('100')).toEqual(100);
+    expect(decoder.verify(' 123  ')).toEqual(123);
+    expect(decoder.verify('2387213979')).toEqual(2387213979);
+  });
+
+  test('invalid', () => {
+    expect(() => decoder.verify('not a numeric string')).toThrow('Number must be finite');
+    expect(() => decoder.verify(42)).toThrow('Must be string');
+    expect(() => decoder.verify('-123')).toThrow('Number must be positive');
+    expect(() => decoder.verify('3.14')).toThrow('Number must be an integer');
+  });
+});
+
+describe('.pipe() with single decoder arg', () => {
+  const decoder = string.transform(Number).pipe(positiveInteger);
+
+  test('valid type of decode result', () => {
+    expect(decoder.verify('100')).toEqual(100);
+    expect(decoder.verify(' 123  ')).toEqual(123);
+    expect(decoder.verify('2387213979')).toEqual(2387213979);
+  });
+
+  test('invalid', () => {
+    expect(() => decoder.verify('not a numeric string')).toThrow('Number must be finite');
+    expect(() => decoder.verify(42)).toThrow('Must be string');
+    expect(() => decoder.verify('-123')).toThrow('Number must be positive');
+    expect(() => decoder.verify('3.14')).toThrow('Number must be an integer');
+  });
+});
+
+describe('.pipe() with decoder function arg', () => {
+  const decoder = string
+    .transform(Number)
+    .pipe((x) => (isNaN(x) || x <= 999 ? positiveInteger : always('A big number!')));
+
+  test('valid type of decode result', () => {
+    expect(decoder.verify('0')).toEqual(0);
+    expect(decoder.verify('100')).toEqual(100);
+    expect(decoder.verify(' 123  ')).toEqual(123);
+    expect(decoder.verify('999')).toEqual(999);
+    expect(decoder.verify(' 1000 ')).toEqual('A big number!');
+    expect(decoder.verify('2387213979')).toEqual('A big number!');
+  });
+
+  test('invalid', () => {
+    expect(() => decoder.verify('not a numeric string')).toThrow('Number must be finite');
+    expect(() => decoder.verify(42)).toThrow('Must be string');
+    expect(() => decoder.verify('-123')).toThrow('Number must be positive');
+    expect(() => decoder.verify('3.14')).toThrow('Number must be an integer');
+  });
+});
+
+describe('.transform()', () => {
   test('change type of decode result', () => {
     const len = string.transform((s) => s.length);
     expect(len.verify('foo')).toEqual(3);
@@ -118,7 +215,7 @@ describe('.transform', () => {
   });
 });
 
-describe('.refine', () => {
+describe('.refine()', () => {
   const odd = number.refine((n) => n % 2 !== 0, 'Must be odd');
 
   test('valid', () => {
@@ -136,7 +233,7 @@ describe('.refine', () => {
   });
 });
 
-describe('.reject (simple)', () => {
+describe('.reject() (simple)', () => {
   const decoder = pojo.reject((obj) => {
     const badKeys = Object.keys(obj).filter((key) => key.startsWith('_'));
     return badKeys.length > 0 ? `Disallowed keys: ${badKeys.join(', ')}` : null;
@@ -150,7 +247,7 @@ describe('.reject (simple)', () => {
   });
 });
 
-describe('.reject (w/ Annotation)', () => {
+describe('.reject() (w/ Annotation)', () => {
   const odd = number.reject((n) =>
     n % 2 === 0 ? annotate('***', "Can't show ya, but this must be odd") : null,
   );
@@ -170,7 +267,7 @@ describe('.reject (w/ Annotation)', () => {
   });
 });
 
-describe('.describe', () => {
+describe('.describe()', () => {
   const decoder = string.describe('Must be text');
 
   test('valid', () => {

@@ -10,6 +10,7 @@ import {
   date,
   datelike,
   decimal,
+  define,
   dict,
   either,
   email,
@@ -68,9 +69,6 @@ import {
   // Formatters
   formatInline,
   formatShort,
-
-  // Results
-  ok,
 } from '../dist';
 import { expectError, expectType, expectAssignable } from 'tsd';
 
@@ -87,6 +85,15 @@ function foo(
   _r: DecoderType<typeof strings>,
   _s: DecoderType<typeof truthy>,
 ) {}
+
+expectType<123 | 'hi'>(
+  test(
+    define((blob, ok, err) => {
+      expectType<unknown>(blob);
+      return Math.random() < 0.5 ? ok(123) : Math.random() < 0.5 ? ok('hi') : err('fail');
+    }),
+  ),
+);
 
 expectType<(p: string, q: number[], r: string[], s: boolean) => void>(foo);
 
@@ -166,7 +173,49 @@ string.verify('dummy', formatShort);
 expectType<number | undefined>(number.value('dummy'));
 expectType<string | undefined>(string.value('dummy'));
 
-expectType<number>(test(string.then((value: string) => ok(value.length))));
+expectType<number>(test(string.then((value: string, ok) => ok(value.length))));
+expectType<number>(
+  test(
+    string.then((value: string, ok, err) =>
+      Math.random() < 0.5 ? ok(value.length) : err('Nope'),
+    ),
+  ),
+);
+expectType<number | string>(
+  test(
+    string.then((value: string, ok, err) =>
+      Math.random() < 0.3
+        ? ok(value.length)
+        : Math.random() < 0.5
+          ? ok(value)
+          : err('Nope'),
+    ),
+  ),
+);
+
+// .then()
+expectType<number>(test(string.transform(Number).then(positiveInteger)));
+expectType<number>(test(string.transform(Number).then(positiveInteger.decode)));
+expectType<boolean>(test(string.transform(Number).transform(String).then(truthy)));
+expectType<boolean>(test(string.transform(Number).transform(String).then(truthy.decode)));
+
+// .pipe()
+expectType<number>(test(string.transform(Number).pipe(positiveInteger)));
+expectType<boolean>(test(string.transform(Number).transform(String).pipe(truthy)));
+// .pipe() with branch infers decoder from both branches
+expectType<number | string>(
+  test(string.transform(Number).pipe(Math.random() < 0.5 ? positiveInteger : string)),
+);
+// .pipe() with function with branches infers decoder from both branches
+expectType<number | string>(
+  test(
+    string.transform(Number).pipe(() => (Math.random() < 0.5 ? positiveInteger : string)),
+  ),
+);
+// .pipe() with input function with branches infers decoder from both branches
+expectType<number | string>(
+  test(string.transform(Number).pipe((x) => (x < 0.5 ? positiveInteger : string))),
+);
 
 expectType<string>(test(string.refine((s) => s.startsWith('x'), 'Must start with x')));
 
