@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [2.4.0] - 2024-01-21
+
 **New features:**
 
 - A new `.pipe()` method on `Decoder` allows you to pass the output of one decoder into
