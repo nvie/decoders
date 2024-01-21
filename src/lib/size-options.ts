@@ -11,14 +11,14 @@ export function bySizeOptions(options: SizeOptions) {
 
   const atLeast = min === max ? '' : 'at least ';
   const atMost = min === max ? '' : 'at most ';
-  const tooShort = `Too short, must be ${atLeast}${min} chars`;
-  const tooLong = `Too long, must be ${atMost}${max} chars`;
+  const tooShort = min !== undefined && `Too short, must be ${atLeast}${min} chars`;
+  const tooLong = max !== undefined && `Too long, must be ${atMost}${max} chars`;
 
-  // XXX Optimize for runtime performance
-  return (s: string) =>
-    min !== undefined && s.length < min
-      ? tooShort
-      : max !== undefined && s.length > max
-        ? tooLong
-        : null;
+  return tooShort && tooLong
+    ? (s: string) => (s.length < min ? tooShort : s.length > max ? tooLong : null)
+    : tooShort
+      ? (s: string) => (s.length < min ? tooShort : null)
+      : tooLong
+        ? (s: string) => (s.length > max ? tooLong : null)
+        : () => null;
 }

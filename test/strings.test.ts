@@ -287,6 +287,7 @@ describe('nanoid', () => {
     expect(nanoid().verify('vA4mt7CUWnouU6jTGbMP_')).toEqual('vA4mt7CUWnouU6jTGbMP_');
     expect(nanoid({}).verify('vA4mt7CUWnouU6jTGbMP_')).toEqual('vA4mt7CUWnouU6jTGbMP_');
     expect(nanoid({ min: 7 }).verify('yH8mx-7')).toEqual('yH8mx-7');
+    expect(nanoid({ max: 7 }).verify('yH8mx-7')).toEqual('yH8mx-7');
     expect(nanoid({ min: 7, max: 10 }).verify('yH8mx-7')).toEqual('yH8mx-7');
     expect(nanoid({ min: 7, max: 10 }).verify('yH8mx-7890')).toEqual('yH8mx-7890');
   });
@@ -301,6 +302,12 @@ describe('nanoid', () => {
     );
     expect(() => nanoid({ size: 21 }).verify('x'.repeat(20))).toThrow(
       /Too short, must be 21 chars/,
+    );
+    expect(() => nanoid({ min: 21 }).verify('x'.repeat(20))).toThrow(
+      /Too short, must be at least 21 chars/,
+    );
+    expect(() => nanoid({ max: 21 }).verify('x'.repeat(22))).toThrow(
+      /Too long, must be at most 21 chars/,
     );
     expect(() => nanoid({ min: 21, max: 21 }).verify('x'.repeat(20))).toThrow(
       /Too short, must be 21 chars/,
