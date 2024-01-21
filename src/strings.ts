@@ -75,6 +75,7 @@ export const identifier: Decoder<string> = regex(
  * values. It assumes the default nanoid alphabet. If you're using a custom
  * alphabet, use `regex()` instead.
  */
+// XXX Make this API compatible with the future SizeOptions API, so we won't have to introduce a breaking change later
 export function nanoid(min: number, max: number): Decoder<string>;
 export function nanoid(size?: number): Decoder<string>;
 export function nanoid(minOrSize: number = 21, max_?: number): Decoder<string> {
