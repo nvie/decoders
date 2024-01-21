@@ -22,8 +22,13 @@
           : never('Invalid coordinate'),
     );
   ```
-- The `formatShort` formatter will now quote error positions with single quotes, which
-  makes them more human-readable in JSON responses.
+- Decoder error messages will now quote identifiers using single quotes, which makes them
+  more human-readable in JSON responses. Compare:
+  ```
+  "Value at key \"foo\": Must be \"bar\", \"qux\""  // ❌ Previously
+  "Value at key 'foo': Must be 'bar', 'qux'"        // ✅ Now
+  ```
+- Some runtime perf optimizations
 
 **New decoders:**
 
