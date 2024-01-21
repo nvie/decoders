@@ -319,9 +319,9 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
 const _register: WeakSet<Decoder<unknown>> = new WeakSet();
 
 /** @internal */
-function brand<A extends Decoder<unknown>>(ann: A): A {
-  _register.add(ann);
-  return ann;
+function brand<D extends Decoder<unknown>>(decoder: D): D {
+  _register.add(decoder);
+  return decoder;
 }
 
 /** @internal */
