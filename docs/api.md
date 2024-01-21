@@ -102,7 +102,7 @@ for section, names in DECODERS_BY_SECTION.items():
 
 ---
 
-<a href="#string">#</a> **string**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L18-L23 'Source')
+<a href="#string">#</a> **string**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L20-L25 'Source')
 {: #string .signature}
 
 Accepts and returns strings.
@@ -121,7 +121,7 @@ string.verify(null);  // throws
 
 ---
 
-<a href="#nonEmptyString">#</a> **nonEmptyString**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L25-L28 'Source')
+<a href="#nonEmptyString">#</a> **nonEmptyString**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L27-L30 'Source')
 {: #nonEmptyString .signature}
 
 Like [`string`](/api.html#string), but will reject the empty string or strings containing only whitespace.
@@ -139,7 +139,7 @@ nonEmptyString.verify('');    // throws
 
 ---
 
-<a href="#regex">#</a> **regex**(pattern: <i style="color: #267f99">RegExp</i>, message: <i style="color: #267f99">string</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L30-L35 'Source')
+<a href="#regex">#</a> **regex**(pattern: <i style="color: #267f99">RegExp</i>, message: <i style="color: #267f99">string</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L32-L37 'Source')
 {: #regex .signature}
 
 Accepts and returns strings that match the given regular expression.
@@ -159,7 +159,7 @@ decoder.verify('foo');  // throws
 
 ---
 
-<a href="#decimal">#</a> **decimal**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L119-L123 'Source')
+<a href="#decimal">#</a> **decimal**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L114-L118 'Source')
 {: #decimal .signature}
 
 Accepts and returns strings with decimal digits only (base-10).
@@ -181,7 +181,7 @@ decoder.verify(123);       // throws (not a string)
 
 ---
 
-<a href="#hexadecimal">#</a> **hexadecimal**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L125-L131 'Source')
+<a href="#hexadecimal">#</a> **hexadecimal**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L120-L126 'Source')
 {: #hexadecimal .signature}
 
 Accepts and returns strings with hexadecimal digits only (base-16).
@@ -201,7 +201,7 @@ decoder.verify('1');    // throws
 
 ---
 
-<a href="#numeric">#</a> **numeric**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L133-L138 'Source')
+<a href="#numeric">#</a> **numeric**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L128-L133 'Source')
 {: #numeric .signature}
 
 Accepts valid numerical strings (in base-10) and returns them as a number.
@@ -224,7 +224,7 @@ decoder.verify(123);       // throws (not a string)
 
 ---
 
-<a href="#email">#</a> **email**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L37-L45 'Source')
+<a href="#email">#</a> **email**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L39-L47 'Source')
 {: #email .signature}
 
 Accepts and returns strings that are syntactically valid email addresses.
@@ -242,7 +242,7 @@ email.verify('alice @ acme.org');  // throws
 
 ---
 
-<a href="#url">#</a> **url**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L47-L53 'Source')
+<a href="#url">#</a> **url**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L49-L55 'Source')
 {: #url .signature}
 
 Accepts strings that are valid URLs, returns the value as a URL instance.
@@ -262,7 +262,7 @@ url.verify('/search?q=foo');     // throws
 
 ---
 
-<a href="#httpsUrl">#</a> **httpsUrl**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L55-L62 'Source')
+<a href="#httpsUrl">#</a> **httpsUrl**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L57-L64 'Source')
 {: #httpsUrl .signature}
 
 Accepts strings that are valid URLs, but only HTTPS ones. Returns the value
@@ -288,7 +288,7 @@ const gitUrl: Decoder<URL> = url.refine(
 
 ---
 
-<a href="#identifier">#</a> **identifier**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L64-L71 'Source')
+<a href="#identifier">#</a> **identifier**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L66-L73 'Source')
 {: #identifier .signature}
 
 Accepts and returns strings that are valid identifiers in most programming
@@ -311,7 +311,7 @@ identifier.verify(42);         // not a string
 
 ---
 
-<a href="#nanoid">#</a> **nanoid**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L73-L89 'Source')
+<a href="#nanoid">#</a> **nanoid**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L75-L84 'Source')
 {: #nanoid .signature}
 
 Accepts and returns [nanoid](https://zelark.github.io/nano-id-cc) string
@@ -322,9 +322,9 @@ alphabet, use [`regex()`](/api.html#regex) instead.
 // 👍
 nanoid().verify('1-QskICa3CaPGcKuYYTm1') === '1-QskICa3CaPGcKuYYTm1'
 nanoid().verify('vA4mt7CUWnouU6jTGbMP_') === 'vA4mt7CUWnouU6jTGbMP_'
-nanoid(7).verify('yH8mx-7') === 'yH8mx-7'
-nanoid(7, 10).verify('yH8mx-7') === 'yH8mx-7'
-nanoid(7, 10).verify('yH8mx-7890') === 'yH8mx-7890'
+nanoid({ size: 7 }).verify('yH8mx-7') === 'yH8mx-7'
+nanoid({ min: 7, max: 10 }).verify('yH8mx-7') === 'yH8mx-7'
+nanoid({ min: 7, max: 10 }).verify('yH8mx-7890') === 'yH8mx-7890'
 
 // 👎
 nanoid().verify('123E4567E89B12D3A456426614174000'); // too long
@@ -334,7 +334,7 @@ nanoid().verify('$*&(#%*&(');                        // invalid chars
 
 ---
 
-<a href="#uuid">#</a> **uuid**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L91-L99 'Source')
+<a href="#uuid">#</a> **uuid**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L86-L94 'Source')
 {: #uuid .signature}
 
 Accepts strings that are valid
@@ -353,7 +353,7 @@ uuid.verify('abcdefgh-ijkl-mnop-qrst-uvwxyz012345');  // throws
 
 ---
 
-<a href="#uuidv1">#</a> **uuidv1**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L101-L108 'Source')
+<a href="#uuidv1">#</a> **uuidv1**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L96-L103 'Source')
 {: #uuidv1 .signature}
 
 Like [`uuid`](/api.html#uuid), but only accepts
@@ -370,7 +370,7 @@ uuidv1.verify('123e4567-e89b-42d3-a456-426614174000')  // throws
 
 ---
 
-<a href="#uuidv4">#</a> **uuidv4**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L110-L117 'Source')
+<a href="#uuidv4">#</a> **uuidv4**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L105-L112 'Source')
 {: #uuidv4 .signature}
 
 Like [`uuid`](/api.html#uuid), but only accepts
@@ -1637,5 +1637,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 468d8d01806333072759356adf3b6df2)-->
+<!--[[[end]]] (checksum: 1287dd1ae00318bdc90e2b96ba503aa5)-->
 <!-- prettier-ignore-end -->
