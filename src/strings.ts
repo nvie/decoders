@@ -4,6 +4,8 @@ import { isString } from '~/lib/utils';
 
 import { instanceOf } from './misc';
 import { either } from './unions';
+import type { SizeOptions } from '~/lib/size-options';
+import { bySizeOptions } from '~/lib/size-options';
 
 /** Match groups in this regex:
  * \1 - the scheme
@@ -75,17 +77,9 @@ export const identifier: Decoder<string> = regex(
  * values. It assumes the default nanoid alphabet. If you're using a custom
  * alphabet, use `regex()` instead.
  */
-// XXX Make this API compatible with the future SizeOptions API, so we won't have to introduce a breaking change later
-export function nanoid(min: number, max: number): Decoder<string>;
-export function nanoid(size?: number): Decoder<string>;
-export function nanoid(minOrSize: number = 21, max_?: number): Decoder<string> {
-  const max = max_ ?? minOrSize;
-  const atLeast = minOrSize === max ? '' : 'at least ';
-  const atMost = minOrSize === max ? '' : 'at most ';
-  const tooShort = `Too short, must be ${atLeast}${minOrSize} chars`;
-  const tooLong = `Too long, must be ${atMost}${max} chars`;
-  return regex(/^[a-z0-9_-]+$/i, 'Must be nano ID').reject((s) =>
-    s.length < minOrSize ? tooShort : s.length > max ? tooLong : null,
+export function nanoid(options?: SizeOptions): Decoder<string> {
+  return regex(/^[a-z0-9_-]+$/i, 'Must be nano ID').reject(
+    bySizeOptions(options ?? { size: 21 }),
   );
 }
 

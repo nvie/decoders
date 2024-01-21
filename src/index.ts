@@ -7,6 +7,7 @@ export { mapping, record, set, setFromArray } from './collections';
 export { date, datelike, iso8601 } from './dates';
 export type { JSONArray, JSONObject, JSONValue } from './json';
 export { json, jsonArray, jsonObject } from './json';
+export type { SizeOptions } from './lib/size-options';
 export { instanceOf, lazy, prep } from './misc';
 export { anyNumber, integer, number, positiveInteger, positiveNumber } from './numbers';
 export { bigint } from './numbers';
