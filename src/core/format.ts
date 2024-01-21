@@ -121,7 +121,7 @@ export function serializeValue(value: unknown): string {
     return 'undefined';
   } else {
     if (isDate(value)) {
-      return `new Date(${JSON.stringify(value.toISOString())})`;
+      return `new Date(${quote(value.toISOString())})`;
     } else if (value instanceof Date) {
       // NOTE: Using `instanceof Date` is unreliable way of checking dates.
       // If this case occurs (and it didn't pass the prior isDate())

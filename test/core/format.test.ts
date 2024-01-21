@@ -72,7 +72,7 @@ describe('formatInline', () => {
     checkInline(
       annotate(new Date(Date.UTC(2017, 11, 25)), 'Merry X-mas!'),
       `
-              new Date("2017-12-25T00:00:00.000Z")
+              new Date('2017-12-25T00:00:00.000Z')
               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Merry X-mas!
             `,
     );

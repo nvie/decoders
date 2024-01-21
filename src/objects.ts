@@ -3,6 +3,7 @@
 import type { Annotation, Decoder, DecodeResult, DecoderType } from '~/core';
 import { annotateObject, define, merge, updateText } from '~/core';
 import { difference } from '~/lib/set-methods';
+import { quote } from '~/lib/text';
 import { isPojo } from '~/lib/utils';
 
 type RequiredKeys<T extends object> = {
@@ -124,9 +125,7 @@ export function object<Ds extends Record<string, Decoder<unknown>>>(
       }
 
       if (missingKeys.size > 0) {
-        const errMsg = Array.from(missingKeys)
-          .map((key) => `"${key}"`)
-          .join(', ');
+        const errMsg = Array.from(missingKeys).map(quote).join(', ');
         const pluralized = missingKeys.size > 1 ? 'keys' : 'key';
         objAnn = updateText(objAnn, `Missing ${pluralized}: ${errMsg}`);
       }

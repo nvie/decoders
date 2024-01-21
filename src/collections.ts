@@ -1,5 +1,6 @@
 import type { Annotation, Decoder } from '~/core';
 import { annotate, annotateObject, formatShort, merge } from '~/core';
+import { quote } from '~/lib/text';
 
 import { array } from './arrays';
 import { pojo } from './objects';
@@ -29,10 +30,7 @@ export function record<K extends string, V>(
       const keyResult = keyDecoder?.decode(key);
       if (keyResult?.ok === false) {
         return err(
-          annotate(
-            input,
-            `Invalid key ${JSON.stringify(key)}: ${formatShort(keyResult.error)}`,
-          ),
+          annotate(input, `Invalid key ${quote(key)}: ${formatShort(keyResult.error)}`),
         );
       }
 

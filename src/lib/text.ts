@@ -18,6 +18,8 @@ export function indent(s: string, prefix: string = INDENT): string {
 
 const quotePattern = /'/g;
 
-export function quote(s: string): string {
-  return "'" + s.replace(quotePattern, "\\'") + "'";
+export function quote(value: unknown): string {
+  return typeof value === 'string'
+    ? "'" + value.replace(quotePattern, "\\'") + "'"
+    : JSON.stringify(value);
 }

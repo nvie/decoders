@@ -1,6 +1,6 @@
 import type { Decoder, DecoderType } from '~/core';
 import { define, summarize } from '~/core';
-import { indent } from '~/lib/text';
+import { indent, quote } from '~/lib/text';
 import type { Scalar } from '~/lib/types';
 import { isNumber, isString } from '~/lib/utils';
 
@@ -92,9 +92,7 @@ export function oneOf<C extends Scalar>(constants: readonly C[]): Decoder<C> {
     if (winner !== undefined) {
       return ok(winner);
     }
-    return err(
-      `Must be one of ${constants.map((value) => JSON.stringify(value)).join(', ')}`,
-    );
+    return err(`Must be one of ${constants.map((value) => quote(value)).join(', ')}`);
   });
 }
 
