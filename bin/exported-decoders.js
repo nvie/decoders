@@ -15,6 +15,7 @@ const NOT_DECODERS = new Set([
   'JSONObject',
   'JSONValue',
   'Scalar',
+  'SizeOptions',
 
   // Formatters
   'Formatter',
