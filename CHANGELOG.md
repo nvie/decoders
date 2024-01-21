@@ -2,14 +2,14 @@
 
 **New features:**
 
-- A new `.pipe()` method on Decoder allows you to pass the output of one decoder as input
-  to another:
+- A new `.pipe()` method on `Decoder` allows you to pass the output of one decoder into
+  another:
   ```tsx
   string
     .transform((s) => s.split(',')) // transform first...
     .pipe(array(nonEmptyString)); //   ...then validate that result
   ```
-  This was previously possible already with `.then`, but it was hard to work with.
+  This was previously possible already with `.then`, but it wasn't as elegant to express.
 - The new `.pipe()` can also dynamically select another decoder, based on the input:
   ```tsx
   string
