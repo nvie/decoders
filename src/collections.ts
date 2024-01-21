@@ -26,7 +26,8 @@ export function record<K extends string, V>(
     let rv = {} as Record<K, V>;
     const errors: Map<string, Annotation> = new Map();
 
-    for (const [key, value] of Object.entries(input)) {
+    for (const key of Object.keys(input)) {
+      const value = input[key];
       const keyResult = keyDecoder?.decode(key);
       if (keyResult?.ok === false) {
         return err(
