@@ -157,12 +157,11 @@ export function exact<Ds extends Record<string, Decoder<unknown>>>(
     const extraKeys = difference(actualKeys, allowedKeys);
     return extraKeys.size > 0
       ? `Unexpected extra keys: ${Array.from(extraKeys).join(', ')}`
-      : // Don't reject
-        null;
+      : null;
   });
 
   // Defer to the "object" decoder for doing the real decoding work
-  return checked.then(object(decoders).decode);
+  return checked.pipe(object(decoders));
 }
 
 /**
@@ -176,9 +175,9 @@ export function inexact<Ds extends Record<string, Decoder<unknown>>>(
 export function inexact<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds> & Record<string, unknown>> {
-  return pojo.then((plainObj) => {
+  return pojo.pipe((plainObj) => {
     const allkeys = new Set(Object.keys(plainObj));
-    const decoder = object(decoders).transform((safepart) => {
+    return object(decoders).transform((safepart) => {
       const safekeys = new Set(Object.keys(decoders));
 
       // To account for hard-coded keys that aren't part of the input
@@ -199,6 +198,5 @@ export function inexact<Ds extends Record<string, Decoder<unknown>>>(
       }
       return rv;
     });
-    return decoder.decode(plainObj);
   });
 }
