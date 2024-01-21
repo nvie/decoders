@@ -156,7 +156,7 @@ export function exact<Ds extends Record<string, Decoder<unknown>>>(
     const actualKeys = new Set(Object.keys(plainObj));
     const extraKeys = difference(actualKeys, allowedKeys);
     return extraKeys.size > 0
-      ? `Unexpected extra keys: ${Array.from(extraKeys).join(', ')}`
+      ? `Unexpected extra keys: ${Array.from(extraKeys).map(quote).join(', ')}`
       : null;
   });
 

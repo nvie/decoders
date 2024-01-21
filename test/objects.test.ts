@@ -145,8 +145,13 @@ describe('exact objects', () => {
   test('fails on superfluous keys', () => {
     const decoder = exact({ id: number, name: string });
     expect(() =>
-      decoder.verify({ id: 1, name: 'test', superfluous: 'abundance' }),
-    ).toThrow('Unexpected extra keys');
+      decoder.verify({
+        id: 1,
+        name: 'test',
+        superfluous: 'abundance',
+        more: 'yo',
+      }),
+    ).toThrow("Unexpected extra keys: 'superfluous', 'more'");
   });
 
   test('retains extra hardcoded fields', () => {
@@ -167,10 +172,10 @@ describe('exact objects', () => {
     });
     expect(() =>
       decoder.verify({ id: 1, name: 'test', superfluous: 'abundance' }),
-    ).toThrow('Unexpected extra keys');
+    ).toThrow("Unexpected extra keys: 'superfluous'");
     expect(() =>
       decoder.verify({ id: 1, name: 'test', extra: 42, superfluous: 'abundance' }),
-    ).toThrow('Unexpected extra keys');
+    ).toThrow("Unexpected extra keys: 'superfluous'");
   });
 
   test('empty objects', () => {
