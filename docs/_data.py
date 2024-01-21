@@ -396,24 +396,6 @@ DECODERS = {
     """,
   },
 
-  'numericBoolean': {
-    'section': 'Booleans',
-    'params': None,
-    'return_type': 'Decoder<boolean>',
-    'example': """
-      // 👍
-      numericBoolean.verify(-1) === true;
-      numericBoolean.verify(0) === false;
-      numericBoolean.verify(123) === true;
-
-      // 👎
-      numericBoolean.verify(false);      // throws
-      numericBoolean.verify(true);       // throws
-      numericBoolean.verify(undefined);  // throws
-      numericBoolean.verify('hello');    // throws
-    """,
-  },
-
   'date': {
     'section': 'Dates',
     'params': None,

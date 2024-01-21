@@ -30,7 +30,7 @@ for section, names in DECODERS_BY_SECTION.items():
 ]]]-->
 - [**Strings**](#strings): [`string`](/api.html#string), [`nonEmptyString`](/api.html#nonEmptyString), [`regex()`](/api.html#regex), [`decimal`](/api.html#decimal), [`hexadecimal`](/api.html#hexadecimal), [`numeric`](/api.html#numeric), [`email`](/api.html#email), [`url`](/api.html#url), [`httpsUrl`](/api.html#httpsUrl), [`identifier`](/api.html#identifier), [`nanoid`](/api.html#nanoid), [`uuid`](/api.html#uuid), [`uuidv1`](/api.html#uuidv1), [`uuidv4`](/api.html#uuidv4)
 - [**Numbers**](#numbers): [`number`](/api.html#number), [`integer`](/api.html#integer), [`positiveNumber`](/api.html#positiveNumber), [`positiveInteger`](/api.html#positiveInteger), [`anyNumber`](/api.html#anyNumber), [`bigint`](/api.html#bigint)
-- [**Booleans**](#booleans): [`boolean`](/api.html#boolean), [`truthy`](/api.html#truthy), [`numericBoolean`](/api.html#numericBoolean)
+- [**Booleans**](#booleans): [`boolean`](/api.html#boolean), [`truthy`](/api.html#truthy)
 - [**Dates**](#dates): [`date`](/api.html#date), [`iso8601`](/api.html#iso8601), [`datelike`](/api.html#datelike)
 - [**Constants**](#constants): [`constant()`](/api.html#constant), [`always()`](/api.html#always), [`hardcoded()`](/api.html#hardcoded)
 - [**Optionality**](#optionality): [`null_`](/api.html#null_), [`undefined_`](/api.html#undefined_), [`optional()`](/api.html#optional), [`nullable()`](/api.html#nullable), [`nullish()`](/api.html#nullish), [`unknown`](/api.html#unknown), [`maybe()`](/api.html#maybe), [`mixed`](/api.html#mixed)
@@ -40,7 +40,7 @@ for section, names in DECODERS_BY_SECTION.items():
 - [**JSON values**](#json-values): [`json`](/api.html#json), [`jsonObject`](/api.html#jsonObject), [`jsonArray`](/api.html#jsonArray)
 - [**Unions**](#unions): [`either()`](/api.html#either), [`oneOf()`](/api.html#oneOf), [`enum_()`](/api.html#enum_), [`taggedUnion()`](/api.html#taggedUnion), [`select()`](/api.html#select)
 - [**Utilities**](#utilities): [`define()`](/api.html#define), [`prep()`](/api.html#prep), [`never`](/api.html#never), [`instanceOf()`](/api.html#instanceOf), [`lazy()`](/api.html#lazy), [`fail`](/api.html#fail)
-<!--[[[end]]] (checksum: 9898bb89cfe78ba81e901ac0745d9868) -->
+<!--[[[end]]] (checksum: 37f9fc6b535cb97e7f8973f2baa5cf2c) -->
 
 <!--[[[cog
 for section, names in DECODERS_BY_SECTION.items():
@@ -525,11 +525,10 @@ bigint.verify('not a number');  // throws
 
 - [`boolean`](/api.html#boolean)
 - [`truthy`](/api.html#truthy)
-- [`numericBoolean`](/api.html#numericBoolean)
 
 ---
 
-<a href="#boolean">#</a> **boolean**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;boolean&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/booleans.ts#L6-L11 'Source')
+<a href="#boolean">#</a> **boolean**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;boolean&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/booleans.ts#L4-L9 'Source')
 {: #boolean .signature}
 
 Accepts and returns booleans.
@@ -547,7 +546,7 @@ boolean.verify(123);            // throws
 
 ---
 
-<a href="#truthy">#</a> **truthy**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;boolean&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/booleans.ts#L13-L16 'Source')
+<a href="#truthy">#</a> **truthy**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;boolean&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/booleans.ts#L11-L14 'Source')
 {: #truthy .signature}
 
 Accepts anything and will return its "truth" value. Will never reject.
@@ -565,26 +564,6 @@ truthy.verify(null) === false;
 
 // 👎
 // This decoder will never reject an input
-```
-
----
-
-<a href="#numericBoolean">#</a> **numericBoolean**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;boolean&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/booleans.ts#L18-L24 'Source')
-{: #numericBoolean .signature}
-
-Accepts numbers, but return their boolean representation.
-
-```ts
-// 👍
-numericBoolean.verify(-1) === true;
-numericBoolean.verify(0) === false;
-numericBoolean.verify(123) === true;
-
-// 👎
-numericBoolean.verify(false);      // throws
-numericBoolean.verify(true);       // throws
-numericBoolean.verify(undefined);  // throws
-numericBoolean.verify('hello');    // throws
 ```
 
 ---
@@ -1637,5 +1616,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: ad3b885cbbae83426586fe71433f0e44)-->
+<!--[[[end]]] (checksum: 61b09f8be5bf4d960fcba916cba0e8cf)-->
 <!-- prettier-ignore-end -->

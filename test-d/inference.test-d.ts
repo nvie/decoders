@@ -41,7 +41,6 @@ import {
   null_,
   number,
   numeric,
-  numericBoolean,
   object,
   oneOf,
   optional,
@@ -267,7 +266,6 @@ expectType<unknown[]>(test(poja));
 
 expectType<boolean>(test(boolean));
 expectType<boolean>(test(truthy));
-expectType<boolean>(test(numericBoolean));
 
 expectType<string | undefined>(test(optional(string)));
 expectType<string | undefined>(test(optional(optional(string))));

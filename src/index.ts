@@ -29,5 +29,4 @@ export type { Scalar } from '~/lib/types';
 
 // Deprecated aliases (will get removed in a future version)
 export { hardcoded, maybe, mixed } from './basics';
-export { numericBoolean } from './booleans';
 export { dict } from './collections';

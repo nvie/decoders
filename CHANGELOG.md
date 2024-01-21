@@ -35,6 +35,10 @@
 - `identifier` ([docs](https://decoders.cc/api.html#identifier))
 - `nanoid()` ([docs](https://decoders.cc/api.html#nanoid))
 
+**Removed decoders:**
+
+- Remove `numericBoolean` decoder, which was deprecated since 2.3.0.
+
 ## [2.3.0] - 2024-01-09
 
 **New features:**
