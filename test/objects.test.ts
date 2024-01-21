@@ -90,20 +90,20 @@ describe('objects', () => {
     );
 
     // Test missing key errors
-    expect(() => decoder.verify({ name: 'valid' })).toThrow('Missing key: "id"');
+    expect(() => decoder.verify({ name: 'valid' })).toThrow("Missing key: 'id'");
     expect(() => decoder.verify({ name: 'valid' })).not.toThrow('Must be string');
     expect(() => decoder.verify({ name: 'valid', extra: undefined })).toThrow(
-      'Missing key: "id"',
+      "Missing key: 'id'",
     );
     expect(() => decoder.verify({ name: 'valid', extra: undefined })).not.toThrow(
       'Must be string',
     );
     expect(() => decoder.verify({ extra: 'valid' })).toThrow(
-      'Missing keys: "id", "name"',
+      "Missing keys: 'id', 'name'",
     );
     expect(() => decoder.verify({ extra: 'valid' })).not.toThrow('Must be string');
     expect(() => decoder.verify({ name: undefined, extra: 'valid' })).toThrow(
-      'Missing keys: "id", "name"',
+      "Missing keys: 'id', 'name'",
     );
     expect(() => decoder.verify({ name: undefined, extra: 'valid' })).not.toThrow(
       'Must be string',
@@ -111,7 +111,7 @@ describe('objects', () => {
 
     // Now test that both errors are part of the same error!
     expect(() => decoder.verify({ name: 42 })).toThrow('Must be string');
-    expect(() => decoder.verify({ name: 42 })).toThrow('Missing key: "id"');
+    expect(() => decoder.verify({ name: 42 })).toThrow("Missing key: 'id'");
 
     // Both of these messages are part of the same error!
     expect(() => decoder.verify({ extra: 42 })).toThrow('Must be string');
@@ -145,8 +145,13 @@ describe('exact objects', () => {
   test('fails on superfluous keys', () => {
     const decoder = exact({ id: number, name: string });
     expect(() =>
-      decoder.verify({ id: 1, name: 'test', superfluous: 'abundance' }),
-    ).toThrow('Unexpected extra keys');
+      decoder.verify({
+        id: 1,
+        name: 'test',
+        superfluous: 'abundance',
+        more: 'yo',
+      }),
+    ).toThrow("Unexpected extra keys: 'superfluous', 'more'");
   });
 
   test('retains extra hardcoded fields', () => {
@@ -167,10 +172,10 @@ describe('exact objects', () => {
     });
     expect(() =>
       decoder.verify({ id: 1, name: 'test', superfluous: 'abundance' }),
-    ).toThrow('Unexpected extra keys');
+    ).toThrow("Unexpected extra keys: 'superfluous'");
     expect(() =>
       decoder.verify({ id: 1, name: 'test', extra: 42, superfluous: 'abundance' }),
-    ).toThrow('Unexpected extra keys');
+    ).toThrow("Unexpected extra keys: 'superfluous'");
   });
 
   test('empty objects', () => {
@@ -411,13 +416,13 @@ describe('mapping', () => {
   test('invalid', () => {
     expect(() => decoder.verify('foo')).toThrow('Must be an object');
     expect(() => decoder.verify({ foo: 1 })).toThrow('Must be an object');
-    expect(() => decoder.verify({ foo: {} })).toThrow('Missing key: "name"');
+    expect(() => decoder.verify({ foo: {} })).toThrow("Missing key: 'name'");
     expect(() =>
       decoder.verify({
         '124': { invalid: true },
         '125': { name: 'bar' },
       }),
-    ).toThrow('Missing key: "name"');
+    ).toThrow("Missing key: 'name'");
 
     // More than one error
     expect(() => decoder.verify({ foo: 42, bar: 42 })).toThrow();
@@ -440,13 +445,13 @@ describe('record', () => {
   test('invalid', () => {
     expect(() => decoder.verify('foo')).toThrow('Must be an object');
     expect(() => decoder.verify({ foo: 1 })).toThrow('Must be an object');
-    expect(() => decoder.verify({ foo: {} })).toThrow('Missing key: "name"');
+    expect(() => decoder.verify({ foo: {} })).toThrow("Missing key: 'name'");
     expect(() =>
       decoder.verify({
         '124': { invalid: true },
         '125': { name: 'bar' },
       }),
-    ).toThrow('Missing key: "name"');
+    ).toThrow("Missing key: 'name'");
   });
 });
 
@@ -466,7 +471,7 @@ describe('record with key validation', () => {
     expect(decoder.verify({ aa: true })).toEqual({ aa: true });
     expect(decoder.verify({ aaaaa: true })).toEqual({ aaaaa: true });
     expect(() => decoder.verify({ abc: true })).toThrow(
-      'Invalid key "abc": Must be all a\'s',
+      "Invalid key 'abc': Must be all a's",
     );
   });
 
@@ -479,7 +484,7 @@ describe('record with key validation', () => {
     expect(decoder.verify({ a: true })).toEqual({ a: true });
     expect(decoder.verify({ a: true, aa: false })).toEqual({ a: false });
     expect(() => decoder.verify({ a: true, 1: false })).toThrow(
-      'Invalid key "1": Must be all a\'s',
+      "Invalid key '1': Must be all a's",
     );
   });
 
@@ -488,10 +493,10 @@ describe('record with key validation', () => {
     expect(() => decoder.verify({ 13: 1 })).toThrow('Must be boolean');
     expect(() => decoder.verify({ 42: {} })).toThrow('Must be boolean');
     expect(() => decoder.verify({ x: true })).toThrow(
-      'Invalid key "x": Must only contain digits',
+      "Invalid key 'x': Must only contain digits",
     );
     expect(() => decoder.verify({ '': true })).toThrow(
-      'Invalid key "": Must only contain digits',
+      "Invalid key '': Must only contain digits",
     );
   });
 });

@@ -15,3 +15,11 @@ export function indent(s: string, prefix: string = INDENT): string {
     return `${prefix}${s}`;
   }
 }
+
+const quotePattern = /'/g;
+
+export function quote(value: unknown): string {
+  return typeof value === 'string'
+    ? "'" + value.replace(quotePattern, "\\'") + "'"
+    : JSON.stringify(value);
+}

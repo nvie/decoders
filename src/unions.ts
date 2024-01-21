@@ -1,6 +1,6 @@
 import type { Decoder, DecoderType } from '~/core';
 import { define, summarize } from '~/core';
-import { indent } from '~/lib/text';
+import { indent, quote } from '~/lib/text';
 import type { Scalar } from '~/lib/types';
 import { isNumber, isString } from '~/lib/utils';
 
@@ -92,9 +92,7 @@ export function oneOf<C extends Scalar>(constants: readonly C[]): Decoder<C> {
     if (winner !== undefined) {
       return ok(winner);
     }
-    return err(
-      `Must be one of ${constants.map((value) => JSON.stringify(value)).join(', ')}`,
-    );
+    return err(`Must be one of ${constants.map((value) => quote(value)).join(', ')}`);
   });
 }
 
@@ -175,8 +173,8 @@ export function select<T, D extends Decoder<unknown>>(
   scout: Decoder<T>,
   selectFn: (result: T) => D,
 ): Decoder<DecoderType<D>> {
-  return scout.peek(([blob, peekResult]) => {
-    const decoder = selectFn(peekResult);
-    return decoder.decode(blob);
+  return define((blob) => {
+    const result = scout.decode(blob);
+    return result.ok ? selectFn(result.value).decode(blob) : result;
   }) as Decoder<DecoderType<D>>;
 }

@@ -89,8 +89,8 @@ describe('either', () => {
 }
 ^
 Either:
-- Value at key "foo": Must be string
-- Value at key "bar": Must be number`,
+- Value at key 'foo': Must be string
+- Value at key 'bar': Must be number`,
     );
   });
 
@@ -222,7 +222,7 @@ describe('enums', () => {
 
     test('invalid', () => {
       expect(() => decoder.verify('xx')).toThrow(
-        /Must be one of "apple", "banana", "cherry"/,
+        /Must be one of 'apple', 'banana', 'cherry'/,
       );
       expect(() => decoder.verify('Apple')).toThrow();
       expect(() => decoder.verify('Banana')).toThrow();
@@ -254,7 +254,7 @@ describe('enums', () => {
 
     test('invalid', () => {
       expect(() => decoder.verify('xx')).toThrow(
-        /Must be one of "Apple", "Banana", "Cherry"/,
+        /Must be one of 'Apple', 'Banana', 'Cherry'/,
       );
       expect(() => decoder.verify('Peach')).toThrow();
       expect(() => decoder.verify(0)).toThrow();
@@ -281,7 +281,7 @@ describe('enums', () => {
     });
 
     test('invalid', () => {
-      expect(() => decoder.verify('xx')).toThrow(/Must be one of "apple", "apple"/);
+      expect(() => decoder.verify('xx')).toThrow(/Must be one of 'apple', 'apple'/);
       expect(() => decoder.verify('Apple')).toThrow();
       expect(() => decoder.verify('AlsoApple')).toThrow();
       expect(() => decoder.verify(0)).toThrow();
@@ -394,7 +394,7 @@ describe('enums', () => {
     });
 
     test('invalid', () => {
-      expect(() => decoder.verify('xx')).toThrow(/Must be one of 3, "apple", "Cherry"/);
+      expect(() => decoder.verify('xx')).toThrow(/Must be one of 3, 'apple', 'Cherry'/);
       expect(() => decoder.verify('Apple')).toThrow();
       expect(() => decoder.verify('Banana')).toThrow();
       expect(() => decoder.verify('banana')).toThrow();
@@ -424,7 +424,7 @@ describe('enums', () => {
     });
 
     test('invalid', () => {
-      expect(() => decoder.verify('xx')).toThrow(/Must be one of 3, "apple", "banana"/);
+      expect(() => decoder.verify('xx')).toThrow(/Must be one of 3, 'apple', 'banana'/);
       expect(() => decoder.verify('Apple')).toThrow();
       expect(() => decoder.verify('Banana')).toThrow();
       expect(() => decoder.verify(0)).toThrow();
@@ -484,12 +484,12 @@ describe('taggedUnion', () => {
 
   test('invalid', () => {
     expect(() => decoder.verify('foo')).toThrow('Must be an object');
-    expect(() => decoder.verify({})).toThrow('Missing key: "type"');
+    expect(() => decoder.verify({})).toThrow("Missing key: 'type'");
     expect(() => decoder.verify({ type: 'blah' })).toThrow(
       /Must be one of.*rectangle.*circle/,
     );
     expect(() => decoder.verify({ type: 'rectangle', x: 1 })).toThrow(
-      /Missing keys: "y", "width", "height"/,
+      /Missing keys: 'y', 'width', 'height'/,
     );
   });
 });
@@ -509,10 +509,10 @@ describe('taggedUnion with numeric keys', () => {
 
   test('invalid', () => {
     expect(() => decoder.verify('foo')).toThrow('Must be an object');
-    expect(() => decoder.verify({})).toThrow('Missing key: "type"');
+    expect(() => decoder.verify({})).toThrow("Missing key: 'type'");
     expect(() => decoder.verify({ type: 'blah' })).toThrow(/Must be one of.*1.*2/);
-    expect(() => decoder.verify({ type: 1, x: 1 })).toThrow(/Missing key: "a"/);
-    expect(() => decoder.verify({ type: 2, x: 1 })).toThrow(/Missing key: "b"/);
+    expect(() => decoder.verify({ type: 1, x: 1 })).toThrow(/Missing key: 'a'/);
+    expect(() => decoder.verify({ type: 2, x: 1 })).toThrow(/Missing key: 'b'/);
   });
 });
 
@@ -541,11 +541,11 @@ describe('select', () => {
 
   test('invalid', () => {
     expect(() => decoder.verify('foo')).toThrow('Must be an object');
-    expect(() => decoder.verify({ ver: 1 })).toThrow('Missing key: "title"');
+    expect(() => decoder.verify({ ver: 1 })).toThrow("Missing key: 'title'");
     expect(() => decoder.verify({ version: 7 })).toThrow('Must be one of 2, 3');
     expect(() => decoder.verify({ version: 'hi' })).toThrow('Must be one of 2, 3');
-    expect(() => decoder.verify({ version: 2 })).toThrow('Missing keys: "title", "text"');
-    expect(() => decoder.verify({ version: 3 })).toThrow('Missing key: "text"');
+    expect(() => decoder.verify({ version: 2 })).toThrow("Missing keys: 'title', 'text'");
+    expect(() => decoder.verify({ version: 3 })).toThrow("Missing key: 'text'");
     expect(() => decoder.verify({ version: -7 })).toThrow('Must be one of 2, 3');
   });
 });

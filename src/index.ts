@@ -7,12 +7,14 @@ export { mapping, record, set, setFromArray } from './collections';
 export { date, datelike, iso8601 } from './dates';
 export type { JSONArray, JSONObject, JSONValue } from './json';
 export { json, jsonArray, jsonObject } from './json';
+export type { SizeOptions } from './lib/size-options';
 export { instanceOf, lazy, prep } from './misc';
 export { anyNumber, integer, number, positiveInteger, positiveNumber } from './numbers';
 export { bigint } from './numbers';
 export { exact, inexact, object, pojo } from './objects';
 export { nonEmptyString, regex, string } from './strings';
-export { email, httpsUrl, url, uuid, uuidv1, uuidv4 } from './strings';
+export { identifier, nanoid, uuid, uuidv1, uuidv4 } from './strings';
+export { email, httpsUrl, url } from './strings';
 export { decimal, hexadecimal, numeric } from './strings';
 export { either, enum_, oneOf, select, taggedUnion } from './unions';
 
@@ -27,5 +29,4 @@ export type { Scalar } from '~/lib/types';
 
 // Deprecated aliases (will get removed in a future version)
 export { hardcoded, maybe, mixed } from './basics';
-export { numericBoolean } from './booleans';
 export { dict } from './collections';

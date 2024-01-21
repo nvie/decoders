@@ -1,5 +1,6 @@
 import type { Decoder } from '~/core';
 import { define } from '~/core';
+import { quote } from '~/lib/text';
 import type { Scalar } from '~/lib/types';
 
 import { either } from './unions';
@@ -94,9 +95,7 @@ export function constant<C extends Scalar>(value: C): Decoder<C> {
   return define((blob, ok, err) =>
     blob === value
       ? ok(value)
-      : err(
-          `Must be ${typeof value === 'symbol' ? String(value) : JSON.stringify(value)}`,
-        ),
+      : err(`Must be ${typeof value === 'symbol' ? String(value) : quote(value)}`),
   );
 }
 

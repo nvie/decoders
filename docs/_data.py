@@ -176,6 +176,45 @@ DECODERS = {
     """,
   },
 
+  'identifier': {
+    'section': 'Strings',
+    'params': None,
+    'return_type': 'Decoder<string>',
+    'example': """
+      // 👍
+      identifier.verify('x') === 'x'
+      identifier.verify('abc123') === 'abc123'
+      identifier.verify('_123') === '_123'
+      identifier.verify('a_b_c_1_2_3') === 'a_b_c_1_2_3'
+
+      // 👎
+      identifier.verify('123xyz');   // cannot start with digit
+      identifier.verify('x-y');      // invalid chars
+      identifier.verify('!@#$%^&*()=+');  // invalid chars
+      identifier.verify('🤯');       // invalid chars
+      identifier.verify(42);         // not a string
+    """,
+  },
+
+  'nanoid': {
+    'section': 'Strings',
+    'params': None,
+    'return_type': 'Decoder<string>',
+    'example': """
+      // 👍
+      nanoid().verify('1-QskICa3CaPGcKuYYTm1') === '1-QskICa3CaPGcKuYYTm1'
+      nanoid().verify('vA4mt7CUWnouU6jTGbMP_') === 'vA4mt7CUWnouU6jTGbMP_'
+      nanoid({ size: 7 }).verify('yH8mx-7') === 'yH8mx-7'
+      nanoid({ min: 7, max: 10 }).verify('yH8mx-7') === 'yH8mx-7'
+      nanoid({ min: 7, max: 10 }).verify('yH8mx-7890') === 'yH8mx-7890'
+
+      // 👎
+      nanoid().verify('123E4567E89B12D3A456426614174000'); // too long
+      nanoid().verify('abcdefghijkl');                     // too short
+      nanoid().verify('$*&(#%*&(');                        // invalid chars
+    """,
+  },
+
   'uuid': {
     'section': 'Strings',
     'params': None,
@@ -354,24 +393,6 @@ DECODERS = {
 
       // 👎
       // This decoder will never reject an input
-    """,
-  },
-
-  'numericBoolean': {
-    'section': 'Booleans',
-    'params': None,
-    'return_type': 'Decoder<boolean>',
-    'example': """
-      // 👍
-      numericBoolean.verify(-1) === true;
-      numericBoolean.verify(0) === false;
-      numericBoolean.verify(123) === true;
-
-      // 👎
-      numericBoolean.verify(false);      // throws
-      numericBoolean.verify(true);       // throws
-      numericBoolean.verify(undefined);  // throws
-      numericBoolean.verify('hello');    // throws
     """,
   },
 
@@ -1425,13 +1446,80 @@ DECODER_METHODS = {
   },
 
   'then': {
-    'type_params': ['V'],
-    'params': [
-      ('next', '(blob: T, ok, err) => DecodeResult<V>'),
+    'signatures': [
+      {
+        'type_params': ['V'],
+        'params': [
+          ('next', '(blob: T, ok, err) => DecodeResult<V> | Decoder<V>'),
+        ],
+        'return_type': 'Decoder<V>',
+      },
+      {
+        'type_params': ['V'],
+        'params': [
+          ('next', 'Decoder<V>'),
+        ],
+        'return_type': 'Decoder<V>',
+        },
     ],
-    'return_type': 'Decoder<V>',
     # 'example': """
     # """,
+  },
+
+  'pipe': {
+    'type_params': ['V'],
+
+    'signatures': [
+      {
+        'type_params': ['V'],
+        'params': [('next', 'Decoder<V>')],
+        'return_type': 'Decoder<V>',
+      },
+      {
+        'type_params': ['V'],
+        'params': [
+          ('next', '(blob: T) => Decoder<V>'),
+        ],
+        'return_type': 'Decoder<V>',
+      },
+    ],
+
+    'markdown': """
+    ```tsx
+    const decoder =
+      string
+        .transform((s) => s.split(',').map(Number))
+        .pipe(array(positiveInteger));
+
+    // 👍
+    decoder.verify('7') === [7];
+    decoder.verify('1,2,3') === [1, 2, 3];
+
+    // 👎
+    decoder.verify('1,-3')  // -3 is not positive
+    decoder.verify('🚀');   // not a number
+    decoder.verify('3.14'); // not a whole number
+    decoder.verify(123);    // not a string
+    decoder.verify(true);   // not a string
+    decoder.verify(null);   // not a string
+    ```
+
+    #### Dynamic decoder selection with ``.pipe()``
+
+    With `.pipe()` you can also dynamically select another decoder, based on dynamic runtime value.
+
+    ```tsx
+    string
+      .transform((s) => s.split(',').map(Number))
+      .pipe((tup) =>
+        tup.length === 2
+          ? point2d
+          : tup.length === 3
+            ? point3d
+            : never('Invalid coordinate'),
+      );
+    ```
+    """,
   },
 }
 

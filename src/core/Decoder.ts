@@ -12,11 +12,23 @@ export type DecodeResult<T> = Result<T, Annotation>;
  * `ok()` and `err()` constructor functions are provided as the 2nd and 3rd
  * param. One of these should be called and its value returned.
  */
-export type AcceptanceFn<T, InputT = unknown> = (
-  blob: InputT,
-  ok: (value: T) => DecodeResult<T>,
-  err: (msg: string | Annotation) => DecodeResult<T>,
-) => DecodeResult<T>;
+//                  Output  Input
+//                      \    /
+export type AcceptanceFn<O, I = unknown> = (
+  blob: I,
+  ok: (value: O) => DecodeResult<O>,
+  err: (msg: string | Annotation) => DecodeResult<O>,
+) => DecodeResult<O>;
+
+//          Output  Input
+//              \    /
+export type Next<O, I = unknown> =
+  | Decoder<O>
+  | ((
+      blob: I,
+      ok: (value: O) => DecodeResult<O>,
+      err: (msg: string | Annotation) => DecodeResult<O>,
+    ) => DecodeResult<O> | Decoder<O>);
 
 export interface Decoder<T> {
   /**
@@ -61,31 +73,32 @@ export interface Decoder<T> {
   describe(message: string): Decoder<T>;
 
   /**
-   * Send the output of the current decoder into another acceptance function.
-   * The given acceptance function will receive the output of the current
-   * decoder as its input, making it partially trusted.
-   *
-   * This works similar to how you would `define()` a new decoder, except
-   * that the ``blob`` param will now be ``T`` (a known type), rather than
-   * ``unknown``. This will allow the function to make a stronger assumption
-   * about its input and avoid re-refining inputs.
+   * Send the output of the current decoder into another decoder or acceptance
+   * function. The given acceptance function will receive the output of the
+   * current decoder as its input.
    *
    * > _**NOTE:** This is an advanced, low-level, API. It's not recommended
    * > to reach for this construct unless there is no other way. Most cases can
-   * > be covered more elegantly by `.transform()` or `.refine()` instead._
-   *
-   * If it helps, you can think of `define(...)` as equivalent to
-   * `unknown.then(...)`.
+   * > be covered more elegantly by `.transform()`, `.refine()`, or `.pipe()`
+   * > instead._
    */
-  then<V>(next: AcceptanceFn<V, T>): Decoder<V>;
+  then<V>(next: Next<V, T>): Decoder<V>;
 
   /**
-   * @internal
-   * Chain together the current decoder with another acceptance function, but
-   * also pass along the original input. Don't call this method directly.
-   * You'll probably want to use the higher-level `select()` decoder instead.
+   * Send the output of this decoder as input to another decoder.
+   *
+   * This can be useful to validate the results of a transform, i.e.:
+   *
+   *   string
+   *     .transform((s) => s.split(','))
+   *     .pipe(array(nonEmptyString))
+   *
+   * You can also conditionally pipe:
+   *
+   *   string.pipe((s) => s.startsWith('@') ? username : email)
    */
-  peek<V>(next: AcceptanceFn<V, [unknown, T]>): Decoder<V>;
+  pipe<V, D extends Decoder<V>>(next: D): Decoder<DecoderType<D>>;
+  pipe<V, D extends Decoder<V>>(next: (blob: T) => D): Decoder<DecoderType<D>>;
 }
 
 /**
@@ -209,29 +222,45 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
   }
 
   /**
-   * Chain together the current decoder with another.
+   * Send the output of the current decoder into another decoder or acceptance
+   * function. The given acceptance function will receive the output of the
+   * current decoder as its input.
    *
    * > _**NOTE:** This is an advanced, low-level, API. It's not recommended
    * > to reach for this construct unless there is no other way. Most cases can
-   * > be covered more elegantly by `.transform()` or `.refine()` instead._
-   *
-   * If the current decoder accepts an input, the resulting ``T`` value will
-   * get passed into the given ``next`` acceptance function to further decide
-   * whether or not the value should get accepted or rejected.
-   *
-   * This works similar to how you would `define()` a new decoder, except
-   * that the ``blob`` param will now be ``T`` (a known type), rather than
-   * ``unknown``. This will allow the function to make a stronger assumption
-   * about its input and avoid re-refining inputs.
-   *
-   * If it helps, you can think of `define(...)` as equivalent to
-   * `unknown.then(...)`.
+   * > be covered more elegantly by `.transform()`, `.refine()`, or `.pipe()`
+   * > instead._
    */
-  function then<V>(next: AcceptanceFn<V, T>): Decoder<V> {
+  function then<V>(next: Next<V, T>): Decoder<V> {
     return define((blob, ok, err) => {
-      const result = decode(blob);
-      return result.ok ? next(result.value, ok, err) : result;
+      const r1 = decode(blob);
+      if (!r1.ok) return r1; // Rejected
+
+      const r2 = isDecoder(next) ? next : next(r1.value, ok, err);
+      return isDecoder(r2) ? r2.decode(r1.value) : r2;
     });
+  }
+
+  /**
+   * Send the output of this decoder as input to another decoder.
+   *
+   * This can be useful to validate the results of a transform, i.e.:
+   *
+   *   string
+   *     .transform((s) => s.split(','))
+   *     .pipe(array(nonEmptyString))
+   *
+   * You can also conditionally pipe:
+   *
+   *   string.pipe((s) => s.startsWith('@') ? username : email)
+   */
+  function pipe<V, D extends Decoder<V>>(
+    next: D | ((blob: T) => D),
+  ): Decoder<DecoderType<D>> {
+    // Technically, .pipe() is just an alias of .then(), but its signature is
+    // more focused on the more convenient use case of working with Decoders
+    // directly.
+    return then(next) as Decoder<DecoderType<D>>;
   }
 
   /**
@@ -273,24 +302,7 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
     });
   }
 
-  /**
-   * Chain together the current decoder with another acceptance function, but
-   * also pass along the original input.
-   *
-   * This is like `.then()`, but instead of this function receiving just
-   * the decoded result ``T``, it also receives the original input.
-   *
-   * This is an advanced, low-level, decoder. Don't call this method directly.
-   * Use the `select()` decoder instead.
-   */
-  function peek<V>(next: AcceptanceFn<V, [unknown, T]>): Decoder<V> {
-    return define((blob, ok, err) => {
-      const result = decode(blob);
-      return result.ok ? next([blob, result.value], ok, err) : result;
-    });
-  }
-
-  return Object.freeze({
+  return brand({
     verify,
     value,
     decode,
@@ -299,6 +311,20 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
     reject,
     describe,
     then,
-    peek,
+    pipe,
   });
+}
+
+/** @internal */
+const _register: WeakSet<Decoder<unknown>> = new WeakSet();
+
+/** @internal */
+function brand<D extends Decoder<unknown>>(decoder: D): D {
+  _register.add(decoder);
+  return decoder;
+}
+
+/** @internal */
+function isDecoder(thing: unknown): thing is Decoder<unknown> {
+  return _register.has(thing as Decoder<unknown>);
 }

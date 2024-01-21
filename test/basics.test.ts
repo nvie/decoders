@@ -73,7 +73,7 @@ describe('string constants', () => {
     expect(not_okay.length).not.toBe(0);
     for (const value of not_okay) {
       expect(decoder.decode(value).ok).toBe(false);
-      expect(decoder.decode(value).error?.text).toEqual('Must be "foo"');
+      expect(decoder.decode(value).error?.text).toEqual("Must be 'foo'");
     }
   });
 });

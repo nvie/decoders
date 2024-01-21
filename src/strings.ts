@@ -1,5 +1,7 @@
 import type { Decoder } from '~/core';
 import { define } from '~/core';
+import type { SizeOptions } from '~/lib/size-options';
+import { bySizeOptions } from '~/lib/size-options';
 import { isString } from '~/lib/utils';
 
 import { instanceOf } from './misc';
@@ -60,6 +62,26 @@ export const httpsUrl: Decoder<URL> = url.refine(
   (value) => value.protocol === 'https:',
   'Must be an HTTPS URL',
 );
+
+/**
+ * Accepts and returns strings that are valid identifiers in most programming
+ * languages.
+ */
+export const identifier: Decoder<string> = regex(
+  /^[a-z_][a-z0-9_]*$/i,
+  'Must be valid identifier',
+);
+
+/**
+ * Accepts and returns [nanoid](https://zelark.github.io/nano-id-cc) string
+ * values. It assumes the default nanoid alphabet. If you're using a custom
+ * alphabet, use `regex()` instead.
+ */
+export function nanoid(options?: SizeOptions): Decoder<string> {
+  return regex(/^[a-z0-9_-]+$/i, 'Must be nano ID').reject(
+    bySizeOptions(options ?? { size: 21 }),
+  );
+}
 
 /**
  * Accepts strings that are valid

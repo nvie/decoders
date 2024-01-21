@@ -7,6 +7,8 @@ import {
   email,
   hexadecimal,
   httpsUrl,
+  identifier,
+  nanoid,
   nonEmptyString,
   numeric,
   regex,
@@ -172,12 +174,18 @@ describe('numeric', () => {
   test('fuzz', () => {
     return fc.assert(
       fc.property(fc.anything(), (input) => {
-        if (typeof input === 'string' && !isNaN(Number(input)) && /\S/.test(input)) {
+        if (
+          typeof input === 'string' &&
+          !isNaN(Number(input)) &&
+          /\S/.test(input) &&
+          input.trim() === input
+        ) {
           expect(decoder.verify(input)).toBe(Number(input));
         } else {
           expect(() => decoder.verify(input)).toThrow();
         }
       }),
+      { examples: [['0 ']] },
     );
   });
 });
@@ -236,6 +244,96 @@ describe('hexadecimal', () => {
         },
       ),
     );
+  });
+});
+
+describe('identifier', () => {
+  const decoder = identifier;
+
+  test('default accepts', () => {
+    expect(decoder.verify('x')).toEqual('x');
+    expect(decoder.verify('abc123')).toEqual('abc123');
+    expect(decoder.verify('ABC123')).toEqual('ABC123');
+    expect(decoder.verify('_123')).toEqual('_123');
+    expect(decoder.verify('a_b_C_1_2_3')).toEqual('a_b_C_1_2_3');
+  });
+
+  test('rejects', () => {
+    expect(() => decoder.verify('1x')).toThrow();
+    expect(() => decoder.verify('123xyz')).toThrow();
+    expect(() => decoder.verify('xyz$')).toThrow();
+    expect(() => decoder.verify('xyz ')).toThrow();
+    expect(() => decoder.verify(' xyz')).toThrow();
+    expect(() => decoder.verify('!@#$%^&*()=+')).toThrow();
+    expect(() => decoder.verify('🤯')).toThrow();
+    expect(() => decoder.verify(42)).toThrow();
+  });
+
+  test('fuzz', () => {
+    return fc.assert(
+      fc.property(
+        fc.anything().filter((x) => typeof x !== 'string'),
+        (input) => {
+          expect(() => decoder.verify(input)).toThrow();
+        },
+      ),
+    );
+  });
+});
+
+describe('nanoid', () => {
+  test('default accepts', () => {
+    expect(nanoid().verify('1-QskICa3CaPGcKuYYTm1')).toEqual('1-QskICa3CaPGcKuYYTm1');
+    expect(nanoid().verify('vA4mt7CUWnouU6jTGbMP_')).toEqual('vA4mt7CUWnouU6jTGbMP_');
+    expect(nanoid({}).verify('vA4mt7CUWnouU6jTGbMP_')).toEqual('vA4mt7CUWnouU6jTGbMP_');
+    expect(nanoid({ min: 7 }).verify('yH8mx-7')).toEqual('yH8mx-7');
+    expect(nanoid({ max: 7 }).verify('yH8mx-7')).toEqual('yH8mx-7');
+    expect(nanoid({ min: 7, max: 10 }).verify('yH8mx-7')).toEqual('yH8mx-7');
+    expect(nanoid({ min: 7, max: 10 }).verify('yH8mx-7890')).toEqual('yH8mx-7890');
+  });
+
+  test('rejects', () => {
+    expect(() => nanoid().verify('x'.repeat(22))).toThrow(/Too long, must be 21 chars/);
+    expect(() => nanoid().verify('x'.repeat(20))).toThrow(/Too short, must be 21 chars/);
+
+    // 21 is the default
+    expect(() => nanoid({ size: 21 }).verify('x'.repeat(22))).toThrow(
+      /Too long, must be 21 chars/,
+    );
+    expect(() => nanoid({ size: 21 }).verify('x'.repeat(20))).toThrow(
+      /Too short, must be 21 chars/,
+    );
+    expect(() => nanoid({ min: 21 }).verify('x'.repeat(20))).toThrow(
+      /Too short, must be at least 21 chars/,
+    );
+    expect(() => nanoid({ max: 21 }).verify('x'.repeat(22))).toThrow(
+      /Too long, must be at most 21 chars/,
+    );
+    expect(() => nanoid({ min: 21, max: 21 }).verify('x'.repeat(20))).toThrow(
+      /Too short, must be 21 chars/,
+    );
+    expect(() => nanoid({ min: 21, max: 21 }).verify('x'.repeat(22))).toThrow(
+      /Too long, must be 21 chars/,
+    );
+
+    // other size
+    expect(() => nanoid({ size: 7 }).verify('x'.repeat(20))).toThrow(
+      /Too long, must be 7 chars/,
+    );
+    expect(() => nanoid({ size: 7 }).verify('x'.repeat(5))).toThrow(
+      /Too short, must be 7 chars/,
+    );
+
+    // range
+    expect(() => nanoid({ min: 3, max: 10 }).verify('x')).toThrow(
+      /Too short, must be at least 3 chars/,
+    );
+    expect(() => nanoid({ min: 3, max: 10 }).verify('x'.repeat(12))).toThrow(
+      /Too long, must be at most 10 chars/,
+    );
+
+    expect(() => nanoid({ size: 5 }).verify('$'.repeat(5))).toThrow(/Must be nano ID/);
+    expect(() => nanoid().verify(42)).toThrow(/Must be string/);
   });
 });
 

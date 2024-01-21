@@ -143,7 +143,8 @@ function annotateObject(
   seen.add(obj);
 
   const fields = new Map<string, Annotation>();
-  for (const [key, value] of Object.entries(obj)) {
+  for (const key of Object.keys(obj)) {
+    const value = obj[key];
     fields.set(key, annotate(value, undefined, seen));
   }
   return makeObjectAnn(fields, text);

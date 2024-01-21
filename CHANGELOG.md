@@ -1,5 +1,44 @@
 ## [Unreleased]
 
+**New features:**
+
+- A new `.pipe()` method on `Decoder` allows you to pass the output of one decoder into
+  another:
+  ```tsx
+  string
+    .transform((s) => s.split(',')) // transform first...
+    .pipe(array(nonEmptyString)); //   ...then validate that result
+  ```
+  This was previously possible already with `.then`, but it wasn't as elegant to express.
+- The new `.pipe()` can also dynamically select another decoder, based on the input:
+  ```tsx
+  string
+    .transform((s) => s.split(',').map(Number)) // transform first...
+    .pipe((tup) =>
+      tup.length === 2
+        ? point2d
+        : tup.length === 3
+          ? point3d
+          : never('Invalid coordinate'),
+    );
+  ```
+- Decoder error messages will now quote identifiers using single quotes, which makes them
+  more human-readable in JSON responses. Compare:
+  ```
+  "Value at key \"foo\": Must be \"bar\", \"qux\""  // ❌ Previously
+  "Value at key 'foo': Must be 'bar', 'qux'"        // ✅ Now
+  ```
+- Some runtime perf optimizations
+
+**New decoders:**
+
+- `identifier` ([docs](https://decoders.cc/api.html#identifier))
+- `nanoid()` ([docs](https://decoders.cc/api.html#nanoid))
+
+**Removed decoders:**
+
+- Remove `numericBoolean` decoder, which was deprecated since 2.3.0.
+
 ## [2.3.0] - 2024-01-09
 
 **New features:**
