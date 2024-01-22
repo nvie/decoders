@@ -448,7 +448,6 @@ positiveNumber.verify(0) === 0;
 
 // 👎
 positiveNumber.verify(-42);             // throws
-positiveNumber.verify(3.14);            // throws
 positiveNumber.verify(Infinity);        // throws
 positiveNumber.verify(NaN);             // throws
 positiveNumber.verify('not a number');  // throws
