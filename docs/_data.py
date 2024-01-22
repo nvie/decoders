@@ -156,6 +156,7 @@ DECODERS = {
     'params': None,
     'return_type': 'Decoder<URL>',
     'example': """
+      ```ts
       // 👍
       httpsUrl.verify('https://nvie.com:443') === new URL('https://nvie.com/');
 
@@ -173,6 +174,7 @@ DECODERS = {
         (value) => value.protocol === 'git:',
         'Must be a git:// URL',
       );
+      ```
     """,
   },
 

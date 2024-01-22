@@ -268,6 +268,7 @@ url.verify('/search?q=foo');     // throws
 Accepts strings that are valid URLs, but only HTTPS ones. Returns the value
 as a URL instance.
 
+```ts
 // 👍
 httpsUrl.verify('https://nvie.com:443') === new URL('https://nvie.com/');
 
@@ -285,6 +286,7 @@ const gitUrl: Decoder<URL> = url.refine(
   (value) => value.protocol === 'git:',
   'Must be a git:// URL',
 );
+```
 
 ---
 
@@ -1616,5 +1618,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 61b09f8be5bf4d960fcba916cba0e8cf)-->
+<!--[[[end]]] (checksum: f1b15961ef6fc5f0c6516084dcc4561c)-->
 <!-- prettier-ignore-end -->
