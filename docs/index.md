@@ -166,8 +166,8 @@ Built-in formatters are:
   Decoding error:
   [
     {
-      name: 'Alice',
-      age: '33',
+      name: "Alice",
+      age: "33",
            ^^^^ Must be number
     },
   ]
