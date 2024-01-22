@@ -450,7 +450,6 @@ positiveNumber.verify(0) === 0;
 
 // 👎
 positiveNumber.verify(-42);             // throws
-positiveNumber.verify(3.14);            // throws
 positiveNumber.verify(Infinity);        // throws
 positiveNumber.verify(NaN);             // throws
 positiveNumber.verify('not a number');  // throws
@@ -1618,5 +1617,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 3f0b6e1da4611aeab76f59cc562c3487)-->
+<!--[[[end]]] (checksum: 33b174f35b1f1f252e52808ea7466445)-->
 <!-- prettier-ignore-end -->
