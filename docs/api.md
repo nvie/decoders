@@ -277,7 +277,7 @@ httpsUrl.verify('http://nvie.com');                        // throws, not HTTPS
 httpsUrl.verify('git+ssh://user@github.com/foo/bar.git');  // throws, not HTTPS
 ```
 
-**Tip!** If you need to limit URLs to different protocols than HTTP, you can do as the HTTPS decoder is implemented: by adding further conditions using an [`.refine()`](/Decoder.html#refine) call.
+**Tip!** If you need to limit URLs to different protocols than HTTP, you can do as the HTTPS decoder is implemented: by adding further conditions using a [`.refine()`](/Decoder.html#refine) call.
 
 ```ts
 import { url } from 'decoders';
@@ -1618,5 +1618,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: f1b15961ef6fc5f0c6516084dcc4561c)-->
+<!--[[[end]]] (checksum: 3f0b6e1da4611aeab76f59cc562c3487)-->
 <!-- prettier-ignore-end -->

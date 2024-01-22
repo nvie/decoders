@@ -165,7 +165,7 @@ DECODERS = {
       httpsUrl.verify('git+ssh://user@github.com/foo/bar.git');  // throws, not HTTPS
       ```
 
-      **Tip!** If you need to limit URLs to different protocols than HTTP, you can do as the HTTPS decoder is implemented: by adding further conditions using an `.refine()` call.
+      **Tip!** If you need to limit URLs to different protocols than HTTP, you can do as the HTTPS decoder is implemented: by adding further conditions using a `.refine()` call.
 
       ```ts
       import { url } from 'decoders';
