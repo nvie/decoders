@@ -446,6 +446,7 @@ Accepts only non-negative (zero or positive) finite numbers.
 ```ts
 // 👍
 positiveNumber.verify(123) === 123;
+positiveNumber.verify(3.14) === 3.14;
 positiveNumber.verify(0) === 0;
 
 // 👎
@@ -1617,5 +1618,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 33b174f35b1f1f252e52808ea7466445)-->
+<!--[[[end]]] (checksum: af2a7b1899a07d8902f2b1c405e6182e)-->
 <!-- prettier-ignore-end -->

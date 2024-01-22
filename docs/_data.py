@@ -297,6 +297,7 @@ DECODERS = {
     'example': """
       // 👍
       positiveNumber.verify(123) === 123;
+      positiveNumber.verify(3.14) === 3.14;
       positiveNumber.verify(0) === 0;
 
       // 👎
