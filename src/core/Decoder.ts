@@ -1,5 +1,5 @@
 import type { Annotation } from './annotate';
-import { annotate, isAnnotation } from './annotate';
+import { annotate, isAnnotation, makeOpaqueAnn } from './annotate';
 import type { Formatter } from './format';
 import { formatInline } from './format';
 import type { Result } from './Result';
@@ -30,7 +30,11 @@ export type Next<O, I = unknown> =
       err: (msg: string | Annotation) => DecodeResult<O>,
     ) => DecodeResult<O> | Decoder<O>);
 
+export const kMask = Symbol();
+
 export interface Decoder<T> {
+  [kMask]?: string;
+
   /**
    * Verifies untrusted input. Either returns a value, or throws a decoding
    * error.
@@ -157,7 +161,7 @@ function format(err: Annotation, formatter: Formatter): Error {
  * helper functions. Please note that `ok()` and `err()` don't perform side
  * effects! You'll need to _return_ those values.
  */
-export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
+export function define<T>(fn: AcceptanceFn<T>, options?: { mask?: string }): Decoder<T> {
   /**
    * Verifies the untrusted/unknown input and either accepts or rejects it.
    *
@@ -303,6 +307,8 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
   }
 
   return brand({
+    [kMask]: options?.mask,
+
     verify,
     value,
     decode,
@@ -313,6 +319,22 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
     then,
     pipe,
   });
+}
+
+export function masked<T>(decoder: Decoder<T>, mask: string = '<masked>'): Decoder<T> {
+  return define(
+    (blob: unknown) => {
+      const result = decoder.decode(blob);
+      if (!result.ok) {
+        // XXX What if the error isn't at the top level here? If the error is
+        // nested deeply, we'll have to display something too!
+        return makeErr(makeOpaqueAnn(mask, result.error.text));
+      } else {
+        return result;
+      }
+    },
+    { mask },
+  );
 }
 
 /** @internal */

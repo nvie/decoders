@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import type { Annotation, Decoder, DecodeResult, DecoderType } from '~/core';
-import { annotateObject, define, merge, updateText } from '~/core';
+import { annotateObject, define, kMask, makeOpaqueAnn, merge, updateText } from '~/core';
 import { difference } from '~/lib/set-methods';
 import { quote } from '~/lib/text';
 import { isPojo } from '~/lib/utils';
@@ -118,7 +118,16 @@ export function object<Ds extends Record<string, Decoder<unknown>>>(
     // object.  Lastly, any fields that are missing should be annotated on
     // the outer object itself.
     if (errors || missingKeys.size > 0) {
-      let objAnn = annotateObject(plainObj);
+      let objAnn = annotateObject(
+        Object.fromEntries(
+          Object.entries(plainObj).map(([k, v]) => {
+            const decoder = decoders[k];
+            const mask = decoder?.[kMask];
+            // XXX This is just a proof of concept, not a sustainable implementation
+            return mask !== undefined ? [k, makeOpaqueAnn(mask)] : [k, v];
+          }),
+        ),
+      );
 
       if (errors) {
         objAnn = merge(objAnn, errors);
