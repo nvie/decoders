@@ -7,6 +7,18 @@ import { object } from '~/objects';
 
 import { INPUTS } from './_fixtures';
 
+// XXX Also test with other containers, not just object()
+// - exact()
+// - inexact()
+// - either()
+// - array()
+// - record
+// - mapping
+// - setFromArray()
+
+// XXX For inexact(), is there a way to specify that all extra fields should
+// match a specific decoder? And if so, could we mask() that one?
+
 describe("scalar values that are masked won't echo back their inputs when invalid", () => {
   describe('with default mask', () => {
     const decoder = masked(string);
