@@ -4,7 +4,7 @@ import type { Annotation, ObjectAnnotation } from '~/core/annotate';
 import {
   annotate,
   makeArrayAnn,
-  makeCircularRefAnn,
+  makeOpaqueAnn,
   makeObjectAnn as makeObjectAnnOriginal,
   makeScalarAnn,
   merge as mergeOriginal,
@@ -153,7 +153,7 @@ describe('annotating circular objects', () => {
 
     const expected = makeArrayAnn([
       makeScalarAnn('foo'),
-      makeArrayAnn([makeScalarAnn(42), makeCircularRefAnn()]),
+      makeArrayAnn([makeScalarAnn(42), makeOpaqueAnn('<circular ref>')]),
     ]);
 
     expect(annotate(circularArray)).toEqual(expected);
@@ -174,9 +174,9 @@ describe('annotating circular objects', () => {
       foo: makeScalarAnn(42),
       bar: makeObjectAnn({
         qux: makeScalarAnn('hello'),
-        self: makeCircularRefAnn(),
+        self: makeOpaqueAnn('<circular ref>'),
       }),
-      self: makeCircularRefAnn(),
+      self: makeOpaqueAnn('<circular ref>'),
     });
 
     expect(annotate(circularObject)).toEqual(expected);
