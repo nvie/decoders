@@ -1,7 +1,12 @@
 import { INDENT, indent, isMultiline, quote } from '~/lib/text';
 import { isDate } from '~/lib/utils';
 
-import type { Annotation, ArrayAnnotation, ObjectAnnotation } from './annotate';
+import type {
+  Annotation,
+  ArrayAnnotation,
+  ObjectAnnotation,
+  OpaqueAnnotation,
+} from './annotate';
 
 export type Formatter = (err: Annotation) => string | Error;
 
@@ -138,19 +143,17 @@ export function serializeAnnotation(
   prefix: string = '',
 ): [string, string | undefined] {
   // The serialized data (the input object echoed back)
-  let serialized;
+  let serialized: string;
+
   if (ann.type === 'array') {
     serialized = serializeArray(ann, prefix);
   } else if (ann.type === 'object') {
     serialized = serializeObject(ann, prefix);
-  } else if (ann.type === 'function') {
-    serialized = '<function>';
-  } else if (ann.type === 'circular-ref') {
-    serialized = '<circular ref>';
-  } else if (ann.type === 'unknown') {
-    serialized = '???';
-  } else {
+  } else if (ann.type === 'scalar') {
     serialized = serializeValue(ann.value);
+  } else {
+    ((_: OpaqueAnnotation) => {})(ann); // Serves as an exhaustiveness check
+    serialized = ann.value;
   }
 
   const text = ann.text;
