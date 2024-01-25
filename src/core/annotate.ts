@@ -20,19 +20,9 @@ export interface ScalarAnnotation {
   readonly text?: string;
 }
 
-export interface FunctionAnnotation {
-  readonly type: 'function';
-  readonly text?: string;
-}
-
-export interface CircularRefAnnotation {
-  readonly type: 'circular-ref';
-  readonly text?: string;
-}
-
-export interface UnknownAnnotation {
-  readonly type: 'unknown';
-  readonly value: unknown;
+export interface OpaqueAnnotation {
+  readonly type: 'opaque';
+  readonly value: string; // e.g. '???' | '<function>' | '<circular ref>'
   readonly text?: string;
 }
 
@@ -40,9 +30,7 @@ export type Annotation =
   | ObjectAnnotation
   | ArrayAnnotation
   | ScalarAnnotation
-  | FunctionAnnotation
-  | CircularRefAnnotation
-  | UnknownAnnotation;
+  | OpaqueAnnotation;
 
 /** @internal */
 function brand<A extends Annotation>(ann: A): A {
@@ -67,23 +55,13 @@ export function makeArrayAnn(
 }
 
 /** @internal */
-export function makeFunctionAnn(text?: string): FunctionAnnotation {
-  return brand({ type: 'function', text });
-}
-
-/** @internal */
-export function makeUnknownAnn(value: unknown, text?: string): UnknownAnnotation {
-  return brand({ type: 'unknown', value, text });
+export function makeOpaqueAnn(value: string, text?: string): OpaqueAnnotation {
+  return brand({ type: 'opaque', value, text });
 }
 
 /** @internal */
 export function makeScalarAnn(value: unknown, text?: string): ScalarAnnotation {
   return brand({ type: 'scalar', value, text });
-}
-
-/** @internal */
-export function makeCircularRefAnn(text?: string): CircularRefAnnotation {
-  return brand({ type: 'circular-ref', text });
 }
 
 /**
@@ -122,7 +100,7 @@ function annotateArray(
   arr: readonly unknown[],
   text: string | undefined,
   seen: RefSet,
-): ArrayAnnotation | CircularRefAnnotation {
+): ArrayAnnotation | OpaqueAnnotation {
   seen.add(arr);
 
   // Cannot use .map() here because it won't work correctly if `arr` is
@@ -171,7 +149,7 @@ function annotate(value: unknown, text: string | undefined, seen: RefSet): Annot
   if (Array.isArray(value)) {
     // "Circular references" can only exist in objects or arrays
     if (seen.has(value)) {
-      return makeCircularRefAnn(text);
+      return makeOpaqueAnn('<circular ref>', text);
     } else {
       return annotateArray(value, text, seen);
     }
@@ -180,17 +158,17 @@ function annotate(value: unknown, text: string | undefined, seen: RefSet): Annot
   if (isPojo(value)) {
     // "Circular references" can only exist in objects or arrays
     if (seen.has(value)) {
-      return makeCircularRefAnn(text);
+      return makeOpaqueAnn('<circular ref>', text);
     } else {
       return annotateObject(value, text, seen);
     }
   }
 
   if (typeof value === 'function') {
-    return makeFunctionAnn(text);
+    return makeOpaqueAnn('<function>', text);
   }
 
-  return makeUnknownAnn(value, text);
+  return makeOpaqueAnn('???', text);
 }
 
 function public_annotate(value: unknown, text?: string): Annotation {
