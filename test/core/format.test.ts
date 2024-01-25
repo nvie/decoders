@@ -35,10 +35,10 @@ describe('formatInline', () => {
     checkInline(
       ['foo', 123],
       `
-              [
-                "foo",
-                123,
-              ]`,
+      [
+        "foo",
+        123,
+      ]`,
     );
   });
 
@@ -51,65 +51,65 @@ describe('formatInline', () => {
     checkInline(
       annotate(123, 'a number'),
       `
-              123
-              ^^^ a number
-            `,
+        123
+        ^^^ a number
+      `,
     );
     checkInline(
       annotate(true, 'not false'),
       `
-              true
-              ^^^^ not false
-            `,
+        true
+        ^^^^ not false
+      `,
     );
     checkInline(
       annotate('foo', 'This is a foo'),
       `
-              "foo"
-              ^^^^^ This is a foo
-            `,
+        "foo"
+        ^^^^^ This is a foo
+      `,
     );
     checkInline(
       annotate(new Date(Date.UTC(2017, 11, 25)), 'Merry X-mas!'),
       `
-              new Date('2017-12-25T00:00:00.000Z')
-              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Merry X-mas!
-            `,
+        new Date('2017-12-25T00:00:00.000Z')
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Merry X-mas!
+      `,
     );
     checkInline(
       annotate(new Date('not a date'), 'Nope'),
       `
-              (Invalid Date)
-              ^^^^^^^^^^^^^^ Nope
-            `,
+        (Invalid Date)
+        ^^^^^^^^^^^^^^ Nope
+      `,
     );
     checkInline(
       annotate(new DefinitelyNotADate(), 'Nope'),
       `
-              (unserializable)
-              ^^^^^^^^^^^^^^^^ Nope
-            `,
+        (unserializable)
+        ^^^^^^^^^^^^^^^^ Nope
+      `,
     );
     checkInline(
       annotate([], 'must not be empty'),
       `
-              []
-              ^^ must not be empty
-            `,
+        []
+        ^^ must not be empty
+      `,
     );
     checkInline(
       annotate({}, 'must not be empty'),
       `
-              {}
-              ^^ must not be empty
-            `,
+        {}
+        ^^ must not be empty
+      `,
     );
     checkInline(
       annotate(() => {}, 'xxx'),
       `
-              <function>
-              ^^^^^^^^^^ xxx
-            `,
+        <function>
+        ^^^^^^^^^^ xxx
+      `,
     );
   });
 
