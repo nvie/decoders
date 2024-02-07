@@ -174,18 +174,13 @@ describe('numeric', () => {
   test('fuzz', () => {
     return fc.assert(
       fc.property(fc.anything(), (input) => {
-        if (
-          typeof input === 'string' &&
-          !isNaN(Number(input)) &&
-          /\S/.test(input) &&
-          input.trim() === input
-        ) {
+        if (typeof input === 'string' && /^[0-9]$/.test(input)) {
           expect(decoder.verify(input)).toBe(Number(input));
         } else {
           expect(() => decoder.verify(input)).toThrow();
         }
       }),
-      { examples: [['0 ']] },
+      { examples: [['0 '], ['.0'], ['0.'], ['-0'], ['+0']] },
     );
   });
 });
