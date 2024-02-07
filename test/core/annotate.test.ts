@@ -4,8 +4,8 @@ import type { Annotation, ObjectAnnotation } from '~/core/annotate';
 import {
   annotate,
   makeArrayAnn,
-  makeOpaqueAnn,
   makeObjectAnn as makeObjectAnnOriginal,
+  makeOpaqueAnn,
   makeScalarAnn,
   merge as mergeOriginal,
 } from '~/core/annotate';
