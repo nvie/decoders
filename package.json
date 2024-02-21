@@ -68,7 +68,7 @@
     "@vitest/coverage-istanbul": "^1.2.2",
     "eslint": "^8.56.0",
     "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "eslint-plugin-simple-import-sort": "^12.0.0",
     "fast-check": "^3.15.1",
     "itertools": "^2.2.3",
     "prettier": "^3.2.5",
