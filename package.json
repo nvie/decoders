@@ -64,7 +64,7 @@
     "@arethetypeswrong/cli": "^0.13.6",
     "@release-it/keep-a-changelog": "^5.0.0",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
-    "@typescript-eslint/parser": "^6.21.0",
+    "@typescript-eslint/parser": "^7.5.0",
     "@vitest/coverage-istanbul": "^1.2.2",
     "eslint": "^8.56.0",
     "eslint-plugin-import": "^2.29.1",
