@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Upgrade all dependencies
+
 ## [2.4.0] - 2024-01-21
 
 **New features:**
