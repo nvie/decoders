@@ -147,10 +147,12 @@ export function enum_<TEnum extends Record<string, string | number>>(
  * error messages and is more performant at runtime because it doesn't have to
  * try all decoders one by one.
  */
-export function taggedUnion<
-  O extends Record<string, Decoder<unknown>>,
-  T = DecoderType<O[keyof O]>,
->(field: string, mapping: O): Decoder<T> {
+export function taggedUnion<O extends Record<string, Decoder<unknown>>>(
+  field: string,
+  mapping: O,
+): Decoder<DecoderType<O[keyof O]>> {
+  type T = DecoderType<O[keyof O]>;
+
   const scout = object({
     [field]: prep(String, oneOf(Object.keys(mapping))),
   }).transform((o) => o[field]);
