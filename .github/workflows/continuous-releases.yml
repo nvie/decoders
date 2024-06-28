@@ -27,4 +27,4 @@ jobs:
         run: npm build
 
       - name: Publish to pkg.pr.new
-        run: npx pkg-pr-new publish
+        run: npx pkg-pr-new publish --compact
