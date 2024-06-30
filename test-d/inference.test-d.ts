@@ -531,6 +531,29 @@ expectType<Shape>(test(taggedUnion('_type', { rect, circle })));
 
 expectType<Shape>(test(select(unknown, (_) => (Math.random() < 0.5 ? rect : circle))));
 
+{
+  function takesShape(_d: Decoder<Shape>) {}
+
+  // Works
+  takesShape(
+    taggedUnion('_type', {
+      rect,
+      circle,
+    }),
+  );
+
+  // Should fail
+  expectError(
+    takesShape(
+      taggedUnion('_type', {
+        new: object({ _type: constant('new') }),
+        rect,
+        circle,
+      }),
+    ),
+  );
+}
+
 interface Rect1 {
   _type: 0;
   x: number;

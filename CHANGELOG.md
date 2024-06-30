@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- Fix a regression in `taggedUnion` (thanks for reporting, @programever)
 - Upgrade all dependencies
 
 ## [2.4.0] - 2024-01-21
