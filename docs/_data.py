@@ -939,7 +939,7 @@ DECODERS = {
     'params': [('decoder', 'Decoder<T>')],
     'return_type': 'Decoder<Set<T>>',
     'example': """
-      const decoder = set(string);
+      const decoder = setFromArray(string);
 
       // 👍
       decoder.verify(['abc', 'pqr'])  // new Set(['abc', 'pqr'])

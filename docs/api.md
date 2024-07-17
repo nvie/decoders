@@ -1181,7 +1181,7 @@ Similar to [`array()`](/api.html#array), but returns the result as an [ES6
 Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set).
 
 ```ts
-const decoder = set(string);
+const decoder = setFromArray(string);
 
 // 👍
 decoder.verify(['abc', 'pqr'])  // new Set(['abc', 'pqr'])
@@ -1618,5 +1618,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 4416418b71ace6cf7fb2331ace2dae00)-->
+<!--[[[end]]] (checksum: b2930e07c0699a79871559f3853b8d7d)-->
 <!-- prettier-ignore-end -->
