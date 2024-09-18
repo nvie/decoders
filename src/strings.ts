@@ -37,6 +37,26 @@ export function regex(regex: RegExp, msg: string): Decoder<string> {
 }
 
 /**
+ * Accepts and returns strings that start with the given prefix.
+ */
+export function startsWith<P extends string>(prefix: P): Decoder<`${P}${string}`> {
+  return string.refine(
+    (s): s is `${P}${string}` => s.startsWith(prefix),
+    `Must start with '${prefix}'`,
+  );
+}
+
+/**
+ * Accepts and returns strings that end with the given suffix.
+ */
+export function endsWith<S extends string>(suffix: S): Decoder<`${string}${S}`> {
+  return string.refine(
+    (s): s is `${string}${S}` => s.endsWith(suffix),
+    `Must end with '${suffix}'`,
+  );
+}
+
+/**
  * Accepts and returns strings that are syntactically valid email addresses.
  * (This will not mean that the email address actually exist.)
  */

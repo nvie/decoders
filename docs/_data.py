@@ -65,6 +65,46 @@ DECODERS = {
     """,
   },
 
+  'startsWith': {
+    'section': 'Strings',
+    'params': [
+      ('prefix', 'P'),
+    ],
+    'return_type': 'Decoder<\\`${P}${string}\\`>',
+    'example': """
+      const decoder = startsWith('abc');
+
+      // 👍
+      decoder.verify('abc') === 'abc';
+      decoder.verify('abcdefg') === 'abcdefg';
+
+      // 👎
+      decoder.verify(42);     // throws
+      decoder.verify('ab');   // throws
+      decoder.verify('ABC');  // throws
+    """,
+  },
+
+  'endsWith': {
+    'section': 'Strings',
+    'params': [
+      ('suffix', 'S'),
+    ],
+    'return_type': 'Decoder<\\`${string}${S}\\`>',
+    'example': """
+      const decoder = endsWith('bar');
+
+      // 👍
+      decoder.verify('bar') === 'bar';
+      decoder.verify('foobar') === 'foobar';
+
+      // 👎
+      decoder.verify(42);      // throws
+      decoder.verify('Bar');   // throws
+      decoder.verify('bark');  // throws
+    """,
+  },
+
   'decimal': {
     'section': 'Strings',
     'return_type': 'Decoder<string>',

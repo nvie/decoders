@@ -5,6 +5,7 @@ import { describe, expect, test } from 'vitest';
 import {
   decimal,
   email,
+  endsWith,
   hexadecimal,
   httpsUrl,
   identifier,
@@ -12,6 +13,7 @@ import {
   nonEmptyString,
   numeric,
   regex,
+  startsWith,
   string,
   url,
   uuid,
@@ -55,6 +57,43 @@ describe('regex', () => {
     expect(() => decoder.verify(42)).toThrow('Must be string'); // All regexes must be strings
     expect(() => decoder.verify('11-22-33')).toThrow('Must be YYYY-MM-DD');
     expect(() => decoder.verify('invalid')).toThrow('Must be YYYY-MM-DD');
+  });
+});
+
+describe('startsWith', () => {
+  const decoder = startsWith('foo');
+
+  test('valid', () => {
+    expect(decoder.verify('foo')).toBe('foo');
+    expect(decoder.verify('fooooooo')).toBe('fooooooo');
+    expect(decoder.verify('foo bar')).toBe('foo bar');
+  });
+
+  test('invalid', () => {
+    expect(() => decoder.verify(42)).toThrow('Must be string');
+    expect(() => decoder.verify('1234')).toThrow("Must start with 'foo'");
+    expect(() => decoder.verify('ofoo')).toThrow("Must start with 'foo'");
+    expect(() => decoder.verify('FoO')).toThrow("Must start with 'foo'");
+    expect(() => decoder.verify('fo')).toThrow("Must start with 'foo'");
+  });
+});
+
+describe('endsWith', () => {
+  const decoder = endsWith('bar');
+
+  test('valid', () => {
+    expect(decoder.verify('bar')).toBe('bar');
+    expect(decoder.verify('obar')).toBe('obar');
+    expect(decoder.verify('bababar')).toBe('bababar');
+    expect(decoder.verify('foo bar')).toBe('foo bar');
+  });
+
+  test('invalid', () => {
+    expect(() => decoder.verify(42)).toThrow('Must be string');
+    expect(() => decoder.verify('1234')).toThrow("Must end with 'bar'");
+    expect(() => decoder.verify('baro')).toThrow("Must end with 'bar'");
+    expect(() => decoder.verify('arb')).toThrow("Must end with 'bar'");
+    expect(() => decoder.verify('BaR')).toThrow("Must end with 'bar'");
   });
 });
 

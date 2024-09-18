@@ -28,7 +28,7 @@ All "batteries included" decoders available in the standard library.
 for section, names in DECODERS_BY_SECTION.items():
   cog.outl(f'- [**{section}**](#{slugify(section)}): {", ".join(ref(name) for name in names)}')
 ]]]-->
-- [**Strings**](#strings): [`string`](/api.html#string), [`nonEmptyString`](/api.html#nonEmptyString), [`regex()`](/api.html#regex), [`decimal`](/api.html#decimal), [`hexadecimal`](/api.html#hexadecimal), [`numeric`](/api.html#numeric), [`email`](/api.html#email), [`url`](/api.html#url), [`httpsUrl`](/api.html#httpsUrl), [`identifier`](/api.html#identifier), [`nanoid`](/api.html#nanoid), [`uuid`](/api.html#uuid), [`uuidv1`](/api.html#uuidv1), [`uuidv4`](/api.html#uuidv4)
+- [**Strings**](#strings): [`string`](/api.html#string), [`nonEmptyString`](/api.html#nonEmptyString), [`regex()`](/api.html#regex), [`startsWith()`](/api.html#startsWith), [`endsWith()`](/api.html#endsWith), [`decimal`](/api.html#decimal), [`hexadecimal`](/api.html#hexadecimal), [`numeric`](/api.html#numeric), [`email`](/api.html#email), [`url`](/api.html#url), [`httpsUrl`](/api.html#httpsUrl), [`identifier`](/api.html#identifier), [`nanoid`](/api.html#nanoid), [`uuid`](/api.html#uuid), [`uuidv1`](/api.html#uuidv1), [`uuidv4`](/api.html#uuidv4)
 - [**Numbers**](#numbers): [`number`](/api.html#number), [`integer`](/api.html#integer), [`positiveNumber`](/api.html#positiveNumber), [`positiveInteger`](/api.html#positiveInteger), [`anyNumber`](/api.html#anyNumber), [`bigint`](/api.html#bigint)
 - [**Booleans**](#booleans): [`boolean`](/api.html#boolean), [`truthy`](/api.html#truthy)
 - [**Dates**](#dates): [`date`](/api.html#date), [`iso8601`](/api.html#iso8601), [`datelike`](/api.html#datelike)
@@ -40,7 +40,7 @@ for section, names in DECODERS_BY_SECTION.items():
 - [**JSON values**](#json-values): [`json`](/api.html#json), [`jsonObject`](/api.html#jsonObject), [`jsonArray`](/api.html#jsonArray)
 - [**Unions**](#unions): [`either()`](/api.html#either), [`oneOf()`](/api.html#oneOf), [`enum_()`](/api.html#enum_), [`taggedUnion()`](/api.html#taggedUnion), [`select()`](/api.html#select)
 - [**Utilities**](#utilities): [`define()`](/api.html#define), [`prep()`](/api.html#prep), [`never`](/api.html#never), [`instanceOf()`](/api.html#instanceOf), [`lazy()`](/api.html#lazy), [`fail`](/api.html#fail)
-<!--[[[end]]] (checksum: 37f9fc6b535cb97e7f8973f2baa5cf2c) -->
+<!--[[[end]]] (checksum: 4cdd36f025b72df9bd2faf855ae4bebd) -->
 
 <!--[[[cog
 for section, names in DECODERS_BY_SECTION.items():
@@ -88,6 +88,8 @@ for section, names in DECODERS_BY_SECTION.items():
 - [`string`](/api.html#string)
 - [`nonEmptyString`](/api.html#nonEmptyString)
 - [`regex()`](/api.html#regex)
+- [`startsWith()`](/api.html#startsWith)
+- [`endsWith()`](/api.html#endsWith)
 - [`decimal`](/api.html#decimal)
 - [`hexadecimal`](/api.html#hexadecimal)
 - [`numeric`](/api.html#numeric)
@@ -159,7 +161,47 @@ decoder.verify('foo');  // throws
 
 ---
 
-<a href="#decimal">#</a> **decimal**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L114-L118 'Source')
+<a href="#startsWith">#</a> **startsWith**(prefix: <i style="color: #267f99">P</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;\`${P}${string}\`&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L39-L47 'Source')
+{: #startsWith .signature}
+
+Accepts and returns strings that start with the given prefix.
+
+```ts
+const decoder = startsWith('abc');
+
+// 👍
+decoder.verify('abc') === 'abc';
+decoder.verify('abcdefg') === 'abcdefg';
+
+// 👎
+decoder.verify(42);     // throws
+decoder.verify('ab');   // throws
+decoder.verify('ABC');  // throws
+```
+
+---
+
+<a href="#endsWith">#</a> **endsWith**(suffix: <i style="color: #267f99">S</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;\`${string}${S}\`&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L49-L57 'Source')
+{: #endsWith .signature}
+
+Accepts and returns strings that end with the given suffix.
+
+```ts
+const decoder = endsWith('bar');
+
+// 👍
+decoder.verify('bar') === 'bar';
+decoder.verify('foobar') === 'foobar';
+
+// 👎
+decoder.verify(42);      // throws
+decoder.verify('Bar');   // throws
+decoder.verify('bark');  // throws
+```
+
+---
+
+<a href="#decimal">#</a> **decimal**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L134-L138 'Source')
 {: #decimal .signature}
 
 Accepts and returns strings with decimal digits only (base-10).
@@ -181,7 +223,7 @@ decoder.verify(123);       // throws (not a string)
 
 ---
 
-<a href="#hexadecimal">#</a> **hexadecimal**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L120-L126 'Source')
+<a href="#hexadecimal">#</a> **hexadecimal**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L140-L146 'Source')
 {: #hexadecimal .signature}
 
 Accepts and returns strings with hexadecimal digits only (base-16).
@@ -201,7 +243,7 @@ decoder.verify('1');    // throws
 
 ---
 
-<a href="#numeric">#</a> **numeric**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L128-L133 'Source')
+<a href="#numeric">#</a> **numeric**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;number&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L148-L153 'Source')
 {: #numeric .signature}
 
 Accepts valid numerical strings (in base-10) and returns them as a number.
@@ -224,7 +266,7 @@ decoder.verify(123);       // throws (not a string)
 
 ---
 
-<a href="#email">#</a> **email**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L39-L47 'Source')
+<a href="#email">#</a> **email**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L59-L67 'Source')
 {: #email .signature}
 
 Accepts and returns strings that are syntactically valid email addresses.
@@ -242,7 +284,7 @@ email.verify('alice @ acme.org');  // throws
 
 ---
 
-<a href="#url">#</a> **url**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L49-L55 'Source')
+<a href="#url">#</a> **url**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L69-L75 'Source')
 {: #url .signature}
 
 Accepts strings that are valid URLs, returns the value as a URL instance.
@@ -262,7 +304,7 @@ url.verify('/search?q=foo');     // throws
 
 ---
 
-<a href="#httpsUrl">#</a> **httpsUrl**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L57-L64 'Source')
+<a href="#httpsUrl">#</a> **httpsUrl**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L77-L84 'Source')
 {: #httpsUrl .signature}
 
 Accepts strings that are valid URLs, but only HTTPS ones. Returns the value
@@ -290,7 +332,7 @@ const gitUrl: Decoder<URL> = url.refine(
 
 ---
 
-<a href="#identifier">#</a> **identifier**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L66-L73 'Source')
+<a href="#identifier">#</a> **identifier**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L86-L93 'Source')
 {: #identifier .signature}
 
 Accepts and returns strings that are valid identifiers in most programming
@@ -313,7 +355,7 @@ identifier.verify(42);         // not a string
 
 ---
 
-<a href="#nanoid">#</a> **nanoid**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L75-L84 'Source')
+<a href="#nanoid">#</a> **nanoid**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L95-L104 'Source')
 {: #nanoid .signature}
 
 Accepts and returns [nanoid](https://zelark.github.io/nano-id-cc) string
@@ -336,7 +378,7 @@ nanoid().verify('$*&(#%*&(');                        // invalid chars
 
 ---
 
-<a href="#uuid">#</a> **uuid**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L86-L94 'Source')
+<a href="#uuid">#</a> **uuid**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L106-L114 'Source')
 {: #uuid .signature}
 
 Accepts strings that are valid
@@ -355,7 +397,7 @@ uuid.verify('abcdefgh-ijkl-mnop-qrst-uvwxyz012345');  // throws
 
 ---
 
-<a href="#uuidv1">#</a> **uuidv1**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L96-L103 'Source')
+<a href="#uuidv1">#</a> **uuidv1**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L116-L123 'Source')
 {: #uuidv1 .signature}
 
 Like [`uuid`](/api.html#uuid), but only accepts
@@ -372,7 +414,7 @@ uuidv1.verify('123e4567-e89b-42d3-a456-426614174000')  // throws
 
 ---
 
-<a href="#uuidv4">#</a> **uuidv4**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L105-L112 'Source')
+<a href="#uuidv4">#</a> **uuidv4**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;URL&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/strings.ts#L125-L132 'Source')
 {: #uuidv4 .signature}
 
 Like [`uuid`](/api.html#uuid), but only accepts
@@ -1618,5 +1660,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: b2930e07c0699a79871559f3853b8d7d)-->
+<!--[[[end]]] (checksum: e875efd895ee6c480c011b9e3113ed5e)-->
 <!-- prettier-ignore-end -->

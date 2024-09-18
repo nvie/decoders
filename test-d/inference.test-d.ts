@@ -14,6 +14,7 @@ import {
   dict,
   either,
   email,
+  endsWith,
   enum_,
   exact,
   fail,
@@ -54,6 +55,7 @@ import {
   select,
   set,
   setFromArray,
+  startsWith,
   string,
   taggedUnion,
   truthy,
@@ -122,6 +124,8 @@ expectType<string>(test(decimal));
 expectType<string>(test(hexadecimal));
 expectType<string>(test(email));
 expectType<string>(test(regex(/foo/, 'Must be foo')));
+expectType<`foo-${string}`>(test(startsWith('foo-')));
+expectType<`${string}-bar`>(test(endsWith('-bar')));
 expectType<URL>(test(url));
 expectType<URL>(test(httpsUrl));
 expectType<string>(test(identifier));
