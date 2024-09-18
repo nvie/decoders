@@ -2,8 +2,8 @@
 
 **New decoders:**
 
-- `startsWith(prefix)`
-- `endsWith(suffix)`
+- `startsWith()` ([docs](https://decoders.cc/api.html#startsWith))
+- `endsWith()` ([docs](https://decoders.cc/api.html#endsWith))
 
 ## [2.4.2] - 2024-06-30
 
