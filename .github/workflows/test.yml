@@ -13,7 +13,6 @@ jobs:
       matrix:
         node-version: [
             # From https://github.com/nodejs/Release
-            '16.x', # EoL 2023-09-11
             '18.x', # EoL 2025-04-30
             '20.x', # EoL by 2026-04-30
             'latest',

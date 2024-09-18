@@ -5,6 +5,8 @@
 - `startsWith()` ([docs](https://decoders.cc/api.html#startsWith))
 - `endsWith()` ([docs](https://decoders.cc/api.html#endsWith))
 
+- Officially drop Node 16 support (it may still work)
+
 ## [2.4.2] - 2024-06-30
 
 - Fix a regression in `taggedUnion` (thanks for reporting, @programever)
