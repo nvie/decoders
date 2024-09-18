@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [2.5.0] - 2024-09-18
+
 **New decoders:**
 
 - `startsWith()` ([docs](https://decoders.cc/api.html#startsWith))
