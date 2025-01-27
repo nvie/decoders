@@ -321,24 +321,18 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
     '~standard': {
       version: 1,
       vendor: 'decoders',
-      validate: (data) => {
-        try {
-          const value = verify(data);
-          const result = makeOk(value);
+      validate: (blob) => {
+        const result = decode(blob);
 
+        if (result.ok) {
           return {
             value: result.value,
           };
-        } catch (e) {
-          const message = e instanceof Error ? e.message : String(e);
-          const result = makeErr(annotate(data, message));
+        } else {
+          const error = format(result.error, formatInline);
 
           return {
-            issues: [
-              {
-                message: result.error.text ?? message,
-              },
-            ],
+            issues: [{ message: error.message }],
           };
         }
       },
