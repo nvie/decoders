@@ -63,6 +63,7 @@
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.17.3",
     "@release-it/keep-a-changelog": "^6.0.0",
+    "@standard-schema/spec": "^1.0.0",
     "@types/eslint": "^8.56.10",
     "@typescript-eslint/eslint-plugin": "^7.14.1",
     "@typescript-eslint/parser": "^7.14.1",
