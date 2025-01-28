@@ -104,7 +104,7 @@ export interface Decoder<T> {
   /**
    * The Standard Schema interface for this decoder.
    */
-  '~standard': StandardSchemaV1.Props<T>;
+  '~standard': StandardSchemaV1.Props<unknown, T>;
 }
 
 /**
