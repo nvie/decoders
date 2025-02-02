@@ -5,7 +5,7 @@ import { string } from '~/strings';
 describe('standard-schema', () => {
   test('valid', () => {
     const schema = string;
-    const result = schema['~standard']['validate']("I'm a string");
+    const result = schema['~standard'].validate("I'm a string");
 
     if (result instanceof Promise) {
       throw new Error('Expected synchronous result');
@@ -20,7 +20,7 @@ describe('standard-schema', () => {
 
   test('invalid', () => {
     const schema = string;
-    const result = schema['~standard']['validate'](42);
+    const result = schema['~standard'].validate(42);
 
     if (result instanceof Promise) {
       throw new Error('Expected synchronous result');

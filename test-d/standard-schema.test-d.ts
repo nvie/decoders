@@ -21,6 +21,6 @@ declare function standardValidate<T extends StandardSchemaV1>(
 ): StandardSchemaV1.InferOutput<T>;
 
 // `string` and `stringToNumber` are accepted by `standardValidate`
-expectError(standardValidate(() => "I'm a string", 42));
+expectError(standardValidate(() => "I'm not a standard validator", 42));
 expectType<string>(standardValidate(string, "I'm a string"));
 expectType<number>(standardValidate(stringToNumber, "I'm a string"));
