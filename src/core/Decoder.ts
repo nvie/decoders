@@ -1,7 +1,7 @@
 import type { Annotation } from './annotate';
 import { annotate, isAnnotation } from './annotate';
 import type { Formatter } from './format';
-import { formatInline } from './format';
+import { formatAsIssues, formatInline } from './format';
 import type { Result } from './Result';
 import { err as makeErr, ok as makeOk } from './Result';
 import type { StandardSchemaV1 } from './standard-schema';
@@ -323,17 +323,11 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
       vendor: 'decoders',
       validate: (blob) => {
         const result = decode(blob);
-
         if (result.ok) {
-          return {
-            value: result.value,
-          };
+          return { value: result.value };
         } else {
-          const error = format(result.error, formatInline);
-
-          return {
-            issues: [{ message: error.message }],
-          };
+          const issues = formatAsIssues(result.error);
+          return { issues };
         }
       },
     },

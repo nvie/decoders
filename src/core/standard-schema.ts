@@ -33,7 +33,6 @@ export declare namespace StandardSchemaV1 {
     /** The issues of failed validation. */
     readonly issues: ReadonlyArray<Issue>;
   }
-
   /** The issue interface of the failure output. */
   export interface Issue {
     /** The error message of the issue. */

@@ -7,6 +7,7 @@ import type {
   ObjectAnnotation,
   OpaqueAnnotation,
 } from './annotate';
+import type { StandardSchemaV1 as Std } from './standard-schema';
 
 export type Formatter = (err: Annotation) => string | Error;
 
@@ -176,4 +177,46 @@ export function formatInline(ann: Annotation): string {
 
 export function formatShort(ann: Annotation): string {
   return summarize(ann, []).join('\n');
+}
+
+function* iterAnnotation(ann: Annotation, stack: PropertyKey[]): Generator<Std.Issue> {
+  // If the current annotation has a message, yield it first
+  if (ann.text) {
+    if (stack.length > 0) {
+      yield { message: ann.text, path: [...stack] };
+    } else {
+      yield { message: ann.text };
+    }
+  }
+
+  switch (ann.type) {
+    case 'array': {
+      let index = 0;
+      for (const item of ann.items) {
+        stack.push(index++);
+        yield* iterAnnotation(item, stack);
+        stack.pop();
+      }
+      break;
+    }
+
+    case 'object': {
+      for (const [key, value] of ann.fields) {
+        stack.push(key);
+        yield* iterAnnotation(value, stack);
+        stack.pop();
+      }
+      break;
+    }
+
+    case 'scalar':
+    case 'opaque': {
+      // Nothing extra to iterate here, they are leafs
+      break;
+    }
+  }
+}
+
+export function formatAsIssues(ann: Annotation): Std.Issue[] {
+  return Array.from(iterAnnotation(ann, []));
 }
