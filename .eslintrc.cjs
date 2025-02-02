@@ -25,6 +25,10 @@ module.exports = {
   },
 
   rules: {
+    // Disable these checks
+    '@typescript-eslint/no-namespace': 'off',
+
+    // Enable these checks
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
     'import/first': 'error',
