@@ -4,6 +4,7 @@ import type { Formatter } from './format';
 import { formatInline } from './format';
 import type { Result } from './Result';
 import { err as makeErr, ok as makeOk } from './Result';
+import type { StandardSchemaV1 } from './standard-schema';
 
 export type DecodeResult<T> = Result<T, Annotation>;
 
@@ -99,6 +100,11 @@ export interface Decoder<T> {
    */
   pipe<V, D extends Decoder<V>>(next: D): Decoder<DecoderType<D>>;
   pipe<V, D extends Decoder<V>>(next: (blob: T) => D): Decoder<DecoderType<D>>;
+
+  /**
+   * The Standard Schema interface for this decoder.
+   */
+  '~standard': StandardSchemaV1.Props<unknown, T>;
 }
 
 /**
@@ -312,6 +318,25 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
     describe,
     then,
     pipe,
+    '~standard': {
+      version: 1,
+      vendor: 'decoders',
+      validate: (blob) => {
+        const result = decode(blob);
+
+        if (result.ok) {
+          return {
+            value: result.value,
+          };
+        } else {
+          const error = format(result.error, formatInline);
+
+          return {
+            issues: [{ message: error.message }],
+          };
+        }
+      },
+    },
   });
 }
 
