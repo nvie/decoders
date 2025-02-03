@@ -1517,7 +1517,7 @@ const decoder = select(
 
 ---
 
-<a href="#define">#</a> **define**&lt;<i style="color: #267f99">T</i>&gt;(fn: <i style="color: #267f99">(blob: unknown, ok, err) =&gt; DecodeResult&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/core/Decoder.ts#L147-L316 'Source')
+<a href="#define">#</a> **define**&lt;<i style="color: #267f99">T</i>&gt;(fn: <i style="color: #267f99">(blob: unknown, ok, err) =&gt; DecodeResult&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/core/Decoder.ts#L153-L335 'Source')
 {: #define .signature}
 
 Defines a new `Decoder<T>`, by implementing a custom acceptance function.
@@ -1660,5 +1660,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: e875efd895ee6c480c011b9e3113ed5e)-->
+<!--[[[end]]] (checksum: 8764d0df66062b4b0fbed65fa1292a90)-->
 <!-- prettier-ignore-end -->
