@@ -737,7 +737,11 @@ to upgrade:
   - `numericBoolean` takes only numbers as input, and returns their boolean interpretation
     (0 = false, non-0 = true)
 
-## [1.2.2, 1.2.3]
+## [1.2.3]
+
+Same as 1.2.2.
+
+## [1.2.2]
 
 - **New feature** `mixed` decoder, for unverified pass-thru of any values
 
