@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [2.6.0] - 2025-02-04
+
 - Implement the [Standard Schema](https://standardschema.dev/) specification.
 
 ## [2.5.0] - 2024-09-18
