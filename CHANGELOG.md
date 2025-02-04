@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Implement the [Standard Schema](https://standardschema.dev/) specification.
+
 ## [2.5.0] - 2024-09-18
 
 **New decoders:**
