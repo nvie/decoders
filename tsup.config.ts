@@ -6,5 +6,5 @@ export default defineConfig({
   splitting: true,
   clean: true,
   // target: /* what tsconfig specifies */,
-  format: ['esm', 'cjs'],
+  format: ['esm'],
 });
