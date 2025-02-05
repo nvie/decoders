@@ -211,7 +211,7 @@ describe('numeric', () => {
   });
 
   test('fuzz', () => {
-    return fc.assert(
+    fc.assert(
       fc.property(fc.anything(), (input) => {
         if (typeof input === 'string' && /^[0-9]$/.test(input)) {
           expect(decoder.verify(input)).toBe(Number(input));
@@ -239,7 +239,7 @@ describe('decimal', () => {
   });
 
   test('fuzz', () => {
-    return fc.assert(
+    fc.assert(
       fc.property(
         fc.anything().filter((x) => typeof x !== 'string' || !/^[0-9]+$/.test(x)),
         (input) => {
@@ -270,7 +270,7 @@ describe('hexadecimal', () => {
   });
 
   test('fuzz', () => {
-    return fc.assert(
+    fc.assert(
       fc.property(
         fc.anything().filter((x) => typeof x !== 'string' || !/^[0-9a-fA-F]+$/.test(x)),
         (input) => {
@@ -304,7 +304,7 @@ describe('identifier', () => {
   });
 
   test('fuzz', () => {
-    return fc.assert(
+    fc.assert(
       fc.property(
         fc.anything().filter((x) => typeof x !== 'string'),
         (input) => {

@@ -948,7 +948,7 @@ unknown.verify([1, 2]) === [1, 2];
 
 ---
 
-<a href="#array">#</a> **array**(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T[]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/arrays.ts#L52-L61 'Source')
+<a href="#array">#</a> **array**(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T[]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/arrays.ts#L52-L62 'Source')
 {: #array .signature}
 
 Accepts arrays of whatever the given decoder accepts.
@@ -966,7 +966,7 @@ decoder.verify(['hello', 1.2]);  // throws
 
 ---
 
-<a href="#nonEmptyArray">#</a> **nonEmptyArray**(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;[T, ...T[]]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/arrays.ts#L67-L72 'Source')
+<a href="#nonEmptyArray">#</a> **nonEmptyArray**(decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;[T, ...T[]]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/arrays.ts#L68-L73 'Source')
 {: #nonEmptyArray .signature}
 
 Like [`array()`](/api.html#array), but will reject arrays with 0 elements.
@@ -1004,7 +1004,7 @@ poja.verify('hi');  // throws
 
 ---
 
-<a href="#tuple">#</a> **tuple**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;</i>, <i style="color: #267f99">...</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;[A, B, ...]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/arrays.ts#L81-L110 'Source')
+<a href="#tuple">#</a> **tuple**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;</i>, <i style="color: #267f99">...</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;[A, B, ...]&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/arrays.ts#L82-L112 'Source')
 {: #tuple .signature}
 
 Accepts a tuple (an array with exactly _n_ items) of values accepted by the
@@ -1517,7 +1517,7 @@ const decoder = select(
 
 ---
 
-<a href="#define">#</a> **define**&lt;<i style="color: #267f99">T</i>&gt;(fn: <i style="color: #267f99">(blob: unknown, ok, err) =&gt; DecodeResult&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/core/Decoder.ts#L153-L335 'Source')
+<a href="#define">#</a> **define**&lt;<i style="color: #267f99">T</i>&gt;(fn: <i style="color: #267f99">(blob: unknown, ok, err) =&gt; DecodeResult&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/core/Decoder.ts#L152-L334 'Source')
 {: #define .signature}
 
 Defines a new `Decoder<T>`, by implementing a custom acceptance function.
@@ -1564,7 +1564,7 @@ const uppercase: Decoder<string> = string.transform(s => s.toUpperCase());
 
 ---
 
-<a href="#prep">#</a> **prep**&lt;<i style="color: #267f99">T</i>&gt;(mapperFn: <i style="color: #267f99">(raw: mixed) =&gt; mixed</i>, decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/misc.ts#L29-L59 'Source')
+<a href="#prep">#</a> **prep**&lt;<i style="color: #267f99">T</i>&gt;(mapperFn: <i style="color: #267f99">(raw: mixed) =&gt; mixed</i>, decoder: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/misc.ts#L31-L61 'Source')
 {: #prep .signature}
 
 Pre-process the data input before passing it into the decoder. This gives
@@ -1618,7 +1618,7 @@ decoder.verify({ a: 'foo', b: 'bar' });  // throws
 
 ---
 
-<a href="#instanceOf">#</a> **instanceOf**&lt;<i style="color: #267f99">T</i>&gt;(klass: <i style="color: #267f99">Klass&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/misc.ts#L11-L19 'Source')
+<a href="#instanceOf">#</a> **instanceOf**&lt;<i style="color: #267f99">T</i>&gt;(klass: <i style="color: #267f99">Klass&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/misc.ts#L12-L21 'Source')
 {: #instanceOf .signature}
 
 Accepts any value that is an ``instanceof`` the given class.
@@ -1637,7 +1637,7 @@ decoder.verify(3);      // throws
 
 ---
 
-<a href="#lazy">#</a> **lazy**&lt;<i style="color: #267f99">T</i>&gt;(decoderFn: <i style="color: #267f99">() =&gt; <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/misc.ts#L21-L27 'Source')
+<a href="#lazy">#</a> **lazy**&lt;<i style="color: #267f99">T</i>&gt;(decoderFn: <i style="color: #267f99">() =&gt; <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/misc.ts#L23-L29 'Source')
 {: #lazy .signature}
 
 Lazily evaluate the given decoder. This is useful to build self-referential
@@ -1660,5 +1660,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 8764d0df66062b4b0fbed65fa1292a90)-->
+<!--[[[end]]] (checksum: 59af5899dc0064a90a972ff36f42901f)-->
 <!-- prettier-ignore-end -->

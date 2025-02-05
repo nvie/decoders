@@ -53,6 +53,7 @@ function all<T>(
  * Accepts arrays of whatever the given decoder accepts.
  */
 export function array<T>(decoder: Decoder<T>): Decoder<T[]> {
+  // eslint-disable-next-line @typescript-eslint/unbound-method
   const decodeFn = decoder.decode;
   return poja.then((blobs: readonly unknown[], ok, err) => {
     const results = blobs.map(decodeFn);
@@ -99,6 +100,7 @@ export function tuple<
       }
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (allOk) {
       return ok(rvs as TupleDecoderType<Ds>);
     } else {

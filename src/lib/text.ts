@@ -2,7 +2,7 @@
 export const INDENT = '  ';
 
 export function isMultiline(s: string): boolean {
-  return s.indexOf('\n') >= 0;
+  return s.includes('\n');
 }
 
 export function indent(s: string, prefix: string = INDENT): string {

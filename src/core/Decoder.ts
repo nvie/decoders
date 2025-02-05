@@ -98,8 +98,7 @@ export interface Decoder<T> {
    *
    *   string.pipe((s) => s.startsWith('@') ? username : email)
    */
-  pipe<V, D extends Decoder<V>>(next: D): Decoder<DecoderType<D>>;
-  pipe<V, D extends Decoder<V>>(next: (blob: T) => D): Decoder<DecoderType<D>>;
+  pipe<V, D extends Decoder<V>>(next: D | ((blob: T) => D)): Decoder<DecoderType<D>>;
 
   /**
    * The Standard Schema interface for this decoder.
@@ -335,7 +334,7 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
 }
 
 /** @internal */
-const _register: WeakSet<Decoder<unknown>> = new WeakSet();
+const _register = new WeakSet<Decoder<unknown>>();
 
 /** @internal */
 function brand<D extends Decoder<unknown>>(decoder: D): D {

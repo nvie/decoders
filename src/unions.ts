@@ -1,4 +1,4 @@
-import type { Decoder, DecoderType } from '~/core';
+import type { Annotation, Decoder, DecoderType } from '~/core';
 import { define, summarize } from '~/core';
 import { indent, quote } from '~/lib/text';
 import type { Scalar } from '~/lib/types';
@@ -64,10 +64,10 @@ export function either<TDecoders extends readonly Decoder<unknown>[]>(
   type T = DecoderType<TDecoders[number]>;
   return define<T>((blob, _, err) => {
     // Collect errors here along the way
-    const errors = [];
+    const errors: Annotation[] = [];
 
-    for (let i = 0; i < decoders.length; i++) {
-      const result = (decoders[i] as Decoder<T>).decode(blob);
+    for (const decoder of decoders) {
+      const result = (decoder as Decoder<T>).decode(blob);
       if (result.ok) {
         return result;
       } else {

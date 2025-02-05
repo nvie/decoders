@@ -1,6 +1,6 @@
 import { isPojo } from '~/lib/utils';
 
-const _register: WeakSet<Annotation> = new WeakSet();
+const _register = new WeakSet<Annotation>();
 
 export interface ObjectAnnotation {
   readonly type: 'object';

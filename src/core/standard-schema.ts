@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 /** The Standard Schema interface. */
 export interface StandardSchemaV1<Input = unknown, Output = Input> {
   /** The Standard Schema properties. */

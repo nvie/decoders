@@ -1,8 +1,9 @@
 import type { Decoder } from '~/core';
 import { annotate, define } from '~/core';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 export interface Klass<T> extends Function {
+  // eslint-disable-next-line @typescript-eslint/prefer-function-type,@typescript-eslint/no-explicit-any
   new (...args: readonly any[]): T;
 }
 
@@ -14,6 +15,7 @@ export type Instance<K> = K extends Klass<infer T> ? T : never;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function instanceOf<K extends Klass<any>>(klass: K): Decoder<Instance<K>> {
   return define((blob, ok, err) =>
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     blob instanceof klass ? ok(blob) : err(`Must be ${klass.name} instance`),
   );
 }
