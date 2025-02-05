@@ -13,8 +13,8 @@ import { either, enum_, oneOf, select, taggedUnion } from '~/unions';
 import { INPUTS } from './_fixtures';
 
 // TODO Move into test utils
-export function fuzz(testFn: (blob: unknown) => void) {
-  return fc.assert(
+export function fuzz(testFn: (blob: unknown) => void): void {
+  fc.assert(
     fc.property(
       fc.anything({
         withBigInt: true,
@@ -380,7 +380,7 @@ describe('enums', () => {
   describe('mixed enums', () => {
     enum Fruit {
       Apple = 'apple',
-      Banana = 3,
+      Banana = 3, // eslint-disable-line @typescript-eslint/no-mixed-enums
       Cherry = 'Cherry',
     }
 

@@ -4,10 +4,10 @@ export type SizeOptions = {
   size?: number;
 };
 
-export function bySizeOptions(options: SizeOptions) {
-  const size = options?.size;
-  const min = size ?? options?.min;
-  const max = size ?? options?.max;
+export function bySizeOptions(options: SizeOptions): (value: string) => string | null {
+  const size = options.size;
+  const min = size ?? options.min;
+  const max = size ?? options.max;
 
   const atLeast = min === max ? '' : 'at least ';
   const atMost = min === max ? '' : 'at most ';

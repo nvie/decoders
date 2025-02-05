@@ -82,7 +82,7 @@ function serializeArray(annotation: ArrayAnnotation, prefix: string): string {
   const result: string[] = [];
   for (const item of items) {
     const [ser, ann] = serializeAnnotation(item, `${prefix}${INDENT}`);
-    result.push(`${prefix}${INDENT}${ser}${','}`);
+    result.push(`${prefix}${INDENT}${ser},`);
     if (ann !== undefined) {
       result.push(indent(ann, `${prefix}${INDENT}`));
     }

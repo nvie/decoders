@@ -66,6 +66,7 @@ export function either<TDecoders extends readonly Decoder<unknown>[]>(
     // Collect errors here along the way
     const errors = [];
 
+    // eslint-disable-next-line @typescript-eslint/prefer-for-of
     for (let i = 0; i < decoders.length; i++) {
       const result = (decoders[i] as Decoder<T>).decode(blob);
       if (result.ok) {
