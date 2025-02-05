@@ -1334,7 +1334,7 @@ jsonArray.verify(null);               // throws
 
 ---
 
-<a href="#either">#</a> **either**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;</i>, <i style="color: #267f99">...</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | ...&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/unions.ts#L50-L84 'Source')
+<a href="#either">#</a> **either**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(<i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;</i>, <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;</i>, <i style="color: #267f99">...</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | ...&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/unions.ts#L50-L83 'Source')
 {: #either .signature}
 
 Accepts values accepted by any of the given decoders.
@@ -1356,7 +1356,7 @@ decoder.verify(false);  // throws
 
 ---
 
-<a href="#oneOf">#</a> **oneOf**&lt;<i style="color: #267f99">T</i>&gt;(values: <i style="color: #267f99">T[]</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/unions.ts#L86-L98 'Source')
+<a href="#oneOf">#</a> **oneOf**&lt;<i style="color: #267f99">T</i>&gt;(values: <i style="color: #267f99">T[]</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/unions.ts#L85-L97 'Source')
 {: #oneOf .signature}
 
 Accepts any value that is strictly-equal (using `===`) to one of the
@@ -1383,7 +1383,7 @@ oneOf(['foo', 'bar']);
 
 ---
 
-<a href="#enum_">#</a> **enum_**(enum: <i style="color: #267f99">MyEnum</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;MyEnum&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/unions.ts#L100-L121 'Source')
+<a href="#enum_">#</a> **enum_**(enum: <i style="color: #267f99">MyEnum</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;MyEnum&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/unions.ts#L99-L120 'Source')
 {: #enum_ .signature}
 
 Accepts and return an enum value.
@@ -1442,7 +1442,7 @@ decoder.verify(3);        // throws
 
 ---
 
-<a href="#taggedUnion">#</a> **taggedUnion**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(field: <i style="color: #267f99">string</i>, mapping: <i style="color: #267f99">{ value1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, value2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | ...&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/unions.ts#L123-L164 'Source')
+<a href="#taggedUnion">#</a> **taggedUnion**&lt;<i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(field: <i style="color: #267f99">string</i>, mapping: <i style="color: #267f99">{ value1: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt;, value2: <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt;, ... }</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | ...&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/unions.ts#L122-L163 'Source')
 {: #taggedUnion .signature}
 
 If you are decoding tagged unions you may want to use the [`taggedUnion()`](/api.html#taggedUnion)
@@ -1474,7 +1474,7 @@ try all decoders one by one.
 
 ---
 
-<a href="#select">#</a> **select**&lt;<i style="color: #267f99">T</i>, <i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(scout: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>, selectFn: <i style="color: #267f99">(result: T) =&gt; <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt; | <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt; | ...</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | ...&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/unions.ts#L166-L183 'Source')
+<a href="#select">#</a> **select**&lt;<i style="color: #267f99">T</i>, <i style="color: #267f99">A</i>, <i style="color: #267f99">B</i>, <i style="color: #267f99">...</i>&gt;(scout: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;T&gt;</i>, selectFn: <i style="color: #267f99">(result: T) =&gt; <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A&gt; | <a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;B&gt; | ...</i>): <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;A | B | ...&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/unions.ts#L165-L182 'Source')
 {: #select .signature}
 
 Briefly peek at a runtime input using a "scout" decoder first, then decide
@@ -1660,5 +1660,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 4d8f3fc0cf7b2c151af8a385f6572aa3)-->
+<!--[[[end]]] (checksum: 59af5899dc0064a90a972ff36f42901f)-->
 <!-- prettier-ignore-end -->

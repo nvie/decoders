@@ -10,19 +10,9 @@ export default tseslint.config(
   tseslint.configs.strictTypeChecked,
   tseslint.configs.stylisticTypeChecked,
 
-  //env: {
-  //  es6: true,
-  //  jest: true,
-  //},
-
   {
     languageOptions: {
       parser: tsParser,
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-
-      // Each project's individual/local tsconfig.json defines the behavior
-      // of the parser
       parserOptions: {
         project: ['./tsconfig.json'],
       },
