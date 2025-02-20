@@ -1,6 +1,8 @@
 import { isPojo } from '~/lib/utils.js';
 
-const _register = new WeakSet<Annotation>();
+const kAnnotationRegistry = Symbol.for('decoders.kAnnotationRegistry');
+const _register: WeakSet<Annotation> = ((globalThis as any)[kAnnotationRegistry] ??=
+  new WeakSet());
 
 export interface ObjectAnnotation {
   readonly type: 'object';

@@ -334,7 +334,9 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
 }
 
 /** @internal */
-const _register = new WeakSet<Decoder<unknown>>();
+const kDecoderRegistry = Symbol.for('decoders.kDecoderRegistry');
+const _register: WeakSet<Decoder<unknown>> = ((globalThis as any)[kDecoderRegistry] ??=
+  new WeakSet());
 
 /** @internal */
 function brand<D extends Decoder<unknown>>(decoder: D): D {
