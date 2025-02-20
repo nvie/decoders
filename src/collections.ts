@@ -1,9 +1,9 @@
-import type { Annotation, Decoder } from '~/core';
-import { annotate, annotateObject, formatShort, merge } from '~/core';
-import { quote } from '~/lib/text';
+import type { Annotation, Decoder } from '~/core/index.js';
+import { annotate, annotateObject, formatShort, merge } from '~/core/index.js';
+import { quote } from '~/lib/text.js';
 
-import { array } from './arrays';
-import { pojo } from './objects';
+import { array } from './arrays.js';
+import { pojo } from './objects.js';
 
 /**
  * Accepts objects where all values match the given decoder, and returns the

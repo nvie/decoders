@@ -1,11 +1,11 @@
-import type { Decoder } from '~/core';
-import { define } from '~/core';
-import type { SizeOptions } from '~/lib/size-options';
-import { bySizeOptions } from '~/lib/size-options';
-import { isString } from '~/lib/utils';
+import type { Decoder } from '~/core/index.js';
+import { define } from '~/core/index.js';
+import type { SizeOptions } from '~/lib/size-options.js';
+import { bySizeOptions } from '~/lib/size-options.js';
+import { isString } from '~/lib/utils.js';
 
-import { instanceOf } from './misc';
-import { either } from './unions';
+import { instanceOf } from './misc.js';
+import { either } from './unions.js';
 
 /** Match groups in this regex:
  * \1 - the scheme

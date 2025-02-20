@@ -1,5 +1,5 @@
-import type { Annotation, Decoder, DecodeResult, DecoderType } from '~/core';
-import { annotate, define } from '~/core';
+import type { Annotation, Decoder, DecodeResult, DecoderType } from '~/core/index.js';
+import { annotate, define } from '~/core/index.js';
 
 /**
  * Accepts any array, but doesn't validate its items further.

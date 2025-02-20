@@ -8,9 +8,9 @@ import {
   number,
   positiveInteger,
   positiveNumber,
-} from '~/numbers';
+} from '~/numbers.js';
 
-import { INPUTS } from './_fixtures';
+import { INPUTS } from './_fixtures.js';
 
 describe('number', () => {
   const decoder = number;

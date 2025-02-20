@@ -1,11 +1,11 @@
-import type { Annotation, Decoder, DecoderType } from '~/core';
-import { define, summarize } from '~/core';
-import { indent, quote } from '~/lib/text';
-import type { Scalar } from '~/lib/types';
-import { isNumber, isString } from '~/lib/utils';
+import type { Annotation, Decoder, DecoderType } from '~/core/index.js';
+import { define, summarize } from '~/core/index.js';
+import { indent, quote } from '~/lib/text.js';
+import type { Scalar } from '~/lib/types.js';
+import { isNumber, isString } from '~/lib/utils.js';
 
-import { prep } from './misc';
-import { object } from './objects';
+import { prep } from './misc.js';
+import { object } from './objects.js';
 
 const EITHER_PREFIX = 'Either:\n';
 

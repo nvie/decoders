@@ -1,10 +1,10 @@
 import { describe, expect, test } from 'vitest';
 
-import { always } from '~/basics';
-import { annotate, define, formatInline, formatShort } from '~/core';
-import { number, positiveInteger } from '~/numbers';
-import { pojo } from '~/objects';
-import { string } from '~/strings';
+import { always } from '~/basics.js';
+import { annotate, define, formatInline, formatShort } from '~/core/index.js';
+import { number, positiveInteger } from '~/numbers.js';
+import { pojo } from '~/objects.js';
+import { string } from '~/strings.js';
 
 test('.decode', () => {
   // .decode() is tested implicitly because it's used _everywhere_

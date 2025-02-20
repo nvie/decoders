@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { err, ok } from '~/core';
+import { err, ok } from '~/core/index.js';
 
 describe('Result', () => {
   const r1 = ok(42);

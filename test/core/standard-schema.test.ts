@@ -1,10 +1,10 @@
 import { describe, expect, test } from 'vitest';
 
-import { array } from '~/arrays';
-import { number } from '~/numbers';
-import { exact, object } from '~/objects';
-import { string } from '~/strings';
-import { either } from '~/unions';
+import { array } from '~/arrays.js';
+import { number } from '~/numbers.js';
+import { exact, object } from '~/objects.js';
+import { string } from '~/strings.js';
+import { either } from '~/unions.js';
 
 describe('standard-schema', () => {
   test('valid', async () => {

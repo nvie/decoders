@@ -1,10 +1,10 @@
-import type { Annotation } from './annotate';
-import { annotate, isAnnotation } from './annotate';
-import type { Formatter } from './format';
-import { formatAsIssues, formatInline } from './format';
-import type { Result } from './Result';
-import { err as makeErr, ok as makeOk } from './Result';
-import type { StandardSchemaV1 } from './standard-schema';
+import type { Annotation } from './annotate.js';
+import { annotate, isAnnotation } from './annotate.js';
+import type { Formatter } from './format.js';
+import { formatAsIssues, formatInline } from './format.js';
+import type { Result } from './Result.js';
+import { err as makeErr, ok as makeOk } from './Result.js';
+import type { StandardSchemaV1 } from './standard-schema.js';
 
 export type DecodeResult<T> = Result<T, Annotation>;
 

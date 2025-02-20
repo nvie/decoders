@@ -1,9 +1,9 @@
-import type { Decoder } from '~/core';
-import { define } from '~/core';
-import { isDate } from '~/lib/utils';
+import type { Decoder } from '~/core/index.js';
+import { define } from '~/core/index.js';
+import { isDate } from '~/lib/utils.js';
 
-import { regex } from './strings';
-import { either } from './unions';
+import { regex } from './strings.js';
+import { either } from './unions.js';
 
 // Only matches the shape.  This "over-matches" some values that still aren't
 // valid dates (like 9999-99-99), but those will be caught by JS Date's
