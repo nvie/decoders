@@ -13,18 +13,11 @@
     "url": "https://github.com/nvie/decoders/issues"
   },
   "type": "module",
-  "main": "./dist/index.cjs",
-  "types": "./dist/index.d.cts",
   "exports": {
     ".": {
       "import": {
         "types": "./dist/index.d.ts",
         "default": "./dist/index.js"
-      },
-      "require": {
-        "types": "./dist/index.d.cts",
-        "module": "./dist/index.js",
-        "default": "./dist/index.cjs"
       }
     }
   },
@@ -39,7 +32,7 @@
     "docs": "cog -cr docs/*.md",
     "lint": "eslint --color --report-unused-disable-directives src/ test/ && prettier --list-different src/ test/ test-d/",
     "lint:docs": "cog -c --check docs/*.md || (npm run docs; git diff; echo 'Error: docs not up-to-date, please re-run \"npm docs\" to update them.' && exit 1)",
-    "lint:package": "publint --strict && attw --pack",
+    "lint:package": "publint --strict && attw --pack --profile esm-only",
     "format": "eslint --color --report-unused-disable-directives --fix src/ test/ ; prettier --write src/ test/ test-d/",
     "test": "vitest run --coverage",
     "test:completeness": "./bin/check.sh",
