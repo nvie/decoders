@@ -1,6 +1,7 @@
 import { isPojo } from '~/lib/utils.js';
 
 const kAnnotationRegistry = Symbol.for('decoders.kAnnotationRegistry');
+// eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
 const _register: WeakSet<Annotation> = ((globalThis as any)[kAnnotationRegistry] ??=
   new WeakSet());
 

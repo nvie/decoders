@@ -335,6 +335,7 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
 
 /** @internal */
 const kDecoderRegistry = Symbol.for('decoders.kDecoderRegistry');
+// eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
 const _register: WeakSet<Decoder<unknown>> = ((globalThis as any)[kDecoderRegistry] ??=
   new WeakSet());
 
