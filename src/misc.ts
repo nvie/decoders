@@ -1,5 +1,5 @@
-import type { Decoder } from '~/core';
-import { annotate, define } from '~/core';
+import type { Decoder } from '~/core/index.js';
+import { annotate, define } from '~/core/index.js';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 export interface Klass<T> extends Function {

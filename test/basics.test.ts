@@ -13,10 +13,10 @@ import {
   optional,
   undefined_,
   unknown,
-} from '~/basics';
-import { string } from '~/strings';
+} from '~/basics.js';
+import { string } from '~/strings.js';
 
-import { INPUTS } from './_fixtures';
+import { INPUTS } from './_fixtures.js';
 
 describe('null_', () => {
   const decoder = null_;

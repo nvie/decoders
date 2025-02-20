@@ -2,15 +2,15 @@ import * as fc from 'fast-check';
 import { partition } from 'itertools';
 import { describe, expect, test } from 'vitest';
 
-import { constant, optional, undefined_ } from '~/basics';
-import { boolean } from '~/booleans';
-import type { Decoder } from '~/core';
-import { number } from '~/numbers';
-import { object } from '~/objects';
-import { regex, string } from '~/strings';
-import { either, enum_, oneOf, select, taggedUnion } from '~/unions';
+import { constant, optional, undefined_ } from '~/basics.js';
+import { boolean } from '~/booleans.js';
+import type { Decoder } from '~/core/index.js';
+import { number } from '~/numbers.js';
+import { object } from '~/objects.js';
+import { regex, string } from '~/strings.js';
+import { either, enum_, oneOf, select, taggedUnion } from '~/unions.js';
 
-import { INPUTS } from './_fixtures';
+import { INPUTS } from './_fixtures.js';
 
 // TODO Move into test utils
 export function fuzz(testFn: (blob: unknown) => void): void {

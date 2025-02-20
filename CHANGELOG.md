@@ -1,5 +1,8 @@
 ## [Unreleased]
 
+- Use `node16` module resolution setting (recommended setting for libraries that run in
+  both browsers and Node environments)
+
 ## [2.6.0] - 2025-02-04
 
 - Implement the [Standard Schema](https://standardschema.dev/) specification.

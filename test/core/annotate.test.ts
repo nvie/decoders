@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import type { Annotation, ObjectAnnotation } from '~/core/annotate';
+import type { Annotation, ObjectAnnotation } from '~/core/annotate.js';
 import {
   annotate,
   makeArrayAnn,
@@ -8,7 +8,7 @@ import {
   makeOpaqueAnn,
   makeScalarAnn,
   merge as mergeOriginal,
-} from '~/core/annotate';
+} from '~/core/annotate.js';
 
 function makeObjectAnn(obj: Record<string, Annotation>, text?: string) {
   return makeObjectAnnOriginal(new Map(Object.entries(obj)), text);
