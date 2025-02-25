@@ -1,6 +1,9 @@
 import { isPojo } from '~/lib/utils';
 
-const _register = new WeakSet<Annotation>();
+const kAnnotationRegistry = Symbol.for('decoders.kAnnotationRegistry');
+// eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
+const _register: WeakSet<Annotation> = ((globalThis as any)[kAnnotationRegistry] ??=
+  new WeakSet());
 
 export interface ObjectAnnotation {
   readonly type: 'object';
