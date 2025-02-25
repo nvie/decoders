@@ -1,13 +1,13 @@
-import type { Decoder } from '~/core/index.js';
+import type { Decoder } from '~/core';
 
-import { array } from './arrays.js';
-import { null_ } from './basics.js';
-import { boolean } from './booleans.js';
-import { record } from './collections.js';
-import { lazy } from './misc.js';
-import { number } from './numbers.js';
-import { string } from './strings.js';
-import { either } from './unions.js';
+import { array } from './arrays';
+import { null_ } from './basics';
+import { boolean } from './booleans';
+import { record } from './collections';
+import { lazy } from './misc';
+import { number } from './numbers';
+import { string } from './strings';
+import { either } from './unions';
 
 export type JSONValue = null | string | number | boolean | JSONObject | JSONArray;
 export type JSONObject = { [key: string]: JSONValue | undefined };

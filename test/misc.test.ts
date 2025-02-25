@@ -1,15 +1,15 @@
 import { partition } from 'itertools';
 import { describe, expect, test } from 'vitest';
 
-import { array } from '~/arrays.js';
-import { constant, optional } from '~/basics.js';
-import type { Decoder } from '~/core/index.js';
-import { instanceOf, lazy, prep } from '~/misc.js';
-import { number } from '~/numbers.js';
-import { object } from '~/objects.js';
-import { string } from '~/strings.js';
+import { array } from '~/arrays';
+import { constant, optional } from '~/basics';
+import type { Decoder } from '~/core';
+import { instanceOf, lazy, prep } from '~/misc';
+import { number } from '~/numbers';
+import { object } from '~/objects';
+import { string } from '~/strings';
 
-import { INPUTS } from './_fixtures.js';
+import { INPUTS } from './_fixtures';
 
 describe('instanceOf', () => {
   const errorDecoder = instanceOf(Error);

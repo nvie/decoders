@@ -1,6 +1,6 @@
-import type { Decoder } from '~/core/index.js';
-import { define } from '~/core/index.js';
-import { isBigInt, isNumber } from '~/lib/utils.js';
+import type { Decoder } from '~/core';
+import { define } from '~/core';
+import { isBigInt, isNumber } from '~/lib/utils';
 
 /**
  * Accepts any valid ``number`` value.

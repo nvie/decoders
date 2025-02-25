@@ -1,4 +1,4 @@
-import { string, numeric } from '../dist/index.js';
+import { string, numeric } from '../dist';
 import { expectAssignable, expectError, expectType } from 'tsd';
 import type { StandardSchemaV1 } from '@standard-schema/spec';
 

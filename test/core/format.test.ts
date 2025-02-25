@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { __private_annotate, annotate, formatInline, formatShort } from '~/core/index.js';
+import { __private_annotate, annotate, formatInline, formatShort } from '~/core';
 
 const whitespace_re = /^\s*$/;
 

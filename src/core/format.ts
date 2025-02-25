@@ -1,13 +1,13 @@
-import { INDENT, indent, isMultiline, quote } from '~/lib/text.js';
-import { isDate } from '~/lib/utils.js';
+import { INDENT, indent, isMultiline, quote } from '~/lib/text';
+import { isDate } from '~/lib/utils';
 
 import type {
   Annotation,
   ArrayAnnotation,
   ObjectAnnotation,
   OpaqueAnnotation,
-} from './annotate.js';
-import type { StandardSchemaV1 as Std } from './standard-schema.js';
+} from './annotate';
+import type { StandardSchemaV1 as Std } from './standard-schema';
 
 export type Formatter = (err: Annotation) => string | Error;
 

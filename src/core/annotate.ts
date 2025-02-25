@@ -1,4 +1,4 @@
-import { isPojo } from '~/lib/utils.js';
+import { isPojo } from '~/lib/utils';
 
 const _register = new WeakSet<Annotation>();
 
