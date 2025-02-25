@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { Annotation, Decoder, DecodeResult, DecoderType } from '~/core/index.js';
-import { annotateObject, define, merge, updateText } from '~/core/index.js';
-import { difference } from '~/lib/set-methods.js';
-import { quote } from '~/lib/text.js';
-import { isPojo } from '~/lib/utils.js';
+import type { Annotation, Decoder, DecodeResult, DecoderType } from '~/core';
+import { annotateObject, define, merge, updateText } from '~/core';
+import { difference } from '~/lib/set-methods';
+import { quote } from '~/lib/text';
+import { isPojo } from '~/lib/utils';
 
 type RequiredKeys<T extends object> = {
   [K in keyof T]: undefined extends T[K] ? never : K;

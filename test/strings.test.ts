@@ -19,9 +19,9 @@ import {
   uuid,
   uuidv1,
   uuidv4,
-} from '~/strings.js';
+} from '~/strings';
 
-import { INPUTS } from './_fixtures.js';
+import { INPUTS } from './_fixtures';
 
 describe('string', () => {
   const decoder = string;

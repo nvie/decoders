@@ -1,9 +1,10 @@
 ## [Unreleased]
 
-- Ensure the global singleton registries are truly global, even if somehow the bundler
-  might have included multiple copies of decoders (CJS and ESM) in the same bundle.
-- Use `node16` module resolution setting (recommended setting for libraries that run in
-  both browsers and Node environments)
+- Fix issue that could lead to corrupt annotations if somehow two verions of decoders (or
+  a CJS and an ESM "copy") end up in your bundle
+- Use `bundler` module resolution setting (recommended setting for libraries that use a
+  bundler)
+- Upgrade dev dependencies
 
 ## [2.6.0] - 2025-02-04
 

@@ -1,4 +1,4 @@
-import { isPojo } from '~/lib/utils.js';
+import { isPojo } from '~/lib/utils';
 
 const kAnnotationRegistry = Symbol.for('decoders.kAnnotationRegistry');
 // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access

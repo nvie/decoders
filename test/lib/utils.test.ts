@@ -1,8 +1,8 @@
 import { describe, expect, test } from 'vitest';
 
-import { difference } from '~/lib/set-methods.js';
-import { indent } from '~/lib/text.js';
-import type { Scalar } from '~/lib/types.js';
+import { difference } from '~/lib/set-methods';
+import { indent } from '~/lib/text';
+import type { Scalar } from '~/lib/types';
 
 describe('subtract', () => {
   const exampleSets: Set<Scalar>[] = [

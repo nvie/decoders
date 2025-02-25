@@ -1,10 +1,4 @@
-import type {
-  Decoder,
-  DecoderType,
-  JSONValue,
-  JSONObject,
-  JSONArray,
-} from '../dist/index.js';
+import type { Decoder, DecoderType, JSONValue, JSONObject, JSONArray } from '../dist';
 import {
   // Decoders
   always,
@@ -76,7 +70,7 @@ import {
   // Formatters
   formatInline,
   formatShort,
-} from '../dist/index.js';
+} from '../dist';
 import { expectError, expectType, expectAssignable } from 'tsd';
 
 // Helper function to "test" a decoder on some input, and assert the return type

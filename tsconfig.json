@@ -3,9 +3,9 @@
     "noEmit": true,
     "strict": true,
     "skipLibCheck": true,
-    "target": "es2020",
-    "module": "node16",
-    "moduleResolution": "node16",
+    "target": "es2022",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "stripInternal": true,
     "forceConsistentCasingInFileNames": true,
@@ -23,6 +23,5 @@
       "~/*": ["./src/*"]
     }
   },
-  "include": ["src", "test"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src", "test"]
 }

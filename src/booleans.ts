@@ -1,5 +1,5 @@
-import type { Decoder } from '~/core/index.js';
-import { define } from '~/core/index.js';
+import type { Decoder } from '~/core';
+import { define } from '~/core';
 
 /**
  * Accepts and returns booleans.

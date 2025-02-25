@@ -1,9 +1,9 @@
-import type { Decoder } from '~/core/index.js';
-import { define } from '~/core/index.js';
-import { quote } from '~/lib/text.js';
-import type { Scalar } from '~/lib/types.js';
+import type { Decoder } from '~/core';
+import { define } from '~/core';
+import { quote } from '~/lib/text';
+import type { Scalar } from '~/lib/types';
 
-import { either } from './unions.js';
+import { either } from './unions';
 
 function lazyval<V>(value: (() => V) | V): V {
   return typeof value === 'function' ? (value as () => V)() : value;
