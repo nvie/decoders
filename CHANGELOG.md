@@ -2,6 +2,7 @@
 
 - Use `bundler` module resolution setting (recommended setting for libraries that use a
   bundler)
+- Upgrade dev dependencies
 
 ## [2.6.0] - 2025-02-04
 
