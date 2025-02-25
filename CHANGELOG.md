@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [2.6.1] - 2025-02-25
+
 - Fix issue that could lead to corrupt annotations if somehow two verions of decoders (or
   a CJS and an ESM "copy") end up in your bundle (#1231). Thanks for reporting,
   @craig-feldman!
