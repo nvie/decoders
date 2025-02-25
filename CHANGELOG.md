@@ -1,7 +1,8 @@
 ## [Unreleased]
 
 - Fix issue that could lead to corrupt annotations if somehow two verions of decoders (or
-  a CJS and an ESM "copy") end up in your bundle
+  a CJS and an ESM "copy") end up in your bundle (#1231). Thanks for reporting,
+  @craig-feldman!
 - Use `bundler` module resolution setting (recommended setting for libraries that use a
   bundler)
 - Upgrade dev dependencies
