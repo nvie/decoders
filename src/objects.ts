@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { Annotation, Decoder, DecodeResult, DecoderType } from '~/core';
-import { annotateObject, define, merge, updateText } from '~/core';
+import type {
+  Annotation,
+  Decoder,
+  DecodeResult,
+  DecoderType,
+  ReadonlyDecoder,
+} from '~/core';
+import { annotateObject, defineReadonly, merge, updateText } from '~/core';
 import { difference } from '~/lib/set-methods';
 import { quote } from '~/lib/text';
 import { isPojo } from '~/lib/utils';
@@ -48,8 +54,9 @@ type ObjectDecoderType<Ds extends Record<string, Decoder<unknown>>> =
  * Accepts any "plain old JavaScript object", but doesn't validate its keys or
  * values further.
  */
-export const pojo: Decoder<Record<string, unknown>> = define((blob, ok, err) =>
-  isPojo(blob) ? ok(blob) : err('Must be an object'),
+export const pojo: ReadonlyDecoder<Record<string, unknown>> = defineReadonly(
+  isPojo,
+  'Must be an object',
 );
 
 /**

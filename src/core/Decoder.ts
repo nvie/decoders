@@ -1,3 +1,4 @@
+import { is } from '~/lib/utils';
 import type { Annotation } from './annotate';
 import { annotate, isAnnotation } from './annotate';
 import type { Formatter } from './format';
@@ -31,7 +32,43 @@ export type Next<O, I = unknown> =
       err: (msg: string | Annotation) => DecodeResult<O>,
     ) => DecodeResult<O> | Decoder<O>);
 
+export interface ReadonlyDecoder<T> extends Decoder<T> {
+  /**
+   * Whether this Decoder is guaranteed to only validate the given input
+   * without modifying it.
+   */
+  readonly isReadonly: true;
+
+  /**
+   * Build a new decoder from the the current one, with an extra acceptance
+   * criterium.
+   */
+  refine<N extends T>(
+    predicate: (value: T) => value is N,
+    msg: string,
+  ): ReadonlyDecoder<N>;
+  refine(predicate: (value: T) => boolean, msg: string): ReadonlyDecoder<T>;
+
+  /**
+   * Build a new decoder from the current one, with an extra rejection
+   * criterium.
+   */
+  reject(rejectFn: (value: T) => string | Annotation | null): ReadonlyDecoder<T>;
+
+  /**
+   * Build a new decoder from the current one, with a mutated error message
+   * in case of a rejection.
+   */
+  describe(message: string): ReadonlyDecoder<T>;
+}
+
 export interface Decoder<T> {
+  /**
+   * Whether this Decoder is guaranteed to only validate the given input
+   * without modifying it.
+   */
+  readonly isReadonly: boolean;
+
   /**
    * Verifies untrusted input. Either returns a value, or throws a decoding
    * error.
@@ -162,7 +199,7 @@ function format(err: Annotation, formatter: Formatter): Error {
  * helper functions. Please note that `ok()` and `err()` don't perform side
  * effects! You'll need to _return_ those values.
  */
-export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
+export function define<T>(fn: AcceptanceFn<T>, isReadonly = false): Decoder<T> {
   /**
    * Verifies the untrusted/unknown input and either accepts or rejects it.
    *
@@ -312,6 +349,7 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
   }
 
   return brand({
+    isReadonly,
     verify,
     value,
     decode,
@@ -335,6 +373,16 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
       },
     },
   });
+}
+
+export function defineReadonly<T>(
+  predicate: (blob: unknown) => blob is T,
+  message: string,
+): ReadonlyDecoder<T> {
+  return define(
+    (blob, ok, err) => (predicate(blob) ? ok(blob as T) : err(message)),
+    /* readonly */ true,
+  ) as ReadonlyDecoder<T>;
 }
 
 /** @internal */

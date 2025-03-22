@@ -1,5 +1,5 @@
 import type { Decoder } from '~/core';
-import { define } from '~/core';
+import { defineReadonly } from '~/core';
 import { isDate } from '~/lib/utils';
 
 import { regex } from './strings';
@@ -14,9 +14,7 @@ const iso8601_re =
 /**
  * Accepts and returns `Date` instances.
  */
-export const date: Decoder<Date> = define((blob, ok, err) => {
-  return isDate(blob) ? ok(blob) : err('Must be a Date');
-});
+export const date = defineReadonly(isDate, 'Must be a Date');
 
 /**
  * Accepts [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings,

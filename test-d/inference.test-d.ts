@@ -11,6 +11,7 @@ import {
   datelike,
   decimal,
   define,
+  defineReadonly,
   dict,
   either,
   email,
@@ -90,6 +91,15 @@ function foo(
 expectType<123 | 'hi'>(
   test(
     define((blob, ok, err) => {
+      expectType<unknown>(blob);
+      return Math.random() < 0.5 ? ok(123) : Math.random() < 0.5 ? ok('hi') : err('fail');
+    }),
+  ),
+);
+
+expectType<123 | 'hi'>(
+  test(
+    defineReadonly((blob, ok, err) => {
       expectType<unknown>(blob);
       return Math.random() < 0.5 ? ok(123) : Math.random() < 0.5 ? ok('hi') : err('fail');
     }),

@@ -1,12 +1,13 @@
-import type { Decoder } from '~/core';
-import { define } from '~/core';
+import type { Decoder, ReadonlyDecoder } from '~/core';
+import { define, defineReadonly } from '~/core';
 
 /**
  * Accepts and returns booleans.
  */
-export const boolean: Decoder<boolean> = define((blob, ok, err) => {
-  return typeof blob === 'boolean' ? ok(blob) : err('Must be boolean');
-});
+export const boolean: ReadonlyDecoder<boolean> = defineReadonly(
+  (blob) => typeof blob === 'boolean',
+  'Must be boolean',
+);
 
 /**
  * Accepts anything and will return its "truth" value. Will never reject.

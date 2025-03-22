@@ -1,5 +1,5 @@
-import type { Annotation, Decoder, DecoderType } from '~/core';
-import { define, summarize } from '~/core';
+import type { Annotation, Decoder, DecoderType, ReadonlyDecoder } from '~/core';
+import { define, defineReadonly, summarize } from '~/core';
 import { indent, quote } from '~/lib/text';
 import type { Scalar } from '~/lib/types';
 import { isNumber, isString } from '~/lib/utils';
@@ -86,14 +86,11 @@ export function either<TDecoders extends readonly Decoder<unknown>[]>(
  * Accepts any value that is strictly-equal (using `===`) to one of the
  * specified values.
  */
-export function oneOf<C extends Scalar>(constants: readonly C[]): Decoder<C> {
-  return define((blob, ok, err) => {
-    const winner = constants.find((c) => c === blob);
-    if (winner !== undefined) {
-      return ok(winner);
-    }
-    return err(`Must be one of ${constants.map((value) => quote(value)).join(', ')}`);
-  });
+export function oneOf<C extends Scalar>(constants: readonly C[]): ReadonlyDecoder<C> {
+  return defineReadonly(
+    (blob): blob is C => constants.indexOf(blob as C) > -1,
+    `Must be one of ${constants.map((value) => quote(value)).join(', ')}`,
+  );
 }
 
 /**

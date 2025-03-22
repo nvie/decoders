@@ -19,10 +19,10 @@ export { decimal, hexadecimal, numeric } from './strings';
 export { either, enum_, oneOf, select, taggedUnion } from './unions';
 
 // Core functionality
-export type { Decoder, DecodeResult, DecoderType } from '~/core';
+export type { Decoder, DecodeResult, DecoderType, ReadonlyDecoder } from '~/core';
 export type { Err, Ok, Result } from '~/core';
 export type { Formatter } from '~/core';
-export { define } from '~/core';
+export { define, defineReadonly } from '~/core';
 export { err, ok } from '~/core';
 export { formatInline, formatShort } from '~/core';
 export type { Scalar } from '~/lib/types';

@@ -1,3 +1,8 @@
+export function is(x: any, y: any): boolean {
+  // Like Object.is(), except that is(NaN, NaN) and is(-0, +0)
+  return x === y ? x !== 0 || 1 / x === 1 / y : x !== x && y !== y;
+}
+
 export function isNumber(value: unknown): value is number {
   return typeof value === 'number';
 }
