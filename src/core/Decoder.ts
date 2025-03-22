@@ -1,4 +1,3 @@
-import { is } from '~/lib/utils';
 import type { Annotation } from './annotate';
 import { annotate, isAnnotation } from './annotate';
 import type { Formatter } from './format';
