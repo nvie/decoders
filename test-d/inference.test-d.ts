@@ -97,12 +97,12 @@ expectType<123 | 'hi'>(
   ),
 );
 
-expectType<123 | 'hi'>(
+expectType<number>(
   test(
-    defineReadonly((blob, ok, err) => {
+    defineReadonly((blob): blob is number => {
       expectType<unknown>(blob);
-      return Math.random() < 0.5 ? ok(123) : Math.random() < 0.5 ? ok('hi') : err('fail');
-    }),
+      return Math.random() < 0.5;
+    }, 'fail'),
   ),
 );
 
