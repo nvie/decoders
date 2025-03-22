@@ -170,9 +170,13 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
    * instead return a result type.
    */
   function decode(blob: unknown): DecodeResult<T> {
-    return fn(blob, makeOk, (msg: Annotation | string) =>
-      makeErr(isAnnotation(msg) ? msg : annotate(blob, msg)),
-    );
+    // Pass a more flexible error constructor to the acceptance function which
+    // can also "just" error with a string, so users don't have to build the
+    // Annotation object themselves in all custom Decoders.
+    const makeFlexErr = (msg: Annotation | string) =>
+      makeErr(isAnnotation(msg) ? msg : annotate(blob, msg));
+
+    return fn(blob, makeOk, makeFlexErr);
   }
 
   /**
