@@ -7,6 +7,7 @@ import { INPUTS } from './_fixtures';
 
 describe('booleans', () => {
   const decoder = boolean;
+  expect(decoder.isReadonly).toBe(true);
   const [okay, not_okay] = partition(INPUTS, (x) => x === true || x === false);
 
   test('valid', () => {
@@ -26,6 +27,7 @@ describe('booleans', () => {
 
 describe('truthy', () => {
   const decoder = truthy;
+  expect(decoder.isReadonly).toBe(false);
   const okay = INPUTS;
 
   test('valid', () => {
