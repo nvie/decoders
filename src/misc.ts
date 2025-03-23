@@ -16,7 +16,6 @@ export type Instance<K> = K extends Klass<infer T> ? T : never;
 export function instanceOf<K extends Klass<any>>(klass: K): ReadonlyDecoder<Instance<K>> {
   return defineReadonly(
     (blob): blob is Instance<K> => blob instanceof klass,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     `Must be ${klass.name} instance`,
   );
 }

@@ -88,7 +88,7 @@ export function either<TDecoders extends readonly Decoder<unknown>[]>(
  */
 export function oneOf<C extends Scalar>(constants: readonly C[]): ReadonlyDecoder<C> {
   return defineReadonly(
-    (blob): blob is C => constants.indexOf(blob as C) > -1,
+    (blob): blob is C => constants.includes(blob as C),
     `Must be one of ${constants.map((value) => quote(value)).join(', ')}`,
   );
 }
