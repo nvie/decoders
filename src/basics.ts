@@ -31,6 +31,7 @@ const nullish_ = defineReadonly(
  * If a default value is explicitly provided, return that instead in the
  * `undefined` case.
  */
+export function optional<T>(decoder: ReadonlyDecoder<T>): ReadonlyDecoder<T | undefined>;
 export function optional<T>(decoder: Decoder<T>): Decoder<T | undefined>;
 export function optional<T, C extends Scalar>(decoder: Decoder<T>, defaultValue: (() => C) | C): Decoder<NonNullable<T> | C>; // prettier-ignore
 export function optional<T, V>(decoder: Decoder<T>, defaultValue: (() => V) | V): Decoder<NonNullable<T> | V>; // prettier-ignore

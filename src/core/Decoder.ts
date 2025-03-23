@@ -159,10 +159,10 @@ export interface Decoder<T> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type DecoderType<D extends Decoder<any>> = D extends Decoder<infer T> ? T : never;
 
-const NONE = 0;
-const READONLY = 1;
-// const OPTIONAL = 2
-// const MASKED = 3;
+export const NONE = 0;
+export const READONLY = 1;
+// export const OPTIONAL = 2
+// export const MASKED = 3;
 
 function noThrow<T, V>(fn: (value: T) => V): (blob: T) => DecodeResult<V> {
   return (t) => {
