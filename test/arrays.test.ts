@@ -31,6 +31,40 @@ describe('array', () => {
     expect(decoder.verify([[1, 2], [], [3, 4, 5]])).toEqual([[1, 2], [], [3, 4, 5]]);
   });
 
+  describe('readonly', () => {
+    test('if array item decoder is readonly, then so is the array decoder', () => {
+      const decoder = array(number);
+
+      expect(number.isReadonly).toBe(true);
+      expect(decoder.isReadonly).toBe(true);
+
+      const example = [1, 2, 3, 4, 5];
+      expect(decoder.verify(example)).toEqual(example);
+      expect(decoder.verify(example)).toBe(example); // (!)
+    });
+
+    test("if array item decoder is NOT readonly, then so won't the array decoder", () => {
+      const decoder = array(number.transform((x) => x + 1));
+
+      expect(decoder.isReadonly).toBe(false);
+
+      const example = [1, 2, 3, 4, 5];
+      const expected = [2, 3, 4, 5, 6];
+      expect(decoder.verify(example)).toEqual(expected);
+    });
+
+    test('if array item decoders are recursively readonly, then so is the array decoder', () => {
+      const decoder = array(array(array(number)));
+
+      expect(number.isReadonly).toBe(true);
+      expect(decoder.isReadonly).toBe(true);
+
+      const example = [[[1, 2], [], [3, 4, 5]], []];
+      expect(decoder.verify(example)).toEqual(example);
+      expect(decoder.verify(example)).toBe(example); // (!)
+    });
+  });
+
   test('failure to unpack', () => {
     const decoder = array(string);
     expect(() => decoder.verify('boop')).toThrow('Must be an array');

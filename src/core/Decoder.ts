@@ -248,7 +248,7 @@ export function define<T>(fn: AcceptanceFn<T>, isReadonly = false): Decoder<T> {
    * message as the failure reason.
    */
   function transform<V>(transformFn: (result: T) => V): Decoder<V> {
-    return then(noThrow(transformFn));
+    return then(noThrow(transformFn), false);
   }
 
   /**
@@ -276,14 +276,20 @@ export function define<T>(fn: AcceptanceFn<T>, isReadonly = false): Decoder<T> {
    * > be covered more elegantly by `.transform()`, `.refine()`, or `.pipe()`
    * > instead._
    */
-  function then<V>(next: Next<V, T>): Decoder<V> {
-    return define((blob, ok, err) => {
-      const r1 = decode(blob);
-      if (!r1.ok) return r1; // Rejected
+  function then<V>(
+    next: Next<V, T>,
+    isReadonly: boolean = false, // XXX This should not be part of the public API
+  ): Decoder<V> {
+    return define(
+      (blob, ok, err) => {
+        const r1 = decode(blob);
+        if (!r1.ok) return r1; // Rejected
 
-      const r2 = isDecoder(next) ? next : next(r1.value, ok, err);
-      return isDecoder(r2) ? r2.decode(r1.value) : r2;
-    });
+        const r2 = isDecoder(next) ? next : next(r1.value, ok, err);
+        return isDecoder(r2) ? r2.decode(r1.value) : r2;
+      },
+      isReadonly, // XXX We can be more precise here, but I'll work on that later
+    );
   }
 
   /**
@@ -305,7 +311,10 @@ export function define<T>(fn: AcceptanceFn<T>, isReadonly = false): Decoder<T> {
     // Technically, .pipe() is just an alias of .then(), but its signature is
     // more focused on the more convenient use case of working with Decoders
     // directly.
-    return then(next) as Decoder<DecoderType<D>>;
+    return then(
+      next,
+      false, // XXX We can be more precise here, but I'll work on that later
+    ) as Decoder<DecoderType<D>>;
   }
 
   /**
@@ -325,7 +334,7 @@ export function define<T>(fn: AcceptanceFn<T>, isReadonly = false): Decoder<T> {
       return errmsg === null
         ? ok(blob)
         : err(typeof errmsg === 'string' ? annotate(blob, errmsg) : errmsg);
-    });
+    }, isReadonly);
   }
 
   /**
