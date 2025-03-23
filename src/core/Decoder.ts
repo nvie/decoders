@@ -159,6 +159,11 @@ export interface Decoder<T> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type DecoderType<D extends Decoder<any>> = D extends Decoder<infer T> ? T : never;
 
+const NONE = 0;
+const READONLY = 1;
+// const OPTIONAL = 2
+// const MASKED = 3;
+
 function noThrow<T, V>(fn: (value: T) => V): (blob: T) => DecodeResult<V> {
   return (t) => {
     try {
@@ -198,7 +203,7 @@ function format(err: Annotation, formatter: Formatter): Error {
  * helper functions. Please note that `ok()` and `err()` don't perform side
  * effects! You'll need to _return_ those values.
  */
-export function define<T>(fn: AcceptanceFn<T>, isReadonly = false): Decoder<T> {
+export function define<T>(fn: AcceptanceFn<T>, flags = NONE): Decoder<T> {
   /**
    * Verifies the untrusted/unknown input and either accepts or rejects it.
    *
@@ -248,7 +253,7 @@ export function define<T>(fn: AcceptanceFn<T>, isReadonly = false): Decoder<T> {
    * message as the failure reason.
    */
   function transform<V>(transformFn: (result: T) => V): Decoder<V> {
-    return then(noThrow(transformFn), false);
+    return then(noThrow(transformFn));
   }
 
   /**
@@ -276,10 +281,13 @@ export function define<T>(fn: AcceptanceFn<T>, isReadonly = false): Decoder<T> {
    * > be covered more elegantly by `.transform()`, `.refine()`, or `.pipe()`
    * > instead._
    */
-  function then<V>(
-    next: Next<V, T>,
-    isReadonly: boolean = false, // XXX This should not be part of the public API
-  ): Decoder<V> {
+  function then<V>(next: Next<V, T>, forceFlags?: number): Decoder<V> {
+    // Compute flags for the resulting decoder. If the provided value is
+    // a function, it's impossible to statically know if it's going to be
+    // a readonly decoder or not.
+    const newFlags =
+      forceFlags ?? (!isDecoder(next) || !next.isReadonly ? flags & ~READONLY : flags);
+
     return define(
       (blob, ok, err) => {
         const r1 = decode(blob);
@@ -288,7 +296,8 @@ export function define<T>(fn: AcceptanceFn<T>, isReadonly = false): Decoder<T> {
         const r2 = isDecoder(next) ? next : next(r1.value, ok, err);
         return isDecoder(r2) ? r2.decode(r1.value) : r2;
       },
-      isReadonly, // XXX We can be more precise here, but I'll work on that later
+
+      newFlags,
     );
   }
 
@@ -311,10 +320,7 @@ export function define<T>(fn: AcceptanceFn<T>, isReadonly = false): Decoder<T> {
     // Technically, .pipe() is just an alias of .then(), but its signature is
     // more focused on the more convenient use case of working with Decoders
     // directly.
-    return then(
-      next,
-      false, // XXX We can be more precise here, but I'll work on that later
-    ) as Decoder<DecoderType<D>>;
+    return then(next) as Decoder<DecoderType<D>>;
   }
 
   /**
@@ -329,12 +335,19 @@ export function define<T>(fn: AcceptanceFn<T>, isReadonly = false): Decoder<T> {
    * message.
    */
   function reject(rejectFn: (value: T) => string | Annotation | null): Decoder<T> {
-    return then((blob, ok, err) => {
-      const errmsg = rejectFn(blob);
-      return errmsg === null
-        ? ok(blob)
-        : err(typeof errmsg === 'string' ? annotate(blob, errmsg) : errmsg);
-    }, isReadonly);
+    return then(
+      (blob, ok, err) => {
+        const errmsg = rejectFn(blob);
+        return errmsg === null
+          ? ok(blob)
+          : err(typeof errmsg === 'string' ? annotate(blob, errmsg) : errmsg);
+      },
+
+      // XXX I don't like this forcing of the flags here.
+      // XXX The internal helper we really want to call here is like
+      // XXX a .thenReadonly(). Think about a better API.
+      flags,
+    );
   }
 
   /**
@@ -357,7 +370,9 @@ export function define<T>(fn: AcceptanceFn<T>, isReadonly = false): Decoder<T> {
   }
 
   return brand({
-    isReadonly,
+    get isReadonly(): boolean {
+      return (flags & READONLY) !== 0;
+    },
     verify,
     value,
     decode,
@@ -388,8 +403,8 @@ export function defineReadonly<T>(
   message: string,
 ): ReadonlyDecoder<T> {
   return define(
-    (blob, ok, err) => (predicate(blob) ? ok(blob as T) : err(message)),
-    /* readonly */ true,
+    (blob, ok, err) => (predicate(blob) ? ok(blob) : err(message)),
+    READONLY,
   ) as ReadonlyDecoder<T>;
 }
 
