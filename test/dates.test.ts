@@ -25,6 +25,10 @@ describe('pure dates', () => {
       expect(() => decoder.verify(value)).toThrow();
     }
   });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('iso8601', () => {
@@ -61,6 +65,10 @@ describe('iso8601', () => {
     // Semantically invalid (these dates don't exist)
     expect(() => decoder.verify('2020-03-32T10:57:33Z')).toThrow();
     expect(() => decoder.verify('0099-16-48T10:57:33Z')).toThrow();
+  });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(false);
   });
 });
 
@@ -123,5 +131,9 @@ describe('datelike', () => {
     // Semantically invalid (these dates don't exist)
     expect(() => decoder.verify('2020-03-32T10:57:33Z')).toThrow();
     expect(() => decoder.verify('0099-16-48T10:57:33Z')).toThrow();
+  });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(false);
   });
 });

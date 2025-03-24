@@ -119,7 +119,7 @@ export interface Decoder<T> {
    * > be covered more elegantly by `.transform()`, `.refine()`, or `.pipe()`
    * > instead._
    */
-  then<V>(next: Next<V, T>): Decoder<V>;
+  then<V>(next: Next<V, T>, forceFlags?: number): Decoder<V>;  // XXX This should not be public API
 
   /**
    * Send the output of this decoder as input to another decoder.

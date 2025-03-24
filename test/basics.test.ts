@@ -14,13 +14,12 @@ import {
   undefined_,
   unknown,
 } from '~/basics';
-import { string } from '~/strings';
+import { numeric, string } from '~/strings';
 
 import { INPUTS } from './_fixtures';
 
 describe('null_', () => {
   const decoder = null_;
-  expect(decoder.isReadonly).toBe(true);
   const [okay, not_okay] = partition(INPUTS, (x) => x === null);
 
   test('valid', () => {
@@ -37,11 +36,14 @@ describe('null_', () => {
       expect(decoder.decode(value).error?.text).toEqual('Must be null');
     }
   });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('undefined_', () => {
   const decoder = undefined_;
-  expect(decoder.isReadonly).toBe(true);
   const [okay, not_okay] = partition(INPUTS, (x) => x === undefined);
 
   test('valid', () => {
@@ -58,11 +60,14 @@ describe('undefined_', () => {
       expect(decoder.decode(value).error?.text).toEqual('Must be undefined');
     }
   });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('string constants', () => {
   const decoder = constant('foo');
-  expect(decoder.isReadonly).toBe(true);
   const [okay, not_okay] = partition(INPUTS, (x) => x === 'foo');
 
   test('valid', () => {
@@ -79,12 +84,15 @@ describe('string constants', () => {
       expect(decoder.decode(value).error?.text).toEqual("Must be 'foo'");
     }
   });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('number constants', () => {
   const decoder = constant(42);
   const [okay, not_okay] = partition(INPUTS, (x) => x === 42);
-  expect(decoder.isReadonly).toBe(true);
 
   test('valid', () => {
     expect(okay.length).not.toBe(0);
@@ -99,6 +107,10 @@ describe('number constants', () => {
       expect(decoder.decode(value).ok).toBe(false);
       expect(decoder.decode(value).error?.text).toEqual('Must be 42');
     }
+  });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
   });
 });
 
@@ -121,11 +133,14 @@ describe('boolean constants #1', () => {
       expect(decoder.decode(value).error?.text).toEqual('Must be true');
     }
   });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('boolean constants #2', () => {
   const decoder = constant(false);
-  expect(decoder.isReadonly).toBe(true);
   const [okay, not_okay] = partition(INPUTS, (x) => x === false);
 
   test('valid', () => {
@@ -142,6 +157,10 @@ describe('boolean constants #2', () => {
       expect(decoder.decode(value).error?.text).toEqual('Must be false');
     }
   });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('symbol constants', () => {
@@ -151,7 +170,6 @@ describe('symbol constants', () => {
   const sym4 = Symbol();
 
   const decoder = constant(sym2);
-  expect(decoder.isReadonly).toBe(true);
   const [okay, not_okay] = partition([...INPUTS, sym1, sym2, sym3, sym4], (x) =>
     ([sym2] as unknown[]).includes(x),
   );
@@ -170,6 +188,10 @@ describe('symbol constants', () => {
       expect(decoder.decode(value).error?.text).toMatch(/^Must be Symbol\(xyz2\)$/);
     }
   });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('always', () => {
@@ -182,7 +204,6 @@ describe('always', () => {
       }
 
       const decoder = always(hardcodedValue);
-      expect(decoder.isReadonly).toBe(false);
 
       // Against all inputs...
       for (const input of INPUTS) {
@@ -200,14 +221,17 @@ describe('always', () => {
   test('invalid', () => {
     // hardcoded verifiers never fail
   });
+
+  test('readonliness', () => {
+    const decoder = always(42);
+    expect(decoder.isReadonly).toBe(false);
+  });
 });
 
-describe('mixed (pass-thru)', () => {
-  test('valid', () => {
-    // Test all hardcoded inputs...
-    const decoder = unknown;
-    expect(decoder.isReadonly).toBe(true);
+describe('unknown (pass-thru)', () => {
+  const decoder = unknown;
 
+  test('valid', () => {
     // Against all inputs...
     for (const input of INPUTS) {
       expect(decoder.verify(input)).toBe(input);
@@ -217,11 +241,14 @@ describe('mixed (pass-thru)', () => {
   test('mixed', () => {
     // mixed verifiers never fail
   });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('optional', () => {
   const decoder = optional(string);
-  expect(decoder.isReadonly).toBe(true);
   const [okay, not_okay] = partition(INPUTS, (x) => typeof x === 'string');
 
   test('valid', () => {
@@ -261,11 +288,23 @@ describe('optional', () => {
     expect(() => decoder.verify(null)).toThrow();
     expect(() => decoder.verify(123)).toThrow();
   });
+
+  describe('readonliness', () => {
+    test('inherits readonliness when possible', () => {
+      const decoder = optional(optional(string));
+      expect(decoder.isReadonly).toBe(true);
+    });
+
+    test('does not inherit readonliness when not possible', () => {
+      const decoder = optional(optional(numeric));
+      //                                ^^^^^^^ not readonly
+      expect(decoder.isReadonly).toBe(false);
+    });
+  });
 });
 
 describe('nullable', () => {
   const decoder = nullable(string);
-  expect(decoder.isReadonly).toBe(true);
   const [okay, not_okay] = partition(INPUTS, (x) => typeof x === 'string');
 
   test('valid', () => {
@@ -305,11 +344,23 @@ describe('nullable', () => {
     expect(() => decoder.verify(undefined)).toThrow();
     expect(() => decoder.verify(123)).toThrow();
   });
+
+  describe('readonliness', () => {
+    test('inherits readonliness when possible', () => {
+      const decoder = nullable(nullable(string));
+      expect(decoder.isReadonly).toBe(true);
+    });
+
+    test('does not inherit readonliness when not possible', () => {
+      const decoder = nullable(nullable(numeric));
+      //                                ^^^^^^^ not readonly
+      expect(decoder.isReadonly).toBe(false);
+    });
+  });
 });
 
 describe('maybe', () => {
   const decoder = maybe(string);
-  expect(decoder.isReadonly).toBe(true);
   const [okay, not_okay] = partition(INPUTS, (x) => typeof x === 'string');
 
   test('valid', () => {
@@ -360,12 +411,24 @@ describe('maybe', () => {
     expect(decoder.verify(undefined)).toBe(42);
 
     expect(() => decoder.verify(123)).toThrow();
+  });
+
+  describe('readonliness', () => {
+    test('inherits readonliness when possible', () => {
+      const decoder = maybe(maybe(string));
+      expect(decoder.isReadonly).toBe(true);
+    });
+
+    test('does not inherit readonliness when not possible', () => {
+      const decoder = maybe(maybe(numeric));
+      //                          ^^^^^^^ not readonly
+      expect(decoder.isReadonly).toBe(false);
+    });
   });
 });
 
 describe('nullish', () => {
   const decoder = nullish(string);
-  expect(decoder.isReadonly).toBe(true);
   const [okay, not_okay] = partition(INPUTS, (x) => typeof x === 'string');
 
   test('valid', () => {
@@ -417,11 +480,23 @@ describe('nullish', () => {
 
     expect(() => decoder.verify(123)).toThrow();
   });
+
+  describe('readonliness', () => {
+    test('inherits readonliness when possible', () => {
+      const decoder = nullish(nullish(string));
+      expect(decoder.isReadonly).toBe(true);
+    });
+
+    test('does not inherit readonliness when not possible', () => {
+      const decoder = nullish(nullish(numeric));
+      //                              ^^^^^^^ not readonly
+      expect(decoder.isReadonly).toBe(false);
+    });
+  });
 });
 
 describe('fail', () => {
   const decoder = fail('I always fail');
-  expect(decoder.isReadonly).toBe(true);
   const not_okay = INPUTS;
 
   test('accepts nothing', () => {
@@ -433,12 +508,15 @@ describe('fail', () => {
     for (const value of not_okay) {
       expect(decoder.decode(value).ok).toBe(false);
     }
+  });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
   });
 });
 
 describe('never', () => {
   const decoder = never('I always fail');
-  expect(decoder.isReadonly).toBe(true);
   const not_okay = INPUTS;
 
   test('accepts nothing', () => {
@@ -450,5 +528,9 @@ describe('never', () => {
     for (const value of not_okay) {
       expect(decoder.decode(value).ok).toBe(false);
     }
+  });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
   });
 });

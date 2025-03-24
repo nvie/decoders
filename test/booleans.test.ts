@@ -7,7 +7,6 @@ import { INPUTS } from './_fixtures';
 
 describe('booleans', () => {
   const decoder = boolean;
-  expect(decoder.isReadonly).toBe(true);
   const [okay, not_okay] = partition(INPUTS, (x) => x === true || x === false);
 
   test('valid', () => {
@@ -23,11 +22,14 @@ describe('booleans', () => {
       expect(decoder.decode(value).ok).toBe(false);
     }
   });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('truthy', () => {
   const decoder = truthy;
-  expect(decoder.isReadonly).toBe(false);
   const okay = INPUTS;
 
   test('valid', () => {
@@ -39,5 +41,9 @@ describe('truthy', () => {
 
   test('invalid', () => {
     // truthy never fails
+  });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(false);
   });
 });

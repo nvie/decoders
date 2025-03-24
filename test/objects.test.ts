@@ -5,7 +5,7 @@ import { boolean } from '~/booleans';
 import { mapping, record } from '~/collections';
 import { number } from '~/numbers';
 import { exact, inexact, object, pojo } from '~/objects';
-import { decimal, regex, string } from '~/strings';
+import { decimal, numeric, regex, string } from '~/strings';
 
 describe('objects', () => {
   test('decodes objects and fields', () => {
@@ -131,6 +131,11 @@ describe('objects', () => {
     expect(decoder.decode({ foo: [1, 2, 3] }).ok).toBe(false); // Missing key "id"
     expect(decoder.decode({ id: 3 }).ok).toBe(false); // Invalid field value for "id"
   });
+
+  // XXX Implement
+  test('readonliness', () => {
+    // expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('exact objects', () => {
@@ -216,6 +221,11 @@ describe('exact objects', () => {
       extra: 'default',
     });
   });
+
+  // XXX Implement
+  test('readonliness', () => {
+    // expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('inexact objects', () => {
@@ -294,17 +304,27 @@ describe('inexact objects', () => {
       bar: undefined, // 'bar' is ignored so the explicit-undefined will override here
     });
   });
+
+  // XXX Implement
+  test('readonliness', () => {
+    // expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('pojo', () => {
+  const decoder = pojo;
+
   test('decodes objects and fields', () => {
-    const decoder = pojo;
     expect(decoder.verify({})).toEqual({});
     expect(decoder.verify({ a: 1 })).toEqual({ a: 1 });
 
     // Not
     expect(() => decoder.verify(null)).toThrow();
     expect(() => decoder.verify(42)).toThrow();
+  });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
   });
 });
 
@@ -366,6 +386,11 @@ describe('objects w/ circular refs', () => {
       }).decode(value).ok,
     ).toBe(false);
   });
+
+  // XXX Implement
+  test('readonliness', () => {
+    // expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('arrays are not objects', () => {
@@ -393,6 +418,12 @@ describe('arrays are not objects', () => {
     expect(() => decoder2.verify(new Error('foo'))).toThrow('Must be an object');
     expect(() => decoder1.verify(new Date())).toThrow('Must be an object');
     expect(() => decoder2.verify(new Date())).toThrow('Must be an object');
+  });
+
+  // XXX Should inherit
+  test.fails('readonliness', () => {
+    expect(decoder1.isReadonly).toBe(true);
+    expect(decoder2.isReadonly).toBe(true);
   });
 });
 
@@ -427,6 +458,11 @@ describe('mapping', () => {
     // More than one error
     expect(() => decoder.verify({ foo: 42, bar: 42 })).toThrow();
   });
+
+  // XXX Implement
+  test.fails('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 // Single-argument form of record() only specifies value type
@@ -452,6 +488,11 @@ describe('record', () => {
         '125': { name: 'bar' },
       }),
     ).toThrow("Missing key: 'name'");
+  });
+
+  // XXX Implement
+  test.fails('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
   });
 });
 
@@ -498,5 +539,41 @@ describe('record with key validation', () => {
     expect(() => decoder.verify({ '': true })).toThrow(
       "Invalid key '': Must only contain digits",
     );
+  });
+
+  describe('readonliness', () => {
+    test('inherits readonliness when possible', () => {
+      // value decoders is readonly
+      const decoder1 = record(number);
+      expect(decoder1.isReadonly).toBe(true);
+
+      // key and value decoders are readonly
+      const decoder2 = record(string, number);
+      expect(decoder2.isReadonly).toBe(true);
+
+      // key and value decoders are readonly
+      const decoder3 = record(decimal, number);
+      expect(decoder3.isReadonly).toBe(true);
+    });
+
+    test('does not inherit readonliness when not possible', () => {
+      const decoder1 = record(
+        // value decoder not readonly
+        string.transform((s) => s.toUpperCase()),
+      );
+      expect(decoder1.isReadonly).toBe(false);
+
+      const decoder2 = record(
+        string.transform((s) => s.toUpperCase()), // key decoder not readonly
+        number,
+      );
+      expect(decoder2.isReadonly).toBe(false);
+
+      const decoder3 = record(
+        decimal,
+        string.transform((s) => s.toUpperCase()), // value decoder not readonly
+      );
+      expect(decoder3.isReadonly).toBe(false);
+    });
   });
 });

@@ -1,5 +1,5 @@
 import type { Annotation, Decoder, DecoderType, ReadonlyDecoder } from '~/core';
-import { annotate, defineReadonly } from '~/core';
+import { annotate, defineReadonly, NONE, READONLY } from '~/core';
 
 /**
  * Accepts any array, but doesn't validate its items further.
@@ -71,6 +71,9 @@ function isNonEmpty<T>(arr: readonly T[]): arr is [T, ...T[]] {
 /**
  * Like `array()`, but will reject arrays with 0 elements.
  */
+export function nonEmptyArray<T>(
+  decoder: ReadonlyDecoder<T>,
+): ReadonlyDecoder<[T, ...T[]]>;
 export function nonEmptyArray<T>(decoder: Decoder<T>): Decoder<[T, ...T[]]> {
   return array(decoder).refine(isNonEmpty, 'Must be non-empty array');
 }
@@ -87,8 +90,18 @@ type TupleDecoderType<Ds extends readonly Decoder<unknown>[]> = {
  * _n_ given decoders.
  */
 export function tuple<
+  Ds extends readonly [
+    first: ReadonlyDecoder<unknown>,
+    ...rest: readonly ReadonlyDecoder<unknown>[],
+  ],
+>(...decoders: Ds): ReadonlyDecoder<TupleDecoderType<Ds>>;
+export function tuple<
+  Ds extends readonly [first: Decoder<unknown>, ...rest: readonly Decoder<unknown>[]],
+>(...decoders: Ds): Decoder<TupleDecoderType<Ds>>;
+export function tuple<
   Ds extends readonly [first: Decoder<unknown>, ...rest: readonly Decoder<unknown>[]],
 >(...decoders: Ds): Decoder<TupleDecoderType<Ds>> {
+  const flags = decoders.every((d) => d.isReadonly) ? READONLY : NONE;
   return ntuple(decoders.length).then((blobs, ok, err) => {
     let allOk = true;
 
@@ -111,5 +124,5 @@ export function tuple<
       // results, try to construct a good error message
       return err(annotate(rvs));
     }
-  });
+  }, flags);
 }

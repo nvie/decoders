@@ -55,6 +55,11 @@ describe('decoder', () => {
     expect(() => decoder.verify([new Date()])).toThrow();
     expect(() => decoder.verify({ a: new Date() })).toThrow();
   });
+
+  // XXX Implement
+  test.fails('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('jsonObject', () => {
@@ -90,6 +95,11 @@ describe('jsonObject', () => {
     expect(() => decoder.verify([new Date()])).toThrow();
     expect(() => decoder.verify({ a: new Date() })).toThrow();
   });
+
+  // XXX Implement
+  test.fails('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('jsonArray', () => {
@@ -122,5 +132,10 @@ describe('jsonArray', () => {
     expect(() => decoder.verify(new Date())).toThrow();
     expect(() => decoder.verify([new Date()])).toThrow();
     expect(() => decoder.verify({ a: new Date() })).toThrow();
+  });
+
+  // XXX Implement
+  test.fails('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
   });
 });
