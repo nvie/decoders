@@ -1,10 +1,10 @@
 import { describe, expect, test } from 'vitest';
 
-import { always } from '~/basics';
-import { annotate, define, formatInline, formatShort } from '~/core';
+import { always, optional } from '~/basics';
+import { annotate, define, formatInline, formatShort, readonly } from '~/core';
 import { number, positiveInteger } from '~/numbers';
 import { pojo } from '~/objects';
-import { string } from '~/strings';
+import { numeric, string } from '~/strings';
 
 test('.decode', () => {
   // .decode() is tested implicitly because it's used _everywhere_
@@ -277,5 +277,17 @@ describe('.describe()', () => {
 
   test('invalid', () => {
     expect(() => decoder.verify(0)).toThrow(/Must be text/);
+  });
+});
+
+describe('readonly() helper', () => {
+  test('is a no-op when the given decoder is read-only', () => {
+    const decoder = optional(string);
+    expect(readonly(decoder)).toBe(decoder);
+  });
+
+  test("throws when the given decoder isn't read-only", () => {
+    const decoder = optional(numeric);
+    expect(() => readonly(decoder)).toThrow('The provided decoder must be read-only');
   });
 });

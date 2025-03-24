@@ -1,4 +1,11 @@
-import type { Decoder, DecoderType, JSONValue, JSONObject, JSONArray } from '../dist';
+import type {
+  Decoder,
+  DecoderType,
+  JSONValue,
+  JSONObject,
+  JSONArray,
+  ReadonlyDecoder,
+} from '../dist';
 import {
   // Decoders
   always,
@@ -51,6 +58,7 @@ import {
   positiveInteger,
   positiveNumber,
   prep,
+  readonly,
   record,
   regex,
   select,
@@ -601,3 +609,10 @@ const circle1: Decoder<Circle1> = object({
 });
 
 expectType<Shape1>(test(taggedUnion('_type', { 0: rect1, 1: circle1 })));
+
+// readonly() helper
+expectType<ReadonlyDecoder<string>>(string);
+expectType<ReadonlyDecoder<string>>(readonly(string));
+expectType<ReadonlyDecoder<string>>(readonly(readonly(string)));
+expectType<ReadonlyDecoder<string[]>>(readonly(array(string)));
+expectError(readonly(array(numeric)));

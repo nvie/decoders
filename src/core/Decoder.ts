@@ -398,6 +398,11 @@ export function define<T>(fn: AcceptanceFn<T>, flags = NONE): Decoder<T> {
   });
 }
 
+/**
+ * Defines a new read-only decoder. A read-only decoder is one that guarantees
+ * to validate the given input without modifying it, and returning its input
+ * value unchanged (if it's accepted).
+ */
 export function defineReadonly<T>(
   predicate: (blob: unknown) => blob is T,
   message: string,
@@ -406,6 +411,16 @@ export function defineReadonly<T>(
     (blob, ok, err) => (predicate(blob) ? ok(blob) : err(message)),
     READONLY,
   ) as ReadonlyDecoder<T>;
+}
+
+/**
+ * Ensures that the given decoder is read-only.
+ */
+export function readonly<T>(decoder: ReadonlyDecoder<T>): ReadonlyDecoder<T> {
+  if (!decoder.isReadonly) {
+    throw new Error('The provided decoder must be read-only');
+  }
+  return decoder;
 }
 
 /** @internal */

@@ -22,7 +22,7 @@ export { either, enum_, oneOf, select, taggedUnion } from './unions';
 export type { Decoder, DecodeResult, DecoderType, ReadonlyDecoder } from '~/core';
 export type { Err, Ok, Result } from '~/core';
 export type { Formatter } from '~/core';
-export { define, defineReadonly } from '~/core';
+export { define, defineReadonly, readonly } from '~/core';
 export { err, ok } from '~/core';
 export { formatInline, formatShort } from '~/core';
 export type { Scalar } from '~/lib/types';
