@@ -1,4 +1,4 @@
-import type { Annotation, Decoder, DecodeResult, DecoderType } from '~/core';
+import type { Decoder, DecoderType } from '~/core';
 import { annotate, define } from '~/core';
 
 /**
@@ -14,50 +14,34 @@ export const poja: Decoder<unknown[]> = define((blob, ok, err) => {
 });
 
 /**
- * Given an array of Result instances, loop over them all and return:
- * - An [index, err] tuple, indicating the (index of the) first Err instance
- *   encountered; or
- * - a new Ok with an array of all unwrapped Ok'ed values
- */
-function all<T>(
-  items: readonly DecodeResult<T>[],
-  blobs: readonly unknown[],
-
-  // TODO: Make this less ugly
-  ok: (value: T[]) => DecodeResult<T[]>,
-  err: (ann: Annotation) => DecodeResult<T[]>,
-): DecodeResult<T[]> {
-  const results: T[] = [];
-  for (let index = 0; index < items.length; ++index) {
-    const result = items[index];
-    if (result.ok) {
-      results.push(result.value);
-    } else {
-      const ann = result.error;
-
-      // Rewrite the annotation to include the index information, and inject it into the original blob
-      const clone = blobs.slice();
-      clone.splice(
-        index,
-        1,
-        annotate(ann, ann.text ? `${ann.text} (at index ${index})` : `index ${index}`),
-      );
-
-      return err(annotate(clone));
-    }
-  }
-  return ok(results);
-}
-
-/**
  * Accepts arrays of whatever the given decoder accepts.
  */
 export function array<T>(decoder: Decoder<T>): Decoder<T[]> {
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const decodeFn = decoder.decode;
-  return poja.then((blobs: readonly unknown[], ok, err) => {
-    const results = blobs.map(decodeFn);
-    return all(results, blobs, ok, err);
+  return poja.then((inputs: readonly unknown[], ok, err) => {
+    const results: T[] = [];
+    for (let i = 0; i < inputs.length; ++i) {
+      const blob = inputs[i];
+      const result = decodeFn(blob);
+      if (result.ok) {
+        results.push(result.value);
+      } else {
+        results.length = 0; // Forget all results collected so far
+        const ann = result.error;
+
+        // Rewrite the annotation to include the index information, and inject it into the original blob
+        const clone = inputs.slice();
+        clone.splice(
+          i,
+          1,
+          annotate(ann, ann.text ? `${ann.text} (at index ${i})` : `index ${i}`),
+        );
+
+        return err(annotate(clone));
+      }
+    }
+    return ok(results);
   });
 }
 
