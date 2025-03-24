@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Reduce peak memory usage of `array()` decoder
+
 ## [2.6.1] - 2025-02-25
 
 - Fix issue that could lead to corrupt annotations if somehow two verions of decoders (or
