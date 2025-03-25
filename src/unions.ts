@@ -1,5 +1,5 @@
 import type { Annotation, Decoder, DecoderType, ReadonlyDecoder } from '~/core';
-import { define, defineReadonly, NONE, READONLY, summarize } from '~/core';
+import { define, defineReadonly, summarize } from '~/core';
 import { indent, quote } from '~/lib/text';
 import type { Scalar } from '~/lib/types';
 import { isNumber, isString } from '~/lib/utils';
@@ -89,7 +89,8 @@ export function either<Ds extends readonly Decoder<unknown>[]>(
       return err(text);
     },
 
-    decoders.every((decoder) => decoder.isReadonly) ? READONLY : NONE,
+    // Flags
+    { readonly: decoders.every((decoder) => decoder.isReadonly) },
   );
 }
 

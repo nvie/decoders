@@ -1,5 +1,5 @@
 import type { Annotation, Decoder, DecoderType, ReadonlyDecoder } from '~/core';
-import { annotate, defineReadonly, NONE, READONLY } from '~/core';
+import { annotate, defineReadonly } from '~/core';
 
 /**
  * Accepts any array, but doesn't validate its items further.
@@ -74,6 +74,7 @@ function isNonEmpty<T>(arr: readonly T[]): arr is [T, ...T[]] {
 export function nonEmptyArray<T>(
   decoder: ReadonlyDecoder<T>,
 ): ReadonlyDecoder<[T, ...T[]]>;
+export function nonEmptyArray<T>(decoder: Decoder<T>): Decoder<[T, ...T[]]>;
 export function nonEmptyArray<T>(decoder: Decoder<T>): Decoder<[T, ...T[]]> {
   return array(decoder).refine(isNonEmpty, 'Must be non-empty array');
 }
@@ -101,28 +102,32 @@ export function tuple<
 export function tuple<
   Ds extends readonly [first: Decoder<unknown>, ...rest: readonly Decoder<unknown>[]],
 >(...decoders: Ds): Decoder<TupleDecoderType<Ds>> {
-  const flags = decoders.every((d) => d.isReadonly) ? READONLY : NONE;
-  return ntuple(decoders.length).then((blobs, ok, err) => {
-    let allOk = true;
+  return ntuple(decoders.length).then(
+    (blobs, ok, err) => {
+      let allOk = true;
 
-    const rvs = decoders.map((decoder, i) => {
-      const blob = blobs[i];
-      const result = decoder.decode(blob);
-      if (result.ok) {
-        return result.value;
+      const rvs = decoders.map((decoder, i) => {
+        const blob = blobs[i];
+        const result = decoder.decode(blob);
+        if (result.ok) {
+          return result.value;
+        } else {
+          allOk = false;
+          return result.error;
+        }
+      });
+
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (allOk) {
+        return ok(rvs as TupleDecoderType<Ds>);
       } else {
-        allOk = false;
-        return result.error;
+        // If a decoder error has happened while unwrapping all the
+        // results, try to construct a good error message
+        return err(annotate(rvs));
       }
-    });
+    },
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (allOk) {
-      return ok(rvs as TupleDecoderType<Ds>);
-    } else {
-      // If a decoder error has happened while unwrapping all the
-      // results, try to construct a good error message
-      return err(annotate(rvs));
-    }
-  }, flags);
+    // Flags
+    { readonly: decoders.every((d) => d.isReadonly) },
+  );
 }

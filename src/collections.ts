@@ -1,5 +1,5 @@
 import type { Annotation, Decoder, ReadonlyDecoder } from '~/core';
-import { annotate, annotateObject, formatShort, merge, NONE, READONLY } from '~/core';
+import { annotate, annotateObject, formatShort, merge } from '~/core';
 import { quote } from '~/lib/text';
 
 import { array } from './arrays';
@@ -26,40 +26,43 @@ export function record<K extends string, V>(
 ): Decoder<Record<K, V>> {
   const keyDecoder = snd !== undefined ? (fst as Decoder<K>) : undefined;
   const valueDecoder = snd ?? (fst as Decoder<V>);
-  const flags =
-    (keyDecoder?.isReadonly ?? true) && valueDecoder.isReadonly ? READONLY : NONE;
-  return pojo.then((input, ok, err) => {
-    let rv = {} as Record<K, V>;
-    const errors = new Map<string, Annotation>();
+  return pojo.then(
+    (input, ok, err) => {
+      let rv = {} as Record<K, V>;
+      const errors = new Map<string, Annotation>();
 
-    for (const key of Object.keys(input)) {
-      const value = input[key];
-      const keyResult = keyDecoder?.decode(key);
-      if (keyResult?.ok === false) {
-        return err(
-          annotate(input, `Invalid key ${quote(key)}: ${formatShort(keyResult.error)}`),
-        );
-      }
-
-      const k = keyResult?.value ?? (key as K);
-
-      const result = valueDecoder.decode(value);
-      if (result.ok) {
-        if (errors.size === 0) {
-          rv[k] = result.value;
+      for (const key of Object.keys(input)) {
+        const value = input[key];
+        const keyResult = keyDecoder?.decode(key);
+        if (keyResult?.ok === false) {
+          return err(
+            annotate(input, `Invalid key ${quote(key)}: ${formatShort(keyResult.error)}`),
+          );
         }
-      } else {
-        errors.set(key, result.error);
-        rv = {} as Record<K, V>; // Clear the success value so it can get garbage collected early
-      }
-    }
 
-    if (errors.size > 0) {
-      return err(merge(annotateObject(input), errors));
-    } else {
-      return ok(rv);
-    }
-  }, flags);
+        const k = keyResult?.value ?? (key as K);
+
+        const result = valueDecoder.decode(value);
+        if (result.ok) {
+          if (errors.size === 0) {
+            rv[k] = result.value;
+          }
+        } else {
+          errors.set(key, result.error);
+          rv = {} as Record<K, V>; // Clear the success value so it can get garbage collected early
+        }
+      }
+
+      if (errors.size > 0) {
+        return err(merge(annotateObject(input), errors));
+      } else {
+        return ok(rv);
+      }
+    },
+
+    // Flags
+    { readonly: (keyDecoder?.isReadonly ?? true) && valueDecoder.isReadonly },
+  );
 }
 
 /**

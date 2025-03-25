@@ -1,5 +1,5 @@
 import type { Decoder, ReadonlyDecoder } from '~/core';
-import { annotate, define, defineReadonly, NONE, READONLY, readonly } from '~/core';
+import { annotate, define, defineReadonly, readonly } from '~/core';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 export interface Klass<T> extends Function {
@@ -35,15 +35,12 @@ export function lazy<T>(
 ): ReadonlyDecoder<T>;
 export function lazy<T>(decoderFn: () => Decoder<T>): Decoder<T>;
 export function lazy<T>(decoderFn: () => Decoder<T>, options?: LazyOptions): Decoder<T> {
-  return define(
-    (blob) => {
-      let decoder = options?.readonly
-        ? readonly(decoderFn() as ReadonlyDecoder<T>)
-        : decoderFn();
-      return decoder.decode(blob);
-    },
-    options?.readonly ? READONLY : NONE,
-  );
+  return define((blob) => {
+    let decoder = options?.readonly
+      ? readonly(decoderFn() as ReadonlyDecoder<T>)
+      : decoderFn();
+    return decoder.decode(blob);
+  }, options);
 }
 
 /**

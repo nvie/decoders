@@ -5,7 +5,7 @@ import { boolean } from '~/booleans';
 import { mapping, record } from '~/collections';
 import { number } from '~/numbers';
 import { exact, inexact, object, pojo } from '~/objects';
-import { decimal, numeric, regex, string } from '~/strings';
+import { decimal, regex, string } from '~/strings';
 
 describe('objects', () => {
   test('decodes objects and fields', () => {
