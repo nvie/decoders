@@ -110,10 +110,10 @@ export function oneOf<C extends Scalar>(constants: readonly C[]): ReadonlyDecode
  */
 export function enum_<TEnum extends Record<string, string | number>>(
   enumObj: TEnum,
-): Decoder<TEnum[keyof TEnum]> {
+): ReadonlyDecoder<TEnum[keyof TEnum]> {
   const values = Object.values(enumObj);
   if (!values.some(isNumber)) {
-    return oneOf(values) as Decoder<TEnum[keyof TEnum]>;
+    return oneOf(values) as ReadonlyDecoder<TEnum[keyof TEnum]>;
   } else {
     // Numeric enums (or mixed enums) require a bit more work. We'll definitely
     // want to allow all the numeric values.
@@ -124,7 +124,7 @@ export function enum_<TEnum extends Record<string, string | number>>(
     // numeric values we already covered
     const strings = values.filter(isString).filter((val) => !ignore.has(val));
 
-    return oneOf([...nums, ...strings]) as Decoder<TEnum[keyof TEnum]>;
+    return oneOf([...nums, ...strings]) as ReadonlyDecoder<TEnum[keyof TEnum]>;
   }
 }
 
