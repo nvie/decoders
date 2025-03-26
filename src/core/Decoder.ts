@@ -417,11 +417,11 @@ export function defineReadonly<T>(
 }
 
 /**
- * Ensures that the given decoder is read-only.
+ * Ensures that the given decoder will (recursively) be read-only at runtime.
  */
 export function readonly<T>(decoder: Decoder<T>): ReadonlyDecoder<T> {
   if (!decoder.isReadonly) {
-    const err = new Error('The provided decoder must be read-only');
+    const err = new Error('Decoder setup error: this decoder is required to be readonly');
     Error.captureStackTrace(err, readonly);
     throw err;
   }

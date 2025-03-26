@@ -608,7 +608,34 @@ describe('select', () => {
     expect(() => decoder.verify({ version: -7 })).toThrow('Must be one of 2, 3');
   });
 
-  test('readonliness', () => {
-    expect(decoder.isReadonly).toBe(false);
+  describe('readonliness', () => {
+    test('does not inherit readonliness by default', () => {
+      const decoder = select(number, () => number);
+      expect(decoder.isReadonly).toBe(false);
+    });
+
+    test("inherits readonliness when told it's possible", () => {
+      const decoder = select(number, () => number, { readonly: true });
+      expect(decoder.isReadonly).toBe(true);
+    });
+
+    test('does not inherit readonliness when not possible', () => {
+      const decoder = select(number, () => numeric);
+      //                                   ^^^^^^^ not readonly
+      expect(decoder.isReadonly).toBe(false);
+    });
+
+    test("inherits readonliness when told it's possible (despite being a lie)", () => {
+      const decoder = select(number, () => numeric, { readonly: true });
+      //                                                        ^^^^ a lie
+      //                                   ^^^^^^^ not readonly
+      expect(decoder.isReadonly).toBe(true);
+      //                              ^^^^ the lie is forwarded...
+
+      // ...but this is what you get when telling lies
+      expect(() => decoder.verify(123)).toThrow(
+        'Decoder setup error: this decoder is required to be readonly',
+      );
+    });
   });
 });

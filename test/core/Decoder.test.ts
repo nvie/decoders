@@ -288,6 +288,8 @@ describe('readonly() helper', () => {
 
   test("throws when the given decoder isn't read-only", () => {
     const decoder = optional(numeric);
-    expect(() => readonly(decoder)).toThrow('The provided decoder must be read-only');
+    expect(() => readonly(decoder)).toThrow(
+      'Decoder setup error: this decoder is required to be readonly',
+    );
   });
 });

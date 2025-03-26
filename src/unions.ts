@@ -217,5 +217,5 @@ export function select<T, D extends Decoder<unknown>>(
           : selectFn(result.value)
         ).decode(blob)
       : result;
-  }) as Decoder<DecoderType<D>>;
+  }, options) as Decoder<DecoderType<D>>;
 }
