@@ -5,7 +5,7 @@ import { isDate } from '~/lib/utils';
 import { regex } from './strings';
 import { either } from './unions';
 
-// Only matches the shape.  This "over-matches" some values that still aren't
+// Only matches the shape. This "over-matches" some values that still aren't
 // valid dates (like 9999-99-99), but those will be caught by JS Date's
 // internal validations
 const iso8601_re =

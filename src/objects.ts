@@ -82,7 +82,7 @@ export function object<Ds extends Record<string, Decoder<unknown>>>(
     // value.
     const missingKeys = difference(knownKeys, actualKeys);
 
-    const record = {};
+    const output = {};
     let errors: Map<string, Annotation> | null = null;
 
     for (const key of Object.keys(decoders)) {
@@ -94,7 +94,7 @@ export function object<Ds extends Record<string, Decoder<unknown>>>(
         const value = result.value;
         if (value !== undefined) {
           // @ts-expect-error - look into this later
-          record[key] = value;
+          output[key] = value;
         }
 
         // If this succeeded, remove the key from the missing keys
@@ -107,7 +107,7 @@ export function object<Ds extends Record<string, Decoder<unknown>>>(
         // want to collect more error information.
         if (rawValue === undefined) {
           // Explicitly add it to the missing set if the value is
-          // undefined.  This covers explicit undefineds to be
+          // undefined. This covers explicit undefineds to be
           // treated the same as implicit undefineds (aka missing
           // keys).
           missingKeys.add(key);
@@ -119,8 +119,8 @@ export function object<Ds extends Record<string, Decoder<unknown>>>(
     }
 
     // Deal with errors now. There are two classes of errors we want to
-    // report.  First of all, we want to report any inline errors in this
-    // object.  Lastly, any fields that are missing should be annotated on
+    // report. First of all, we want to report any inline errors in this
+    // object. Lastly, any fields that are missing should be annotated on
     // the outer object itself.
     if (errors || missingKeys.size > 0) {
       let objAnn = annotateObject(plainObj);
@@ -138,7 +138,7 @@ export function object<Ds extends Record<string, Decoder<unknown>>>(
       return err(objAnn);
     }
 
-    return ok(record as ObjectDecoderType<Ds>);
+    return ok(output as ObjectDecoderType<Ds>);
   });
 }
 
