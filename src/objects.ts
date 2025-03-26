@@ -105,9 +105,7 @@ export function object<Ds extends Record<string, Decoder<unknown>>>(
           // keys).
           missingKeys.add(key);
         } else {
-          if (errors === null) {
-            errors = new Map();
-          }
+          errors ??= new Map();
           errors.set(key, ann);
         }
       }
