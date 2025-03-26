@@ -454,6 +454,22 @@ DECODERS = {
     """,
   },
 
+  'dateString': {
+    'section': 'Dates',
+    'params': None,
+    'return_type': 'Decoder<string>',
+    'example': """
+      // 👍
+      dateString.verify('2020-06-01T12:00:00Z');
+
+      // 👎
+      dateString.verify('2020-06-01');  // throws
+      dateString.verify('hello');       // throws
+      dateString.verify(123);           // throws
+      dateString.verify(new Date());    // throws (does not accept dates)
+    """,
+  },
+
   'iso8601': {
     'section': 'Dates',
     'params': None,
