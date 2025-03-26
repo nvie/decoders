@@ -56,8 +56,7 @@ describe('decoder', () => {
     expect(() => decoder.verify({ a: new Date() })).toThrow();
   });
 
-  // XXX Implement
-  test.fails('readonliness', () => {
+  test('readonliness', () => {
     expect(decoder.isReadonly).toBe(true);
   });
 });
@@ -96,8 +95,7 @@ describe('jsonObject', () => {
     expect(() => decoder.verify({ a: new Date() })).toThrow();
   });
 
-  // XXX Implement
-  test.fails('readonliness', () => {
+  test('readonliness', () => {
     expect(decoder.isReadonly).toBe(true);
   });
 });
@@ -134,8 +132,7 @@ describe('jsonArray', () => {
     expect(() => decoder.verify({ a: new Date() })).toThrow();
   });
 
-  // XXX Implement
-  test.fails('readonliness', () => {
+  test('readonliness', () => {
     expect(decoder.isReadonly).toBe(true);
   });
 });

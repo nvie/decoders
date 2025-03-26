@@ -1,5 +1,5 @@
 import type { Decoder, ReadonlyDecoder } from '~/core';
-import { annotate, define, defineReadonly } from '~/core';
+import { annotate, define, defineReadonly, NONE, READONLY, readonly } from '~/core';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 export interface Klass<T> extends Function {
@@ -20,12 +20,30 @@ export function instanceOf<K extends Klass<any>>(klass: K): ReadonlyDecoder<Inst
   );
 }
 
+export type LazyOptions = {
+  /** Ensure that the provided factory function may only return readonly decoders. */
+  readonly: boolean;
+};
+
 /**
  * Lazily evaluate the given decoder. This is useful to build self-referential
  * types for recursive data structures.
  */
-export function lazy<T>(decoderFn: () => Decoder<T>): Decoder<T> {
-  return define((blob) => decoderFn().decode(blob));
+export function lazy<T>(
+  decoderFn: () => ReadonlyDecoder<T>,
+  options: { readonly: true },
+): ReadonlyDecoder<T>;
+export function lazy<T>(decoderFn: () => Decoder<T>): Decoder<T>;
+export function lazy<T>(decoderFn: () => Decoder<T>, options?: LazyOptions): Decoder<T> {
+  return define(
+    (blob) => {
+      let decoder = options?.readonly
+        ? readonly(decoderFn() as ReadonlyDecoder<T>)
+        : decoderFn();
+      return decoder.decode(blob);
+    },
+    options?.readonly ? READONLY : NONE,
+  );
 }
 
 /**
