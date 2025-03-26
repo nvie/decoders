@@ -418,7 +418,9 @@ export function defineReadonly<T>(
  */
 export function readonly<T>(decoder: ReadonlyDecoder<T>): ReadonlyDecoder<T> {
   if (!decoder.isReadonly) {
-    throw new Error('The provided decoder must be read-only');
+    const err = new Error('The provided decoder must be read-only');
+    Error.captureStackTrace(err, readonly);
+    throw err;
   }
   return decoder;
 }
