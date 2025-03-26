@@ -21,7 +21,7 @@ export function instanceOf<K extends Klass<any>>(klass: K): ReadonlyDecoder<Inst
 }
 
 export type LazyOptions = {
-  /** Ensure that the provided factory function may only return readonly decoders. */
+  /** Ensure that the provided factory function will only return readonly decoders. */
   readonly: boolean;
 };
 

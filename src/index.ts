@@ -17,6 +17,7 @@ export { endsWith, nonEmptyString, regex, startsWith, string } from './strings';
 export { identifier, nanoid, uuid, uuidv1, uuidv4 } from './strings';
 export { email, httpsUrl, url } from './strings';
 export { decimal, hexadecimal, numeric } from './strings';
+export type { SelectOptions } from './unions';
 export { either, enum_, oneOf, select, taggedUnion } from './unions';
 
 // Core functionality

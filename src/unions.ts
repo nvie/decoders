@@ -1,5 +1,5 @@
 import type { Annotation, Decoder, DecoderType, ReadonlyDecoder } from '~/core';
-import { define, defineReadonly, summarize } from '~/core';
+import { define, defineReadonly, readonly, summarize } from '~/core';
 import { indent, quote } from '~/lib/text';
 import type { Scalar } from '~/lib/types';
 import { isNumber, isString } from '~/lib/utils';
@@ -156,6 +156,14 @@ export function enum_<TEnum extends Record<string, string | number>>(
  * error messages and is more performant at runtime because it doesn't have to
  * try all decoders one by one.
  */
+export function taggedUnion<O extends Record<string, ReadonlyDecoder<unknown>>>(
+  field: string,
+  mapping: O,
+): ReadonlyDecoder<DecoderType<O[keyof O]>>;
+export function taggedUnion<O extends Record<string, Decoder<unknown>>>(
+  field: string,
+  mapping: O,
+): Decoder<DecoderType<O[keyof O]>>;
 export function taggedUnion<O extends Record<string, Decoder<unknown>>>(
   field: string,
   mapping: O,
@@ -168,8 +176,14 @@ export function taggedUnion<O extends Record<string, Decoder<unknown>>>(
   return select(
     scout, // peek...
     (key) => mapping[key] as Decoder<T>, // ...then select
+    { readonly: Object.values(mapping).every((d) => d.isReadonly) },
   );
 }
+
+export type SelectOptions = {
+  /** Ensure that the provided factory function will only return readonly decoders. */
+  readonly: boolean;
+};
 
 /**
  * Briefly peek at a runtime input using a "scout" decoder first, then decide
@@ -183,9 +197,25 @@ export function taggedUnion<O extends Record<string, Decoder<unknown>>>(
 export function select<T, D extends Decoder<unknown>>(
   scout: Decoder<T>,
   selectFn: (result: T) => D,
+  options: { readonly: true },
+): ReadonlyDecoder<DecoderType<D>>;
+export function select<T, D extends Decoder<unknown>>(
+  scout: Decoder<T>,
+  selectFn: (result: T) => D,
+  options?: SelectOptions,
+): Decoder<DecoderType<D>>;
+export function select<T, D extends Decoder<unknown>>(
+  scout: Decoder<T>,
+  selectFn: (result: T) => D,
+  options?: SelectOptions,
 ): Decoder<DecoderType<D>> {
   return define((blob) => {
     const result = scout.decode(blob);
-    return result.ok ? selectFn(result.value).decode(blob) : result;
+    return result.ok
+      ? (options?.readonly
+          ? readonly(selectFn(result.value))
+          : selectFn(result.value)
+        ).decode(blob)
+      : result;
   }) as Decoder<DecoderType<D>>;
 }
