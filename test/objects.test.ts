@@ -132,9 +132,11 @@ describe('objects', () => {
     expect(decoder.decode({ id: 3 }).ok).toBe(false); // Invalid field value for "id"
   });
 
-  // XXX Implement
   test('readonliness', () => {
-    // expect(decoder.isReadonly).toBe(true);
+    const decoder = object({ id: string });
+
+    // object() decoder is never read-only, as extra fields will be discarded
+    expect(decoder.isReadonly).toBe(false);
   });
 });
 
