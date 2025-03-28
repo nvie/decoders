@@ -67,6 +67,7 @@ export function object(decoders: Record<any, never>): Decoder<Record<string, nev
 export function object<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds>>;
+
 export function object<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds>> {
@@ -146,10 +147,14 @@ export function object<Ds extends Record<string, Decoder<unknown>>>(
  * Like `object()`, but will reject inputs that contain extra fields that are
  * not specified explicitly.
  */
-export function exact(decoders: Record<any, never>): Decoder<Record<string, never>>;
+export function exact(decoders: Record<any, never>): Decoder<Record<string, never>>; // XXX Make readonly
+export function exact<Ds extends Record<string, ReadonlyDecoder<unknown>>>(
+  decoders: Ds,
+): ReadonlyDecoder<ObjectDecoderType<Ds>>;
 export function exact<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds>>;
+
 export function exact<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds>> {
@@ -174,9 +179,13 @@ export function exact<Ds extends Record<string, Decoder<unknown>>>(
  * unvalidated that will thus be of `unknown` type statically.
  */
 export function inexact(decoders: Record<any, never>): Decoder<Record<string, unknown>>;
+export function inexact<Ds extends Record<string, ReadonlyDecoder<unknown>>>(
+  decoders: Ds,
+): ReadonlyDecoder<ObjectDecoderType<Ds> & Record<string, unknown>>;
 export function inexact<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds> & Record<string, unknown>>;
+
 export function inexact<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds> & Record<string, unknown>> {
