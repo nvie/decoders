@@ -371,7 +371,7 @@ export function define<T>(fn: AcceptanceFn<T>, flags = DEFAULT_FLAGS): Decoder<T
     }, flags);
   }
 
-  return brand({
+  return register({
     get isReadonly(): boolean {
       return flags.readonly;
     },
@@ -435,7 +435,7 @@ const _register: WeakSet<Decoder<unknown>> = ((globalThis as any)[kDecoderRegist
   new WeakSet());
 
 /** @internal */
-function brand<D extends Decoder<unknown>>(decoder: D): D {
+function register<D extends Decoder<unknown>>(decoder: D): D {
   _register.add(decoder);
   return decoder;
 }
