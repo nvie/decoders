@@ -59,6 +59,13 @@ export interface ReadonlyDecoder<T> extends Decoder<T> {
    * in case of a rejection.
    */
   describe(message: string): ReadonlyDecoder<T>;
+
+  /**
+   * Cast the return type of this read-only decoder to a more
+   * specific type. This is useful to return "branded" types. This
+   * method has no runtime effect.
+   */
+  brand<SubT>(): ReadonlyDecoder<SubT>;
 }
 
 export interface Decoder<T> {
@@ -108,6 +115,13 @@ export interface Decoder<T> {
    * in case of a rejection.
    */
   describe(message: string): Decoder<T>;
+
+  /**
+   * Cast the return type of this decoder to a more specific type.
+   * This is useful to return "branded" types. This method has no
+   * runtime effect.
+   */
+  brand<SubT>(): Decoder<SubT>;
 
   /**
    * Send the output of the current decoder into another decoder or acceptance
@@ -371,7 +385,16 @@ export function define<T>(fn: AcceptanceFn<T>, flags = DEFAULT_FLAGS): Decoder<T
     }, flags);
   }
 
-  return register({
+  /**
+   * Cast the return type of this decoder to a more specific type.
+   * This is useful to return "branded" types. This method has no
+   * runtime effect.
+   */
+  function brand<SubT>(): Decoder<SubT> {
+    return self as any;
+  }
+
+  const self = register({
     get isReadonly(): boolean {
       return flags.readonly;
     },
@@ -382,6 +405,7 @@ export function define<T>(fn: AcceptanceFn<T>, flags = DEFAULT_FLAGS): Decoder<T
     refine,
     reject,
     describe,
+    brand,
     then,
     pipe,
     '~standard': {
@@ -398,6 +422,7 @@ export function define<T>(fn: AcceptanceFn<T>, flags = DEFAULT_FLAGS): Decoder<T
       },
     },
   });
+  return self;
 }
 
 /**

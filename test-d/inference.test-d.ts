@@ -610,6 +610,19 @@ const circle1: Decoder<Circle1> = object({
 
 expectType<Shape1>(test(taggedUnion('_type', { 0: rect1, 1: circle1 })));
 
+// Branded types
+type UppercaseString = string & { __brand: 'UppercaseString' };
+
+// Converting to uppercase
+expectType<Decoder<UppercaseString>>(
+  string.transform((s) => s.toUpperCase()).brand<UppercaseString>(),
+);
+
+// Readonly version that accepts only uppercase
+expectType<ReadonlyDecoder<UppercaseString>>(
+  regex(/^[A-Z]+$/, 'Must be uppercase').brand<UppercaseString>(),
+);
+
 // readonly() helper
 expectType<ReadonlyDecoder<string>>(string);
 expectType<ReadonlyDecoder<string>>(readonly(string));
