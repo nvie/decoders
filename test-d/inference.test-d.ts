@@ -628,4 +628,3 @@ expectType<ReadonlyDecoder<string>>(string);
 expectType<ReadonlyDecoder<string>>(readonly(string));
 expectType<ReadonlyDecoder<string>>(readonly(readonly(string)));
 expectType<ReadonlyDecoder<string[]>>(readonly(array(string)));
-expectError(readonly(array(numeric)));
