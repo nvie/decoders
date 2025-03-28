@@ -190,28 +190,51 @@ export function inexact<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds> & Record<string, unknown>> {
   const objDecoder = object(decoders);
-  return pojo.pipe((obj) => {
-    const allkeys = new Set(Object.keys(obj));
-    return objDecoder.transform((safepart) => {
-      const safekeys = new Set(Object.keys(decoders));
 
-      // To account for hard-coded keys that aren't part of the input
-      for (const k of safekeys) allkeys.add(k);
-
-      const rv = {} as ObjectDecoderType<Ds> & Record<string, unknown>;
-      for (const k of allkeys) {
-        if (safekeys.has(k)) {
-          const value = safepart[k];
-          if (value !== undefined) {
-            // @ts-expect-error - look into this later
-            rv[k] = value;
-          }
+  const readonly = Object.values(decoders).every((d) => d.isReadonly);
+  if (readonly) {
+    return pojo.then(
+      (obj, ok, err) => {
+        // XXX It works and is correct! But still too inefficient, and needs to
+        // be improved. We shouldn't have to duplicate the entire object
+        // (recursively) here, which is what the call to objDecoder.decode()
+        // here is doing! Instead, we should be better off calling
+        // a "read-only" version of that decoder, which won't copy the object,
+        // but just validates it.
+        const result = objDecoder.decode(obj);
+        if (result.ok) {
+          return ok(obj as any);
+          //        ^^^ Note! Not result.ok!
         } else {
-          // @ts-expect-error - look into this later
-          rv[k] = obj[k];
+          return err(result.error);
         }
-      }
-      return rv;
+      },
+      { readonly },
+    );
+  } else {
+    return pojo.pipe((obj) => {
+      const allkeys = new Set(Object.keys(obj));
+      return objDecoder.transform((safepart) => {
+        const safekeys = new Set(Object.keys(decoders));
+
+        // To account for hard-coded keys that aren't part of the input
+        for (const k of safekeys) allkeys.add(k);
+
+        const rv = {} as ObjectDecoderType<Ds> & Record<string, unknown>;
+        for (const k of allkeys) {
+          if (safekeys.has(k)) {
+            const value = safepart[k];
+            if (value !== undefined) {
+              // @ts-expect-error - look into this later
+              rv[k] = value;
+            }
+          } else {
+            // @ts-expect-error - look into this later
+            rv[k] = obj[k];
+          }
+        }
+        return rv;
+      });
     });
-  });
+  }
 }
