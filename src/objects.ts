@@ -73,8 +73,8 @@ export function object<Ds extends Record<string, Decoder<unknown>>>(
   // Compute this set at decoder definition time
   const knownKeys = new Set(Object.keys(decoders));
 
-  return pojo.then((plainObj, ok, err) => {
-    const actualKeys = new Set(Object.keys(plainObj));
+  return pojo.then((obj, ok, err) => {
+    const actualKeys = new Set(Object.keys(obj));
 
     // At this point, "missingKeys" will also include all fields that may
     // validly be optional. We'll let the underlying decoder decide and
@@ -87,7 +87,7 @@ export function object<Ds extends Record<string, Decoder<unknown>>>(
 
     for (const key of Object.keys(decoders)) {
       const decoder = decoders[key];
-      const rawValue = plainObj[key];
+      const rawValue = obj[key];
       const result: DecodeResult<unknown> = decoder.decode(rawValue);
 
       if (result.ok) {
@@ -123,7 +123,7 @@ export function object<Ds extends Record<string, Decoder<unknown>>>(
     // object. Lastly, any fields that are missing should be annotated on
     // the outer object itself.
     if (errors || missingKeys.size > 0) {
-      let objAnn = annotateObject(plainObj);
+      let objAnn = annotateObject(obj);
 
       if (errors) {
         objAnn = merge(objAnn, errors);
@@ -157,8 +157,8 @@ export function exact<Ds extends Record<string, Decoder<unknown>>>(
   const allowedKeys = new Set(Object.keys(decoders));
 
   // Check the inputted object for any unexpected extra keys
-  const checked = pojo.reject((plainObj) => {
-    const actualKeys = new Set(Object.keys(plainObj));
+  const checked = pojo.reject((obj) => {
+    const actualKeys = new Set(Object.keys(obj));
     const extraKeys = difference(actualKeys, allowedKeys);
     return extraKeys.size > 0
       ? `Unexpected extra keys: ${Array.from(extraKeys).map(quote).join(', ')}`
@@ -180,9 +180,10 @@ export function inexact<Ds extends Record<string, Decoder<unknown>>>(
 export function inexact<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds> & Record<string, unknown>> {
-  return pojo.pipe((plainObj) => {
-    const allkeys = new Set(Object.keys(plainObj));
-    return object(decoders).transform((safepart) => {
+  const objDecoder = object(decoders);
+  return pojo.pipe((obj) => {
+    const allkeys = new Set(Object.keys(obj));
+    return objDecoder.transform((safepart) => {
       const safekeys = new Set(Object.keys(decoders));
 
       // To account for hard-coded keys that aren't part of the input
@@ -198,7 +199,7 @@ export function inexact<Ds extends Record<string, Decoder<unknown>>>(
           }
         } else {
           // @ts-expect-error - look into this later
-          rv[k] = plainObj[k];
+          rv[k] = obj[k];
         }
       }
       return rv;
