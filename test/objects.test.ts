@@ -5,7 +5,7 @@ import { boolean } from '~/booleans';
 import { mapping, record } from '~/collections';
 import { number } from '~/numbers';
 import { exact, inexact, object, pojo } from '~/objects';
-import { decimal, regex, string } from '~/strings';
+import { decimal, numeric, regex, string } from '~/strings';
 
 describe('objects', () => {
   test('decodes objects and fields', () => {
@@ -224,9 +224,25 @@ describe('exact objects', () => {
     });
   });
 
-  // XXX Implement
-  test('readonliness', () => {
-    // expect(decoder.isReadonly).toBe(true);
+  describe('readonliness', () => {
+    test('inherits readonliness when possible', () => {
+      const decoder = exact({
+        id: number,
+        name: string,
+        extra: optional(string),
+      });
+
+      expect(decoder.isReadonly).toBe(true);
+    });
+
+    test('does not inherit readonliness when not possible', () => {
+      const decoder = exact({
+        id: numeric,
+        //  ^^^^^^^ not readonly
+      });
+
+      expect(decoder.isReadonly).toBe(false);
+    });
   });
 });
 
