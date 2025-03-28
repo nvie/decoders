@@ -280,6 +280,14 @@ describe('.describe()', () => {
   });
 });
 
+describe('.brand<T>()', () => {
+  const decoders = [number, numeric, string, pojo];
+
+  test.each(decoders)('valid', (d) => {
+    expect(d.brand()).toBe(d);
+  });
+});
+
 describe('readonly() helper', () => {
   test('is a no-op when the given decoder is read-only', () => {
     const decoder = optional(string);
