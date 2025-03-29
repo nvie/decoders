@@ -29,6 +29,10 @@ describe('number', () => {
       expect(decoder.decode(value).ok).toBe(false);
     }
   });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('anyNumber', () => {
@@ -47,6 +51,10 @@ describe('anyNumber', () => {
     for (const value of not_okay) {
       expect(decoder.decode(value).ok).toBe(false);
     }
+  });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
   });
 });
 
@@ -76,6 +84,10 @@ describe('positiveNumber', () => {
       expect(decoder.decode(value).ok).toBe(false);
     }
   });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('integer', () => {
@@ -94,6 +106,10 @@ describe('integer', () => {
     for (const value of not_okay) {
       expect(decoder.decode(value).ok).toBe(false);
     }
+  });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
   });
 });
 
@@ -123,6 +139,10 @@ describe('positiveInteger', () => {
       expect(decoder.decode(value).ok).toBe(false);
     }
   });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('bigint', () => {
@@ -141,5 +161,9 @@ describe('bigint', () => {
     for (const value of not_okay) {
       expect(decoder.decode(value).ok).toBe(false);
     }
+  });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
   });
 });

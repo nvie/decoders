@@ -1,11 +1,11 @@
-import type { Decoder } from '~/core';
-import { define } from '~/core';
+import type { Decoder, ReadonlyDecoder } from '~/core';
+import { defineReadonly } from '~/core';
 import { isDate } from '~/lib/utils';
 
 import { regex } from './strings';
 import { either } from './unions';
 
-// Only matches the shape.  This "over-matches" some values that still aren't
+// Only matches the shape. This "over-matches" some values that still aren't
 // valid dates (like 9999-99-99), but those will be caught by JS Date's
 // internal validations
 const iso8601_re =
@@ -14,9 +14,18 @@ const iso8601_re =
 /**
  * Accepts and returns `Date` instances.
  */
-export const date: Decoder<Date> = define((blob, ok, err) => {
-  return isDate(blob) ? ok(blob) : err('Must be a Date');
-});
+export const date: ReadonlyDecoder<Date> = defineReadonly(isDate, 'Must be a Date');
+
+/**
+ * Accepts and returns [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings.
+ */
+export const dateString: ReadonlyDecoder<string> = regex(
+  iso8601_re,
+  'Must be ISO8601 format',
+).refine(
+  (value: string) => !isNaN(new Date(value).getTime()),
+  'Must be valid date/time value',
+);
 
 /**
  * Accepts [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings,
@@ -25,18 +34,7 @@ export const date: Decoder<Date> = define((blob, ok, err) => {
  * This is very useful for working with dates in APIs: serialize them as
  * `.toISOString()` when sending, decode them with `iso8601` when receiving.
  */
-export const iso8601: Decoder<Date> =
-  // Input itself needs to match the ISO8601 regex...
-  regex(iso8601_re, 'Must be ISO8601 format').transform(
-    // Make sure it is a _valid_ date
-    (value: string) => {
-      const date = new Date(value);
-      if (isNaN(date.getTime())) {
-        throw new Error('Must be valid date/time value');
-      }
-      return date;
-    },
-  );
+export const iso8601: Decoder<Date> = dateString.transform((value) => new Date(value));
 
 /**
  * Accepts either a Date, or an ISO date string, returns a Date instance.

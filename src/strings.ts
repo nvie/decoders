@@ -1,5 +1,5 @@
-import type { Decoder } from '~/core';
-import { define } from '~/core';
+import type { Decoder, ReadonlyDecoder } from '~/core';
+import { defineReadonly } from '~/core';
 import type { SizeOptions } from '~/lib/size-options';
 import { bySizeOptions } from '~/lib/size-options';
 import { isString } from '~/lib/utils';
@@ -20,26 +20,29 @@ const url_re =
 /**
  * Accepts and returns strings.
  */
-export const string: Decoder<string> = define((blob, ok, err) =>
-  isString(blob) ? ok(blob) : err('Must be string'),
-);
+export const string: ReadonlyDecoder<string> = defineReadonly(isString, 'Must be string');
 
 /**
  * Like `string`, but will reject the empty string or strings containing only whitespace.
  */
-export const nonEmptyString: Decoder<string> = regex(/\S/, 'Must be non-empty string');
+export const nonEmptyString: ReadonlyDecoder<string> = regex(
+  /\S/,
+  'Must be non-empty string',
+);
 
 /**
  * Accepts and returns strings that match the given regular expression.
  */
-export function regex(regex: RegExp, msg: string): Decoder<string> {
+export function regex(regex: RegExp, msg: string): ReadonlyDecoder<string> {
   return string.refine((s) => regex.test(s), msg);
 }
 
 /**
  * Accepts and returns strings that start with the given prefix.
  */
-export function startsWith<P extends string>(prefix: P): Decoder<`${P}${string}`> {
+export function startsWith<P extends string>(
+  prefix: P,
+): ReadonlyDecoder<`${P}${string}`> {
   return string.refine(
     (s): s is `${P}${string}` => s.startsWith(prefix),
     `Must start with '${prefix}'`,
@@ -49,7 +52,7 @@ export function startsWith<P extends string>(prefix: P): Decoder<`${P}${string}`
 /**
  * Accepts and returns strings that end with the given suffix.
  */
-export function endsWith<S extends string>(suffix: S): Decoder<`${string}${S}`> {
+export function endsWith<S extends string>(suffix: S): ReadonlyDecoder<`${string}${S}`> {
   return string.refine(
     (s): s is `${string}${S}` => s.endsWith(suffix),
     `Must end with '${suffix}'`,
@@ -60,7 +63,7 @@ export function endsWith<S extends string>(suffix: S): Decoder<`${string}${S}`> 
  * Accepts and returns strings that are syntactically valid email addresses.
  * (This will not mean that the email address actually exist.)
  */
-export const email: Decoder<string> = regex(
+export const email: ReadonlyDecoder<string> = regex(
   // The almost perfect email regex, taken from https://emailregex.com/
   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
   'Must be email',
@@ -87,7 +90,7 @@ export const httpsUrl: Decoder<URL> = url.refine(
  * Accepts and returns strings that are valid identifiers in most programming
  * languages.
  */
-export const identifier: Decoder<string> = regex(
+export const identifier: ReadonlyDecoder<string> = regex(
   /^[a-z_][a-z0-9_]*$/i,
   'Must be valid identifier',
 );
@@ -97,7 +100,7 @@ export const identifier: Decoder<string> = regex(
  * values. It assumes the default nanoid alphabet. If you're using a custom
  * alphabet, use `regex()` instead.
  */
-export function nanoid(options?: SizeOptions): Decoder<string> {
+export function nanoid(options?: SizeOptions): ReadonlyDecoder<string> {
   return regex(/^[a-z0-9_-]+$/i, 'Must be nano ID').reject(
     bySizeOptions(options ?? { size: 21 }),
   );
@@ -108,7 +111,7 @@ export function nanoid(options?: SizeOptions): Decoder<string> {
  * [UUIDs](https://en.wikipedia.org/wiki/universally_unique_identifier)
  * (universally unique identifier).
  */
-export const uuid: Decoder<string> = regex(
+export const uuid: ReadonlyDecoder<string> = regex(
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
   'Must be uuid',
 );
@@ -118,7 +121,7 @@ export const uuid: Decoder<string> = regex(
  * [UUIDv1](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_%28date-time_and_MAC_address%29)
  * strings.
  */
-export const uuidv1: Decoder<string> =
+export const uuidv1: ReadonlyDecoder<string> =
   // https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_(date-time_and_MAC_address)
   uuid.refine((value) => value[14] === '1', 'Must be uuidv1');
 
@@ -127,7 +130,7 @@ export const uuidv1: Decoder<string> =
  * [UUIDv4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_%28random%29)
  * strings.
  */
-export const uuidv4: Decoder<string> =
+export const uuidv4: ReadonlyDecoder<string> =
   // https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)
   uuid.refine((value) => value[14] === '4', 'Must be uuidv4');
 
@@ -135,12 +138,15 @@ export const uuidv4: Decoder<string> =
  * Accepts and returns strings with decimal digits only (base-10).
  * To convert these to numbers, use the `numeric` decoder.
  */
-export const decimal: Decoder<string> = regex(/^[0-9]+$/, 'Must only contain digits');
+export const decimal: ReadonlyDecoder<string> = regex(
+  /^[0-9]+$/,
+  'Must only contain digits',
+);
 
 /**
  * Accepts and returns strings with hexadecimal digits only (base-16).
  */
-export const hexadecimal: Decoder<string> = regex(
+export const hexadecimal: ReadonlyDecoder<string> = regex(
   /^[0-9a-f]+$/i,
   'Must only contain hexadecimal digits',
 );

@@ -35,6 +35,11 @@ describe('instanceOf', () => {
     expect(() => errorDecoder.verify(null)).toThrow('Must be Error instance');
     expect(() => errorDecoder.verify(undefined)).toThrow('Must be Error instance');
   });
+
+  test('readonliness', () => {
+    expect(errorDecoder.isReadonly).toBe(true);
+    expect(typeErrorDecoder.isReadonly).toBe(true);
+  });
 });
 
 describe('lazy', () => {
@@ -101,6 +106,13 @@ describe('lazy', () => {
     expect(tree(number).decode(n1).value).toEqual(n1);
     expect(tree(number).decode(n2).value).toEqual(n2);
   });
+
+  test('readonliness', () => {
+    const eagerDecoder = string;
+    const lazyDecoder = lazy(() => string);
+    expect(eagerDecoder.isReadonly).toBe(true);
+    expect(lazyDecoder.isReadonly).toBe(false);
+  });
 });
 
 describe('prep', () => {
@@ -124,5 +136,9 @@ describe('prep', () => {
   test('invalid when prep mapper function throws', () => {
     expect(answerToLife.decode(Symbol('foo')).ok).toBe(false);
     //                  ^^^^^^^^^^^^^ This will cause the `Number(x)` call to throw
+  });
+
+  test('readonliness', () => {
+    expect(answerToLife.isReadonly).toBe(false);
   });
 });

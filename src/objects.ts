@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { Annotation, Decoder, DecodeResult, DecoderType } from '~/core';
-import { annotateObject, define, merge, updateText } from '~/core';
+import type {
+  Annotation,
+  Decoder,
+  DecodeResult,
+  DecoderType,
+  ReadonlyDecoder,
+} from '~/core';
+import { annotateObject, defineReadonly, merge, updateText } from '~/core';
 import { difference } from '~/lib/set-methods';
 import { quote } from '~/lib/text';
 import { isPojo } from '~/lib/utils';
@@ -48,8 +54,9 @@ type ObjectDecoderType<Ds extends Record<string, Decoder<unknown>>> =
  * Accepts any "plain old JavaScript object", but doesn't validate its keys or
  * values further.
  */
-export const pojo: Decoder<Record<string, unknown>> = define((blob, ok, err) =>
-  isPojo(blob) ? ok(blob) : err('Must be an object'),
+export const pojo: ReadonlyDecoder<Record<string, unknown>> = defineReadonly(
+  isPojo,
+  'Must be an object',
 );
 
 /**
@@ -60,14 +67,15 @@ export function object(decoders: Record<any, never>): Decoder<Record<string, nev
 export function object<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds>>;
+
 export function object<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds>> {
   // Compute this set at decoder definition time
   const knownKeys = new Set(Object.keys(decoders));
 
-  return pojo.then((plainObj, ok, err) => {
-    const actualKeys = new Set(Object.keys(plainObj));
+  return pojo.then((obj, ok, err) => {
+    const actualKeys = new Set(Object.keys(obj));
 
     // At this point, "missingKeys" will also include all fields that may
     // validly be optional. We'll let the underlying decoder decide and
@@ -75,19 +83,19 @@ export function object<Ds extends Record<string, Decoder<unknown>>>(
     // value.
     const missingKeys = difference(knownKeys, actualKeys);
 
-    const record = {};
+    const output = {};
     let errors: Map<string, Annotation> | null = null;
 
     for (const key of Object.keys(decoders)) {
       const decoder = decoders[key];
-      const rawValue = plainObj[key];
+      const rawValue = obj[key];
       const result: DecodeResult<unknown> = decoder.decode(rawValue);
 
       if (result.ok) {
         const value = result.value;
         if (value !== undefined) {
           // @ts-expect-error - look into this later
-          record[key] = value;
+          output[key] = value;
         }
 
         // If this succeeded, remove the key from the missing keys
@@ -100,7 +108,7 @@ export function object<Ds extends Record<string, Decoder<unknown>>>(
         // want to collect more error information.
         if (rawValue === undefined) {
           // Explicitly add it to the missing set if the value is
-          // undefined.  This covers explicit undefineds to be
+          // undefined. This covers explicit undefineds to be
           // treated the same as implicit undefineds (aka missing
           // keys).
           missingKeys.add(key);
@@ -112,11 +120,11 @@ export function object<Ds extends Record<string, Decoder<unknown>>>(
     }
 
     // Deal with errors now. There are two classes of errors we want to
-    // report.  First of all, we want to report any inline errors in this
-    // object.  Lastly, any fields that are missing should be annotated on
+    // report. First of all, we want to report any inline errors in this
+    // object. Lastly, any fields that are missing should be annotated on
     // the outer object itself.
     if (errors || missingKeys.size > 0) {
-      let objAnn = annotateObject(plainObj);
+      let objAnn = annotateObject(obj);
 
       if (errors) {
         objAnn = merge(objAnn, errors);
@@ -131,7 +139,7 @@ export function object<Ds extends Record<string, Decoder<unknown>>>(
       return err(objAnn);
     }
 
-    return ok(record as ObjectDecoderType<Ds>);
+    return ok(output as ObjectDecoderType<Ds>);
   });
 }
 
@@ -139,10 +147,14 @@ export function object<Ds extends Record<string, Decoder<unknown>>>(
  * Like `object()`, but will reject inputs that contain extra fields that are
  * not specified explicitly.
  */
-export function exact(decoders: Record<any, never>): Decoder<Record<string, never>>;
+export function exact(decoders: Record<any, never>): Decoder<Record<string, never>>; // XXX Make readonly
+export function exact<Ds extends Record<string, ReadonlyDecoder<unknown>>>(
+  decoders: Ds,
+): ReadonlyDecoder<ObjectDecoderType<Ds>>;
 export function exact<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds>>;
+
 export function exact<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds>> {
@@ -150,8 +162,8 @@ export function exact<Ds extends Record<string, Decoder<unknown>>>(
   const allowedKeys = new Set(Object.keys(decoders));
 
   // Check the inputted object for any unexpected extra keys
-  const checked = pojo.reject((plainObj) => {
-    const actualKeys = new Set(Object.keys(plainObj));
+  const checked = pojo.reject((obj) => {
+    const actualKeys = new Set(Object.keys(obj));
     const extraKeys = difference(actualKeys, allowedKeys);
     return extraKeys.size > 0
       ? `Unexpected extra keys: ${Array.from(extraKeys).map(quote).join(', ')}`
@@ -167,34 +179,62 @@ export function exact<Ds extends Record<string, Decoder<unknown>>>(
  * unvalidated that will thus be of `unknown` type statically.
  */
 export function inexact(decoders: Record<any, never>): Decoder<Record<string, unknown>>;
+export function inexact<Ds extends Record<string, ReadonlyDecoder<unknown>>>(
+  decoders: Ds,
+): ReadonlyDecoder<ObjectDecoderType<Ds> & Record<string, unknown>>;
 export function inexact<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds> & Record<string, unknown>>;
+
 export function inexact<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds> & Record<string, unknown>> {
-  return pojo.pipe((plainObj) => {
-    const allkeys = new Set(Object.keys(plainObj));
-    return object(decoders).transform((safepart) => {
-      const safekeys = new Set(Object.keys(decoders));
+  const objDecoder = object(decoders);
 
-      // To account for hard-coded keys that aren't part of the input
-      for (const k of safekeys) allkeys.add(k);
-
-      const rv = {} as ObjectDecoderType<Ds> & Record<string, unknown>;
-      for (const k of allkeys) {
-        if (safekeys.has(k)) {
-          const value = safepart[k];
-          if (value !== undefined) {
-            // @ts-expect-error - look into this later
-            rv[k] = value;
-          }
+  const readonly = Object.values(decoders).every((d) => d.isReadonly);
+  if (readonly) {
+    return pojo.then(
+      (obj, ok, err) => {
+        // XXX It works and is correct! But still too inefficient, and needs to
+        // be improved. We shouldn't have to duplicate the entire object
+        // (recursively) here, which is what the call to objDecoder.decode()
+        // here is doing! Instead, we should be better off calling
+        // a "read-only" version of that decoder, which won't copy the object,
+        // but just validates it.
+        const result = objDecoder.decode(obj);
+        if (result.ok) {
+          return ok(obj as any);
+          //        ^^^ Note! Not result.ok!
         } else {
-          // @ts-expect-error - look into this later
-          rv[k] = plainObj[k];
+          return err(result.error);
         }
-      }
-      return rv;
+      },
+      { readonly },
+    );
+  } else {
+    return pojo.pipe((obj) => {
+      const allkeys = new Set(Object.keys(obj));
+      return objDecoder.transform((safepart) => {
+        const safekeys = new Set(Object.keys(decoders));
+
+        // To account for hard-coded keys that aren't part of the input
+        for (const k of safekeys) allkeys.add(k);
+
+        const rv = {} as ObjectDecoderType<Ds> & Record<string, unknown>;
+        for (const k of allkeys) {
+          if (safekeys.has(k)) {
+            const value = safepart[k];
+            if (value !== undefined) {
+              // @ts-expect-error - look into this later
+              rv[k] = value;
+            }
+          } else {
+            // @ts-expect-error - look into this later
+            rv[k] = obj[k];
+          }
+        }
+        return rv;
+      });
     });
-  });
+  }
 }

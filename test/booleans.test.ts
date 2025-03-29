@@ -22,6 +22,10 @@ describe('booleans', () => {
       expect(decoder.decode(value).ok).toBe(false);
     }
   });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('truthy', () => {
@@ -37,5 +41,9 @@ describe('truthy', () => {
 
   test('invalid', () => {
     // truthy never fails
+  });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(false);
   });
 });

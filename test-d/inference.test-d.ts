@@ -1,4 +1,11 @@
-import type { Decoder, DecoderType, JSONValue, JSONObject, JSONArray } from '../dist';
+import type {
+  Decoder,
+  DecoderType,
+  JSONValue,
+  JSONObject,
+  JSONArray,
+  ReadonlyDecoder,
+} from '../dist';
 import {
   // Decoders
   always,
@@ -11,6 +18,7 @@ import {
   datelike,
   decimal,
   define,
+  defineReadonly,
   dict,
   either,
   email,
@@ -50,6 +58,7 @@ import {
   positiveInteger,
   positiveNumber,
   prep,
+  readonly,
   record,
   regex,
   select,
@@ -93,6 +102,15 @@ expectType<123 | 'hi'>(
       expectType<unknown>(blob);
       return Math.random() < 0.5 ? ok(123) : Math.random() < 0.5 ? ok('hi') : err('fail');
     }),
+  ),
+);
+
+expectType<number>(
+  test(
+    defineReadonly((blob): blob is number => {
+      expectType<unknown>(blob);
+      return Math.random() < 0.5;
+    }, 'fail'),
   ),
 );
 
@@ -591,3 +609,22 @@ const circle1: Decoder<Circle1> = object({
 });
 
 expectType<Shape1>(test(taggedUnion('_type', { 0: rect1, 1: circle1 })));
+
+// Branded types
+type UppercaseString = string & { __brand: 'UppercaseString' };
+
+// Converting to uppercase
+expectType<Decoder<UppercaseString>>(
+  string.transform((s) => s.toUpperCase()).brand<UppercaseString>(),
+);
+
+// Readonly version that accepts only uppercase
+expectType<ReadonlyDecoder<UppercaseString>>(
+  regex(/^[A-Z]+$/, 'Must be uppercase').brand<UppercaseString>(),
+);
+
+// readonly() helper
+expectType<ReadonlyDecoder<string>>(string);
+expectType<ReadonlyDecoder<string>>(readonly(string));
+expectType<ReadonlyDecoder<string>>(readonly(readonly(string)));
+expectType<ReadonlyDecoder<string[]>>(readonly(array(string)));
