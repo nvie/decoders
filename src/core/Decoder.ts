@@ -49,6 +49,13 @@ export interface ReadonlyDecoder<T> extends Decoder<T> {
   refine(predicate: (value: T) => boolean, msg: string): ReadonlyDecoder<T>;
 
   /**
+   * Cast the return type of this read-only decoder to a more
+   * specific type. This is useful to return "branded" types. This
+   * method has no runtime effect.
+   */
+  brand<SubT>(): ReadonlyDecoder<SubT>;
+
+  /**
    * Build a new decoder from the current one, with an extra rejection
    * criterium.
    */
@@ -59,13 +66,6 @@ export interface ReadonlyDecoder<T> extends Decoder<T> {
    * in case of a rejection.
    */
   describe(message: string): ReadonlyDecoder<T>;
-
-  /**
-   * Cast the return type of this read-only decoder to a more
-   * specific type. This is useful to return "branded" types. This
-   * method has no runtime effect.
-   */
-  brand<SubT>(): ReadonlyDecoder<SubT>;
 }
 
 export interface Decoder<T> {
@@ -100,6 +100,13 @@ export interface Decoder<T> {
   refine(predicate: (value: T) => boolean, msg: string): Decoder<T>;
 
   /**
+   * Cast the return type of this decoder to a more specific type.
+   * This is useful to return "branded" types. This method has no
+   * runtime effect.
+   */
+  brand<SubT>(): Decoder<SubT>;
+
+  /**
    * Build a new decoder from the current one, with an extra rejection
    * criterium.
    */
@@ -115,13 +122,6 @@ export interface Decoder<T> {
    * in case of a rejection.
    */
   describe(message: string): Decoder<T>;
-
-  /**
-   * Cast the return type of this decoder to a more specific type.
-   * This is useful to return "branded" types. This method has no
-   * runtime effect.
-   */
-  brand<SubT>(): Decoder<SubT>;
 
   /**
    * Send the output of the current decoder into another decoder or acceptance
