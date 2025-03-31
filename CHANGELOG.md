@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- Add new `dateString` decoder (see [docs](https://decoders.cc/api.html#dateString))
 - Reduce peak memory usage of `array()` decoder
 
 ## [2.6.1] - 2025-02-25

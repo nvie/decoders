@@ -31,7 +31,7 @@ for section, names in DECODERS_BY_SECTION.items():
 - [**Strings**](#strings): [`string`](/api.html#string), [`nonEmptyString`](/api.html#nonEmptyString), [`regex()`](/api.html#regex), [`startsWith()`](/api.html#startsWith), [`endsWith()`](/api.html#endsWith), [`decimal`](/api.html#decimal), [`hexadecimal`](/api.html#hexadecimal), [`numeric`](/api.html#numeric), [`email`](/api.html#email), [`url`](/api.html#url), [`httpsUrl`](/api.html#httpsUrl), [`identifier`](/api.html#identifier), [`nanoid`](/api.html#nanoid), [`uuid`](/api.html#uuid), [`uuidv1`](/api.html#uuidv1), [`uuidv4`](/api.html#uuidv4)
 - [**Numbers**](#numbers): [`number`](/api.html#number), [`integer`](/api.html#integer), [`positiveNumber`](/api.html#positiveNumber), [`positiveInteger`](/api.html#positiveInteger), [`anyNumber`](/api.html#anyNumber), [`bigint`](/api.html#bigint)
 - [**Booleans**](#booleans): [`boolean`](/api.html#boolean), [`truthy`](/api.html#truthy)
-- [**Dates**](#dates): [`date`](/api.html#date), [`iso8601`](/api.html#iso8601), [`datelike`](/api.html#datelike)
+- [**Dates**](#dates): [`date`](/api.html#date), [`dateString`](/api.html#dateString), [`iso8601`](/api.html#iso8601), [`datelike`](/api.html#datelike)
 - [**Constants**](#constants): [`constant()`](/api.html#constant), [`always()`](/api.html#always), [`hardcoded()`](/api.html#hardcoded)
 - [**Optionality**](#optionality): [`null_`](/api.html#null_), [`undefined_`](/api.html#undefined_), [`optional()`](/api.html#optional), [`nullable()`](/api.html#nullable), [`nullish()`](/api.html#nullish), [`unknown`](/api.html#unknown), [`maybe()`](/api.html#maybe), [`mixed`](/api.html#mixed)
 - [**Arrays**](#arrays): [`array()`](/api.html#array), [`nonEmptyArray()`](/api.html#nonEmptyArray), [`poja`](/api.html#poja), [`tuple()`](/api.html#tuple)
@@ -40,7 +40,7 @@ for section, names in DECODERS_BY_SECTION.items():
 - [**JSON values**](#json-values): [`json`](/api.html#json), [`jsonObject`](/api.html#jsonObject), [`jsonArray`](/api.html#jsonArray)
 - [**Unions**](#unions): [`either()`](/api.html#either), [`oneOf()`](/api.html#oneOf), [`enum_()`](/api.html#enum_), [`taggedUnion()`](/api.html#taggedUnion), [`select()`](/api.html#select)
 - [**Utilities**](#utilities): [`define()`](/api.html#define), [`prep()`](/api.html#prep), [`never`](/api.html#never), [`instanceOf()`](/api.html#instanceOf), [`lazy()`](/api.html#lazy), [`fail`](/api.html#fail)
-<!--[[[end]]] (checksum: 4cdd36f025b72df9bd2faf855ae4bebd) -->
+<!--[[[end]]] (checksum: dce427c01510e08fcbd5ba1c84f0f701) -->
 
 <!--[[[cog
 for section, names in DECODERS_BY_SECTION.items():
@@ -616,6 +616,7 @@ truthy.verify(null) === false;
 
 
 - [`date`](/api.html#date)
+- [`dateString`](/api.html#dateString)
 - [`iso8601`](/api.html#iso8601)
 - [`datelike`](/api.html#datelike)
 
@@ -639,7 +640,25 @@ date.verify('hello');  // throws
 
 ---
 
-<a href="#iso8601">#</a> **iso8601**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Date&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/dates.ts#L21-L39 'Source')
+<a href="#dateString">#</a> **dateString**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;string&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/dates.ts#L21-L30 'Source')
+{: #dateString .signature}
+
+Accepts and returns [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings.
+
+```ts
+// 👍
+dateString.verify('2020-06-01T12:00:00Z');
+
+// 👎
+dateString.verify('2020-06-01');  // throws
+dateString.verify('hello');       // throws
+dateString.verify(123);           // throws
+dateString.verify(new Date());    // throws (does not accept dates)
+```
+
+---
+
+<a href="#iso8601">#</a> **iso8601**: <i style="color: #267f99"><a href="/Decoder.html" style="color: inherit">Decoder</a>&lt;Date&gt;</i> [<small>(source)</small>](https://github.com/nvie/decoders/tree/main/src/dates.ts#L32-L39 'Source')
 {: #iso8601 .signature}
 
 Accepts [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings,
@@ -1660,5 +1679,5 @@ const treeDecoder: Decoder<Tree> = object({
 });
 ```
 
-<!--[[[end]]] (checksum: 12415d149e086199bc4d6a1d8e110111)-->
+<!--[[[end]]] (checksum: c4c62679a7792ce4b137806032aa70be)-->
 <!-- prettier-ignore-end -->
