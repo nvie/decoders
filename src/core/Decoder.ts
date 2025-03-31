@@ -57,6 +57,12 @@ export interface Decoder<T> {
   refine(predicate: (value: T) => boolean, msg: string): Decoder<T>;
 
   /**
+   * Cast the return type of this read-only decoder to a narrower type. This is
+   * useful to return "branded" types. This method has no runtime effect.
+   */
+  refineType<SubT extends T>(): Decoder<SubT>;
+
+  /**
    * Build a new decoder from the current one, with an extra rejection
    * criterium.
    */
@@ -231,6 +237,14 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
   }
 
   /**
+   * Cast the return type of this read-only decoder to a narrower type. This is
+   * useful to return "branded" types. This method has no runtime effect.
+   */
+  function refineType<SubT extends T>() {
+    return self as unknown as Decoder<SubT>;
+  }
+
+  /**
    * Send the output of the current decoder into another decoder or acceptance
    * function. The given acceptance function will receive the output of the
    * current decoder as its input.
@@ -311,12 +325,13 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
     });
   }
 
-  return brand({
+  const unregistered: Decoder<T> = {
     verify,
     value,
     decode,
     transform,
     refine,
+    refineType,
     reject,
     describe,
     then,
@@ -334,7 +349,9 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
         }
       },
     },
-  });
+  };
+  const self = brand(unregistered);
+  return self;
 }
 
 /** @internal */

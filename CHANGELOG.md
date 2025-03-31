@@ -1,6 +1,8 @@
 ## [Unreleased]
 
 - Add new `dateString` decoder (see [docs](https://decoders.cc/api.html#dateString))
+- Add new `.refineType<SubT>()` method (see
+  [docs](https://decoders.cc/Decoder.html#refineType))
 - Reduce peak memory usage of `array()` decoder
 
 ## [2.6.1] - 2025-02-25

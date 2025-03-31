@@ -591,3 +591,16 @@ const circle1: Decoder<Circle1> = object({
 });
 
 expectType<Shape1>(test(taggedUnion('_type', { 0: rect1, 1: circle1 })));
+
+// Branded types
+type UppercaseString = string & { __brand: 'UppercaseString' };
+
+// Branding can be done, but only to narrower types
+expectType<string>(test(string.refineType()));
+expectType<UppercaseString>(test(string.refineType<UppercaseString>()));
+expectType<'foo' | 'bar'>(test(string.refineType<'foo' | 'bar'>()));
+
+// Casting to wider types is not allowed
+expectError(test(string.refineType<string | 42>()));
+expectError(test(string.refineType<'foo' | 'bar' | 42>()));
+expectError(test(string.refineType<unknown>()));

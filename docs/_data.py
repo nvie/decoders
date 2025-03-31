@@ -1464,6 +1464,15 @@ DECODER_METHODS = {
     """,
   },
 
+  'refineType': {
+    'type_params': ['SubT extends T'],
+    'params': [],
+    'return_type': 'Decoder<SubT>',
+    'example': """
+      const user = object({ name: string }).refineType<Person>();
+    """,
+  },
+
   'reject': {
     'params': [
       ('rejectFn', 'T => string | null'),

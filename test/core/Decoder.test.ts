@@ -233,6 +233,14 @@ describe('.refine()', () => {
   });
 });
 
+describe('.refineType<T>()', () => {
+  test('valid', () => {
+    const d = string;
+    const d2 = d.refineType<'hi' | 'foo'>();
+    expect(d2).toBe(d);
+  });
+});
+
 describe('.reject() (simple)', () => {
   const decoder = pojo.reject((obj) => {
     const badKeys = Object.keys(obj).filter((key) => key.startsWith('_'));
