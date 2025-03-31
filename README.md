@@ -1,7 +1,7 @@
 <img alt="Decoders logo" src="./docs/assets/logo@2x.png" style="width: 100%; max-width: 830px; max-height: 248px" width="830" /><br />
 
 [![npm](https://img.shields.io/npm/v/decoders.svg)](https://www.npmjs.com/package/decoders)
-[![Build Status](https://github.com/nvie/decoders/workflows/test/badge.svg)](https://github.com/nvie/decoders/actions)
+[![Test Status](https://github.com/nvie/decoders/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/nvie/decoders/actions)
 [![Bundle size for decoders](https://pkg-size.dev/badge/bundle/4200)](https://pkg-size.dev/decoders)
 
 Elegant and battle-tested validation library for type-safe input data for

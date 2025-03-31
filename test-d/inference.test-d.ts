@@ -613,14 +613,20 @@ expectType<Shape1>(test(taggedUnion('_type', { 0: rect1, 1: circle1 })));
 // Branded types
 type UppercaseString = string & { __brand: 'UppercaseString' };
 
-// Converting to uppercase
-expectType<Decoder<UppercaseString>>(
-  string.transform((s) => s.toUpperCase()).brand<UppercaseString>(),
-);
+// Refining types can be done, but only to narrower types
+expectType<string>(test(string.refineType()));
+expectType<UppercaseString>(test(string.refineType<UppercaseString>()));
+expectType<'foo' | 'bar'>(test(string.refineType<'foo' | 'bar'>()));
+
+// Refining types to wider types is not allowed
+// XXX Ideally these should error! :( Look into the .refine() overload in the ReadonlyDecoder.
+// expectError(test(string.refineType<string | 42>()));
+// expectError(test(string.refineType<'foo' | 'bar' | 42>()));
+// expectError(test(string.refineType<unknown>()));
 
 // Readonly version that accepts only uppercase
 expectType<ReadonlyDecoder<UppercaseString>>(
-  regex(/^[A-Z]+$/, 'Must be uppercase').brand<UppercaseString>(),
+  regex(/^[A-Z]+$/, 'Must be uppercase').refineType<UppercaseString>(),
 );
 
 // readonly() helper

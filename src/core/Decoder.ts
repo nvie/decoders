@@ -49,11 +49,11 @@ export interface ReadonlyDecoder<T> extends Decoder<T> {
   refine(predicate: (value: T) => boolean, msg: string): ReadonlyDecoder<T>;
 
   /**
-   * Cast the return type of this read-only decoder to a more
-   * specific type. This is useful to return "branded" types. This
-   * method has no runtime effect.
+   * Cast the return type of this read-only decoder to a narrower type. This is
+   * useful to return "branded" types. This method has no runtime effect.
    */
-  brand<SubT>(): ReadonlyDecoder<SubT>;
+  refineType<SubT /* extends T */>(): ReadonlyDecoder<SubT>;
+  //              ^^^^^^^^^^^^^^^ XXX Figure out why everything breaks if I add this desired constraint 🤔
 
   /**
    * Build a new decoder from the current one, with an extra rejection
@@ -100,11 +100,10 @@ export interface Decoder<T> {
   refine(predicate: (value: T) => boolean, msg: string): Decoder<T>;
 
   /**
-   * Cast the return type of this decoder to a more specific type.
-   * This is useful to return "branded" types. This method has no
-   * runtime effect.
+   * Cast the return type of this read-only decoder to a narrower type. This is
+   * useful to return "branded" types. This method has no runtime effect.
    */
-  brand<SubT>(): Decoder<SubT>;
+  refineType<SubT extends T>(): Decoder<SubT>;
 
   /**
    * Build a new decoder from the current one, with an extra rejection
@@ -287,6 +286,14 @@ export function define<T>(fn: AcceptanceFn<T>, flags = DEFAULT_FLAGS): Decoder<T
   }
 
   /**
+   * Cast the return type of this read-only decoder to a narrower type. This is
+   * useful to return "branded" types. This method has no runtime effect.
+   */
+  function refineType<SubT extends T>() {
+    return self as unknown as Decoder<SubT>;
+  }
+
+  /**
    * Send the output of the current decoder into another decoder or acceptance
    * function. The given acceptance function will receive the output of the
    * current decoder as its input.
@@ -385,16 +392,7 @@ export function define<T>(fn: AcceptanceFn<T>, flags = DEFAULT_FLAGS): Decoder<T
     }, flags);
   }
 
-  /**
-   * Cast the return type of this decoder to a more specific type.
-   * This is useful to return "branded" types. This method has no
-   * runtime effect.
-   */
-  function brand<SubT>(): Decoder<SubT> {
-    return self as any;
-  }
-
-  const self = register({
+  const unregistered: Decoder<T> = {
     get isReadonly(): boolean {
       return flags.readonly;
     },
@@ -403,9 +401,9 @@ export function define<T>(fn: AcceptanceFn<T>, flags = DEFAULT_FLAGS): Decoder<T
     decode,
     transform,
     refine,
+    refineType,
     reject,
     describe,
-    brand,
     then,
     pipe,
     '~standard': {
@@ -421,7 +419,8 @@ export function define<T>(fn: AcceptanceFn<T>, flags = DEFAULT_FLAGS): Decoder<T
         }
       },
     },
-  });
+  };
+  const self = register(unregistered);
   return self;
 }
 

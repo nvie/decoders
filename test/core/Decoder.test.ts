@@ -233,6 +233,27 @@ describe('.refine()', () => {
   });
 });
 
+describe('.refineType<T>()', () => {
+  test('valid on decoders', () => {
+    const d = string.transform((s) => s.toUpperCase());
+    const d2 = d.refineType<'HI'>();
+    expect(d2).toBe(d);
+  });
+
+  test('valid on readonly decoders', () => {
+    const d = number.refine((x) => x > 0 && x < 4, 'Must be between 1 and 3');
+    const d2 = d.refineType<1 | 2 | 3>();
+    expect(d2).toBe(d);
+  });
+
+  test.each([number, numeric, string, pojo])(
+    'generic property: .refineType does not change the instance, only its type',
+    (d) => {
+      expect((d.refineType as any)()).toBe(d);
+    },
+  );
+});
+
 describe('.reject() (simple)', () => {
   const decoder = pojo.reject((obj) => {
     const badKeys = Object.keys(obj).filter((key) => key.startsWith('_'));
@@ -277,14 +298,6 @@ describe('.describe()', () => {
 
   test('invalid', () => {
     expect(() => decoder.verify(0)).toThrow(/Must be text/);
-  });
-});
-
-describe('.brand<T>()', () => {
-  const decoders = [number, numeric, string, pojo];
-
-  test.each(decoders)('valid', (d) => {
-    expect(d.brand()).toBe(d);
   });
 });
 

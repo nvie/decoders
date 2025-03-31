@@ -19,7 +19,7 @@ export const date: ReadonlyDecoder<Date> = defineReadonly(isDate, 'Must be a Dat
 /**
  * Accepts and returns [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings.
  */
-export const dateString: ReadonlyDecoder<string> = regex(
+export const dateString: Decoder<string> = regex(
   iso8601_re,
   'Must be ISO8601 format',
 ).refine(
