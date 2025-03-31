@@ -40,6 +40,10 @@ describe('string', () => {
       expect(() => decoder.verify(value)).toThrow();
     }
   });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('regex', () => {
@@ -57,6 +61,10 @@ describe('regex', () => {
     expect(() => decoder.verify(42)).toThrow('Must be string'); // All regexes must be strings
     expect(() => decoder.verify('11-22-33')).toThrow('Must be YYYY-MM-DD');
     expect(() => decoder.verify('invalid')).toThrow('Must be YYYY-MM-DD');
+  });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
   });
 });
 
@@ -76,6 +84,10 @@ describe('startsWith', () => {
     expect(() => decoder.verify('FoO')).toThrow("Must start with 'foo'");
     expect(() => decoder.verify('fo')).toThrow("Must start with 'foo'");
   });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('endsWith', () => {
@@ -94,6 +106,10 @@ describe('endsWith', () => {
     expect(() => decoder.verify('baro')).toThrow("Must end with 'bar'");
     expect(() => decoder.verify('arb')).toThrow("Must end with 'bar'");
     expect(() => decoder.verify('BaR')).toThrow("Must end with 'bar'");
+  });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
   });
 });
 
@@ -123,6 +139,10 @@ describe('email', () => {
       expect(() => decoder.verify(invalid)).toThrow('Must be email');
     }
     expect(() => decoder.verify(123)).toThrow('Must be string');
+  });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
   });
 });
 
@@ -171,6 +191,10 @@ describe('url', () => {
     expect(() => decoder.verify('me@nvie.com ')).toThrow('Must be URL');
     expect(() => decoder.verify(123)).toThrow('Must be string');
   });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(false);
+  });
 });
 
 describe('nonEmptyString', () => {
@@ -192,6 +216,10 @@ describe('nonEmptyString', () => {
     expect(() => decoder.verify('	')).toThrow();
     expect(() => decoder.verify('\n')).toThrow();
     expect(() => decoder.verify('     \n ')).toThrow();
+  });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
   });
 });
 
@@ -222,6 +250,10 @@ describe('numeric', () => {
       { examples: [['0 '], ['.0'], ['0.'], ['-0'], ['+0'], ['00']] },
     );
   });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(false);
+  });
 });
 
 describe('decimal', () => {
@@ -247,6 +279,10 @@ describe('decimal', () => {
         },
       ),
     );
+  });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
   });
 });
 
@@ -278,6 +314,10 @@ describe('hexadecimal', () => {
         },
       ),
     );
+  });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
   });
 });
 
@@ -312,6 +352,10 @@ describe('identifier', () => {
         },
       ),
     );
+  });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
   });
 });
 
@@ -369,6 +413,10 @@ describe('nanoid', () => {
     expect(() => nanoid({ size: 5 }).verify('$'.repeat(5))).toThrow(/Must be nano ID/);
     expect(() => nanoid().verify(42)).toThrow(/Must be string/);
   });
+
+  test('readonliness', () => {
+    expect(nanoid().isReadonly).toBe(true);
+  });
 });
 
 describe('uuid', () => {
@@ -393,6 +441,10 @@ describe('uuid', () => {
     expect(decoder.decode('123e4567-e89b-12d3-a456-42661417400x').ok).toBe(false);
     expect(decoder.decode('123e4567e89b12d3a456426614174000').ok).toBe(false);
   });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('uuidv1', () => {
@@ -410,6 +462,10 @@ describe('uuidv1', () => {
   test('rejects', () => {
     expect(decoder.decode('123e4567-e89b-12d3-a456-42661417400x').ok).toBe(false);
     expect(decoder.decode('123e4567e89b12d3a456426614174000').ok).toBe(false);
+  });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
   });
 });
 
@@ -429,5 +485,9 @@ describe('uuidv4', () => {
     expect(decoder.decode('123e4567-e89b-42d3-a456-42661417400x').ok).toBe(false);
     expect(decoder.decode('123E4567-E89B-12d3-A456-426614174000').ok).toBe(false);
     expect(decoder.decode('123e4567e89b42d3a456426614174000').ok).toBe(false);
+  });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
   });
 });

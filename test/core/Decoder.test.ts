@@ -1,10 +1,10 @@
 import { describe, expect, test } from 'vitest';
 
-import { always } from '~/basics';
-import { annotate, define, formatInline, formatShort } from '~/core';
+import { always, optional } from '~/basics';
+import { annotate, define, formatInline, formatShort, readonly } from '~/core';
 import { number, positiveInteger } from '~/numbers';
 import { pojo } from '~/objects';
-import { string } from '~/strings';
+import { numeric, string } from '~/strings';
 
 test('.decode', () => {
   // .decode() is tested implicitly because it's used _everywhere_
@@ -234,11 +234,24 @@ describe('.refine()', () => {
 });
 
 describe('.refineType<T>()', () => {
-  test('valid', () => {
-    const d = string;
-    const d2 = d.refineType<'hi' | 'foo'>();
+  test('valid on decoders', () => {
+    const d = string.transform((s) => s.toUpperCase());
+    const d2 = d.refineType<'HI'>();
     expect(d2).toBe(d);
   });
+
+  test('valid on readonly decoders', () => {
+    const d = number.refine((x) => x > 0 && x < 4, 'Must be between 1 and 3');
+    const d2 = d.refineType<1 | 2 | 3>();
+    expect(d2).toBe(d);
+  });
+
+  test.each([number, numeric, string, pojo])(
+    'generic property: .refineType does not change the instance, only its type',
+    (d) => {
+      expect((d.refineType as any)()).toBe(d);
+    },
+  );
 });
 
 describe('.reject() (simple)', () => {
@@ -285,5 +298,19 @@ describe('.describe()', () => {
 
   test('invalid', () => {
     expect(() => decoder.verify(0)).toThrow(/Must be text/);
+  });
+});
+
+describe('readonly() helper', () => {
+  test('is a no-op when the given decoder is read-only', () => {
+    const decoder = optional(string);
+    expect(readonly(decoder)).toBe(decoder);
+  });
+
+  test("throws when the given decoder isn't read-only", () => {
+    const decoder = optional(numeric);
+    expect(() => readonly(decoder)).toThrow(
+      'Decoder setup error: this decoder is required to be readonly',
+    );
   });
 });

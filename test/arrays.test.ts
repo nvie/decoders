@@ -4,7 +4,7 @@ import { array, nonEmptyArray, tuple } from '~/arrays';
 import { setFromArray } from '~/collections';
 import { number } from '~/numbers';
 import { object } from '~/objects';
-import { string } from '~/strings';
+import { numeric, string } from '~/strings';
 
 describe('array', () => {
   test('empty array', () => {
@@ -42,6 +42,19 @@ describe('array', () => {
     const decoder2 = array(object({ name: string }));
     expect(() => decoder2.verify([{ name: 123 }])).toThrow('^ index 0');
   });
+
+  describe('readonliness', () => {
+    test('inherits readonliness when possible', () => {
+      const decoder = array(array(number));
+      expect(decoder.isReadonly).toBe(true);
+    });
+
+    test('does not inherit readonliness when not possible', () => {
+      const decoder = array(array(numeric));
+      //                          ^^^^^^^ not readonly
+      expect(decoder.isReadonly).toBe(false);
+    });
+  });
 });
 
 describe('nonEmptyArray', () => {
@@ -60,12 +73,24 @@ describe('nonEmptyArray', () => {
     expect(() => strings.verify([])).toThrow('Must be non-empty array');
     expect(() => numbers.verify([])).toThrow('Must be non-empty array');
   });
+
+  describe('readonliness', () => {
+    test('inherits readonliness when possible', () => {
+      const decoder = nonEmptyArray(nonEmptyArray(number));
+      expect(decoder.isReadonly).toBe(true);
+    });
+
+    test('does not inherit readonliness when not possible', () => {
+      const decoder = nonEmptyArray(nonEmptyArray(numeric));
+      expect(decoder.isReadonly).toBe(false);
+    });
+  });
 });
 
-describe('set', () => {
+describe('setFromArray', () => {
   const decoder = setFromArray(string);
 
-  test('empty set', () => {
+  test('empty setFromArray', () => {
     expect(decoder.verify([]).size).toBe(0);
   });
 
@@ -79,6 +104,11 @@ describe('set', () => {
   test('rejects', () => {
     expect(decoder.decode([1]).ok).toBe(false);
     expect(decoder.decode(1).ok).toBe(false);
+  });
+
+  test('readonliness', () => {
+    const decoder = setFromArray(number);
+    expect(decoder.isReadonly).toBe(false);
   });
 });
 
@@ -170,5 +200,18 @@ describe('tuples', () => {
     expect(decoder.decode([1, 2, 'foo', 3, 4, 5]).ok).toBe(false);
     expect(decoder.decode([1, 'foo', 2, 3, 4, 5]).ok).toBe(false);
     expect(decoder.decode(['foo', 1, 2, 3, 4, 5]).ok).toBe(false);
+  });
+
+  describe('readonliness', () => {
+    test('inherits readonliness when possible', () => {
+      const decoder = tuple(number, tuple(string, number));
+      expect(decoder.isReadonly).toBe(true);
+    });
+
+    test('does not inherit readonliness when not possible', () => {
+      const decoder = tuple(number, tuple(number, numeric));
+      //                                          ^^^^^^^ not readonly
+      expect(decoder.isReadonly).toBe(false);
+    });
   });
 });

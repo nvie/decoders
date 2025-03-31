@@ -31,7 +31,50 @@ export type Next<O, I = unknown> =
       err: (msg: string | Annotation) => DecodeResult<O>,
     ) => DecodeResult<O> | Decoder<O>);
 
+export interface ReadonlyDecoder<T> extends Decoder<T> {
+  /**
+   * Whether this Decoder is guaranteed to only validate the given input
+   * without modifying it.
+   */
+  readonly isReadonly: true;
+
+  /**
+   * Build a new decoder from the the current one, with an extra acceptance
+   * criterium.
+   */
+  refine<N extends T>(
+    predicate: (value: T) => value is N,
+    msg: string,
+  ): ReadonlyDecoder<N>;
+  refine(predicate: (value: T) => boolean, msg: string): ReadonlyDecoder<T>;
+
+  /**
+   * Cast the return type of this read-only decoder to a narrower type. This is
+   * useful to return "branded" types. This method has no runtime effect.
+   */
+  refineType<SubT /* extends T */>(): ReadonlyDecoder<SubT>;
+  //              ^^^^^^^^^^^^^^^ XXX Figure out why everything breaks if I add this desired constraint 🤔
+
+  /**
+   * Build a new decoder from the current one, with an extra rejection
+   * criterium.
+   */
+  reject(rejectFn: (value: T) => string | Annotation | null): ReadonlyDecoder<T>;
+
+  /**
+   * Build a new decoder from the current one, with a mutated error message
+   * in case of a rejection.
+   */
+  describe(message: string): ReadonlyDecoder<T>;
+}
+
 export interface Decoder<T> {
+  /**
+   * Whether this Decoder is guaranteed to only validate the given input
+   * without modifying it.
+   */
+  readonly isReadonly: boolean;
+
   /**
    * Verifies untrusted input. Either returns a value, or throws a decoding
    * error.
@@ -89,7 +132,7 @@ export interface Decoder<T> {
    * > be covered more elegantly by `.transform()`, `.refine()`, or `.pipe()`
    * > instead._
    */
-  then<V>(next: Next<V, T>): Decoder<V>;
+  then<V>(next: Next<V, T>, forceFlags?: Flags): Decoder<V>; // XXX This should not be public API
 
   /**
    * Send the output of this decoder as input to another decoder.
@@ -128,6 +171,12 @@ export interface Decoder<T> {
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type DecoderType<D extends Decoder<any>> = D extends Decoder<infer T> ? T : never;
+
+export type Flags = {
+  readonly readonly: boolean;
+};
+
+const DEFAULT_FLAGS: Flags = Object.freeze({ readonly: false });
 
 function noThrow<T, V>(fn: (value: T) => V): (blob: T) => DecodeResult<V> {
   return (t) => {
@@ -168,7 +217,7 @@ function format(err: Annotation, formatter: Formatter): Error {
  * helper functions. Please note that `ok()` and `err()` don't perform side
  * effects! You'll need to _return_ those values.
  */
-export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
+export function define<T>(fn: AcceptanceFn<T>, flags = DEFAULT_FLAGS): Decoder<T> {
   /**
    * Verifies the untrusted/unknown input and either accepts or rejects it.
    *
@@ -254,14 +303,25 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
    * > be covered more elegantly by `.transform()`, `.refine()`, or `.pipe()`
    * > instead._
    */
-  function then<V>(next: Next<V, T>): Decoder<V> {
-    return define((blob, ok, err) => {
-      const r1 = decode(blob);
-      if (!r1.ok) return r1; // Rejected
+  function then<V>(next: Next<V, T>, forceFlags?: Flags): Decoder<V> {
+    // Compute flags for the resulting decoder. If the provided value is
+    // a function, it's impossible to statically know if it's going to be
+    // a readonly decoder or not.
+    const newFlags = forceFlags ?? {
+      readonly: flags.readonly && isDecoder(next) && next.isReadonly,
+    };
 
-      const r2 = isDecoder(next) ? next : next(r1.value, ok, err);
-      return isDecoder(r2) ? r2.decode(r1.value) : r2;
-    });
+    return define(
+      (blob, ok, err) => {
+        const r1 = decode(blob);
+        if (!r1.ok) return r1; // Rejected
+
+        const r2 = isDecoder(next) ? next : next(r1.value, ok, err);
+        return isDecoder(r2) ? r2.decode(r1.value) : r2;
+      },
+
+      newFlags,
+    );
   }
 
   /**
@@ -298,12 +358,19 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
    * message.
    */
   function reject(rejectFn: (value: T) => string | Annotation | null): Decoder<T> {
-    return then((blob, ok, err) => {
-      const errmsg = rejectFn(blob);
-      return errmsg === null
-        ? ok(blob)
-        : err(typeof errmsg === 'string' ? annotate(blob, errmsg) : errmsg);
-    });
+    return then(
+      (blob, ok, err) => {
+        const errmsg = rejectFn(blob);
+        return errmsg === null
+          ? ok(blob)
+          : err(typeof errmsg === 'string' ? annotate(blob, errmsg) : errmsg);
+      },
+
+      // XXX I don't like this forcing of the flags here.
+      // XXX The internal helper we really want to call here is like
+      // XXX a .thenReadonly(). Think about a better API.
+      flags,
+    );
   }
 
   /**
@@ -322,10 +389,13 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
         // message instead
         return err(annotate(result.error, message));
       }
-    });
+    }, flags);
   }
 
   const unregistered: Decoder<T> = {
+    get isReadonly(): boolean {
+      return flags.readonly;
+    },
     verify,
     value,
     decode,
@@ -350,8 +420,36 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
       },
     },
   };
-  const self = brand(unregistered);
+  const self = register(unregistered);
   return self;
+}
+
+/**
+ * Defines a new read-only decoder. A read-only decoder is one that guarantees
+ * to validate the given input without modifying it, and returning its input
+ * value unchanged (if it's accepted).
+ */
+export function defineReadonly<T>(
+  predicate: (blob: unknown) => blob is T,
+  message: string,
+): ReadonlyDecoder<T> {
+  const flags: Flags = { readonly: true };
+  return define(
+    (blob, ok, err) => (predicate(blob) ? ok(blob) : err(message)),
+    flags,
+  ) as ReadonlyDecoder<T>;
+}
+
+/**
+ * Ensures that the given decoder will (recursively) be read-only at runtime.
+ */
+export function readonly<T>(decoder: Decoder<T>): ReadonlyDecoder<T> {
+  if (!decoder.isReadonly) {
+    const err = new Error('Decoder setup error: this decoder is required to be readonly');
+    Error.captureStackTrace(err, readonly);
+    throw err;
+  }
+  return decoder as ReadonlyDecoder<T>;
 }
 
 /** @internal */
@@ -361,7 +459,7 @@ const _register: WeakSet<Decoder<unknown>> = ((globalThis as any)[kDecoderRegist
   new WeakSet());
 
 /** @internal */
-function brand<D extends Decoder<unknown>>(decoder: D): D {
+function register<D extends Decoder<unknown>>(decoder: D): D {
   _register.add(decoder);
   return decoder;
 }
