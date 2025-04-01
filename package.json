@@ -70,7 +70,7 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "fast-check": "^4.0.0",
     "itertools": "^2.4.1",
-    "pkg-pr-new": "^0.0.41",
+    "pkg-pr-new": "^0.0.42",
     "prettier": "^3.5.3",
     "publint": "^0.3.9",
     "release-it": "^18.1.2",
