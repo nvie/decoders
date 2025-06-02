@@ -196,6 +196,18 @@ describe('exact objects', () => {
     expect(decoder.decode({ id: 3 }).ok).toBe(false); // Invalid field value for "id"
   });
 
+  test('accepts missing fields if optional', () => {
+    const decoder = exact({
+      name: string,
+      age: optional(number),
+    });
+
+    expect(decoder.value({ name: 'test', age: 42 })).toEqual({ name: 'test', age: 42 });
+    expect(decoder.value({ name: 'test', age: 42 })).toEqual({ name: 'test', age: 42 });
+    expect(decoder.value({ name: 'test' })).toEqual({ name: 'test' });
+    expect(decoder.value({ name: 'test' })).toEqual({ name: 'test', age: undefined });
+  });
+
   test('exact objects with optional fields will be implicit-undefined', () => {
     const defaults = {
       extra: 'default',
