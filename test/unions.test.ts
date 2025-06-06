@@ -7,7 +7,7 @@ import { boolean } from '~/booleans';
 import type { Decoder } from '~/core';
 import { number } from '~/numbers';
 import { object } from '~/objects';
-import { regex, string } from '~/strings';
+import { numeric, regex, string } from '~/strings';
 import { either, enum_, oneOf, select, taggedUnion } from '~/unions';
 
 import { INPUTS } from './_fixtures';
@@ -51,6 +51,19 @@ describe('either', () => {
     for (const value of not_okay) {
       expect(() => stringOrBooleanDecoder.verify(value)).toThrow();
     }
+  });
+
+  describe('readonliness', () => {
+    test('inherits readonliness when possible', () => {
+      const decoder = either(number, either(string, number));
+      expect(decoder.isReadonly).toBe(true);
+    });
+
+    test('does not inherit readonliness when not possible', () => {
+      const decoder = either(number, either(number, numeric));
+      //                                            ^^^^^^^ not readonly
+      expect(decoder.isReadonly).toBe(false);
+    });
   });
 
   test('errors nicely in trivial eithers', () => {
@@ -199,6 +212,10 @@ describe('oneOf', () => {
       const expected = okay.includes(blob as never);
       expect(decoder.decode(blob).ok).toBe(expected);
     }));
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('enums', () => {
@@ -232,6 +249,10 @@ describe('enums', () => {
       expect(() => decoder.verify(2)).toThrow();
       expect(() => decoder.verify(3)).toThrow();
     });
+
+    test('readonliness', () => {
+      expect(decoder.isReadonly).toBe(true);
+    });
   });
 
   describe('string enums where keys and values are equal', () => {
@@ -262,6 +283,10 @@ describe('enums', () => {
       expect(() => decoder.verify(2)).toThrow();
       expect(() => decoder.verify(3)).toThrow();
     });
+
+    test('readonliness', () => {
+      expect(decoder.isReadonly).toBe(true);
+    });
   });
 
   describe('string enums with duplicate values', () => {
@@ -288,6 +313,10 @@ describe('enums', () => {
       expect(() => decoder.verify(1)).toThrow();
       expect(() => decoder.verify(2)).toThrow();
       expect(() => decoder.verify(3)).toThrow();
+    });
+
+    test('readonliness', () => {
+      expect(decoder.isReadonly).toBe(true);
     });
   });
 
@@ -320,6 +349,10 @@ describe('enums', () => {
       expect(() => decoder.verify(-1)).toThrow();
       expect(() => decoder.verify(3)).toThrow();
     });
+
+    test('readonliness', () => {
+      expect(decoder.isReadonly).toBe(true);
+    });
   });
 
   describe('number enums with explicit auto-incrementing nums', () => {
@@ -346,6 +379,10 @@ describe('enums', () => {
       expect(() => decoder.verify(-1)).toThrow();
       expect(() => decoder.verify(0)).toThrow();
       expect(() => decoder.verify(3)).toThrow();
+    });
+
+    test('readonliness', () => {
+      expect(decoder.isReadonly).toBe(true);
     });
   });
 
@@ -375,6 +412,10 @@ describe('enums', () => {
       expect(() => decoder.verify(1)).toThrow();
       expect(() => decoder.verify(2)).toThrow();
     });
+
+    test('readonliness', () => {
+      expect(decoder.isReadonly).toBe(true);
+    });
   });
 
   describe('mixed enums', () => {
@@ -402,6 +443,10 @@ describe('enums', () => {
       expect(() => decoder.verify(1)).toThrow();
       expect(() => decoder.verify(2)).toThrow();
       expect(() => decoder.verify(4)).toThrow();
+    });
+
+    test('readonliness', () => {
+      expect(decoder.isReadonly).toBe(true);
     });
   });
 
@@ -431,6 +476,10 @@ describe('enums', () => {
       expect(() => decoder.verify(1)).toThrow();
       expect(() => decoder.verify(2)).toThrow();
       expect(() => decoder.verify(4)).toThrow();
+    });
+
+    test('readonliness', () => {
+      expect(decoder.isReadonly).toBe(true);
     });
   });
 });
@@ -492,6 +541,11 @@ describe('taggedUnion', () => {
       /Missing keys: 'y', 'width', 'height'/,
     );
   });
+
+  // XXX Implement later
+  test.todo('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('taggedUnion with numeric keys', () => {
@@ -513,6 +567,11 @@ describe('taggedUnion with numeric keys', () => {
     expect(() => decoder.verify({ type: 'blah' })).toThrow(/Must be one of.*1.*2/);
     expect(() => decoder.verify({ type: 1, x: 1 })).toThrow(/Missing key: 'a'/);
     expect(() => decoder.verify({ type: 2, x: 1 })).toThrow(/Missing key: 'b'/);
+  });
+
+  // XXX Implement later
+  test.todo('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
   });
 });
 
@@ -547,5 +606,36 @@ describe('select', () => {
     expect(() => decoder.verify({ version: 2 })).toThrow("Missing keys: 'title', 'text'");
     expect(() => decoder.verify({ version: 3 })).toThrow("Missing key: 'text'");
     expect(() => decoder.verify({ version: -7 })).toThrow('Must be one of 2, 3');
+  });
+
+  describe('readonliness', () => {
+    test('does not inherit readonliness by default', () => {
+      const decoder = select(number, () => number);
+      expect(decoder.isReadonly).toBe(false);
+    });
+
+    test("inherits readonliness when told it's possible", () => {
+      const decoder = select(number, () => number, { readonly: true });
+      expect(decoder.isReadonly).toBe(true);
+    });
+
+    test('does not inherit readonliness when not possible', () => {
+      const decoder = select(number, () => numeric);
+      //                                   ^^^^^^^ not readonly
+      expect(decoder.isReadonly).toBe(false);
+    });
+
+    test("inherits readonliness when told it's possible (despite being a lie)", () => {
+      const decoder = select(number, () => numeric, { readonly: true });
+      //                                                        ^^^^ a lie
+      //                                   ^^^^^^^ not readonly
+      expect(decoder.isReadonly).toBe(true);
+      //                              ^^^^ the lie is forwarded...
+
+      // ...but this is what you get when telling lies
+      expect(() => decoder.verify(123)).toThrow(
+        'Decoder setup error: this decoder is required to be readonly',
+      );
+    });
   });
 });

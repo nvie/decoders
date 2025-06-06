@@ -36,7 +36,7 @@ export type Annotation =
   | OpaqueAnnotation;
 
 /** @internal */
-function brand<A extends Annotation>(ann: A): A {
+function register<A extends Annotation>(ann: A): A {
   _register.add(ann);
   return ann;
 }
@@ -46,7 +46,7 @@ export function makeObjectAnn(
   fields: ReadonlyMap<string, Annotation>,
   text?: string,
 ): ObjectAnnotation {
-  return brand({ type: 'object', fields, text });
+  return register({ type: 'object', fields, text });
 }
 
 /** @internal */
@@ -54,17 +54,17 @@ export function makeArrayAnn(
   items: readonly Annotation[],
   text?: string,
 ): ArrayAnnotation {
-  return brand({ type: 'array', items, text });
+  return register({ type: 'array', items, text });
 }
 
 /** @internal */
 export function makeOpaqueAnn(value: string, text?: string): OpaqueAnnotation {
-  return brand({ type: 'opaque', value, text });
+  return register({ type: 'opaque', value, text });
 }
 
 /** @internal */
 export function makeScalarAnn(value: unknown, text?: string): ScalarAnnotation {
-  return brand({ type: 'scalar', value, text });
+  return register({ type: 'scalar', value, text });
 }
 
 /**
@@ -73,7 +73,7 @@ export function makeScalarAnn(value: unknown, text?: string): ScalarAnnotation {
  */
 export function updateText<A extends Annotation>(annotation: A, text?: string): A {
   if (text !== undefined) {
-    return brand({ ...annotation, text });
+    return register({ ...annotation, text });
   } else {
     return annotation;
   }

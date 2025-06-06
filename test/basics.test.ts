@@ -14,7 +14,7 @@ import {
   undefined_,
   unknown,
 } from '~/basics';
-import { string } from '~/strings';
+import { numeric, string } from '~/strings';
 
 import { INPUTS } from './_fixtures';
 
@@ -36,6 +36,10 @@ describe('null_', () => {
       expect(decoder.decode(value).error?.text).toEqual('Must be null');
     }
   });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('undefined_', () => {
@@ -55,6 +59,10 @@ describe('undefined_', () => {
       expect(decoder.decode(value).ok).toBe(false);
       expect(decoder.decode(value).error?.text).toEqual('Must be undefined');
     }
+  });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
   });
 });
 
@@ -76,6 +84,10 @@ describe('string constants', () => {
       expect(decoder.decode(value).error?.text).toEqual("Must be 'foo'");
     }
   });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('number constants', () => {
@@ -96,10 +108,15 @@ describe('number constants', () => {
       expect(decoder.decode(value).error?.text).toEqual('Must be 42');
     }
   });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('boolean constants #1', () => {
   const decoder = constant(true);
+  expect(decoder.isReadonly).toBe(true);
   const [okay, not_okay] = partition(INPUTS, (x) => x === true);
 
   test('valid', () => {
@@ -115,6 +132,10 @@ describe('boolean constants #1', () => {
       expect(decoder.decode(value).ok).toBe(false);
       expect(decoder.decode(value).error?.text).toEqual('Must be true');
     }
+  });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
   });
 });
 
@@ -135,6 +156,10 @@ describe('boolean constants #2', () => {
       expect(decoder.decode(value).ok).toBe(false);
       expect(decoder.decode(value).error?.text).toEqual('Must be false');
     }
+  });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
   });
 });
 
@@ -162,6 +187,10 @@ describe('symbol constants', () => {
       expect(decoder.decode(value).ok).toBe(false);
       expect(decoder.decode(value).error?.text).toMatch(/^Must be Symbol\(xyz2\)$/);
     }
+  });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
   });
 });
 
@@ -192,13 +221,17 @@ describe('always', () => {
   test('invalid', () => {
     // hardcoded verifiers never fail
   });
+
+  test('readonliness', () => {
+    const decoder = always(42);
+    expect(decoder.isReadonly).toBe(false);
+  });
 });
 
-describe('mixed (pass-thru)', () => {
-  test('valid', () => {
-    // Test all hardcoded inputs...
-    const decoder = unknown;
+describe('unknown (pass-thru)', () => {
+  const decoder = unknown;
 
+  test('valid', () => {
     // Against all inputs...
     for (const input of INPUTS) {
       expect(decoder.verify(input)).toBe(input);
@@ -207,6 +240,10 @@ describe('mixed (pass-thru)', () => {
 
   test('mixed', () => {
     // mixed verifiers never fail
+  });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
   });
 });
 
@@ -232,6 +269,7 @@ describe('optional', () => {
 
   test('w/ default value', () => {
     const decoder = optional(string, 42);
+    expect(decoder.isReadonly).toBe(false);
     expect(decoder.verify('foo')).toBe('foo');
     expect(decoder.verify('')).toBe('');
     expect(decoder.verify(undefined)).toBe(42);
@@ -242,12 +280,26 @@ describe('optional', () => {
 
   test('w/ callable default value', () => {
     const decoder = optional(string, () => 42);
+    expect(decoder.isReadonly).toBe(false);
     expect(decoder.verify('foo')).toBe('foo');
     expect(decoder.verify('')).toBe('');
     expect(decoder.verify(undefined)).toBe(42);
 
     expect(() => decoder.verify(null)).toThrow();
     expect(() => decoder.verify(123)).toThrow();
+  });
+
+  describe('readonliness', () => {
+    test('inherits readonliness when possible', () => {
+      const decoder = optional(optional(string));
+      expect(decoder.isReadonly).toBe(true);
+    });
+
+    test('does not inherit readonliness when not possible', () => {
+      const decoder = optional(optional(numeric));
+      //                                ^^^^^^^ not readonly
+      expect(decoder.isReadonly).toBe(false);
+    });
   });
 });
 
@@ -273,6 +325,7 @@ describe('nullable', () => {
 
   test('w/ default value', () => {
     const decoder = nullable(string, 42);
+    expect(decoder.isReadonly).toBe(false);
     expect(decoder.verify('foo')).toBe('foo');
     expect(decoder.verify('')).toBe('');
     expect(decoder.verify(null)).toBe(42);
@@ -283,12 +336,26 @@ describe('nullable', () => {
 
   test('w/ callable default value', () => {
     const decoder = nullable(string, () => 42);
+    expect(decoder.isReadonly).toBe(false);
     expect(decoder.verify('foo')).toBe('foo');
     expect(decoder.verify('')).toBe('');
     expect(decoder.verify(null)).toBe(42);
 
     expect(() => decoder.verify(undefined)).toThrow();
     expect(() => decoder.verify(123)).toThrow();
+  });
+
+  describe('readonliness', () => {
+    test('inherits readonliness when possible', () => {
+      const decoder = nullable(nullable(string));
+      expect(decoder.isReadonly).toBe(true);
+    });
+
+    test('does not inherit readonliness when not possible', () => {
+      const decoder = nullable(nullable(numeric));
+      //                                ^^^^^^^ not readonly
+      expect(decoder.isReadonly).toBe(false);
+    });
   });
 });
 
@@ -326,6 +393,7 @@ describe('maybe', () => {
 
   test('w/ default value', () => {
     const decoder = nullish(string, 42);
+    expect(decoder.isReadonly).toBe(false);
     expect(decoder.verify('foo')).toBe('foo');
     expect(decoder.verify('')).toBe('');
     expect(decoder.verify(null)).toBe(42);
@@ -336,12 +404,26 @@ describe('maybe', () => {
 
   test('w/ callable default value', () => {
     const decoder = nullish(string, () => 42);
+    expect(decoder.isReadonly).toBe(false);
     expect(decoder.verify('foo')).toBe('foo');
     expect(decoder.verify('')).toBe('');
     expect(decoder.verify(null)).toBe(42);
     expect(decoder.verify(undefined)).toBe(42);
 
     expect(() => decoder.verify(123)).toThrow();
+  });
+
+  describe('readonliness', () => {
+    test('inherits readonliness when possible', () => {
+      const decoder = maybe(maybe(string));
+      expect(decoder.isReadonly).toBe(true);
+    });
+
+    test('does not inherit readonliness when not possible', () => {
+      const decoder = maybe(maybe(numeric));
+      //                          ^^^^^^^ not readonly
+      expect(decoder.isReadonly).toBe(false);
+    });
   });
 });
 
@@ -379,6 +461,7 @@ describe('nullish', () => {
 
   test('w/ default value', () => {
     const decoder = nullish(string, 42);
+    expect(decoder.isReadonly).toBe(false);
     expect(decoder.verify('foo')).toBe('foo');
     expect(decoder.verify('')).toBe('');
     expect(decoder.verify(null)).toBe(42);
@@ -389,12 +472,26 @@ describe('nullish', () => {
 
   test('w/ callable default value', () => {
     const decoder = nullish(string, () => 42);
+    expect(decoder.isReadonly).toBe(false);
     expect(decoder.verify('foo')).toBe('foo');
     expect(decoder.verify('')).toBe('');
     expect(decoder.verify(null)).toBe(42);
     expect(decoder.verify(undefined)).toBe(42);
 
     expect(() => decoder.verify(123)).toThrow();
+  });
+
+  describe('readonliness', () => {
+    test('inherits readonliness when possible', () => {
+      const decoder = nullish(nullish(string));
+      expect(decoder.isReadonly).toBe(true);
+    });
+
+    test('does not inherit readonliness when not possible', () => {
+      const decoder = nullish(nullish(numeric));
+      //                              ^^^^^^^ not readonly
+      expect(decoder.isReadonly).toBe(false);
+    });
   });
 });
 
@@ -412,6 +509,10 @@ describe('fail', () => {
       expect(decoder.decode(value).ok).toBe(false);
     }
   });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
+  });
 });
 
 describe('never', () => {
@@ -427,5 +528,9 @@ describe('never', () => {
     for (const value of not_okay) {
       expect(decoder.decode(value).ok).toBe(false);
     }
+  });
+
+  test('readonliness', () => {
+    expect(decoder.isReadonly).toBe(true);
   });
 });

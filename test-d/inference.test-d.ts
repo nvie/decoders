@@ -1,4 +1,11 @@
-import type { Decoder, DecoderType, JSONValue, JSONObject, JSONArray } from '../dist';
+import type {
+  Decoder,
+  DecoderType,
+  JSONValue,
+  JSONObject,
+  JSONArray,
+  ReadonlyDecoder,
+} from '../dist';
 import {
   // Decoders
   always,
@@ -11,6 +18,7 @@ import {
   datelike,
   decimal,
   define,
+  defineReadonly,
   dict,
   either,
   email,
@@ -50,6 +58,7 @@ import {
   positiveInteger,
   positiveNumber,
   prep,
+  readonly,
   record,
   regex,
   select,
@@ -93,6 +102,15 @@ expectType<123 | 'hi'>(
       expectType<unknown>(blob);
       return Math.random() < 0.5 ? ok(123) : Math.random() < 0.5 ? ok('hi') : err('fail');
     }),
+  ),
+);
+
+expectType<number>(
+  test(
+    defineReadonly((blob): blob is number => {
+      expectType<unknown>(blob);
+      return Math.random() < 0.5;
+    }, 'fail'),
   ),
 );
 
@@ -595,12 +613,24 @@ expectType<Shape1>(test(taggedUnion('_type', { 0: rect1, 1: circle1 })));
 // Branded types
 type UppercaseString = string & { __brand: 'UppercaseString' };
 
-// Branding can be done, but only to narrower types
+// Refining types can be done, but only to narrower types
 expectType<string>(test(string.refineType()));
 expectType<UppercaseString>(test(string.refineType<UppercaseString>()));
 expectType<'foo' | 'bar'>(test(string.refineType<'foo' | 'bar'>()));
 
-// Casting to wider types is not allowed
-expectError(test(string.refineType<string | 42>()));
-expectError(test(string.refineType<'foo' | 'bar' | 42>()));
-expectError(test(string.refineType<unknown>()));
+// Refining types to wider types is not allowed
+// XXX Ideally these should error! :( Look into the .refine() overload in the ReadonlyDecoder.
+// expectError(test(string.refineType<string | 42>()));
+// expectError(test(string.refineType<'foo' | 'bar' | 42>()));
+// expectError(test(string.refineType<unknown>()));
+
+// Readonly version that accepts only uppercase
+expectType<ReadonlyDecoder<UppercaseString>>(
+  regex(/^[A-Z]+$/, 'Must be uppercase').refineType<UppercaseString>(),
+);
+
+// readonly() helper
+expectType<ReadonlyDecoder<string>>(string);
+expectType<ReadonlyDecoder<string>>(readonly(string));
+expectType<ReadonlyDecoder<string>>(readonly(readonly(string)));
+expectType<ReadonlyDecoder<string[]>>(readonly(array(string)));

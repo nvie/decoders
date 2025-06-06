@@ -28,8 +28,15 @@ And a runtime input of:
 }
 ```
 
-|                                       | Extra properties | Output value                   | Inferred type                               |
-| ------------------------------------- | ---------------- | ------------------------------ | ------------------------------------------- |
-| [`object(thing)`](/api.html#object)   | discarded        | `{a: "hi", b: 42}`             | `{a: string, b: number}`                    |
-| [`exact(thing)`](/api.html#exact)     | not allowed      | n/a (rejected)                 | `{a: string, b: number}`                    |
-| [`inexact(thing)`](/api.html#inexact) | retained         | `{a: "hi", b: 42, c: "extra"}` | `{a: string, b: number, [string]: unknown}` |
+|                                       | Read-only   | Extra properties | Output value                   | Inferred type                               |
+| ------------------------------------- | ----------- | ---------------- | ------------------------------ | ------------------------------------------- |
+| [`object(thing)`](/api.html#object)   | no\*\*      | discarded        | `{a: "hi", b: 42}`             | `{a: string, b: number}`                    |
+| [`exact(thing)`](/api.html#exact)     | inherited\* | not allowed      | n/a (rejected)                 | `{a: string, b: number}`                    |
+| [`inexact(thing)`](/api.html#inexact) | inherited\* | retained         | `{a: "hi", b: 42, c: "extra"}` | `{a: string, b: number, [string]: unknown}` |
+
+\*: The read-only behavior of `exact` and `inexact` is inherited from the field decoders
+that are provided. If all fields are read-only, then the `exact` or `inexact` decoder
+itself will also be read-only.
+
+\*\*: Note that the `object` decoder is never read-only, because it will always create a
+new object that has exactly the keys provided.
