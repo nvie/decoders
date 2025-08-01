@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- Fix: `dateString` decoder is now properly exported at the top-level
 - Fix: `oneOf()` decoder now correctly handles `undefined` constants
 
 ## [2.7.0] - 2025-03-31
