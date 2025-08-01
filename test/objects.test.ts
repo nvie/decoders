@@ -1,6 +1,21 @@
 import { describe, expect, test } from 'vitest';
 
-import { hardcoded, optional, unknown, boolean, mapping, record, number, exact, inexact, object, pojo, decimal, regex, string } from '~';
+import {
+  boolean,
+  decimal,
+  exact,
+  hardcoded,
+  inexact,
+  mapping,
+  number,
+  object,
+  optional,
+  pojo,
+  record,
+  regex,
+  string,
+  unknown,
+} from '~';
 
 describe('objects', () => {
   test('decodes objects and fields', () => {

@@ -1,14 +1,7 @@
 import { partition } from 'itertools';
 import { describe, expect, test } from 'vitest';
 
-import {
-  anyNumber,
-  bigint,
-  integer,
-  number,
-  positiveInteger,
-  positiveNumber,
-} from '~';
+import { anyNumber, bigint, integer, number, positiveInteger, positiveNumber } from '~';
 
 import { INPUTS } from './_fixtures';
 

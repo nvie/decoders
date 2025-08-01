@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { array, nonEmptyArray, tuple, setFromArray, number, object, string } from '~';
+import { array, nonEmptyArray, number, object, setFromArray, string, tuple } from '~';
 
 describe('array', () => {
   test('empty array', () => {

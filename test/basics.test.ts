@@ -11,9 +11,9 @@ import {
   nullable,
   nullish,
   optional,
+  string,
   undefined_,
   unknown,
-  string,
 } from '~';
 
 import { INPUTS } from './_fixtures';

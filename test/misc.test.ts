@@ -1,8 +1,18 @@
 import { partition } from 'itertools';
 import { describe, expect, test } from 'vitest';
 
+import {
+  array,
+  constant,
+  instanceOf,
+  lazy,
+  number,
+  object,
+  optional,
+  prep,
+  string,
+} from '~';
 import type { Decoder } from '~/core';
-import { array, constant, optional, instanceOf, lazy, prep, number, object, string } from '~';
 
 import { INPUTS } from './_fixtures';
 

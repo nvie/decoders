@@ -2,8 +2,22 @@ import * as fc from 'fast-check';
 import { partition } from 'itertools';
 import { describe, expect, test } from 'vitest';
 
+import {
+  boolean,
+  constant,
+  either,
+  enum_,
+  number,
+  object,
+  oneOf,
+  optional,
+  regex,
+  select,
+  string,
+  taggedUnion,
+  undefined_,
+} from '~';
 import type { Decoder } from '~/core';
-import { constant, optional, undefined_, boolean, number, object, regex, string, either, enum_, oneOf, select, taggedUnion } from '~';
 
 import { INPUTS } from './_fixtures';
 
