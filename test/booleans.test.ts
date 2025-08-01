@@ -1,7 +1,7 @@
 import { partition } from 'itertools';
 import { describe, expect, test } from 'vitest';
 
-import { boolean, truthy } from '~/booleans';
+import { boolean, truthy } from '~';
 
 import { INPUTS } from './_fixtures';
 

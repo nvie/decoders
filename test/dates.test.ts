@@ -1,7 +1,7 @@
 import { partition } from 'itertools';
 import { describe, expect, test } from 'vitest';
 
-import { date, datelike, dateString, iso8601 } from '~/dates';
+import { date, datelike, dateString, iso8601 } from '~';
 
 import { INPUTS } from './_fixtures';
 

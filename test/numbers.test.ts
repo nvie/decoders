@@ -8,7 +8,7 @@ import {
   number,
   positiveInteger,
   positiveNumber,
-} from '~/numbers';
+} from '~';
 
 import { INPUTS } from './_fixtures';
 

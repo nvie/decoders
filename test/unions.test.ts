@@ -2,13 +2,8 @@ import * as fc from 'fast-check';
 import { partition } from 'itertools';
 import { describe, expect, test } from 'vitest';
 
-import { constant, optional, undefined_ } from '~/basics';
-import { boolean } from '~/booleans';
 import type { Decoder } from '~/core';
-import { number } from '~/numbers';
-import { object } from '~/objects';
-import { regex, string } from '~/strings';
-import { either, enum_, oneOf, select, taggedUnion } from '~/unions';
+import { constant, optional, undefined_, boolean, number, object, regex, string, either, enum_, oneOf, select, taggedUnion } from '~';
 
 import { INPUTS } from './_fixtures';
 

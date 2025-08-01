@@ -13,8 +13,8 @@ import {
   optional,
   undefined_,
   unknown,
-} from '~/basics';
-import { string } from '~/strings';
+  string,
+} from '~';
 
 import { INPUTS } from './_fixtures';
 

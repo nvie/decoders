@@ -19,7 +19,7 @@ import {
   uuid,
   uuidv1,
   uuidv4,
-} from '~/strings';
+} from '~';
 
 import { INPUTS } from './_fixtures';
 

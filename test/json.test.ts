@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { json, jsonArray, jsonObject } from '~/json';
+import { json, jsonArray, jsonObject } from '~';
 
 describe('decoder', () => {
   const decoder = json;
