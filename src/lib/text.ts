@@ -21,5 +21,7 @@ const quotePattern = /'/g;
 export function quote(value: unknown): string {
   return typeof value === 'string'
     ? "'" + value.replace(quotePattern, "\\'") + "'"
-    : JSON.stringify(value);
+    : value === undefined
+      ? 'undefined'
+      : JSON.stringify(value);
 }

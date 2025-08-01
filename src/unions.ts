@@ -88,9 +88,9 @@ export function either<TDecoders extends readonly Decoder<unknown>[]>(
  */
 export function oneOf<C extends Scalar>(constants: readonly C[]): Decoder<C> {
   return define((blob, ok, err) => {
-    const winner = constants.find((c) => c === blob);
-    if (winner !== undefined) {
-      return ok(winner);
+    const index = constants.indexOf(blob as C);
+    if (index !== -1) {
+      return ok(constants[index]);
     }
     return err(`Must be one of ${constants.map((value) => quote(value)).join(', ')}`);
   });

@@ -194,6 +194,16 @@ describe('oneOf', () => {
     }
   });
 
+  test('handles undefined as a valid value', () => {
+    const decoder = oneOf([undefined]);
+    expect(decoder.verify(undefined)).toBe(undefined);
+  });
+
+  test('shows undefined in error message', () => {
+    const decoder = oneOf([undefined]);
+    expect(() => decoder.verify('invalid')).toThrow('Must be one of undefined');
+  });
+
   test('fuzz', () =>
     fuzz((blob) => {
       const expected = okay.includes(blob as never);

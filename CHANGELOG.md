@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Fix: `oneOf()` decoder now correctly handles `undefined` constants
+
 ## [2.7.0] - 2025-03-31
 
 - Add new `dateString` decoder (see [docs](https://decoders.cc/api.html#dateString))
