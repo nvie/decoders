@@ -1,6 +1,7 @@
 import type { Decoder, DecoderType, JSONValue, JSONObject, JSONArray } from '../dist';
 import {
   // Decoders
+  // Formatters
   always,
   anyNumber,
   array,
@@ -9,6 +10,7 @@ import {
   constant,
   date,
   datelike,
+  dateString,
   decimal,
   define,
   dict,
@@ -18,9 +20,12 @@ import {
   enum_,
   exact,
   fail,
+  formatInline,
+  formatShort,
   hardcoded,
   hexadecimal,
   httpsUrl,
+  identifier,
   inexact,
   instanceOf,
   integer,
@@ -33,13 +38,12 @@ import {
   maybe,
   mixed,
   nanoid,
-  identifier,
   never,
   nonEmptyArray,
   nonEmptyString,
+  null_,
   nullable,
   nullish,
-  null_,
   number,
   numeric,
   object,
@@ -66,10 +70,6 @@ import {
   uuid,
   uuidv1,
   uuidv4,
-
-  // Formatters
-  formatInline,
-  formatShort,
 } from '../dist';
 import { expectError, expectType, expectAssignable } from 'tsd';
 
@@ -451,6 +451,7 @@ expectType<JSONValue | undefined>(test(jsonObject).abc);
 expectType<Date>(test(date));
 expectType<Date>(test(iso8601));
 expectType<Date>(test(datelike));
+expectType<string>(test(dateString));
 
 expectType<never>(test(fail('I will never return')));
 expectType<never>(test(never('I will never return')));
