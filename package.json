@@ -1,6 +1,6 @@
 {
   "name": "decoders",
-  "version": "2.7.1",
+  "version": "2.7.2",
   "description": "Elegant and battle-tested validation library for type-safe input data for TypeScript",
   "license": "MIT",
   "repository": {

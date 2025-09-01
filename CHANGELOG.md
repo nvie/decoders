@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [2.7.2] - 2025-09-01
+
 - Fix: `url` decoder now also accepts a wider range of protocol lengths, now accepting
   e.g. at:// and postgresql:// URLs
 
