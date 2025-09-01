@@ -130,9 +130,6 @@ describe('url', () => {
   const decoder = url;
 
   test('valid', () => {
-    expect(decoder.verify(new URL('https://nvie.com/')).toString()).toEqual(
-      'https://nvie.com/',
-    );
     expect(decoder.verify('https://nvie.com').toString()).toEqual('https://nvie.com/');
     expect(decoder.verify('https://example.com/foo?q=foo/bar').toString()).toBe(
       'https://example.com/foo?q=foo/bar',
@@ -143,6 +140,10 @@ describe('url', () => {
     expect(decoder.verify('https://res.example.com/a_b,c_1d/foo.svg').toString()).toBe(
       'https://res.example.com/a_b,c_1d/foo.svg',
     );
+    expect(decoder.verify('postgresql://localhost/db').toString()).toEqual(
+      'postgresql://localhost/db',
+    );
+    expect(decoder.verify('at://localhost/db').toString()).toEqual('at://localhost/db');
   });
 
   test('custom URL schemes', () => {

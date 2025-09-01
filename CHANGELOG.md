@@ -1,5 +1,8 @@
 ## [Unreleased]
 
+- Fix: `url` decoder now also accepts a wider range of protocol lengths, now accepting
+  e.g. at:// and postgresql:// URLs
+
 ## [2.7.1] - 2025-08-01
 
 - Fix: `dateString` decoder is now properly exported at the top-level
