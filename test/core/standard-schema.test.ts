@@ -23,6 +23,12 @@ describe('standard-schema', () => {
     expect(result.issues).toEqual([{ message: 'Must be string' }]);
   });
 
+  test('invalid (w/ object)', async () => {
+    const schema = object({ id: string });
+    const result = await schema['~standard'].validate({ id: 42 });
+    expect(result.issues).toEqual([{ message: 'Must be string', path: ['id'] }]);
+  });
+
   test('invalid (nesting with array paths)', async () => {
     const schema = array(exact({ a: string }));
 
