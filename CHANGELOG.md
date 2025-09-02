@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [2.7.3] - 2025-09-02
+
 - Fix: `url` decoder now also accepts dots (`.`) as part of username/password parts
 
 ## [2.7.2] - 2025-09-01
