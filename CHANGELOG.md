@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [2.7.4] - 2025-09-02
+
 - Fix: `url` decoder now sanitizes (legal) empty user/passwords
 
 ## [2.7.3] - 2025-09-02
