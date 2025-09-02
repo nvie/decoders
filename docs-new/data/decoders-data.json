@@ -1,0 +1,1226 @@
+{
+  "decoders": {
+    "string": {
+      "section": "Strings",
+      "params": null,
+      "return_type": "Decoder<string>",
+      "example": "\n      // 👍\n      string.verify('hello world') === 'hello world';\n      string.verify('🚀') === '🚀';\n      string.verify('') === '';\n\n      // 👎\n      string.verify(123);   // throws\n      string.verify(true);  // throws\n      string.verify(null);  // throws\n    "
+    },
+    "nonEmptyString": {
+      "section": "Strings",
+      "params": null,
+      "return_type": "Decoder<string>",
+      "example": "\n      // 👍\n      nonEmptyString.verify('hello world') === 'hello world';\n      nonEmptyString.verify('🚀') === '🚀';\n\n      // 👎\n      nonEmptyString.verify(123);   // throws\n      nonEmptyString.verify('  ');  // throws\n      nonEmptyString.verify('');    // throws\n    "
+    },
+    "regex": {
+      "section": "Strings",
+      "params": [
+        [
+          "pattern",
+          "RegExp"
+        ],
+        [
+          "message",
+          "string"
+        ]
+      ],
+      "return_type": "Decoder<string>",
+      "example": "\n      const decoder = regex(/^[0-9][0-9]+$/, 'Must be numeric');\n\n      // 👍\n      decoder.verify('42') === '42';\n      decoder.verify('83401648364738') === '83401648364738';\n\n      // 👎\n      decoder.verify('');     // throws\n      decoder.verify('1');    // throws\n      decoder.verify('foo');  // throws\n    "
+    },
+    "startsWith": {
+      "section": "Strings",
+      "params": [
+        [
+          "prefix",
+          "P"
+        ]
+      ],
+      "return_type": "Decoder<\\`${P}${string}\\`>",
+      "example": "\n      const decoder = startsWith('abc');\n\n      // 👍\n      decoder.verify('abc') === 'abc';\n      decoder.verify('abcdefg') === 'abcdefg';\n\n      // 👎\n      decoder.verify(42);     // throws\n      decoder.verify('ab');   // throws\n      decoder.verify('ABC');  // throws\n    "
+    },
+    "endsWith": {
+      "section": "Strings",
+      "params": [
+        [
+          "suffix",
+          "S"
+        ]
+      ],
+      "return_type": "Decoder<\\`${string}${S}\\`>",
+      "example": "\n      const decoder = endsWith('bar');\n\n      // 👍\n      decoder.verify('bar') === 'bar';\n      decoder.verify('foobar') === 'foobar';\n\n      // 👎\n      decoder.verify(42);      // throws\n      decoder.verify('Bar');   // throws\n      decoder.verify('bark');  // throws\n    "
+    },
+    "decimal": {
+      "section": "Strings",
+      "return_type": "Decoder<string>",
+      "example": "\n      const decoder = decimal;\n\n      // 👍\n      decoder.verify('42') === '42';\n      decoder.verify('83401648364738') === '83401648364738';\n\n      // 👎\n      decoder.verify('');        // throws\n      decoder.verify('123abc');  // throws\n      decoder.verify('foo');     // throws\n      decoder.verify(123);       // throws (not a string)\n    "
+    },
+    "hexadecimal": {
+      "section": "Strings",
+      "return_type": "Decoder<string>",
+      "example": "\n      const decoder = hexadecimal;\n\n      // 👍\n      decoder.verify('0123456789ABCDEF') === '0123456789ABCDEF';\n      decoder.verify('deadbeef') === 'deadbeef';\n\n      // 👎\n      decoder.verify('abcdefghijklm');  // throws (not hexadecimal)\n      decoder.verify('');     // throws\n      decoder.verify('1');    // throws\n    "
+    },
+    "numeric": {
+      "section": "Strings",
+      "return_type": "Decoder<number>",
+      "example": "\n      const decoder = numeric;\n\n      // 👍\n      decoder.verify('42') === 42;\n      decoder.verify('83401648364738') === 83401648364738;\n\n      // 👎\n      decoder.verify('');        // throws\n      decoder.verify('123abc');  // throws\n      decoder.verify('foo');     // throws\n      decoder.verify(123);       // throws (not a string)\n    "
+    },
+    "email": {
+      "section": "Strings",
+      "params": null,
+      "return_type": "Decoder<string>",
+      "example": "\n      // 👍\n      email.verify('alice@acme.org') === 'alice@acme.org';\n\n      // 👎\n      email.verify('foo');               // throws\n      email.verify('@acme.org');         // throws\n      email.verify('alice @ acme.org');  // throws\n    "
+    },
+    "url": {
+      "section": "Strings",
+      "params": null,
+      "return_type": "Decoder<URL>",
+      "example": "\n      // 👍\n      url.verify('http://nvie.com') === new URL('http://nvie.com/');\n      url.verify('https://nvie.com') === new URL('https://nvie.com/');\n      url.verify('git+ssh://user@github.com/foo/bar.git') === new URL('git+ssh://user@github.com/foo/bar.git');\n\n      // 👎\n      url.verify('foo');               // throws\n      url.verify('@acme.org');         // throws\n      url.verify('alice @ acme.org');  // throws\n      url.verify('/search?q=foo');     // throws\n    "
+    },
+    "httpsUrl": {
+      "section": "Strings",
+      "params": null,
+      "return_type": "Decoder<URL>",
+      "example": "\n      ```ts\n      // 👍\n      httpsUrl.verify('https://nvie.com:443') === new URL('https://nvie.com/');\n\n      // 👎\n      httpsUrl.verify('http://nvie.com');                        // throws, not HTTPS\n      httpsUrl.verify('git+ssh://user@github.com/foo/bar.git');  // throws, not HTTPS\n      ```\n\n      **Tip!** If you need to limit URLs to different protocols than HTTP, you can do as the HTTPS decoder is implemented: by adding further conditions using a `.refine()` call.\n\n      ```ts\n      import { url } from 'decoders';\n\n      const gitUrl: Decoder<URL> = url.refine(\n        (value) => value.protocol === 'git:',\n        'Must be a git:// URL',\n      );\n      ```\n    "
+    },
+    "identifier": {
+      "section": "Strings",
+      "params": null,
+      "return_type": "Decoder<string>",
+      "example": "\n      // 👍\n      identifier.verify('x') === 'x'\n      identifier.verify('abc123') === 'abc123'\n      identifier.verify('_123') === '_123'\n      identifier.verify('a_b_c_1_2_3') === 'a_b_c_1_2_3'\n\n      // 👎\n      identifier.verify('123xyz');   // cannot start with digit\n      identifier.verify('x-y');      // invalid chars\n      identifier.verify('!@#$%^&*()=+');  // invalid chars\n      identifier.verify('🤯');       // invalid chars\n      identifier.verify(42);         // not a string\n    "
+    },
+    "nanoid": {
+      "section": "Strings",
+      "params": null,
+      "return_type": "Decoder<string>",
+      "example": "\n      // 👍\n      nanoid().verify('1-QskICa3CaPGcKuYYTm1') === '1-QskICa3CaPGcKuYYTm1'\n      nanoid().verify('vA4mt7CUWnouU6jTGbMP_') === 'vA4mt7CUWnouU6jTGbMP_'\n      nanoid({ size: 7 }).verify('yH8mx-7') === 'yH8mx-7'\n      nanoid({ min: 7, max: 10 }).verify('yH8mx-7') === 'yH8mx-7'\n      nanoid({ min: 7, max: 10 }).verify('yH8mx-7890') === 'yH8mx-7890'\n\n      // 👎\n      nanoid().verify('123E4567E89B12D3A456426614174000'); // too long\n      nanoid().verify('abcdefghijkl');                     // too short\n      nanoid().verify('$*&(#%*&(');                        // invalid chars\n    "
+    },
+    "uuid": {
+      "section": "Strings",
+      "params": null,
+      "return_type": "Decoder<string>",
+      "example": "\n      // 👍\n      uuid.verify('123e4567-e89b-12d3-a456-426614174000') === '123e4567-e89b-12d3-a456-426614174000'\n      uuid.verify('123E4567-E89B-12D3-A456-426614174000') === '123E4567-E89B-12D3-A456-426614174000'\n\n      // 👎\n      uuid.verify('123E4567E89B12D3A456426614174000');      // throws\n      uuid.verify('abcdefgh-ijkl-mnop-qrst-uvwxyz012345');  // throws\n    "
+    },
+    "uuidv1": {
+      "section": "Strings",
+      "params": null,
+      "return_type": "Decoder<URL>",
+      "example": "\n      // 👍\n      uuidv1.verify('123e4567-e89b-12d3-a456-426614174000') === '123e4567-e89b-42d3-a456-426614174000'\n\n      // 👎\n      uuidv1.verify('123e4567-e89b-42d3-a456-426614174000')  // throws\n    "
+    },
+    "uuidv4": {
+      "section": "Strings",
+      "params": null,
+      "return_type": "Decoder<URL>",
+      "example": "\n      // 👍\n      uuidv4.verify('123e4567-e89b-42d3-a456-426614174000') === '123e4567-e89b-42d3-a456-426614174000'\n\n      // 👎\n      uuidv4.verify('123e4567-e89b-12d3-a456-426614174000')  // throws\n    "
+    },
+    "number": {
+      "section": "Numbers",
+      "params": null,
+      "return_type": "Decoder<number>",
+      "example": "\n      // 👍\n      number.verify(123) === 123;\n      number.verify(-3.14) === -3.14;\n\n      // 👎\n      number.verify(Infinity);        // throws\n      number.verify(NaN);             // throws\n      number.verify('not a number');  // throws\n    "
+    },
+    "integer": {
+      "section": "Numbers",
+      "params": null,
+      "return_type": "Decoder<number>",
+      "example": "\n      // 👍\n      integer.verify(123) === 123;\n\n      // 👎\n      integer.verify(-3.14);           // throws\n      integer.verify(Infinity);        // throws\n      integer.verify(NaN);             // throws\n      integer.verify('not a integer'); // throws\n    "
+    },
+    "positiveNumber": {
+      "section": "Numbers",
+      "params": null,
+      "return_type": "Decoder<number>",
+      "example": "\n      // 👍\n      positiveNumber.verify(123) === 123;\n      positiveNumber.verify(3.14) === 3.14;\n      positiveNumber.verify(0) === 0;\n\n      // 👎\n      positiveNumber.verify(-42);             // throws\n      positiveNumber.verify(Infinity);        // throws\n      positiveNumber.verify(NaN);             // throws\n      positiveNumber.verify('not a number');  // throws\n      positiveNumber.verify(-0);              // throws\n    "
+    },
+    "positiveInteger": {
+      "section": "Numbers",
+      "params": null,
+      "return_type": "Decoder<number>",
+      "example": "\n      // 👍\n      positiveInteger.verify(123) === 123;\n      positiveInteger.verify(0) === 0;\n\n      // 👎\n      positiveInteger.verify(-3);              // throws\n      positiveInteger.verify(3.14);            // throws\n      positiveInteger.verify(Infinity);        // throws\n      positiveInteger.verify(NaN);             // throws\n      positiveInteger.verify('not a number');  // throws\n      positiveInteger.verify(-0);              // throws\n    "
+    },
+    "anyNumber": {
+      "section": "Numbers",
+      "params": null,
+      "return_type": "Decoder<number>",
+      "example": "\n      // 👍\n      anyNumber.verify(123) === 123;\n      anyNumber.verify(-3.14) === -3.14;\n      anyNumber.verify(Infinity) === Infinity;\n      anyNumber.verify(NaN) === NaN;\n\n      // 👎\n      anyNumber.verify('not a number');  // throws\n    "
+    },
+    "bigint": {
+      "section": "Numbers",
+      "params": null,
+      "return_type": "Decoder<bigint>",
+      "example": "\n      // 👍\n      bigint.verify(123n) === 123n;\n      bigint.verify(-4543000000n) === -4543000000n;\n\n      // 👎\n      bigint.verify(123);             // throws\n      bigint.verify(-3.14);           // throws\n      bigint.verify(Infinity);        // throws\n      bigint.verify(NaN);             // throws\n      bigint.verify('not a number');  // throws\n    "
+    },
+    "boolean": {
+      "section": "Booleans",
+      "params": null,
+      "return_type": "Decoder<boolean>",
+      "example": "\n      // 👍\n      boolean.verify(false) === false;\n      boolean.verify(true) === true;\n\n      // 👎\n      boolean.verify(undefined);      // throws\n      boolean.verify('hello world');  // throws\n      boolean.verify(123);            // throws\n    "
+    },
+    "truthy": {
+      "section": "Booleans",
+      "params": null,
+      "return_type": "Decoder<boolean>",
+      "example": "\n      // 👍\n      truthy.verify(false) === false;\n      truthy.verify(true) === true;\n      truthy.verify(undefined) === false;\n      truthy.verify('hello world') === true;\n      truthy.verify('false') === true;\n      truthy.verify(0) === false;\n      truthy.verify(1) === true;\n      truthy.verify(null) === false;\n\n      // 👎\n      // This decoder will never reject an input\n    "
+    },
+    "date": {
+      "section": "Dates",
+      "params": null,
+      "return_type": "Decoder<Date>",
+      "example": "\n      const now = new Date();\n\n      // 👍\n      date.verify(now) === now;\n\n      // 👎\n      date.verify(123);      // throws\n      date.verify('hello');  // throws\n    "
+    },
+    "dateString": {
+      "section": "Dates",
+      "params": null,
+      "return_type": "Decoder<string>",
+      "example": "\n      // 👍\n      dateString.verify('2020-06-01T12:00:00Z');\n\n      // 👎\n      dateString.verify('2020-06-01');  // throws\n      dateString.verify('hello');       // throws\n      dateString.verify(123);           // throws\n      dateString.verify(new Date());    // throws (does not accept dates)\n    "
+    },
+    "iso8601": {
+      "section": "Dates",
+      "params": null,
+      "return_type": "Decoder<Date>",
+      "example": "\n      // 👍\n      iso8601.verify('2020-06-01T12:00:00Z'); // new Date('2020-06-01T12:00:00Z')\n\n      // 👎\n      iso8601.verify('2020-06-01');  // throws\n      iso8601.verify('hello');       // throws\n      iso8601.verify(123);           // throws\n      iso8601.verify(new Date());    // throws (does not accept dates)\n    "
+    },
+    "datelike": {
+      "section": "Dates",
+      "params": null,
+      "return_type": "Decoder<Date>",
+      "example": "\n      // 👍\n      datelike.verify('2024-01-08T12:00:00Z'); // strings...\n      datelike.verify(new Date());             // ...or Date instances\n\n      // 👎\n      datelike.verify('2020-06-01');  // throws\n      datelike.verify('hello');       // throws\n      datelike.verify(123);           // throws\n    "
+    },
+    "constant": {
+      "section": "Constants",
+      "type_params": [
+        "T"
+      ],
+      "params": [
+        [
+          "value",
+          "T"
+        ]
+      ],
+      "return_type": "Decoder<T>",
+      "example": "\n      const decoder = constant('hello');\n\n      // 👍\n      decoder.verify('hello') === 'hello';\n\n      // 👎\n      decoder.verify('this breaks');  // throws\n      decoder.verify(false);          // throws\n      decoder.verify(undefined);      // throws\n    "
+    },
+    "always": {
+      "section": "Constants",
+      "type_params": [
+        "T"
+      ],
+      "params": [
+        [
+          "value",
+          "T"
+        ]
+      ],
+      "return_type": "Decoder<T>",
+      "aliases": [
+        "hardcoded"
+      ],
+      "example": "\n      ```ts\n      const decoder = always(42);\n\n      // 👍\n      decoder.verify('hello') === 42;\n      decoder.verify(false) === 42;\n      decoder.verify(undefined) === 42;\n\n      // 👎\n      // This decoder will never reject an input\n      ```\n\n      Or use it with a function instead of a constant:\n\n      ```ts\n      const now = always(() => new Date());\n\n      now.verify('dummy');  // e.g. new Date('2022-02-07T09:36:58.848Z')\n      ```\n    "
+    },
+    "null_": {
+      "section": "Optionality",
+      "params": null,
+      "return_type": "Decoder<null>",
+      "example": "\n      // 👍\n      null_.verify(null) === null;\n\n      // 👎\n      null_.verify(false);         // throws\n      null_.verify(undefined);     // throws\n      null_.verify('hello world'); // throws\n    "
+    },
+    "undefined_": {
+      "section": "Optionality",
+      "params": null,
+      "return_type": "Decoder<undefined>",
+      "example": "\n      // 👍\n      undefined_.verify(undefined) === undefined;\n\n      // 👎\n      undefined_.verify(null);          // throws\n      undefined_.verify(false);         // throws\n      undefined_.verify('hello world'); // throws\n    "
+    },
+    "optional": {
+      "section": "Optionality",
+      "signatures": [
+        {
+          "type_params": [
+            "T"
+          ],
+          "params": [
+            [
+              "decoder",
+              "Decoder<T>"
+            ]
+          ],
+          "return_type": "Decoder<T | undefined>"
+        },
+        {
+          "type_params": [
+            "T",
+            "V"
+          ],
+          "params": [
+            [
+              "decoder",
+              "Decoder<T>"
+            ],
+            [
+              "defaultValue",
+              "V | (() => V)"
+            ]
+          ],
+          "return_type": "Decoder<T | V>"
+        }
+      ],
+      "example": "\n      ```ts\n      const decoder = optional(string);\n\n      // 👍\n      decoder.verify('hello') === 'hello';\n      decoder.verify(undefined) === undefined;\n\n      // 👎\n      decoder.verify(null);  // throws\n      decoder.verify(0);     // throws\n      decoder.verify(42);    // throws\n      ```\n\n      A typical case where `optional` is useful is in decoding objects with optional fields:\n\n      ```ts\n      object({\n        id: number,\n        name: string,\n        address: optional(string),\n      });\n      ```\n\n      Which will decode to type:\n\n      ```ts\n      {\n        id: number;\n        name: string;\n        address?: string;\n      }\n      ```\n    "
+    },
+    "nullable": {
+      "section": "Optionality",
+      "signatures": [
+        {
+          "type_params": [
+            "T"
+          ],
+          "params": [
+            [
+              "decoder",
+              "Decoder<T>"
+            ]
+          ],
+          "return_type": "Decoder<T | null>"
+        },
+        {
+          "type_params": [
+            "T",
+            "V"
+          ],
+          "params": [
+            [
+              "decoder",
+              "Decoder<T>"
+            ],
+            [
+              "defaultValue",
+              "V | (() => V)"
+            ]
+          ],
+          "return_type": "Decoder<T | V>"
+        }
+      ],
+      "example": "\n      ```ts\n      const decoder = nullable(string);\n\n      // 👍\n      decoder.verify('hello') === 'hello';\n      decoder.verify(null) === null;\n\n      // 👎\n      decoder.verify(undefined);  // throws\n      decoder.verify(0);          // throws\n      decoder.verify(42);         // throws\n      ```\n\n      Or use it with a default value:\n\n      ```ts\n      const decoder = nullable(iso8601, () => new Date());\n\n      decoder.verify('2022-01-01T12:00:00Z') === '2022-01-01T12:00:00Z';\n      decoder.verify(null);  // the current date\n      ```\n    "
+    },
+    "nullish": {
+      "section": "Optionality",
+      "aliases": [
+        "maybe"
+      ],
+      "signatures": [
+        {
+          "type_params": [
+            "T"
+          ],
+          "params": [
+            [
+              "decoder",
+              "Decoder<T>"
+            ]
+          ],
+          "return_type": "Decoder<T | null | undefined>"
+        },
+        {
+          "type_params": [
+            "T",
+            "V"
+          ],
+          "params": [
+            [
+              "decoder",
+              "Decoder<T>"
+            ],
+            [
+              "defaultValue",
+              "V | (() => V)"
+            ]
+          ],
+          "return_type": "Decoder<T | V>"
+        }
+      ],
+      "example": "\n      ```ts\n      const decoder = nullish(string);\n\n      // 👍\n      decoder.verify('hello') === 'hello';\n      decoder.verify(null) === null;\n      decoder.verify(undefined) === undefined;\n\n      // 👎\n      decoder.verify(0);   // throws\n      decoder.verify(42);  // throws\n      ```\n\n      Or use it with a default value:\n\n      ```ts\n      const decoder = nullish(string, null);\n\n      decoder.verify('hello') === 'hello';\n      decoder.verify(null) === null;\n      decoder.verify(undefined) === null;\n      ```\n    "
+    },
+    "unknown": {
+      "section": "Optionality",
+      "params": null,
+      "return_type": "Decoder<unknown>",
+      "aliases": [
+        "mixed"
+      ],
+      "example": "\n      // 👍\n      unknown.verify('hello') === 'hello';\n      unknown.verify(false) === false;\n      unknown.verify(undefined) === undefined;\n      unknown.verify([1, 2]) === [1, 2];\n\n      // 👎\n      // This decoder will never reject an input\n    "
+    },
+    "array": {
+      "section": "Arrays",
+      "params": [
+        [
+          "decoder",
+          "Decoder<T>"
+        ]
+      ],
+      "return_type": "Decoder<T[]>",
+      "example": "\n      const decoder = array(string);\n\n      // 👍\n      decoder.verify(['hello', 'world']) === ['hello', 'world'];\n      decoder.verify([]) === [];\n\n      // 👎\n      decoder.verify(['hello', 1.2]);  // throws\n    "
+    },
+    "nonEmptyArray": {
+      "section": "Arrays",
+      "params": [
+        [
+          "decoder",
+          "Decoder<T>"
+        ]
+      ],
+      "return_type": "Decoder<[T, ...T[]]>",
+      "example": "\n      const decoder = nonEmptyArray(string);\n\n      // 👍\n      decoder.verify(['hello', 'world']) === ['hello', 'world'];\n\n      // 👎\n      decoder.verify(['hello', 1.2]);  // throws\n      decoder.verify([]);              // throws\n    "
+    },
+    "poja": {
+      "section": "Arrays",
+      "params": null,
+      "return_type": "Decoder<unknown[]>",
+      "example": "\n      // 👍\n      poja.verify([1, 'hi', true]) === [1, 'hi', true];\n      poja.verify(['hello', 'world']) === ['hello', 'world'];\n      poja.verify([]) === [];\n\n      // 👎\n      poja.verify({});    // throws\n      poja.verify('hi');  // throws\n    "
+    },
+    "tuple": {
+      "section": "Arrays",
+      "signatures": [
+        {
+          "type_params": [
+            "A",
+            "B",
+            "..."
+          ],
+          "params": [
+            [
+              null,
+              "Decoder<A>"
+            ],
+            [
+              null,
+              "Decoder<B>"
+            ],
+            [
+              null,
+              "..."
+            ]
+          ],
+          "return_type": "Decoder<[A, B, ...]>"
+        }
+      ],
+      "example": "\n      const decoder = tuple(string, number);\n\n      // 👍\n      decoder.verify(['hello', 1.2]) === ['hello', 1.2];\n\n      // 👎\n      decoder.verify([]);                  // throws, too few items\n      decoder.verify(['hello', 'world']);  // throws, not the right types\n      decoder.verify(['a', 1, 'c']);       // throws, too many items\n    "
+    },
+    "object": {
+      "section": "Objects",
+      "type_params": [
+        "A",
+        "B",
+        "..."
+      ],
+      "params": [
+        [
+          null,
+          "{ field1: Decoder<A>, field2: Decoder<B>, ... }"
+        ]
+      ],
+      "return_type": "Decoder<{ field1: A, field2: B, ... }>",
+      "example": "\n      ```ts\n      const decoder = object({\n        x: number,\n        y: number,\n      });\n\n      // 👍\n      decoder.verify({ x: 1, y: 2 }) === { x: 1, y: 2 };\n      decoder.verify({ x: 1, y: 2, z: 3 }) === { x: 1, y: 2 }; // ⚠️ extra field `z` not returned!\n\n      // 👎\n      decoder.verify({ x: 1 });  // throws, missing field `y`\n      ```\n\n      For more information, see also [The difference between ``object``, ``exact``, and ``inexact``](./tips.html#the-difference-between-object-exact-and-inexact).\n    "
+    },
+    "exact": {
+      "section": "Objects",
+      "type_params": [
+        "A",
+        "B",
+        "..."
+      ],
+      "params": [
+        [
+          null,
+          "{ field1: Decoder<A>, field2: Decoder<B>, ... }"
+        ]
+      ],
+      "return_type": "Decoder<{ field1: A, field2: B, ... }>",
+      "example": "\n      ```ts\n      const decoder = exact({\n        x: number,\n        y: number,\n      });\n\n      // 👍\n      decoder.verify({ x: 1, y: 2 }) === { x: 1, y: 2 };\n\n      // 👎\n      decoder.verify({ x: 1, y: 2, z: 3 });  // throws, extra field `z` not allowed\n      decoder.verify({ x: 1 });              // throws, missing field `y`\n      ```\n\n      For more information, see also [The difference between ``object``, ``exact``, and ``inexact``](./tips.html#the-difference-between-object-exact-and-inexact).\n    "
+    },
+    "inexact": {
+      "section": "Objects",
+      "type_params": [
+        "A",
+        "B",
+        "..."
+      ],
+      "params": [
+        [
+          null,
+          "{ field1: Decoder<A>, field2: Decoder<B>, ... }"
+        ]
+      ],
+      "return_type": "Decoder<{ field1: A, field2: B, ... }>",
+      "example": "\n      ```ts\n      const decoder = inexact({\n        x: number,\n        y: number,\n      });\n\n      // 👍\n      decoder.verify({ x: 1, y: 2 }) === { x: 1, y: 2 };\n      decoder.verify({ x: 1, y: 2, z: 3 }) === { x: 1, y: 2, z: 3 };\n\n      // 👎\n      decoder.verify({ x: 1 });  // throws, missing field `y`\n      ```\n\n      For more information, see also [The difference between ``object``, ``exact``, and ``inexact``](./tips.html#the-difference-between-object-exact-and-inexact).\n    "
+    },
+    "pojo": {
+      "section": "Objects",
+      "params": null,
+      "return_type": "Decoder<Record<string, unknown>>",
+      "example": "\n      // 👍\n      pojo.verify({}) === {};\n      pojo.verify({ name: 'hi' }) === { name: 'hi' };\n\n      // 👎\n      pojo.verify('hi');        // throws\n      pojo.verify([]);          // throws\n      pojo.verify(new Date());  // throws\n      pojo.verify(null);        // throws\n    "
+    },
+    "record": {
+      "section": "Collections",
+      "signatures": [
+        {
+          "type_params": [
+            "V"
+          ],
+          "params": [
+            [
+              "values",
+              "Decoder<V>"
+            ]
+          ],
+          "return_type": "Decoder<Record<string, V>>"
+        },
+        {
+          "type_params": [
+            "K",
+            "V"
+          ],
+          "params": [
+            [
+              "keys",
+              "Decoder<K>"
+            ],
+            [
+              "values",
+              "Decoder<V>"
+            ]
+          ],
+          "return_type": "Decoder<Record<K, V>>"
+        }
+      ],
+      "example": "\n      This is useful to validate inputs like `{ [key: string]: V }`.\n\n      #### Decoding values only\n\n      The default call takes a single argument and will validate all _values_.\n      For example, to validate that all values in the object are numbers:\n\n      ```ts\n      const decoder = record(number);\n      //                        \\ \n      //                      Values must be numbers\n\n      // 👍\n      decoder.verify({ red: 1, blue: 2, green: 3 });\n\n      // 👎\n      decoder.verify({ hi: 'not a number' });\n      ```\n\n      #### Decoding keys and values\n\n      If you also want to validate that keys are of a specific form, use the\n      two-argument form: `record(key, value)`. Note that the given key decoder\n      must return strings.\n\n      For example, to enforce that all keys are emails:\n\n      ```ts\n      const decoder = record(email, number);\n      //                      /        \\ \n      //              Keys must        Values must\n      //             be emails           be numbers\n\n      // 👍\n      decoder.verify({ \"me@nvie.com\": 1 });\n\n      // 👎\n      decoder.verify({ \"no-email\": 1 });\n      ```\n    "
+    },
+    "dict": {
+      "section": "Collections",
+      "signatures": [
+        {
+          "type_params": [
+            "V"
+          ],
+          "params": [
+            [
+              "decoder",
+              "Decoder<T>"
+            ]
+          ],
+          "return_type": "Decoder<Record<string, V>>"
+        }
+      ],
+      "markdown": "\n      Alias of `record()`.\n    "
+    },
+    "mapping": {
+      "section": "Collections",
+      "type_params": [
+        "T"
+      ],
+      "params": [
+        [
+          "decoder",
+          "Decoder<T>"
+        ]
+      ],
+      "return_type": "Decoder<Map<string, T>>",
+      "example": "\n      const decoder = mapping(number);\n\n      // 👍\n      decoder.verify({ red: 1, blue: 2, green: 3 });\n      // Map([\n      //   ['red', '1'],\n      //   ['blue', '2'],\n      //   ['green', '3'],\n      // ]);\n    "
+    },
+    "setFromArray": {
+      "section": "Collections",
+      "type_params": [
+        "T"
+      ],
+      "params": [
+        [
+          "decoder",
+          "Decoder<T>"
+        ]
+      ],
+      "return_type": "Decoder<Set<T>>",
+      "example": "\n      const decoder = setFromArray(string);\n\n      // 👍\n      decoder.verify(['abc', 'pqr'])  // new Set(['abc', 'pqr'])\n      decoder.verify([])              // new Set([])\n\n      // 👎\n      decoder.verify([1, 2]);         // throws, not the right types\n    "
+    },
+    "set": {
+      "section": "Collections",
+      "type_params": [
+        "T"
+      ],
+      "params": [
+        [
+          "decoder",
+          "Decoder<T>"
+        ]
+      ],
+      "return_type": "Decoder<Set<T>>",
+      "markdown": "\n      An alias of `setFromArray()`.\n\n      ⚠️ **IMPORTANT!** This decoder will change its behavior in a future\n      version! If you rely on this decoder, use `setFromArray()` instead.\n    "
+    },
+    "json": {
+      "section": "JSON values",
+      "params": null,
+      "return_type": "Decoder<JSONValue>",
+      "example": "\n      // 👍\n      json.verify({\n        name: 'Amir',\n        age: 27,\n        admin: true,\n        image: null,\n        tags: ['vip', 'staff'],\n      });\n    "
+    },
+    "jsonObject": {
+      "section": "JSON values",
+      "params": null,
+      "return_type": "Decoder<{ [string]: JSONValue }>",
+      "example": "\n      // 👍\n      jsonObject.verify({});                // {}\n      jsonObject.verify({ name: 'Amir' });  // { name: 'Amir' }\n\n      // 👎\n      jsonObject.verify([]);                   // throws\n      jsonObject.verify([{ name: 'Alice' }]);  // throws\n      jsonObject.verify('hello');              // throws\n      jsonObject.verify(null);                 // throws\n    "
+    },
+    "jsonArray": {
+      "section": "JSON values",
+      "params": null,
+      "return_type": "Decoder<JSONValue[]>",
+      "example": "\n      // 👍\n      jsonArray.verify([]);                  // []\n      jsonArray.verify([{ name: 'Amir' }]);  // [{ name: 'Amir' }]\n\n      // 👎\n      jsonArray.verify({});                 // throws\n      jsonArray.verify({ name: 'Alice' });  // throws\n      jsonArray.verify('hello');            // throws\n      jsonArray.verify(null);               // throws\n    "
+    },
+    "either": {
+      "section": "Unions",
+      "signatures": [
+        {
+          "type_params": [
+            "A",
+            "B",
+            "..."
+          ],
+          "params": [
+            [
+              null,
+              "Decoder<A>"
+            ],
+            [
+              null,
+              "Decoder<B>"
+            ],
+            [
+              null,
+              "..."
+            ]
+          ],
+          "return_type": "Decoder<A | B | ...>"
+        }
+      ],
+      "example": "\n      const decoder = either(number, string);\n\n      // 👍\n      decoder.verify('hello world') === 'hello world';\n      decoder.verify(123) === 123;\n\n      // 👎\n      decoder.verify(false);  // throws\n    "
+    },
+    "oneOf": {
+      "section": "Unions",
+      "type_params": [
+        "T"
+      ],
+      "params": [
+        [
+          "values",
+          "T[]"
+        ]
+      ],
+      "return_type": "Decoder<T>",
+      "example": "\n      ```ts\n      const decoder = oneOf(['foo', 'bar', 3]);\n\n      // 👍\n      decoder.verify('foo') === 'foo';\n      decoder.verify(3) === 3;\n\n      // 👎\n      decoder.verify('hello');  // throws\n      decoder.verify(4);        // throws\n      decoder.verify(false);    // throws\n      ```\n\n      For example, given an array of strings, like so:\n\n      ```ts\n      oneOf(['foo', 'bar']);\n      ```\n    "
+    },
+    "enum_": {
+      "section": "Unions",
+      "signatures": [
+        {
+          "params": [
+            [
+              "enum",
+              "MyEnum"
+            ]
+          ],
+          "return_type": "Decoder<MyEnum>"
+        }
+      ],
+      "example": "\n      It works with numeric enums:\n\n      ```ts\n      enum Fruit {\n        Apple,\n        Banana,\n        Cherry\n      }\n\n      const decoder = enum_(Fruit);\n\n      // 👍\n      decoder.verify(Fruit.Apple) === Fruit.Apple;\n      decoder.verify(Fruit.Banana) === Fruit.Banana;\n      decoder.verify(Fruit.Cherry) === Fruit.Cherry;\n      decoder.verify(0) === Fruit.Apple;\n      decoder.verify(1) === Fruit.Banana;\n      decoder.verify(2) === Fruit.Cherry;\n\n      // 👎\n      decoder.verify('Apple');  // throws\n      decoder.verify(-1);       // throws\n      decoder.verify(3);        // throws\n      ```\n\n      As well as with string enums:\n\n      ```ts\n      enum Fruit {\n        Apple = 'a',\n        Banana = 'b',\n        Cherry = 'c'\n      }\n\n      const decoder = enum_(Fruit);\n\n      // 👍\n      decoder.verify(Fruit.Apple) === Fruit.Apple;\n      decoder.verify(Fruit.Banana) === Fruit.Banana;\n      decoder.verify(Fruit.Cherry) === Fruit.Cherry;\n      decoder.verify('a') === Fruit.Apple;\n      decoder.verify('b') === Fruit.Banana;\n      decoder.verify('c') === Fruit.Cherry;\n\n      // 👎\n      decoder.verify('Apple');  // throws\n      decoder.verify(0);        // throws\n      decoder.verify(1);        // throws\n      decoder.verify(2);        // throws\n      decoder.verify(3);        // throws\n      ```\n    "
+    },
+    "taggedUnion": {
+      "section": "Unions",
+      "type_params": [
+        "A",
+        "B",
+        "..."
+      ],
+      "params": [
+        [
+          "field",
+          "string"
+        ],
+        [
+          "mapping",
+          "{ value1: Decoder<A>, value2: Decoder<B>, ... }"
+        ]
+      ],
+      "return_type": "Decoder<A | B | ...>"
+    },
+    "select": {
+      "section": "Unions",
+      "type_params": [
+        "T",
+        "A",
+        "B",
+        "..."
+      ],
+      "params": [
+        [
+          "scout",
+          "Decoder<T>"
+        ],
+        [
+          "selectFn",
+          "(result: T) => Decoder<A> | Decoder<B> | ..."
+        ]
+      ],
+      "return_type": "Decoder<A | B | ...>",
+      "example": "\n    ```ts\n    const decoder = select(\n      // First, validate/extract the minimal information to make a decision\n      object({ version: optional(number) }),\n\n      // Then select which decoder to run\n      (obj) => {\n        switch (obj.version) {\n          case undefined: return v1Decoder; // Suppose v1 doesn't have a discriminating field\n          case 2:         return v2Decoder;\n          case 3:         return v3Decoder;\n          default:        return never('Invalid version');\n        }\n      },\n    );\n    // Decoder<V1 | V2 | V3>\n    ```\n    "
+    },
+    "define": {
+      "section": "Utilities",
+      "type_params": [
+        "T"
+      ],
+      "params": [
+        [
+          "fn",
+          "(blob: unknown, ok, err) => DecodeResult<T>"
+        ]
+      ],
+      "return_type": "Decoder<T>",
+      "example": "\n      > _**NOTE:** This is the lowest-level API to define a new decoder, and therefore not recommended unless you have a very good reason for it. Most cases can be covered more elegantly by starting from an existing decoder and using `.transform()` or `.refine()` on them instead._\n\n      ```ts\n      // NOTE: Please do NOT implement an uppercase decoder like this! 😇\n      const uppercase: Decoder<string> = define(\n        (blob, ok, err) => {\n          if (typeof blob === 'string') {\n            // Accept the input\n            return ok(blob.toUpperCase());\n          } else {\n            // Reject the input\n            return err('I only accept strings as input');\n          }\n        }\n      );\n\n      // 👍\n      uppercase.verify('hi there') === 'HI THERE';\n\n      // 👎\n      uppercase.verify(123);   // throws: 123\n                               //         ^^^ I only accept strings as input\n      ```\n\n      The above example is just an example to illustrate how `define()` works. It would be more idiomatic to implement an uppercase decoder as follows:\n\n      ```ts\n      const uppercase: Decoder<string> = string.transform(s => s.toUpperCase());\n      ```\n    "
+    },
+    "prep": {
+      "section": "Utilities",
+      "type_params": [
+        "T"
+      ],
+      "params": [
+        [
+          "mapperFn",
+          "(raw: mixed) => mixed"
+        ],
+        [
+          "decoder",
+          "Decoder<T>"
+        ]
+      ],
+      "return_type": "Decoder<T>",
+      "example": "\n      const decoder = prep(\n        // Will convert any input to an int first, before feeding it to\n        // positiveInteger. This will effectively also allow numeric strings\n        // to be accepted (and returned) as integers. If this ever throws,\n        // then the error message will be what gets annotated on the input.\n        x => parseInt(x),\n        positiveInteger,\n      );\n\n      // 👍\n      decoder.verify(42) === 42;\n      decoder.verify('3') === 3;\n\n      // 👎\n      decoder.verify('-3');  // throws: not a positive number\n      decoder.verify('hi');  // throws: not a number\n    "
+    },
+    "never": {
+      "section": "Utilities",
+      "params": null,
+      "return_type": "Decoder<never>",
+      "aliases": [
+        "fail"
+      ],
+      "example": "\n      const decoder = object({\n        a: string,\n        b: optional(never('Key b has been removed')),\n      });\n\n      // 👍\n      decoder.verify({ a: 'foo' });            // { a: 'foo' };\n      decoder.verify({ a: 'foo', c: 'bar' });  // { a: 'foo' };\n\n      // 👎\n      decoder.verify({ a: 'foo', b: 'bar' });  // throws\n    "
+    },
+    "instanceOf": {
+      "section": "Utilities",
+      "type_params": [
+        "T"
+      ],
+      "params": [
+        [
+          "klass",
+          "Klass<T>"
+        ]
+      ],
+      "return_type": "Decoder<T>",
+      "example": "\n      const decoder = instanceOf(Error);\n\n      // 👍\n      const value = new Error('foo');\n      decoder.verify(value) === value;\n\n      // 👎\n      decoder.verify('foo');  // throws\n      decoder.verify(3);      // throws\n    "
+    },
+    "lazy": {
+      "section": "Utilities",
+      "type_params": [
+        "T"
+      ],
+      "params": [
+        [
+          "decoderFn",
+          "() => Decoder<T>"
+        ]
+      ],
+      "return_type": "Decoder<T>",
+      "example": "\n      type Tree = {\n        value: string;\n        children: Array<Tree>;\n        //              ^^^^\n        //              Self-reference defining a recursive type\n      };\n\n      const treeDecoder: Decoder<Tree> = object({\n        value: string,\n        children: array(lazy(() => treeDecoder)),\n        //              ^^^^^^^^^^^^^^^^^^^^^^^\n        //              Use lazy() like this to refer to the treeDecoder which is\n        //              getting defined here\n      });\n    "
+    },
+    "hardcoded": {
+      "section": "Constants",
+      "type_params": [
+        "T"
+      ],
+      "params": [
+        [
+          "value",
+          "T"
+        ]
+      ],
+      "return_type": "Decoder<T>",
+      "example": "\n      ```ts\n      const decoder = always(42);\n\n      // 👍\n      decoder.verify('hello') === 42;\n      decoder.verify(false) === 42;\n      decoder.verify(undefined) === 42;\n\n      // 👎\n      // This decoder will never reject an input\n      ```\n\n      Or use it with a function instead of a constant:\n\n      ```ts\n      const now = always(() => new Date());\n\n      now.verify('dummy');  // e.g. new Date('2022-02-07T09:36:58.848Z')\n      ```\n    ",
+      "alias_of": "always"
+    },
+    "maybe": {
+      "section": "Optionality",
+      "signatures": [
+        {
+          "type_params": [
+            "T"
+          ],
+          "params": [
+            [
+              "decoder",
+              "Decoder<T>"
+            ]
+          ],
+          "return_type": "Decoder<T | null | undefined>"
+        },
+        {
+          "type_params": [
+            "T",
+            "V"
+          ],
+          "params": [
+            [
+              "decoder",
+              "Decoder<T>"
+            ],
+            [
+              "defaultValue",
+              "V | (() => V)"
+            ]
+          ],
+          "return_type": "Decoder<T | V>"
+        }
+      ],
+      "example": "\n      ```ts\n      const decoder = nullish(string);\n\n      // 👍\n      decoder.verify('hello') === 'hello';\n      decoder.verify(null) === null;\n      decoder.verify(undefined) === undefined;\n\n      // 👎\n      decoder.verify(0);   // throws\n      decoder.verify(42);  // throws\n      ```\n\n      Or use it with a default value:\n\n      ```ts\n      const decoder = nullish(string, null);\n\n      decoder.verify('hello') === 'hello';\n      decoder.verify(null) === null;\n      decoder.verify(undefined) === null;\n      ```\n    ",
+      "alias_of": "nullish"
+    },
+    "mixed": {
+      "section": "Optionality",
+      "params": null,
+      "return_type": "Decoder<unknown>",
+      "example": "\n      // 👍\n      unknown.verify('hello') === 'hello';\n      unknown.verify(false) === false;\n      unknown.verify(undefined) === undefined;\n      unknown.verify([1, 2]) === [1, 2];\n\n      // 👎\n      // This decoder will never reject an input\n    ",
+      "alias_of": "unknown"
+    },
+    "fail": {
+      "section": "Utilities",
+      "params": null,
+      "return_type": "Decoder<never>",
+      "example": "\n      const decoder = object({\n        a: string,\n        b: optional(never('Key b has been removed')),\n      });\n\n      // 👍\n      decoder.verify({ a: 'foo' });            // { a: 'foo' };\n      decoder.verify({ a: 'foo', c: 'bar' });  // { a: 'foo' };\n\n      // 👎\n      decoder.verify({ a: 'foo', b: 'bar' });  // throws\n    ",
+      "alias_of": "never"
+    }
+  },
+  "decoder_methods": {
+    "verify": {
+      "params": [
+        [
+          "blob",
+          "mixed"
+        ]
+      ],
+      "return_type": "T",
+      "example": "\n      <img alt=\"The .verify() method explained\" src=\"./assets/schematic-verify.png\" style=\"max-width: min(592px, 100%)\" />\n\n      For example, take this simple number decoder.\n\n      ```ts\n      // 👍\n      number.verify(123);     // 123\n      number.verify(3.1415);  // 3.1415\n\n      // 👎\n      number.verify('hello'); // throws\n      // Decoding error:\n      // \"hello\"\n      // ^^^^^^^ Must be number\n      ```\n    "
+    },
+    "value": {
+      "params": [
+        [
+          "blob",
+          "mixed"
+        ]
+      ],
+      "return_type": "T | undefined",
+      "example": "\n      <img alt=\"The .value() method explained\" src=\"./assets/schematic-value.png\" style=\"max-width: min(592px, 100%)\" />\n\n      ```ts\n      // 👍\n      number.value(3);     // 3\n      string.value('hi');  // 'hi'\n\n      // 👎\n      number.value('hi');  // undefined\n      string.value(42);    // undefined\n      ```\n\n      > _**NOTE:** When you use this on `optional()` decoders, you cannot distinguish a rejected value from an accepted ``undefined`` input value._\n    "
+    },
+    "decode": {
+      "params": [
+        [
+          "blob",
+          "mixed"
+        ]
+      ],
+      "return_type": "DecodeResult<T>",
+      "example": "\n      <img alt=\"The .decode() method explained\" src=\"./assets/schematic-decode.png\" style=\"max-width: min(592px, 100%)\" />\n\n      For example, take this simple \"number\" decoder. When given an number value, it will return an ok: true result. Otherwise, it will return an ok: false result with the original input value annotated.\n\n      ```ts\n      // 👍\n      number.decode(3);     // { ok: true, value: 3 };\n\n      // 👎\n      number.decode('hi');  // { ok: false, error: { type: 'scalar', value: 'hi', text: 'Must be number' } }\n      ```\n    "
+    },
+    "transform": {
+      "type_params": [
+        "V"
+      ],
+      "params": [
+        [
+          "transformFn",
+          "(T) => V"
+        ]
+      ],
+      "return_type": "Decoder<V>",
+      "example": "\n      const upper = string.transform((s) => s.toUpperCase());\n\n      // 👍\n      upper.verify('foo') === 'FOO'\n\n      // 👎\n      upper.verify(4);  // throws\n    "
+    },
+    "refine": {
+      "params": [
+        [
+          "predicate",
+          "T => boolean"
+        ],
+        [
+          "message",
+          "string"
+        ]
+      ],
+      "return_type": "Decoder<T>",
+      "example": "\n      ```ts\n      const odd = number.refine(\n        (n) => n % 2 !== 0,\n        'Must be odd'\n      );\n\n      // 👍\n      odd.verify(3) === 3;\n\n      // 👎\n      odd.verify(42);    // throws: not an odd number\n      odd.verify('hi');  // throws: not a number\n      ```\n\n      In TypeScript, if you provide a predicate that also is a [type predicate](https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates), then this will be reflected in the return type, too.\n    "
+    },
+    "refineType": {
+      "type_params": [
+        "SubT extends T"
+      ],
+      "params": [],
+      "return_type": "Decoder<SubT>",
+      "example": "\n      const user = object({ name: string }).refineType<Person>();\n    "
+    },
+    "reject": {
+      "params": [
+        [
+          "rejectFn",
+          "T => string | null"
+        ]
+      ],
+      "return_type": "Decoder<T>",
+      "example": "\n      const decoder = pojo\n        .reject(\n          obj => {\n            const badKeys = Object.keys(obj).filter(key => key.startsWith('_'));\n            return badKeys.length > 0\n              ? `Disallowed keys: ${badKeys.join(', ')}`\n              : null;\n          }\n        );\n\n      // 👍\n      decoder.verify({ id: 123, name: 'Vincent' }) === { id: 123, name: 'Vincent' };\n\n      // 👎\n      decoder.verify({ id: 123, _name: 'Vincent'  })   // throws: \"Disallowed keys: _name\"\n    "
+    },
+    "describe": {
+      "params": [
+        [
+          "message",
+          "string"
+        ]
+      ],
+      "return_type": "Decoder<T>",
+      "markdown": "\n      Uses the given decoder, but will use an alternative error message in case it rejects. This can be used to simplify or shorten otherwise long or low-level/technical errors.\n\n      ```ts\n      const vowel = oneOf(['a', 'e', 'i', 'o', 'u'])\n        .describe('Must be vowel');\n      ```\n    "
+    },
+    "then": {
+      "signatures": [
+        {
+          "type_params": [
+            "V"
+          ],
+          "params": [
+            [
+              "next",
+              "(blob: T, ok, err) => DecodeResult<V> | Decoder<V>"
+            ]
+          ],
+          "return_type": "Decoder<V>"
+        },
+        {
+          "type_params": [
+            "V"
+          ],
+          "params": [
+            [
+              "next",
+              "Decoder<V>"
+            ]
+          ],
+          "return_type": "Decoder<V>"
+        }
+      ]
+    },
+    "pipe": {
+      "type_params": [
+        "V"
+      ],
+      "signatures": [
+        {
+          "type_params": [
+            "V"
+          ],
+          "params": [
+            [
+              "next",
+              "Decoder<V>"
+            ]
+          ],
+          "return_type": "Decoder<V>"
+        },
+        {
+          "type_params": [
+            "V"
+          ],
+          "params": [
+            [
+              "next",
+              "(blob: T) => Decoder<V>"
+            ]
+          ],
+          "return_type": "Decoder<V>"
+        }
+      ],
+      "markdown": "\n    ```tsx\n    const decoder =\n      string\n        .transform((s) => s.split(',').map(Number))\n        .pipe(array(positiveInteger));\n\n    // 👍\n    decoder.verify('7') === [7];\n    decoder.verify('1,2,3') === [1, 2, 3];\n\n    // 👎\n    decoder.verify('1,-3')  // -3 is not positive\n    decoder.verify('🚀');   // not a number\n    decoder.verify('3.14'); // not a whole number\n    decoder.verify(123);    // not a string\n    decoder.verify(true);   // not a string\n    decoder.verify(null);   // not a string\n    ```\n\n    #### Dynamic decoder selection with ``.pipe()``\n\n    With `.pipe()` you can also dynamically select another decoder, based on dynamic runtime value.\n\n    ```tsx\n    string\n      .transform((s) => s.split(',').map(Number))\n      .pipe((tup) =>\n        tup.length === 2\n          ? point2d\n          : tup.length === 3\n            ? point3d\n            : never('Invalid coordinate'),\n      );\n    ```\n    "
+    }
+  },
+  "locations": {
+    "array": "https://github.com/nvie/decoders/tree/main/src/arrays.ts#L16-L46",
+    "nonEmptyArray": "https://github.com/nvie/decoders/tree/main/src/arrays.ts#L52-L57",
+    "tuple": "https://github.com/nvie/decoders/tree/main/src/arrays.ts#L66-L96",
+    "poja": "https://github.com/nvie/decoders/tree/main/src/arrays.ts#L4-L14",
+    "optional": "https://github.com/nvie/decoders/tree/main/src/basics.ts#L27-L44",
+    "nullable": "https://github.com/nvie/decoders/tree/main/src/basics.ts#L46-L63",
+    "nullish": "https://github.com/nvie/decoders/tree/main/src/basics.ts#L72-L89",
+    "constant": "https://github.com/nvie/decoders/tree/main/src/basics.ts#L91-L100",
+    "always": "https://github.com/nvie/decoders/tree/main/src/basics.ts#L102-L116",
+    "never": "https://github.com/nvie/decoders/tree/main/src/basics.ts#L118-L124",
+    "null_": "https://github.com/nvie/decoders/tree/main/src/basics.ts#L12-L15",
+    "undefined_": "https://github.com/nvie/decoders/tree/main/src/basics.ts#L17-L20",
+    "maybe": "https://github.com/nvie/decoders/tree/main/src/basics.ts#L65-L70",
+    "fail": "https://github.com/nvie/decoders/tree/main/src/basics.ts#L126-L129",
+    "hardcoded": "https://github.com/nvie/decoders/tree/main/src/basics.ts#L131-L136",
+    "unknown": "https://github.com/nvie/decoders/tree/main/src/basics.ts#L138-L145",
+    "mixed": "https://github.com/nvie/decoders/tree/main/src/basics.ts#L147-L152",
+    "boolean": "https://github.com/nvie/decoders/tree/main/src/booleans.ts#L4-L9",
+    "truthy": "https://github.com/nvie/decoders/tree/main/src/booleans.ts#L11-L14",
+    "record": "https://github.com/nvie/decoders/tree/main/src/collections.ts#L8-L57",
+    "setFromArray": "https://github.com/nvie/decoders/tree/main/src/collections.ts#L66-L72",
+    "mapping": "https://github.com/nvie/decoders/tree/main/src/collections.ts#L82-L89",
+    "dict": "https://github.com/nvie/decoders/tree/main/src/collections.ts#L59-L64",
+    "set": "https://github.com/nvie/decoders/tree/main/src/collections.ts#L74-L80",
+    "date": "https://github.com/nvie/decoders/tree/main/src/dates.ts#L14-L19",
+    "dateString": "https://github.com/nvie/decoders/tree/main/src/dates.ts#L21-L30",
+    "iso8601": "https://github.com/nvie/decoders/tree/main/src/dates.ts#L32-L39",
+    "datelike": "https://github.com/nvie/decoders/tree/main/src/dates.ts#L41-L46",
+    "jsonObject": "https://github.com/nvie/decoders/tree/main/src/json.ts#L16-L19",
+    "jsonArray": "https://github.com/nvie/decoders/tree/main/src/json.ts#L21-L24",
+    "json": "https://github.com/nvie/decoders/tree/main/src/json.ts#L26-L49",
+    "instanceOf": "https://github.com/nvie/decoders/tree/main/src/misc.ts#L12-L21",
+    "lazy": "https://github.com/nvie/decoders/tree/main/src/misc.ts#L23-L29",
+    "prep": "https://github.com/nvie/decoders/tree/main/src/misc.ts#L31-L61",
+    "anyNumber": "https://github.com/nvie/decoders/tree/main/src/numbers.ts#L5-L14",
+    "number": "https://github.com/nvie/decoders/tree/main/src/numbers.ts#L16-L23",
+    "integer": "https://github.com/nvie/decoders/tree/main/src/numbers.ts#L25-L31",
+    "positiveNumber": "https://github.com/nvie/decoders/tree/main/src/numbers.ts#L33-L39",
+    "positiveInteger": "https://github.com/nvie/decoders/tree/main/src/numbers.ts#L41-L47",
+    "bigint": "https://github.com/nvie/decoders/tree/main/src/numbers.ts#L49-L54",
+    "object": "https://github.com/nvie/decoders/tree/main/src/objects.ts#L55-L136",
+    "exact": "https://github.com/nvie/decoders/tree/main/src/objects.ts#L138-L163",
+    "inexact": "https://github.com/nvie/decoders/tree/main/src/objects.ts#L165-L200",
+    "pojo": "https://github.com/nvie/decoders/tree/main/src/objects.ts#L47-L53",
+    "regex": "https://github.com/nvie/decoders/tree/main/src/strings.ts#L32-L37",
+    "startsWith": "https://github.com/nvie/decoders/tree/main/src/strings.ts#L39-L47",
+    "endsWith": "https://github.com/nvie/decoders/tree/main/src/strings.ts#L49-L57",
+    "nanoid": "https://github.com/nvie/decoders/tree/main/src/strings.ts#L95-L104",
+    "string": "https://github.com/nvie/decoders/tree/main/src/strings.ts#L20-L25",
+    "nonEmptyString": "https://github.com/nvie/decoders/tree/main/src/strings.ts#L27-L30",
+    "email": "https://github.com/nvie/decoders/tree/main/src/strings.ts#L59-L67",
+    "url": "https://github.com/nvie/decoders/tree/main/src/strings.ts#L69-L75",
+    "httpsUrl": "https://github.com/nvie/decoders/tree/main/src/strings.ts#L77-L84",
+    "identifier": "https://github.com/nvie/decoders/tree/main/src/strings.ts#L86-L93",
+    "uuid": "https://github.com/nvie/decoders/tree/main/src/strings.ts#L106-L114",
+    "uuidv1": "https://github.com/nvie/decoders/tree/main/src/strings.ts#L116-L123",
+    "uuidv4": "https://github.com/nvie/decoders/tree/main/src/strings.ts#L125-L132",
+    "decimal": "https://github.com/nvie/decoders/tree/main/src/strings.ts#L134-L138",
+    "hexadecimal": "https://github.com/nvie/decoders/tree/main/src/strings.ts#L140-L146",
+    "numeric": "https://github.com/nvie/decoders/tree/main/src/strings.ts#L148-L153",
+    "either": "https://github.com/nvie/decoders/tree/main/src/unions.ts#L50-L83",
+    "oneOf": "https://github.com/nvie/decoders/tree/main/src/unions.ts#L85-L97",
+    "enum_": "https://github.com/nvie/decoders/tree/main/src/unions.ts#L99-L120",
+    "taggedUnion": "https://github.com/nvie/decoders/tree/main/src/unions.ts#L122-L163",
+    "select": "https://github.com/nvie/decoders/tree/main/src/unions.ts#L165-L182",
+    "makeObjectAnn": "https://github.com/nvie/decoders/tree/main/src/core/annotate.ts#L44-L50",
+    "makeArrayAnn": "https://github.com/nvie/decoders/tree/main/src/core/annotate.ts#L52-L58",
+    "makeOpaqueAnn": "https://github.com/nvie/decoders/tree/main/src/core/annotate.ts#L60-L63",
+    "makeScalarAnn": "https://github.com/nvie/decoders/tree/main/src/core/annotate.ts#L65-L68",
+    "updateText": "https://github.com/nvie/decoders/tree/main/src/core/annotate.ts#L70-L80",
+    "merge": "https://github.com/nvie/decoders/tree/main/src/core/annotate.ts#L82-L92",
+    "isAnnotation": "https://github.com/nvie/decoders/tree/main/src/core/annotate.ts#L94-L97",
+    "define": "https://github.com/nvie/decoders/tree/main/src/core/Decoder.ts#L158-L355",
+    "summarize": "https://github.com/nvie/decoders/tree/main/src/core/format.ts#L14-L60",
+    "serializeValue": "https://github.com/nvie/decoders/tree/main/src/core/format.ts#L115-L140",
+    "serializeAnnotation": "https://github.com/nvie/decoders/tree/main/src/core/format.ts#L142-L167",
+    "formatInline": "https://github.com/nvie/decoders/tree/main/src/core/format.ts#L169-L176",
+    "formatShort": "https://github.com/nvie/decoders/tree/main/src/core/format.ts#L178-L180",
+    "formatAsIssues": "https://github.com/nvie/decoders/tree/main/src/core/format.ts#L220-L222",
+    "ok": "https://github.com/nvie/decoders/tree/main/src/core/Result.ts#L20-L25",
+    "err": "https://github.com/nvie/decoders/tree/main/src/core/Result.ts#L27-L32",
+    "difference": "https://github.com/nvie/decoders/tree/main/src/lib/set-methods.ts#L1-L13",
+    "bySizeOptions": "https://github.com/nvie/decoders/tree/main/src/lib/size-options.ts#L7-L24",
+    "isMultiline": "https://github.com/nvie/decoders/tree/main/src/lib/text.ts#L4-L6",
+    "indent": "https://github.com/nvie/decoders/tree/main/src/lib/text.ts#L8-L17",
+    "quote": "https://github.com/nvie/decoders/tree/main/src/lib/text.ts#L21-L27",
+    "INDENT": "https://github.com/nvie/decoders/tree/main/src/lib/text.ts#L2-L2",
+    "isNumber": "https://github.com/nvie/decoders/tree/main/src/lib/utils.ts#L1-L3",
+    "isString": "https://github.com/nvie/decoders/tree/main/src/lib/utils.ts#L5-L7",
+    "isBigInt": "https://github.com/nvie/decoders/tree/main/src/lib/utils.ts#L9-L11",
+    "isDate": "https://github.com/nvie/decoders/tree/main/src/lib/utils.ts#L13-L26",
+    "isPojo": "https://github.com/nvie/decoders/tree/main/src/lib/utils.ts#L28-L40",
+    "decode": "https://github.com/nvie/decoders/tree/main/src/core/Decoder.ts#L172-L186",
+    "verify": "https://github.com/nvie/decoders/tree/main/src/core/Decoder.ts#L188-L200",
+    "value": "https://github.com/nvie/decoders/tree/main/src/core/Decoder.ts#L202-L212",
+    "transform": "https://github.com/nvie/decoders/tree/main/src/core/Decoder.ts#L214-L222",
+    "refine": "https://github.com/nvie/decoders/tree/main/src/core/Decoder.ts#L224-L237",
+    "refineType": "https://github.com/nvie/decoders/tree/main/src/core/Decoder.ts#L239-L245",
+    "then": "https://github.com/nvie/decoders/tree/main/src/core/Decoder.ts#L247-L265",
+    "pipe": "https://github.com/nvie/decoders/tree/main/src/core/Decoder.ts#L267-L287",
+    "reject": "https://github.com/nvie/decoders/tree/main/src/core/Decoder.ts#L289-L307",
+    "describe": "https://github.com/nvie/decoders/tree/main/src/core/Decoder.ts#L309-L326"
+  },
+  "doc_strings": {
+    "array": "Accepts arrays of whatever the given decoder accepts.",
+    "nonEmptyArray": "Like `array()`, but will reject arrays with 0 elements.",
+    "tuple": "Accepts a tuple (an array with exactly _n_ items) of values accepted by the\n_n_ given decoders.",
+    "poja": "Accepts any array, but doesn't validate its items further.\n\n\"poja\" means \"plain old JavaScript array\", a play on `pojo()`.",
+    "optional": "Accepts whatever the given decoder accepts, or `undefined`.\n\nIf a default value is explicitly provided, return that instead in the\n`undefined` case.",
+    "nullable": "Accepts whatever the given decoder accepts, or `null`.\n\nIf a default value is explicitly provided, return that instead in the `null`\ncase.",
+    "nullish": "Accepts whatever the given decoder accepts, or `null`, or `undefined`.\n\nIf a default value is explicitly provided, return that instead in the\n`null`/`undefined` case.",
+    "constant": "Accepts only the given constant value.",
+    "always": "Accepts anything, completely ignores it, and always returns the provided\nvalue instead.\n\nThis is useful to manually add extra fields to object decoders.",
+    "never": "Rejects all inputs, and always fails with the given error message. May be\nuseful for explicitly disallowing keys, or for testing purposes.",
+    "null_": "Accepts and returns only the literal `null` value.",
+    "undefined_": "Accepts and returns only the literal `undefined` value.",
+    "fail": "Alias of `never()`.",
+    "hardcoded": "Alias of `always()`.",
+    "unknown": "Accepts anything and returns it unchanged.\n\nUseful for situation in which you don't know or expect a specific type. Of\ncourse, the downside is that you won't know the type of the value statically\nand you'll have to further refine it yourself.",
+    "mixed": "Alias of `unknown`.",
+    "boolean": "Accepts and returns booleans.",
+    "truthy": "Accepts anything and will return its \"truth\" value. Will never reject.",
+    "record": "Accepts objects where all values match the given decoder, and returns the\nresult as a `Record<string, V>`.",
+    "setFromArray": "Similar to `array()`, but returns the result as an [ES6\nSet](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set).",
+    "mapping": "Similar to `record()`, but returns the result as a `Map<string, T>` (an [ES6\nMap](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map))\ninstead.",
+    "set": "Renamed to `setFromArray` to make room for a future `set()` decoder that\nworks differently.",
+    "date": "Accepts and returns `Date` instances.",
+    "dateString": "Accepts and returns [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings.",
+    "iso8601": "Accepts [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings,\nreturns them as `Date` instances.\n\nThis is very useful for working with dates in APIs: serialize them as\n`.toISOString()` when sending, decode them with `iso8601` when receiving.",
+    "datelike": "Accepts either a Date, or an ISO date string, returns a Date instance.\nThis is commonly useful to build decoders that can be reused to validate\nobject with Date instances as well as objects coming from JSON payloads.",
+    "jsonObject": "Accepts objects that contain only valid JSON values.",
+    "jsonArray": "Accepts arrays that contain only valid JSON values.",
+    "json": "Accepts any value that's a valid JSON value.\n\nIn other words: any value returned by `JSON.parse()` should decode without\nfailure.\n\n```typescript\ntype JSONValue =\n    | null\n    | string\n    | number\n    | boolean\n    | { [string]: JSONValue }\n    | JSONValue[]\n```",
+    "instanceOf": "Accepts any value that is an ``instanceof`` the given class.",
+    "lazy": "Lazily evaluate the given decoder. This is useful to build self-referential\ntypes for recursive data structures.",
+    "prep": "Pre-process the data input before passing it into the decoder. This gives\nyou the ability to arbitrarily customize the input on the fly before passing\nit to the decoder. Of course, the input value at that point is still of\n``unknown`` type, so you will have to deal with that accordingly.",
+    "anyNumber": "Accepts any valid ``number`` value.\n\nThis also accepts special values like `NaN` and `Infinity`. Unless you\nwant to deliberately accept those, you'll likely want to use the\n`number` decoder instead.",
+    "number": "Accepts finite numbers (can be integer or float values). Values `NaN`,\nor positive and negative `Infinity` will get rejected.",
+    "integer": "Accepts only finite whole numbers.",
+    "positiveNumber": "Accepts only non-negative (zero or positive) finite numbers.",
+    "positiveInteger": "Accepts only non-negative (zero or positive) finite whole numbers.",
+    "bigint": "Accepts any valid ``bigint`` value.",
+    "object": "Accepts objects with fields matching the given decoders. Extra fields that\nexist on the input object are ignored and will not be returned.",
+    "exact": "Like `object()`, but will reject inputs that contain extra fields that are\nnot specified explicitly.",
+    "inexact": "Like `object()`, but will pass through any extra fields on the input object\nunvalidated that will thus be of `unknown` type statically.",
+    "pojo": "Accepts any \"plain old JavaScript object\", but doesn't validate its keys or\nvalues further.",
+    "regex": "Accepts and returns strings that match the given regular expression.",
+    "startsWith": "Accepts and returns strings that start with the given prefix.",
+    "endsWith": "Accepts and returns strings that end with the given suffix.",
+    "nanoid": "Accepts and returns [nanoid](https://zelark.github.io/nano-id-cc) string\nvalues. It assumes the default nanoid alphabet. If you're using a custom\nalphabet, use `regex()` instead.",
+    "string": "Accepts and returns strings.",
+    "nonEmptyString": "Like `string`, but will reject the empty string or strings containing only whitespace.",
+    "email": "Accepts and returns strings that are syntactically valid email addresses.\n(This will not mean that the email address actually exist.)",
+    "url": "Accepts strings that are valid URLs, returns the value as a URL instance.",
+    "httpsUrl": "Accepts strings that are valid URLs, but only HTTPS ones. Returns the value\nas a URL instance.",
+    "identifier": "Accepts and returns strings that are valid identifiers in most programming\nlanguages.",
+    "uuid": "Accepts strings that are valid\n[UUIDs](https://en.wikipedia.org/wiki/universally_unique_identifier)\n(universally unique identifier).",
+    "uuidv1": "Like `uuid`, but only accepts\n[UUIDv1](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_%28date-time_and_MAC_address%29)\nstrings.",
+    "uuidv4": "Like `uuid`, but only accepts\n[UUIDv4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_%28random%29)\nstrings.",
+    "decimal": "Accepts and returns strings with decimal digits only (base-10).\nTo convert these to numbers, use the `numeric` decoder.",
+    "hexadecimal": "Accepts and returns strings with hexadecimal digits only (base-16).",
+    "numeric": "Accepts valid numerical strings (in base-10) and returns them as a number.\nTo only accept numerical strings and keep them as string values, use the\n`decimal` decoder.",
+    "either": "Accepts values accepted by any of the given decoders.\n\nThe decoders are tried on the input one by one, in the given order. The\nfirst one that accepts the input \"wins\". If all decoders reject the input,\nthe input gets rejected.",
+    "oneOf": "Accepts any value that is strictly-equal (using `===`) to one of the\nspecified values.",
+    "enum_": "Accepts and return an enum value.",
+    "taggedUnion": "If you are decoding tagged unions you may want to use the `taggedUnion()`\ndecoder instead of the general purpose `either()` decoder to get better\nerror messages and better performance.\n\nThis decoder is optimized for [tagged\nunions](https://en.wikipedia.org/wiki/Tagged_union), i.e. a union of\nobjects where one field is used as the discriminator.\n\n```ts\nconst A = object({ tag: constant('A'), foo: string });\nconst B = object({ tag: constant('B'), bar: number });\n\nconst AorB = taggedUnion('tag', { A, B });\n//                        ^^^\n```\n\nDecoding now works in two steps:\n\n1. Look at the `'tag'` field in the incoming object (this is the field\n   that decides which decoder will be used)\n2. If the value is `'A'`, then decoder `A` will be used. If it's `'B'`, then\n   decoder `B` will be used. Otherwise, this will fail.\n\nThis is effectively equivalent to `either(A, B)`, but will provide better\nerror messages and is more performant at runtime because it doesn't have to\ntry all decoders one by one.",
+    "select": "Briefly peek at a runtime input using a \"scout\" decoder first, then decide\nwhich decoder to run on the (original) input, based on the information that\nthe \"scout\" extracted.\n\nIt serves a similar purpose as `taggedUnion()`, but is a generalization that\nworks even if there isn't a single discriminator, or the discriminator isn't\na string.",
+    "define": "Defines a new `Decoder<T>`, by implementing a custom acceptance function.\nThe function receives three arguments:\n\n1. `blob` - the raw/unknown input (aka your external data)\n2. `ok` - Call `ok(value)` to accept the input and return ``value``\n3. `err` - Call `err(message)` to reject the input with error ``message``\n\nThe expected return value should be a `DecodeResult<T>`, which can be\nobtained by returning the result of calling the provided `ok` or `err`\nhelper functions. Please note that `ok()` and `err()` don't perform side\neffects! You'll need to _return_ those values.",
+    "summarize": "Walks the annotation tree and emits the annotation's key path within the\nobject tree, and the message as a series of messages (array of strings).",
+    "ok": "Create a new Result instance representing a successful computation.",
+    "err": "Create a new Result instance representing a failed computation.",
+    "difference": "Subtract two sets. This is a polyfill until we have it natively\navailable, see https://tc39.es/proposal-set-methods/#sec-set.prototype.difference",
+    "isPojo": "Is the given value a POJO (plain old JavaScript object)?",
+    "decode": "Verifies the untrusted/unknown input and either accepts or rejects it.\n\nContrasted with `.verify()`, calls to `.decode()` will never fail and\ninstead return a result type.",
+    "verify": "Verifies the untrusted/unknown input and either accepts or rejects it.\nWhen accepted, returns a value of type `T`. Otherwise fail with\na runtime error.",
+    "value": "Verifies the untrusted/unknown input and either accepts or rejects it.\nWhen accepted, returns the decoded `T` value directly. Otherwise returns\n`undefined`.\n\nUse this when you're not interested in programmatically handling the\nerror message.",
+    "transform": "Accepts any value the given decoder accepts, and on success, will call\nthe given function **on the decoded result**. If the transformation\nfunction throws an error, the whole decoder will fail using the error\nmessage as the failure reason.",
+    "refine": "Adds an extra predicate to a decoder. The new decoder is like the\noriginal decoder, but only accepts values that also meet the\npredicate.",
+    "refineType": "Cast the return type of this read-only decoder to a narrower type. This is\nuseful to return \"branded\" types. This method has no runtime effect.",
+    "then": "Send the output of the current decoder into another decoder or acceptance\nfunction. The given acceptance function will receive the output of the\ncurrent decoder as its input.\n\n> _**NOTE:** This is an advanced, low-level, API. It's not recommended\n> to reach for this construct unless there is no other way. Most cases can\n> be covered more elegantly by `.transform()`, `.refine()`, or `.pipe()`\n> instead._",
+    "pipe": "Send the output of this decoder as input to another decoder.\n\nThis can be useful to validate the results of a transform, i.e.:\n\n  string\n    .transform((s) => s.split(','))\n    .pipe(array(nonEmptyString))\n\nYou can also conditionally pipe:\n\n  string.pipe((s) => s.startsWith('@') ? username : email)",
+    "reject": "Adds an extra predicate to a decoder. The new decoder is like the\noriginal decoder, but only accepts values that aren't rejected by the\ngiven function.\n\nThe given function can return `null` to accept the decoded value, or\nreturn a specific error message to reject.\n\nUnlike `.refine()`, you can use this function to return a dynamic error\nmessage.",
+    "describe": "Uses the given decoder, but will use an alternative error message in\ncase it rejects. This can be used to simplify or shorten otherwise\nlong or low-level/technical errors."
+  },
+  "decoders_by_section": {
+    "Strings": [
+      "string",
+      "nonEmptyString",
+      "regex",
+      "startsWith",
+      "endsWith",
+      "decimal",
+      "hexadecimal",
+      "numeric",
+      "email",
+      "url",
+      "httpsUrl",
+      "identifier",
+      "nanoid",
+      "uuid",
+      "uuidv1",
+      "uuidv4"
+    ],
+    "Numbers": [
+      "number",
+      "integer",
+      "positiveNumber",
+      "positiveInteger",
+      "anyNumber",
+      "bigint"
+    ],
+    "Booleans": [
+      "boolean",
+      "truthy"
+    ],
+    "Dates": [
+      "date",
+      "dateString",
+      "iso8601",
+      "datelike"
+    ],
+    "Constants": [
+      "constant",
+      "always",
+      "hardcoded"
+    ],
+    "Optionality": [
+      "null_",
+      "undefined_",
+      "optional",
+      "nullable",
+      "nullish",
+      "unknown",
+      "maybe",
+      "mixed"
+    ],
+    "Arrays": [
+      "array",
+      "nonEmptyArray",
+      "poja",
+      "tuple"
+    ],
+    "Objects": [
+      "object",
+      "exact",
+      "inexact",
+      "pojo"
+    ],
+    "Collections": [
+      "record",
+      "dict",
+      "mapping",
+      "setFromArray",
+      "set"
+    ],
+    "JSON values": [
+      "json",
+      "jsonObject",
+      "jsonArray"
+    ],
+    "Unions": [
+      "either",
+      "oneOf",
+      "enum_",
+      "taggedUnion",
+      "select"
+    ],
+    "Utilities": [
+      "define",
+      "prep",
+      "never",
+      "instanceOf",
+      "lazy",
+      "fail"
+    ]
+  }
+}

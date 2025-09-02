@@ -22,7 +22,9 @@ Decoders is an elegant and battle-tested validation library for type-safe input 
 
 Just install the package and you're ready to go.
 
-    $ npm install decoders
+```bash
+$ npm install decoders
+```
 
 ## Introduction
 
