@@ -144,6 +144,9 @@ describe('url', () => {
       'postgresql://localhost/db',
     );
     expect(decoder.verify('at://localhost/db').toString()).toEqual('at://localhost/db');
+    expect(
+      decoder.verify('https://user.with.dots:passwd.with.dots@host:6543/').toString(),
+    ).toBe('https://user.with.dots:passwd.with.dots@host:6543/');
   });
 
   test('custom URL schemes', () => {
