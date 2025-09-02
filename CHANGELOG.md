@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [2.7.5] - 2025-09-02
+
 - Fixes for `url` decoder:
   - Sanitizes (legal) empty user/passwords
   - Accepts any char as part of username/password
