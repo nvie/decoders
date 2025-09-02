@@ -1,17 +1,22 @@
 ## [Unreleased]
 
+- Fixes for `url` decoder:
+  - Sanitizes (legal) empty user/passwords
+  - Accepts any char as part of username/password
+  - Accepts a wider range of protocol lengths, e.g. now also recognizes at:// and
+    postgresql:// URLs
+
 ## [2.7.4] - 2025-09-02
 
-- Fix: `url` decoder now sanitizes (legal) empty user/passwords
+Bad release, please use 2.7.5 instead.
 
 ## [2.7.3] - 2025-09-02
 
-- Fix: `url` decoder now also accepts dots (`.`) as part of username/password parts
+Bad release, please use 2.7.5 instead.
 
 ## [2.7.2] - 2025-09-01
 
-- Fix: `url` decoder now also accepts a wider range of protocol lengths, now accepting
-  e.g. at:// and postgresql:// URLs
+Bad release, please use 2.7.5 instead.
 
 ## [2.7.1] - 2025-08-01
 
