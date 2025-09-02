@@ -149,6 +149,19 @@ describe('url', () => {
     ).toBe('https://user.with.dots:passwd.with.dots@host:6543/');
   });
 
+  test('sanitizes empty user/passwords', () => {
+    // User, no password
+    expect(decoder.verify('https://user:@host:6543/').toString()).toBe(
+      'https://user@host:6543/',
+    );
+    // Password, no user
+    expect(decoder.verify('https://:pwd@host:6543/').toString()).toBe(
+      'https://:pwd@host:6543/',
+    );
+    // No user, no password
+    expect(decoder.verify('https://:@host:6543/').toString()).toBe('https://host:6543/');
+  });
+
   test('custom URL schemes', () => {
     const decoder = url.refine(
       (value) => ['http:', 'git+ssh:', 'ftp:'].includes(value.protocol),
