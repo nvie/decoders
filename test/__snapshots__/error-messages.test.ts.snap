@@ -1,0 +1,14 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`error messages (optional objects) > invalid 1`] = `
+"{
+  "person": {
+    "name": "Alice",
+    "age": "thirty",
+  },
+            ^
+            Either:
+            - Must be undefined
+            - Value at key 'age': Must be number
+}"
+`;
