@@ -32,6 +32,7 @@ export default tseslint.config(
       quotes: ['error', 'single', 'avoid-escape'],
       'object-shorthand': 'error',
 
+      '@typescript-eslint/no-deprecated': 'off',
       '@typescript-eslint/consistent-type-imports': 'error',
       '@typescript-eslint/explicit-module-boundary-types': 'error',
       '@typescript-eslint/restrict-template-expressions': [
