@@ -37,7 +37,9 @@ export function optional<T, V>(
   decoder: Decoder<T>,
   defaultValue?: (() => V) | V,
 ): Decoder<T | V | undefined> {
-  const rv = either(undefined_, decoder);
+  const rv = define<T | undefined>((blob, ok) =>
+    blob === undefined ? ok(undefined) : decoder.decode(blob),
+  );
   return arguments.length >= 2
     ? rv.transform((value) => value ?? lazyval(defaultValue as (() => V) | V))
     : rv;
