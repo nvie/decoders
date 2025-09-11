@@ -80,6 +80,7 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.56.1",
     "vite-tsconfig-paths": "^6.1.1",
+    "vitepress": "^2.0.0-alpha.12",
     "vitest": "^4.0.18"
   },
   "githubUrl": "https://github.com/nvie/decoders",
