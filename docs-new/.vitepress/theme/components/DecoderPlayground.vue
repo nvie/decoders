@@ -37,12 +37,12 @@
           >
             <div v-if="example.result?.loading" class="loading">Evaluating...</div>
             <div v-else-if="example.result?.error" class="error-result">
-              <span class="error-icon">❌</span>
+              <span class="error-badge">rejected</span>
               <pre class="error-message">{{ example.result.error }}</pre>
             </div>
             <div v-else-if="example.result?.success" class="success-result">
-              <span class="success-icon">✅</span>
-              <code class="output-value">{{ formatValue(example.result.value) }}</code>
+              <span class="success-badge">accepted</span>
+              <span class="output-value">{{ formatValue(example.result.value) }}</span>
             </div>
             <div v-else class="empty-result">—</div>
           </td>
@@ -191,8 +191,15 @@ function onDecoderChange() {
   });
 }
 
-// Initialize SES for secure compartment evaluation
-lockdown();
+// Initialize SES for secure compartment evaluation (only once)
+try {
+  lockdown();
+} catch (error) {
+  // Ignore if already locked down
+  if (!(error instanceof Error && error.message.includes('Already locked down'))) {
+    throw error;
+  }
+}
 
 // Compartment 1: For decoder expressions (array(string), object({ x: number }), etc.)
 const decoderCompartment = new Compartment({
@@ -379,25 +386,6 @@ watch(
   margin: 1.5rem 0;
 }
 
-.security-notice {
-  background: var(--vp-c-bg-soft);
-  padding: 0.5rem 0.75rem;
-  border-bottom: 1px solid var(--vp-c-divider-light);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.8rem;
-  color: var(--vp-c-text-2);
-}
-
-.security-icon {
-  font-size: 0.9rem;
-}
-
-.security-text {
-  font-style: italic;
-}
-
 .decoder-header {
   padding: 0.75rem;
   background: var(--vp-c-bg-soft);
@@ -485,16 +473,8 @@ watch(
 
 .output-cell {
   width: 60%;
-  background: var(--vp-c-bg-alt);
+  /* background: var(--vp-c-bg-alt); */
   position: relative;
-}
-
-.output-cell.success {
-  background: var(--playground-output-success-bg);
-}
-
-.output-cell.error {
-  background: var(--playground-output-error-bg);
 }
 
 .loading,
@@ -507,26 +487,30 @@ watch(
 
 .success-result,
 .error-result {
+  font-size: 0.875rem;
   padding: 0.75rem;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.5rem;
   width: 100%;
 }
 
-.error-icon {
-  font-size: 0.875rem;
-  flex-shrink: 0;
+.error-badge {
+  font-size: 0.7rem;
+  padding: 0 6px;
+  background-color: var(--vp-c-danger-2);
+  border-radius: 6px;
 }
 
-.success-icon {
-  font-size: 0.875rem;
-  flex-shrink: 0;
+.success-badge {
+  font-size: 0.7rem;
+  padding: 0 6px;
+  background-color: darkgreen;
+  border-radius: 6px;
 }
 
 .output-value {
   font-family: var(--vp-font-family-mono);
-  font-size: 0.875rem;
   word-break: break-all;
   flex: 1;
 }
@@ -534,7 +518,7 @@ watch(
 .error-message {
   font-family: var(--vp-font-family-mono);
   font-size: 0.875rem;
-  color: var(--vp-custom-block-danger-text);
+  color: var(--vp-c-danger-1);
   margin: 0;
   white-space: pre-wrap;
   word-break: break-word;

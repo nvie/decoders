@@ -3,10 +3,12 @@ title: string
 description: Strings decoder
 ---
 
-# `string` decoder
+# `string`
+
+<Signature name="string" noFunc />
 
 ```typescript
-string(): Decoder<string>
+string: Decoder<string>;
 ```
 
 [View source](https://github.com/nvie/decoders/tree/main/src/strings.ts#L20-L25)
@@ -23,13 +25,12 @@ Try different inputs and see the results in real-time:
 
 ```typescript
 // 👍
-      string.verify('hello world') === 'hello world';
-      string.verify('🚀') === '🚀';
-      string.verify('') === '';
+string.verify('hello world') === 'hello world';
+string.verify('🚀') === '🚀';
+string.verify('') === '';
 
-      // 👎
-      string.verify(123);   // throws
-      string.verify(true);  // throws
-      string.verify(null);  // throws
+// 👎
+string.verify(123); // throws
+string.verify(true); // throws
+string.verify(null); // throws
 ```
-

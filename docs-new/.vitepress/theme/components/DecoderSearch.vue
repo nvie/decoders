@@ -1,13 +1,11 @@
 <template>
   <div class="decoder-search">
-    <div class="search-shortcut">
-      Press <kbd>⌘</kbd> <kbd>K</kbd> to search decoders
-    </div>
+    <div class="search-shortcut">Press <kbd>⌘</kbd> <kbd>K</kbd> to search decoders</div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue';
 
 // Enhanced search functionality will be added here
 // For now, this leverages VitePress's built-in search with custom styling
@@ -16,25 +14,25 @@ onMounted(() => {
   // Add custom keyboard shortcut handling if needed
   const handleKeydown = (e: KeyboardEvent) => {
     if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-      e.preventDefault()
+      e.preventDefault();
       // Trigger VitePress search modal
-      const searchButton = document.querySelector('.DocSearch-Button') as HTMLElement
+      const searchButton = document.querySelector('.DocSearch-Button') as HTMLElement;
       if (searchButton) {
-        searchButton.click()
+        searchButton.click();
       }
     }
-  }
-  
-  document.addEventListener('keydown', handleKeydown)
-  
+  };
+
+  document.addEventListener('keydown', handleKeydown);
+
   return () => {
-    document.removeEventListener('keydown', handleKeydown)
-  }
-})
+    document.removeEventListener('keydown', handleKeydown);
+  };
+});
 
 onUnmounted(() => {
   // Cleanup handled by onMounted return function
-})
+});
 </script>
 
 <style scoped>

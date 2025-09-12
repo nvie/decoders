@@ -5,7 +5,12 @@ description: Strings decoder
 
 # `startsWith` decoder
 
-```typescript
+<Signature  
+  name="startsWith"
+  :params="[{name: 'prefix', type: 'P'}]"
+  output-type="`${P}${string}`" />
+
+```ts
 startsWith(prefix: P): Decoder<\`${P}${string}\`>
 ```
 
@@ -17,20 +22,19 @@ Accepts and returns strings that start with the given prefix.
 
 Try different inputs and see the results in real-time:
 
-<DecoderPlayground decoder-name="startsWith("hello")" />
+<DecoderPlayground decoder-name="startsWith('hello')" />
 
 ## Code Examples
 
 ```typescript
 const decoder = startsWith('abc');
 
-      // 👍
-      decoder.verify('abc') === 'abc';
-      decoder.verify('abcdefg') === 'abcdefg';
+// 👍
+decoder.verify('abc') === 'abc';
+decoder.verify('abcdefg') === 'abcdefg';
 
-      // 👎
-      decoder.verify(42);     // throws
-      decoder.verify('ab');   // throws
-      decoder.verify('ABC');  // throws
+// 👎
+decoder.verify(42); // throws
+decoder.verify('ab'); // throws
+decoder.verify('ABC'); // throws
 ```
-

@@ -17,20 +17,19 @@ Accepts and returns strings that match the given regular expression.
 
 Try different inputs and see the results in real-time:
 
-<DecoderPlayground decoder-name="regex(/^[0-9]+$/, "Must be numeric")" />
+<DecoderPlayground decoder-name="regex(/^[0-9]+$/, 'Must be numeric')" />
 
 ## Code Examples
 
 ```typescript
 const decoder = regex(/^[0-9][0-9]+$/, 'Must be numeric');
 
-      // 👍
-      decoder.verify('42') === '42';
-      decoder.verify('83401648364738') === '83401648364738';
+// 👍
+decoder.verify('42') === '42';
+decoder.verify('83401648364738') === '83401648364738';
 
-      // 👎
-      decoder.verify('');     // throws
-      decoder.verify('1');    // throws
-      decoder.verify('foo');  // throws
+// 👎
+decoder.verify(''); // throws
+decoder.verify('1'); // throws
+decoder.verify('foo'); // throws
 ```
-
