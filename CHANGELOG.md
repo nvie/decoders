@@ -1,5 +1,8 @@
 ## [Unreleased]
 
+- Drop support for Node 18 and below (they will likely still work, but are no longer
+  tested)
+
 ## [2.7.5] - 2025-09-02
 
 - Fixes for `url` decoder:
