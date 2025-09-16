@@ -70,7 +70,7 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "fast-check": "^4.3.0",
     "itertools": "^2.5.0",
-    "pkg-pr-new": "^0.0.59",
+    "pkg-pr-new": "^0.0.60",
     "prettier": "^3.6.2",
     "publint": "^0.3.12",
     "release-it": "^19.0.4",
@@ -78,7 +78,7 @@
     "tsd": "^0.33.0",
     "tsup": "^8.5.0",
     "typescript": "^5.9.2",
-    "typescript-eslint": "^8.43.0",
+    "typescript-eslint": "^8.44.0",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4"
   },
