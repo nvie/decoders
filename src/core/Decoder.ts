@@ -366,7 +366,9 @@ function brand<D extends Decoder<unknown>>(decoder: D): D {
   return decoder;
 }
 
-/** @internal */
-function isDecoder(thing: unknown): thing is Decoder<unknown> {
-  return _register.has(thing as Decoder<unknown>);
+/**
+ * Returns whether the given value is a Decoder instance.
+ */
+export function isDecoder(value: unknown): value is Decoder<unknown> {
+  return _register.has(value as Decoder<unknown>);
 }

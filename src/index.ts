@@ -25,6 +25,7 @@ export type { Formatter } from '~/core';
 export { define } from '~/core';
 export { err, ok } from '~/core';
 export { formatInline, formatShort } from '~/core';
+export { isDecoder } from '~/core';
 export type { Scalar } from '~/lib/types';
 
 // Deprecated aliases (will get removed in a future version)
