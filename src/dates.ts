@@ -25,7 +25,7 @@ export const dateString: Decoder<string> = regex(
   iso8601_re,
   'Must be ISO8601 format',
 ).refine(
-  (value: string) => !isNaN(new Date(value).getTime()),
+  (value: string) => !Number.isNaN(new Date(value).getTime()),
   'Must be valid date/time value',
 );
 
