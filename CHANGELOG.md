@@ -348,7 +348,6 @@ Implementation changes:
 ## [1.24.0]
 
 - **New decoders:**
-
   - [`describe`](https://github.com/nvie/decoders#describe): change the error message for
     an existing decoder
 
@@ -386,7 +385,6 @@ TypeScript types:
 ## [1.23.0]
 
 - **New decoders:**
-
   - [`json`](https://github.com/nvie/decoders#json): decodes any valid JSON value
 
   - [`jsonObject`](https://github.com/nvie/decoders#jsonObject): decodes any valid JSON
@@ -398,7 +396,6 @@ TypeScript types:
 ## [1.22.2]
 
 - **New decoders:**
-
   - [`inexact()`](https://github.com/nvie/decoders#inexact): like object, but retain any
     extra fields on the input value as `unknown`
 
@@ -585,7 +582,6 @@ May cause breakage for Flow users:
 
 - `guard()` now takes a config option to control how to format error messages. This is
   done via the `guard(..., { style: 'inline' })` parameter.
-
   - `'inline'`: echoes back the input value and inlines errors (default);
   - `'simple'`: just returns the decoder errors. Useful for use in sensitive contexts.
 
