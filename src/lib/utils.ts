@@ -25,6 +25,15 @@ export function isDate(value: unknown): value is Date {
   );
 }
 
+export function isPromiseLike(value: unknown): value is PromiseLike<unknown> {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'then' in value &&
+    typeof value.then === 'function'
+  );
+}
+
 /**
  * Is the given value a POJO (plain old JavaScript object)?
  */

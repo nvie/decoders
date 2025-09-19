@@ -122,19 +122,55 @@ describe('formatInline', () => {
     checkInline(
       __private_annotate(value, 'xxx', seen),
       `
-              <circular ref>
-              ^^^^^^^^^^^^^^ xxx
-            `,
+        <circular ref>
+        ^^^^^^^^^^^^^^ xxx
+      `,
+    );
+  });
+
+  test('serializes w/ Promises', () => {
+    checkInline(
+      annotate(new Promise(() => void 0), 'xxx'),
+      `
+        <Promise>
+        ^^^^^^^^^ xxx
+      `,
+    );
+  });
+
+  test('serializes w/ bigints', () => {
+    checkInline(
+      annotate(2643923467934223980832n, 'xxx'),
+      `
+        2643923467934223980832n
+        ^^^^^^^^^^^^^^^^^^^^^^^ xxx
+      `,
     );
   });
 
   test('serializes w/ unknown values', () => {
     checkInline(
-      annotate(0n, 'xxx'),
+      annotate(new Error('oops'), 'xxx'),
       `
-              ???
-              ^^^ xxx
-            `,
+        <Error>
+        ^^^^^^^ xxx
+      `,
+    );
+
+    checkInline(
+      annotate(/a regular expression/, 'xxx'),
+      `
+        <RegExp>
+        ^^^^^^^^ xxx
+      `,
+    );
+
+    checkInline(
+      annotate(new TextEncoder(), 'xxx'),
+      `
+        <TextEncoder>
+        ^^^^^^^^^^^^^ xxx
+      `,
     );
   });
 
@@ -142,9 +178,9 @@ describe('formatInline', () => {
     checkInline(
       annotate(Number.NEGATIVE_INFINITY, 'Not finite'),
       `
-              -Infinity
-              ^^^^^^^^^ Not finite
-            `,
+        -Infinity
+        ^^^^^^^^^ Not finite
+      `,
     );
   });
 
@@ -152,26 +188,26 @@ describe('formatInline', () => {
     checkInline(
       [annotate(123, 'Must be one of:\n1. a float\n2. a string')],
       `
-              [
-                123,
-                ^^^
-                Must be one of:
-                1. a float
-                2. a string
-              ]
-            `,
+        [
+          123,
+          ^^^
+          Must be one of:
+          1. a float
+          2. a string
+        ]
+      `,
     );
     checkInline(
       { name: annotate(123, 'Must be one of:\n1. a float\n2. a string') },
       `
-              {
-                "name": 123,
-                        ^^^
-                        Must be one of:
-                        1. a float
-                        2. a string
-              }
-            `,
+        {
+          "name": 123,
+                  ^^^
+                  Must be one of:
+                  1. a float
+                  2. a string
+        }
+      `,
     );
   });
 
@@ -179,8 +215,8 @@ describe('formatInline', () => {
     checkInline(
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Etiam lacus ligula, accumsan id imperdiet rhoncus, dapibus vitae arcu.  Nulla non quam erat, luctus consequat nisi.  Integer hendrerit lacus sagittis erat fermentum tincidunt.  Cras vel dui neque.  In sagittis commodo luctus.  Mauris non metus dolor, ut suscipit dui.  Aliquam mauris lacus, laoreet et consequat quis, bibendum id ipsum.  Donec gravida, diam id imperdiet cursus, nunc nisl bibendum sapien, eget tempor neque elit in tortor.',
       `
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Etiam l..." [truncated]
-            `,
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Etiam l..." [truncated]
+      `,
     );
   });
 

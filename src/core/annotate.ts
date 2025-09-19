@@ -1,4 +1,4 @@
-import { isPojo } from '~/lib/utils';
+import { isPojo, isPromiseLike } from '~/lib/utils';
 
 const kAnnotationRegistry = Symbol.for('decoders.kAnnotationRegistry');
 // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
@@ -140,6 +140,7 @@ function annotate(value: unknown, text: string | undefined, seen: RefSet): Annot
     typeof value === 'number' ||
     typeof value === 'boolean' ||
     typeof value === 'symbol' ||
+    typeof value === 'bigint' ||
     typeof (value as Record<string, unknown>).getMonth === 'function'
   ) {
     return makeScalarAnn(value, text);
@@ -171,7 +172,17 @@ function annotate(value: unknown, text: string | undefined, seen: RefSet): Annot
     return makeOpaqueAnn('<function>', text);
   }
 
-  return makeOpaqueAnn('???', text);
+  if (isPromiseLike(value)) {
+    return makeOpaqueAnn('<Promise>', text);
+  }
+
+  // istanbul ignore else -- @preserve
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (value?.constructor?.name) {
+    return makeOpaqueAnn(`<${value.constructor.name}>`, text);
+  } else {
+    return makeOpaqueAnn('???', text);
+  }
 }
 
 function public_annotate(value: unknown, text?: string): Annotation {

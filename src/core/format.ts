@@ -125,6 +125,8 @@ export function serializeValue(value: unknown): string {
     return 'null';
   } else if (value === undefined) {
     return 'undefined';
+  } else if (typeof value === 'bigint') {
+    return `${value.toString()}n`;
   } else {
     if (isDate(value)) {
       return `new Date(${quote(value.toISOString())})`;

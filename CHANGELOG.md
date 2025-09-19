@@ -2,6 +2,8 @@
 
 ## [2.8.0-0] - 2025-09-18
 
+- In error output, display promise, bigint, and any other unknown values (instead of
+  showing '???')
 - Drop support for Node 18 and below (they will likely still work, but are no longer
   tested)
 - Export `isDecoder(value)` helper
