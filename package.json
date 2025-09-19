@@ -45,6 +45,7 @@
     "test:completeness": "./bin/check.sh",
     "test:typescript": "tsc --noEmit",
     "test:types": "npm run build && tsd --typings ./dist/index.d.ts",
+    "test:watch": "vitest --coverage",
     "release": "npm run test && npm run lint && npm run lint:docs && npm run build && npm run lint:package && release-it"
   },
   "keywords": [
