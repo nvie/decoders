@@ -47,7 +47,6 @@ export function isPromiseLike(value: unknown): value is PromiseLike<unknown> {
 export function isPlainObject(value: unknown): value is Record<string, unknown> {
   return (
     value !== null &&
-    value !== undefined &&
     typeof value === 'object' &&
     // This still seems to be the only reliable way to determine whether
     // something is a pojo... ¯\_(ツ)_/¯
