@@ -8,6 +8,7 @@ const project = new Project({
 // check if these are _type_ exports or not. But I haven't figured out yet how
 // to do that programmatically.
 const NOT_DECODERS = new Set([
+  '_annotate',
   'Decoder',
   'DecodeResult',
   'DecoderType',

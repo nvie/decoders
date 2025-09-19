@@ -31,3 +31,8 @@ export type {
 export { define, err, formatInline, formatShort, isDecoder, ok } from '~/core';
 export type { Scalar } from '~/lib/types';
 export { isDate, isPlainObject, isPromiseLike } from '~/lib/utils';
+
+export {
+  /** @private Private API, don't rely on this */
+  annotate as _annotate,
+} from '~/core';
