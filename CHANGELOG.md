@@ -1,7 +1,5 @@
 ## [Unreleased]
 
-## [2.8.0-0] - 2025-09-18
-
 - New: `anything` is now an alias for `unknown`, which might be more readable in some
   contexts
 - In error output, display promise, bigint, and any other unknown values (instead of
@@ -11,14 +9,18 @@
   - `isDecoder(value)`
   - `isPlainObject(value)`
   - `isPromiseLike(value)`
-- Drop support for Node 18 and below (they will likely still work, but are no longer
-  tested)
 - Drop previously deprecated decoders:
   - `dict()` (prefer `record()`)
   - `hardcoded()` (prefer `always()`)
   - `maybe()` (prefer `nullish()`)
   - `mixed` (prefer `unknown`)
   - `set()` (prefer `setFromArray()`)
+
+## [2.8.0-0] - 2025-09-18
+
+- Drop support for Node 18 and below (they will likely still work, but are no longer
+  tested)
+- Export `isDecoder(value)` helper
 
 ## [2.7.5] - 2025-09-02
 
