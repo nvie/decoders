@@ -14,7 +14,6 @@ import {
   dateString,
   decimal,
   define,
-  dict,
   either,
   email,
   endsWith,
@@ -23,7 +22,6 @@ import {
   fail,
   formatInline,
   formatShort,
-  hardcoded,
   hexadecimal,
   httpsUrl,
   identifier,
@@ -36,8 +34,6 @@ import {
   jsonObject,
   lazy,
   mapping,
-  maybe,
-  mixed,
   nanoid,
   never,
   nonEmptyArray,
@@ -58,7 +54,6 @@ import {
   record,
   regex,
   select,
-  set,
   setFromArray,
   startsWith,
   string,
@@ -100,15 +95,12 @@ expectType<123 | 'hi'>(
 expectType<(p: string, q: number[], r: string[], s: boolean) => void>(foo);
 
 expectType<'foo'>(test(constant('foo')));
-expectType<'foo'>(test(hardcoded('foo')));
-expectType<Date>(test(hardcoded(() => new Date())));
 expectType<'foo'>(test(always('foo')));
 expectType<42>(test(always(42)));
 expectType<Date>(test(always(() => new Date())));
 
 expectType<null>(test(null_));
 expectType<undefined>(test(undefined_));
-expectType<unknown>(test(mixed));
 expectType<unknown>(test(unknown));
 expectType<unknown>(test(anything));
 
@@ -148,8 +140,6 @@ expectType<[string, ...string[]]>(test(nonEmptyArray(string)));
 expectType<[number, ...number[]]>(test(nonEmptyArray(number)));
 expectType<Set<string>>(test(setFromArray(string)));
 expectType<Set<number>>(test(setFromArray(number)));
-expectType<Set<string>>(test(set(string)));
-expectType<Set<number>>(test(set(number)));
 
 expectType<[string]>(test(tuple(string)));
 expectType<[string, number]>(test(tuple(string, number)));
@@ -302,18 +292,6 @@ expectType<string | Date | null | undefined>(
   test(nullish(nullish(string, () => new Date()))),
 );
 
-// Alias of `nullish()`
-expectType<string | null | undefined>(test(maybe(string)));
-expectType<string | null | undefined>(test(maybe(maybe(string))));
-expectType<string | 42>(test(maybe(string, 42)));
-expectType<string | 42>(test(maybe(maybe(string), 42)));
-expectType<string | 42 | null | undefined>(test(maybe(maybe(string, 42))));
-expectType<string | Date>(test(maybe(string, () => new Date())));
-expectType<string | Date>(test(maybe(maybe(string), () => new Date())));
-expectType<string | Date | null | undefined>(
-  test(maybe(maybe(string, () => new Date()))),
-);
-
 // object()
 {
   const d = object({
@@ -399,16 +377,6 @@ expectType<Record<'foo' | 'bar', number>>(
 );
 expectType<Record<string, number>>(test(record(decimal, number)));
 expectType<Record<string, boolean>>(test(record(email, boolean)));
-
-// Single-argument form (validate values only)
-expectType<Record<string, number>>(test(dict(number)));
-
-// Two-argument form (validate keys and values)
-expectType<Record<'foo' | 'bar', number>>(
-  test(dict(oneOf(['foo', 'bar'] as const), number)),
-);
-expectType<Record<string, number>>(test(dict(decimal, number)));
-expectType<Record<string, boolean>>(test(dict(email, boolean)));
 
 expectType<string>(test(lazy(() => string)));
 expectType<number>(test(lazy(() => number)));

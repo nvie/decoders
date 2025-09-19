@@ -1,10 +1,10 @@
 import { describe, expect, test } from 'vitest';
 
 import {
+  always,
   boolean,
   decimal,
   exact,
-  hardcoded,
   inexact,
   mapping,
   number,
@@ -168,7 +168,7 @@ describe('exact objects', () => {
     const decoder = exact({
       id: number,
       name: string,
-      extra: hardcoded('extra'),
+      extra: always('extra'),
     });
     expect(decoder.verify({ id: 1, name: 'test' })).toEqual({
       id: 1,
@@ -258,7 +258,7 @@ describe('inexact objects', () => {
   });
 
   test('retains extra hardcoded fields', () => {
-    const decoder = inexact({ id: number, name: string, extra: hardcoded('extra') });
+    const decoder = inexact({ id: number, name: string, extra: always('extra') });
     expect(decoder.verify({ id: 1, name: 'test', extra: 42 })).toEqual({
       id: 1,
       name: 'test',

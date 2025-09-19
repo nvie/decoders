@@ -5,7 +5,6 @@ import {
   always,
   constant,
   fail,
-  maybe,
   never,
   null_,
   nullable,
@@ -288,59 +287,6 @@ describe('nullable', () => {
     expect(decoder.verify(null)).toBe(42);
 
     expect(() => decoder.verify(undefined)).toThrow();
-    expect(() => decoder.verify(123)).toThrow();
-  });
-});
-
-describe('maybe', () => {
-  const decoder = maybe(string);
-  const [okay, not_okay] = partition(INPUTS, (x) => typeof x === 'string');
-
-  test('valid', () => {
-    expect(okay.length).not.toBe(0);
-    expect(decoder.verify(null)).toBe(null);
-    expect(decoder.verify(undefined)).toBe(undefined);
-    for (const value of okay) {
-      expect(decoder.verify(value)).toBe(value);
-    }
-  });
-
-  test('allowNull', () => {
-    // No difference when decoding undefined
-    expect(decoder.verify(undefined)).toBeUndefined();
-    expect(decoder.verify(null)).toBeNull();
-
-    // No difference when string-decoding
-    expect(decoder.verify('')).toBe('');
-    expect(decoder.verify('foo')).toBe('foo');
-  });
-
-  test('invalid', () => {
-    expect(not_okay.length).not.toBe(0);
-    for (const value of not_okay) {
-      if (value === undefined) continue;
-      if (value === null) continue;
-      expect(decoder.decode(value).ok).toBe(false);
-    }
-  });
-
-  test('w/ default value', () => {
-    const decoder = nullish(string, 42);
-    expect(decoder.verify('foo')).toBe('foo');
-    expect(decoder.verify('')).toBe('');
-    expect(decoder.verify(null)).toBe(42);
-    expect(decoder.verify(undefined)).toBe(42);
-
-    expect(() => decoder.verify(123)).toThrow();
-  });
-
-  test('w/ callable default value', () => {
-    const decoder = nullish(string, () => 42);
-    expect(decoder.verify('foo')).toBe('foo');
-    expect(decoder.verify('')).toBe('');
-    expect(decoder.verify(null)).toBe(42);
-    expect(decoder.verify(undefined)).toBe(42);
-
     expect(() => decoder.verify(123)).toThrow();
   });
 });

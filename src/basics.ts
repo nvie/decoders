@@ -63,13 +63,6 @@ export function nullable<T, V>(
 }
 
 /**
- * @deprecated Will get removed in a future version.
- *
- * Alias of `nullish()`.
- */
-export const maybe = nullish;
-
-/**
  * Accepts whatever the given decoder accepts, or `null`, or `undefined`.
  *
  * If a default value is explicitly provided, return that instead in the
@@ -129,13 +122,6 @@ export function never(msg: string): Decoder<never> {
 export const fail = never;
 
 /**
- * Alias of `always()`.
- *
- * @deprecated Will get removed in a future version.
- */
-export const hardcoded = always;
-
-/**
  * Accepts anything and returns it unchanged.
  *
  * Useful for situation in which you don't know or expect a specific type. Of
@@ -148,10 +134,3 @@ export const unknown: Decoder<unknown> = define((blob, ok, _) => ok(blob));
  * Alias of `unknown`.
  */
 export const anything: Decoder<unknown> = unknown;
-
-/**
- * Alias of `unknown`.
- *
- * @deprecated Will get removed in a future version.
- */
-export const mixed = unknown;

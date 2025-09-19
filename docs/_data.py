@@ -525,7 +525,6 @@ DECODERS = {
     'type_params': ['T'],
     'params': [('value', 'T')],
     'return_type': 'Decoder<T>',
-    'aliases': ['hardcoded'],
     'example': """
       ```ts
       const decoder = always(42);
@@ -680,8 +679,6 @@ DECODERS = {
 
   'nullish': {
     'section': 'Optionality',
-    'aliases': ['maybe'],
-
     'signatures': [
       {
         'type_params': ['T'],
@@ -728,7 +725,7 @@ DECODERS = {
     'section': 'Optionality',
     'params': None,
     'return_type': 'Decoder<unknown>',
-    'aliases': ['anything', 'mixed'],
+    'aliases': ['anything'],
     'example': """
       // 👍
       unknown.verify('hello') === 'hello';
@@ -957,20 +954,6 @@ DECODERS = {
     """,
   },
 
-  'dict': {
-    'section': 'Collections',
-    'signatures': [
-      {
-        'type_params': ['V'],
-        'params': [('decoder', 'Decoder<T>')],
-        'return_type': 'Decoder<Record<string, V>>',
-      }
-    ],
-    'markdown': """
-      Alias of `record()`.
-    """,
-  },
-
   'mapping': {
     'section': 'Collections',
     'type_params': ['T'],
@@ -1003,19 +986,6 @@ DECODERS = {
 
       // 👎
       decoder.verify([1, 2]);         // throws, not the right types
-    """,
-  },
-
-  'set': {
-    'section': 'Collections',
-    'type_params': ['T'],
-    'params': [('decoder', 'Decoder<T>')],
-    'return_type': 'Decoder<Set<T>>',
-    'markdown': """
-      An alias of `setFromArray()`.
-
-      ⚠️ **IMPORTANT!** This decoder will change its behavior in a future
-      version! If you rely on this decoder, use `setFromArray()` instead.
     """,
   },
 

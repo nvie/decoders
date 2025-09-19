@@ -3,7 +3,7 @@ export { array, nonEmptyArray, poja, tuple } from './arrays';
 export { always, anything, constant, fail, never, unknown } from './basics';
 export { null_, nullable, nullish, optional, undefined_ } from './basics';
 export { boolean, truthy } from './booleans';
-export { mapping, record, set, setFromArray } from './collections';
+export { mapping, record, setFromArray } from './collections';
 export { date, datelike, dateString, iso8601 } from './dates';
 export type { JSONArray, JSONObject, JSONValue } from './json';
 export { json, jsonArray, jsonObject } from './json';
@@ -19,15 +19,14 @@ export { decimal, hexadecimal, numeric } from './strings';
 export { either, enum_, oneOf, select, taggedUnion } from './unions';
 
 // Core functionality
-export type { Decoder, DecodeResult, DecoderType } from '~/core';
-export type { Err, Ok, Result } from '~/core';
-export type { Formatter } from '~/core';
-export { define } from '~/core';
-export { err, ok } from '~/core';
-export { formatInline, formatShort } from '~/core';
-export { isDecoder } from '~/core';
+export type {
+  Decoder,
+  DecodeResult,
+  DecoderType,
+  Err,
+  Formatter,
+  Ok,
+  Result,
+} from '~/core';
+export { define, err, formatInline, formatShort, isDecoder, ok } from '~/core';
 export type { Scalar } from '~/lib/types';
-
-// Deprecated aliases (will get removed in a future version)
-export { hardcoded, maybe, mixed } from './basics';
-export { dict } from './collections';
