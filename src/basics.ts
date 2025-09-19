@@ -146,6 +146,11 @@ export const unknown: Decoder<unknown> = define((blob, ok, _) => ok(blob));
 
 /**
  * Alias of `unknown`.
+ */
+export const anything: Decoder<unknown> = unknown;
+
+/**
+ * Alias of `unknown`.
  *
  * @deprecated Will get removed in a future version.
  */

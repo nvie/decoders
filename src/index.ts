@@ -1,6 +1,6 @@
 // All built-in decoders
 export { array, nonEmptyArray, poja, tuple } from './arrays';
-export { always, constant, fail, never, unknown } from './basics';
+export { always, anything, constant, fail, never, unknown } from './basics';
 export { null_, nullable, nullish, optional, undefined_ } from './basics';
 export { boolean, truthy } from './booleans';
 export { mapping, record, set, setFromArray } from './collections';

@@ -728,7 +728,7 @@ DECODERS = {
     'section': 'Optionality',
     'params': None,
     'return_type': 'Decoder<unknown>',
-    'aliases': ['mixed'],
+    'aliases': ['anything', 'mixed'],
     'example': """
       // 👍
       unknown.verify('hello') === 'hello';

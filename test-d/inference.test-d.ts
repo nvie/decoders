@@ -4,6 +4,7 @@ import {
   // Formatters
   always,
   anyNumber,
+  anything,
   array,
   bigint,
   boolean,
@@ -109,6 +110,7 @@ expectType<null>(test(null_));
 expectType<undefined>(test(undefined_));
 expectType<unknown>(test(mixed));
 expectType<unknown>(test(unknown));
+expectType<unknown>(test(anything));
 
 expectType<number>(test(anyNumber));
 expectType<number>(test(integer));
