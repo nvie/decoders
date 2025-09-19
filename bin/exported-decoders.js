@@ -11,6 +11,7 @@ const NOT_DECODERS = new Set([
   'Decoder',
   'DecodeResult',
   'DecoderType',
+  'isDecoder',
   'JSONArray',
   'JSONObject',
   'JSONValue',
