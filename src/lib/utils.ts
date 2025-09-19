@@ -10,6 +10,10 @@ export function isBigInt(value: unknown): value is bigint {
   return typeof value === 'bigint';
 }
 
+/**
+ * Returns whether the given value is a Date object.
+ * NOTE: Invalid dates are not considered dates by this check.
+ */
 export function isDate(value: unknown): value is Date {
   //
   // `x instanceof Date` checks are unreliable across stack frames (that
@@ -25,6 +29,9 @@ export function isDate(value: unknown): value is Date {
   );
 }
 
+/**
+ * Returns whether the given value is a Promise-like, i.e. has a `then` method.
+ */
 export function isPromiseLike(value: unknown): value is PromiseLike<unknown> {
   return (
     typeof value === 'object' &&
