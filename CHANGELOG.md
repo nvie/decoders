@@ -6,7 +6,11 @@
   contexts
 - In error output, display promise, bigint, and any other unknown values (instead of
   showing '???')
-- Export `isDecoder(value)` helper
+- Export some internally used utilities are generally useful:
+  - `isDate(value)`
+  - `isDecoder(value)`
+  - `isPlainObject(value)`
+  - `isPromiseLike(value)`
 - Drop support for Node 18 and below (they will likely still work, but are no longer
   tested)
 - Drop previously deprecated decoders:

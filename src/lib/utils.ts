@@ -35,9 +35,9 @@ export function isPromiseLike(value: unknown): value is PromiseLike<unknown> {
 }
 
 /**
- * Is the given value a POJO (plain old JavaScript object)?
+ * Returns whether the given value is a plain old JS object (POJO).
  */
-export function isPojo(value: unknown): value is Record<string, unknown> {
+export function isPlainObject(value: unknown): value is Record<string, unknown> {
   return (
     value !== null &&
     value !== undefined &&

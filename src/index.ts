@@ -30,3 +30,4 @@ export type {
 } from '~/core';
 export { define, err, formatInline, formatShort, isDecoder, ok } from '~/core';
 export type { Scalar } from '~/lib/types';
+export { isDate, isPlainObject, isPromiseLike } from '~/lib/utils';

@@ -1,4 +1,4 @@
-import { isPojo, isPromiseLike } from '~/lib/utils';
+import { isPlainObject, isPromiseLike } from '~/lib/utils';
 
 const kAnnotationRegistry = Symbol.for('decoders.kAnnotationRegistry');
 // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
@@ -159,7 +159,7 @@ function annotate(value: unknown, text: string | undefined, seen: RefSet): Annot
     }
   }
 
-  if (isPojo(value)) {
+  if (isPlainObject(value)) {
     // "Circular references" can only exist in objects or arrays
     if (seen.has(value)) {
       return makeOpaqueAnn('<circular ref>', text);

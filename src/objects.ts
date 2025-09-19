@@ -4,7 +4,7 @@ import type { Annotation, Decoder, DecodeResult, DecoderType } from '~/core';
 import { annotateObject, define, merge, updateText } from '~/core';
 import { difference } from '~/lib/set-methods';
 import { quote } from '~/lib/text';
-import { isPojo } from '~/lib/utils';
+import { isPlainObject } from '~/lib/utils';
 
 type RequiredKeys<T extends object> = {
   [K in keyof T]: undefined extends T[K] ? never : K;
@@ -49,7 +49,7 @@ type ObjectDecoderType<Ds extends Record<string, Decoder<unknown>>> =
  * values further.
  */
 export const pojo: Decoder<Record<string, unknown>> = define((blob, ok, err) =>
-  isPojo(blob) ? ok(blob) : err('Must be an object'),
+  isPlainObject(blob) ? ok(blob) : err('Must be an object'),
 );
 
 /**
