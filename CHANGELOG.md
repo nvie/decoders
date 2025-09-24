@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [2.8.0-1] - 2025-09-24
+
 - New: `anything` is now an alias for `unknown`, which might be more readable in some
   contexts
 - In error output, display promise, bigint, and any other unknown values (instead of
