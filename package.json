@@ -61,14 +61,10 @@
   ],
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.2",
-    "@eslint/js": "^9.35.0",
     "@release-it/keep-a-changelog": "^7.0.1",
     "@standard-schema/spec": "^1.1.0",
     "@types/node": "^24.3.1",
     "@vitest/coverage-istanbul": "^4.0.18",
-    "eslint": "^9.35.0",
-    "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-simple-import-sort": "^12.1.1",
     "fast-check": "^4.5.3",
     "itertools": "^2.6.0",
     "oxlint": "^1.50.0",
@@ -81,7 +77,6 @@
     "tsup": "^8.5.1",
     "tsx": "^4.20.5",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.56.1",
     "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^4.0.18"
   },
