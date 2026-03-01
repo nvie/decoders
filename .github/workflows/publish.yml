@@ -1,0 +1,59 @@
+name: Publish to NPM
+on:
+  workflow_dispatch:
+    inputs:
+      increment:
+        description: "Release increment (e.g. patch, minor, major, none (for existing prereleases))"
+        required: false
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+          - none
+      prerelease:
+        description: "Prerelease tag (e.g. beta, alpha)"
+        required: false
+        type: string
+      dry-run:
+        description: 'Run the release without publishing for testing (set to "true")'
+        required: false
+        default: "false"
+concurrency:
+  group: ${{ github.workflow }}
+run-name: "Release (increment: ${{ github.event.inputs.increment }}, prerelease: ${{ github.event.inputs.prerelease || 'none' }}${{ github.event.inputs.dry-run == 'true' && ', dry run' || '' }})"
+permissions:
+  id-token: write
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout commit
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: npm
+      - name: Setup git config
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Install dependencies
+        run: npm ci
+      - name: Release package
+        run: |
+          ARGS=""
+          if [[ "${{ github.event.inputs.increment }}" != "none" ]]; then
+            ARGS+="${{ github.event.inputs.increment }}"
+          fi
+          if [[ -n "${{ github.event.inputs.prerelease }}" ]]; then
+            ARGS+=" --preRelease=${{ github.event.inputs.prerelease }}"
+          fi
+          if [[ "${{ github.event.inputs.dry-run }}" == "true" ]]; then
+            ARGS+=" --dry-run"
+          fi
+          npm run release -- $ARGS --ci
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

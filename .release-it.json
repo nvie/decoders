@@ -11,6 +11,9 @@
     "commitMessage": "Release v${version}",
     "tagName": "v${version}"
   },
+  "npm": {
+    "skipChecks": true
+  },
   "github": {
     "release": true,
     "releaseName": "v${version}"
