@@ -7,11 +7,17 @@ list_decoders() {
     node bin/exported-decoders.js | sort -u
 }
 
+DOCS_API="docs/content/docs/api"
+
 echo "==> Checking documentation" >&2
 list_decoders | while read dec; do
-  if grep -qEe "'$dec': {" docs/_data.py; then
+  # Check for a ## heading (handling trailing _ escaping, e.g. null_ -> null\_)
+  heading=$(echo "$dec" | sed 's/_$/\\_/')
+  if grep -rqE "^## ${heading}" "$DOCS_API"; then
       continue
-  elif grep -qEe "'aliases':.*'$dec'" docs/_data.py; then
+  # Check for a <DecoderSig name="..."> (catches aliases like anything, fail)
+  # Works for both single-line and multiline tags (name= is always on its own line)
+  elif grep -rqE "name=\"$dec\"" "$DOCS_API"; then
       continue
   else
       echo "❌ $dec" >&2
@@ -19,7 +25,7 @@ list_decoders | while read dec; do
       echo "It looks like decoder \"$dec\" is not documented yet!" >&2
       echo "To fix this, please add an entry for it in" >&2
       echo "" >&2
-      echo "    docs/_data.py" >&2
+      echo "    $DOCS_API/" >&2
       echo "" >&2
       exit 3
   fi
