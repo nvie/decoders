@@ -4,14 +4,7 @@ description:
   Elegant and battle-tested validation library for type-safe input data for TypeScript.
 ---
 
-## Validate untrusted inputs
-
-Decoders is an elegant and battle-tested validation library for type-safe input data for
-TypeScript.
-
 ## Getting started
-
-Just install the package and you're ready to go.
 
 ```bash tab="npm"
 npm install decoders
@@ -72,9 +65,9 @@ const user = userDecoder.verify(externalData);
 
 ## The core idea
 
-The central concept of this library is the Decoder. A Decoder is a construct that can help
-you verify that untrusted external input matches your expectations. Untrusted data is
-basically any variable of type `any` or `unknown`.
+The central concept of this library is the [Decoder](/docs/api/Decoder). A Decoder is a
+class that can help you verify that untrusted external input matches your expectations.
+Untrusted data is basically any variable of type `any` or `unknown`.
 
 This way, you can be sure that all untrusted runtime data is always in the shape you
 expect, and that static types can correctly be inferred for dynamic input data.
@@ -136,7 +129,7 @@ tell you what inputs it accepts.
 ## Building your own decoders
 
 You are encouraged to build your own decoders that serve your use case. For documentation
-and examples, see [Building your own](./building-your-own).
+and examples, see [Building your own](/docs/building-your-own).
 
 ## Formatting error messages
 
