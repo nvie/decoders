@@ -9,6 +9,19 @@
   --color-fd-ring: #f43f5e;
 }
 
+.fn-sig + .fn-sig {
+  margin-top: -0.75em;
+}
+
+.sig-source {
+  font-size: 0.85em;
+  text-decoration: none;
+}
+
+.sig-source:hover {
+  text-decoration: underline;
+}
+
 .dark {
   --color-fd-primary: #fb7185;
   --color-fd-primary-foreground: #1c1017;
