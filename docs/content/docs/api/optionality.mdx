@@ -1,0 +1,180 @@
+---
+title: Optionality
+description: Decoders for handling null, undefined, and optional values.
+---
+
+### null\_
+
+<DecoderSig name="null_" type="null" source="basics.ts#L12-L15" />
+
+Accepts and returns only the literal `null` value.
+
+```ts
+// 👍
+null_.verify(null) === null;
+
+// 👎
+null_.verify(false);         // throws
+null_.verify(undefined);     // throws
+null_.verify('hello world'); // throws
+```
+
+---
+
+### undefined\_
+
+<DecoderSig name="undefined_" type="undefined" source="basics.ts#L17-L20" />
+
+Accepts and returns only the literal `undefined` value.
+
+```ts
+// 👍
+undefined_.verify(undefined) === undefined;
+
+// 👎
+undefined_.verify(null);          // throws
+undefined_.verify(false);         // throws
+undefined_.verify('hello world'); // throws
+```
+
+---
+
+### optional()
+
+<DecoderSig name="optional" params="decoder: Decoder<T>" type="T | undefined" source="basics.ts#L27-L44" />
+
+<DecoderSig name="optional" params="decoder: Decoder<T>, defaultValue: V | (() => V)" type="T | V" source="basics.ts#L27-L44" />
+
+Accepts whatever the given decoder accepts, or `undefined`.
+
+If a default value is explicitly provided, return that instead in the
+`undefined` case.
+
+```ts
+const decoder = optional(string);
+
+// 👍
+decoder.verify('hello') === 'hello';
+decoder.verify(undefined) === undefined;
+
+// 👎
+decoder.verify(null);  // throws
+decoder.verify(0);     // throws
+decoder.verify(42);    // throws
+```
+
+A typical case where [`optional()`](#optional) is useful is in decoding objects with optional fields:
+
+```ts
+object({
+  id: number,
+  name: string,
+  address: optional(string),
+});
+```
+
+Which will decode to type:
+
+```ts
+{
+  id: number;
+  name: string;
+  address?: string;
+}
+```
+
+---
+
+### nullable()
+
+<DecoderSig name="nullable" params="decoder: Decoder<T>" type="T | null" source="basics.ts#L46-L63" />
+
+<DecoderSig name="nullable" params="decoder: Decoder<T>, defaultValue: V | (() => V)" type="T | V" source="basics.ts#L46-L63" />
+
+Accepts whatever the given decoder accepts, or `null`.
+
+If a default value is explicitly provided, return that instead in the `null`
+case.
+
+```ts
+const decoder = nullable(string);
+
+// 👍
+decoder.verify('hello') === 'hello';
+decoder.verify(null) === null;
+
+// 👎
+decoder.verify(undefined);  // throws
+decoder.verify(0);          // throws
+decoder.verify(42);         // throws
+```
+
+Or use it with a default value:
+
+```ts
+const decoder = nullable(iso8601, () => new Date());
+
+decoder.verify('2022-01-01T12:00:00Z') === '2022-01-01T12:00:00Z';
+decoder.verify(null);  // the current date
+```
+
+---
+
+### nullish()
+
+<DecoderSig name="nullish" params="decoder: Decoder<T>" type="T | null | undefined" source="basics.ts#L65-L82" />
+
+<DecoderSig name="nullish" params="decoder: Decoder<T>, defaultValue: V | (() => V)" type="T | V" source="basics.ts#L65-L82" />
+
+Accepts whatever the given decoder accepts, or `null`, or `undefined`.
+
+If a default value is explicitly provided, return that instead in the
+`null`/`undefined` case.
+
+```ts
+const decoder = nullish(string);
+
+// 👍
+decoder.verify('hello') === 'hello';
+decoder.verify(null) === null;
+decoder.verify(undefined) === undefined;
+
+// 👎
+decoder.verify(0);   // throws
+decoder.verify(42);  // throws
+```
+
+Or use it with a default value:
+
+```ts
+const decoder = nullish(string, null);
+
+decoder.verify('hello') === 'hello';
+decoder.verify(null) === null;
+decoder.verify(undefined) === null;
+```
+
+---
+
+### unknown
+
+<DecoderSig name="unknown" type="unknown" source="basics.ts#L124-L131" />
+
+<DecoderSig name="anything" type="unknown" source="basics.ts#L133-L136" />
+
+Accepts anything and returns it unchanged.
+
+Useful for situation in which you don't know or expect a specific type. Of
+course, the downside is that you won't know the type of the value statically
+and you'll have to further refine it yourself.
+
+```ts
+// 👍
+unknown.verify('hello') === 'hello';
+unknown.verify(false) === false;
+unknown.verify(undefined) === undefined;
+unknown.verify([1, 2]) === [1, 2];
+
+// 👎
+// This decoder will never reject an input
+```

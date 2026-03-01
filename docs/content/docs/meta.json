@@ -3,6 +3,19 @@
     "index",
     "---Guides---",
     "building-your-own",
-    "tips"
+    "tips",
+    "---API Reference---",
+    "api/strings",
+    "api/numbers",
+    "api/booleans",
+    "api/dates",
+    "api/constants",
+    "api/optionality",
+    "api/arrays",
+    "api/objects",
+    "api/collections",
+    "api/json-values",
+    "api/unions",
+    "api/utilities"
   ]
 }

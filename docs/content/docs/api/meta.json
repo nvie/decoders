@@ -1,0 +1,16 @@
+{
+  "pages": [
+    "strings",
+    "numbers",
+    "booleans",
+    "dates",
+    "constants",
+    "optionality",
+    "arrays",
+    "objects",
+    "collections",
+    "json-values",
+    "unions",
+    "utilities"
+  ]
+}

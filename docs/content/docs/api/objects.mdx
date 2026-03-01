@@ -1,0 +1,98 @@
+---
+title: Objects
+description: Object decoders for validating structured data.
+---
+
+### object()
+
+<DecoderSig name="object" params="{ field1: Decoder<A>, field2: Decoder<B>, ... }" type="{ field1: A, field2: B, ... }" source="objects.ts#L55-L136" />
+
+Accepts objects with fields matching the given decoders. Extra fields that
+exist on the input object are ignored and will not be returned.
+
+```ts
+const decoder = object({
+  x: number,
+  y: number,
+});
+
+// 👍
+decoder.verify({ x: 1, y: 2 }) === { x: 1, y: 2 };
+decoder.verify({ x: 1, y: 2, z: 3 }) === { x: 1, y: 2 }; // ⚠️ extra field `z` not returned!
+
+// 👎
+decoder.verify({ x: 1 });  // throws, missing field `y`
+```
+
+For more information, see also [The difference between `object`, `exact`, and `inexact`](/docs/tips#the-difference-between-object-exact-and-inexact).
+
+---
+
+### exact()
+
+<DecoderSig name="exact" params="{ field1: Decoder<A>, field2: Decoder<B>, ... }" type="{ field1: A, field2: B, ... }" source="objects.ts#L138-L163" />
+
+Like [`object()`](#object), but will reject inputs that contain extra fields that are
+not specified explicitly.
+
+```ts
+const decoder = exact({
+  x: number,
+  y: number,
+});
+
+// 👍
+decoder.verify({ x: 1, y: 2 }) === { x: 1, y: 2 };
+
+// 👎
+decoder.verify({ x: 1, y: 2, z: 3 });  // throws, extra field `z` not allowed
+decoder.verify({ x: 1 });              // throws, missing field `y`
+```
+
+For more information, see also [The difference between `object`, `exact`, and `inexact`](/docs/tips#the-difference-between-object-exact-and-inexact).
+
+---
+
+### inexact()
+
+<DecoderSig name="inexact" params="{ field1: Decoder<A>, field2: Decoder<B>, ... }" type="{ field1: A, field2: B, ... }" source="objects.ts#L165-L200" />
+
+Like [`object()`](#object), but will pass through any extra fields on the input object
+unvalidated that will thus be of `unknown` type statically.
+
+```ts
+const decoder = inexact({
+  x: number,
+  y: number,
+});
+
+// 👍
+decoder.verify({ x: 1, y: 2 }) === { x: 1, y: 2 };
+decoder.verify({ x: 1, y: 2, z: 3 }) === { x: 1, y: 2, z: 3 };
+
+// 👎
+decoder.verify({ x: 1 });  // throws, missing field `y`
+```
+
+For more information, see also [The difference between `object`, `exact`, and `inexact`](/docs/tips#the-difference-between-object-exact-and-inexact).
+
+---
+
+### pojo
+
+<DecoderSig name="pojo" type="Record<string, unknown>" source="objects.ts#L47-L53" />
+
+Accepts any "plain old JavaScript object", but doesn't validate its keys or
+values further.
+
+```ts
+// 👍
+pojo.verify({}) === {};
+pojo.verify({ name: 'hi' }) === { name: 'hi' };
+
+// 👎
+pojo.verify('hi');        // throws
+pojo.verify([]);          // throws
+pojo.verify(new Date());  // throws
+pojo.verify(null);        // throws
+```

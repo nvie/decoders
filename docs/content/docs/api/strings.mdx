@@ -1,0 +1,345 @@
+---
+title: Strings
+description: String decoders for validating and parsing string values.
+---
+
+### string
+
+<DecoderSig name="string" type="string" source="strings.ts#L20-L25" />
+
+Accepts and returns strings.
+
+```ts
+// 👍
+string.verify('hello world') === 'hello world';
+string.verify('🚀') === '🚀';
+string.verify('') === '';
+
+// 👎
+string.verify(123);   // throws
+string.verify(true);  // throws
+string.verify(null);  // throws
+```
+
+---
+
+### nonEmptyString
+
+<DecoderSig name="nonEmptyString" type="string" source="strings.ts#L27-L30" />
+
+Like [`string`](#string), but will reject the empty string or strings containing only whitespace.
+
+```ts
+// 👍
+nonEmptyString.verify('hello world') === 'hello world';
+nonEmptyString.verify('🚀') === '🚀';
+
+// 👎
+nonEmptyString.verify(123);   // throws
+nonEmptyString.verify('  ');  // throws
+nonEmptyString.verify('');    // throws
+```
+
+---
+
+### regex()
+
+<DecoderSig name="regex" params="pattern: RegExp, message: string" type="string" source="strings.ts#L32-L37" />
+
+Accepts and returns strings that match the given regular expression.
+
+```ts
+const decoder = regex(/^[0-9][0-9]+$/, 'Must be numeric');
+
+// 👍
+decoder.verify('42') === '42';
+decoder.verify('83401648364738') === '83401648364738';
+
+// 👎
+decoder.verify('');     // throws
+decoder.verify('1');    // throws
+decoder.verify('foo');  // throws
+```
+
+---
+
+### startsWith()
+
+<DecoderSig name="startsWith" params="prefix: P" type="`${P}${string}`" source="strings.ts#L39-L47" />
+
+Accepts and returns strings that start with the given prefix.
+
+```ts
+const decoder = startsWith('abc');
+
+// 👍
+decoder.verify('abc') === 'abc';
+decoder.verify('abcdefg') === 'abcdefg';
+
+// 👎
+decoder.verify(42);     // throws
+decoder.verify('ab');   // throws
+decoder.verify('ABC');  // throws
+```
+
+---
+
+### endsWith()
+
+<DecoderSig name="endsWith" params="suffix: S" type="`${string}${S}`" source="strings.ts#L49-L57" />
+
+Accepts and returns strings that end with the given suffix.
+
+```ts
+const decoder = endsWith('bar');
+
+// 👍
+decoder.verify('bar') === 'bar';
+decoder.verify('foobar') === 'foobar';
+
+// 👎
+decoder.verify(42);      // throws
+decoder.verify('Bar');   // throws
+decoder.verify('bark');  // throws
+```
+
+---
+
+### decimal
+
+<DecoderSig name="decimal" type="string" source="strings.ts#L134-L138" />
+
+Accepts and returns strings with decimal digits only (base-10).
+To convert these to numbers, use the [`numeric`](#numeric) decoder.
+
+```ts
+const decoder = decimal;
+
+// 👍
+decoder.verify('42') === '42';
+decoder.verify('83401648364738') === '83401648364738';
+
+// 👎
+decoder.verify('');        // throws
+decoder.verify('123abc');  // throws
+decoder.verify('foo');     // throws
+decoder.verify(123);       // throws (not a string)
+```
+
+---
+
+### hexadecimal
+
+<DecoderSig name="hexadecimal" type="string" source="strings.ts#L140-L146" />
+
+Accepts and returns strings with hexadecimal digits only (base-16).
+
+```ts
+const decoder = hexadecimal;
+
+// 👍
+decoder.verify('0123456789ABCDEF') === '0123456789ABCDEF';
+decoder.verify('deadbeef') === 'deadbeef';
+
+// 👎
+decoder.verify('abcdefghijklm');  // throws (not hexadecimal)
+decoder.verify('');     // throws
+decoder.verify('1');    // throws
+```
+
+---
+
+### numeric
+
+<DecoderSig name="numeric" type="number" source="strings.ts#L148-L153" />
+
+Accepts valid numerical strings (in base-10) and returns them as a number.
+To only accept numerical strings and keep them as string values, use the
+[`decimal`](#decimal) decoder.
+
+```ts
+const decoder = numeric;
+
+// 👍
+decoder.verify('42') === 42;
+decoder.verify('83401648364738') === 83401648364738;
+
+// 👎
+decoder.verify('');        // throws
+decoder.verify('123abc');  // throws
+decoder.verify('foo');     // throws
+decoder.verify(123);       // throws (not a string)
+```
+
+---
+
+### email
+
+<DecoderSig name="email" type="string" source="strings.ts#L59-L67" />
+
+Accepts and returns strings that are syntactically valid email addresses.
+(This will not mean that the email address actually exist.)
+
+```ts
+// 👍
+email.verify('alice@acme.org') === 'alice@acme.org';
+
+// 👎
+email.verify('foo');               // throws
+email.verify('@acme.org');         // throws
+email.verify('alice @ acme.org');  // throws
+```
+
+---
+
+### url
+
+<DecoderSig name="url" type="URL" source="strings.ts#L69-L75" />
+
+Accepts strings that are valid URLs, returns the value as a URL instance.
+
+```ts
+// 👍
+url.verify('http://nvie.com') === new URL('http://nvie.com/');
+url.verify('https://nvie.com') === new URL('https://nvie.com/');
+url.verify('git+ssh://user@github.com/foo/bar.git') === new URL('git+ssh://user@github.com/foo/bar.git');
+
+// 👎
+url.verify('foo');               // throws
+url.verify('@acme.org');         // throws
+url.verify('alice @ acme.org');  // throws
+url.verify('/search?q=foo');     // throws
+```
+
+---
+
+### httpsUrl
+
+<DecoderSig name="httpsUrl" type="URL" source="strings.ts#L77-L84" />
+
+Accepts strings that are valid URLs, but only HTTPS ones. Returns the value
+as a URL instance.
+
+```ts
+// 👍
+httpsUrl.verify('https://nvie.com:443') === new URL('https://nvie.com/');
+
+// 👎
+httpsUrl.verify('http://nvie.com');                        // throws, not HTTPS
+httpsUrl.verify('git+ssh://user@github.com/foo/bar.git');  // throws, not HTTPS
+```
+
+**Tip!** If you need to limit URLs to different protocols than HTTP, you can do as the HTTPS decoder is implemented: by adding further conditions using a `.refine()` call.
+
+```ts
+import { url } from 'decoders';
+
+const gitUrl: Decoder<URL> = url.refine(
+  (value) => value.protocol === 'git:',
+  'Must be a git:// URL',
+);
+```
+
+---
+
+### identifier
+
+<DecoderSig name="identifier" type="string" source="strings.ts#L86-L93" />
+
+Accepts and returns strings that are valid identifiers in most programming
+languages.
+
+```ts
+// 👍
+identifier.verify('x') === 'x'
+identifier.verify('abc123') === 'abc123'
+identifier.verify('_123') === '_123'
+identifier.verify('a_b_c_1_2_3') === 'a_b_c_1_2_3'
+
+// 👎
+identifier.verify('123xyz');   // cannot start with digit
+identifier.verify('x-y');      // invalid chars
+identifier.verify('!@#$%^&*()=+');  // invalid chars
+identifier.verify('🤯');       // invalid chars
+identifier.verify(42);         // not a string
+```
+
+---
+
+### nanoid
+
+<DecoderSig name="nanoid" type="string" source="strings.ts#L95-L104" />
+
+Accepts and returns [nanoid](https://zelark.github.io/nano-id-cc) string
+values. It assumes the default nanoid alphabet. If you're using a custom
+alphabet, use [`regex()`](#regex) instead.
+
+```ts
+// 👍
+nanoid().verify('1-QskICa3CaPGcKuYYTm1') === '1-QskICa3CaPGcKuYYTm1'
+nanoid().verify('vA4mt7CUWnouU6jTGbMP_') === 'vA4mt7CUWnouU6jTGbMP_'
+nanoid({ size: 7 }).verify('yH8mx-7') === 'yH8mx-7'
+nanoid({ min: 7, max: 10 }).verify('yH8mx-7') === 'yH8mx-7'
+nanoid({ min: 7, max: 10 }).verify('yH8mx-7890') === 'yH8mx-7890'
+
+// 👎
+nanoid().verify('123E4567E89B12D3A456426614174000'); // too long
+nanoid().verify('abcdefghijkl');                     // too short
+nanoid().verify('$*&(#%*&(');                        // invalid chars
+```
+
+---
+
+### uuid
+
+<DecoderSig name="uuid" type="string" source="strings.ts#L106-L114" />
+
+Accepts strings that are valid
+[UUIDs](https://en.wikipedia.org/wiki/universally_unique_identifier)
+(universally unique identifier).
+
+```ts
+// 👍
+uuid.verify('123e4567-e89b-12d3-a456-426614174000') === '123e4567-e89b-12d3-a456-426614174000'
+uuid.verify('123E4567-E89B-12D3-A456-426614174000') === '123E4567-E89B-12D3-A456-426614174000'
+
+// 👎
+uuid.verify('123E4567E89B12D3A456426614174000');      // throws
+uuid.verify('abcdefgh-ijkl-mnop-qrst-uvwxyz012345');  // throws
+```
+
+---
+
+### uuidv1
+
+<DecoderSig name="uuidv1" type="string" source="strings.ts#L116-L123" />
+
+Like [`uuid`](#uuid), but only accepts
+[UUIDv1](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_%28date-time_and_MAC_address%29)
+strings.
+
+```ts
+// 👍
+uuidv1.verify('123e4567-e89b-12d3-a456-426614174000') === '123e4567-e89b-42d3-a456-426614174000'
+
+// 👎
+uuidv1.verify('123e4567-e89b-42d3-a456-426614174000')  // throws
+```
+
+---
+
+### uuidv4
+
+<DecoderSig name="uuidv4" type="string" source="strings.ts#L125-L132" />
+
+Like [`uuid`](#uuid), but only accepts
+[UUIDv4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_%28random%29)
+strings.
+
+```ts
+// 👍
+uuidv4.verify('123e4567-e89b-42d3-a456-426614174000') === '123e4567-e89b-42d3-a456-426614174000'
+
+// 👎
+uuidv4.verify('123e4567-e89b-12d3-a456-426614174000')  // throws
+```
