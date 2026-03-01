@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { __private_annotate, annotate, formatInline, formatShort } from '~/core';
+import { __annotate, annotate, formatInline, formatShort } from '~/core';
 
 const whitespace_re = /^\s*$/;
 
@@ -120,7 +120,7 @@ describe('formatInline', () => {
     const seen = new WeakSet();
     seen.add(value);
     checkInline(
-      __private_annotate(value, 'xxx', seen),
+      __annotate(value, 'xxx', seen),
       `
         <circular ref>
         ^^^^^^^^^^^^^^ xxx

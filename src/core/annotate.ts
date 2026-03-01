@@ -110,7 +110,7 @@ function annotateArray(
   // a sparse array.
   const items = [];
   for (const value of arr) {
-    items.push(annotate(value, undefined, seen));
+    items.push(__annotate(value, undefined, seen));
   }
   return makeArrayAnn(items, text);
 }
@@ -126,13 +126,17 @@ function annotateObject(
   const fields = new Map<string, Annotation>();
   for (const key of Object.keys(obj)) {
     const value = obj[key];
-    fields.set(key, annotate(value, undefined, seen));
+    fields.set(key, __annotate(value, undefined, seen));
   }
   return makeObjectAnn(fields, text);
 }
 
 /** @internal */
-function annotate(value: unknown, text: string | undefined, seen: RefSet): Annotation {
+export function __annotate(
+  value: unknown,
+  text: string | undefined,
+  seen: RefSet,
+): Annotation {
   if (
     value === null ||
     value === undefined ||
@@ -186,7 +190,7 @@ function annotate(value: unknown, text: string | undefined, seen: RefSet): Annot
 }
 
 function public_annotate(value: unknown, text?: string): Annotation {
-  return annotate(value, text, new WeakSet());
+  return __annotate(value, text, new WeakSet());
 }
 
 function public_annotateObject(
@@ -197,8 +201,6 @@ function public_annotateObject(
 }
 
 export {
-  /** @internal */
-  annotate as __private_annotate,
   // This construct just ensures the "seen" weakmap (used for circular
   // reference detection) isn't made part of the public API.
   public_annotate as annotate,
