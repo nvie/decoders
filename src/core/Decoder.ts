@@ -334,6 +334,7 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
     refineType,
     reject,
     describe,
+    // oxlint-disable-next-line unicorn/no-thenable
     then,
     pipe,
     '~standard': {

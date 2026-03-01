@@ -284,11 +284,12 @@ describe('enums', () => {
   });
 
   describe('string enums with duplicate values', () => {
+    /* oxlint-disable typescript/no-duplicate-enum-values */
     enum Fruit {
       Apple = 'apple',
-      // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
       AlsoApple = 'apple',
     }
+    /* oxlint-enable typescript/no-duplicate-enum-values */
 
     const decoder = enum_(Fruit);
 
