@@ -1,0 +1,63 @@
+---
+title: Overview
+description: Elegant and battle-tested validation library for type-safe input data for TypeScript.
+---
+
+## Validate untrusted inputs
+
+Decoders is a validation library for TypeScript that lets you verify and
+type-check unknown data at runtime. It's designed to be composable, so you can
+build complex validators from simple building blocks.
+
+## Getting started
+
+```bash
+npm install decoders
+```
+
+## Introduction
+
+When you're working with data from external sources — API responses, form inputs,
+webhook payloads, config files — you can't just trust it. The data might be
+malformed, missing fields, or have the wrong types. Decoders helps you verify
+this data at runtime and narrow its type at compile time.
+
+## Basic example
+
+```typescript
+import { array, iso8601, number, object, optional, string } from "decoders";
+
+const userDecoder = object({
+  name: string,
+  age: number,
+  email: optional(string),
+  created_at: iso8601,
+  tags: array(string),
+});
+
+// Verify untrusted data
+const user = userDecoder.verify(untrustedData);
+// user is now fully typed!
+```
+
+## Core idea
+
+A **Decoder** is a value that knows how to validate and type-check a piece of
+unknown data. Decoders are composable — you combine small decoders to build
+larger ones:
+
+- `string` checks that a value is a string
+- `number` checks that a value is a number
+- `object({ name: string, age: number })` checks that a value is an object with
+  the right shape
+- `array(string)` checks that a value is an array of strings
+
+## Using a decoder
+
+Every decoder has three main methods:
+
+| Method | Returns | On invalid input |
+| --- | --- | --- |
+| `.verify(input)` | `T` | Throws |
+| `.value(input)` | `T \| undefined` | Returns `undefined` |
+| `.decode(input)` | `Result<T>` | Returns error result |
