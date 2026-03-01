@@ -1,4 +1,4 @@
-name: test
+name: Test
 on:
   push:
     branches:
@@ -27,16 +27,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
-
       - name: Install dependencies
         run: npm ci
-
-      - name: Install Python dependencies (for documentation generation)
-        run: pip install cogapp
 
       - name: Test TypeScript
         run: npm run test:typescript
@@ -70,10 +62,5 @@ jobs:
 
       - name: Lint packages
         run: npm run lint:package
-        env:
-          CI: true
-
-      - name: Lint docs
-        run: npm run lint:docs
         env:
           CI: true

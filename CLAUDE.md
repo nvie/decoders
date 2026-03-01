@@ -1,3 +1,10 @@
+# Plans
+
+Plans for larger changes live in `.claude/plans/<name>.md`. At the start of a
+session, check if there are any existing plans. When asked to make a plan, write
+it there. Use `- [x]`/`- [ ]` checkboxes to track progress, and update them as
+you go.
+
 # Commands
 
 - npm run test: run the unit tests

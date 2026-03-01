@@ -11,5 +11,8 @@ __pycache__/
 /*.js
 /*.d.ts
 
+# Plans
+/.claude/plans
+
 # VitePress
 /docs-new/.vitepress/cache

@@ -1,0 +1,82 @@
+---
+title: Arrays
+description: Array and tuple decoders for validating collections of values.
+---
+
+## array
+
+<DecoderSig name="array" params="decoder: Decoder<T>" type="T[]" source="arrays.ts#L16-L46" />
+
+Accepts arrays of whatever the given decoder accepts.
+
+```ts
+const decoder = array(string);
+
+// 👍
+decoder.verify(['hello', 'world']) === ['hello', 'world'];
+decoder.verify([]) === [];
+
+// 👎
+decoder.verify(['hello', 1.2]);  // throws
+```
+
+---
+
+## nonEmptyArray
+
+<DecoderSig name="nonEmptyArray" params="decoder: Decoder<T>" type="[T, ...T[]]" source="arrays.ts#L52-L57" />
+
+Like [`array()`](#array), but will reject arrays with 0 elements.
+
+```ts
+const decoder = nonEmptyArray(string);
+
+// 👍
+decoder.verify(['hello', 'world']) === ['hello', 'world'];
+
+// 👎
+decoder.verify(['hello', 1.2]);  // throws
+decoder.verify([]);              // throws
+```
+
+---
+
+## poja
+
+<DecoderSig name="poja" type="unknown[]" source="arrays.ts#L4-L14" />
+
+Accepts any array, but doesn't validate its items further.
+
+"poja" means "plain old JavaScript array", a play on [`pojo`](/docs/api/objects#pojo).
+
+```ts
+// 👍
+poja.verify([1, 'hi', true]) === [1, 'hi', true];
+poja.verify(['hello', 'world']) === ['hello', 'world'];
+poja.verify([]) === [];
+
+// 👎
+poja.verify({});    // throws
+poja.verify('hi');  // throws
+```
+
+---
+
+## tuple
+
+<DecoderSig name="tuple" params="Decoder<A>, Decoder<B>, ..." type="[A, B, ...]" source="arrays.ts#L66-L96" />
+
+Accepts a tuple (an array with exactly _n_ items) of values accepted by the
+_n_ given decoders.
+
+```ts
+const decoder = tuple(string, number);
+
+// 👍
+decoder.verify(['hello', 1.2]) === ['hello', 1.2];
+
+// 👎
+decoder.verify([]);                  // throws, too few items
+decoder.verify(['hello', 'world']);  // throws, not the right types
+decoder.verify(['a', 1, 'c']);       // throws, too many items
+```

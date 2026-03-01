@@ -1,0 +1,95 @@
+---
+title: Collections
+description: Decoders for records, maps, and sets.
+---
+
+## record
+
+<DecoderSig name="record" params="values: Decoder<V>" type="Record<string, V>" source="collections.ts#L8-L57" />
+
+<DecoderSig name="record" params="keys: Decoder<K>, values: Decoder<V>" type="Record<K, V>" source="collections.ts#L8-L57" />
+
+Accepts objects where all values match the given decoder, and returns the
+result as a `Record<string, V>`.
+
+This is useful to validate inputs like `{ [key: string]: V }`.
+
+#### Decoding values only
+
+The default call takes a single argument and will validate all _values_.
+For example, to validate that all values in the object are numbers:
+
+```ts
+const decoder = record(number);
+//                        \
+//                      Values must be numbers
+
+// 👍
+decoder.verify({ red: 1, blue: 2, green: 3 });
+
+// 👎
+decoder.verify({ hi: 'not a number' });
+```
+
+#### Decoding keys and values
+
+If you also want to validate that keys are of a specific form, use the
+two-argument form: `record(key, value)`. Note that the given key decoder
+must return strings.
+
+For example, to enforce that all keys are emails:
+
+```ts
+const decoder = record(email, number);
+//                      /        \
+//              Keys must        Values must
+//             be emails           be numbers
+
+// 👍
+decoder.verify({ "me@nvie.com": 1 });
+
+// 👎
+decoder.verify({ "no-email": 1 });
+```
+
+---
+
+## mapping
+
+<DecoderSig name="mapping" params="decoder: Decoder<T>" type="Map<string, T>" source="collections.ts#L67-L74" />
+
+Similar to [`record()`](#record), but returns the result as a `Map<string, T>` (an [ES6
+Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map))
+instead.
+
+```ts
+const decoder = mapping(number);
+
+// 👍
+decoder.verify({ red: 1, blue: 2, green: 3 });
+// Map([
+//   ['red', '1'],
+//   ['blue', '2'],
+//   ['green', '3'],
+// ]);
+```
+
+---
+
+## setFromArray
+
+<DecoderSig name="setFromArray" params="decoder: Decoder<T>" type="Set<T>" source="collections.ts#L59-L65" />
+
+Similar to [`array()`](/docs/api/arrays#array), but returns the result as an [ES6
+Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set).
+
+```ts
+const decoder = setFromArray(string);
+
+// 👍
+decoder.verify(['abc', 'pqr'])  // new Set(['abc', 'pqr'])
+decoder.verify([])              // new Set([])
+
+// 👎
+decoder.verify([1, 2]);         // throws, not the right types
+```

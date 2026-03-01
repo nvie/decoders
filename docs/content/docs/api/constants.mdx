@@ -1,0 +1,53 @@
+---
+title: Constants
+description: Decoders for constant and fixed values.
+---
+
+## constant
+
+<DecoderSig name="constant" params="value: T" type="T" source="basics.ts#L84-L93" />
+
+Accepts only the given constant value.
+
+```ts
+const decoder = constant('hello');
+
+// 👍
+decoder.verify('hello') === 'hello';
+
+// 👎
+decoder.verify('this breaks');  // throws
+decoder.verify(false);          // throws
+decoder.verify(undefined);      // throws
+```
+
+---
+
+## always
+
+<DecoderSig name="always" params="value: T" type="T" source="basics.ts#L95-L109" />
+
+Accepts anything, completely ignores it, and always returns the provided
+value instead.
+
+This is useful to manually add extra fields to object decoders.
+
+```ts
+const decoder = always(42);
+
+// 👍
+decoder.verify('hello') === 42;
+decoder.verify(false) === 42;
+decoder.verify(undefined) === 42;
+
+// 👎
+// This decoder will never reject an input
+```
+
+Or use it with a function instead of a constant:
+
+```ts
+const now = always(() => new Date());
+
+now.verify('dummy');  // e.g. new Date('2022-02-07T09:36:58.848Z')
+```

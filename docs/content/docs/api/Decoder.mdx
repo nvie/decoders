@@ -1,0 +1,298 @@
+---
+title: Decoder
+description: Instance methods available on all Decoder instances.
+---
+
+## Decoder.verify
+
+<Sig
+  name=".verify"
+  params="blob: unknown"
+  returnType="T"
+  source="core/Decoder.ts#L188-L200"
+/>
+
+Verifies the untrusted/unknown input and either accepts or rejects it. When accepted,
+returns a value of type `T`. Otherwise fail with a runtime error.
+
+<img
+  alt="The .verify() method explained"
+  src="/schematic-verify.png"
+  style={{ maxWidth: 'min(592px, 100%)' }}
+/>
+
+For example, take this simple number decoder.
+
+```ts
+// 👍
+number.verify(123); // 123
+number.verify(3.1415); // 3.1415
+
+// 👎
+number.verify('hello'); // throws
+// Decoding error:
+// "hello"
+// ^^^^^^^ Must be number
+```
+
+---
+
+## Decoder.value
+
+<Sig
+  name=".value"
+  params="blob: unknown"
+  returnType="T | undefined"
+  source="core/Decoder.ts#L202-L212"
+/>
+
+Verifies the untrusted/unknown input and either accepts or rejects it. When accepted,
+returns the decoded `T` value directly. Otherwise returns `undefined`.
+
+Use this when you're not interested in programmatically handling the error message.
+
+<img
+  alt="The .value() method explained"
+  src="/schematic-value.png"
+  style={{ maxWidth: 'min(592px, 100%)' }}
+/>
+
+```ts
+// 👍
+number.value(3); // 3
+string.value('hi'); // 'hi'
+
+// 👎
+number.value('hi'); // undefined
+string.value(42); // undefined
+```
+
+> _**NOTE:** When you use this on [`optional()`](/docs/api/optionality#optional) decoders,
+> you cannot distinguish a rejected value from an accepted `undefined` input value._
+
+---
+
+## Decoder.decode
+
+<Sig
+  name=".decode"
+  params="blob: unknown"
+  returnType="DecodeResult<T>"
+  source="core/Decoder.ts#L172-L186"
+/>
+
+Verifies the untrusted/unknown input and either accepts or rejects it.
+
+Contrasted with [`.verify()`](#decoder.verify), calls to [`.decode()`](#decoder.decode) will
+never fail and instead return a result type.
+
+<img
+  alt="The .decode() method explained"
+  src="/schematic-decode.png"
+  style={{ maxWidth: 'min(592px, 100%)' }}
+/>
+
+For example, take this simple "number" decoder. When given an number value, it will return
+an ok: true result. Otherwise, it will return an ok: false result with the original input
+value annotated.
+
+```ts
+// 👍
+number.decode(3); // { ok: true, value: 3 };
+
+// 👎
+number.decode('hi'); // { ok: false, error: { type: 'scalar', value: 'hi', text: 'Must be number' } }
+```
+
+---
+
+## Decoder.transform
+
+<Sig
+  name=".transform"
+  params="transformFn: (T) => V"
+  returnType="Decoder<V>"
+  source="core/Decoder.ts#L214-L222"
+/>
+
+Accepts any value the given decoder accepts, and on success, will call the given function
+**on the decoded result**. If the transformation function throws an error, the whole
+decoder will fail using the error message as the failure reason.
+
+```ts
+const upper = string.transform((s) => s.toUpperCase());
+
+// 👍
+upper.verify('foo') === 'FOO';
+
+// 👎
+upper.verify(4); // throws
+```
+
+---
+
+## Decoder.refine
+
+<Sig
+  name=".refine"
+  params="predicate: T => boolean, message: string"
+  returnType="Decoder<T>"
+  source="core/Decoder.ts#L224-L237"
+/>
+
+Adds an extra predicate to a decoder. The new decoder is like the original decoder, but
+only accepts values that also meet the predicate.
+
+```ts
+const odd = number.refine((n) => n % 2 !== 0, 'Must be odd');
+
+// 👍
+odd.verify(3) === 3;
+
+// 👎
+odd.verify(42); // throws: not an odd number
+odd.verify('hi'); // throws: not a number
+```
+
+In TypeScript, if you provide a predicate that also is a
+[type predicate](https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates),
+then this will be reflected in the return type, too.
+
+---
+
+## Decoder.refineType
+
+<Sig name=".refineType" returnType="Decoder<SubT>" source="core/Decoder.ts#L239-L245" />
+
+Cast the return type of this read-only decoder to a narrower type. This is useful to
+return "branded" types. This method has no runtime effect.
+
+```ts
+const user = object({ name: string }).refineType<Person>();
+```
+
+---
+
+## Decoder.reject
+
+<Sig
+  name=".reject"
+  params="rejectFn: T => string | null"
+  returnType="Decoder<T>"
+  source="core/Decoder.ts#L289-L307"
+/>
+
+Adds an extra predicate to a decoder. The new decoder is like the original decoder, but
+only accepts values that aren't rejected by the given function.
+
+The given function can return `null` to accept the decoded value, or return a specific
+error message to reject.
+
+Unlike [`.refine()`](#decoder.refine), you can use this function to return a dynamic error
+message.
+
+```ts
+const decoder = pojo.reject((obj) => {
+  const badKeys = Object.keys(obj).filter((key) => key.startsWith('_'));
+  return badKeys.length > 0 ? `Disallowed keys: ${badKeys.join(', ')}` : null;
+});
+
+// 👍
+decoder.verify({ id: 123, name: 'Vincent' }) === { id: 123, name: 'Vincent' };
+
+// 👎
+decoder.verify({ id: 123, _name: 'Vincent' }); // throws: "Disallowed keys: _name"
+```
+
+---
+
+## Decoder.describe
+
+<Sig
+  name=".describe"
+  params="message: string"
+  returnType="Decoder<T>"
+  source="core/Decoder.ts#L309-L326"
+/>
+
+Uses the given decoder, but will use an alternative error message in case it rejects. This
+can be used to simplify or shorten otherwise long or low-level/technical errors.
+
+```ts
+const vowel = oneOf(['a', 'e', 'i', 'o', 'u']).describe('Must be vowel');
+```
+
+---
+
+## Decoder.then
+
+<Sig
+  name=".then"
+  params="next: (blob: T, ok, err) => DecodeResult<V> | Decoder<V>"
+  returnType="Decoder<V>"
+  source="core/Decoder.ts#L247-L265"
+/>
+
+<Sig
+  name=".then"
+  params="next: Decoder<V>"
+  returnType="Decoder<V>"
+  source="core/Decoder.ts#L247-L265"
+/>
+
+Send the output of the current decoder into another decoder or acceptance function. The
+given acceptance function will receive the output of the current decoder as its input.
+
+> _**NOTE:** This is an advanced, low-level, API. It's not recommended to reach for this
+> construct unless there is no other way. Most cases can be covered more elegantly by
+> [`.transform()`](#decoder.transform), [`.refine()`](#decoder.refine), or
+> [`.pipe()`](#decoder.pipe) instead._
+
+---
+
+## Decoder.pipe
+
+<Sig
+  name=".pipe"
+  params="next: Decoder<V>"
+  returnType="Decoder<V>"
+  source="core/Decoder.ts#L267-L287"
+/>
+
+<Sig
+  name=".pipe"
+  params="next: (blob: T) => Decoder<V>"
+  returnType="Decoder<V>"
+  source="core/Decoder.ts#L267-L287"
+/>
+
+```tsx
+const decoder = string
+  .transform((s) => s.split(',').map(Number))
+  .pipe(array(positiveInteger));
+
+// 👍
+decoder.verify('7') === [7];
+decoder.verify('1,2,3') === [1, 2, 3];
+
+// 👎
+decoder.verify('1,-3'); // -3 is not positive
+decoder.verify('🚀'); // not a number
+decoder.verify('3.14'); // not a whole number
+decoder.verify(123); // not a string
+decoder.verify(true); // not a string
+decoder.verify(null); // not a string
+```
+
+#### Dynamic decoder selection with `.pipe()`
+
+With [`.pipe()`](#decoder.pipe) you can also dynamically select another decoder, based on
+dynamic runtime value.
+
+```tsx
+string
+  .transform((s) => s.split(',').map(Number))
+  .pipe((tup) =>
+    tup.length === 2 ? point2d : tup.length === 3 ? point3d : never('Invalid coordinate'),
+  );
+```

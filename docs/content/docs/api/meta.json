@@ -1,0 +1,17 @@
+{
+  "pages": [
+    "Decoder",
+    "strings",
+    "numbers",
+    "booleans",
+    "dates",
+    "constants",
+    "optionality",
+    "arrays",
+    "objects",
+    "collections",
+    "json",
+    "unions",
+    "utilities"
+  ]
+}

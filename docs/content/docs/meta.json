@@ -1,0 +1,22 @@
+{
+  "pages": [
+    "index",
+    "---API Reference---",
+    "api/Decoder",
+    "api/strings",
+    "api/numbers",
+    "api/booleans",
+    "api/dates",
+    "api/constants",
+    "api/optionality",
+    "api/arrays",
+    "api/objects",
+    "api/collections",
+    "api/json",
+    "api/unions",
+    "api/utilities",
+    "---Guides---",
+    "building-your-own",
+    "tips"
+  ]
+}

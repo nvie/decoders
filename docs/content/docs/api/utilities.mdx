@@ -1,0 +1,172 @@
+---
+title: Utilities
+description: Utility decoders for custom logic, preprocessing, and advanced use cases.
+---
+
+## define
+
+<DecoderSig
+  name="define"
+  params="fn: (blob: unknown, ok, err) => DecodeResult<T>"
+  type="T"
+  source="core/Decoder.ts#L158-L355"
+/>
+
+Defines a new `Decoder<T>`, by implementing a custom acceptance function. The function
+receives three arguments:
+
+1. `blob` - the raw/unknown input (aka your external data)
+2. `ok` - Call `ok(value)` to accept the input and return `value`
+3. `err` - Call `err(message)` to reject the input with error `message`
+
+The expected return value should be a `DecodeResult<T>`, which can be obtained by
+returning the result of calling the provided `ok` or `err` helper functions. Please note
+that `ok()` and `err()` don't perform side effects! You'll need to _return_ those values.
+
+> _**NOTE:** This is the lowest-level API to define a new decoder, and therefore not
+> recommended unless you have a very good reason for it. Most cases can be covered more
+> elegantly by starting from an existing decoder and using `.transform()` or `.refine()`
+> on them instead._
+
+```ts
+// NOTE: Please do NOT implement an uppercase decoder like this! 😇
+const uppercase: Decoder<string> = define((blob, ok, err) => {
+  if (typeof blob === 'string') {
+    // Accept the input
+    return ok(blob.toUpperCase());
+  } else {
+    // Reject the input
+    return err('I only accept strings as input');
+  }
+});
+
+// 👍
+uppercase.verify('hi there') === 'HI THERE';
+
+// 👎
+uppercase.verify(123); // throws: 123
+//         ^^^ I only accept strings as input
+```
+
+The above example is just an example to illustrate how [`define()`](#define) works. It
+would be more idiomatic to implement an uppercase decoder as follows:
+
+```ts
+const uppercase: Decoder<string> = string.transform((s) => s.toUpperCase());
+```
+
+---
+
+## prep
+
+<DecoderSig
+  name="prep"
+  params="mapperFn: (raw: unknown) => unknown, decoder: Decoder<T>"
+  type="T"
+  source="misc.ts#L31-L61"
+/>
+
+Pre-process the data input before passing it into the decoder. This gives you the ability
+to arbitrarily customize the input on the fly before passing it to the decoder. Of course,
+the input value at that point is still of `unknown` type, so you will have to deal with
+that accordingly.
+
+```ts
+const decoder = prep(
+  // Will convert any input to an int first, before feeding it to
+  // positiveInteger. This will effectively also allow numeric strings
+  // to be accepted (and returned) as integers. If this ever throws,
+  // then the error message will be what gets annotated on the input.
+  (x) => parseInt(x),
+  positiveInteger,
+);
+
+// 👍
+decoder.verify(42) === 42;
+decoder.verify('3') === 3;
+
+// 👎
+decoder.verify('-3'); // throws: not a positive number
+decoder.verify('hi'); // throws: not a number
+```
+
+---
+
+## never
+
+<DecoderSig name="never" type="never" source="basics.ts#L111-L117" />
+
+<DecoderSig name="fail" type="never" source="basics.ts#L119-L122" />
+
+Rejects all inputs, and always fails with the given error message. May be useful for
+explicitly disallowing keys, or for testing purposes.
+
+```ts
+const decoder = object({
+  a: string,
+  b: optional(never('Key b has been removed')),
+});
+
+// 👍
+decoder.verify({ a: 'foo' }); // { a: 'foo' };
+decoder.verify({ a: 'foo', c: 'bar' }); // { a: 'foo' };
+
+// 👎
+decoder.verify({ a: 'foo', b: 'bar' }); // throws
+```
+
+---
+
+## instanceOf
+
+<DecoderSig
+  name="instanceOf"
+  params="klass: Klass<T>"
+  type="T"
+  source="misc.ts#L12-L21"
+/>
+
+Accepts any value that is an `instanceof` the given class.
+
+```ts
+const decoder = instanceOf(Error);
+
+// 👍
+const value = new Error('foo');
+decoder.verify(value) === value;
+
+// 👎
+decoder.verify('foo'); // throws
+decoder.verify(3); // throws
+```
+
+---
+
+## lazy
+
+<DecoderSig
+  name="lazy"
+  params="decoderFn: () => Decoder<T>"
+  type="T"
+  source="misc.ts#L23-L29"
+/>
+
+Lazily evaluate the given decoder. This is useful to build self-referential types for
+recursive data structures.
+
+```ts
+type Tree = {
+  value: string;
+  children: Array<Tree>;
+  //              ^^^^
+  //              Self-reference defining a recursive type
+};
+
+const treeDecoder: Decoder<Tree> = object({
+  value: string,
+  children: array(lazy(() => treeDecoder)),
+  //              ^^^^^^^^^^^^^^^^^^^^^^^
+  //              Use lazy() like this to refer to the treeDecoder which is
+  //              getting defined here
+});
+```

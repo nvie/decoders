@@ -1,0 +1,84 @@
+---
+title: Dates
+description: Date decoders for validating and parsing date values.
+---
+
+## date
+
+<DecoderSig name="date" type="Date" source="dates.ts#L14-L19" />
+
+Accepts and returns `Date` instances.
+
+```ts
+const now = new Date();
+
+// 👍
+date.verify(now) === now;
+
+// 👎
+date.verify(123);      // throws
+date.verify('hello');  // throws
+```
+
+---
+
+## dateString
+
+<DecoderSig name="dateString" type="string" source="dates.ts#L21-L30" />
+
+Accepts and returns [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings.
+
+```ts
+// 👍
+dateString.verify('2020-06-01T12:00:00Z');
+
+// 👎
+dateString.verify('2020-06-01');  // throws
+dateString.verify('hello');       // throws
+dateString.verify(123);           // throws
+dateString.verify(new Date());    // throws (does not accept dates)
+```
+
+---
+
+## iso8601
+
+<DecoderSig name="iso8601" type="Date" source="dates.ts#L32-L39" />
+
+Accepts [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings,
+returns them as `Date` instances.
+
+This is very useful for working with dates in APIs: serialize them as
+`.toISOString()` when sending, decode them with [`iso8601`](#iso8601) when receiving.
+
+```ts
+// 👍
+iso8601.verify('2020-06-01T12:00:00Z'); // new Date('2020-06-01T12:00:00Z')
+
+// 👎
+iso8601.verify('2020-06-01');  // throws
+iso8601.verify('hello');       // throws
+iso8601.verify(123);           // throws
+iso8601.verify(new Date());    // throws (does not accept dates)
+```
+
+---
+
+## datelike
+
+<DecoderSig name="datelike" type="Date" source="dates.ts#L41-L46" />
+
+Accepts either a Date, or an ISO date string, returns a Date instance.
+This is commonly useful to build decoders that can be reused to validate
+object with Date instances as well as objects coming from JSON payloads.
+
+```ts
+// 👍
+datelike.verify('2024-01-08T12:00:00Z'); // strings...
+datelike.verify(new Date());             // ...or Date instances
+
+// 👎
+datelike.verify('2020-06-01');  // throws
+datelike.verify('hello');       // throws
+datelike.verify(123);           // throws
+```
