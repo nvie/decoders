@@ -1,18 +1,10 @@
 .DS_Store
 *.tsbuildinfo
-/.direnv
-/coverage
-/dist
-/node_modules
-yarn-error.log
-__pycache__/
 
-# Packaging hack
-/*.js
-/*.d.ts
+coverage/
+dist/
+node_modules/
 
-# Plans
+# Claude
 /.claude/plans
-
-# VitePress
-/docs-new/.vitepress/cache
+/.claude/settings.local.json
