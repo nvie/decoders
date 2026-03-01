@@ -6,10 +6,10 @@ export const revalidate = false;
 
 export async function GET(
   _req: Request,
-  { params }: { params: Promise<{ slug: string[] }> },
+  { params }: { params: Promise<{ slug?: string[] }> },
 ) {
   const { slug } = await params;
-  const page = source.getPage(slug);
+  const page = source.getPage(slug ?? []);
   if (!page) notFound();
 
   return new Response(await getLLMText(page), {
@@ -20,5 +20,5 @@ export async function GET(
 }
 
 export function generateStaticParams() {
-  return source.generateParams().filter((p) => p.slug.length > 0);
+  return source.generateParams();
 }
