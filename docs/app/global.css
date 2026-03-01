@@ -1,3 +1,16 @@
 @import "tailwindcss";
 @import "fumadocs-ui/css/neutral.css";
 @import "fumadocs-ui/css/preset.css";
+
+@theme {
+  /* Rose accent matching the original decoders docs */
+  --color-fd-primary: #e11d48;
+  --color-fd-primary-foreground: #fff;
+  --color-fd-ring: #f43f5e;
+}
+
+.dark {
+  --color-fd-primary: #fb7185;
+  --color-fd-primary-foreground: #1c1017;
+  --color-fd-ring: #f43f5e;
+}
