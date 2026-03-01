@@ -45,6 +45,11 @@ jobs:
         env:
           CI: true
 
+      - name: Check docs source lines are up to date
+        run: |
+          npm run docs:update-sources
+          git diff --exit-code docs/content/docs/api/
+
       - name: Lints
         run: npm run lint
         env:
