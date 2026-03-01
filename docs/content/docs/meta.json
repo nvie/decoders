@@ -2,6 +2,7 @@
   "pages": [
     "index",
     "---API Reference---",
+    "api/Decoder",
     "api/strings",
     "api/numbers",
     "api/booleans",
@@ -11,7 +12,7 @@
     "api/arrays",
     "api/objects",
     "api/collections",
-    "api/json-values",
+    "api/json",
     "api/unions",
     "api/utilities",
     "---Guides---",

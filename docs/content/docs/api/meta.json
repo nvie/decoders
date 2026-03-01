@@ -1,5 +1,6 @@
 {
   "pages": [
+    "Decoder",
     "strings",
     "numbers",
     "booleans",
@@ -9,7 +10,7 @@
     "arrays",
     "objects",
     "collections",
-    "json-values",
+    "json",
     "unions",
     "utilities"
   ]

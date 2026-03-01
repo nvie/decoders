@@ -6,26 +6,33 @@ description:
 
 ## Validate untrusted inputs
 
-Decoders is an elegant and battle-tested validation library for type-safe input
-data for [TypeScript](https://www.typescriptlang.org/).
+Decoders is an elegant and battle-tested validation library for type-safe input data for
+TypeScript.
 
 ## Getting started
 
 Just install the package and you're ready to go.
 
-```bash
+```bash tab="npm"
 npm install decoders
+```
+
+```bash tab="bun"
+bun add decoders
+```
+
+```bash tab="pnpm"
+pnpm add decoders
 ```
 
 ## Introduction
 
-Data entering your application from the outside world should not be trusted
-without validation and often is of the `any` type, effectively disabling your
-type checker around input values. It's an industry good practice to validate your
-expectations right at your program's boundaries. This has two benefits: (1) your
-inputs are getting validated, and (2) you can now statically know for sure the
-shape of the incoming data. **Decoders help solve both of these problems at
-once.**
+Data entering your application from the outside world should not be trusted without
+validation and often is of the `any` type, effectively disabling your type checker around
+input values. It's an industry good practice to validate your expectations right at your
+program's boundaries. This has two benefits: (1) your inputs are getting validated, and
+(2) you can now statically know for sure the shape of the incoming data. **Decoders help
+solve both of these problems at once.**
 
 ## Basic example
 
@@ -65,17 +72,16 @@ const user = userDecoder.verify(externalData);
 
 ## The core idea
 
-The central concept of this library is the Decoder. A Decoder is a construct
-that can help you verify that untrusted external input matches your expectations.
-Untrusted data is basically any variable of type `any` or `unknown`.
+The central concept of this library is the Decoder. A Decoder is a construct that can help
+you verify that untrusted external input matches your expectations. Untrusted data is
+basically any variable of type `any` or `unknown`.
 
-This way, you can be sure that all untrusted runtime data is always in the shape
-you expect, and that static types can correctly be inferred for dynamic input
-data.
+This way, you can be sure that all untrusted runtime data is always in the shape you
+expect, and that static types can correctly be inferred for dynamic input data.
 
 All decoders have an associated type, for example `Decoder<string>`, or
-`Decoder<number[]>`, etc. When you use a `Decoder<T>` on untrusted input, it
-will either "accept + return" something of type `T`, or "reject" the value.
+`Decoder<number[]>`, etc. When you use a `Decoder<T>` on untrusted input, it will either
+"accept + return" something of type `T`, or "reject" the value.
 
 Generic/small decoders are typically stacked together like LEGO pieces to build
 larger/custom decoders. In the example above, you have already seen many decoder
@@ -85,66 +91,64 @@ instances!
 
 ### Using a decoder
 
-To use a decoder on an untrusted input, call one of these three methods on the
-outermost decoder. Which one you want to use will depend on your use case.
+To use a decoder on an untrusted input, call one of these three methods on the outermost
+decoder. Which one you want to use will depend on your use case.
 
 - `.verify()` (recommended)
 - `.value()` (for best-effort decoding)
 - `.decode()` (for precise control)
 
-The simplest and recommended method is `.verify()`. It will either return the
-decoded (safe) value on success, or throw an error with a friendly message when
-the decoding failed.
+The simplest and recommended method is `.verify()`. It will either return the decoded
+(safe) value on success, or throw an error with a friendly message when the decoding
+failed.
 
 ![The .verify() method explained](/schematic-verify.png)
 
-Alternatively, you can use the `.value()` method which will not throw, but
-instead return `undefined` when the decoder rejects the input. Use this when you
-don't care about erroring in the face of unexpected input data. For example to
-use it as a "best effort" attempt:
+Alternatively, you can use the `.value()` method which will not throw, but instead return
+`undefined` when the decoder rejects the input. Use this when you don't care about
+erroring in the face of unexpected input data. For example to use it as a "best effort"
+attempt:
 
 ![The .value() method explained](/schematic-value.png)
 
-> **Caveat!** You won't be able to distinguish between a legal `undefined` value
-> or a decoding error this way.
+> **Caveat!** You won't be able to distinguish between a legal `undefined` value or a
+> decoding error this way.
 
 Lastly, you can use the lower-level `.decode()` method if you want to have most
-programmatic control over the result. It works like `.verify()`, but instead of
-directly returning a value or failing, it returns a "Result" value, which can
-either have `ok: true` (and a value), or `ok: false` and an error annotation.
+programmatic control over the result. It works like `.verify()`, but instead of directly
+returning a value or failing, it returns a "Result" value, which can either have
+`ok: true` (and a value), or `ok: false` and an error annotation.
 
 ![The .decode() method explained](/schematic-decode.png)
 
-You'll typically only use this method directly when implementing your own
-decoders.
+You'll typically only use this method directly when implementing your own decoders.
 
 ## Understanding the "type" of a Decoder
 
-Every decoder has a type, for example when you see a decoder of type
-`Decoder<string>` it means that _if_ it accepts the runtime input, it will
-always return a `string`.
+Every decoder has a type, for example when you see a decoder of type `Decoder<string>` it
+means that _if_ it accepts the runtime input, it will always return a `string`.
 
-It does **not** mean it will only accept string inputs! Take the `truthy`
-decoder as an example. That one will accept _any_ input value, but return a
-`boolean`. What values will get accepted by a decoder depends on its
-implementation. The decoder's documentation will tell you what inputs it accepts.
+It does **not** mean it will only accept string inputs! Take the `truthy` decoder as an
+example. That one will accept _any_ input value, but return a `boolean`. What values will
+get accepted by a decoder depends on its implementation. The decoder's documentation will
+tell you what inputs it accepts.
 
 ## Building your own decoders
 
-You are encouraged to build your own decoders that serve your use case. For
-documentation and examples, see [Building your own](./building-your-own).
+You are encouraged to build your own decoders that serve your use case. For documentation
+and examples, see [Building your own](./building-your-own).
 
 ## Formatting error messages
 
-By default, `.verify()` will use the `formatInline` error formatter. You can
-pass another built-in formatter as the second argument, or provide your own.
-(This will require understanding the internal `Annotation` datastructure that
-decoders uses for error reporting.)
+By default, `.verify()` will use the `formatInline` error formatter. You can pass another
+built-in formatter as the second argument, or provide your own. (This will require
+understanding the internal `Annotation` datastructure that decoders uses for error
+reporting.)
 
 Built-in formatters are:
 
-- `formatInline` (default) — will echo back the input object and inline error
-  messages smartly. Example:
+- `formatInline` (default) — will echo back the input object and inline error messages
+  smartly. Example:
 
   ```typescript
   import { array, object, string, number, formatInline } from 'decoders';
@@ -168,8 +172,8 @@ Built-in formatters are:
   ]
   ```
 
-- `formatShort` — will report the _path_ into the object where the error
-  happened. Example:
+- `formatShort` — will report the _path_ into the object where the error happened.
+  Example:
 
   ```typescript
   import { formatShort } from 'decoders';

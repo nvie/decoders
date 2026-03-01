@@ -29,6 +29,7 @@ export default async function Page(props: {
         <DocsTitle>{page.data.title}</DocsTitle>
         <PageActions
           githubUrl={`${GITHUB_CONTENT_URL}/${page.path}`}
+          markdownUrl={`${page.url}.mdx`}
         />
       </div>
       <DocsDescription className="mb-0 border-b pb-6">

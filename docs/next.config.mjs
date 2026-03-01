@@ -9,6 +9,14 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const config = {
   turbopack: { root: __dirname },
   reactStrictMode: true,
+  async rewrites() {
+    return [
+      {
+        source: "/docs/:path*.mdx",
+        destination: "/llms.mdx/docs/:path*",
+      },
+    ];
+  },
 };
 
 export default withMDX(config);

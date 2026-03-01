@@ -6,6 +6,7 @@ import {
   ChevronDown,
   Copy,
   ExternalLinkIcon,
+  TextIcon,
 } from "lucide-react";
 import { useCopyButton } from "fumadocs-ui/utils/use-copy-button";
 import { buttonVariants } from "fumadocs-ui/components/ui/button";
@@ -15,7 +16,13 @@ import {
   PopoverTrigger,
 } from "fumadocs-ui/components/ui/popover";
 
-export function PageActions({ githubUrl }: { githubUrl: string }) {
+export function PageActions({
+  githubUrl,
+  markdownUrl,
+}: {
+  githubUrl: string;
+  markdownUrl: string;
+}) {
   const [checked, onCopy] = useCopyButton(() => {
     const article = document.querySelector("article");
     if (article) {
@@ -29,6 +36,11 @@ export function PageActions({ githubUrl }: { githubUrl: string }) {
     const q = `Read ${pageUrl}, I want to ask questions about it.`;
 
     return [
+      {
+        title: "View as Markdown",
+        href: markdownUrl,
+        icon: <TextIcon />,
+      },
       {
         title: "Open in GitHub",
         href: githubUrl,
@@ -62,8 +74,19 @@ export function PageActions({ githubUrl }: { githubUrl: string }) {
           </svg>
         ),
       },
+      {
+        title: "Open in Cursor",
+        subtitle: "Ask questions about this page",
+        href: `https://cursor.com/link/prompt?text=${encodeURIComponent(q)}`,
+        icon: (
+          <svg fill="currentColor" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <title>Cursor</title>
+            <path d="M10.32 3.804a1.26 1.26 0 0 1 2.114-.394l9.773 10.632a1.26 1.26 0 0 1-.596 2.063l-4.695 1.29a1.26 1.26 0 0 0-.792.665l-2.146 4.752a1.26 1.26 0 0 1-2.183.2L3.592 11.47a1.26 1.26 0 0 1 .378-1.829z" />
+          </svg>
+        ),
+      },
     ];
-  }, [githubUrl]);
+  }, [githubUrl, markdownUrl]);
 
   return (
     <Popover>
@@ -89,7 +112,7 @@ export function PageActions({ githubUrl }: { githubUrl: string }) {
           <span className="flex flex-col gap-0.5">
             <span className="font-medium">Copy page</span>
             <span className="text-xs text-fd-muted-foreground">
-              Copy as text for LLMs
+              Copy as Markdown for LLMs
             </span>
           </span>
         </button>
