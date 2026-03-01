@@ -67,9 +67,6 @@ number.value('hi'); // undefined
 string.value(42); // undefined
 ```
 
-> _**NOTE:** When you use this on [`optional()`](/docs/api/optionality#optional) decoders,
-> you cannot distinguish a rejected value from an accepted `undefined` input value._
-
 ---
 
 ## Decoder.decode
@@ -83,8 +80,8 @@ string.value(42); // undefined
 
 Verifies the untrusted/unknown input and either accepts or rejects it.
 
-Contrasted with [`.verify()`](#decoder.verify), calls to [`.decode()`](#decoder.decode) will
-never fail and instead return a result type.
+Contrasted with [`.verify()`](#decoder.verify), calls to [`.decode()`](#decoder.decode)
+will never fail and instead return a result type.
 
 <img
   alt="The .decode() method explained"
