@@ -34,7 +34,6 @@
     "README.md"
   ],
   "scripts": {
-    "actually-prepublish": "echo \"\\n\\nPlease run \\`bin/publish.sh <options>\\` instead.\\n\\n\" && exit 2",
     "build": "tsup",
     "docs": "cog -cr docs/*.md",
     "lint": "eslint --color --report-unused-disable-directives src/ test/ && prettier --list-different src/ test/ test-d/",
@@ -46,7 +45,7 @@
     "test:typescript": "tsc --noEmit",
     "test:types": "npm run build && tsd --typings ./dist/index.d.ts",
     "test:watch": "vitest --coverage",
-    "release": "npm run test && npm run lint && npm run lint:docs && npm run build && npm run lint:package && release-it"
+    "release": "release-it"
   },
   "keywords": [
     "Decoder",

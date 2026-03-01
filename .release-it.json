@@ -1,12 +1,22 @@
 {
+  "$schema": "https://unpkg.com/release-it@19/schema/release-it.json",
   "plugins": {
     "@release-it/keep-a-changelog": {
       "filename": "CHANGELOG.md",
       "addUnreleased": true
     }
   },
+  "git": {
+    "requireBranch": "main",
+    "commitMessage": "Release v${version}",
+    "tagName": "v${version}"
+  },
   "github": {
     "release": true,
     "releaseName": "v${version}"
+  },
+  "hooks": {
+    "before:init": ["npm run build", "npm run lint", "npm run lint:package"],
+    "after:bump": "prettier --write package.json"
   }
 }
