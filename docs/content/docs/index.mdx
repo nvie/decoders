@@ -18,6 +18,16 @@ bun add decoders
 pnpm add decoders
 ```
 
+You must set `strict: true` in your `tsconfig.json` for type inference to work correctly:
+
+```json
+{
+  "compilerOptions": {
+    "strict": true
+  }
+}
+```
+
 ## Introduction
 
 Data entering your application from the outside world should not be trusted without
@@ -39,7 +49,7 @@ import { array, iso8601, number, object, optional, string } from 'decoders';
 const externalData = {
   id: 123,
   name: 'Alison Roberts',
-  createdAt: '1994-01-11T12:26:37.024Z',
+  createdAt: '2026-01-11T12:26:37.024Z',
   tags: ['foo', 'bar'],
 };
 

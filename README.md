@@ -4,28 +4,19 @@
 [![Test Status](https://github.com/nvie/decoders/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/nvie/decoders/actions)
 [![Bundle size for decoders](https://pkg-size.dev/badge/bundle/4200)](https://pkg-size.dev/decoders)
 
-Elegant and battle-tested validation library for type-safe input data for
-[TypeScript](https://www.typescriptlang.org/).
-
-## Introduction
-
-Data entering your application from the outside world should not be trusted without
-validation and often is of the `any` type, effectively disabling your type checker around
-input values. It's an industry good practice to validate your expectations right at your
-program's boundaries. This has two benefits: (1) your inputs are getting validated, and
-(2) you can now statically know for sure the shape of the incoming data. **Decoders help
-solve both of these problems at once.**
+Elegant and battle-tested validation library for type-safe input data for TypeScript.
 
 ## Basic example
 
 ```typescript
 import { array, iso8601, number, object, optional, string } from 'decoders';
 
-// Incoming data at runtime
+// Incoming data at runtime, e.g. the request body
+// The point is that this data is untrusted and its type unknown
 const externalData = {
   id: 123,
   name: 'Alison Roberts',
-  createdAt: '1994-01-11T12:26:37.024Z',
+  createdAt: '2026-01-11T12:26:37.024Z',
   tags: ['foo', 'bar'],
 };
 
@@ -40,7 +31,7 @@ const userDecoder = object({
 // Call .verify() on the incoming data
 const user = userDecoder.verify(externalData);
 //    ^^^^
-//    TypeScript automatically infers this type as:
+//    TypeScript will infer this type as:
 //    {
 //      id: number;
 //      name: string;
