@@ -3,7 +3,7 @@ title: Optionality
 description: Decoders for handling null, undefined, and optional values.
 ---
 
-### null\_
+## null\_
 
 <DecoderSig name="null_" type="null" source="basics.ts#L12-L15" />
 
@@ -21,7 +21,7 @@ null_.verify('hello world'); // throws
 
 ---
 
-### undefined\_
+## undefined\_
 
 <DecoderSig name="undefined_" type="undefined" source="basics.ts#L17-L20" />
 
@@ -39,7 +39,7 @@ undefined_.verify('hello world'); // throws
 
 ---
 
-### optional()
+## optional
 
 <DecoderSig name="optional" params="decoder: Decoder<T>" type="T | undefined" source="basics.ts#L27-L44" />
 
@@ -85,7 +85,7 @@ Which will decode to type:
 
 ---
 
-### nullable()
+## nullable
 
 <DecoderSig name="nullable" params="decoder: Decoder<T>" type="T | null" source="basics.ts#L46-L63" />
 
@@ -120,7 +120,7 @@ decoder.verify(null);  // the current date
 
 ---
 
-### nullish()
+## nullish
 
 <DecoderSig name="nullish" params="decoder: Decoder<T>" type="T | null | undefined" source="basics.ts#L65-L82" />
 
@@ -156,7 +156,7 @@ decoder.verify(undefined) === null;
 
 ---
 
-### unknown
+## unknown
 
 <DecoderSig name="unknown" type="unknown" source="basics.ts#L124-L131" />
 

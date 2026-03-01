@@ -1,8 +1,8 @@
-import type { ReactNode } from "react";
+import type { ReactNode } from 'react';
 
-const REPO = "https://github.com/nvie/decoders/tree/main/src";
-const TEAL = "#267f99";
-const GRAY = "#6b7280";
+const REPO = 'https://github.com/nvie/decoders/tree/main/src';
+const TEAL = '#267f99';
+const GRAY = '#6b7280';
 
 /**
  * Split a string by a delimiter, but only at the top level
@@ -11,14 +11,14 @@ const GRAY = "#6b7280";
 function splitAtTopLevel(str: string, delimiter: string): string[] {
   const parts: string[] = [];
   let depth = 0;
-  let current = "";
+  let current = '';
   for (let i = 0; i < str.length; i++) {
     const ch = str[i];
-    if (ch === "<" || ch === "(" || ch === "{" || ch === "[") depth++;
-    else if (ch === ">" || ch === ")" || ch === "}" || ch === "]") depth--;
+    if (ch === '<' || ch === '(' || ch === '{' || ch === '[') depth++;
+    else if (ch === '>' || ch === ')' || ch === '}' || ch === ']') depth--;
     if (depth === 0 && str.slice(i, i + delimiter.length) === delimiter) {
       parts.push(current);
-      current = "";
+      current = '';
       i += delimiter.length - 1;
     } else {
       current += ch;
@@ -35,9 +35,9 @@ function findTopLevelColon(str: string): number {
   let depth = 0;
   for (let i = 0; i < str.length; i++) {
     const ch = str[i];
-    if (ch === "<" || ch === "(" || ch === "{" || ch === "[") depth++;
-    else if (ch === ">" || ch === ")" || ch === "}" || ch === "]") depth--;
-    if (depth === 0 && str.slice(i, i + 2) === ": ") return i;
+    if (ch === '<' || ch === '(' || ch === '{' || ch === '[') depth++;
+    else if (ch === '>' || ch === ')' || ch === '}' || ch === ']') depth--;
+    if (depth === 0 && str.slice(i, i + 2) === ': ') return i;
   }
   return -1;
 }
@@ -53,7 +53,7 @@ function renderType(type: string): ReactNode {
   let key = 0;
 
   while (i < type.length) {
-    const decoderIdx = type.indexOf("Decoder<", i);
+    const decoderIdx = type.indexOf('Decoder<', i);
     if (decoderIdx === -1) {
       // No more Decoder< — push the rest as teal
       if (i < type.length) {
@@ -77,21 +77,21 @@ function renderType(type: string): ReactNode {
 
     // Find the matching closing >
     let depth = 0;
-    let j = decoderIdx + "Decoder<".length;
+    let j = decoderIdx + 'Decoder<'.length;
     for (; j < type.length; j++) {
-      if (type[j] === "<") depth++;
-      else if (type[j] === ">") {
+      if (type[j] === '<') depth++;
+      else if (type[j] === '>') {
         if (depth === 0) break;
         depth--;
       }
     }
 
-    const inner = type.slice(decoderIdx + "Decoder<".length, j);
+    const inner = type.slice(decoderIdx + 'Decoder<'.length, j);
     parts.push(
       <span key={key++}>
-        <span style={{ color: GRAY }}>{"Decoder<"}</span>
+        <span style={{ color: GRAY }}>{'Decoder<'}</span>
         <span style={{ color: TEAL }}>{inner}</span>
-        <span style={{ color: GRAY }}>{">"}</span>
+        <span style={{ color: GRAY }}>{'>'}</span>
       </span>,
     );
 
@@ -106,10 +106,10 @@ function renderType(type: string): ReactNode {
  * with Decoder<...> wrappers in gray.
  */
 function renderParams(params: string): ReactNode {
-  const paramList = splitAtTopLevel(params, ", ");
+  const paramList = splitAtTopLevel(params, ', ');
   return paramList.map((param, i) => {
     const colonIdx = findTopLevelColon(param);
-    const separator = i < paramList.length - 1 ? ", " : "";
+    const separator = i < paramList.length - 1 ? ', ' : '';
     if (colonIdx === -1) {
       return (
         <span key={i}>
@@ -122,7 +122,8 @@ function renderParams(params: string): ReactNode {
     const type = param.slice(colonIdx + 2);
     return (
       <span key={i}>
-        <span style={{ color: GRAY }}>{name}: </span>{renderType(type)}
+        <span style={{ color: GRAY }}>{name}: </span>
+        {renderType(type)}
         {separator}
       </span>
     );
@@ -149,12 +150,18 @@ export function Sig({
   return (
     <p className="fn-sig">
       <strong style={{ fontWeight: 700 }}>{name}</strong>
-      {params !== undefined ? <>({renderParams(params)})</> : null}
-      {": "}
+      {params !== undefined ? (
+        <span style={{ display: 'inline-flex', gap: '0.1em' }}>
+          <span>(</span>
+          <span>{renderParams(params)}</span>
+          <span>)</span>
+        </span>
+      ) : null}
+      {': '}
       {returnType}
       {source ? (
         <>
-          {" "}
+          {' '}
           <a href={`${REPO}/${source}`} title="Source" className="sig-source">
             (source)
           </a>
@@ -188,9 +195,9 @@ export function DecoderSig({
       params={params}
       returnType={
         <em>
-          <span style={{ color: GRAY }}>{"Decoder<"}</span>
+          <span style={{ color: GRAY }}>{'Decoder<'}</span>
           <span style={{ color: TEAL }}>{type}</span>
-          <span style={{ color: GRAY }}>{">"}</span>
+          <span style={{ color: GRAY }}>{'>'}</span>
         </em>
       }
       source={source}

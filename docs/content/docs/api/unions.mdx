@@ -3,7 +3,7 @@ title: Unions
 description: Decoders for union types, enums, and tagged unions.
 ---
 
-### either()
+## either
 
 <DecoderSig name="either" params="Decoder<A>, Decoder<B>, ..." type="A | B | ..." source="unions.ts#L50-L83" />
 
@@ -26,7 +26,7 @@ decoder.verify(false);  // throws
 
 ---
 
-### oneOf()
+## oneOf
 
 <DecoderSig name="oneOf" params="values: T[]" type="T" source="unions.ts#L85-L97" />
 
@@ -54,7 +54,7 @@ oneOf(['foo', 'bar']);
 
 ---
 
-### enum\_()
+## enum\_()
 
 <DecoderSig name="enum_" params="enum: MyEnum" type="MyEnum" source="unions.ts#L99-L120" />
 
@@ -114,7 +114,7 @@ decoder.verify(3);        // throws
 
 ---
 
-### taggedUnion()
+## taggedUnion
 
 <DecoderSig name="taggedUnion" params="field: string, mapping: { value1: Decoder<A>, value2: Decoder<B>, ... }" type="A | B | ..." source="unions.ts#L122-L163" />
 
@@ -147,7 +147,7 @@ try all decoders one by one.
 
 ---
 
-### select()
+## select
 
 <DecoderSig name="select" params="scout: Decoder<T>, selectFn: (result: T) => Decoder<A> | Decoder<B> | ..." type="A | B | ..." source="unions.ts#L165-L182" />
 

@@ -1,16 +1,44 @@
-@import "tailwindcss";
-@import "fumadocs-ui/css/neutral.css";
-@import "fumadocs-ui/css/preset.css";
+@import 'tailwindcss';
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
 
 @theme {
-  /* Rose accent matching the original decoders docs */
-  --color-fd-primary: #e11d48;
+  /* Orange accent */
+  --color-fd-primary: #d46b08;
   --color-fd-primary-foreground: #fff;
-  --color-fd-ring: #f43f5e;
+  --color-fd-ring: #d46b08;
+}
+
+.fn-sig {
+  font-size: 1.2em;
+  line-height: 1.5em;
 }
 
 .fn-sig + .fn-sig {
   margin-top: -0.75em;
+}
+
+.prose a {
+  text-decoration: none;
+}
+
+.prose a {
+  color: #d46b08;
+}
+
+.prose a:has(> code:only-child) {
+  color: inherit;
+}
+
+.prose a:hover {
+  text-decoration: underline;
+}
+
+.prose h1 a,
+.prose h2 a,
+.prose h3 a,
+.prose h4 a {
+  text-decoration: none !important;
 }
 
 .sig-source {
@@ -23,7 +51,7 @@
 }
 
 .dark {
-  --color-fd-primary: #fb7185;
+  --color-fd-primary: #e27b50;
   --color-fd-primary-foreground: #1c1017;
-  --color-fd-ring: #f43f5e;
+  --color-fd-ring: #d46b08;
 }

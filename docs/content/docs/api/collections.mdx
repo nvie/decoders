@@ -3,7 +3,7 @@ title: Collections
 description: Decoders for records, maps, and sets.
 ---
 
-### record()
+## record
 
 <DecoderSig name="record" params="values: Decoder<V>" type="Record<string, V>" source="collections.ts#L8-L57" />
 
@@ -54,7 +54,7 @@ decoder.verify({ "no-email": 1 });
 
 ---
 
-### mapping()
+## mapping
 
 <DecoderSig name="mapping" params="decoder: Decoder<T>" type="Map<string, T>" source="collections.ts#L67-L74" />
 
@@ -76,7 +76,7 @@ decoder.verify({ red: 1, blue: 2, green: 3 });
 
 ---
 
-### setFromArray()
+## setFromArray
 
 <DecoderSig name="setFromArray" params="decoder: Decoder<T>" type="Set<T>" source="collections.ts#L59-L65" />
 

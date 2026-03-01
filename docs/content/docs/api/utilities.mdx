@@ -3,7 +3,7 @@ title: Utilities
 description: Utility decoders for custom logic, preprocessing, and advanced use cases.
 ---
 
-### define()
+## define
 
 <DecoderSig name="define" params="fn: (blob: unknown, ok, err) => DecodeResult<T>" type="T" source="core/Decoder.ts#L158-L355" />
 
@@ -51,7 +51,7 @@ const uppercase: Decoder<string> = string.transform(s => s.toUpperCase());
 
 ---
 
-### prep()
+## prep
 
 <DecoderSig name="prep" params="mapperFn: (raw: mixed) => mixed, decoder: Decoder<T>" type="T" source="misc.ts#L31-L61" />
 
@@ -81,7 +81,7 @@ decoder.verify('hi');  // throws: not a number
 
 ---
 
-### never
+## never
 
 <DecoderSig name="never" type="never" source="basics.ts#L111-L117" />
 
@@ -106,7 +106,7 @@ decoder.verify({ a: 'foo', b: 'bar' });  // throws
 
 ---
 
-### instanceOf()
+## instanceOf
 
 <DecoderSig name="instanceOf" params="klass: Klass<T>" type="T" source="misc.ts#L12-L21" />
 
@@ -126,7 +126,7 @@ decoder.verify(3);      // throws
 
 ---
 
-### lazy()
+## lazy
 
 <DecoderSig name="lazy" params="decoderFn: () => Decoder<T>" type="T" source="misc.ts#L23-L29" />
 

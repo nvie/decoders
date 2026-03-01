@@ -1,9 +1,6 @@
 {
   "pages": [
     "index",
-    "---Guides---",
-    "building-your-own",
-    "tips",
     "---API Reference---",
     "api/strings",
     "api/numbers",
@@ -16,6 +13,9 @@
     "api/collections",
     "api/json-values",
     "api/unions",
-    "api/utilities"
+    "api/utilities",
+    "---Guides---",
+    "building-your-own",
+    "tips"
   ]
 }
