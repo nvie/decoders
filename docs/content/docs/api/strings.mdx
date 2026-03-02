@@ -9,17 +9,10 @@ description: String decoders for validating and parsing string values.
 
 Accepts and returns strings.
 
-```ts
-// 👍
-string.verify('hello world') === 'hello world';
-string.verify('🚀') === '🚀';
-string.verify('') === '';
-
-// 👎
-string.verify(123); // throws
-string.verify(true); // throws
-string.verify(null); // throws
-```
+<DecoderPlayground
+  decoder="string"
+  examples={["'hello world'", "'🚀'", "''", "123", "true", "null"]}
+/>
 
 ---
 
