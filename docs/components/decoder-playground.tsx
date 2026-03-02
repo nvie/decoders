@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useSyncExternalStore } from 'react';
 import { Check, ChevronDown } from 'lucide-react';
 import {
   Popover,
@@ -8,6 +8,7 @@ import {
   PopoverTrigger,
 } from 'fumadocs-ui/components/ui/popover';
 import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { Signal } from '@/lib/signals';
 
 type EvalResult = { ok: true; value: string } | { ok: false; error: string };
 
@@ -29,6 +30,14 @@ const FMT_OPTIONS: { fmt: Fmt; label: string; description: string }[] = [
   },
   { fmt: 'formatShort', label: 'formatShort', description: 'Short summary' },
 ];
+
+// Module-level signals shared by all playground instances on the page
+const mode$ = new Signal<Mode>('verify');
+const fmt$ = new Signal<Fmt>('formatInline');
+
+function useSignal<T>(signal: Signal<T>): T {
+  return useSyncExternalStore(signal.subscribe, signal.get, signal.get);
+}
 
 interface Props {
   /** Expression that evaluates to a decoder, e.g. "string" */
@@ -107,9 +116,9 @@ function highlight(text: string): React.ReactNode {
 }
 
 export function DecoderPlayground({ decoder, examples }: Props) {
+  const mode = useSignal(mode$);
+  const fmt = useSignal(fmt$);
   const [rows, setRows] = useState<Row[]>(() => examples.map((input) => ({ input })));
-  const [mode, setMode] = useState<Mode>('verify');
-  const [fmt, setFmt] = useState<Fmt>('formatInline');
   const [activeRow, setActiveRow] = useState(0);
   const [ready, setReady] = useState(false);
   const compartmentRef = useRef<{ evaluate: (code: string) => unknown }>(undefined);
@@ -173,17 +182,16 @@ export function DecoderPlayground({ decoder, examples }: Props) {
     [decoder],
   );
 
-  const reEvalAll = useCallback(
-    (m: Mode, f: Fmt) => {
-      setRows((prev) =>
-        prev.map((row) => ({
-          input: row.input,
-          result: evalInput(row.input, m, f),
-        })),
-      );
-    },
-    [evalInput],
-  );
+  // Re-eval all rows when mode or fmt changes
+  useEffect(() => {
+    if (!ready) return;
+    setRows((prev) =>
+      prev.map((row) => ({
+        input: row.input,
+        result: evalInput(row.input, mode, fmt),
+      })),
+    );
+  }, [mode, fmt, ready, evalInput]);
 
   useEffect(() => {
     let cancelled = false;
@@ -254,18 +262,16 @@ export function DecoderPlayground({ decoder, examples }: Props) {
 
   const changeMode = useCallback(
     (m: Mode) => {
-      setMode(m);
-      reEvalAll(m, fmt);
+      mode$.set(m);
     },
-    [reEvalAll, fmt],
+    [],
   );
 
   const changeFmt = useCallback(
     (f: Fmt) => {
-      setFmt(f);
-      reEvalAll(mode, f);
+      fmt$.set(f);
     },
-    [reEvalAll, mode],
+    [],
   );
 
   return (
