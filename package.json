@@ -35,7 +35,7 @@
   ],
   "scripts": {
     "build": "tsup",
-    "docs:dev": "cd docs && npm run dev",
+    "docs:dev": "cd docs && rm -rf .next && npm run dev",
     "docs:build": "cd docs && npm run build",
     "docs:update-sources": "node bin/update-source-lines.js",
     "lint": "oxlint src/ test/ && prettier --list-different src/ test/ test-d/",
