@@ -67,6 +67,14 @@ export const email: Decoder<string> = regex(
 );
 
 /**
+ * Accepts strings that are valid URLs.
+ */
+export const urlString: Decoder<string> = string.refine(
+  (s) => URL.canParse(s),
+  'Must be URL',
+);
+
+/**
  * Accepts strings that are valid URLs, returns the value as a URL instance.
  */
 export const url: Decoder<URL> = either(

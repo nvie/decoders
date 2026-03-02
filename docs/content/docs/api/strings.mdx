@@ -139,6 +139,27 @@ mean that the email address actually exist.)
 
 ---
 
+## urlString
+
+<DecoderSig name="urlString" type="string" source="strings.ts#L69-L76" />
+
+Accepts strings that are valid URLs, returns the value as a string (not a URL instance).
+Uses `URL.canParse()` for validation.
+
+<DecoderPlayground
+  decoder="urlString"
+  examples={[
+    "'http://nvie.com'",
+    "'https://nvie.com'",
+    "'git+ssh://user@github.com/foo/bar.git'",
+    "'foo'",
+    "'@acme.org'",
+    "'/search?q=foo'",
+  ]}
+/>
+
+---
+
 ## url
 
 <DecoderSig name="url" type="URL" source="strings.ts#L69-L75" />

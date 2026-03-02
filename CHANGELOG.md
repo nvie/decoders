@@ -1,5 +1,8 @@
 ## [Unreleased]
 
+- New: `urlString` decoder, which is like `url`, but returns a string instead of a URL
+  instance.
+
 ## [2.9.0-pre.1] - 2026-03-02
 
 - Rename Decoder.then() → Decoder.chain() to avoid confusion with Promises (custom

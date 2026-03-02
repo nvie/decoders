@@ -16,6 +16,7 @@ import {
   startsWith,
   string,
   url,
+  urlString,
   uuid,
   uuidv1,
   uuidv4,
@@ -122,6 +123,41 @@ describe('email', () => {
     for (const invalid of invalids) {
       expect(() => decoder.verify(invalid)).toThrow('Must be email');
     }
+    expect(() => decoder.verify(123)).toThrow('Must be string');
+  });
+});
+
+describe('urlString', () => {
+  const decoder = urlString;
+
+  test('valid', () => {
+    expect(decoder.verify('https://nvie.com')).toBe('https://nvie.com');
+    expect(decoder.verify('https://example.com/foo?q=foo/bar')).toBe(
+      'https://example.com/foo?q=foo/bar',
+    );
+    expect(decoder.verify('http://nvie.com')).toBe('http://nvie.com');
+    expect(decoder.verify('postgresql://localhost/db')).toBe('postgresql://localhost/db');
+    expect(decoder.verify('git+ssh://user@github.com/foo/bar.git')).toBe(
+      'git+ssh://user@github.com/foo/bar.git',
+    );
+    expect(decoder.verify('https://user:pass@nvie.com:443/foo?q=bar#qux')).toBe(
+      'https://user:pass@nvie.com:443/foo?q=bar#qux',
+    );
+  });
+
+  test('returns the original string unchanged', () => {
+    // Unlike `url`, urlString does NOT transform the input
+    const input = 'https://nvie.com';
+    const result = decoder.verify(input);
+    expect(typeof result).toBe('string');
+    expect(result).toBe(input);
+  });
+
+  test('invalid', () => {
+    expect(() => decoder.verify('www.nvie.com')).toThrow('Must be URL');
+    expect(() => decoder.verify('foo')).toThrow('Must be URL');
+    expect(() => decoder.verify('/search?q=foo')).toThrow('Must be URL');
+    expect(() => decoder.verify('')).toThrow('Must be URL');
     expect(() => decoder.verify(123)).toThrow('Must be string');
   });
 });
