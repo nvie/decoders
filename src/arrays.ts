@@ -19,7 +19,7 @@ export const poja: Decoder<unknown[]> = define((blob, ok, err) => {
 export function array<T>(decoder: Decoder<T>): Decoder<T[]> {
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const decodeFn = decoder.decode;
-  return poja.then((inputs: readonly unknown[], ok, err) => {
+  return poja.chain((inputs: readonly unknown[], ok, err) => {
     const results: T[] = [];
     for (let i = 0; i < inputs.length; ++i) {
       const blob = inputs[i];
@@ -70,7 +70,7 @@ type TupleDecoderType<Ds extends readonly Decoder<unknown>[]> = {
 export function tuple<
   Ds extends readonly [first: Decoder<unknown>, ...rest: readonly Decoder<unknown>[]],
 >(...decoders: Ds): Decoder<TupleDecoderType<Ds>> {
-  return ntuple(decoders.length).then((blobs, ok, err) => {
+  return ntuple(decoders.length).chain((blobs, ok, err) => {
     let allOk = true;
 
     const rvs = decoders.map((decoder, i) => {

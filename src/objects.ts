@@ -66,7 +66,7 @@ export function object<Ds extends Record<string, Decoder<unknown>>>(
   // Compute this set at decoder definition time
   const knownKeys = new Set(Object.keys(decoders));
 
-  return pojo.then((plainObj, ok, err) => {
+  return pojo.chain((plainObj, ok, err) => {
     const actualKeys = new Set(Object.keys(plainObj));
 
     // At this point, "missingKeys" will also include all fields that may

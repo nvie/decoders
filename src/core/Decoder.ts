@@ -89,7 +89,7 @@ export interface Decoder<T> {
    * > be covered more elegantly by `.transform()`, `.refine()`, or `.pipe()`
    * > instead._
    */
-  then<V>(next: Next<V, T>): Decoder<V>;
+  chain<V>(next: Next<V, T>): Decoder<V>;
 
   /**
    * Send the output of this decoder as input to another decoder.
@@ -218,7 +218,7 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
    * message as the failure reason.
    */
   function transform<V>(transformFn: (result: T) => V): Decoder<V> {
-    return then(noThrow(transformFn));
+    return chain(noThrow(transformFn));
   }
 
   /**
@@ -254,7 +254,7 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
    * > be covered more elegantly by `.transform()`, `.refine()`, or `.pipe()`
    * > instead._
    */
-  function then<V>(next: Next<V, T>): Decoder<V> {
+  function chain<V>(next: Next<V, T>): Decoder<V> {
     return define((blob, ok, err) => {
       const r1 = decode(blob);
       if (!r1.ok) return r1; // Rejected
@@ -280,10 +280,10 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
   function pipe<V, D extends Decoder<V>>(
     next: D | ((blob: T) => D),
   ): Decoder<DecoderType<D>> {
-    // Technically, .pipe() is just an alias of .then(), but its signature is
+    // Technically, .pipe() is just an alias of .chain(), but its signature is
     // more focused on the more convenient use case of working with Decoders
     // directly.
-    return then(next) as Decoder<DecoderType<D>>;
+    return chain(next) as Decoder<DecoderType<D>>;
   }
 
   /**
@@ -298,7 +298,7 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
    * message.
    */
   function reject(rejectFn: (value: T) => string | Annotation | null): Decoder<T> {
-    return then((blob, ok, err) => {
+    return chain((blob, ok, err) => {
       const errmsg = rejectFn(blob);
       return errmsg === null
         ? ok(blob)
@@ -334,8 +334,7 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
     refineType,
     reject,
     describe,
-    // oxlint-disable-next-line unicorn/no-thenable
-    then,
+    chain,
     pipe,
     '~standard': {
       version: 1,

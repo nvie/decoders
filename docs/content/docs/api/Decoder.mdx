@@ -174,15 +174,21 @@ can be used to simplify or shorten otherwise long or low-level/technical errors.
 
 ## Decoder.then
 
+In 2.9, `.then()` will get renamed to `.chain()` to avoid being mistaken for a Promise.
+
+---
+
+## Decoder.chain
+
 <Sig
-  name=".then"
+  name=".chain"
   params="next: (blob: T, ok, err) => DecodeResult<V> | Decoder<V>"
   returnType="Decoder<V>"
   source="core/Decoder.ts#L247-L265"
 />
 
 <Sig
-  name=".then"
+  name=".chain"
   params="next: Decoder<V>"
   returnType="Decoder<V>"
   source="core/Decoder.ts#L247-L265"

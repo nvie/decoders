@@ -87,10 +87,10 @@ describe('.value()', () => {
   });
 });
 
-describe('.then() with acceptance function', () => {
+describe('.chain() with acceptance function', () => {
   const hex =
     // We already know how to decode strings...
-    string.then(
+    string.chain(
       // We'll try to parse it as an hex int, but if it fails, we'll
       // return Err, otherwise Ok
       (s, ok, err) => {
@@ -109,8 +109,8 @@ describe('.then() with acceptance function', () => {
   });
 });
 
-describe('.then() with acceptance function returning a decoder', () => {
-  const decoder = string.transform(Number).then(() => positiveInteger);
+describe('.chain() with acceptance function returning a decoder', () => {
+  const decoder = string.transform(Number).chain(() => positiveInteger);
 
   test('valid type of decode result', () => {
     expect(decoder.verify('100')).toEqual(100);
@@ -126,8 +126,8 @@ describe('.then() with acceptance function returning a decoder', () => {
   });
 });
 
-describe('.then() directly taking a decoder', () => {
-  const decoder = string.transform(Number).then(positiveInteger);
+describe('.chain() directly taking a decoder', () => {
+  const decoder = string.transform(Number).chain(positiveInteger);
 
   test('valid type of decode result', () => {
     expect(decoder.verify('100')).toEqual(100);

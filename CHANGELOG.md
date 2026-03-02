@@ -1,5 +1,8 @@
 ## [Unreleased]
 
+- Rename Decoder.then() → Decoder.chain() to avoid confusion with Promises (custom
+  thenables).
+
 ## [2.8.0] - 2026-02-22
 
 - New: `anything` is now an alias for `unknown`, which might be more readable in some

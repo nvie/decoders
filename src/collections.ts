@@ -22,7 +22,7 @@ export function record<K extends string, V>(
 ): Decoder<Record<K, V>> {
   const keyDecoder = snd !== undefined ? (fst as Decoder<K>) : undefined;
   const valueDecoder = snd ?? (fst as Decoder<V>);
-  return pojo.then((input, ok, err) => {
+  return pojo.chain((input, ok, err) => {
     let rv = {} as Record<K, V>;
     const errors = new Map<string, Annotation>();
 
