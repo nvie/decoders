@@ -2,12 +2,9 @@
 
 ## [2.9.0-pre.1] - 2026-03-02
 
-- Add missing type-level exports
-
-## [2.9.0-pre.0] - 2026-03-02
-
 - Rename Decoder.then() → Decoder.chain() to avoid confusion with Promises (custom
   thenables).
+- Add missing top-level type exports for annotations
 
 ## [2.8.0] - 2026-02-22
 
