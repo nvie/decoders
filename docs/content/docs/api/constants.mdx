@@ -9,17 +9,10 @@ description: Decoders for constant and fixed values.
 
 Accepts only the given constant value.
 
-```ts
-const decoder = constant('hello');
-
-// 👍
-decoder.verify('hello') === 'hello';
-
-// 👎
-decoder.verify('this breaks');  // throws
-decoder.verify(false);          // throws
-decoder.verify(undefined);      // throws
-```
+<DecoderPlayground
+  decoder="constant('hello')"
+  examples={["'hello'", "'this breaks'", "false", "undefined"]}
+/>
 
 ---
 
@@ -32,17 +25,10 @@ value instead.
 
 This is useful to manually add extra fields to object decoders.
 
-```ts
-const decoder = always(42);
-
-// 👍
-decoder.verify('hello') === 42;
-decoder.verify(false) === 42;
-decoder.verify(undefined) === 42;
-
-// 👎
-// This decoder will never reject an input
-```
+<DecoderPlayground
+  decoder="always(42)"
+  examples={["'hello'", "false", "undefined"]}
+/>
 
 Or use it with a function instead of a constant:
 

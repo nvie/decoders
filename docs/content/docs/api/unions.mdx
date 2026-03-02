@@ -13,16 +13,10 @@ The decoders are tried on the input one by one, in the given order. The
 first one that accepts the input "wins". If all decoders reject the input,
 the input gets rejected.
 
-```ts
-const decoder = either(number, string);
-
-// 👍
-decoder.verify('hello world') === 'hello world';
-decoder.verify(123) === 123;
-
-// 👎
-decoder.verify(false);  // throws
-```
+<DecoderPlayground
+  decoder="either(number, string)"
+  examples={["'hello world'", "123", "false"]}
+/>
 
 ---
 
@@ -33,18 +27,10 @@ decoder.verify(false);  // throws
 Accepts any value that is strictly-equal (using `===`) to one of the
 specified values.
 
-```ts
-const decoder = oneOf(['foo', 'bar', 3]);
-
-// 👍
-decoder.verify('foo') === 'foo';
-decoder.verify(3) === 3;
-
-// 👎
-decoder.verify('hello');  // throws
-decoder.verify(4);        // throws
-decoder.verify(false);    // throws
-```
+<DecoderPlayground
+  decoder="oneOf(['foo', 'bar', 3])"
+  examples={["'foo'", "3", "'hello'", "4", "false"]}
+/>
 
 For example, given an array of strings, like so:
 

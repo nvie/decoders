@@ -9,16 +9,10 @@ description: Array and tuple decoders for validating collections of values.
 
 Accepts arrays of whatever the given decoder accepts.
 
-```ts
-const decoder = array(string);
-
-// 👍
-decoder.verify(['hello', 'world']) === ['hello', 'world'];
-decoder.verify([]) === [];
-
-// 👎
-decoder.verify(['hello', 1.2]);  // throws
-```
+<DecoderPlayground
+  decoder="array(string)"
+  examples={["['hello', 'world']", "[]", "['hello', 1.2]"]}
+/>
 
 ---
 
@@ -28,16 +22,10 @@ decoder.verify(['hello', 1.2]);  // throws
 
 Like [`array()`](#array), but will reject arrays with 0 elements.
 
-```ts
-const decoder = nonEmptyArray(string);
-
-// 👍
-decoder.verify(['hello', 'world']) === ['hello', 'world'];
-
-// 👎
-decoder.verify(['hello', 1.2]);  // throws
-decoder.verify([]);              // throws
-```
+<DecoderPlayground
+  decoder="nonEmptyArray(string)"
+  examples={["['hello', 'world']", "['hello', 1.2]", "[]"]}
+/>
 
 ---
 
@@ -49,16 +37,10 @@ Accepts any array, but doesn't validate its items further.
 
 "poja" means "plain old JavaScript array", a play on [`pojo`](/docs/api/objects#pojo).
 
-```ts
-// 👍
-poja.verify([1, 'hi', true]) === [1, 'hi', true];
-poja.verify(['hello', 'world']) === ['hello', 'world'];
-poja.verify([]) === [];
-
-// 👎
-poja.verify({});    // throws
-poja.verify('hi');  // throws
-```
+<DecoderPlayground
+  decoder="poja"
+  examples={["[1, 'hi', true]", "['hello', 'world']", "[]", "{}", "'hi'"]}
+/>
 
 ---
 
@@ -69,14 +51,7 @@ poja.verify('hi');  // throws
 Accepts a tuple (an array with exactly _n_ items) of values accepted by the
 _n_ given decoders.
 
-```ts
-const decoder = tuple(string, number);
-
-// 👍
-decoder.verify(['hello', 1.2]) === ['hello', 1.2];
-
-// 👎
-decoder.verify([]);                  // throws, too few items
-decoder.verify(['hello', 'world']);  // throws, not the right types
-decoder.verify(['a', 1, 'c']);       // throws, too many items
-```
+<DecoderPlayground
+  decoder="tuple(string, number)"
+  examples={["['hello', 1.2]", "[]", "['hello', 'world']", "['a', 1, 'c']"]}
+/>

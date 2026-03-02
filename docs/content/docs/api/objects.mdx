@@ -10,19 +10,10 @@ description: Object decoders for validating structured data.
 Accepts objects with fields matching the given decoders. Extra fields that
 exist on the input object are ignored and will not be returned.
 
-```ts
-const decoder = object({
-  x: number,
-  y: number,
-});
-
-// 👍
-decoder.verify({ x: 1, y: 2 }) === { x: 1, y: 2 };
-decoder.verify({ x: 1, y: 2, z: 3 }) === { x: 1, y: 2 }; // ⚠️ extra field `z` not returned!
-
-// 👎
-decoder.verify({ x: 1 });  // throws, missing field `y`
-```
+<DecoderPlayground
+  decoder="object({ x: number, y: number })"
+  examples={["{ x: 1, y: 2 }", "{ x: 1, y: 2, z: 3 }", "{ x: 1 }"]}
+/>
 
 For more information, see also [The difference between `object`, `exact`, and `inexact`](/docs/tips#the-difference-between-object-exact-and-inexact).
 
@@ -35,19 +26,10 @@ For more information, see also [The difference between `object`, `exact`, and `i
 Like [`object()`](#object), but will reject inputs that contain extra fields that are
 not specified explicitly.
 
-```ts
-const decoder = exact({
-  x: number,
-  y: number,
-});
-
-// 👍
-decoder.verify({ x: 1, y: 2 }) === { x: 1, y: 2 };
-
-// 👎
-decoder.verify({ x: 1, y: 2, z: 3 });  // throws, extra field `z` not allowed
-decoder.verify({ x: 1 });              // throws, missing field `y`
-```
+<DecoderPlayground
+  decoder="exact({ x: number, y: number })"
+  examples={["{ x: 1, y: 2 }", "{ x: 1, y: 2, z: 3 }", "{ x: 1 }"]}
+/>
 
 For more information, see also [The difference between `object`, `exact`, and `inexact`](/docs/tips#the-difference-between-object-exact-and-inexact).
 
@@ -60,19 +42,10 @@ For more information, see also [The difference between `object`, `exact`, and `i
 Like [`object()`](#object), but will pass through any extra fields on the input object
 unvalidated that will thus be of `unknown` type statically.
 
-```ts
-const decoder = inexact({
-  x: number,
-  y: number,
-});
-
-// 👍
-decoder.verify({ x: 1, y: 2 }) === { x: 1, y: 2 };
-decoder.verify({ x: 1, y: 2, z: 3 }) === { x: 1, y: 2, z: 3 };
-
-// 👎
-decoder.verify({ x: 1 });  // throws, missing field `y`
-```
+<DecoderPlayground
+  decoder="inexact({ x: number, y: number })"
+  examples={["{ x: 1, y: 2 }", "{ x: 1, y: 2, z: 3 }", "{ x: 1 }"]}
+/>
 
 For more information, see also [The difference between `object`, `exact`, and `inexact`](/docs/tips#the-difference-between-object-exact-and-inexact).
 
@@ -85,14 +58,7 @@ For more information, see also [The difference between `object`, `exact`, and `i
 Accepts any "plain old JavaScript object", but doesn't validate its keys or
 values further.
 
-```ts
-// 👍
-pojo.verify({}) === {};
-pojo.verify({ name: 'hi' }) === { name: 'hi' };
-
-// 👎
-pojo.verify('hi');        // throws
-pojo.verify([]);          // throws
-pojo.verify(new Date());  // throws
-pojo.verify(null);        // throws
-```
+<DecoderPlayground
+  decoder="pojo"
+  examples={["{}", "{ name: 'hi' }", "'hi'", "[]", "new Date()", "null"]}
+/>
