@@ -77,6 +77,8 @@ function formatValue(value: unknown): string {
 interface Row {
   input: string;
   result?: EvalResult;
+  /** Whether .decode() returned ok: true — used for the accepted/rejected comment */
+  accepted?: boolean;
 }
 
 // Node.js REPL-style syntax highlighting
@@ -252,6 +254,22 @@ export function DecoderPlayground(props: Props) {
     [props.decoder],
   );
 
+  const checkAccepted = useCallback(
+    (inputExpr: string): boolean | undefined => {
+      const compartment = compartmentRef.current;
+      if (!inputExpr || !compartment) return undefined;
+      try {
+        const result = compartment.evaluate(
+          `(${props.decoder}).decode(${inputExpr})`,
+        ) as { ok: boolean };
+        return result.ok;
+      } catch {
+        return false;
+      }
+    },
+    [props.decoder],
+  );
+
   // Re-eval all rows synchronously when mode or fmt changes (derived state
   // pattern). This ensures updated row heights are committed in the same
   // render pass, so the useLayoutEffect scroll anchor sees the correct DOM.
@@ -265,6 +283,7 @@ export function DecoderPlayground(props: Props) {
       prev.map((row) => ({
         input: row.input,
         result: evalInput(row.input, mode, fmt),
+        accepted: checkAccepted(row.input),
       })),
     );
   }
@@ -298,6 +317,7 @@ export function DecoderPlayground(props: Props) {
             prev.map((row) => ({
               input: row.input,
               result: evalInput(row.input, mode, fmt),
+              accepted: checkAccepted(row.input),
             })),
           );
           setReady(true);
@@ -317,7 +337,7 @@ export function DecoderPlayground(props: Props) {
     (index: number, input: string) => {
       setRows((prev) => {
         const next = [...prev];
-        next[index] = { input, result: evalInput(input, mode, fmt) };
+        next[index] = { input, result: evalInput(input, mode, fmt), accepted: checkAccepted(input) };
         return next;
       });
     },
@@ -428,7 +448,7 @@ export function DecoderPlayground(props: Props) {
       <div className="border-b border-fd-border [&_figure]:!m-0 [&_figure]:!rounded-none [&_figure]:!border-0 [&_figure]:!bg-transparent [&_pre]:!bg-transparent [&_pre]:!text-xs [&_pre]:!py-1.5 [&_pre]:!px-3 [&_button]:!hidden">
         <DynamicCodeBlock
           lang="ts"
-          code={`${props.preface ? `${props.preface}\n\n` : ''}${formatSnippet(props.decoder, mode, rows[activeRow]?.input || '…', fmt)}`}
+          code={`${props.preface ? `${props.preface}\n\n` : ''}${formatSnippet(props.decoder, mode, rows[activeRow]?.input || '…', fmt)}${rows[activeRow]?.accepted === true ? '  // accepted 👍' : rows[activeRow]?.accepted === false ? '  // rejected 👎' : ''}`}
         />
       </div>
       <table className="w-full">
