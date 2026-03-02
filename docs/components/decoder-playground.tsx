@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef, useSyncExternalStore } from 'react';
+import { useState, useEffect, useLayoutEffect, useCallback, useRef, useSyncExternalStore } from 'react';
 import { Check, ChevronDown } from 'lucide-react';
 import {
   Popover,
@@ -122,6 +122,21 @@ export function DecoderPlayground({ decoder, examples }: Props) {
   const [activeRow, setActiveRow] = useState(0);
   const [ready, setReady] = useState(false);
   const compartmentRef = useRef<{ evaluate: (code: string) => unknown }>(undefined);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const scrollAnchorRef = useRef<number | null>(null);
+
+  // After mode/fmt change causes a re-render, compensate scroll so this
+  // playground stays at the same viewport position.
+  useLayoutEffect(() => {
+    if (scrollAnchorRef.current !== null && containerRef.current) {
+      const newTop = containerRef.current.getBoundingClientRect().top;
+      const delta = newTop - scrollAnchorRef.current;
+      if (delta !== 0) {
+        window.scrollBy(0, delta);
+      }
+    }
+    scrollAnchorRef.current = null;
+  });
 
   const evalInput = useCallback(
     (inputExpr: string, m: Mode, f: Fmt): EvalResult | undefined => {
@@ -182,16 +197,23 @@ export function DecoderPlayground({ decoder, examples }: Props) {
     [decoder],
   );
 
-  // Re-eval all rows when mode or fmt changes
-  useEffect(() => {
-    if (!ready) return;
+  // Re-eval all rows synchronously when mode or fmt changes (derived state
+  // pattern). This ensures updated row heights are committed in the same
+  // render pass, so the useLayoutEffect scroll anchor sees the correct DOM.
+  const prevEvalDepsRef = useRef({ mode, fmt });
+  if (
+    ready &&
+    (prevEvalDepsRef.current.mode !== mode ||
+      prevEvalDepsRef.current.fmt !== fmt)
+  ) {
+    prevEvalDepsRef.current = { mode, fmt };
     setRows((prev) =>
       prev.map((row) => ({
         input: row.input,
         result: evalInput(row.input, mode, fmt),
       })),
     );
-  }, [mode, fmt, ready, evalInput]);
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -262,6 +284,9 @@ export function DecoderPlayground({ decoder, examples }: Props) {
 
   const changeMode = useCallback(
     (m: Mode) => {
+      if (containerRef.current) {
+        scrollAnchorRef.current = containerRef.current.getBoundingClientRect().top;
+      }
       mode$.set(m);
     },
     [],
@@ -269,13 +294,16 @@ export function DecoderPlayground({ decoder, examples }: Props) {
 
   const changeFmt = useCallback(
     (f: Fmt) => {
+      if (containerRef.current) {
+        scrollAnchorRef.current = containerRef.current.getBoundingClientRect().top;
+      }
       fmt$.set(f);
     },
     [],
   );
 
   return (
-    <div className="not-prose my-4 overflow-hidden rounded-lg border border-fd-border text-sm">
+    <div ref={containerRef} className="not-prose my-4 overflow-hidden rounded-lg border border-fd-border text-sm">
       <div className="flex items-center justify-between bg-fd-muted/50 px-3 py-2">
         <span className="text-xs font-medium uppercase tracking-wide text-fd-foreground/80">
           Try it
