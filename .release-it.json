@@ -20,6 +20,6 @@
   },
   "hooks": {
     "before:init": ["npm run build", "npm run lint", "npm run lint:package"],
-    "after:bump": "prettier --write package.json"
+    "after:bump": "prettier --write package.json && npm pkg set dependencies.decoders=^${version} --prefix docs && npm install --prefix docs"
   }
 }
