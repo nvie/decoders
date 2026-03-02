@@ -151,11 +151,11 @@ export function Sig({
     <p className="fn-sig">
       <strong style={{ fontWeight: 700 }}>{name}</strong>
       {params !== undefined ? (
-        <span style={{ display: 'inline-flex', gap: '0.1em' }}>
-          <span>(</span>
-          <span>{renderParams(params)}</span>
-          <span>)</span>
-        </span>
+        <>
+          {'(\u200A'}
+          {renderParams(params)}
+          {'\u2009)'}
+        </>
       ) : null}
       {': '}
       {returnType}
