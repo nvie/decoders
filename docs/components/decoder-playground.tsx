@@ -463,7 +463,7 @@ export function DecoderPlayground(props: Props) {
             <tr
               key={i}
               onClick={() => setActiveRow(i)}
-              className={`border-b border-fd-border last:border-b-0 align-top cursor-pointer ${activeRow === i ? 'bg-fd-muted/30' : ''}`}
+              className={`border-b border-fd-border last:border-b-0 align-top cursor-pointer ${activeRow === i ? 'bg-black/[0.02] dark:bg-white/[0.04]' : ''}`}
             >
               <td className="px-3 py-1.5">
                 <input
