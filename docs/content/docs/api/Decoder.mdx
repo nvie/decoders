@@ -24,6 +24,7 @@ returns a value of type `T`. Otherwise fail with a runtime error.
 For example, take this simple number decoder.
 
 <DecoderPlayground
+  mode="verify"
   decoder="number"
   examples={["123", "3.1415", "'hello'"]}
 />
@@ -51,6 +52,7 @@ Use this when you're not interested in programmatically handling the error messa
 />
 
 <DecoderPlayground
+  mode="value"
   decoder="number"
   examples={["3", "'hi'", "42", "'hello'"]}
 />

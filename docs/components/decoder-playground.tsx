@@ -1,6 +1,13 @@
 'use client';
 
-import { useState, useEffect, useLayoutEffect, useCallback, useRef, useSyncExternalStore } from 'react';
+import {
+  useState,
+  useEffect,
+  useLayoutEffect,
+  useCallback,
+  useRef,
+  useSyncExternalStore,
+} from 'react';
 import { Check, ChevronDown } from 'lucide-react';
 import {
   Popover,
@@ -44,6 +51,8 @@ interface Props {
   decoder: string;
   /** Input expressions to try, e.g. ["'hello'", "42", "null"] */
   examples: string[];
+  /** When set, locks this playground to the given mode (ignoring the global signal) */
+  mode?: Mode;
 }
 
 function formatValue(value: unknown): string {
@@ -115,10 +124,16 @@ function highlight(text: string): React.ReactNode {
   return parts;
 }
 
-export function DecoderPlayground({ decoder, examples }: Props) {
-  const mode = useSignal(mode$);
+export function DecoderPlayground(props: Props) {
+  const globalMode = useSignal(mode$);
+  const mode = props.mode ?? globalMode;
   const fmt = useSignal(fmt$);
-  const [rows, setRows] = useState<Row[]>(() => examples.map((input) => ({ input })));
+  const modeLocked = props.mode !== undefined;
+  const showFmt = mode !== 'value';
+  const showPopover = !modeLocked || showFmt;
+  const [rows, setRows] = useState<Row[]>(() =>
+    props.examples.map((input) => ({ input })),
+  );
   const [activeRow, setActiveRow] = useState(0);
   const [ready, setReady] = useState(false);
   const compartmentRef = useRef<{ evaluate: (code: string) => unknown }>(undefined);
@@ -146,19 +161,21 @@ export function DecoderPlayground({ decoder, examples }: Props) {
       try {
         switch (m) {
           case 'verify': {
-            const code = `(${decoder}).verify(${inputExpr})`;
+            const code = `(${props.decoder}).verify(${inputExpr})`;
             const result = compartment.evaluate(code);
             return { ok: true, value: formatValue(result) };
           }
 
           case 'value': {
-            const code = `(${decoder}).value(${inputExpr})`;
+            const code = `(${props.decoder}).value(${inputExpr})`;
             const result = compartment.evaluate(code);
             return { ok: true, value: formatValue(result) };
           }
 
           case 'decode': {
-            const result = compartment.evaluate(`(${decoder}).decode(${inputExpr})`) as {
+            const result = compartment.evaluate(
+              `(${props.decoder}).decode(${inputExpr})`,
+            ) as {
               ok: boolean;
               value?: unknown;
               error?: unknown;
@@ -170,7 +187,7 @@ export function DecoderPlayground({ decoder, examples }: Props) {
               };
             }
             const annotation = compartment.evaluate(
-              `${f}((${decoder}).decode(${inputExpr}).error)`,
+              `${f}((${props.decoder}).decode(${inputExpr}).error)`,
             ) as string;
             return {
               ok: true,
@@ -184,7 +201,7 @@ export function DecoderPlayground({ decoder, examples }: Props) {
         if (m === 'verify') {
           try {
             const formatted = compartment.evaluate(
-              `${f}((${decoder}).decode(${inputExpr}).error)`,
+              `${f}((${props.decoder}).decode(${inputExpr}).error)`,
             ) as string;
             return { ok: false, error: formatted };
           } catch {
@@ -194,7 +211,7 @@ export function DecoderPlayground({ decoder, examples }: Props) {
         return { ok: false, error: msg };
       }
     },
-    [decoder],
+    [props.decoder],
   );
 
   // Re-eval all rows synchronously when mode or fmt changes (derived state
@@ -203,8 +220,7 @@ export function DecoderPlayground({ decoder, examples }: Props) {
   const prevEvalDepsRef = useRef({ mode, fmt });
   if (
     ready &&
-    (prevEvalDepsRef.current.mode !== mode ||
-      prevEvalDepsRef.current.fmt !== fmt)
+    (prevEvalDepsRef.current.mode !== mode || prevEvalDepsRef.current.fmt !== fmt)
   ) {
     prevEvalDepsRef.current = { mode, fmt };
     setRows((prev) =>
@@ -248,7 +264,7 @@ export function DecoderPlayground({ decoder, examples }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [decoder, evalInput, mode, fmt]);
+  }, [props.decoder, evalInput, mode, fmt]);
 
   const updateRow = useCallback(
     (index: number, input: string) => {
@@ -282,95 +298,90 @@ export function DecoderPlayground({ decoder, examples }: Props) {
     [],
   );
 
-  const changeMode = useCallback(
-    (m: Mode) => {
-      if (containerRef.current) {
-        scrollAnchorRef.current = containerRef.current.getBoundingClientRect().top;
-      }
-      mode$.set(m);
-    },
-    [],
-  );
+  const changeMode = useCallback((m: Mode) => {
+    if (containerRef.current) {
+      scrollAnchorRef.current = containerRef.current.getBoundingClientRect().top;
+    }
+    mode$.set(m);
+  }, []);
 
-  const changeFmt = useCallback(
-    (f: Fmt) => {
-      if (containerRef.current) {
-        scrollAnchorRef.current = containerRef.current.getBoundingClientRect().top;
-      }
-      fmt$.set(f);
-    },
-    [],
-  );
+  const changeFmt = useCallback((f: Fmt) => {
+    if (containerRef.current) {
+      scrollAnchorRef.current = containerRef.current.getBoundingClientRect().top;
+    }
+    fmt$.set(f);
+  }, []);
 
   return (
-    <div ref={containerRef} className="not-prose my-4 overflow-hidden rounded-lg border border-fd-border text-sm">
+    <div
+      ref={containerRef}
+      className="not-prose my-4 overflow-hidden rounded-lg border border-fd-border text-sm"
+    >
       <div className="flex items-center justify-between bg-fd-muted/50 px-3 py-2">
         <span className="text-xs font-medium uppercase tracking-wide text-fd-foreground/80">
           Try it
         </span>
-        <Popover>
-          <PopoverTrigger className="inline-flex cursor-pointer items-center rounded p-1 text-fd-muted-foreground hover:bg-fd-accent hover:text-fd-accent-foreground">
-            <ChevronDown className="size-4" />
-          </PopoverTrigger>
-          <PopoverContent className="flex flex-col p-1">
-            {MODE_OPTIONS.map((opt) => (
-              <button
-                key={opt.mode}
-                onClick={() => {
-                  changeMode(opt.mode);
-                  document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
-                }}
-                className="flex cursor-pointer items-start gap-2 rounded-lg p-2 text-start text-sm hover:bg-fd-accent hover:text-fd-accent-foreground"
-              >
-                <Check
-                  className={`mt-0.5 size-4 shrink-0 ${mode === opt.mode ? 'opacity-100' : 'opacity-0'}`}
-                />
-                <span className="flex flex-col gap-0.5">
-                  <span className="font-medium">{opt.label}</span>
-                  <span className="text-xs text-fd-muted-foreground">
-                    {opt.description}
-                  </span>
-                </span>
-              </button>
-            ))}
-            <hr className="my-1 border-fd-border" />
-            {FMT_OPTIONS.map((opt) => {
-              const disabled = mode === 'value';
-              return (
-                <button
-                  key={opt.fmt}
-                  disabled={disabled}
-                  onClick={() => {
-                    changeFmt(opt.fmt);
-                    document.dispatchEvent(
-                      new KeyboardEvent('keydown', { key: 'Escape' }),
-                    );
-                  }}
-                  className={`flex cursor-pointer items-start gap-2 rounded-lg p-2 text-start text-sm ${
-                    disabled
-                      ? 'cursor-default opacity-40'
-                      : 'hover:bg-fd-accent hover:text-fd-accent-foreground'
-                  }`}
-                >
-                  <Check
-                    className={`mt-0.5 size-4 shrink-0 ${fmt === opt.fmt && !disabled ? 'opacity-100' : 'opacity-0'}`}
-                  />
-                  <span className="flex flex-col gap-0.5">
-                    <span className="font-medium">{opt.label}</span>
-                    <span className="text-xs text-fd-muted-foreground">
-                      {opt.description}
+        {showPopover && (
+          <Popover>
+            <PopoverTrigger className="inline-flex cursor-pointer items-center rounded p-1 text-fd-muted-foreground hover:bg-fd-accent hover:text-fd-accent-foreground">
+              <ChevronDown className="size-4" />
+            </PopoverTrigger>
+            <PopoverContent className="flex flex-col p-1">
+              {!modeLocked &&
+                MODE_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.mode}
+                    onClick={() => {
+                      changeMode(opt.mode);
+                      document.dispatchEvent(
+                        new KeyboardEvent('keydown', { key: 'Escape' }),
+                      );
+                    }}
+                    className="flex cursor-pointer items-start gap-2 rounded-lg p-2 text-start text-sm hover:bg-fd-accent hover:text-fd-accent-foreground"
+                  >
+                    <Check
+                      className={`mt-0.5 size-4 shrink-0 ${mode === opt.mode ? 'opacity-100' : 'opacity-0'}`}
+                    />
+                    <span className="flex flex-col gap-0.5">
+                      <span className="font-medium">{opt.label}</span>
+                      <span className="text-xs text-fd-muted-foreground">
+                        {opt.description}
+                      </span>
                     </span>
-                  </span>
-                </button>
-              );
-            })}
-          </PopoverContent>
-        </Popover>
+                  </button>
+                ))}
+              {!modeLocked && showFmt && <hr className="my-1 border-fd-border" />}
+              {showFmt &&
+                FMT_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.fmt}
+                    onClick={() => {
+                      changeFmt(opt.fmt);
+                      document.dispatchEvent(
+                        new KeyboardEvent('keydown', { key: 'Escape' }),
+                      );
+                    }}
+                    className="flex cursor-pointer items-start gap-2 rounded-lg p-2 text-start text-sm hover:bg-fd-accent hover:text-fd-accent-foreground"
+                  >
+                    <Check
+                      className={`mt-0.5 size-4 shrink-0 ${fmt === opt.fmt ? 'opacity-100' : 'opacity-0'}`}
+                    />
+                    <span className="flex flex-col gap-0.5">
+                      <span className="font-medium">{opt.label}</span>
+                      <span className="text-xs text-fd-muted-foreground">
+                        {opt.description}
+                      </span>
+                    </span>
+                  </button>
+                ))}
+            </PopoverContent>
+          </Popover>
+        )}
       </div>
       <div className="border-b border-fd-border [&_figure]:!m-0 [&_figure]:!rounded-none [&_figure]:!border-0 [&_figure]:!bg-transparent [&_pre]:!bg-transparent [&_pre]:!text-xs [&_pre]:!py-1.5 [&_pre]:!px-3 [&_button]:!hidden">
         <DynamicCodeBlock
           lang="ts"
-          code={`${decoder}.${mode}(${rows[activeRow]?.input || '…'}${mode === 'verify' && fmt === 'formatShort' ? `, ${fmt}` : ''})`}
+          code={`${props.decoder}.${mode}(${rows[activeRow]?.input || '…'}${mode === 'verify' && fmt === 'formatShort' ? `, ${fmt}` : ''})`}
         />
       </div>
       <table className="w-full">
