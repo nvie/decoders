@@ -86,7 +86,7 @@ Accepts and returns strings that end with the given suffix.
 
 ## decimal
 
-<DecoderSig name="decimal" type="string" source="strings.ts#L134-L138" />
+<DecoderSig name="decimal" type="string" source="strings.ts#L142-L146" />
 
 Accepts and returns strings with decimal digits only (base-10). To convert these to
 numbers, use the [`numeric`](#numeric) decoder.
@@ -100,7 +100,7 @@ numbers, use the [`numeric`](#numeric) decoder.
 
 ## hexadecimal
 
-<DecoderSig name="hexadecimal" type="string" source="strings.ts#L140-L146" />
+<DecoderSig name="hexadecimal" type="string" source="strings.ts#L148-L154" />
 
 Accepts and returns strings with hexadecimal digits only (base-16).
 
@@ -113,7 +113,7 @@ Accepts and returns strings with hexadecimal digits only (base-16).
 
 ## numeric
 
-<DecoderSig name="numeric" type="number" source="strings.ts#L148-L153" />
+<DecoderSig name="numeric" type="number" source="strings.ts#L156-L161" />
 
 Accepts valid numerical strings (in base-10) and returns them as a number. To only accept
 numerical strings and keep them as string values, use the [`decimal`](#decimal) decoder.
@@ -141,7 +141,7 @@ mean that the email address actually exist.)
 
 ## urlString
 
-<DecoderSig name="urlString" type="string" source="strings.ts#L69-L76" />
+<DecoderSig name="urlString" type="string" source="strings.ts#L69-L75" />
 
 Accepts strings that are valid URLs, returns the value as a string (not a URL instance).
 Uses `URL.canParse()` for validation.
@@ -162,7 +162,7 @@ Uses `URL.canParse()` for validation.
 
 ## url
 
-<DecoderSig name="url" type="URL" source="strings.ts#L69-L75" />
+<DecoderSig name="url" type="URL" source="strings.ts#L77-L83" />
 
 Accepts strings that are valid URLs, returns the value as a URL instance.
 
@@ -182,7 +182,7 @@ Accepts strings that are valid URLs, returns the value as a URL instance.
 
 ## httpsUrl
 
-<DecoderSig name="httpsUrl" type="URL" source="strings.ts#L77-L84" />
+<DecoderSig name="httpsUrl" type="URL" source="strings.ts#L85-L92" />
 
 Accepts strings that are valid URLs, but only HTTPS ones. Returns the value as a URL
 instance.
@@ -212,7 +212,7 @@ const gitUrl: Decoder<URL> = url.refine(
 
 ## identifier
 
-<DecoderSig name="identifier" type="string" source="strings.ts#L86-L93" />
+<DecoderSig name="identifier" type="string" source="strings.ts#L94-L101" />
 
 Accepts and returns strings that are valid identifiers in most programming languages.
 
@@ -238,7 +238,7 @@ Accepts and returns strings that are valid identifiers in most programming langu
   name="nanoid"
   params="options?: SizeOptions"
   type="string"
-  source="strings.ts#L95-L104"
+  source="strings.ts#L103-L112"
 />
 
 Accepts and returns [nanoid](https://zelark.github.io/nano-id-cc) string values. It
@@ -260,7 +260,7 @@ assumes the default nanoid alphabet. If you're using a custom alphabet, use
 
 ## uuid
 
-<DecoderSig name="uuid" type="string" source="strings.ts#L106-L114" />
+<DecoderSig name="uuid" type="string" source="strings.ts#L114-L122" />
 
 Accepts strings that are valid
 [UUIDs](https://en.wikipedia.org/wiki/universally_unique_identifier) (universally unique
@@ -280,7 +280,7 @@ identifier).
 
 ## uuidv1
 
-<DecoderSig name="uuidv1" type="string" source="strings.ts#L116-L123" />
+<DecoderSig name="uuidv1" type="string" source="strings.ts#L124-L131" />
 
 Like [`uuid`](#uuid), but only accepts
 [UUIDv1](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_%28date-time_and_MAC_address%29)
@@ -298,7 +298,7 @@ strings.
 
 ## uuidv4
 
-<DecoderSig name="uuidv4" type="string" source="strings.ts#L125-L132" />
+<DecoderSig name="uuidv4" type="string" source="strings.ts#L133-L140" />
 
 Like [`uuid`](#uuid), but only accepts
 [UUIDv4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_%28random%29)
