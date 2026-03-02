@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [2.9.1-pre.0] - 2026-03-02
+
 - Add missing type-level exports
 
 ## [2.9.0-pre.0] - 2026-03-02
