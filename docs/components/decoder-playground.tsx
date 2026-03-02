@@ -53,6 +53,10 @@ interface Props {
   examples: string[];
   /** When set, locks this playground to the given mode (ignoring the global signal) */
   mode?: Mode;
+  /** Extra globals to inject into the sandbox, as name → expression pairs evaluated with decoders in scope */
+  globals?: Record<string, string>;
+  /** Code displayed above the decoder call in the snippet, e.g. an enum definition */
+  preface?: string;
 }
 
 function formatValue(value: unknown): string {
@@ -122,6 +126,40 @@ function highlight(text: string): React.ReactNode {
   }
 
   return parts;
+}
+
+/**
+ * Splits a decoder expression at top-level dots (ignoring dots inside
+ * parentheses/brackets), e.g. "string.transform(s => s.split(','))" →
+ * ["string", ".transform(s => s.split(','))"].
+ */
+function splitChain(expr: string): string[] {
+  const segments: string[] = [];
+  let depth = 0;
+  let start = 0;
+  for (let i = 0; i < expr.length; i++) {
+    const ch = expr[i];
+    if (ch === '(' || ch === '[') depth++;
+    else if (ch === ')' || ch === ']') depth--;
+    else if (ch === '.' && depth === 0 && i > 0) {
+      segments.push(expr.slice(start, i));
+      start = i;
+    }
+  }
+  segments.push(expr.slice(start));
+  return segments;
+}
+
+function formatSnippet(decoder: string, mode: Mode, input: string, fmt: Fmt): string {
+  const fmtArg = mode === 'verify' && fmt === 'formatShort' ? `, ${fmt}` : '';
+  const call = `.${mode}(${input}${fmtArg})`;
+  const segments = splitChain(decoder);
+  if (segments.length <= 1) {
+    return `${decoder}${call}`;
+  }
+  return [segments[0], ...segments.slice(1), call]
+    .map((s, i) => (i === 0 ? s : `  ${s}`))
+    .join('\n');
 }
 
 export function DecoderPlayground(props: Props) {
@@ -244,7 +282,16 @@ export function DecoderPlayground(props: Props) {
 
         const decodersMod = await import('decoders');
 
-        compartmentRef.current = new Compartment({ ...decodersMod });
+        const compartment = new Compartment({ ...decodersMod });
+
+        // Evaluate extra globals (e.g. custom decoders) and inject them
+        if (props.globals) {
+          for (const [name, expr] of Object.entries(props.globals)) {
+            compartment.globalThis[name] = compartment.evaluate(expr);
+          }
+        }
+
+        compartmentRef.current = compartment;
 
         if (!cancelled) {
           setRows((prev) =>
@@ -381,7 +428,7 @@ export function DecoderPlayground(props: Props) {
       <div className="border-b border-fd-border [&_figure]:!m-0 [&_figure]:!rounded-none [&_figure]:!border-0 [&_figure]:!bg-transparent [&_pre]:!bg-transparent [&_pre]:!text-xs [&_pre]:!py-1.5 [&_pre]:!px-3 [&_button]:!hidden">
         <DynamicCodeBlock
           lang="ts"
-          code={`${props.decoder}.${mode}(${rows[activeRow]?.input || '…'}${mode === 'verify' && fmt === 'formatShort' ? `, ${fmt}` : ''})`}
+          code={`${props.preface ? `${props.preface}\n\n` : ''}${formatSnippet(props.decoder, mode, rows[activeRow]?.input || '…', fmt)}`}
         />
       </div>
       <table className="w-full">

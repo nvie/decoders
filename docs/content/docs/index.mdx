@@ -106,11 +106,11 @@ Call one of these methods on any decoder:
 
 | Method                                         | Returns          | On failure           |
 | ---------------------------------------------- | ---------------- | -------------------- |
-| [`.verify()`](/docs/api/Decoder#decoderverify) | `T`              | Throws an error      |
-| [`.value()`](/docs/api/Decoder#decodervalue)   | `T \| undefined` | Returns `undefined`  |
-| [`.decode()`](/docs/api/Decoder#decoderdecode) | `Result<T>`      | Returns error result |
+| [`.verify()`](/docs/api/Decoder#decoder.verify) | `T`              | Throws an error      |
+| [`.value()`](/docs/api/Decoder#decoder.value)   | `T \| undefined` | Returns `undefined`  |
+| [`.decode()`](/docs/api/Decoder#decoder.decode) | `Result<T>`      | Returns error result |
 
-Most of the time, `.verify()` is what you want.
+Most of the time, [`.verify()`](/docs/api/Decoder#decoder.verify) is what you want.
 
 ### Composing decoders
 
