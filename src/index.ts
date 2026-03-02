@@ -20,13 +20,18 @@ export { either, enum_, oneOf, select, taggedUnion } from './unions';
 
 // Core functionality
 export type {
+  Annotation,
+  ArrayAnnotation,
   Decoder,
   DecodeResult,
   DecoderType,
   Err,
   Formatter,
+  ObjectAnnotation,
   Ok,
+  OpaqueAnnotation,
   Result,
+  ScalarAnnotation,
 } from '~/core';
 export { define, err, formatInline, formatShort, isDecoder, ok } from '~/core';
 export type { Scalar } from '~/lib/types';
