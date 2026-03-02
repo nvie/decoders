@@ -22,16 +22,10 @@ type JSONValue =
     | JSONValue[]
 ```
 
-```ts
-// 👍
-json.verify({
-  name: 'Amir',
-  age: 27,
-  admin: true,
-  image: null,
-  tags: ['vip', 'staff'],
-});
-```
+<DecoderPlayground
+  decoder="json"
+  examples={["{ name: 'Amir', age: 27, admin: true, image: null, tags: ['vip'] }", "'hello'", "42", "null", "true", "[1, 2, 3]"]}
+/>
 
 ---
 
@@ -41,17 +35,10 @@ json.verify({
 
 Accepts objects that contain only valid JSON values.
 
-```ts
-// 👍
-jsonObject.verify({});                // {}
-jsonObject.verify({ name: 'Amir' });  // { name: 'Amir' }
-
-// 👎
-jsonObject.verify([]);                   // throws
-jsonObject.verify([{ name: 'Alice' }]);  // throws
-jsonObject.verify('hello');              // throws
-jsonObject.verify(null);                 // throws
-```
+<DecoderPlayground
+  decoder="jsonObject"
+  examples={["{}", "{ name: 'Amir' }", "[]", "[{ name: 'Alice' }]", "'hello'", "null"]}
+/>
 
 ---
 
@@ -61,14 +48,7 @@ jsonObject.verify(null);                 // throws
 
 Accepts arrays that contain only valid JSON values.
 
-```ts
-// 👍
-jsonArray.verify([]);                  // []
-jsonArray.verify([{ name: 'Amir' }]);  // [{ name: 'Amir' }]
-
-// 👎
-jsonArray.verify({});                 // throws
-jsonArray.verify({ name: 'Alice' });  // throws
-jsonArray.verify('hello');            // throws
-jsonArray.verify(null);               // throws
-```
+<DecoderPlayground
+  decoder="jsonArray"
+  examples={["[]", "[{ name: 'Amir' }]", "{}", "{ name: 'Alice' }", "'hello'", "null"]}
+/>

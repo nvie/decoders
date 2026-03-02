@@ -5,24 +5,22 @@ description: Decoders for union types, enums, and tagged unions.
 
 ## either
 
-<DecoderSig name="either" params="Decoder<A>, Decoder<B>, ..." type="A | B | ..." source="unions.ts#L50-L83" />
+<DecoderSig
+  name="either"
+  params="Decoder<A>, Decoder<B>, ..."
+  type="A | B | ..."
+  source="unions.ts#L50-L83"
+/>
 
 Accepts values accepted by any of the given decoders.
 
-The decoders are tried on the input one by one, in the given order. The
-first one that accepts the input "wins". If all decoders reject the input,
-the input gets rejected.
+The decoders are tried on the input one by one, in the given order. The first one that
+accepts the input "wins". If all decoders reject the input, the input gets rejected.
 
-```ts
-const decoder = either(number, string);
-
-// 👍
-decoder.verify('hello world') === 'hello world';
-decoder.verify(123) === 123;
-
-// 👎
-decoder.verify(false);  // throws
-```
+<DecoderPlayground
+  decoder="either(number, string)"
+  examples={["'hello world'", '123', 'false']}
+/>
 
 ---
 
@@ -30,21 +28,12 @@ decoder.verify(false);  // throws
 
 <DecoderSig name="oneOf" params="values: T[]" type="T" source="unions.ts#L85-L97" />
 
-Accepts any value that is strictly-equal (using `===`) to one of the
-specified values.
+Accepts any value that is strictly-equal (using `===`) to one of the specified values.
 
-```ts
-const decoder = oneOf(['foo', 'bar', 3]);
-
-// 👍
-decoder.verify('foo') === 'foo';
-decoder.verify(3) === 3;
-
-// 👎
-decoder.verify('hello');  // throws
-decoder.verify(4);        // throws
-decoder.verify(false);    // throws
-```
+<DecoderPlayground
+  decoder="oneOf(['foo', 'bar', 3])"
+  examples={["'foo'", '3', "'hello'", '4', 'false']}
+/>
 
 For example, given an array of strings, like so:
 
@@ -56,108 +45,101 @@ oneOf(['foo', 'bar']);
 
 ## enum\_
 
-<DecoderSig name="enum_" params="enum: MyEnum" type="MyEnum" source="unions.ts#L99-L120" />
+<DecoderSig
+  name="enum_"
+  params="enum: MyEnum"
+  type="MyEnum"
+  source="unions.ts#L99-L120"
+/>
 
 Accepts and return an enum value.
 
 It works with numeric enums:
 
-```ts
-enum Fruit {
-  Apple,
-  Banana,
-  Cherry
-}
-
-const decoder = enum_(Fruit);
-
-// 👍
-decoder.verify(Fruit.Apple) === Fruit.Apple;
-decoder.verify(Fruit.Banana) === Fruit.Banana;
-decoder.verify(Fruit.Cherry) === Fruit.Cherry;
-decoder.verify(0) === Fruit.Apple;
-decoder.verify(1) === Fruit.Banana;
-decoder.verify(2) === Fruit.Cherry;
-
-// 👎
-decoder.verify('Apple');  // throws
-decoder.verify(-1);       // throws
-decoder.verify(3);        // throws
-```
+<DecoderPlayground
+  preface={'enum Fruit {\n  Apple,\n  Banana,\n  Cherry,\n}'}
+  globals={{
+    Fruit:
+      "Object.freeze({ 0: 'Apple', 1: 'Banana', 2: 'Cherry', Apple: 0, Banana: 1, Cherry: 2 })",
+  }}
+  decoder="enum_(Fruit)"
+  examples={['Fruit.Apple', 'Fruit.Banana', '0', '1', '4', "'Apple'"]}
+/>
 
 As well as with string enums:
 
-```ts
-enum Fruit {
-  Apple = 'a',
-  Banana = 'b',
-  Cherry = 'c'
-}
-
-const decoder = enum_(Fruit);
-
-// 👍
-decoder.verify(Fruit.Apple) === Fruit.Apple;
-decoder.verify(Fruit.Banana) === Fruit.Banana;
-decoder.verify(Fruit.Cherry) === Fruit.Cherry;
-decoder.verify('a') === Fruit.Apple;
-decoder.verify('b') === Fruit.Banana;
-decoder.verify('c') === Fruit.Cherry;
-
-// 👎
-decoder.verify('Apple');  // throws
-decoder.verify(0);        // throws
-decoder.verify(1);        // throws
-decoder.verify(2);        // throws
-decoder.verify(3);        // throws
-```
+<DecoderPlayground
+  globals={{
+    Fruit: "Object.freeze({ Apple: 'a', Banana: 'b', Cherry: 'c' })",
+  }}
+  preface={"enum Fruit {\n  Apple = 'a',\n  Banana = 'b',\n  Cherry = 'c',\n}"}
+  decoder="enum_(Fruit)"
+  examples={['Fruit.Apple', 'Fruit.Banana', "'a'", "'b'", "'Apple'", '0']}
+/>
 
 ---
 
 ## taggedUnion
 
-<DecoderSig name="taggedUnion" params="field: string, mapping: { value1: Decoder<A>, value2: Decoder<B>, ... }" type="A | B | ..." source="unions.ts#L122-L163" />
+<DecoderSig
+  name="taggedUnion"
+  params="field: string, mapping: { value1: Decoder<A>, value2: Decoder<B>, ... }"
+  type="A | B | ..."
+  source="unions.ts#L122-L163"
+/>
 
 If you are decoding tagged unions you may want to use the [`taggedUnion()`](#taggedunion)
-decoder instead of the general purpose [`either()`](#either) decoder to get better
-error messages and better performance.
+decoder instead of the general purpose [`either()`](#either) decoder to get better error
+messages and better performance.
 
-This decoder is optimized for [tagged
-unions](https://en.wikipedia.org/wiki/Tagged_union), i.e. a union of
-objects where one field is used as the discriminator.
-
-```ts
-const A = object({ tag: constant('A'), foo: string });
-const B = object({ tag: constant('B'), bar: number });
-
-const AorB = taggedUnion('tag', { A, B });
-//                        ^^^
-```
+This decoder is optimized for [tagged unions](https://en.wikipedia.org/wiki/Tagged_union),
+i.e. a union of objects where one field is used as the discriminator.
 
 Decoding now works in two steps:
 
-1. Look at the `'tag'` field in the incoming object (this is the field
-   that decides which decoder will be used)
-2. If the value is `'A'`, then decoder `A` will be used. If it's `'B'`, then
-   decoder `B` will be used. Otherwise, this will fail.
+1. Look at the discriminator field in the incoming object (this is the field that decides
+   which decoder will be used)
+2. If the value is `'A'`, then decoder `A` will be used. If it's `'B'`, then decoder `B`
+   will be used. Otherwise, this will fail.
 
-This is effectively equivalent to `either(A, B)`, but will provide better
-error messages and is more performant at runtime because it doesn't have to
-try all decoders one by one.
+This is effectively equivalent to `either(A, B)`, but will provide better error messages
+and is more performant at runtime because it doesn't have to try all decoders one by one.
+
+<DecoderPlayground
+  globals={{
+    A: "object({ type: constant('A'), foo: string })",
+    B: "object({ type: constant('B'), bar: number })",
+  }}
+  preface={
+    "const A = object({ type: constant('A'), foo: string });\nconst B = object({ type: constant('B'), bar: number });"
+  }
+  decoder="taggedUnion('type', { A, B })"
+  examples={[
+    "{ type: 'A', foo: 'hello' }",
+    "{ type: 'B', bar: 42 }",
+    "{ type: 'A', foo: 42 }",
+    "{ type: 'C' }",
+    "{ foo: 'hello' }",
+  ]}
+/>
 
 ---
 
 ## select
 
-<DecoderSig name="select" params="scout: Decoder<T>, selectFn: (result: T) => Decoder<A> | Decoder<B> | ..." type="A | B | ..." source="unions.ts#L165-L182" />
+<DecoderSig
+  name="select"
+  params="scout: Decoder<T>, selectFn: (result: T) => Decoder<A> | Decoder<B> | ..."
+  type="A | B | ..."
+  source="unions.ts#L165-L182"
+/>
 
-Briefly peek at a runtime input using a "scout" decoder first, then decide
-which decoder to run on the (original) input, based on the information that
-the "scout" extracted.
+Briefly peek at a runtime input using a "scout" decoder first, then decide which decoder
+to run on the (original) input, based on the information that the "scout" extracted.
 
-It serves a similar purpose as [`taggedUnion()`](#taggedunion), but is a generalization that
-works even if there isn't a single discriminator, or the discriminator isn't
-a string.
+It serves a similar purpose as [`taggedUnion()`](#taggedunion), but is a generalization
+that works even if there isn't a single discriminator, or the discriminator isn't a
+string.
 
 ```ts
 const decoder = select(
@@ -167,10 +149,14 @@ const decoder = select(
   // Then select which decoder to run
   (obj) => {
     switch (obj.version) {
-      case undefined: return v1Decoder; // Suppose v1 doesn't have a discriminating field
-      case 2:         return v2Decoder;
-      case 3:         return v3Decoder;
-      default:        return never('Invalid version');
+      case undefined:
+        return v1Decoder; // Suppose v1 doesn't have a discriminating field
+      case 2:
+        return v2Decoder;
+      case 3:
+        return v3Decoder;
+      default:
+        return never('Invalid version');
     }
   },
 );

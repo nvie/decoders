@@ -128,17 +128,10 @@ decoder.verify({ a: 'foo', b: 'bar' }); // throws
 
 Accepts any value that is an `instanceof` the given class.
 
-```ts
-const decoder = instanceOf(Error);
-
-// 👍
-const value = new Error('foo');
-decoder.verify(value) === value;
-
-// 👎
-decoder.verify('foo'); // throws
-decoder.verify(3); // throws
-```
+<DecoderPlayground
+  decoder="instanceOf(Error)"
+  examples={["new Error('foo')", "'foo'", "3"]}
+/>
 
 ---
 

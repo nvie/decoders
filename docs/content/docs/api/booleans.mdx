@@ -9,16 +9,10 @@ description: Boolean decoders for validating and parsing boolean values.
 
 Accepts and returns booleans.
 
-```ts
-// 👍
-boolean.verify(false) === false;
-boolean.verify(true) === true;
-
-// 👎
-boolean.verify(undefined);      // throws
-boolean.verify('hello world');  // throws
-boolean.verify(123);            // throws
-```
+<DecoderPlayground
+  decoder="boolean"
+  examples={["false", "true", "undefined", "'hello world'", "123"]}
+/>
 
 ---
 
@@ -28,17 +22,7 @@ boolean.verify(123);            // throws
 
 Accepts anything and will return its "truth" value. Will never reject.
 
-```ts
-// 👍
-truthy.verify(false) === false;
-truthy.verify(true) === true;
-truthy.verify(undefined) === false;
-truthy.verify('hello world') === true;
-truthy.verify('false') === true;
-truthy.verify(0) === false;
-truthy.verify(1) === true;
-truthy.verify(null) === false;
-
-// 👎
-// This decoder will never reject an input
-```
+<DecoderPlayground
+  decoder="truthy"
+  examples={["false", "true", "undefined", "'hello world'", "'false'", "0", "1", "null"]}
+/>

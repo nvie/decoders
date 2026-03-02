@@ -15,25 +15,11 @@ description: Instance methods available on all Decoder instances.
 Verifies the untrusted/unknown input and either accepts or rejects it. When accepted,
 returns a value of type `T`. Otherwise fail with a runtime error.
 
-<img
-  alt="The .verify() method explained"
-  src="/schematic-verify.png"
-  style={{ maxWidth: 'min(592px, 100%)' }}
+<DecoderPlayground
+  mode="verify"
+  decoder="number"
+  examples={['123', '3.1415', "'hello'"]}
 />
-
-For example, take this simple number decoder.
-
-```ts
-// 👍
-number.verify(123); // 123
-number.verify(3.1415); // 3.1415
-
-// 👎
-number.verify('hello'); // throws
-// Decoding error:
-// "hello"
-// ^^^^^^^ Must be number
-```
 
 ---
 
@@ -51,21 +37,11 @@ returns the decoded `T` value directly. Otherwise returns `undefined`.
 
 Use this when you're not interested in programmatically handling the error message.
 
-<img
-  alt="The .value() method explained"
-  src="/schematic-value.png"
-  style={{ maxWidth: 'min(592px, 100%)' }}
+<DecoderPlayground
+  mode="value"
+  decoder="number"
+  examples={['3', "'hi'", '42', "'hello'"]}
 />
-
-```ts
-// 👍
-number.value(3); // 3
-string.value('hi'); // 'hi'
-
-// 👎
-number.value('hi'); // undefined
-string.value(42); // undefined
-```
 
 ---
 
@@ -83,15 +59,8 @@ Verifies the untrusted/unknown input and either accepts or rejects it.
 Contrasted with [`.verify()`](#decoder.verify), calls to [`.decode()`](#decoder.decode)
 will never fail and instead return a result type.
 
-<img
-  alt="The .decode() method explained"
-  src="/schematic-decode.png"
-  style={{ maxWidth: 'min(592px, 100%)' }}
-/>
-
 For example, take this simple "number" decoder. When given an number value, it will return
-an ok: true result. Otherwise, it will return an ok: false result with the original input
-value annotated.
+an `ok: true` result. Otherwise, it will return an `ok: false` result.
 
 ```ts
 // 👍
@@ -116,15 +85,10 @@ Accepts any value the given decoder accepts, and on success, will call the given
 **on the decoded result**. If the transformation function throws an error, the whole
 decoder will fail using the error message as the failure reason.
 
-```ts
-const upper = string.transform((s) => s.toUpperCase());
-
-// 👍
-upper.verify('foo') === 'FOO';
-
-// 👎
-upper.verify(4); // throws
-```
+<DecoderPlayground
+  decoder="string.transform(s => s.toUpperCase())"
+  examples={["'foo'", '4']}
+/>
 
 ---
 
@@ -140,16 +104,10 @@ upper.verify(4); // throws
 Adds an extra predicate to a decoder. The new decoder is like the original decoder, but
 only accepts values that also meet the predicate.
 
-```ts
-const odd = number.refine((n) => n % 2 !== 0, 'Must be odd');
-
-// 👍
-odd.verify(3) === 3;
-
-// 👎
-odd.verify(42); // throws: not an odd number
-odd.verify('hi'); // throws: not a number
-```
+<DecoderPlayground
+  decoder="number.refine(n => n % 2 !== 0, 'Must be odd')"
+  examples={['3', '42', "'hi'"]}
+/>
 
 In TypeScript, if you provide a predicate that also is a
 [type predicate](https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates),
@@ -188,18 +146,10 @@ error message to reject.
 Unlike [`.refine()`](#decoder.refine), you can use this function to return a dynamic error
 message.
 
-```ts
-const decoder = pojo.reject((obj) => {
-  const badKeys = Object.keys(obj).filter((key) => key.startsWith('_'));
-  return badKeys.length > 0 ? `Disallowed keys: ${badKeys.join(', ')}` : null;
-});
-
-// 👍
-decoder.verify({ id: 123, name: 'Vincent' }) === { id: 123, name: 'Vincent' };
-
-// 👎
-decoder.verify({ id: 123, _name: 'Vincent' }); // throws: "Disallowed keys: _name"
-```
+<DecoderPlayground
+  decoder="string.reject(s => s.length > 5 ? `Too long (${s.length} chars)` : null)"
+  examples={["'hello'", "'this string is too long'", '42']}
+/>
 
 ---
 
@@ -215,9 +165,10 @@ decoder.verify({ id: 123, _name: 'Vincent' }); // throws: "Disallowed keys: _nam
 Uses the given decoder, but will use an alternative error message in case it rejects. This
 can be used to simplify or shorten otherwise long or low-level/technical errors.
 
-```ts
-const vowel = oneOf(['a', 'e', 'i', 'o', 'u']).describe('Must be vowel');
-```
+<DecoderPlayground
+  decoder="oneOf(['a', 'e', 'i', 'o', 'u']).describe('Must be a vowel')"
+  examples={["'a'", "'x'", '42']}
+/>
 
 ---
 
@@ -240,10 +191,11 @@ const vowel = oneOf(['a', 'e', 'i', 'o', 'u']).describe('Must be vowel');
 Send the output of the current decoder into another decoder or acceptance function. The
 given acceptance function will receive the output of the current decoder as its input.
 
-> _**NOTE:** This is an advanced, low-level, API. It's not recommended to reach for this
-> construct unless there is no other way. Most cases can be covered more elegantly by
-> [`.transform()`](#decoder.transform), [`.refine()`](#decoder.refine), or
-> [`.pipe()`](#decoder.pipe) instead._
+<Callout title="This is an advanced, low-level, API" type="warning">
+  It’s not recommended to reach for this construct unless there is no other way. Most
+  cases can be covered more elegantly by [`.transform()`](#decoder.transform),
+  [`.refine()`](#decoder.refine), or [`.pipe()`](#decoder.pipe) instead.
+</Callout>
 
 ---
 
@@ -263,33 +215,24 @@ given acceptance function will receive the output of the current decoder as its 
   source="core/Decoder.ts#L267-L287"
 />
 
-```tsx
-const decoder = string
-  .transform((s) => s.split(',').map(Number))
-  .pipe(array(positiveInteger));
+<DecoderPlayground
+  decoder="string.transform(s => s.split(',').map(Number)).pipe(array(positiveInteger))"
+  examples={["'7'", "'1,2,3'", "'1,-3'", "'🚀'", "'3.14'", '123', 'true', 'null']}
+/>
 
-// 👍
-decoder.verify('7') === [7];
-decoder.verify('1,2,3') === [1, 2, 3];
-
-// 👎
-decoder.verify('1,-3'); // -3 is not positive
-decoder.verify('🚀'); // not a number
-decoder.verify('3.14'); // not a whole number
-decoder.verify(123); // not a string
-decoder.verify(true); // not a string
-decoder.verify(null); // not a string
-```
-
-#### Dynamic decoder selection with `.pipe()`
+### Dynamic decoder selection with `.pipe()`
 
 With [`.pipe()`](#decoder.pipe) you can also dynamically select another decoder, based on
 dynamic runtime value.
 
-```tsx
-string
-  .transform((s) => s.split(',').map(Number))
-  .pipe((tup) =>
-    tup.length === 2 ? point2d : tup.length === 3 ? point3d : never('Invalid coordinate'),
-  );
-```
+<DecoderPlayground
+  globals={{
+    point2d: 'tuple(number, number)',
+    point3d: 'tuple(number, number, number)',
+  }}
+  preface={
+    'const point2d = tuple(number, number);\nconst point3d = tuple(number, number, number);'
+  }
+  decoder="string.transform(s => s.split(',').map(Number)).pipe(tup => tup.length === 2 ? point2d : tup.length === 3 ? point3d : never('Must be 2D or 3D point'))"
+  examples={["'1'", "'1,2'", "'1,2,3'", "'1,2,3,4'"]}
+/>

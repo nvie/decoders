@@ -10,16 +10,10 @@ description: Number decoders for validating and parsing numeric values.
 Accepts finite numbers (can be integer or float values). Values `NaN`,
 or positive and negative `Infinity` will get rejected.
 
-```ts
-// 👍
-number.verify(123) === 123;
-number.verify(-3.14) === -3.14;
-
-// 👎
-number.verify(Infinity);        // throws
-number.verify(NaN);             // throws
-number.verify('not a number');  // throws
-```
+<DecoderPlayground
+  decoder="number"
+  examples={["123", "-3.14", "Infinity", "NaN", "'not a number'"]}
+/>
 
 ---
 
@@ -29,16 +23,10 @@ number.verify('not a number');  // throws
 
 Accepts only finite whole numbers.
 
-```ts
-// 👍
-integer.verify(123) === 123;
-
-// 👎
-integer.verify(-3.14);           // throws
-integer.verify(Infinity);        // throws
-integer.verify(NaN);             // throws
-integer.verify('not a integer'); // throws
-```
+<DecoderPlayground
+  decoder="integer"
+  examples={["123", "-3.14", "Infinity", "NaN", "'not a integer'"]}
+/>
 
 ---
 
@@ -48,19 +36,10 @@ integer.verify('not a integer'); // throws
 
 Accepts only non-negative (zero or positive) finite numbers.
 
-```ts
-// 👍
-positiveNumber.verify(123) === 123;
-positiveNumber.verify(3.14) === 3.14;
-positiveNumber.verify(0) === 0;
-
-// 👎
-positiveNumber.verify(-42);             // throws
-positiveNumber.verify(Infinity);        // throws
-positiveNumber.verify(NaN);             // throws
-positiveNumber.verify('not a number');  // throws
-positiveNumber.verify(-0);              // throws
-```
+<DecoderPlayground
+  decoder="positiveNumber"
+  examples={["123", "3.14", "0", "-42", "Infinity", "NaN", "'not a number'", "-0"]}
+/>
 
 ---
 
@@ -70,19 +49,10 @@ positiveNumber.verify(-0);              // throws
 
 Accepts only non-negative (zero or positive) finite whole numbers.
 
-```ts
-// 👍
-positiveInteger.verify(123) === 123;
-positiveInteger.verify(0) === 0;
-
-// 👎
-positiveInteger.verify(-3);              // throws
-positiveInteger.verify(3.14);            // throws
-positiveInteger.verify(Infinity);        // throws
-positiveInteger.verify(NaN);             // throws
-positiveInteger.verify('not a number');  // throws
-positiveInteger.verify(-0);              // throws
-```
+<DecoderPlayground
+  decoder="positiveInteger"
+  examples={["123", "0", "-3", "3.14", "Infinity", "NaN", "'not a number'", "-0"]}
+/>
 
 ---
 
@@ -96,16 +66,10 @@ This also accepts special values like `NaN` and `Infinity`. Unless you
 want to deliberately accept those, you'll likely want to use the
 [`number`](#number) decoder instead.
 
-```ts
-// 👍
-anyNumber.verify(123) === 123;
-anyNumber.verify(-3.14) === -3.14;
-anyNumber.verify(Infinity) === Infinity;
-anyNumber.verify(NaN) === NaN;
-
-// 👎
-anyNumber.verify('not a number');  // throws
-```
+<DecoderPlayground
+  decoder="anyNumber"
+  examples={["123", "-3.14", "Infinity", "NaN", "'not a number'"]}
+/>
 
 ---
 
@@ -115,15 +79,7 @@ anyNumber.verify('not a number');  // throws
 
 Accepts any valid `bigint` value.
 
-```ts
-// 👍
-bigint.verify(123n) === 123n;
-bigint.verify(-4543000000n) === -4543000000n;
-
-// 👎
-bigint.verify(123);             // throws
-bigint.verify(-3.14);           // throws
-bigint.verify(Infinity);        // throws
-bigint.verify(NaN);             // throws
-bigint.verify('not a number');  // throws
-```
+<DecoderPlayground
+  decoder="bigint"
+  examples={["123n", "-4543000000n", "123", "-3.14", "Infinity", "NaN", "'not a number'"]}
+/>
