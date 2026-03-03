@@ -68,11 +68,11 @@ export function max(decoder: Decoder<number>, max: number): Decoder<number> {
  */
 export function between(
   decoder: Decoder<number>,
-  lo: number,
-  hi: number,
+  min: number,
+  max: number,
 ): Decoder<number> {
   return decoder.reject((value) =>
-    value < lo ? `Must be at least ${lo}` : value > hi ? `Must be at most ${hi}` : null,
+    value < min ? `Must be at least ${min}` : value > max ? `Must be at most ${max}` : null,
   );
 }
 

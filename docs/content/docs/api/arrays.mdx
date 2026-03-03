@@ -70,3 +70,26 @@ decoders.
   decoder="tuple(string, number)"
   examples={["['hello', 1.2]", '[]', "['hello', 'world']", "['a', 1, 'c']"]}
 />
+
+---
+
+## Limiting array sizes
+
+<DecoderSig
+  name="sized"
+  params="decoder: Decoder<T[]>, options: SizeOptions"
+  type="T[]"
+  source="strings.ts#L112-L121"
+/>
+
+<Since version="2.9" />
+
+Takes any array decoder and rejects values that don't match the given size constraints.
+Also works with [strings](/docs/api/strings#limiting-string-size) and [sets](/docs/api/sets-and-maps#limiting-set-sizes).
+
+`SizeOptions` accepts `min`, `max`, or `size` (shorthand for exact length).
+
+<DecoderPlayground
+  decoder="sized(array(number), { min: 2, max: 4 })"
+  examples={['[1, 2, 3]', '[1, 2]', '[1]', '[1, 2, 3, 4, 5]', '[]']}
+/>

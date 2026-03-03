@@ -240,29 +240,6 @@ Accepts and returns strings that are valid identifiers in most programming langu
 
 ---
 
-## sized
-
-<DecoderSig
-  name="sized"
-  params="decoder: Decoder<string>, options: SizeOptions"
-  type="string"
-  source="strings.ts#L112-L121"
-/>
-
-<Since version="2.9" />
-
-Takes any string decoder and rejects values that don't match the given size constraints.
-Also works with [arrays and sets](/docs/api/utilities#sized).
-
-`SizeOptions` accepts `min`, `max`, or `size` (shorthand for exact length).
-
-<DecoderPlayground
-  decoder="sized(string, { min: 2, max: 10 })"
-  examples={["'hello'", "'hi'", "'x'", "'this string is too long'", '42']}
-/>
-
----
-
 ## nanoid
 
 <DecoderSig
@@ -343,4 +320,27 @@ strings.
     "'123e4567-e89b-42d3-a456-426614174000'",
     "'123e4567-e89b-12d3-a456-426614174000'",
   ]}
+/>
+
+---
+
+## Limiting string size
+
+<DecoderSig
+  name="sized"
+  params="decoder: Decoder<string>, options: SizeOptions"
+  type="string"
+  source="strings.ts#L112-L121"
+/>
+
+<Since version="2.9" />
+
+Takes any string decoder and rejects values that don't match the given size constraints.
+Also works with [arrays](/docs/api/arrays#limiting-array-sizes) and [sets](/docs/api/sets-and-maps#limiting-set-sizes).
+
+`SizeOptions` accepts `min`, `max`, or `size` (shorthand for exact length).
+
+<DecoderPlayground
+  decoder="sized(string, { min: 2, max: 10 })"
+  examples={["'hello'", "'hi'", "'x'", "'this string is too long'", '42']}
 />

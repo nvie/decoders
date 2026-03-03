@@ -1,6 +1,6 @@
 ---
-title: Unions
-description: Decoders for union types, enums, and tagged unions.
+title: Choices
+description: Decoders for union types and tagged unions.
 ---
 
 ## either
@@ -40,54 +40,6 @@ For example, given an array of strings, like so:
 ```ts
 oneOf(['foo', 'bar']);
 ```
-
----
-
-## enum\_
-
-<DecoderSig
-  name="enum_"
-  params="enum: MyEnum"
-  type="MyEnum"
-  source="unions.ts#L99-L120"
-/>
-
-Accepts and return an enum value.
-
-It works with numeric enums:
-
-<DecoderPlayground
-  preface={`
-    enum Fruit {
-      Apple,
-      Banana,
-      Cherry,
-    }
-  `}
-  globals={{
-    Fruit:
-      "Object.freeze({ 0: 'Apple', 1: 'Banana', 2: 'Cherry', Apple: 0, Banana: 1, Cherry: 2 })",
-  }}
-  decoder="enum_(Fruit)"
-  examples={['Fruit.Apple', 'Fruit.Banana', '0', '1', '4', "'Apple'"]}
-/>
-
-As well as with string enums:
-
-<DecoderPlayground
-  globals={{
-    Fruit: "Object.freeze({ Apple: 'a', Banana: 'b', Cherry: 'c' })",
-  }}
-  preface={`
-    enum Fruit {
-      Apple = 'a',
-      Banana = 'b',
-      Cherry = 'c',
-    }
-  `}
-  decoder="enum_(Fruit)"
-  examples={['Fruit.Apple', 'Fruit.Banana', "'a'", "'b'", "'Apple'", '0']}
-/>
 
 ---
 

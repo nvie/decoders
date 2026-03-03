@@ -92,6 +92,45 @@ decoder.verify('hi'); // throws: not a number
 
 ---
 
+## unknown
+
+<DecoderSig name="unknown" type="unknown" source="basics.ts#L124-L131" />
+
+<DecoderSig name="anything" type="unknown" source="basics.ts#L133-L136" />
+
+Accepts anything and returns it unchanged.
+
+Useful for situation in which you don't know or expect a specific type. Of course, the
+downside is that you won't know the type of the value statically and you'll have to
+further refine it yourself.
+
+<DecoderPlayground
+  decoder="unknown"
+  examples={["'hello'", 'false', 'undefined', '[1, 2]']}
+/>
+
+---
+
+## always
+
+<DecoderSig name="always" params="value: T" type="T" source="basics.ts#L95-L109" />
+
+Accepts anything, completely ignores it, and always returns the provided value instead.
+
+This is useful to manually add extra fields to object decoders.
+
+<DecoderPlayground decoder="always(42)" examples={["'hello'", 'false', 'undefined']} />
+
+Or use it with a function instead of a constant:
+
+```ts
+const now = always(() => new Date());
+
+now.verify('dummy'); // e.g. new Date('2022-02-07T09:36:58.848Z')
+```
+
+---
+
 ## never
 
 <DecoderSig name="never" type="never" source="basics.ts#L111-L117" />

@@ -1,0 +1,64 @@
+---
+title: Sets & Maps
+description: Decoders for maps and sets.
+---
+
+## mapping
+
+<DecoderSig
+  name="mapping"
+  params="decoder: Decoder<T>"
+  type="Map<string, T>"
+  source="collections.ts#L67-L74"
+/>
+
+Similar to [`record()`](/docs/api/objects#record), but returns the result as a `Map<string, T>` (an
+[ES6 Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map))
+instead.
+
+<DecoderPlayground
+  decoder="mapping(number)"
+  examples={['{ red: 1, blue: 2, green: 3 }', "{ hi: 'not a number' }"]}
+/>
+
+---
+
+## setFromArray
+
+<DecoderSig
+  name="setFromArray"
+  params="decoder: Decoder<T>"
+  type="Set<T>"
+  source="collections.ts#L59-L65"
+/>
+
+Similar to [`array()`](/docs/api/arrays#array), but returns the result as an
+[ES6 Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set).
+
+<DecoderPlayground
+  decoder="setFromArray(string)"
+  examples={["['abc', 'pqr']", '[]', '[1, 2]']}
+/>
+
+---
+
+## Limiting set sizes
+
+<DecoderSig
+  name="sized"
+  params="decoder: Decoder<Set<T>>, options: SizeOptions"
+  type="Set<T>"
+  source="strings.ts#L112-L121"
+/>
+
+<Since version="2.9" />
+
+Takes any set decoder and rejects values that don't match the given size constraints.
+Also works with [strings](/docs/api/strings#limiting-string-size) and [arrays](/docs/api/arrays#limiting-array-sizes).
+
+`SizeOptions` accepts `min`, `max`, or `size` (shorthand for exact length).
+
+<DecoderPlayground
+  decoder="sized(setFromArray(string), { min: 1, max: 3 })"
+  examples={["['a', 'b']", "['a']", '[]', "['a', 'b', 'c', 'd']"]}
+/>

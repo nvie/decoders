@@ -1,32 +1,6 @@
 ---
-title: Optionality
-description: Decoders for handling null, undefined, and optional values.
----
-
-## null\_
-
-<DecoderSig name="null_" type="null" source="basics.ts#L12-L15" />
-
-Accepts and returns only the literal `null` value.
-
-<DecoderPlayground
-  decoder="null_"
-  examples={['null', 'false', 'undefined', "'hello world'"]}
-/>
-
----
-
-## undefined\_
-
-<DecoderSig name="undefined_" type="undefined" source="basics.ts#L17-L20" />
-
-Accepts and returns only the literal `undefined` value.
-
-<DecoderPlayground
-  decoder="undefined_"
-  examples={['undefined', 'null', 'false', "'hello world'"]}
-/>
-
+title: Optional
+description: Decoders for handling optional and nullable values.
 ---
 
 ## optional
@@ -148,22 +122,3 @@ decoder.verify('hello') === 'hello';
 decoder.verify(null) === null;
 decoder.verify(undefined) === null;
 ```
-
----
-
-## unknown
-
-<DecoderSig name="unknown" type="unknown" source="basics.ts#L124-L131" />
-
-<DecoderSig name="anything" type="unknown" source="basics.ts#L133-L136" />
-
-Accepts anything and returns it unchanged.
-
-Useful for situation in which you don't know or expect a specific type. Of course, the
-downside is that you won't know the type of the value statically and you'll have to
-further refine it yourself.
-
-<DecoderPlayground
-  decoder="unknown"
-  examples={["'hello'", 'false', 'undefined', '[1, 2]']}
-/>

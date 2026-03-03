@@ -16,20 +16,74 @@ Accepts only the given constant value.
 
 ---
 
-## always
+## null\_
 
-<DecoderSig name="always" params="value: T" type="T" source="basics.ts#L95-L109" />
+<DecoderSig name="null_" type="null" source="basics.ts#L12-L15" />
 
-Accepts anything, completely ignores it, and always returns the provided value instead.
+Accepts and returns only the literal `null` value.
 
-This is useful to manually add extra fields to object decoders.
+<DecoderPlayground
+  decoder="null_"
+  examples={['null', 'false', 'undefined', "'hello world'"]}
+/>
 
-<DecoderPlayground decoder="always(42)" examples={["'hello'", 'false', 'undefined']} />
+---
 
-Or use it with a function instead of a constant:
+## undefined\_
 
-```ts
-const now = always(() => new Date());
+<DecoderSig name="undefined_" type="undefined" source="basics.ts#L17-L20" />
 
-now.verify('dummy'); // e.g. new Date('2022-02-07T09:36:58.848Z')
-```
+Accepts and returns only the literal `undefined` value.
+
+<DecoderPlayground
+  decoder="undefined_"
+  examples={['undefined', 'null', 'false', "'hello world'"]}
+/>
+
+---
+
+## enum\_
+
+<DecoderSig
+  name="enum_"
+  params="enum: MyEnum"
+  type="MyEnum"
+  source="unions.ts#L99-L120"
+/>
+
+Accepts and return an enum value.
+
+It works with numeric enums:
+
+<DecoderPlayground
+  preface={`
+    enum Fruit {
+      Apple,
+      Banana,
+      Cherry,
+    }
+  `}
+  globals={{
+    Fruit:
+      "Object.freeze({ 0: 'Apple', 1: 'Banana', 2: 'Cherry', Apple: 0, Banana: 1, Cherry: 2 })",
+  }}
+  decoder="enum_(Fruit)"
+  examples={['Fruit.Apple', 'Fruit.Banana', '0', '1', '4', "'Apple'"]}
+/>
+
+As well as with string enums:
+
+<DecoderPlayground
+  globals={{
+    Fruit: "Object.freeze({ Apple: 'a', Banana: 'b', Cherry: 'c' })",
+  }}
+  preface={`
+    enum Fruit {
+      Apple = 'a',
+      Banana = 'b',
+      Cherry = 'c',
+    }
+  `}
+  decoder="enum_(Fruit)"
+  examples={['Fruit.Apple', 'Fruit.Banana', "'a'", "'b'", "'Apple'", '0']}
+/>

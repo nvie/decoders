@@ -5,13 +5,13 @@
     "numbers",
     "booleans",
     "dates",
-    "constants",
-    "optionality",
-    "arrays",
+    "optional",
+    "choices",
     "objects",
-    "collections",
+    "arrays",
+    "sets-and-maps",
+    "constants",
     "json",
-    "unions",
     "utilities"
   ]
 }

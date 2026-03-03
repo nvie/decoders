@@ -69,6 +69,51 @@ For more information, see also
 
 ---
 
+## record
+
+<DecoderSig
+  name="record"
+  params="values: Decoder<V>"
+  type="Record<string, V>"
+  source="collections.ts#L8-L57"
+/>
+
+<DecoderSig
+  name="record"
+  params="keys: Decoder<K>, values: Decoder<V>"
+  type="Record<K, V>"
+  source="collections.ts#L8-L57"
+/>
+
+Accepts objects where all values match the given decoder, and returns the result as a
+`Record<string, V>`.
+
+This is useful to validate inputs like `{ [key: string]: V }`.
+
+#### Decoding values only
+
+The default call takes a single argument and will validate all _values_. For example, to
+validate that all values in the object are numbers:
+
+<DecoderPlayground
+  decoder="record(number)"
+  examples={['{ red: 1, blue: 2, green: 3 }', "{ hi: 'not a number' }"]}
+/>
+
+#### Decoding keys and values
+
+If you also want to validate that keys are of a specific form, use the two-argument form:
+`record(key, value)`. Note that the given key decoder must return strings.
+
+For example, to enforce that all keys are emails:
+
+<DecoderPlayground
+  decoder="record(email, number)"
+  examples={["{ 'me@nvie.com': 1 }", "{ 'no-email': 1 }"]}
+/>
+
+---
+
 ## pojo
 
 <DecoderSig name="pojo" type="Record<string, unknown>" source="objects.ts#L47-L53" />
