@@ -17,7 +17,9 @@ import {
 import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
 import { Signal } from '@/lib/signals';
 
-type EvalResult = { ok: true; value: string } | { ok: false; error: string };
+type CellResult =
+  | { status: 'accepted'; value: string }
+  | { status: 'rejected'; error: string };
 
 type Mode = 'verify' | 'value' | 'decode';
 type Fmt = 'formatShort' | 'formatInline';
@@ -47,8 +49,8 @@ function useSignal<T>(signal: Signal<T>): T {
 }
 
 interface Props {
-  /** Expression that evaluates to a decoder, e.g. "string" */
-  decoder: string;
+  /** Expression that evaluates to a decoder, e.g. "string", or an array of [name, expression] tuples for multi-decoder comparison */
+  decoder: string | [string, string][];
   /** Input expressions to try, e.g. ["'hello'", "42", "null"] */
   examples: string[];
   /** When set, locks this playground to the given mode (ignoring the global signal) */
@@ -80,9 +82,7 @@ function formatValue(value: unknown): string {
 
 interface Row {
   input: string;
-  result?: EvalResult;
-  /** Whether .decode() returned ok: true — used for the accepted/rejected comment */
-  accepted?: boolean;
+  cells: (CellResult | undefined)[];
 }
 
 // Node.js REPL-style syntax highlighting
@@ -178,7 +178,43 @@ function formatSnippet(decoder: string, mode: Mode, input: string, fmt: Fmt): st
     .join('\n');
 }
 
+function statusComment(cell: CellResult | undefined): string {
+  if (cell?.status === 'accepted') return '  // accepted \u{1F44D}';
+  if (cell?.status === 'rejected') return '  // rejected \u{1F44E}';
+  return '';
+}
+
+function renderCellContent(cell: CellResult | undefined, input: string, mode: Mode): React.ReactNode {
+  if (!input) return null;
+  if (!cell) return <span className="text-fd-muted-foreground">&hellip;</span>;
+  if (cell.status === 'accepted') {
+    return <code className="whitespace-pre text-xs">{highlight(cell.value)}</code>;
+  }
+  // In value mode, rejected inputs show "undefined" as a normal value
+  if (mode === 'value') {
+    return <code className="whitespace-pre text-xs">{highlight(cell.error)}</code>;
+  }
+  return (
+    <code
+      className="whitespace-pre-wrap text-xs"
+      style={{ color: 'light-dark(#c4210a, #e5534b)' }}
+    >
+      {cell.error.trim()}
+    </code>
+  );
+}
+
 export function DecoderPlayground(props: Props) {
+  const decoderEntries: [string, string][] =
+    typeof props.decoder === 'string'
+      ? [['Result', props.decoder]]
+      : props.decoder;
+  const isMulti = decoderEntries.length > 1;
+  const decoderKey =
+    typeof props.decoder === 'string'
+      ? props.decoder
+      : JSON.stringify(props.decoder);
+
   const globalMode = useSignal(mode$);
   const mode = props.mode ?? globalMode;
   const fmt = useSignal(fmt$);
@@ -186,7 +222,7 @@ export function DecoderPlayground(props: Props) {
   const showFmt = mode !== 'value';
   const showPopover = !modeLocked || showFmt;
   const [rows, setRows] = useState<Row[]>(() =>
-    props.examples.map((input) => ({ input })),
+    props.examples.map((input) => ({ input, cells: [] })),
   );
   const [activeRow, setActiveRow] = useState(0);
   const [ready, setReady] = useState(false);
@@ -207,45 +243,50 @@ export function DecoderPlayground(props: Props) {
     scrollAnchorRef.current = null;
   });
 
-  const evalInput = useCallback(
-    (inputExpr: string, m: Mode, f: Fmt): EvalResult | undefined => {
+  const evalCell = useCallback(
+    (decoderExpr: string, inputExpr: string, m: Mode, f: Fmt): CellResult | undefined => {
       const compartment = compartmentRef.current;
       if (!inputExpr || !compartment) return undefined;
 
       try {
+        // Check acceptance via .decode()
+        const decodeResult = compartment.evaluate(
+          `(${decoderExpr}).decode(${inputExpr})`,
+        ) as { ok: boolean; value?: unknown; error?: unknown };
+        const accepted = decodeResult.ok;
+
         switch (m) {
           case 'verify': {
-            const code = `(${props.decoder}).verify(${inputExpr})`;
-            const result = compartment.evaluate(code);
-            return { ok: true, value: formatValue(result) };
+            if (accepted) {
+              const result = compartment.evaluate(`(${decoderExpr}).verify(${inputExpr})`);
+              return { status: 'accepted', value: formatValue(result) };
+            }
+            const formatted = compartment.evaluate(
+              `${f}((${decoderExpr}).decode(${inputExpr}).error)`,
+            ) as string;
+            return { status: 'rejected', error: formatted };
           }
 
           case 'value': {
-            const code = `(${props.decoder}).value(${inputExpr})`;
-            const result = compartment.evaluate(code);
-            return { ok: true, value: formatValue(result) };
+            const result = compartment.evaluate(`(${decoderExpr}).value(${inputExpr})`);
+            return accepted
+              ? { status: 'accepted', value: formatValue(result) }
+              : { status: 'rejected', error: formatValue(result) };
           }
 
           case 'decode': {
-            const result = compartment.evaluate(
-              `(${props.decoder}).decode(${inputExpr})`,
-            ) as {
-              ok: boolean;
-              value?: unknown;
-              error?: unknown;
-            };
-            if (result.ok) {
+            if (accepted) {
               return {
-                ok: true,
-                value: `{ ok: true, value: ${formatValue(result.value)} }`,
+                status: 'accepted',
+                value: `{ ok: true, value: ${formatValue(decodeResult.value)} }`,
               };
             }
             const annotation = compartment.evaluate(
-              `${f}((${props.decoder}).decode(${inputExpr}).error)`,
+              `${f}((${decoderExpr}).decode(${inputExpr}).error)`,
             ) as string;
             return {
-              ok: true,
-              value: `{ ok: false, error: ${JSON.stringify(annotation)} }`,
+              status: 'rejected',
+              error: `{ ok: false, error: ${JSON.stringify(annotation)} }`,
             };
           }
         }
@@ -254,34 +295,18 @@ export function DecoderPlayground(props: Props) {
         // For verify errors, format using the selected formatter
         if (m === 'verify') {
           try {
-            const formatted = compartment.evaluate(
-              `${f}((${props.decoder}).decode(${inputExpr}).error)`,
+            const formatted = compartmentRef.current!.evaluate(
+              `${f}((${decoderExpr}).decode(${inputExpr}).error)`,
             ) as string;
-            return { ok: false, error: formatted };
+            return { status: 'rejected', error: formatted };
           } catch {
             // Fall through to raw message
           }
         }
-        return { ok: false, error: msg };
+        return { status: 'rejected', error: msg };
       }
     },
-    [props.decoder],
-  );
-
-  const checkAccepted = useCallback(
-    (inputExpr: string): boolean | undefined => {
-      const compartment = compartmentRef.current;
-      if (!inputExpr || !compartment) return undefined;
-      try {
-        const result = compartment.evaluate(
-          `(${props.decoder}).decode(${inputExpr})`,
-        ) as { ok: boolean };
-        return result.ok;
-      } catch {
-        return false;
-      }
-    },
-    [props.decoder],
+    [],
   );
 
   // Re-eval all rows synchronously when mode or fmt changes (derived state
@@ -296,8 +321,7 @@ export function DecoderPlayground(props: Props) {
     setRows((prev) =>
       prev.map((row) => ({
         input: row.input,
-        result: evalInput(row.input, mode, fmt),
-        accepted: checkAccepted(row.input),
+        cells: decoderEntries.map(([, expr]) => evalCell(expr, row.input, mode, fmt)),
       })),
     );
   }
@@ -320,7 +344,7 @@ export function DecoderPlayground(props: Props) {
         // Evaluate extra globals (e.g. custom decoders) and inject them
         if (props.globals) {
           for (const [name, expr] of Object.entries(props.globals)) {
-            compartment.globalThis[name] = compartment.evaluate(expr);
+            compartment.globalThis[name] = compartment.evaluate(`(${expr})`);
           }
         }
 
@@ -330,8 +354,7 @@ export function DecoderPlayground(props: Props) {
           setRows((prev) =>
             prev.map((row) => ({
               input: row.input,
-              result: evalInput(row.input, mode, fmt),
-              accepted: checkAccepted(row.input),
+              cells: decoderEntries.map(([, expr]) => evalCell(expr, row.input, mode, fmt)),
             })),
           );
           setReady(true);
@@ -345,17 +368,20 @@ export function DecoderPlayground(props: Props) {
     return () => {
       cancelled = true;
     };
-  }, [props.decoder, evalInput, mode, fmt]);
+  }, [decoderKey, evalCell, mode, fmt]);
 
   const updateRow = useCallback(
     (index: number, input: string) => {
       setRows((prev) => {
         const next = [...prev];
-        next[index] = { input, result: evalInput(input, mode, fmt), accepted: checkAccepted(input) };
+        next[index] = {
+          input,
+          cells: decoderEntries.map(([, expr]) => evalCell(expr, input, mode, fmt)),
+        };
         return next;
       });
     },
-    [evalInput, mode, fmt],
+    [evalCell, mode, fmt, decoderKey],
   );
 
   const handleKeyDown = useCallback(
@@ -364,7 +390,7 @@ export function DecoderPlayground(props: Props) {
         e.preventDefault();
         setRows((prev) => {
           if (index === prev.length - 1 && prev[index].input.trim()) {
-            return [...prev, { input: '' }];
+            return [...prev, { input: '', cells: [] }];
           }
           return prev;
         });
@@ -392,6 +418,28 @@ export function DecoderPlayground(props: Props) {
     }
     fmt$.set(f);
   }, []);
+
+  const activeRowData = rows[activeRow];
+  const activeInput = activeRowData?.input || '\u2026';
+
+  let codeSnippet: string;
+  if (isMulti) {
+    codeSnippet = decoderEntries
+      .map(([, expr], i) => {
+        const cell = activeRowData?.cells[i];
+        return `${formatSnippet(expr, mode, activeInput, fmt)}${statusComment(cell)}`;
+      })
+      .join('\n');
+  } else {
+    const cell = activeRowData?.cells[0];
+    codeSnippet = `${formatSnippet(decoderEntries[0][1], mode, activeInput, fmt)}${statusComment(cell)}`;
+  }
+  if (props.preface) {
+    codeSnippet = `${dedent(props.preface)}\n\n${codeSnippet}`;
+  }
+
+  const colCount = decoderEntries.length + 1;
+  const colWidth = `${100 / colCount}%`;
 
   return (
     <div
@@ -460,17 +508,16 @@ export function DecoderPlayground(props: Props) {
         )}
       </div>
       <div className="border-b border-fd-border [&_figure]:!m-0 [&_figure]:!rounded-none [&_figure]:!border-0 [&_figure]:!bg-transparent [&_pre]:!bg-transparent [&_pre]:!text-xs [&_pre]:!py-1.5 [&_pre]:!px-3 [&_button]:!hidden">
-        <DynamicCodeBlock
-          lang="ts"
-          code={`${props.preface ? `${dedent(props.preface)}\n\n` : ''}${formatSnippet(props.decoder, mode, rows[activeRow]?.input || '…', fmt)}${rows[activeRow]?.accepted === true ? '  // accepted 👍' : rows[activeRow]?.accepted === false ? '  // rejected 👎' : ''}`}
-        />
+        <DynamicCodeBlock lang="ts" code={codeSnippet} />
       </div>
       <div className="overflow-x-auto">
       <table className="w-full">
         <thead>
           <tr className="border-b border-fd-border text-left text-xs text-fd-muted-foreground">
-            <th className="px-3 py-2 font-medium" style={{ width: '50%', minWidth: 150 }}>Input</th>
-            <th className="px-3 py-2 font-medium" style={{ width: '50%', minWidth: 150 }}>Result</th>
+            <th className="px-3 py-2 font-medium" style={{ width: colWidth, minWidth: 150 }}>Input</th>
+            {decoderEntries.map(([name]) => (
+              <th key={name} className="px-3 py-2 font-medium" style={{ width: colWidth, minWidth: 150 }}>{name}</th>
+            ))}
           </tr>
         </thead>
         <tbody>
@@ -488,25 +535,16 @@ export function DecoderPlayground(props: Props) {
                   onChange={(e) => updateRow(i, e.target.value)}
                   onFocus={() => setActiveRow(i)}
                   onKeyDown={(e) => handleKeyDown(e, i)}
-                  placeholder="Type an expression…"
+                  placeholder="Type an expression\u2026"
                   disabled={!ready}
                   className="w-full bg-transparent font-mono text-xs text-fd-foreground placeholder:text-fd-muted-foreground focus:outline-none"
                 />
               </td>
-              <td className="px-3 py-1.5">
-                {!row.input ? null : !row.result ? (
-                  <span className="text-fd-muted-foreground">&hellip;</span>
-                ) : row.result.ok ? (
-                  <code className="whitespace-pre text-xs">{highlight(row.result.value)}</code>
-                ) : (
-                  <div
-                    className="whitespace-pre-wrap text-xs"
-                    style={{ color: 'light-dark(#c4210a, #e5534b)' }}
-                  >
-                    <pre className="inline">{row.result.error.trim()}</pre>
-                  </div>
-                )}
-              </td>
+              {decoderEntries.map(([name], j) => (
+                <td key={name} className="px-3 py-1.5">
+                  {renderCellContent(row.cells[j], row.input, mode)}
+                </td>
+              ))}
             </tr>
           ))}
         </tbody>
