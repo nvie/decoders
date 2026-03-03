@@ -119,6 +119,8 @@ then this will be reflected in the return type, too.
 
 <Sig name=".refineType" returnType="Decoder<SubT>" source="core/Decoder.ts#L239-L245" />
 
+<Since version="2.7" />
+
 Cast the return type of this read-only decoder to a narrower type. This is useful to
 return "branded" types. This method has no runtime effect.
 
@@ -220,6 +222,8 @@ given acceptance function will receive the output of the current decoder as its 
   returnType="Decoder<V>"
   source="core/Decoder.ts#L267-L287"
 />
+
+<Since version="2.4" />
 
 <DecoderPlayground
   decoder="string.transform(s => s.split(',').map(Number)).pipe(array(positiveInteger))"

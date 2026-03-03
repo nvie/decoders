@@ -57,6 +57,8 @@ Accepts and returns strings that match the given regular expression.
   source="strings.ts#L39-L47"
 />
 
+<Since version="2.5" />
+
 Accepts and returns strings that start with the given prefix.
 
 <DecoderPlayground
@@ -74,6 +76,8 @@ Accepts and returns strings that start with the given prefix.
   type="`${string}${S}`"
   source="strings.ts#L49-L57"
 />
+
+<Since version="2.5" />
 
 Accepts and returns strings that end with the given suffix.
 
@@ -216,6 +220,8 @@ const gitUrl: Decoder<URL> = url.refine(
 
 <DecoderSig name="identifier" type="string" source="strings.ts#L94-L101" />
 
+<Since version="2.4" />
+
 Accepts and returns strings that are valid identifiers in most programming languages.
 
 <DecoderPlayground
@@ -242,6 +248,8 @@ Accepts and returns strings that are valid identifiers in most programming langu
   type="string"
   source="strings.ts#L103-L112"
 />
+
+<Since version="2.4" />
 
 Accepts and returns [nanoid](https://zelark.github.io/nano-id-cc) string values. It
 assumes the default nanoid alphabet. If you're using a custom alphabet, use
