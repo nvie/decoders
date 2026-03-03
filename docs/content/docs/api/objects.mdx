@@ -21,7 +21,7 @@ input object are ignored and will not be returned.
 />
 
 For more information, see also
-[The difference between `object`, `exact`, and `inexact`](/docs/tips#the-difference-between-object-exact-and-inexact).
+[Difference between `object`, `exact`, and `inexact`](#difference-between-object-exact-and-inexact).
 
 ---
 
@@ -43,7 +43,7 @@ specified explicitly.
 />
 
 For more information, see also
-[The difference between `object`, `exact`, and `inexact`](/docs/tips#the-difference-between-object-exact-and-inexact).
+[Difference between `object`, `exact`, and `inexact`](#difference-between-object-exact-and-inexact).
 
 ---
 
@@ -65,7 +65,7 @@ unvalidated that will thus be of `unknown` type statically.
 />
 
 For more information, see also
-[The difference between `object`, `exact`, and `inexact`](/docs/tips#the-difference-between-object-exact-and-inexact).
+[Difference between `object`, `exact`, and `inexact`](#difference-between-object-exact-and-inexact).
 
 ---
 
@@ -90,7 +90,7 @@ Accepts objects where all values match the given decoder, and returns the result
 
 This is useful to validate inputs like `{ [key: string]: V }`.
 
-#### Decoding values only
+### Decoding values only
 
 The default call takes a single argument and will validate all _values_. For example, to
 validate that all values in the object are numbers:
@@ -100,7 +100,7 @@ validate that all values in the object are numbers:
   examples={['{ red: 1, blue: 2, green: 3 }', "{ hi: 'not a number' }"]}
 />
 
-#### Decoding keys and values
+### Decoding keys and values
 
 If you also want to validate that keys are of a specific form, use the two-argument form:
 `record(key, value)`. Note that the given key decoder must return strings.
@@ -124,4 +124,29 @@ further.
 <DecoderPlayground
   decoder="pojo"
   examples={['{}', "{ name: 'hi' }", "'hi'", '[]', 'new Date()', 'null']}
+/>
+
+---
+
+## Difference between `object`, `exact`, and `inexact`
+
+The three decoders in the "object" family are very similar and only differ in how they
+treat extra properties on input values.
+
+<DecoderPlayground
+  globals={{
+    fields: '{ x: number, y: number }',
+  }}
+  preface={`
+    const fields = {
+      x: number,
+      y: number,
+    };
+  `}
+  decoder={[
+    ['object', 'object(fields)'],
+    ['exact', 'exact(fields)'],
+    ['inexact', 'inexact(fields)'],
+  ]}
+  examples={['{ x: 1, y: 2, z: 3 }', '{ x: 1, y: 2 }']}
 />
