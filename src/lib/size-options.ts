@@ -22,8 +22,10 @@ export function bySizeOptions(options: SizeOptions): (value: Sized) => string | 
   return (value: Sized) => {
     const len = value.length ?? value.size;
     if (typeof value === 'string') {
-      if (min !== undefined && len < min) return `Too short, must be ${atLeast}${min} chars`;
-      if (max !== undefined && len > max) return `Too long, must be ${atMost}${max} chars`;
+      if (min !== undefined && len < min)
+        return `Too short, must be ${atLeast}${min} chars`;
+      if (max !== undefined && len > max)
+        return `Too long, must be ${atMost}${max} chars`;
     } else {
       if (min !== undefined && len < min) return `Must have ${atLeast}${min} items`;
       if (max !== undefined && len > max) return `Must have ${atMost}${max} items`;
