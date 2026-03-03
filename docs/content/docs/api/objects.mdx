@@ -34,8 +34,8 @@ For more information, see also
   source="objects.ts#L138-L163"
 />
 
-Like [`object()`](#object), but will reject inputs that contain extra fields that are not
-specified explicitly.
+A "strict object" decoder. Like [`object()`](#object), but will reject inputs that contain
+extra fields that are not specified explicitly.
 
 <DecoderPlayground
   decoder="exact({ x: number, y: number })"
@@ -56,8 +56,8 @@ For more information, see also
   source="objects.ts#L165-L200"
 />
 
-Like [`object()`](#object), but will pass through any extra fields on the input object
-unvalidated that will thus be of `unknown` type statically.
+A "loose object" decoder. Like [`object()`](#object), but will pass through any extra
+fields on the input object unvalidated that will thus be of `unknown` type statically.
 
 <DecoderPlayground
   decoder="inexact({ x: number, y: number })"
