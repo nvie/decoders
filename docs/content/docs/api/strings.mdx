@@ -90,7 +90,7 @@ Accepts and returns strings that end with the given suffix.
 
 ## decimal
 
-<DecoderSig name="decimal" type="string" source="strings.ts#L142-L146" />
+<DecoderSig name="decimal" type="string" source="strings.ts#L147-L151" />
 
 Accepts and returns strings with decimal digits only (base-10). To convert these to
 numbers, use the [`numeric`](#numeric) decoder.
@@ -104,7 +104,7 @@ numbers, use the [`numeric`](#numeric) decoder.
 
 ## hexadecimal
 
-<DecoderSig name="hexadecimal" type="string" source="strings.ts#L148-L154" />
+<DecoderSig name="hexadecimal" type="string" source="strings.ts#L153-L159" />
 
 Accepts and returns strings with hexadecimal digits only (base-16).
 
@@ -117,7 +117,7 @@ Accepts and returns strings with hexadecimal digits only (base-16).
 
 ## numeric
 
-<DecoderSig name="numeric" type="number" source="strings.ts#L156-L161" />
+<DecoderSig name="numeric" type="number" source="strings.ts#L161-L166" />
 
 Accepts valid numerical strings (in base-10) and returns them as a number. To only accept
 numerical strings and keep them as string values, use the [`decimal`](#decimal) decoder.
@@ -246,7 +246,7 @@ Accepts and returns strings that are valid identifiers in most programming langu
   name="nanoid"
   params="options?: SizeOptions"
   type="string"
-  source="strings.ts#L103-L112"
+  source="strings.ts#L103-L110"
 />
 
 <Since version="2.4" />
@@ -270,7 +270,7 @@ assumes the default nanoid alphabet. If you're using a custom alphabet, use
 
 ## uuid
 
-<DecoderSig name="uuid" type="string" source="strings.ts#L114-L122" />
+<DecoderSig name="uuid" type="string" source="strings.ts#L119-L127" />
 
 Accepts strings that are valid
 [UUIDs](https://en.wikipedia.org/wiki/universally_unique_identifier) (universally unique
@@ -290,7 +290,7 @@ identifier).
 
 ## uuidv1
 
-<DecoderSig name="uuidv1" type="string" source="strings.ts#L124-L131" />
+<DecoderSig name="uuidv1" type="string" source="strings.ts#L129-L136" />
 
 Like [`uuid`](#uuid), but only accepts
 [UUIDv1](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_%28date-time_and_MAC_address%29)
@@ -308,7 +308,7 @@ strings.
 
 ## uuidv4
 
-<DecoderSig name="uuidv4" type="string" source="strings.ts#L133-L140" />
+<DecoderSig name="uuidv4" type="string" source="strings.ts#L138-L145" />
 
 Like [`uuid`](#uuid), but only accepts
 [UUIDv4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_%28random%29)
