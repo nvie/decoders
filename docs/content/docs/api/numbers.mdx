@@ -90,33 +90,45 @@ Accepts any valid `bigint` value.
 
 <DecoderSig
   name="min"
-  params="decoder: Decoder<number>, min: number"
+  params="min: number, decoder?: Decoder<number>"
   type="number"
   source="numbers.ts#L49-L55"
 />
 <DecoderSig
   name="max"
-  params="decoder: Decoder<number>, max: number"
+  params="max: number, decoder?: Decoder<number>"
   type="number"
   source="numbers.ts#L57-L63"
 />
 <DecoderSig
   name="between"
-  params="decoder: Decoder<number>, min: number, max: number"
+  params="min: number, max: number, decoder?: Decoder<number>"
   type="number"
   source="numbers.ts#L65-L81"
 />
 
 <Since version="2.9" />
 
-Takes any number decoder and rejects values outside the given bounds. Bounds are
-inclusive.
+Rejects values outside the given bounds. Bounds are inclusive. Defaults to the `number`
+decoder if none is provided.
 
 <DecoderPlayground
   decoder={[
-    ['min', 'min(number, 0)'],
-    ['max', 'max(number, 100)'],
-    ['between', 'between(number, 0, 100)'],
+    ['min', 'min(0)'],
+    ['max', 'max(100)'],
+    ['between', 'between(0, 100)'],
   ]}
   examples={['42', '0', 'Math.PI', '100', '-1', '101']}
+/>
+
+You can pass a custom base decoder to restrict what kind of numbers are accepted. For
+example, passing `integer` will reject non-whole numbers in addition to enforcing the
+range:
+
+<DecoderPlayground
+  decoder={[
+    ['between(1, 10)', 'between(1, 10)'],
+    ['between(1, 10, integer)', 'between(1, 10, integer)'],
+  ]}
+  examples={['5', '3.14', '0', '11']}
 />

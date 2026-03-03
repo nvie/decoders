@@ -130,47 +130,47 @@ describe('positiveInteger', () => {
 
 describe('min', () => {
   test('inclusive lower bound', () => {
-    const decoder = min(number, 0);
+    const decoder = min(0);
     expect(decoder.verify(0)).toBe(0);
     expect(decoder.verify(999)).toBe(999);
     expect(() => decoder.verify(-1)).toThrow('Must be at least 0');
   });
 
   test('works with other number decoders', () => {
-    const decoder = min(integer, 1);
+    const decoder = min(1, integer);
     expect(decoder.verify(1)).toBe(1);
     expect(() => decoder.verify(0)).toThrow('Must be at least 1');
     expect(() => decoder.verify(3.5)).toThrow('Number must be an integer');
   });
 
   test('rejects non-numbers', () => {
-    expect(() => min(number, 0).verify('5')).toThrow('Must be number');
+    expect(() => min(0).verify('5')).toThrow('Must be number');
   });
 });
 
 describe('max', () => {
   test('inclusive upper bound', () => {
-    const decoder = max(number, 100);
+    const decoder = max(100);
     expect(decoder.verify(-999)).toBe(-999);
     expect(decoder.verify(100)).toBe(100);
     expect(() => decoder.verify(101)).toThrow('Must be at most 100');
   });
 
   test('works with other number decoders', () => {
-    const decoder = max(integer, 10);
+    const decoder = max(10, integer);
     expect(decoder.verify(10)).toBe(10);
     expect(() => decoder.verify(11)).toThrow('Must be at most 10');
     expect(() => decoder.verify(3.5)).toThrow('Number must be an integer');
   });
 
   test('rejects non-numbers', () => {
-    expect(() => max(number, 10).verify('5')).toThrow('Must be number');
+    expect(() => max(10).verify('5')).toThrow('Must be number');
   });
 });
 
 describe('between', () => {
   test('inclusive bounds', () => {
-    const decoder = between(number, 2, 5);
+    const decoder = between(2, 5);
     expect(decoder.verify(2)).toBe(2);
     expect(decoder.verify(3.5)).toBe(3.5);
     expect(decoder.verify(5)).toBe(5);
@@ -179,7 +179,7 @@ describe('between', () => {
   });
 
   test('works with other number decoders', () => {
-    const decoder = between(integer, 1, 10);
+    const decoder = between(1, 10, integer);
     expect(decoder.verify(1)).toBe(1);
     expect(decoder.verify(10)).toBe(10);
     expect(() => decoder.verify(0)).toThrow('Must be at least 1');
@@ -187,7 +187,7 @@ describe('between', () => {
   });
 
   test('rejects non-numbers', () => {
-    expect(() => between(number, 0, 10).verify('5')).toThrow('Must be number');
+    expect(() => between(0, 10).verify('5')).toThrow('Must be number');
   });
 });
 

@@ -47,29 +47,29 @@ export const positiveInteger: Decoder<number> = integer.refine(
 );
 
 /**
- * Takes any number decoder and rejects values below the given minimum
- * (inclusive, uses >=).
+ * Rejects values below the given minimum (inclusive, uses >=).
+ * Defaults to the ``number`` decoder if none is provided.
  */
-export function min(decoder: Decoder<number>, min: number): Decoder<number> {
+export function min(min: number, decoder: Decoder<number> = number): Decoder<number> {
   return decoder.reject((value) => (value < min ? `Must be at least ${min}` : null));
 }
 
 /**
- * Takes any number decoder and rejects values above the given maximum
- * (inclusive, uses <=).
+ * Rejects values above the given maximum (inclusive, uses <=).
+ * Defaults to the ``number`` decoder if none is provided.
  */
-export function max(decoder: Decoder<number>, max: number): Decoder<number> {
+export function max(max: number, decoder: Decoder<number> = number): Decoder<number> {
   return decoder.reject((value) => (value > max ? `Must be at most ${max}` : null));
 }
 
 /**
- * Takes any number decoder and rejects values outside the given range.
- * Both bounds are inclusive (uses >= and <=).
+ * Rejects values outside the given range. Both bounds are inclusive
+ * (uses >= and <=). Defaults to the ``number`` decoder if none is provided.
  */
 export function between(
-  decoder: Decoder<number>,
   min: number,
   max: number,
+  decoder: Decoder<number> = number,
 ): Decoder<number> {
   return decoder.reject((value) =>
     value < min

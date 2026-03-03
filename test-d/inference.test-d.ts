@@ -115,10 +115,13 @@ expectType<number>(test(number));
 expectType<number>(test(positiveInteger));
 expectType<number>(test(positiveNumber));
 expectType<number>(test(numeric));
-expectType<number>(test(min(number, 0)));
-expectType<number>(test(max(number, 100)));
-expectType<number>(test(between(number, 0, 100)));
-expectType<number>(test(between(integer, 1, 10)));
+expectType<number>(test(min(0)));
+expectType<number>(test(min(0, number)));
+expectType<number>(test(max(100)));
+expectType<number>(test(max(100, number)));
+expectType<number>(test(between(0, 100)));
+expectType<number>(test(between(0, 100, number)));
+expectType<number>(test(between(1, 10, integer)));
 expectType<bigint>(test(bigint));
 
 expectType<string>(test(string));
