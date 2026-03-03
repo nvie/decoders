@@ -9,10 +9,7 @@ description: Date decoders for validating and parsing date values.
 
 Accepts and returns `Date` instances.
 
-<DecoderPlayground
-  decoder="date"
-  examples={["new Date()", "123", "'hello'"]}
-/>
+<DecoderPlayground decoder="date" examples={['new Date()', '123', "'hello'"]} />
 
 ---
 
@@ -26,7 +23,7 @@ Accepts and returns [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted 
 
 <DecoderPlayground
   decoder="dateString"
-  examples={["'2020-06-01T12:00:00Z'", "'2020-06-01'", "'hello'", "123", "new Date()"]}
+  examples={["'2020-06-01T12:00:00Z'", "'2020-06-01'", "'hello'", '123', 'new Date()']}
 />
 
 ---
@@ -35,15 +32,15 @@ Accepts and returns [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted 
 
 <DecoderSig name="iso8601" type="Date" source="dates.ts#L32-L39" />
 
-Accepts [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings,
-returns them as `Date` instances.
+Accepts [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings, returns them
+as `Date` instances.
 
-This is very useful for working with dates in APIs: serialize them as
-`.toISOString()` when sending, decode them with [`iso8601`](#iso8601) when receiving.
+This is very useful for working with dates in APIs: serialize them as `.toISOString()`
+when sending, decode them with [`iso8601`](#iso8601) when receiving.
 
 <DecoderPlayground
   decoder="iso8601"
-  examples={["'2020-06-01T12:00:00Z'", "'2020-06-01'", "'hello'", "123", "new Date()"]}
+  examples={["'2020-06-01T12:00:00Z'", "'2020-06-01'", "'hello'", '123', 'new Date()']}
 />
 
 ---
@@ -52,11 +49,11 @@ This is very useful for working with dates in APIs: serialize them as
 
 <DecoderSig name="datelike" type="Date" source="dates.ts#L41-L46" />
 
-Accepts either a Date, or an ISO date string, returns a Date instance.
-This is commonly useful to build decoders that can be reused to validate
-object with Date instances as well as objects coming from JSON payloads.
+Accepts either a Date, or an ISO date string, returns a Date instance. This is commonly
+useful to build decoders that can be reused to validate object with Date instances as well
+as objects coming from JSON payloads.
 
 <DecoderPlayground
   decoder="datelike"
-  examples={["'2024-01-08T12:00:00Z'", "new Date()", "'2020-06-01'", "'hello'", "123"]}
+  examples={["'2024-01-08T12:00:00Z'", 'new Date()', "'2020-06-01'", "'hello'", '123']}
 />

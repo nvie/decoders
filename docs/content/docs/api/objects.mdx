@@ -5,49 +5,67 @@ description: Object decoders for validating structured data.
 
 ## object
 
-<DecoderSig name="object" params="{ field1: Decoder<A>, field2: Decoder<B>, ... }" type="{ field1: A, field2: B, ... }" source="objects.ts#L55-L136" />
+<DecoderSig
+  name="object"
+  params="{ field1: Decoder<A>, field2: Decoder<B>, ... }"
+  type="{ field1: A, field2: B, ... }"
+  source="objects.ts#L55-L136"
+/>
 
-Accepts objects with fields matching the given decoders. Extra fields that
-exist on the input object are ignored and will not be returned.
+Accepts objects with fields matching the given decoders. Extra fields that exist on the
+input object are ignored and will not be returned.
 
 <DecoderPlayground
   decoder="object({ x: number, y: number })"
-  examples={["{ x: 1, y: 2 }", "{ x: 1, y: 2, z: 3 }", "{ x: 1 }"]}
+  examples={['{ x: 1, y: 2 }', '{ x: 1, y: 2, z: 3 }', '{ x: 1 }']}
 />
 
-For more information, see also [The difference between `object`, `exact`, and `inexact`](/docs/tips#the-difference-between-object-exact-and-inexact).
+For more information, see also
+[The difference between `object`, `exact`, and `inexact`](/docs/tips#the-difference-between-object-exact-and-inexact).
 
 ---
 
 ## exact
 
-<DecoderSig name="exact" params="{ field1: Decoder<A>, field2: Decoder<B>, ... }" type="{ field1: A, field2: B, ... }" source="objects.ts#L138-L163" />
+<DecoderSig
+  name="exact"
+  params="{ field1: Decoder<A>, field2: Decoder<B>, ... }"
+  type="{ field1: A, field2: B, ... }"
+  source="objects.ts#L138-L163"
+/>
 
-Like [`object()`](#object), but will reject inputs that contain extra fields that are
-not specified explicitly.
+Like [`object()`](#object), but will reject inputs that contain extra fields that are not
+specified explicitly.
 
 <DecoderPlayground
   decoder="exact({ x: number, y: number })"
-  examples={["{ x: 1, y: 2 }", "{ x: 1, y: 2, z: 3 }", "{ x: 1 }"]}
+  examples={['{ x: 1, y: 2 }', '{ x: 1, y: 2, z: 3 }', '{ x: 1 }']}
 />
 
-For more information, see also [The difference between `object`, `exact`, and `inexact`](/docs/tips#the-difference-between-object-exact-and-inexact).
+For more information, see also
+[The difference between `object`, `exact`, and `inexact`](/docs/tips#the-difference-between-object-exact-and-inexact).
 
 ---
 
 ## inexact
 
-<DecoderSig name="inexact" params="{ field1: Decoder<A>, field2: Decoder<B>, ... }" type="{ field1: A, field2: B, ... }" source="objects.ts#L165-L200" />
+<DecoderSig
+  name="inexact"
+  params="{ field1: Decoder<A>, field2: Decoder<B>, ... }"
+  type="{ field1: A, field2: B, ... }"
+  source="objects.ts#L165-L200"
+/>
 
 Like [`object()`](#object), but will pass through any extra fields on the input object
 unvalidated that will thus be of `unknown` type statically.
 
 <DecoderPlayground
   decoder="inexact({ x: number, y: number })"
-  examples={["{ x: 1, y: 2 }", "{ x: 1, y: 2, z: 3 }", "{ x: 1 }"]}
+  examples={['{ x: 1, y: 2 }', '{ x: 1, y: 2, z: 3 }', '{ x: 1 }']}
 />
 
-For more information, see also [The difference between `object`, `exact`, and `inexact`](/docs/tips#the-difference-between-object-exact-and-inexact).
+For more information, see also
+[The difference between `object`, `exact`, and `inexact`](/docs/tips#the-difference-between-object-exact-and-inexact).
 
 ---
 
@@ -55,10 +73,10 @@ For more information, see also [The difference between `object`, `exact`, and `i
 
 <DecoderSig name="pojo" type="Record<string, unknown>" source="objects.ts#L47-L53" />
 
-Accepts any "plain old JavaScript object", but doesn't validate its keys or
-values further.
+Accepts any "plain old JavaScript object", but doesn't validate its keys or values
+further.
 
 <DecoderPlayground
   decoder="pojo"
-  examples={["{}", "{ name: 'hi' }", "'hi'", "[]", "new Date()", "null"]}
+  examples={['{}', "{ name: 'hi' }", "'hi'", '[]', 'new Date()', 'null']}
 />

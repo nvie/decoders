@@ -9,22 +9,22 @@ description: Decoders for validating JSON-compatible values.
 
 Accepts any value that's a valid JSON value.
 
-In other words: any value returned by `JSON.parse()` should decode without
-failure.
+In other words: any value returned by `JSON.parse()` should decode without failure.
 
 ```typescript
-type JSONValue =
-    | null
-    | string
-    | number
-    | boolean
-    | { [string]: JSONValue }
-    | JSONValue[]
+type JSONValue = null | string | number | boolean | { [string]: JSONValue } | JSONValue[];
 ```
 
 <DecoderPlayground
   decoder="json"
-  examples={["{ name: 'Amir', age: 27, admin: true, image: null, tags: ['vip'] }", "'hello'", "42", "null", "true", "[1, 2, 3]"]}
+  examples={[
+    "{ name: 'Amir', age: 27, admin: true, image: null, tags: ['vip'] }",
+    "'hello'",
+    '42',
+    'null',
+    'true',
+    '[1, 2, 3]',
+  ]}
 />
 
 ---
@@ -37,7 +37,7 @@ Accepts objects that contain only valid JSON values.
 
 <DecoderPlayground
   decoder="jsonObject"
-  examples={["{}", "{ name: 'Amir' }", "[]", "[{ name: 'Alice' }]", "'hello'", "null"]}
+  examples={['{}', "{ name: 'Amir' }", '[]', "[{ name: 'Alice' }]", "'hello'", 'null']}
 />
 
 ---
@@ -50,5 +50,5 @@ Accepts arrays that contain only valid JSON values.
 
 <DecoderPlayground
   decoder="jsonArray"
-  examples={["[]", "[{ name: 'Amir' }]", "{}", "{ name: 'Alice' }", "'hello'", "null"]}
+  examples={['[]', "[{ name: 'Amir' }]", '{}', "{ name: 'Alice' }", "'hello'", 'null']}
 />

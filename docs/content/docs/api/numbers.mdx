@@ -7,12 +7,12 @@ description: Number decoders for validating and parsing numeric values.
 
 <DecoderSig name="number" type="number" source="numbers.ts#L16-L23" />
 
-Accepts finite numbers (can be integer or float values). Values `NaN`,
-or positive and negative `Infinity` will get rejected.
+Accepts finite numbers (can be integer or float values). Values `NaN`, or positive and
+negative `Infinity` will get rejected.
 
 <DecoderPlayground
   decoder="number"
-  examples={["123", "-3.14", "Infinity", "NaN", "'not a number'"]}
+  examples={['123', '-3.14', 'Infinity', 'NaN', "'not a number'"]}
 />
 
 ---
@@ -25,7 +25,7 @@ Accepts only finite whole numbers.
 
 <DecoderPlayground
   decoder="integer"
-  examples={["123", "-3.14", "Infinity", "NaN", "'not a integer'"]}
+  examples={['123', '-3.14', 'Infinity', 'NaN', "'not a integer'"]}
 />
 
 ---
@@ -38,7 +38,7 @@ Accepts only non-negative (zero or positive) finite numbers.
 
 <DecoderPlayground
   decoder="positiveNumber"
-  examples={["123", "3.14", "0", "-42", "Infinity", "NaN", "'not a number'", "-0"]}
+  examples={['123', '3.14', '0', '-42', 'Infinity', 'NaN', "'not a number'", '-0']}
 />
 
 ---
@@ -51,7 +51,7 @@ Accepts only non-negative (zero or positive) finite whole numbers.
 
 <DecoderPlayground
   decoder="positiveInteger"
-  examples={["123", "0", "-3", "3.14", "Infinity", "NaN", "'not a number'", "-0"]}
+  examples={['123', '0', '-3', '3.14', 'Infinity', 'NaN', "'not a number'", '-0']}
 />
 
 ---
@@ -62,13 +62,13 @@ Accepts only non-negative (zero or positive) finite whole numbers.
 
 Accepts any valid `number` value.
 
-This also accepts special values like `NaN` and `Infinity`. Unless you
-want to deliberately accept those, you'll likely want to use the
-[`number`](#number) decoder instead.
+This also accepts special values like `NaN` and `Infinity`. Unless you want to
+deliberately accept those, you'll likely want to use the [`number`](#number) decoder
+instead.
 
 <DecoderPlayground
   decoder="anyNumber"
-  examples={["123", "-3.14", "Infinity", "NaN", "'not a number'"]}
+  examples={['123', '-3.14', 'Infinity', 'NaN', "'not a number'"]}
 />
 
 ---
@@ -81,5 +81,5 @@ Accepts any valid `bigint` value.
 
 <DecoderPlayground
   decoder="bigint"
-  examples={["123n", "-4543000000n", "123", "-3.14", "Infinity", "NaN", "'not a number'"]}
+  examples={['123n', '-4543000000n', '123', '-3.14', 'Infinity', 'NaN', "'not a number'"]}
 />

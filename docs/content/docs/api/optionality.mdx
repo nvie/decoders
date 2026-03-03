@@ -11,7 +11,7 @@ Accepts and returns only the literal `null` value.
 
 <DecoderPlayground
   decoder="null_"
-  examples={["null", "false", "undefined", "'hello world'"]}
+  examples={['null', 'false', 'undefined', "'hello world'"]}
 />
 
 ---
@@ -24,28 +24,38 @@ Accepts and returns only the literal `undefined` value.
 
 <DecoderPlayground
   decoder="undefined_"
-  examples={["undefined", "null", "false", "'hello world'"]}
+  examples={['undefined', 'null', 'false', "'hello world'"]}
 />
 
 ---
 
 ## optional
 
-<DecoderSig name="optional" params="decoder: Decoder<T>" type="T | undefined" source="basics.ts#L27-L44" />
+<DecoderSig
+  name="optional"
+  params="decoder: Decoder<T>"
+  type="T | undefined"
+  source="basics.ts#L27-L44"
+/>
 
-<DecoderSig name="optional" params="decoder: Decoder<T>, defaultValue: V | (() => V)" type="T | V" source="basics.ts#L27-L44" />
+<DecoderSig
+  name="optional"
+  params="decoder: Decoder<T>, defaultValue: V | (() => V)"
+  type="T | V"
+  source="basics.ts#L27-L44"
+/>
 
 Accepts whatever the given decoder accepts, or `undefined`.
 
-If a default value is explicitly provided, return that instead in the
-`undefined` case.
+If a default value is explicitly provided, return that instead in the `undefined` case.
 
 <DecoderPlayground
   decoder="optional(string)"
-  examples={["'hello'", "undefined", "null", "0", "42"]}
+  examples={["'hello'", 'undefined', 'null', '0', '42']}
 />
 
-A typical case where [`optional()`](#optional) is useful is in decoding objects with optional fields:
+A typical case where [`optional()`](#optional) is useful is in decoding objects with
+optional fields:
 
 ```ts
 object({
@@ -69,18 +79,27 @@ Which will decode to type:
 
 ## nullable
 
-<DecoderSig name="nullable" params="decoder: Decoder<T>" type="T | null" source="basics.ts#L46-L63" />
+<DecoderSig
+  name="nullable"
+  params="decoder: Decoder<T>"
+  type="T | null"
+  source="basics.ts#L46-L63"
+/>
 
-<DecoderSig name="nullable" params="decoder: Decoder<T>, defaultValue: V | (() => V)" type="T | V" source="basics.ts#L46-L63" />
+<DecoderSig
+  name="nullable"
+  params="decoder: Decoder<T>, defaultValue: V | (() => V)"
+  type="T | V"
+  source="basics.ts#L46-L63"
+/>
 
 Accepts whatever the given decoder accepts, or `null`.
 
-If a default value is explicitly provided, return that instead in the `null`
-case.
+If a default value is explicitly provided, return that instead in the `null` case.
 
 <DecoderPlayground
   decoder="nullable(string)"
-  examples={["'hello'", "null", "undefined", "0", "42"]}
+  examples={["'hello'", 'null', 'undefined', '0', '42']}
 />
 
 Or use it with a default value:
@@ -89,25 +108,35 @@ Or use it with a default value:
 const decoder = nullable(iso8601, () => new Date());
 
 decoder.verify('2022-01-01T12:00:00Z') === '2022-01-01T12:00:00Z';
-decoder.verify(null);  // the current date
+decoder.verify(null); // the current date
 ```
 
 ---
 
 ## nullish
 
-<DecoderSig name="nullish" params="decoder: Decoder<T>" type="T | null | undefined" source="basics.ts#L65-L82" />
+<DecoderSig
+  name="nullish"
+  params="decoder: Decoder<T>"
+  type="T | null | undefined"
+  source="basics.ts#L65-L82"
+/>
 
-<DecoderSig name="nullish" params="decoder: Decoder<T>, defaultValue: V | (() => V)" type="T | V" source="basics.ts#L65-L82" />
+<DecoderSig
+  name="nullish"
+  params="decoder: Decoder<T>, defaultValue: V | (() => V)"
+  type="T | V"
+  source="basics.ts#L65-L82"
+/>
 
 Accepts whatever the given decoder accepts, or `null`, or `undefined`.
 
-If a default value is explicitly provided, return that instead in the
-`null`/`undefined` case.
+If a default value is explicitly provided, return that instead in the `null`/`undefined`
+case.
 
 <DecoderPlayground
   decoder="nullish(string)"
-  examples={["'hello'", "null", "undefined", "0", "42"]}
+  examples={["'hello'", 'null', 'undefined', '0', '42']}
 />
 
 Or use it with a default value:
@@ -130,11 +159,11 @@ decoder.verify(undefined) === null;
 
 Accepts anything and returns it unchanged.
 
-Useful for situation in which you don't know or expect a specific type. Of
-course, the downside is that you won't know the type of the value statically
-and you'll have to further refine it yourself.
+Useful for situation in which you don't know or expect a specific type. Of course, the
+downside is that you won't know the type of the value statically and you'll have to
+further refine it yourself.
 
 <DecoderPlayground
   decoder="unknown"
-  examples={["'hello'", "false", "undefined", "[1, 2]"]}
+  examples={["'hello'", 'false', 'undefined', '[1, 2]']}
 />

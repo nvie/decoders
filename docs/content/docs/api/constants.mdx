@@ -11,7 +11,7 @@ Accepts only the given constant value.
 
 <DecoderPlayground
   decoder="constant('hello')"
-  examples={["'hello'", "'this breaks'", "false", "undefined"]}
+  examples={["'hello'", "'this breaks'", 'false', 'undefined']}
 />
 
 ---
@@ -20,20 +20,16 @@ Accepts only the given constant value.
 
 <DecoderSig name="always" params="value: T" type="T" source="basics.ts#L95-L109" />
 
-Accepts anything, completely ignores it, and always returns the provided
-value instead.
+Accepts anything, completely ignores it, and always returns the provided value instead.
 
 This is useful to manually add extra fields to object decoders.
 
-<DecoderPlayground
-  decoder="always(42)"
-  examples={["'hello'", "false", "undefined"]}
-/>
+<DecoderPlayground decoder="always(42)" examples={["'hello'", 'false', 'undefined']} />
 
 Or use it with a function instead of a constant:
 
 ```ts
 const now = always(() => new Date());
 
-now.verify('dummy');  // e.g. new Date('2022-02-07T09:36:58.848Z')
+now.verify('dummy'); // e.g. new Date('2022-02-07T09:36:58.848Z')
 ```

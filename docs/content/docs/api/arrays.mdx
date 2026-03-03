@@ -5,26 +5,36 @@ description: Array and tuple decoders for validating collections of values.
 
 ## array
 
-<DecoderSig name="array" params="decoder: Decoder<T>" type="T[]" source="arrays.ts#L16-L46" />
+<DecoderSig
+  name="array"
+  params="decoder: Decoder<T>"
+  type="T[]"
+  source="arrays.ts#L16-L46"
+/>
 
 Accepts arrays of whatever the given decoder accepts.
 
 <DecoderPlayground
   decoder="array(string)"
-  examples={["['hello', 'world']", "[]", "['hello', 1.2]"]}
+  examples={["['hello', 'world']", '[]', "['hello', 1.2]"]}
 />
 
 ---
 
 ## nonEmptyArray
 
-<DecoderSig name="nonEmptyArray" params="decoder: Decoder<T>" type="[T, ...T[]]" source="arrays.ts#L52-L57" />
+<DecoderSig
+  name="nonEmptyArray"
+  params="decoder: Decoder<T>"
+  type="[T, ...T[]]"
+  source="arrays.ts#L52-L57"
+/>
 
 Like [`array()`](#array), but will reject arrays with 0 elements.
 
 <DecoderPlayground
   decoder="nonEmptyArray(string)"
-  examples={["['hello', 'world']", "['hello', 1.2]", "[]"]}
+  examples={["['hello', 'world']", "['hello', 1.2]", '[]']}
 />
 
 ---
@@ -39,19 +49,24 @@ Accepts any array, but doesn't validate its items further.
 
 <DecoderPlayground
   decoder="poja"
-  examples={["[1, 'hi', true]", "['hello', 'world']", "[]", "{}", "'hi'"]}
+  examples={["[1, 'hi', true]", "['hello', 'world']", '[]', '{}', "'hi'"]}
 />
 
 ---
 
 ## tuple
 
-<DecoderSig name="tuple" params="Decoder<A>, Decoder<B>, ..." type="[A, B, ...]" source="arrays.ts#L66-L96" />
+<DecoderSig
+  name="tuple"
+  params="Decoder<A>, Decoder<B>, ..."
+  type="[A, B, ...]"
+  source="arrays.ts#L66-L96"
+/>
 
-Accepts a tuple (an array with exactly _n_ items) of values accepted by the
-_n_ given decoders.
+Accepts a tuple (an array with exactly _n_ items) of values accepted by the _n_ given
+decoders.
 
 <DecoderPlayground
   decoder="tuple(string, number)"
-  examples={["['hello', 1.2]", "[]", "['hello', 'world']", "['a', 1, 'c']"]}
+  examples={["['hello', 1.2]", '[]', "['hello', 'world']", "['a', 1, 'c']"]}
 />

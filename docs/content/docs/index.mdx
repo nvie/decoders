@@ -104,8 +104,8 @@ Small decoders compose together like LEGO to build larger ones. In the example a
 
 Call one of these methods on any decoder:
 
-| Method                                         | Returns          | On failure           |
-| ---------------------------------------------- | ---------------- | -------------------- |
+| Method                                          | Returns          | On failure           |
+| ----------------------------------------------- | ---------------- | -------------------- |
 | [`.verify()`](/docs/api/Decoder#decoder.verify) | `T`              | Throws an error      |
 | [`.value()`](/docs/api/Decoder#decoder.value)   | `T \| undefined` | Returns `undefined`  |
 | [`.decode()`](/docs/api/Decoder#decoder.decode) | `Result<T>`      | Returns error result |
@@ -135,8 +135,8 @@ const userDecoder = object({
 
 ## Error formatting
 
-By default, [`.verify()`](/docs/api/Decoder#decoder.verify) uses `formatInline`, which echoes back the input with errors
-inlined:
+By default, [`.verify()`](/docs/api/Decoder#decoder.verify) uses `formatInline`, which
+echoes back the input with errors inlined:
 
 ```typescript
 import { array, object, string, number } from 'decoders';
