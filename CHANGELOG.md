@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [2.9.0-pre.2] - 2026-03-03
+
 - New: `sized(decoder, {min?, max?, size?})` utility for adding length validation to
   strings, arrays, and sets.
 - New: `min(min, decoder?)`, `max(max, decoder?)`, and `between(min, max, decoder?)`
