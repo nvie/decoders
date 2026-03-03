@@ -8,7 +8,12 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 /** @type {import('next').NextConfig} */
 const config = {
   outputFileTracingRoot: __dirname,
-  turbopack: { root: __dirname },
+  turbopack: {
+    root: __dirname,
+    resolveAlias: {
+      decoders: "./decoders-latest-snapshot/index.js",
+    },
+  },
   reactStrictMode: true,
   async rewrites() {
     return [

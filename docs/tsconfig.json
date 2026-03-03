@@ -17,6 +17,7 @@
     "incremental": true,
     "paths": {
       "@/*": ["./*"],
+      "decoders": ["./decoders-latest-snapshot/index"],
       "fumadocs-mdx:collections/*": [".source/*"]
     },
     "plugins": [

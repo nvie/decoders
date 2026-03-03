@@ -3,3 +3,4 @@ node_modules/
 .source/
 out/
 next-env.d.ts
+decoders-latest-snapshot/
