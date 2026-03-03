@@ -1,5 +1,7 @@
 import type { Decoder } from '~/core';
 import { annotate, define } from '~/core';
+import type { Sized, SizeOptions } from '~/lib/size-options';
+import { bySizeOptions } from '~/lib/size-options';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 export interface Klass<T> extends Function {
@@ -26,6 +28,16 @@ export function instanceOf<K extends Klass<any>>(klass: K): Decoder<Instance<K>>
  */
 export function lazy<T>(decoderFn: () => Decoder<T>): Decoder<T> {
   return define((blob) => decoderFn().decode(blob));
+}
+
+/**
+ * Only accept strings, arrays, or sets with given length constraints.
+ */
+export function sized<T extends Sized>(
+  decoder: Decoder<T>,
+  options: SizeOptions,
+): Decoder<T> {
+  return decoder.reject(bySizeOptions(options));
 }
 
 /**

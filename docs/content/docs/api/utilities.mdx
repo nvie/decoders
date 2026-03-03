@@ -64,7 +64,7 @@ explicitly disallowing keys, or for testing purposes.
   name="instanceOf"
   params="klass: Klass<T>"
   type="T"
-  source="misc.ts#L12-L21"
+  source="misc.ts#L14-L23"
 />
 
 Accepts any value that is an `instanceof` the given class.
@@ -82,7 +82,7 @@ Accepts any value that is an `instanceof` the given class.
   name="lazy"
   params="decoderFn: () => Decoder<T>"
   type="T"
-  source="misc.ts#L23-L29"
+  source="misc.ts#L25-L31"
 />
 
 Lazily evaluate the given decoder. Useful to build recursive decoders.
@@ -114,19 +114,19 @@ Lazily evaluate the given decoder. Useful to build recursive decoders.
   name="sized"
   params="decoder: Decoder<string>, options: SizeOptions"
   type="string"
-  source="strings.ts#L112-L121"
+  source="misc.ts#L33-L41"
 />
 <DecoderSig
   name="sized"
   params="decoder: Decoder<T[]>, options: SizeOptions"
   type="T[]"
-  source="strings.ts#L112-L121"
+  source="misc.ts#L33-L41"
 />
 <DecoderSig
   name="sized"
   params="decoder: Decoder<Set<T>>, options: SizeOptions"
   type="Set<T>"
-  source="strings.ts#L112-L121"
+  source="misc.ts#L33-L41"
 />
 
 <Since version="2.9" />
@@ -208,7 +208,7 @@ uppercase.verify(123); // throws: Must be string
   name="prep"
   params="mapperFn: (raw: unknown) => unknown, decoder: Decoder<T>"
   type="T"
-  source="misc.ts#L31-L61"
+  source="misc.ts#L43-L73"
 />
 
 Pre-process the data input before passing it into the decoder. This gives you the ability

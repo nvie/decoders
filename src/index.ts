@@ -8,7 +8,7 @@ export { date, datelike, dateString, iso8601 } from './dates';
 export type { JSONArray, JSONObject, JSONValue } from './json';
 export { json, jsonArray, jsonObject } from './json';
 export type { Sized, SizeOptions } from './lib/size-options';
-export { instanceOf, lazy, prep } from './misc';
+export { instanceOf, lazy, prep, sized } from './misc';
 export {
   anyNumber,
   between,
@@ -22,7 +22,7 @@ export {
 export { bigint } from './numbers';
 export { exact, inexact, object, pojo } from './objects';
 export { endsWith, nonEmptyString, regex, startsWith, string } from './strings';
-export { identifier, nanoid, sized, uuid, uuidv1, uuidv4 } from './strings';
+export { identifier, nanoid, uuid, uuidv1, uuidv4 } from './strings';
 export { email, httpsUrl, url, urlString } from './strings';
 export { decimal, hexadecimal, numeric } from './strings';
 export { either, enum_, oneOf, select, taggedUnion } from './unions';
