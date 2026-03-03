@@ -121,7 +121,7 @@ Accepts any value that is an `instanceof` the given class.
 
 <DecoderPlayground
   decoder="instanceOf(Error)"
-  examples={["new Error('foo')", "'foo'", "3"]}
+  examples={["new Error('foo')", "'foo'", '3']}
 />
 
 ---
@@ -137,8 +137,8 @@ Accepts any value that is an `instanceof` the given class.
 
 <Since version="2.9.0-pre.2" />
 
-Takes any string decoder and rejects values that don't match the given size
-constraints. Use this to add length validation to any string-based decoder.
+Takes any string decoder and rejects values that don't match the given size constraints.
+Use this to add length validation to any string-based decoder.
 
 `SizeOptions` accepts `min`, `max`, or `size` (shorthand for exact length).
 
