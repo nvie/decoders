@@ -72,7 +72,11 @@ export function between(
   max: number,
 ): Decoder<number> {
   return decoder.reject((value) =>
-    value < min ? `Must be at least ${min}` : value > max ? `Must be at most ${max}` : null,
+    value < min
+      ? `Must be at least ${min}`
+      : value > max
+        ? `Must be at most ${max}`
+        : null,
   );
 }
 

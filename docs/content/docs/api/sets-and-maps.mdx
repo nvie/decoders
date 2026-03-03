@@ -12,7 +12,8 @@ description: Decoders for maps and sets.
   source="collections.ts#L67-L74"
 />
 
-Similar to [`record()`](/docs/api/objects#record), but returns the result as a `Map<string, T>` (an
+Similar to [`record()`](/docs/api/objects#record), but returns the result as a
+`Map<string, T>` (an
 [ES6 Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map))
 instead.
 
@@ -53,8 +54,9 @@ Similar to [`array()`](/docs/api/arrays#array), but returns the result as an
 
 <Since version="2.9" />
 
-Takes any set decoder and rejects values that don't match the given size constraints.
-Also works with [strings](/docs/api/strings#limiting-string-size) and [arrays](/docs/api/arrays#limiting-array-sizes).
+Takes any set decoder and rejects values that don't match the given size constraints. Also
+works with [strings](/docs/api/strings#limiting-string-size) and
+[arrays](/docs/api/arrays#limiting-array-sizes).
 
 `SizeOptions` accepts `min`, `max`, or `size` (shorthand for exact length).
 
