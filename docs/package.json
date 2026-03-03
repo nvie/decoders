@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "cd .. && npm run build && rsync -a dist/ docs/decoders-latest-snapshot/ && cd docs && next build",
+    "build": "cd .. && npm install --include=dev && npm run build && cp -r dist/ docs/decoders-latest-snapshot/ && cd docs && next build",
     "dev": "next dev",
     "start": "next start",
     "postinstall": "fumadocs-mdx"
