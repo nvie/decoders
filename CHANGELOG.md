@@ -1,7 +1,9 @@
 ## [Unreleased]
 
 - New: `sized(decoder, {min?, max?, size?})` utility for adding length validation to
-  string decoders.
+  strings, arrays, and sets.
+- New: `min(decoder, min)`, `max(decoder, max)`, and `between(decoder, lo, hi)` utilities
+  for adding inclusive numeric range validation.
 - New: `urlString` decoder, which is like `url`, but returns a string instead of a URL
   instance.
 

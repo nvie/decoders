@@ -6,7 +6,10 @@ import {
   anyNumber,
   anything,
   array,
+  between,
   bigint,
+  max,
+  min,
   boolean,
   constant,
   date,
@@ -112,6 +115,10 @@ expectType<number>(test(number));
 expectType<number>(test(positiveInteger));
 expectType<number>(test(positiveNumber));
 expectType<number>(test(numeric));
+expectType<number>(test(min(number, 0)));
+expectType<number>(test(max(number, 100)));
+expectType<number>(test(between(number, 0, 100)));
+expectType<number>(test(between(integer, 1, 10)));
 expectType<bigint>(test(bigint));
 
 expectType<string>(test(string));
@@ -123,6 +130,8 @@ expectType<string>(test(regex(/foo/, 'Must be foo')));
 expectType<`foo-${string}`>(test(startsWith('foo-')));
 expectType<`${string}-bar`>(test(endsWith('-bar')));
 expectType<string>(test(sized(string, { min: 1, max: 10 })));
+expectType<number[]>(test(sized(array(number), { min: 1, max: 10 })));
+expectType<Set<number>>(test(sized(setFromArray(number), { size: 3 })));
 expectType<URL>(test(url));
 expectType<string>(test(urlString));
 expectType<URL>(test(httpsUrl));

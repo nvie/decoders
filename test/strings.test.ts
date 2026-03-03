@@ -3,6 +3,7 @@ import { partition } from 'itertools';
 import { describe, expect, test } from 'vitest';
 
 import {
+  array,
   decimal,
   email,
   endsWith,
@@ -11,6 +12,8 @@ import {
   identifier,
   nanoid,
   nonEmptyString,
+  number,
+  setFromArray,
   sized,
   numeric,
   regex,
@@ -426,14 +429,14 @@ describe('nanoid', () => {
 });
 
 describe('sized', () => {
-  test('exact size', () => {
+  test('exact size (string)', () => {
     const decoder = sized(string, { size: 5 });
     expect(decoder.verify('hello')).toBe('hello');
     expect(() => decoder.verify('hi')).toThrow('Too short, must be 5 chars');
     expect(() => decoder.verify('toolong')).toThrow('Too long, must be 5 chars');
   });
 
-  test('min and max', () => {
+  test('min and max (string)', () => {
     const decoder = sized(string, { min: 2, max: 5 });
     expect(decoder.verify('hi')).toBe('hi');
     expect(decoder.verify('hello')).toBe('hello');
@@ -446,6 +449,35 @@ describe('sized', () => {
     expect(decoder.verify('foo')).toBe('foo');
     expect(() => decoder.verify('x')).toThrow('Too short');
     expect(() => decoder.verify('123')).toThrow('Must be valid identifier');
+  });
+
+  test('exact size (array)', () => {
+    const decoder = sized(array(number), { size: 3 });
+    expect(decoder.verify([1, 2, 3])).toEqual([1, 2, 3]);
+    expect(() => decoder.verify([1])).toThrow('Must have 3 items');
+    expect(() => decoder.verify([1, 2, 3, 4])).toThrow('Must have 3 items');
+  });
+
+  test('min and max (array)', () => {
+    const decoder = sized(array(number), { min: 2, max: 5 });
+    expect(decoder.verify([1, 2])).toEqual([1, 2]);
+    expect(decoder.verify([1, 2, 3, 4, 5])).toEqual([1, 2, 3, 4, 5]);
+    expect(() => decoder.verify([1])).toThrow('Must have at least 2 items');
+    expect(() => decoder.verify([1, 2, 3, 4, 5, 6])).toThrow('Must have at most 5 items');
+  });
+
+  test('exact size (set)', () => {
+    const decoder = sized(setFromArray(number), { size: 3 });
+    expect(decoder.verify([1, 2, 3])).toEqual(new Set([1, 2, 3]));
+    expect(() => decoder.verify([1])).toThrow('Must have 3 items');
+    expect(() => decoder.verify([1, 2, 3, 4])).toThrow('Must have 3 items');
+  });
+
+  test('min and max (set)', () => {
+    const decoder = sized(setFromArray(number), { min: 2, max: 5 });
+    expect(decoder.verify([1, 2])).toEqual(new Set([1, 2]));
+    expect(() => decoder.verify([1])).toThrow('Must have at least 2 items');
+    expect(() => decoder.verify([1, 2, 3, 4, 5, 6])).toThrow('Must have at most 5 items');
   });
 });
 

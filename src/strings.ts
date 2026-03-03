@@ -1,6 +1,6 @@
 import type { Decoder } from '~/core';
 import { define } from '~/core';
-import type { SizeOptions } from '~/lib/size-options';
+import type { Sized, SizeOptions } from '~/lib/size-options';
 import { bySizeOptions } from '~/lib/size-options';
 import { isString } from '~/lib/utils';
 
@@ -110,9 +110,13 @@ export function nanoid(options?: SizeOptions): Decoder<string> {
 }
 
 /**
- * Takes any string decoder and rejects if the length doesn't match.
+ * Takes any decoder of a sized value (string, array, or set) and rejects if
+ * the length doesn't match the given size constraints.
  */
-export function sized(decoder: Decoder<string>, options: SizeOptions): Decoder<string> {
+export function sized<T extends Sized>(
+  decoder: Decoder<T>,
+  options: SizeOptions,
+): Decoder<T> {
   return decoder.reject(bySizeOptions(options));
 }
 

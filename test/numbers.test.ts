@@ -1,7 +1,17 @@
 import { partition } from 'itertools';
 import { describe, expect, test } from 'vitest';
 
-import { anyNumber, bigint, integer, number, positiveInteger, positiveNumber } from '~';
+import {
+  anyNumber,
+  between,
+  bigint,
+  integer,
+  max,
+  min,
+  number,
+  positiveInteger,
+  positiveNumber,
+} from '~';
 
 import { INPUTS } from './_fixtures';
 
@@ -115,6 +125,69 @@ describe('positiveInteger', () => {
     for (const value of not_okay) {
       expect(decoder.decode(value).ok).toBe(false);
     }
+  });
+});
+
+describe('min', () => {
+  test('inclusive lower bound', () => {
+    const decoder = min(number, 0);
+    expect(decoder.verify(0)).toBe(0);
+    expect(decoder.verify(999)).toBe(999);
+    expect(() => decoder.verify(-1)).toThrow('Must be at least 0');
+  });
+
+  test('works with other number decoders', () => {
+    const decoder = min(integer, 1);
+    expect(decoder.verify(1)).toBe(1);
+    expect(() => decoder.verify(0)).toThrow('Must be at least 1');
+    expect(() => decoder.verify(3.5)).toThrow('Number must be an integer');
+  });
+
+  test('rejects non-numbers', () => {
+    expect(() => min(number, 0).verify('5')).toThrow('Must be number');
+  });
+});
+
+describe('max', () => {
+  test('inclusive upper bound', () => {
+    const decoder = max(number, 100);
+    expect(decoder.verify(-999)).toBe(-999);
+    expect(decoder.verify(100)).toBe(100);
+    expect(() => decoder.verify(101)).toThrow('Must be at most 100');
+  });
+
+  test('works with other number decoders', () => {
+    const decoder = max(integer, 10);
+    expect(decoder.verify(10)).toBe(10);
+    expect(() => decoder.verify(11)).toThrow('Must be at most 10');
+    expect(() => decoder.verify(3.5)).toThrow('Number must be an integer');
+  });
+
+  test('rejects non-numbers', () => {
+    expect(() => max(number, 10).verify('5')).toThrow('Must be number');
+  });
+});
+
+describe('between', () => {
+  test('inclusive bounds', () => {
+    const decoder = between(number, 2, 5);
+    expect(decoder.verify(2)).toBe(2);
+    expect(decoder.verify(3.5)).toBe(3.5);
+    expect(decoder.verify(5)).toBe(5);
+    expect(() => decoder.verify(1)).toThrow('Must be at least 2');
+    expect(() => decoder.verify(6)).toThrow('Must be at most 5');
+  });
+
+  test('works with other number decoders', () => {
+    const decoder = between(integer, 1, 10);
+    expect(decoder.verify(1)).toBe(1);
+    expect(decoder.verify(10)).toBe(10);
+    expect(() => decoder.verify(0)).toThrow('Must be at least 1');
+    expect(() => decoder.verify(3.5)).toThrow('Number must be an integer');
+  });
+
+  test('rejects non-numbers', () => {
+    expect(() => between(number, 0, 10).verify('5')).toThrow('Must be number');
   });
 });
 

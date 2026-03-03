@@ -1,24 +1,33 @@
+import type { Relax } from './Relax';
+
 export type SizeOptions = {
   min?: number;
   max?: number;
   size?: number;
 };
 
-export function bySizeOptions(options: SizeOptions): (value: string) => string | null {
+/**
+ * Anything with a .length or .size property, like strings, arrays, or sets.
+ */
+export type Sized = Relax<{ length: number } | { size: number }>;
+
+export function bySizeOptions(options: SizeOptions): (value: Sized) => string | null {
   const size = options.size;
   const min = size ?? options.min;
   const max = size ?? options.max;
 
   const atLeast = min === max ? '' : 'at least ';
   const atMost = min === max ? '' : 'at most ';
-  const tooShort = min !== undefined && `Too short, must be ${atLeast}${min} chars`;
-  const tooLong = max !== undefined && `Too long, must be ${atMost}${max} chars`;
 
-  return tooShort && tooLong
-    ? (s: string) => (s.length < min ? tooShort : s.length > max ? tooLong : null)
-    : tooShort
-      ? (s: string) => (s.length < min ? tooShort : null)
-      : tooLong
-        ? (s: string) => (s.length > max ? tooLong : null)
-        : () => null;
+  return (value: Sized) => {
+    const len = value.length ?? value.size;
+    if (typeof value === 'string') {
+      if (min !== undefined && len < min) return `Too short, must be ${atLeast}${min} chars`;
+      if (max !== undefined && len > max) return `Too long, must be ${atMost}${max} chars`;
+    } else {
+      if (min !== undefined && len < min) return `Must have ${atLeast}${min} items`;
+      if (max !== undefined && len > max) return `Must have ${atMost}${max} items`;
+    }
+    return null;
+  };
 }

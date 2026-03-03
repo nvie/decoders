@@ -20,6 +20,11 @@ const NOT_DECODERS = new Set([
   'JSONObject',
   'JSONValue',
   'Scalar',
+
+  'Sized',
+
+  // Option types
+  'RangeOptions',
   'SizeOptions',
 
   // Annotations

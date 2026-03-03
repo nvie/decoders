@@ -47,6 +47,36 @@ export const positiveInteger: Decoder<number> = integer.refine(
 );
 
 /**
+ * Takes any number decoder and rejects values below the given minimum
+ * (inclusive, uses >=).
+ */
+export function min(decoder: Decoder<number>, min: number): Decoder<number> {
+  return decoder.reject((value) => (value < min ? `Must be at least ${min}` : null));
+}
+
+/**
+ * Takes any number decoder and rejects values above the given maximum
+ * (inclusive, uses <=).
+ */
+export function max(decoder: Decoder<number>, max: number): Decoder<number> {
+  return decoder.reject((value) => (value > max ? `Must be at most ${max}` : null));
+}
+
+/**
+ * Takes any number decoder and rejects values outside the given range.
+ * Both bounds are inclusive (uses >= and <=).
+ */
+export function between(
+  decoder: Decoder<number>,
+  lo: number,
+  hi: number,
+): Decoder<number> {
+  return decoder.reject((value) =>
+    value < lo ? `Must be at least ${lo}` : value > hi ? `Must be at most ${hi}` : null,
+  );
+}
+
+/**
  * Accepts any valid ``bigint`` value.
  */
 export const bigint: Decoder<bigint> = define((blob, ok, err) =>

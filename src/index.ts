@@ -7,9 +7,18 @@ export { mapping, record, setFromArray } from './collections';
 export { date, datelike, dateString, iso8601 } from './dates';
 export type { JSONArray, JSONObject, JSONValue } from './json';
 export { json, jsonArray, jsonObject } from './json';
-export type { SizeOptions } from './lib/size-options';
+export type { Sized, SizeOptions } from './lib/size-options';
 export { instanceOf, lazy, prep } from './misc';
-export { anyNumber, integer, number, positiveInteger, positiveNumber } from './numbers';
+export {
+  anyNumber,
+  between,
+  integer,
+  max,
+  min,
+  number,
+  positiveInteger,
+  positiveNumber,
+} from './numbers';
 export { bigint } from './numbers';
 export { exact, inexact, object, pojo } from './objects';
 export { endsWith, nonEmptyString, regex, startsWith, string } from './strings';
