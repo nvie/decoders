@@ -118,17 +118,16 @@ decoder if none is provided.
     ['max', 'max(100)'],
     ['between', 'between(0, 100)'],
   ]}
-  examples={['42', '0', 'Math.PI', '100', '-1', '101']}
+  examples={['42', 'Math.PI', '100', '-1', '123']}
 />
 
-You can pass a custom base decoder to restrict what kind of numbers are accepted. For
-example, passing `integer` will reject non-whole numbers in addition to enforcing the
-range:
+You can pass `integer` as the number decoder to use to further restrict what kind of
+numbers are accepted:
 
 <DecoderPlayground
   decoder={[
-    ['between(1, 10)', 'between(1, 10)'],
-    ['between(1, 10, integer)', 'between(1, 10, integer)'],
+    ['between(1, 100)', 'between(1, 100)'],
+    ['between(1, 100, integer)', 'between(1, 100, integer)'],
   ]}
-  examples={['5', '3.14', '0', '11']}
+  examples={['5', '3.14', 'Math.PI * 100']}
 />
