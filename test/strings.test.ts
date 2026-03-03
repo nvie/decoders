@@ -11,6 +11,7 @@ import {
   identifier,
   nanoid,
   nonEmptyString,
+  sized,
   numeric,
   regex,
   startsWith,
@@ -421,6 +422,30 @@ describe('nanoid', () => {
 
     expect(() => nanoid({ size: 5 }).verify('$'.repeat(5))).toThrow(/Must be nano ID/);
     expect(() => nanoid().verify(42)).toThrow(/Must be string/);
+  });
+});
+
+describe('sized', () => {
+  test('exact size', () => {
+    const decoder = sized(string, { size: 5 });
+    expect(decoder.verify('hello')).toBe('hello');
+    expect(() => decoder.verify('hi')).toThrow('Too short, must be 5 chars');
+    expect(() => decoder.verify('toolong')).toThrow('Too long, must be 5 chars');
+  });
+
+  test('min and max', () => {
+    const decoder = sized(string, { min: 2, max: 5 });
+    expect(decoder.verify('hi')).toBe('hi');
+    expect(decoder.verify('hello')).toBe('hello');
+    expect(() => decoder.verify('x')).toThrow('Too short, must be at least 2 chars');
+    expect(() => decoder.verify('toolong')).toThrow('Too long, must be at most 5 chars');
+  });
+
+  test('works with other string decoders', () => {
+    const decoder = sized(identifier, { min: 2, max: 10 });
+    expect(decoder.verify('foo')).toBe('foo');
+    expect(() => decoder.verify('x')).toThrow('Too short');
+    expect(() => decoder.verify('123')).toThrow('Must be valid identifier');
   });
 });
 

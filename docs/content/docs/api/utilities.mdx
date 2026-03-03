@@ -126,6 +126,29 @@ Accepts any value that is an `instanceof` the given class.
 
 ---
 
+## sized
+
+<DecoderSig
+  name="sized"
+  params="decoder: Decoder<string>, options: SizeOptions"
+  type="string"
+  source="strings.ts#L113-L120"
+/>
+
+<Since version="2.9.0-pre.2" />
+
+Takes any string decoder and rejects values that don't match the given size
+constraints. Use this to add length validation to any string-based decoder.
+
+`SizeOptions` accepts `min`, `max`, or `size` (shorthand for exact length).
+
+<DecoderPlayground
+  decoder="sized(string, { min: 2, max: 10 })"
+  examples={["'hello'", "'hi'", "'x'", "'this string is too long'", '42']}
+/>
+
+---
+
 ## lazy
 
 <DecoderSig

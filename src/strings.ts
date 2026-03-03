@@ -106,9 +106,14 @@ export const identifier: Decoder<string> = regex(
  * alphabet, use `regex()` instead.
  */
 export function nanoid(options?: SizeOptions): Decoder<string> {
-  return regex(/^[a-z0-9_-]+$/i, 'Must be nano ID').reject(
-    bySizeOptions(options ?? { size: 21 }),
-  );
+  return sized(regex(/^[a-z0-9_-]+$/i, 'Must be nano ID'), options ?? { size: 21 });
+}
+
+/**
+ * Takes any string decoder and rejects if the length doesn't match.
+ */
+export function sized(decoder: Decoder<string>, options: SizeOptions): Decoder<string> {
+  return decoder.reject(bySizeOptions(options));
 }
 
 /**
