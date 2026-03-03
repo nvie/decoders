@@ -5,20 +5,21 @@ description: Learn how to define custom decoders using .refine() and .transform(
 
 When defining new decoders, it's important to understand the difference between what
 values it **accepts** vs which values it **returns**. In many cases these are the same.
-This can make it confusing to notice there even is a difference. For example, the `string`
-decoder _accepts_ strings, and also _returns_ (those same) strings.
+This can make it confusing to notice there even is a difference. For example, the
+[`string`](/docs/api/strings#string) decoder _accepts_ strings, and also _returns_ (those
+same) strings.
 
 This isn't always automatically the case, though. Some random examples:
 
-| This decoder... | ...accepts | ...but returns | ...so its type is  |
-| :-------------- | :--------- | :------------- | :----------------- |
-| `string`        | strings    | strings        | `Decoder<string>`  |
-| `email`         | strings    | strings        | `Decoder<string>`  |
-| `number`        | numbers    | numbers        | `Decoder<number>`  |
-| `integer`       | numbers    | numbers        | `Decoder<number>`  |
-| `iso8601`       | strings    | Date instances | `Decoder<Date>`    |
-| `url`           | strings    | URL instances  | `Decoder<URL>`     |
-| `truthy`        | anything!  | booleans       | `Decoder<boolean>` |
+| This decoder...                        | ...accepts | ...but returns | ...so its type is  |
+| :------------------------------------- | :--------- | :------------- | :----------------- |
+| [`string`](/docs/api/strings#string)   | strings    | strings        | `Decoder<string>`  |
+| [`email`](/docs/api/strings#email)     | strings    | strings        | `Decoder<string>`  |
+| [`number`](/docs/api/numbers#number)   | numbers    | numbers        | `Decoder<number>`  |
+| [`integer`](/docs/api/numbers#integer) | numbers    | numbers        | `Decoder<number>`  |
+| [`iso8601`](/docs/api/dates#iso8601)   | strings    | Date instances | `Decoder<Date>`    |
+| [`url`](/docs/api/strings#url)         | strings    | URL instances  | `Decoder<URL>`     |
+| [`truthy`](/docs/api/booleans#truthy)  | anything!  | booleans       | `Decoder<boolean>` |
 
 From the type definition, you can always tell what the decoder will _return_. You cannot
 tell from the type what input values it will _accept_. You'll need to read the
@@ -43,53 +44,15 @@ Now, let's build a few custom decoders to illustrate the above.
 
 ## Example 1: a "max length" string
 
-To build a decoder _accepting_ strings up until a maximum number of characters, we can
-start from the base `string` decoder. After all, we're only interested in accepting string
-values.
+To build a decoder _accepting_ strings up until a maximum number of characters, use the
+built-in [`sized()`](/docs/api/utilities#sized) helper:
 
-What we want to do is putting an extra acceptance predicate on these string inputs. We use
-`.refine()` for that.
+<DecoderPlayground
+  decoder="sized(string, { max: 280 })"
+  examples={["'Hello world!'", "'x'.repeat(300)", '123']}
+/>
 
-```typescript
-const maxLength = string.refine(
-  (s) => s.length <= 20,
-  'Too long. Must be at most 20 characters',
-);
-```
-
-We can generalize this by making this a function:
-
-```typescript
-function maxLength(size: number): Decoder<string> {
-  return string.refine(
-    (s) => s.length <= size,
-    `Too long. Must be at most ${size} characters`,
-  );
-}
-
-const max20 = maxLength(20);
-const max50 = maxLength(50);
-```
-
-Notice how this decoder works when you pass it arbitrary inputs:
-
-```typescript
-const max20 = maxLength(20);
-
-// OK
-max20.verify('hi'); // 'hi'
-
-// Throws
-max20.verify('Lorem ipsum dolor sit amet.');
-// "Too long. Must be at most 20 characters"
-
-max20.verify(123);
-// "Must be string"
-```
-
-Note that you get the rejection of numbers and other non-string inputs for free if you
-build your decoder this way. The `"Must be string"` guarantee and error message is
-provided by the base `string` decoder.
+The [`sized()`](/docs/api/utilities#sized) helper also supports `min`, or an exact `size`.
 
 ## Example 2: a truncating "max length" string
 
@@ -98,20 +61,18 @@ _reject_ those strings, but instead just chop them off at the given max length. 
 case, you want to not change what values it _accepts_, but what values it _returns_. You
 do that by adding a `.transform()` function:
 
-```typescript
-function truncated(size: number): Decoder<string> {
-  return string.transform((s) => s.substring(0, size));
-}
-
-const str20 = truncated(20);
-
-// OK
-str20.verify('hi'); // 'hi'
-str20.verify('Lorem ipsum dolor sit amet.'); // 'Lorem ipsum dolor si'
-
-// Throws
-str20.verify(123); // "Must be string"
-```
+<DecoderPlayground
+  globals={{
+    truncated: 'size => string.transform((s) => s.substring(0, size))',
+  }}
+  preface={`
+    function truncated(size) {
+      return string.transform((s) => s.substring(0, size));
+    }
+  `}
+  decoder="truncated(20)"
+  examples={["'hi'", "'Lorem ipsum dolor sit amet.'", '123']}
+/>
 
 Compared to example 1, you can see how the "lorem ipsum" string now gets accepted (but
 returned in truncated form).
@@ -127,27 +88,26 @@ We want to build this as a decoder that:
 - _Accepts_ strings containing exactly 5 alphabetical characters
 - _Returns_ those in uppercased form (even when not inputted as such)
 
-To define the acceptance criteria, we'll use a `regex()` decoder. This will enforce that
-only alphabetical chars are used, and that there are exactly 5 of them (it's important
-that the regex pattern is anchored using `^` and `$` for that). Also, we'll accept
-case-insensitive input with the `i` flag.
+To define the acceptance criteria, we'll use a [`regex()`](/docs/api/strings#regex)
+decoder. This will enforce that only alphabetical chars are used, and that there are
+exactly 5 of them (it's important that the regex pattern is anchored using `^` and `$` for
+that). Also, we'll accept case-insensitive input with the `i` flag.
 
 Then, we'll transform any accepted words to uppercase automatically.
 
-```typescript
-const wordle = regex(/^[a-z]{5}$/i, 'Must be 5-letter word').transform((s) =>
-  s.toUpperCase(),
-);
-
-// OK
-wordle.verify('Sweet'); // 'SWEET'
-wordle.verify('space'); // 'SPACE'
-
-// Throws
-wordle.verify('Hey!!'); // "Must be 5-letter word"
-wordle.verify('hi'); // "Must be 5-letter word"
-wordle.verify(123); // "Must be string"
-```
+<DecoderPlayground
+  globals={{
+    wordle:
+      "regex(/^[a-z]{5}$/i, 'Must be 5-letter word').transform((s) => s.toUpperCase())",
+  }}
+  preface={`
+    const wordle =
+      regex(/^[a-z]{5}$/i, 'Must be 5-letter word')
+        .transform((s) => s.toUpperCase());
+  `}
+  decoder="wordle"
+  examples={["'sweet'", "'SpAcE'", "'Sp@cE'", "'hi'"]}
+/>
 
 ## Example 4: Making a transformation reusable
 
@@ -159,38 +119,39 @@ You can define this as a higher-order decoder which works for _any_ string decod
 `Decoder<string>`). Simply define this as a function if you want to make writing these
 easier:
 
-```typescript
-function uppercase(decoder: Decoder<string>): Decoder<string> {
+```ts
+function lower(decoder) {
+  return decoder.transform((s) => s.toLowerCase());
+}
+
+function upper(decoder) {
   return decoder.transform((s) => s.toUpperCase());
 }
 ```
 
-```typescript
-import { email, regex, string } from 'decoders';
+Then you can use reuse them anywhere in your decoders.
 
-// These now all magically work
-uppercase(string);
-uppercase(regex(/^\w+$/, 'Must be single word'));
-uppercase(email);
-
-// Using this on non-string decoders makes no sense though
-uppercase(number); // TypeError
-uppercase(array(number)); // TypeError
-```
-
-This may make your object definitions super readable:
-
-```typescript
-const tag = regex(/^\w+$/, 'Must be single word');
-
-const thing = object({
-  email: uppercase(email),
-  labels: array(uppercase(tag)),
-});
-
-thing.verify({ email: 'user@example.org', labels: ['easy'] });
-// => { email: 'USER@EXAMPLE.ORG', labels: ['EASY'] })
-```
+<DecoderPlayground
+  globals={{
+    lower: 'decoder => decoder.transform(s => s.toLowerCase())',
+    upper: 'decoder => decoder.transform(s => s.toUpperCase())',
+    tag: "regex(/^\\w+$/, 'Must be single word')",
+    thing: 'object({ email: lower(email), labels: array(upper(tag)) })',
+  }}
+  preface={`
+    const tag = regex(/^\\w+$/, 'Must be single word');
+    //
+    const thing = object({
+      email: lower(email),
+      labels: array(upper(tag)),
+    });
+  `}
+  decoder="thing"
+  examples={[
+    "{ email: 'User@Example.ORG', labels: ['easy'] }",
+    "{ email: 'invalid@email', labels: ['ok'] }",
+  ]}
+/>
 
 ## Example 5: Sanitizing messy inputs
 
@@ -243,9 +204,10 @@ following decoder:
 nullish(iso8601, null);
 ```
 
-Wait, why not use `nullable(iso8601)` here?! The reason is the third event in the example.
-Because the field can legally be missing, we'll have to explicitly accept both `undefined`
-and `null` inputs. That's what the `nullish()` decoder does! Its second argument is a
+Wait, why not use [`nullable(iso8601)`](/docs/api/optional#nullable) here?! The reason is
+the third event in the example. Because the field can legally be missing, we'll have to
+explicitly accept both `undefined` and `null` inputs. That's what the
+[`nullish()`](/docs/api/optional#nullish) decoder does! Its second argument is a
 convenience default value that nullish values will get normalized to.
 
 ### Handling the `labels` field
@@ -300,11 +262,12 @@ ID _data type_. That the field also happens to be named `id` is a coincidence.
 ## Keep edge cases outside your decoders
 
 Try to keep `null`s, `undefined`s, or other edge cases outside of the decoder as much as
-possible, and instead wrap them in `nullable()`s where you use them in your call sites -
-typically in those big `object()` decoders.
+possible, and instead wrap them in [`nullable()`](/docs/api/optional#nullable)s where you
+use them in your call sites - typically in those big
+[`object()`](/docs/api/objects#object) decoders.
 
 Take [the example above](#putting-it-all-together). It would be easy to let the
 `commaSeparated` decoder be infected with the `null`-case and handle it too. But this is
 less composable. Keeping the `null`-case outside of that decoder makes it a smaller, and
-thus a more reusable, building block. It's cheap to wrap it in a `nullable` where you put
-it all together.
+thus a more reusable, building block. It's cheap to wrap it in a
+[`nullable`](/docs/api/optional#nullable) where you put it all together.
