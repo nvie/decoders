@@ -40,7 +40,7 @@
     "docs:update-sources": "node bin/update-source-lines.js",
     "lint": "oxlint src/ test/ && prettier --list-different src/ test/ test-d/",
     "lint:package": "publint --strict && attw --pack",
-    "format": "oxlint --fix src/ test/ ; prettier --write src/ test/ test-d/",
+    "format": "oxlint --fix src/ test/ ; prettier --write src/ test/ test-d/ docs/content/",
     "test": "vitest run --coverage",
     "test:completeness": "./bin/check.sh",
     "test:typescript": "tsc --noEmit",
