@@ -113,16 +113,10 @@ Takes any number decoder and rejects values outside the given bounds. Bounds are
 inclusive.
 
 <DecoderPlayground
-  decoder="min(number, 0)"
-  examples={['42', '0', '-1', "'not a number'"]}
-/>
-
-<DecoderPlayground
-  decoder="max(number, 100)"
-  examples={['42', '100', '101', "'not a number'"]}
-/>
-
-<DecoderPlayground
-  decoder="between(number, 0, 100)"
-  examples={['42', '0', '100', '-1', '101', "'not a number'"]}
+  decoder={[
+    ['min', 'min(number, 0)'],
+    ['max', 'max(number, 100)'],
+    ['between', 'between(number, 0, 100)'],
+  ]}
+  examples={['42', '0', 'Math.PI', '100', '-1', '101']}
 />
