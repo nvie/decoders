@@ -1,9 +1,11 @@
 import { createMDX } from "fumadocs-mdx/next";
 import { fileURLToPath } from "url";
-import { dirname } from "path";
+import { dirname, resolve } from "path";
+import { readFileSync } from "fs";
 
 const withMDX = createMDX();
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const pkg = JSON.parse(readFileSync(resolve(__dirname, "../package.json"), "utf-8"));
 
 /** @type {import('next').NextConfig} */
 const config = {
@@ -13,6 +15,9 @@ const config = {
     resolveAlias: {
       decoders: "./decoders-latest-snapshot/index.js",
     },
+  },
+  env: {
+    WIP_DECODERS_VERSION: pkg.version,
   },
   reactStrictMode: true,
   async rewrites() {
