@@ -23,36 +23,38 @@ The expected return value should be a `DecodeResult<T>`, which can be obtained b
 returning the result of calling the provided `ok` or `err` helper functions. Please note
 that `ok()` and `err()` don't perform side effects! You'll need to _return_ those values.
 
-> _**NOTE:** This is the lowest-level API to define a new decoder, and therefore not
-> recommended unless you have a very good reason for it. Most cases can be covered more
-> elegantly by starting from an existing decoder and using `.transform()` or `.refine()`
-> on them instead._
+<Callout title="You probably don’t need this!" type="warning">
+  This is the lowest-level API to define a new decoder, and not recommended unless you
+  have no alternative. In almost all cases starting from an existing decoder and using
+  `.transform()` or `.refine()` will be preferable.
+</Callout>
 
-```ts
-// NOTE: Please do NOT implement an uppercase decoder like this! 😇
-const uppercase: Decoder<string> = define((blob, ok, err) => {
+```ts tab="Example"
+//
+// NOTE: This example just shows how define() works.
+// Please do NOT implement an uppercase decoder like this! 🙈
+//
+const uppercase = define<string>((blob, ok, err) => {
   if (typeof blob === 'string') {
     // Accept the input
     return ok(blob.toUpperCase());
   } else {
     // Reject the input
-    return err('I only accept strings as input');
+    return err('Must be string');
   }
 });
+```
 
+```ts tab="Seriously... just do this instead!"
+const uppercase = string.transform((s) => s.toUpperCase());
+```
+
+```ts
 // 👍
 uppercase.verify('hi there') === 'HI THERE';
 
 // 👎
-uppercase.verify(123); // throws: 123
-//         ^^^ I only accept strings as input
-```
-
-The above example is just an example to illustrate how [`define()`](#define) works. It
-would be more idiomatic to implement an uppercase decoder as follows:
-
-```ts
-const uppercase: Decoder<string> = string.transform((s) => s.toUpperCase());
+uppercase.verify(123); // throws: Must be string
 ```
 
 ---
