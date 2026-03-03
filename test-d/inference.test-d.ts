@@ -55,6 +55,7 @@ import {
   regex,
   select,
   setFromArray,
+  sized,
   startsWith,
   string,
   taggedUnion,
@@ -63,6 +64,7 @@ import {
   undefined_,
   unknown,
   url,
+  urlString,
   uuid,
   uuidv1,
   uuidv4,
@@ -120,7 +122,9 @@ expectType<string>(test(email));
 expectType<string>(test(regex(/foo/, 'Must be foo')));
 expectType<`foo-${string}`>(test(startsWith('foo-')));
 expectType<`${string}-bar`>(test(endsWith('-bar')));
+expectType<string>(test(sized(string, { min: 1, max: 10 })));
 expectType<URL>(test(url));
+expectType<string>(test(urlString));
 expectType<URL>(test(httpsUrl));
 expectType<string>(test(identifier));
 expectType<string>(test(nanoid()));

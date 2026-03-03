@@ -22,6 +22,13 @@ const NOT_DECODERS = new Set([
   'Scalar',
   'SizeOptions',
 
+  // Annotations
+  'Annotation',
+  'ArrayAnnotation',
+  'ObjectAnnotation',
+  'OpaqueAnnotation',
+  'ScalarAnnotation',
+
   // Formatters
   'Formatter',
   'formatInline',
