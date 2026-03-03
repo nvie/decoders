@@ -3,97 +3,6 @@ title: Utilities
 description: Utility decoders for custom logic, preprocessing, and advanced use cases.
 ---
 
-## define
-
-<DecoderSig
-  name="define"
-  params="fn: (blob: unknown, ok, err) => DecodeResult<T>"
-  type="T"
-  source="core/Decoder.ts#L158-L355"
-/>
-
-Defines a new `Decoder<T>`, by implementing a custom acceptance function. The function
-receives three arguments:
-
-1. `blob` - the raw/unknown input (aka your external data)
-2. `ok` - Call `ok(value)` to accept the input and return `value`
-3. `err` - Call `err(message)` to reject the input with error `message`
-
-The expected return value should be a `DecodeResult<T>`, which can be obtained by
-returning the result of calling the provided `ok` or `err` helper functions. Please note
-that `ok()` and `err()` don't perform side effects! You'll need to _return_ those values.
-
-<Callout title="You probably don’t need this!" type="warning">
-  This is the lowest-level API to define a new decoder, and not recommended unless you
-  have no alternative. In almost all cases starting from an existing decoder and using
-  `.transform()` or `.refine()` will be preferable.
-</Callout>
-
-```ts tab="Example"
-//
-// NOTE: This example just shows how define() works.
-// Please do NOT implement an uppercase decoder like this! 🙈
-//
-const uppercase = define<string>((blob, ok, err) => {
-  if (typeof blob === 'string') {
-    // Accept the input
-    return ok(blob.toUpperCase());
-  } else {
-    // Reject the input
-    return err('Must be string');
-  }
-});
-```
-
-```ts tab="Seriously... just do this instead!"
-const uppercase = string.transform((s) => s.toUpperCase());
-```
-
-```ts
-// 👍
-uppercase.verify('hi there') === 'HI THERE';
-
-// 👎
-uppercase.verify(123); // throws: Must be string
-```
-
----
-
-## prep
-
-<DecoderSig
-  name="prep"
-  params="mapperFn: (raw: unknown) => unknown, decoder: Decoder<T>"
-  type="T"
-  source="misc.ts#L31-L61"
-/>
-
-Pre-process the data input before passing it into the decoder. This gives you the ability
-to arbitrarily customize the input on the fly before passing it to the decoder. Of course,
-the input value at that point is still of `unknown` type, so you will have to deal with
-that accordingly.
-
-```ts
-const decoder = prep(
-  // Will convert any input to an int first, before feeding it to
-  // positiveInteger. This will effectively also allow numeric strings
-  // to be accepted (and returned) as integers. If this ever throws,
-  // then the error message will be what gets annotated on the input.
-  (x) => parseInt(x),
-  positiveInteger,
-);
-
-// 👍
-decoder.verify(42) === 42;
-decoder.verify('3') === 3;
-
-// 👎
-decoder.verify('-3'); // throws: not a positive number
-decoder.verify('hi'); // throws: not a number
-```
-
----
-
 ## unknown
 
 <DecoderSig name="unknown" type="unknown" source="basics.ts#L124-L131" />
@@ -167,6 +76,38 @@ Accepts any value that is an `instanceof` the given class.
 
 ---
 
+## lazy
+
+<DecoderSig
+  name="lazy"
+  params="decoderFn: () => Decoder<T>"
+  type="T"
+  source="misc.ts#L23-L29"
+/>
+
+Lazily evaluate the given decoder. Useful to build recursive decoders.
+
+<DecoderPlayground
+  globals={{
+    treeDecoder: 'object({ value: string, children: array(lazy(() => treeDecoder)) })',
+  }}
+  preface={`
+    // A recursive decoder
+    const treeDecoder = object({
+      value: string,
+      children: array(lazy(() => treeDecoder)),
+    });
+  `}
+  decoder="treeDecoder"
+  examples={[
+    "{ value: 'root', children: [{ value: 'leaf', children: [] }] }",
+    "{ value: 'root' }",
+    "'not a tree'",
+  ]}
+/>
+
+---
+
 ## sized
 
 <DecoderSig
@@ -205,32 +146,91 @@ For strings, error messages refer to "chars". For arrays and sets, error message
 
 ---
 
-## lazy
+## define
 
 <DecoderSig
-  name="lazy"
-  params="decoderFn: () => Decoder<T>"
+  name="define"
+  params="fn: (blob: unknown, ok, err) => DecodeResult<T>"
   type="T"
-  source="misc.ts#L23-L29"
+  source="core/Decoder.ts#L158-L355"
 />
 
-Lazily evaluate the given decoder. Useful to build recursive decoders.
+Defines a new `Decoder<T>`, by implementing a custom acceptance function. The function
+receives three arguments:
 
-<DecoderPlayground
-  globals={{
-    treeDecoder: 'object({ value: string, children: array(lazy(() => treeDecoder)) })',
-  }}
-  preface={`
-    // A recursive decoder
-    const treeDecoder = object({
-      value: string,
-      children: array(lazy(() => treeDecoder)),
-    });
-  `}
-  decoder="treeDecoder"
-  examples={[
-    "{ value: 'root', children: [{ value: 'leaf', children: [] }] }",
-    "{ value: 'root' }",
-    "'not a tree'",
-  ]}
+1. `blob` - the raw/unknown input (aka your external data)
+2. `ok` - Call `ok(value)` to accept the input and return `value`
+3. `err` - Call `err(message)` to reject the input with error `message`
+
+The expected return value should be a `DecodeResult<T>`, which can be obtained by
+returning the result of calling the provided `ok` or `err` helper functions. Please note
+that `ok()` and `err()` don't perform side effects! You'll need to _return_ those values.
+
+<Callout title="You probably don't need this!" type="warning">
+  This is the lowest-level API to define a new decoder, and not recommended unless you
+  have no alternative. In almost all cases starting from an existing decoder and using
+  `.transform()` or `.refine()` will be preferable.
+</Callout>
+
+```ts tab="Example"
+//
+// NOTE: This example just shows how define() works.
+// Please do NOT implement an uppercase decoder like this! 🙈
+//
+const uppercase = define<string>((blob, ok, err) => {
+  if (typeof blob === 'string') {
+    // Accept the input
+    return ok(blob.toUpperCase());
+  } else {
+    // Reject the input
+    return err('Must be string');
+  }
+});
+```
+
+```ts tab="Seriously... just do this instead!"
+const uppercase = string.transform((s) => s.toUpperCase());
+```
+
+```ts
+// 👍
+uppercase.verify('hi there') === 'HI THERE';
+
+// 👎
+uppercase.verify(123); // throws: Must be string
+```
+
+---
+
+## prep
+
+<DecoderSig
+  name="prep"
+  params="mapperFn: (raw: unknown) => unknown, decoder: Decoder<T>"
+  type="T"
+  source="misc.ts#L31-L61"
 />
+
+Pre-process the data input before passing it into the decoder. This gives you the ability
+to arbitrarily customize the input on the fly before passing it to the decoder. Of course,
+the input value at that point is still of `unknown` type, so you will have to deal with
+that accordingly.
+
+```ts
+const decoder = prep(
+  // Will convert any input to an int first, before feeding it to
+  // positiveInteger. This will effectively also allow numeric strings
+  // to be accepted (and returned) as integers. If this ever throws,
+  // then the error message will be what gets annotated on the input.
+  (x) => parseInt(x),
+  positiveInteger,
+);
+
+// 👍
+decoder.verify(42) === 42;
+decoder.verify('3') === 3;
+
+// 👎
+decoder.verify('-3'); // throws: not a positive number
+decoder.verify('hi'); // throws: not a number
+```
