@@ -2,14 +2,14 @@
 
 - New: `sized(decoder, {min?, max?, size?})` utility for adding length validation to
   strings, arrays, and sets.
-- New: `min(decoder, min)`, `max(decoder, max)`, and `between(decoder, min, max)` utilities
-  for adding inclusive numeric range validation.
+- New: `min(decoder, min)`, `max(decoder, max)`, and `between(decoder, min, max)`
+  utilities for adding inclusive numeric range validation.
 - New: `urlString` decoder, which is like `url`, but returns a string instead of a URL
   instance.
 
 ## [2.9.0-pre.1] - 2026-03-02
 
-- Rename Decoder.then() → Decoder.chain() to avoid confusion with Promises (custom
+- Rename `Decoder.then()` → `Decoder.chain()` to avoid confusion with Promises (custom
   thenables).
 - Add missing top-level type exports for annotations
 
