@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- New: `sized(decoder, {min?, max?, size?})` utility for adding length validation to
+  string decoders.
 - New: `urlString` decoder, which is like `url`, but returns a string instead of a URL
   instance.
 
