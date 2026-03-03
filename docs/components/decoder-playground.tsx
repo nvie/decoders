@@ -65,10 +65,14 @@ function formatValue(value: unknown): string {
   if (value === null) return 'null';
   if (typeof value === 'number' || typeof value === 'boolean') return String(value);
   if (typeof value === 'bigint') return `${value}n`;
-  if (value instanceof URL) return `URL { ${value.href} }`;
-  if (value instanceof Date) return value.toISOString();
+  if (value instanceof URL) return `URL { href: ${JSON.stringify(value.href)} }`;
+  if (value instanceof Date) return `Date { ${JSON.stringify(value.toISOString())} }`;
+  if (value instanceof Error) return `${value.constructor.name} { ${JSON.stringify(value.message)} }`;
+  if (value instanceof Set) return `Set(${value.size}) { ${[...value].map(formatValue).join(', ')} }`;
+  if (value instanceof Map) return `Map(${value.size}) { ${[...value].map(([k, v]) => `${formatValue(k)} => ${formatValue(v)}`).join(', ')} }`;
   try {
-    return JSON.stringify(value);
+    if (Array.isArray(value)) return `[${value.map(formatValue).join(', ')}]`;
+    return JSON.stringify(value, null, 2).replace(/\n\s*/g, ' ');
   } catch {
     return String(value);
   }
@@ -153,7 +157,7 @@ function splitChain(expr: string): string[] {
 }
 
 function dedent(text: string): string {
-  const lines = text.split('\n');
+  const lines = text.split('\n').map((l) => (l.trim() === '//' ? '' : l));
   const nonEmpty = lines.filter((l) => l.trim().length > 0);
   const indent = Math.min(...nonEmpty.map((l) => l.match(/^ */)![0].length));
   return lines
@@ -461,11 +465,12 @@ export function DecoderPlayground(props: Props) {
           code={`${props.preface ? `${dedent(props.preface)}\n\n` : ''}${formatSnippet(props.decoder, mode, rows[activeRow]?.input || '…', fmt)}${rows[activeRow]?.accepted === true ? '  // accepted 👍' : rows[activeRow]?.accepted === false ? '  // rejected 👎' : ''}`}
         />
       </div>
+      <div className="overflow-x-auto">
       <table className="w-full">
         <thead>
           <tr className="border-b border-fd-border text-left text-xs text-fd-muted-foreground">
-            <th className="w-1/2 px-3 py-2 font-medium">Input</th>
-            <th className="w-1/2 px-3 py-2 font-medium">Result</th>
+            <th className="px-3 py-2 font-medium" style={{ width: '50%', minWidth: 150 }}>Input</th>
+            <th className="px-3 py-2 font-medium" style={{ width: '50%', minWidth: 150 }}>Result</th>
           </tr>
         </thead>
         <tbody>
@@ -492,7 +497,7 @@ export function DecoderPlayground(props: Props) {
                 {!row.input ? null : !row.result ? (
                   <span className="text-fd-muted-foreground">&hellip;</span>
                 ) : row.result.ok ? (
-                  <code className="text-xs">{highlight(row.result.value)}</code>
+                  <code className="whitespace-pre text-xs">{highlight(row.result.value)}</code>
                 ) : (
                   <div
                     className="whitespace-pre-wrap text-xs"
@@ -506,6 +511,7 @@ export function DecoderPlayground(props: Props) {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }
