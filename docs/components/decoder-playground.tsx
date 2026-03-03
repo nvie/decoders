@@ -152,6 +152,16 @@ function splitChain(expr: string): string[] {
   return segments;
 }
 
+function dedent(text: string): string {
+  const lines = text.split('\n');
+  const nonEmpty = lines.filter((l) => l.trim().length > 0);
+  const indent = Math.min(...nonEmpty.map((l) => l.match(/^ */)![0].length));
+  return lines
+    .map((l) => l.slice(indent))
+    .join('\n')
+    .trim();
+}
+
 function formatSnippet(decoder: string, mode: Mode, input: string, fmt: Fmt): string {
   const fmtArg = mode === 'verify' && fmt === 'formatShort' ? `, ${fmt}` : '';
   const call = `.${mode}(${input}${fmtArg})`;
@@ -448,7 +458,7 @@ export function DecoderPlayground(props: Props) {
       <div className="border-b border-fd-border [&_figure]:!m-0 [&_figure]:!rounded-none [&_figure]:!border-0 [&_figure]:!bg-transparent [&_pre]:!bg-transparent [&_pre]:!text-xs [&_pre]:!py-1.5 [&_pre]:!px-3 [&_button]:!hidden">
         <DynamicCodeBlock
           lang="ts"
-          code={`${props.preface ? `${props.preface}\n\n` : ''}${formatSnippet(props.decoder, mode, rows[activeRow]?.input || '…', fmt)}${rows[activeRow]?.accepted === true ? '  // accepted 👍' : rows[activeRow]?.accepted === false ? '  // rejected 👎' : ''}`}
+          code={`${props.preface ? `${dedent(props.preface)}\n\n` : ''}${formatSnippet(props.decoder, mode, rows[activeRow]?.input || '…', fmt)}${rows[activeRow]?.accepted === true ? '  // accepted 👍' : rows[activeRow]?.accepted === false ? '  // rejected 👎' : ''}`}
         />
       </div>
       <table className="w-full">

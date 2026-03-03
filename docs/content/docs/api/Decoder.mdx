@@ -236,9 +236,10 @@ dynamic runtime value.
     point2d: 'tuple(number, number)',
     point3d: 'tuple(number, number, number)',
   }}
-  preface={
-    'const point2d = tuple(number, number);\nconst point3d = tuple(number, number, number);'
-  }
+  preface={`
+    const point2d = tuple(number, number);
+    const point3d = tuple(number, number, number);
+  `}
   decoder="string.transform(s => s.split(',').map(Number)).pipe(tup => tup.length === 2 ? point2d : tup.length === 3 ? point3d : never('Must be 2D or 3D point'))"
   examples={["'1'", "'1,2'", "'1,2,3'", "'1,2,3,4'"]}
 />

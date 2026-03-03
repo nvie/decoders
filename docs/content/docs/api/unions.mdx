@@ -57,7 +57,13 @@ Accepts and return an enum value.
 It works with numeric enums:
 
 <DecoderPlayground
-  preface={'enum Fruit {\n  Apple,\n  Banana,\n  Cherry,\n}'}
+  preface={`
+    enum Fruit {
+      Apple,
+      Banana,
+      Cherry,
+    }
+  `}
   globals={{
     Fruit:
       "Object.freeze({ 0: 'Apple', 1: 'Banana', 2: 'Cherry', Apple: 0, Banana: 1, Cherry: 2 })",
@@ -72,7 +78,13 @@ As well as with string enums:
   globals={{
     Fruit: "Object.freeze({ Apple: 'a', Banana: 'b', Cherry: 'c' })",
   }}
-  preface={"enum Fruit {\n  Apple = 'a',\n  Banana = 'b',\n  Cherry = 'c',\n}"}
+  preface={`
+    enum Fruit {
+      Apple = 'a',
+      Banana = 'b',
+      Cherry = 'c',
+    }
+  `}
   decoder="enum_(Fruit)"
   examples={['Fruit.Apple', 'Fruit.Banana', "'a'", "'b'", "'Apple'", '0']}
 />
@@ -110,9 +122,10 @@ and is more performant at runtime because it doesn't have to try all decoders on
     A: "object({ type: constant('A'), foo: string })",
     B: "object({ type: constant('B'), bar: number })",
   }}
-  preface={
-    "const A = object({ type: constant('A'), foo: string });\nconst B = object({ type: constant('B'), bar: number });"
-  }
+  preface={`
+    const A = object({ type: constant('A'), foo: string });
+    const B = object({ type: constant('B'), bar: number });
+  `}
   decoder="taggedUnion('type', { A, B })"
   examples={[
     "{ type: 'A', foo: 'hello' }",
