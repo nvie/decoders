@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- Improve error messages for `flexDate` decoder
 - Rename date decoders for clarity:
   - `iso8601` → `isoDate` (`iso8601` kept as alias)
   - `dateString` → `isoDateString` (deprecated, will be removed in 3.x)

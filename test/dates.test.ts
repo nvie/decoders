@@ -122,7 +122,7 @@ describe('flexDate', () => {
     }
   });
 
-  test('decodes ISO dates', () => {
+  test('decodes ISO date strings', () => {
     expect(decoder.verify('2020-06-22T10:57:33Z')).toEqual(
       new Date('2020-06-22T10:57:33Z'),
     );
@@ -150,14 +150,21 @@ describe('flexDate', () => {
     );
   });
 
-  test('rejects invalid dates', () => {
+  test('rejects semantically invalid values', () => {
+    expect(() => decoder.verify(new Date(NaN))).toThrow('Must be a Date or date string');
+
     // Syntactically invalid
-    expect(() => decoder.verify('03/04/2000')).toThrow('Must be a Date or date string');
-    expect(() => decoder.verify('2020-06-22T10:57:33')).toThrow();
-    expect(() => decoder.verify('2020-06-22')).toThrow();
+    expect(() => decoder.verify(new Error())).toThrow('Must be a Date or date string');
+    expect(() => decoder.verify('03/04/2000')).toThrow('Must be ISO8601 format');
+    expect(() => decoder.verify('2020-06-22T10:57:33')).toThrow('Must be ISO8601 format');
+    expect(() => decoder.verify('2020-06-22')).toThrow('Must be ISO8601 format');
 
     // Semantically invalid (these dates don't exist)
-    expect(() => decoder.verify('2020-03-32T10:57:33Z')).toThrow();
-    expect(() => decoder.verify('0099-16-48T10:57:33Z')).toThrow();
+    expect(() => decoder.verify('2020-03-32T10:57:33Z')).toThrow(
+      'Must be valid date/time value',
+    );
+    expect(() => decoder.verify('0099-16-48T10:57:33Z')).toThrow(
+      'Must be valid date/time value',
+    );
   });
 });

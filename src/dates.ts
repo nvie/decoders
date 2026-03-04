@@ -3,7 +3,8 @@ import { define } from '~/core';
 import { isDate } from '~/lib/utils';
 
 import { regex } from './strings';
-import { either } from './unions';
+import { select } from './unions';
+import { never, unknown } from './basics';
 
 // Only matches the shape. This "over-matches" some values that still aren't
 // valid dates (like 9999-99-99), but those will be caught by JS Date's
@@ -40,7 +41,13 @@ export const isoDate: Decoder<Date> = isoDateString.transform((value) => new Dat
  * This is commonly useful to build decoders that can be reused to validate
  * object with Date instances as well as objects coming from JSON payloads.
  */
-export const flexDate = either(date, isoDate).describe('Must be a Date or date string');
+export const flexDate = select(unknown, (blob) =>
+  typeof blob === 'string'
+    ? isoDate
+    : isDate(blob)
+      ? date
+      : never('Must be a Date or date string'),
+);
 
 /** @deprecated Renamed to `isoDateString`. This alias will be removed in 3.x. */
 export const dateString: Decoder<string> = isoDateString;
