@@ -9,6 +9,7 @@ import { notFound } from "next/navigation";
 import { getMDXComponents } from "@/mdx-components";
 import type { Metadata } from "next";
 import { createRelativeLink } from "fumadocs-ui/mdx";
+import { GotoDecoderLink } from "@/components/decoder-link";
 import { PageActions } from "@/components/page-actions";
 
 const GITHUB_CONTENT_URL =
@@ -38,7 +39,7 @@ export default async function Page(props: {
       <DocsBody>
         <MDX
           components={getMDXComponents({
-            a: createRelativeLink(source, page),
+            a: createRelativeLink(source, page, GotoDecoderLink),
           })}
         />
       </DocsBody>

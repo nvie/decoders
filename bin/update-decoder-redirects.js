@@ -99,6 +99,21 @@ for (const file of mdxFiles) {
   }
 }
 
+// Legacy aliases: names that no longer exist in the codebase but should still
+// redirect. Each key is resolved through the current redirects map, so if the
+// target is ever renamed again the legacy alias follows automatically.
+const LEGACY_ALIASES = {
+  '.then': '.chain',
+  'decoder.then': 'decoder.chain',
+};
+
+for (const [alias, target] of Object.entries(LEGACY_ALIASES)) {
+  const resolved = redirects.get(target);
+  if (resolved) {
+    redirects.set(alias, resolved);
+  }
+}
+
 // Sort entries alphabetically
 const sorted = [...redirects.entries()].sort(([a], [b]) =>
   a.localeCompare(b),
