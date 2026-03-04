@@ -31,6 +31,17 @@ list_decoders | while read dec; do
   fi
 done
 
+echo "==> Checking decoder redirects" >&2
+list_decoders | while read dec; do
+  lower=$(echo "$dec" | tr '[:upper:]' '[:lower:]')
+  if ! grep -q "\"$lower\":" "docs/lib/decoder-redirects.ts"; then
+    echo "❌ $dec" >&2
+    echo "Decoder \"$dec\" has no redirect entry!" >&2
+    echo "Run 'npm run format' to regenerate." >&2
+    exit 5
+  fi
+done
+
 echo "==> Checking type inference tests" >&2
 list_decoders | while read dec; do
   if ! grep -qF "$dec" "test-d/inference.test-d.ts"; then

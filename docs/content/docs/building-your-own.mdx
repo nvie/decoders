@@ -6,20 +6,19 @@ description: Learn how to define custom decoders using .refine() and .transform(
 When defining new decoders, it's important to understand the difference between what
 values it **accepts** vs which values it **returns**. In many cases these are the same.
 This can make it confusing to notice there even is a difference. For example, the
-[`string`](/docs/api/strings#string) decoder _accepts_ strings, and also _returns_ (those
-same) strings.
+[`string`](/string) decoder _accepts_ strings, and also _returns_ (those same) strings.
 
 This isn't always automatically the case, though. Some random examples:
 
-| This decoder...                        | ...accepts | ...but returns | ...so its type is  |
-| :------------------------------------- | :--------- | :------------- | :----------------- |
-| [`string`](/docs/api/strings#string)   | strings    | strings        | `Decoder<string>`  |
-| [`email`](/docs/api/strings#email)     | strings    | strings        | `Decoder<string>`  |
-| [`number`](/docs/api/numbers#number)   | numbers    | numbers        | `Decoder<number>`  |
-| [`integer`](/docs/api/numbers#integer) | numbers    | numbers        | `Decoder<number>`  |
-| [`isoDate`](/docs/api/dates#isodate)   | strings    | Date instances | `Decoder<Date>`    |
-| [`url`](/docs/api/strings#url)         | strings    | URL instances  | `Decoder<URL>`     |
-| [`truthy`](/docs/api/booleans#truthy)  | anything!  | booleans       | `Decoder<boolean>` |
+| This decoder...       | ...accepts | ...but returns | ...so its type is  |
+| :-------------------- | :--------- | :------------- | :----------------- |
+| [`string`](/string)   | strings    | strings        | `Decoder<string>`  |
+| [`email`](/email)     | strings    | strings        | `Decoder<string>`  |
+| [`number`](/number)   | numbers    | numbers        | `Decoder<number>`  |
+| [`integer`](/integer) | numbers    | numbers        | `Decoder<number>`  |
+| [`isoDate`](/isoDate) | strings    | Date instances | `Decoder<Date>`    |
+| [`url`](/url)         | strings    | URL instances  | `Decoder<URL>`     |
+| [`truthy`](/truthy)   | anything!  | booleans       | `Decoder<boolean>` |
 
 From the type definition, you can always tell what the decoder will _return_. You cannot
 tell from the type what input values it will _accept_. You'll need to read the
@@ -45,14 +44,14 @@ Now, let's build a few custom decoders to illustrate the above.
 ## Example 1: a "max length" string
 
 To build a decoder _accepting_ strings up until a maximum number of characters, use the
-built-in [`sized()`](/docs/api/utilities#sized) helper:
+built-in [`sized()`](/sized) helper:
 
 <DecoderPlayground
   decoder="sized(string, { max: 280 })"
   examples={["'Hello world!'", "'x'.repeat(300)", '123']}
 />
 
-The [`sized()`](/docs/api/utilities#sized) helper also supports `min`, or an exact `size`.
+The [`sized()`](/sized) helper also supports `min`, or an exact `size`.
 
 ## Example 2: a truncating "max length" string
 
@@ -88,10 +87,10 @@ We want to build this as a decoder that:
 - _Accepts_ strings containing exactly 5 alphabetical characters
 - _Returns_ those in uppercased form (even when not inputted as such)
 
-To define the acceptance criteria, we'll use a [`regex()`](/docs/api/strings#regex)
-decoder. This will enforce that only alphabetical chars are used, and that there are
-exactly 5 of them (it's important that the regex pattern is anchored using `^` and `$` for
-that). Also, we'll accept case-insensitive input with the `i` flag.
+To define the acceptance criteria, we'll use a [`regex()`](/regex) decoder. This will
+enforce that only alphabetical chars are used, and that there are exactly 5 of them (it's
+important that the regex pattern is anchored using `^` and `$` for that). Also, we'll
+accept case-insensitive input with the `i` flag.
 
 Then, we'll transform any accepted words to uppercase automatically.
 
@@ -204,11 +203,11 @@ following decoder:
 nullish(isoDate, null);
 ```
 
-Wait, why not use [`nullable(isoDate)`](/docs/api/optional#nullable) here?! The reason is
-the third event in the example. Because the field can legally be missing, we'll have to
-explicitly accept both `undefined` and `null` inputs. That's what the
-[`nullish()`](/docs/api/optional#nullish) decoder does! Its second argument is a
-convenience default value that nullish values will get normalized to.
+Wait, why not use [`nullable(isoDate)`](/nullable) here?! The reason is the third event in
+the example. Because the field can legally be missing, we'll have to explicitly accept
+both `undefined` and `null` inputs. That's what the [`nullish()`](/nullish) decoder does!
+Its second argument is a convenience default value that nullish values will get normalized
+to.
 
 ### Handling the `labels` field
 
@@ -262,12 +261,11 @@ ID _data type_. That the field also happens to be named `id` is a coincidence.
 ## Keep edge cases outside your decoders
 
 Try to keep `null`s, `undefined`s, or other edge cases outside of the decoder as much as
-possible, and instead wrap them in [`nullable()`](/docs/api/optional#nullable)s where you
-use them in your call sites - typically in those big
-[`object()`](/docs/api/objects#object) decoders.
+possible, and instead wrap them in [`nullable()`](/nullable)s where you use them in your
+call sites - typically in those big [`object()`](/object) decoders.
 
 Take [the example above](#putting-it-all-together). It would be easy to let the
 `commaSeparated` decoder be infected with the `null`-case and handle it too. But this is
 less composable. Keeping the `null`-case outside of that decoder makes it a smaller, and
-thus a more reusable, building block. It's cheap to wrap it in a
-[`nullable`](/docs/api/optional#nullable) where you put it all together.
+thus a more reusable, building block. It's cheap to wrap it in a [`nullable`](/nullable)
+where you put it all together.
