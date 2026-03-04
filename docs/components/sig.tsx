@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { Info } from './info';
 
 const REPO = 'https://github.com/nvie/decoders/tree/main/src';
 const TEAL = '#267f99';
@@ -177,30 +178,64 @@ export function Sig({
  * Usage:
  *   <DecoderSig name="string" type="string" source="strings.ts#L20-L25" />
  *   <DecoderSig name="regex" params="pattern: RegExp, message: string" type="string" source="strings.ts#L32-L37" />
+ *   <DecoderSig name="isoDate" aliases={[{ name: "iso8601", info: "Renamed to isoDate." }]} type="Date" />
  */
+
+interface Alias {
+  name: string;
+  info?: ReactNode;
+}
+
 export function DecoderSig({
   name,
+  aliases,
   params,
   type,
   source,
 }: {
   name: string;
+  aliases?: Alias[];
   params?: string;
   type: string;
   source?: string;
 }) {
   return (
-    <Sig
-      name={name}
-      params={params}
-      returnType={
-        <em>
-          <span style={{ color: GRAY }}>{'Decoder<'}</span>
-          <span style={{ color: TEAL }}>{type}</span>
-          <span style={{ color: GRAY }}>{'>'}</span>
-        </em>
-      }
-      source={source}
-    />
+    <>
+      <Sig
+        name={name}
+        params={params}
+        returnType={
+          <em>
+            <span style={{ color: GRAY }}>{'Decoder<'}</span>
+            <span style={{ color: TEAL }}>{type}</span>
+            <span style={{ color: GRAY }}>{'>'}</span>
+          </em>
+        }
+        source={source}
+      />
+      {aliases?.map((alias) => (
+        <p key={alias.name} className="fn-sig fn-sig-deprecated">
+          <span className="fn-sig-content">
+            <strong style={{ fontWeight: 700 }}>{alias.name}</strong>
+            {params !== undefined ? (
+              <>
+                {'(\u200A'}
+                {renderParams(params)}
+                {'\u2009)'}
+              </>
+            ) : null}
+            {': '}
+            <em>
+              <span style={{ color: GRAY }}>{'Decoder<'}</span>
+              <span style={{ color: TEAL }}>{type}</span>
+              <span style={{ color: GRAY }}>{'>'}</span>
+            </em>
+            {' '}
+            <span style={{ color: GRAY, fontStyle: 'italic', fontSize: '0.85em' }}>deprecated</span>
+          </span>
+          {alias.info && <Info>{alias.info}</Info>}
+        </p>
+      ))}
+    </>
   );
 }

@@ -3,6 +3,7 @@ import defaultMdxComponents from "fumadocs-ui/mdx";
 import { Sig, DecoderSig } from "@/components/sig";
 import { DecoderPlayground } from "@/components/decoder-playground";
 import { Since } from "@/components/since";
+import { Info } from "@/components/info";
 
 export function getMDXComponents(components?: MDXComponents): MDXComponents {
   return {
@@ -11,6 +12,7 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     DecoderSig,
     DecoderPlayground,
     Since,
+    Info,
     ...components,
   };
 }
