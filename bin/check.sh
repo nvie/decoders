@@ -15,9 +15,9 @@ list_decoders | while read dec; do
   heading=$(echo "$dec" | sed 's/_$/\\_/')
   if grep -rqE "^## ${heading}" "$DOCS_API"; then
       continue
-  # Check for a <DecoderSig name="..."> (catches aliases like anything, fail)
-  # Works for both single-line and multiline tags (name= is always on its own line)
-  elif grep -rqE "name=\"$dec\"" "$DOCS_API"; then
+  # Check for a <DecoderSig name="..."> or an alias name in aliases prop
+  # Matches both name="dec" (JSX attr) and name: 'dec' (JS object in aliases)
+  elif grep -rqE "name=\"$dec\"|name: '$dec'" "$DOCS_API"; then
       continue
   else
       echo "❌ $dec" >&2
