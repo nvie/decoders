@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [2.9.0-pre.4] - 2026-03-04
+
 - Improve error messages for `flexDate` decoder
 - Rename date decoders for clarity:
   - `iso8601` → `isoDate` (`iso8601` kept as alias)
