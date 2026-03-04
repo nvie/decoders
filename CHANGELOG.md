@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [2.9.0-pre.3] - 2026-03-04
+
 - Improve error messages for `min`, `max`, and `between` decoders
 
 ## [2.9.0-pre.2] - 2026-03-03
