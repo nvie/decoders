@@ -41,7 +41,7 @@ export const isoDate: Decoder<Date> = isoDateString.transform((value) => new Dat
  * This is commonly useful to build decoders that can be reused to validate
  * object with Date instances as well as objects coming from JSON payloads.
  */
-export const flexDate = select(unknown, (blob) =>
+export const flexDate: Decoder<Date> = select(unknown, (blob) =>
   typeof blob === 'string'
     ? isoDate
     : isDate(blob)
