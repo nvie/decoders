@@ -1,18 +1,11 @@
 ## [Unreleased]
 
-## [2.9.0-pre.4] - 2026-03-04
+**Breaking!**
 
-- Improve error messages for `flexDate` decoder
-- Rename date decoders for clarity:
-  - `iso8601` → `isoDate` (`iso8601` kept as alias)
-  - `dateString` → `isoDateString` (deprecated, will be removed in 3.x)
-  - `datelike` → `flexDate` (deprecated, will be removed in 3.x)
+- Rename `Decoder.then()` → `Decoder.chain()` to avoid confusion with Promises (custom
+  thenables)
 
-## [2.9.0-pre.3] - 2026-03-04
-
-- Improve error messages for `min`, `max`, and `between` decoders
-
-## [2.9.0-pre.2] - 2026-03-03
+**New APIs:**
 
 - New: `sized(decoder, {min?, max?, size?})` utility for adding length validation to
   strings, arrays, and sets.
@@ -22,10 +15,13 @@
 - New: `urlString` decoder, which is like `url`, but returns a string instead of a URL
   instance.
 
-## [2.9.0-pre.1] - 2026-03-02
+**Changes:**
 
-- Rename `Decoder.then()` → `Decoder.chain()` to avoid confusion with Promises (custom
-  thenables).
+- Rename date decoders for clarity:
+  - `iso8601` → `isoDate` (`iso8601` will be kept as alias)
+  - `dateString` → `isoDateString` (deprecated, will be removed in 3.x)
+  - `datelike` → `flexDate` (deprecated, will be removed in 3.x)
+- Improve error messages for `flexDate` decoder
 - Add missing top-level type exports for annotations
 
 ## [2.8.0] - 2026-02-22
