@@ -30,7 +30,7 @@ Accepts arrays of whatever the given decoder accepts.
   source="arrays.ts#L52-L57"
 />
 
-Like [`array()`](#array), but will reject arrays with 0 elements.
+Like [`array()`][], but will reject arrays with 0 elements.
 
 <DecoderPlayground
   decoder="nonEmptyArray(string)"
@@ -45,7 +45,7 @@ Like [`array()`](#array), but will reject arrays with 0 elements.
 
 Accepts any array, but doesn't validate its items further.
 
-"poja" means "plain old JavaScript array", a play on [`pojo`](/pojo).
+"poja" means "plain old JavaScript array", a play on [`pojo`][].
 
 <DecoderPlayground
   decoder="poja"
@@ -85,8 +85,7 @@ decoders.
 <Since version="2.9" />
 
 Takes any array decoder and rejects values that don't match the given size constraints.
-Also works with [strings](/docs/api/strings#limiting-string-size) and
-[sets](/docs/api/sets-and-maps#limiting-set-sizes).
+Also works with [strings][sized-strings] and [sets][sized-sets].
 
 `SizeOptions` accepts `min`, `max`, or `size` (shorthand for exact length).
 
@@ -94,3 +93,8 @@ Also works with [strings](/docs/api/strings#limiting-string-size) and
   decoder="sized(array(number), { min: 2, max: 4 })"
   examples={['[1, 2, 3]', '[1, 2]', '[1]', '[1, 2, 3, 4, 5]', '[]']}
 />
+
+[`array()`]: /array
+[`pojo`]: /pojo
+[sized-strings]: /docs/api/strings#limiting-string-size
+[sized-sets]: /docs/api/sets-and-maps#limiting-set-sizes

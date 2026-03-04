@@ -20,8 +20,7 @@ Accepts and returns strings.
 
 <DecoderSig name="nonEmptyString" type="string" source="strings.ts#L27-L30" />
 
-Like [`string`](#string), but will reject the empty string or strings containing only
-whitespace.
+Like [`string`][], but will reject the empty string or strings containing only whitespace.
 
 <DecoderPlayground
   decoder="nonEmptyString"
@@ -93,7 +92,7 @@ Accepts and returns strings that end with the given suffix.
 <DecoderSig name="decimal" type="string" source="strings.ts#L140-L144" />
 
 Accepts and returns strings with decimal digits only (base-10). To convert these to
-numbers, use the [`numeric`](#numeric) decoder.
+numbers, use the [`numeric`][] decoder.
 
 <DecoderPlayground
   decoder="decimal"
@@ -120,7 +119,7 @@ Accepts and returns strings with hexadecimal digits only (base-16).
 <DecoderSig name="numeric" type="number" source="strings.ts#L154-L159" />
 
 Accepts valid numerical strings (in base-10) and returns them as a number. To only accept
-numerical strings and keep them as string values, use the [`decimal`](#decimal) decoder.
+numerical strings and keep them as string values, use the [`decimal`][] decoder.
 
 <DecoderPlayground
   decoder="numeric"
@@ -252,8 +251,8 @@ Accepts and returns strings that are valid identifiers in most programming langu
 <Since version="2.4" />
 
 Accepts and returns [nanoid](https://zelark.github.io/nano-id-cc) string values. It
-assumes the default nanoid alphabet. If you're using a custom alphabet, use
-[`regex()`](#regex) instead.
+assumes the default nanoid alphabet. If you're using a custom alphabet, use [`regex()`][]
+instead.
 
 <DecoderPlayground
   decoder="nanoid()"
@@ -292,7 +291,7 @@ identifier).
 
 <DecoderSig name="uuidv1" type="string" source="strings.ts#L122-L129" />
 
-Like [`uuid`](#uuid), but only accepts
+Like [`uuid`][], but only accepts
 [UUIDv1](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_%28date-time_and_MAC_address%29)
 strings.
 
@@ -310,7 +309,7 @@ strings.
 
 <DecoderSig name="uuidv4" type="string" source="strings.ts#L131-L138" />
 
-Like [`uuid`](#uuid), but only accepts
+Like [`uuid`][], but only accepts
 [UUIDv4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_%28random%29)
 strings.
 
@@ -336,8 +335,7 @@ strings.
 <Since version="2.9" />
 
 Takes any string decoder and rejects values that don't match the given size constraints.
-Also works with [arrays](/docs/api/arrays#limiting-array-sizes) and
-[sets](/docs/api/sets-and-maps#limiting-set-sizes).
+Also works with [arrays][sized-arrays] and [sets][sized-sets].
 
 `SizeOptions` accepts `min`, `max`, or `size` (shorthand for exact length).
 
@@ -345,3 +343,11 @@ Also works with [arrays](/docs/api/arrays#limiting-array-sizes) and
   decoder="sized(string, { min: 2, max: 10 })"
   examples={["'hello'", "'hi'", "'x'", "'this string is too long'", '42']}
 />
+
+[`string`]: /string
+[`numeric`]: /numeric
+[`decimal`]: /decimal
+[`regex()`]: /regex
+[`uuid`]: /uuid
+[sized-arrays]: /docs/api/arrays#limiting-array-sizes
+[sized-sets]: /docs/api/sets-and-maps#limiting-set-sizes

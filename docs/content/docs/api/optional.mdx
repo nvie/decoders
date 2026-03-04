@@ -28,8 +28,8 @@ If a default value is explicitly provided, return that instead in the `undefined
   examples={["'hello'", 'undefined', 'null', '0', '42']}
 />
 
-A typical case where [`optional()`](#optional) is useful is in decoding objects with
-optional fields:
+A typical case where [`optional()`][] is useful is in decoding objects with optional
+fields:
 
 ```ts
 object({
@@ -122,3 +122,5 @@ decoder.verify('hello') === 'hello';
 decoder.verify(null) === null;
 decoder.verify(undefined) === null;
 ```
+
+[`optional()`]: /optional

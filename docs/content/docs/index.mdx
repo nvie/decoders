@@ -104,13 +104,13 @@ Small decoders compose together like LEGO to build larger ones. In the example a
 
 Call one of these methods on any decoder:
 
-| Method                  | Returns          | On failure           |
-| ----------------------- | ---------------- | -------------------- |
-| [`.verify()`](/.verify) | `T`              | Throws an error      |
-| [`.value()`](/.value)   | `T \| undefined` | Returns `undefined`  |
-| [`.decode()`](/.decode) | `Result<T>`      | Returns error result |
+| Method          | Returns          | On failure           |
+| --------------- | ---------------- | -------------------- |
+| [`.verify()`][] | `T`              | Throws an error      |
+| [`.value()`][]  | `T \| undefined` | Returns `undefined`  |
+| [`.decode()`][] | `Result<T>`      | Returns error result |
 
-Most of the time, [`.verify()`](/.verify) is what you want.
+Most of the time, [`.verify()`][] is what you want.
 
 ### Composing decoders
 
@@ -135,8 +135,8 @@ const userDecoder = object({
 
 ## Error formatting
 
-By default, [`.verify()`](/.verify) uses `formatInline`, which echoes back the input with
-errors inlined:
+By default, [`.verify()`][] uses `formatInline`, which echoes back the input with errors
+inlined:
 
 ```typescript
 import { array, object, string, number } from 'decoders';
@@ -162,3 +162,7 @@ import { formatShort } from 'decoders';
 decoder.verify([{ name: 'Alice', age: '33' }], formatShort);
 // Decoding error: Value at keypath '0.age': Must be number
 ```
+
+[`.verify()`]: /.verify
+[`.value()`]: /.value
+[`.decode()`]: /.decode

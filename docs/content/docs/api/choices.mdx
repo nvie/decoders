@@ -52,9 +52,9 @@ oneOf(['foo', 'bar']);
   source="unions.ts#L122-L163"
 />
 
-If you are decoding tagged unions you may want to use the [`taggedUnion()`](#taggedunion)
-decoder instead of the general purpose [`either()`](#either) decoder to get better error
-messages and better performance.
+If you are decoding tagged unions you may want to use the [`taggedUnion()`][] decoder
+instead of the general purpose [`either()`][] decoder to get better error messages and
+better performance.
 
 This decoder is optimized for [tagged unions](https://en.wikipedia.org/wiki/Tagged_union),
 i.e. a union of objects where one field is used as the discriminator.
@@ -102,9 +102,8 @@ and is more performant at runtime because it doesn't have to try all decoders on
 Briefly peek at a runtime input using a "scout" decoder first, then decide which decoder
 to run on the (original) input, based on the information that the "scout" extracted.
 
-It serves a similar purpose as [`taggedUnion()`](#taggedunion), but is a generalization
-that works even if there isn't a single discriminator, or the discriminator isn't a
-string.
+It serves a similar purpose as [`taggedUnion()`][], but is a generalization that works
+even if there isn't a single discriminator, or the discriminator isn't a string.
 
 ```ts
 const decoder = select(
@@ -127,3 +126,6 @@ const decoder = select(
 );
 // Decoder<V1 | V2 | V3>
 ```
+
+[`taggedUnion()`]: /taggedUnion
+[`either()`]: /either

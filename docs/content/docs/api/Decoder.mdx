@@ -56,8 +56,8 @@ Use this when you're not interested in programmatically handling the error messa
 
 Verifies the untrusted/unknown input and either accepts or rejects it.
 
-Contrasted with [`.verify()`](#decoder.verify), calls to [`.decode()`](#decoder.decode)
-will never fail and instead return a result type.
+Contrasted with [`.verify()`][], calls to [`.decode()`][] will never fail and instead
+return a result type.
 
 For example, take this simple "number" decoder. When given an number value, it will return
 an `ok: true` result. Otherwise, it will return an `ok: false` result.
@@ -145,8 +145,7 @@ only accepts values that aren't rejected by the given function.
 The given function can return `null` to accept the decoded value, or return a specific
 error message to reject.
 
-Unlike [`.refine()`](#decoder.refine), you can use this function to return a dynamic error
-message.
+Unlike [`.refine()`][], you can use this function to return a dynamic error message.
 
 <DecoderPlayground
   decoder="string.reject(s => s.length > 5 ? `Too long (${s.length} chars)` : null)"
@@ -174,9 +173,9 @@ can be used to simplify or shorten otherwise long or low-level/technical errors.
 
 ---
 
-## Decoder.then
+## ~~Decoder.then~~
 
-In 2.9, `.then()` will get renamed to `.chain()` to avoid being mistaken for a Promise.
+`.then()` was renamed to [`.chain()`][] in 2.9 to avoid being mistaken for a Promise.
 
 ---
 
@@ -201,8 +200,13 @@ given acceptance function will receive the output of the current decoder as its 
 
 <Callout title="This is an advanced, low-level, API" type="warning">
   It’s not recommended to reach for this construct unless there is no other way. Most
-  cases can be covered more elegantly by [`.transform()`](#decoder.transform),
-  [`.refine()`](#decoder.refine), or [`.pipe()`](#decoder.pipe) instead.
+  cases can be covered more elegantly by [`.transform()`][], [`.refine()`][], or
+  [`.pipe()`][] instead.
+</Callout>
+
+<Callout type="info">
+  This method was named `.then()` in versions prior to 2.9. It was renamed to avoid
+  confusion with Promise thenables.
 </Callout>
 
 ---
@@ -232,8 +236,8 @@ given acceptance function will receive the output of the current decoder as its 
 
 ## Dynamic decoder selection
 
-With [`.pipe()`](#decoder.pipe) you can also dynamically select another decoder, based on
-dynamic runtime value.
+With [`.pipe()`][] you can also dynamically select another decoder, based on dynamic
+runtime value.
 
 <DecoderPlayground
   globals={{
@@ -247,3 +251,13 @@ dynamic runtime value.
   decoder="string.transform(s => s.split(',').map(Number)).pipe(tup => tup.length === 2 ? point2d : tup.length === 3 ? point3d : never('Must be 2D or 3D point'))"
   examples={["'1'", "'1,2'", "'1,2,3'", "'1,2,3,4'"]}
 />
+
+[`.verify()`]: /.verify
+[`.value()`]: /.value
+[`.decode()`]: /.decode
+[`.transform()`]: /.transform
+[`.refine()`]: /.refine
+[`.reject()`]: /.reject
+[`.describe()`]: /.describe
+[`.chain()`]: /.chain
+[`.pipe()`]: /.pipe
