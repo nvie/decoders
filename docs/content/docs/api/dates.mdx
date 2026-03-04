@@ -13,47 +13,90 @@ Accepts and returns `Date` instances.
 
 ---
 
-## dateString
+## isoDate
 
-<DecoderSig name="dateString" type="string" source="dates.ts#L21-L30" />
-
-<Since version="2.7" />
-
-Accepts and returns [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings.
-
-<DecoderPlayground
-  decoder="dateString"
-  examples={["'2020-06-01T12:00:00Z'", "'2020-06-01'", "'hello'", '123', 'new Date()']}
+<DecoderSig
+  name="isoDate"
+  aliases={[
+    {
+      name: 'iso8601',
+      deprecated: false,
+    },
+  ]}
+  type="Date"
+  source="dates.ts#L32-L36"
 />
 
----
-
-## iso8601
-
-<DecoderSig name="iso8601" type="Date" source="dates.ts#L32-L39" />
+<Since version="2.9" />
 
 Accepts [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings, returns them
 as `Date` instances.
 
-This is very useful for working with dates in APIs: serialize them as `.toISOString()`
-when sending, decode them with [`iso8601`](#iso8601) when receiving.
-
 <DecoderPlayground
-  decoder="iso8601"
+  decoder="isoDate"
   examples={["'2020-06-01T12:00:00Z'", "'2020-06-01'", "'hello'", '123', 'new Date()']}
 />
 
 ---
 
-## datelike
+## isoDateString
 
-<DecoderSig name="datelike" type="Date" source="dates.ts#L41-L46" />
+<DecoderSig
+  name="isoDateString"
+  aliases={[
+    {
+      name: 'dateString',
+      deprecated: true,
+      info: (
+        <>
+          Renamed to <code>isoDateString</code> in 2.9. Will be removed in the next major
+          release.
+        </>
+      ),
+    },
+  ]}
+  type="string"
+  source="dates.ts#L21-L30"
+/>
+
+<Since version="2.9" />
+
+Accepts and returns [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings.
+
+<DecoderPlayground
+  decoder="isoDateString"
+  examples={["'2020-06-01T12:00:00Z'", "'2020-06-01'", "'hello'", '123', 'new Date()']}
+/>
+
+---
+
+## flexDate
+
+<DecoderSig
+  name="flexDate"
+  aliases={[
+    {
+      name: 'datelike',
+      deprecated: true,
+      info: (
+        <>
+          Renamed to <code>flexDate</code> in 2.9. Will be removed in the next major
+          release.
+        </>
+      ),
+    },
+  ]}
+  type="Date"
+  source="dates.ts#L41-L46"
+/>
+
+<Since version="2.9" />
 
 Accepts either a Date, or an ISO date string, returns a Date instance. This is commonly
 useful to build decoders that can be reused to validate object with Date instances as well
 as objects coming from JSON payloads.
 
 <DecoderPlayground
-  decoder="datelike"
+  decoder="flexDate"
   examples={["'2024-01-08T12:00:00Z'", 'new Date()', "'2020-06-01'", "'hello'", '123']}
 />

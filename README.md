@@ -9,7 +9,7 @@ Elegant and battle-tested validation library for type-safe input data for TypeSc
 ## Basic example
 
 ```typescript
-import { array, iso8601, number, object, optional, string } from 'decoders';
+import { array, isoDate, number, object, optional, string } from 'decoders';
 
 // Incoming data at runtime, e.g. the request body
 // The point is that this data is untrusted and its type unknown
@@ -24,7 +24,7 @@ const externalData = {
 const userDecoder = object({
   id: number,
   name: string,
-  createdAt: optional(iso8601),
+  createdAt: optional(isoDate),
   tags: array(string),
 });
 

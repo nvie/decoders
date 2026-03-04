@@ -10,12 +10,12 @@ You write a decoder that describes the shape of data you expect. It looks almost
 to the TypeScript type it produces:
 
 ```typescript
-import { array, iso8601, number, object, optional, string } from 'decoders';
+import { array, isoDate, number, object, optional, string } from 'decoders';
 
 const userDecoder = object({
   id: number,
   name: string,
-  createdAt: optional(iso8601),
+  createdAt: optional(isoDate),
   tags: array(string),
 });
 ```
@@ -95,7 +95,7 @@ untrusted input and either accepts it (returning a value of type `T`) or rejects
 helpful error.
 
 Small decoders compose together like LEGO to build larger ones. In the example above,
-`string`, `number`, and `iso8601` are all individual decoders that get combined with
+`string`, `number`, and `isoDate` are all individual decoders that get combined with
 `object`, `array`, and `optional`.
 
 ![Decoder composition](/decoder-composition.gif)

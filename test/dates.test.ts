@@ -1,7 +1,7 @@
 import { partition } from 'itertools';
 import { describe, expect, test } from 'vitest';
 
-import { date, datelike, dateString, iso8601 } from '~';
+import { date, flexDate, isoDate, isoDateString } from '~';
 
 import { INPUTS } from './_fixtures';
 
@@ -27,8 +27,8 @@ describe('pure dates', () => {
   });
 });
 
-describe('dateString', () => {
-  const decoder = dateString;
+describe('isoDateString', () => {
+  const decoder = isoDateString;
 
   test('invalid', () => {
     // None of the values in INPUTS are valid ISO8601 strings
@@ -63,8 +63,8 @@ describe('dateString', () => {
   });
 });
 
-describe('iso8601', () => {
-  const decoder = iso8601;
+describe('isoDate', () => {
+  const decoder = isoDate;
 
   test('invalid', () => {
     // None of the values in INPUTS are valid ISO8601 strings
@@ -100,8 +100,8 @@ describe('iso8601', () => {
   });
 });
 
-describe('datelike', () => {
-  const decoder = datelike;
+describe('flexDate', () => {
+  const decoder = flexDate;
 
   const [okay, not_okay] = partition(
     INPUTS,

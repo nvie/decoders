@@ -79,7 +79,7 @@ If a default value is explicitly provided, return that instead in the `null` cas
 Or use it with a default value:
 
 ```ts
-const decoder = nullable(iso8601, () => new Date());
+const decoder = nullable(isoDate, () => new Date());
 
 decoder.verify('2022-01-01T12:00:00Z') === '2022-01-01T12:00:00Z';
 decoder.verify(null); // the current date

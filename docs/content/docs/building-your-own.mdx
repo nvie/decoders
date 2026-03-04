@@ -17,7 +17,7 @@ This isn't always automatically the case, though. Some random examples:
 | [`email`](/docs/api/strings#email)     | strings    | strings        | `Decoder<string>`  |
 | [`number`](/docs/api/numbers#number)   | numbers    | numbers        | `Decoder<number>`  |
 | [`integer`](/docs/api/numbers#integer) | numbers    | numbers        | `Decoder<number>`  |
-| [`iso8601`](/docs/api/dates#iso8601)   | strings    | Date instances | `Decoder<Date>`    |
+| [`isoDate`](/docs/api/dates#isodate)   | strings    | Date instances | `Decoder<Date>`    |
 | [`url`](/docs/api/strings#url)         | strings    | URL instances  | `Decoder<URL>`     |
 | [`truthy`](/docs/api/booleans#truthy)  | anything!  | booleans       | `Decoder<boolean>` |
 
@@ -201,10 +201,10 @@ We'll want to look at the `created_at` field as a `Date | null` value. So let's 
 following decoder:
 
 ```typescript
-nullish(iso8601, null);
+nullish(isoDate, null);
 ```
 
-Wait, why not use [`nullable(iso8601)`](/docs/api/optional#nullable) here?! The reason is
+Wait, why not use [`nullable(isoDate)`](/docs/api/optional#nullable) here?! The reason is
 the third event in the example. Because the field can legally be missing, we'll have to
 explicitly accept both `undefined` and `null` inputs. That's what the
 [`nullish()`](/docs/api/optional#nullish) decoder does! Its second argument is a
@@ -230,7 +230,7 @@ const eventsDecoder = object({
   events: array(
     object({
       id,
-      created_at: nullish(iso8601, null),
+      created_at: nullish(isoDate, null),
       labels: nullable(commaSeparated, []),
     }),
   ),

@@ -15,6 +15,7 @@ import {
   date,
   datelike,
   dateString,
+  flexDate,
   decimal,
   define,
   either,
@@ -31,6 +32,8 @@ import {
   inexact,
   instanceOf,
   integer,
+  isoDate,
+  isoDateString,
   iso8601,
   json,
   jsonArray,
@@ -437,7 +440,12 @@ expectType<JSONValue | undefined>(test(jsonObject).abc);
 }
 
 expectType<Date>(test(date));
-expectType<Date>(test(iso8601));
+expectType<Date>(test(isoDate));
+expectType<Date>(test(iso8601)); // alias of isoDate
+expectType<string>(test(isoDateString));
+expectType<Date>(test(flexDate));
+
+// Deprecated aliases (should still work)
 expectType<Date>(test(datelike));
 expectType<string>(test(dateString));
 

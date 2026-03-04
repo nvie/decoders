@@ -50,6 +50,24 @@
   text-decoration: underline;
 }
 
+.fn-sig-badge {
+  font-size: 0.65em;
+  font-style: normal;
+  font-weight: 500;
+  padding: 0.15em 0.45em;
+  border-radius: 0.25em;
+  border: 1px solid var(--color-fd-border, #e5e7eb);
+  color: #6b7280;
+  vertical-align: middle;
+  position: relative;
+  top: -0.08em;
+}
+
+.fn-sig-deprecated .fn-sig-badge {
+  color: #c2410c;
+  border-color: #fdba74;
+}
+
 .fn-sig-deprecated > .fn-sig-content {
   opacity: 0.5;
 }

@@ -21,7 +21,7 @@ export const date: Decoder<Date> = define((blob, ok, err) => {
 /**
  * Accepts and returns [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings.
  */
-export const dateString: Decoder<string> = regex(
+export const isoDateString: Decoder<string> = regex(
   iso8601_re,
   'Must be ISO8601 format',
 ).refine(
@@ -32,15 +32,19 @@ export const dateString: Decoder<string> = regex(
 /**
  * Accepts [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings,
  * returns them as `Date` instances.
- *
- * This is very useful for working with dates in APIs: serialize them as
- * `.toISOString()` when sending, decode them with `iso8601` when receiving.
  */
-export const iso8601: Decoder<Date> = dateString.transform((value) => new Date(value));
+export const isoDate: Decoder<Date> = isoDateString.transform((value) => new Date(value));
 
 /**
  * Accepts either a Date, or an ISO date string, returns a Date instance.
  * This is commonly useful to build decoders that can be reused to validate
  * object with Date instances as well as objects coming from JSON payloads.
  */
-export const datelike = either(date, iso8601).describe('Must be a Date or date string');
+export const flexDate = either(date, isoDate).describe('Must be a Date or date string');
+
+/** @deprecated Renamed to `isoDateString`. This alias will be removed in 3.x. */
+export const dateString: Decoder<string> = isoDateString;
+/** Alias of `isoDate`. */
+export const iso8601: Decoder<Date> = isoDate;
+/** @deprecated Renamed to `flexDate`. This alias will be removed in 3.x. */
+export const datelike: Decoder<Date> = flexDate;

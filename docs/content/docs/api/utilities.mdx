@@ -5,9 +5,12 @@ description: Utility decoders for custom logic, preprocessing, and advanced use 
 
 ## unknown
 
-<DecoderSig name="unknown" type="unknown" source="basics.ts#L124-L131" />
-
-<DecoderSig name="anything" type="unknown" source="basics.ts#L133-L136" />
+<DecoderSig
+  name="unknown"
+  aliases={[{ name: 'anything', deprecated: false }]}
+  type="unknown"
+  source="basics.ts#L124-L131"
+/>
 
 Accepts anything and returns it unchanged.
 
@@ -44,9 +47,12 @@ now.verify('dummy'); // e.g. new Date('2022-02-07T09:36:58.848Z')
 
 ## never
 
-<DecoderSig name="never" type="never" source="basics.ts#L111-L117" />
-
-<DecoderSig name="fail" type="never" source="basics.ts#L119-L122" />
+<DecoderSig
+  name="never"
+  aliases={[{ name: 'fail', deprecated: false }]}
+  type="never"
+  source="basics.ts#L111-L117"
+/>
 
 Rejects all inputs, and always fails with the given error message. May be useful for
 explicitly disallowing keys, or for testing purposes.

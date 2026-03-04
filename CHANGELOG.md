@@ -1,5 +1,10 @@
 ## [Unreleased]
 
+- Rename date decoders for clarity:
+  - `iso8601` → `isoDate` (`iso8601` kept as alias)
+  - `dateString` → `isoDateString` (deprecated, will be removed in 3.x)
+  - `datelike` → `flexDate` (deprecated, will be removed in 3.x)
+
 ## [2.9.0-pre.3] - 2026-03-04
 
 - Improve error messages for `min`, `max`, and `between` decoders

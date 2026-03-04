@@ -184,6 +184,7 @@ export function Sig({
 interface Alias {
   name: string;
   info?: ReactNode;
+  deprecated: boolean;
 }
 
 export function DecoderSig({
@@ -214,8 +215,8 @@ export function DecoderSig({
         source={source}
       />
       {aliases?.map((alias) => (
-        <p key={alias.name} className="fn-sig fn-sig-deprecated">
-          <span className="fn-sig-content">
+        <p key={alias.name} className={`fn-sig${alias.deprecated ? ' fn-sig-deprecated' : ''}`}>
+          <span className={alias.deprecated ? 'fn-sig-content' : undefined}>
             <strong style={{ fontWeight: 700 }}>{alias.name}</strong>
             {params !== undefined ? (
               <>
@@ -231,7 +232,9 @@ export function DecoderSig({
               <span style={{ color: GRAY }}>{'>'}</span>
             </em>
             {' '}
-            <span style={{ color: GRAY, fontStyle: 'italic', fontSize: '0.85em' }}>deprecated</span>
+            <span className="fn-sig-badge">
+              {alias.deprecated ? 'deprecated' : 'alias'}
+            </span>
           </span>
           {alias.info && <Info>{alias.info}</Info>}
         </p>
