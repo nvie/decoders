@@ -42,7 +42,7 @@ export function PageActions({
         icon: <TextIcon />,
       },
       {
-        title: "Open in GitHub",
+        title: "Edit on GitHub",
         href: githubUrl,
         icon: (
           <svg fill="currentColor" role="img" viewBox="0 0 24 24">

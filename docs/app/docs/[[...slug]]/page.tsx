@@ -12,7 +12,7 @@ import { createRelativeLink } from "fumadocs-ui/mdx";
 import { PageActions } from "@/components/page-actions";
 
 const GITHUB_CONTENT_URL =
-  "https://github.com/nvie/decoders/blob/main/docs/content/docs";
+  "https://github.com/nvie/decoders/edit/main/docs/content/docs";
 
 export default async function Page(props: {
   params: Promise<{ slug?: string[] }>;
