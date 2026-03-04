@@ -42,8 +42,8 @@ whitespace.
 Accepts and returns strings that match the given regular expression.
 
 <DecoderPlayground
-  decoder="regex(/^(ha|ho)+/, 'Must be laughing')"
-  examples={["'hohoho'", "'haha, awesome!'", "'hello'", '42']}
+  decoder="regex(/^\d{5}(-\d{4})?$/, 'Must be a valid ZIP code')"
+  examples={["'90210'", "'12345-6789'", "'12345-6'", '12345']}
 />
 
 ---
