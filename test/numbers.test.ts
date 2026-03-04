@@ -133,14 +133,19 @@ describe('min', () => {
     const decoder = min(0);
     expect(decoder.verify(0)).toBe(0);
     expect(decoder.verify(999)).toBe(999);
-    expect(() => decoder.verify(-1)).toThrow('Must be at least 0');
+    expect(() => decoder.verify(-1)).toThrow('Too low, must be at least 0');
   });
 
   test('works with other number decoders', () => {
     const decoder = min(1, integer);
     expect(decoder.verify(1)).toBe(1);
-    expect(() => decoder.verify(0)).toThrow('Must be at least 1');
+    expect(() => decoder.verify(0)).toThrow('Too low, must be at least 1');
     expect(() => decoder.verify(3.5)).toThrow('Number must be an integer');
+  });
+
+  test('rejects infinity with anyNumber', () => {
+    const decoder = min(0, anyNumber);
+    expect(() => decoder.verify(-Infinity)).toThrow('Too low, must be at least 0');
   });
 
   test('rejects non-numbers', () => {
@@ -153,14 +158,19 @@ describe('max', () => {
     const decoder = max(100);
     expect(decoder.verify(-999)).toBe(-999);
     expect(decoder.verify(100)).toBe(100);
-    expect(() => decoder.verify(101)).toThrow('Must be at most 100');
+    expect(() => decoder.verify(101)).toThrow('Too high, must be at most 100');
   });
 
   test('works with other number decoders', () => {
     const decoder = max(10, integer);
     expect(decoder.verify(10)).toBe(10);
-    expect(() => decoder.verify(11)).toThrow('Must be at most 10');
+    expect(() => decoder.verify(11)).toThrow('Too high, must be at most 10');
     expect(() => decoder.verify(3.5)).toThrow('Number must be an integer');
+  });
+
+  test('rejects infinity with anyNumber', () => {
+    const decoder = max(100, anyNumber);
+    expect(() => decoder.verify(Infinity)).toThrow('Too high, must be at most 100');
   });
 
   test('rejects non-numbers', () => {
@@ -174,16 +184,28 @@ describe('between', () => {
     expect(decoder.verify(2)).toBe(2);
     expect(decoder.verify(3.5)).toBe(3.5);
     expect(decoder.verify(5)).toBe(5);
-    expect(() => decoder.verify(1)).toThrow('Must be at least 2');
-    expect(() => decoder.verify(6)).toThrow('Must be at most 5');
+    expect(() => decoder.verify(1)).toThrow('Too low, must be between 2 and 5');
+    expect(() => decoder.verify(6)).toThrow('Too high, must be between 2 and 5');
   });
 
   test('works with other number decoders', () => {
     const decoder = between(1, 10, integer);
     expect(decoder.verify(1)).toBe(1);
     expect(decoder.verify(10)).toBe(10);
-    expect(() => decoder.verify(0)).toThrow('Must be at least 1');
+    expect(() => decoder.verify(0)).toThrow('Too low, must be between 1 and 10');
     expect(() => decoder.verify(3.5)).toThrow('Number must be an integer');
+  });
+
+  test('rejects infinity with anyNumber', () => {
+    const decoder = between(1, 100, anyNumber);
+    expect(() => decoder.verify(-Infinity)).toThrow('Too low, must be between 1 and 100');
+    expect(() => decoder.verify(Infinity)).toThrow('Too high, must be between 1 and 100');
+  });
+
+  test('NaN passes through with anyNumber', () => {
+    // NaN comparisons always return false, so NaN slips through range checks
+    const decoder = between(1, 100, anyNumber);
+    expect(decoder.verify(NaN)).toBeNaN();
   });
 
   test('rejects non-numbers', () => {

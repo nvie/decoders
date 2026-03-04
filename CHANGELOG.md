@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Improve error messages for `min`, `max`, and `between` decoders
+
 ## [2.9.0-pre.2] - 2026-03-03
 
 - New: `sized(decoder, {min?, max?, size?})` utility for adding length validation to

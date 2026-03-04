@@ -52,7 +52,9 @@ export const positiveInteger: Decoder<number> = integer.refine(
  * different decoder to further restrict accepted values, e.g. ``min(0, integer)``.
  */
 export function min(min: number, decoder: Decoder<number> = number): Decoder<number> {
-  return decoder.reject((value) => (value < min ? `Must be at least ${min}` : null));
+  return decoder.reject((value) =>
+    value < min ? `Too low, must be at least ${min}` : null,
+  );
 }
 
 /**
@@ -61,7 +63,9 @@ export function min(min: number, decoder: Decoder<number> = number): Decoder<num
  * different decoder to further restrict accepted values, e.g. ``max(100, integer)``.
  */
 export function max(max: number, decoder: Decoder<number> = number): Decoder<number> {
-  return decoder.reject((value) => (value > max ? `Must be at most ${max}` : null));
+  return decoder.reject((value) =>
+    value > max ? `Too high, must be at most ${max}` : null,
+  );
 }
 
 /**
@@ -76,9 +80,9 @@ export function between(
 ): Decoder<number> {
   return decoder.reject((value) =>
     value < min
-      ? `Must be at least ${min}`
+      ? `Too low, must be between ${min} and ${max}`
       : value > max
-        ? `Must be at most ${max}`
+        ? `Too high, must be between ${min} and ${max}`
         : null,
   );
 }
