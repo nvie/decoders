@@ -1,9 +1,17 @@
 ---
-title: Decoder
-description: Instance methods available on all Decoder instances.
+title: Decoder<T>
+description:
+  The Decoder class represents a type-safe decoder that validates and transforms untrusted
+  data
 ---
 
-## Decoder.verify
+The `Decoder<T>` class is the core abstraction in the decoders library. It represents a
+reusable, composable decoder that can validate and transform untrusted input data into
+typed values.
+
+## Decoding Methods
+
+### .verify()
 
 <Sig
   name=".verify"
@@ -11,6 +19,8 @@ description: Instance methods available on all Decoder instances.
   returnType="T"
   source="core/Decoder.ts#L188-L200"
 />
+
+<Sig name=".verify" params="blob: unknown, formatter: Formatter" returnType="T" />
 
 Verifies the untrusted/unknown input and either accepts or rejects it. When accepted,
 returns a value of type `T`. Otherwise fail with a runtime error.
@@ -23,7 +33,7 @@ returns a value of type `T`. Otherwise fail with a runtime error.
 
 ---
 
-## Decoder.value
+### .value()
 
 <Sig
   name=".value"
@@ -45,7 +55,7 @@ Use this when you're not interested in programmatically handling the error messa
 
 ---
 
-## Decoder.decode
+### .decode()
 
 <Sig
   name=".decode"
@@ -72,7 +82,9 @@ number.decode('hi'); // { ok: false, error: { type: 'scalar', value: 'hi', text:
 
 ---
 
-## Decoder.transform
+## Transformation Methods
+
+### .transform()
 
 <Sig
   name=".transform"
@@ -92,7 +104,7 @@ decoder will fail using the error message as the failure reason.
 
 ---
 
-## Decoder.refine
+### .refine()
 
 <Sig
   name=".refine"
@@ -115,7 +127,7 @@ then this will be reflected in the return type, too.
 
 ---
 
-## Decoder.refineType
+### .refineType()
 
 <Sig
   name=".refineType"
@@ -135,7 +147,7 @@ const user = object({ name: string }).refineType<Person>();
 
 ---
 
-## Decoder.reject
+### .reject()
 
 <Sig
   name=".reject"
@@ -159,7 +171,7 @@ Unlike [`.refine()`][], you can use this function to return a dynamic error mess
 
 ---
 
-## Decoder.describe
+### .describe()
 
 <Sig
   name=".describe"
@@ -178,13 +190,15 @@ can be used to simplify or shorten otherwise long or low-level/technical errors.
 
 ---
 
-## ~~Decoder.then~~
+## Composition Methods
+
+### ~~.then()~~
 
 `.then()` was renamed to [`.chain()`][] in 2.9 to avoid being mistaken for a Promise.
 
 ---
 
-## Decoder.chain
+### .chain()
 
 <Sig
   name=".chain"
@@ -215,7 +229,7 @@ given acceptance function will receive the output of the current decoder as its 
 
 ---
 
-## Decoder.pipe
+### .pipe()
 
 <Sig
   name=".pipe"
@@ -233,7 +247,7 @@ given acceptance function will receive the output of the current decoder as its 
   examples={["'7'", "'1,2,3'", "'1,-3'", "'🚀'", "'3.14'", '123', 'true', 'null']}
 />
 
-## Dynamic decoder selection
+### Dynamic decoder selection
 
 With [`.pipe()`][] you can also dynamically select another decoder, based on dynamic
 runtime value.
@@ -250,6 +264,45 @@ runtime value.
   decoder="string.transform(s => s.split(',').map(Number)).pipe(tup => tup.length === 2 ? point2d : tup.length === 3 ? point3d : never('Must be 2D or 3D point'))"
   examples={["'1'", "'1,2'", "'1,2,3'", "'1,2,3,4'"]}
 />
+
+---
+
+## Helper Types
+
+### DecoderType\<D\>
+
+Extracts the output type from a Decoder.
+
+```ts
+import type { DecoderType } from 'decoders';
+import { string, number } from 'decoders';
+
+type StringType = DecoderType<typeof string>; // string
+type NumberType = DecoderType<typeof number>; // number
+
+type ArrayOfNumbers = DecoderType<Decoder<number[]>>; // number[]
+```
+
+---
+
+## Standard Schema Support
+
+Every decoder implements the [Standard Schema](https://github.com/standard-schema/standard-schema)
+v1 interface:
+
+```ts
+const decoder: Decoder<T> = /* ... */;
+
+// Access Standard Schema interface
+const standardSchema = decoder['~standard'];
+
+// Properties:
+// - version: 1
+// - vendor: 'decoders'
+// - validate: (blob: unknown) => { value: T } | { issues: Issue[] }
+```
+
+See the [Standard Schema specification](https://github.com/standard-schema/standard-schema) for more details.
 
 [`.verify()`]: /.verify
 [`.value()`]: /.value

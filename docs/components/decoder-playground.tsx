@@ -441,8 +441,20 @@ export function DecoderPlayground(props: Props) {
     const cell = activeRowData?.cells[0];
     codeSnippet = `${formatSnippet(decoderEntries[0][1], mode, activeInput, fmt)}${statusComment(cell)}`;
   }
-  if (props.preface) {
-    codeSnippet = `${dedent(props.preface)}\n\n${codeSnippet}`;
+
+  let preface = props.preface;
+  if (!preface) {
+    //
+    // TODO Make this auto-import the right thing based on the decoder expression,
+    // e.g. if it's "string" or "array(string)", import { string, array } from "decoders"
+    //
+    // if (typeof props.decoder === 'string') {
+    //   const name = props.decoder.split(/[^\w]/g)[0];
+    //   preface = `import { ${name} } from "decoders";`;
+    // }
+  }
+  if (preface) {
+    codeSnippet = `${dedent(preface)}\n\n${codeSnippet}`;
   }
 
   const colCount = decoderEntries.length + 1;
