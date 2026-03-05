@@ -9,7 +9,7 @@ description: Object decoders for validating structured data.
   name="object"
   params="{ field1: Decoder<A>, field2: Decoder<B>, ... }"
   type="{ field1: A, field2: B, ... }"
-  source="objects.ts#L55-L136"
+  source="objects.ts#L55-L137"
 />
 
 Accepts objects with fields matching the given decoders. Extra fields that exist on the
@@ -31,7 +31,7 @@ For more information, see also
   name="exact"
   params="{ field1: Decoder<A>, field2: Decoder<B>, ... }"
   type="{ field1: A, field2: B, ... }"
-  source="objects.ts#L138-L163"
+  source="objects.ts#L139-L165"
 />
 
 A "strict object" decoder. Like [`object()`][], but will reject inputs that contain extra
@@ -53,7 +53,7 @@ For more information, see also
   name="inexact"
   params="{ field1: Decoder<A>, field2: Decoder<B>, ... }"
   type="{ field1: A, field2: B, ... }"
-  source="objects.ts#L165-L200"
+  source="objects.ts#L167-L203"
 />
 
 A "loose object" decoder. Like [`object()`][], but will pass through any extra fields on
@@ -75,14 +75,14 @@ For more information, see also
   name="record"
   params="values: Decoder<V>"
   type="Record<string, V>"
-  source="collections.ts#L8-L57"
+  source="collections.ts#L8-L58"
 />
 
 <DecoderSig
   name="record"
   params="keys: Decoder<K>, values: Decoder<V>"
   type="Record<K, V>"
-  source="collections.ts#L8-L57"
+  source="collections.ts#L8-L58"
 />
 
 Accepts objects where all values match the given decoder, and returns the result as a

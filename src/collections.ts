@@ -9,6 +9,7 @@ import { pojo } from './objects';
  * Accepts objects where all values match the given decoder, and returns the
  * result as a `Record<string, V>`.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function record<V>(valueDecoder: Decoder<V>): Decoder<Record<string, V>>;
 /**
  * Accepts objects where all keys and values match the given decoders, and
@@ -60,6 +61,7 @@ export function record<K extends string, V>(
  * Similar to `array()`, but returns the result as an [ES6
  * Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set).
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function setFromArray<T>(decoder: Decoder<T>): Decoder<Set<T>> {
   return array(decoder).transform((items) => new Set(items));
 }
@@ -69,6 +71,7 @@ export function setFromArray<T>(decoder: Decoder<T>): Decoder<Set<T>> {
  * Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map))
  * instead.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
   return record(decoder).transform((obj) => new Map(Object.entries(obj)));
 }

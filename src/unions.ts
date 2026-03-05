@@ -54,6 +54,7 @@ function nest(errText: string): string {
  * first one that accepts the input "wins". If all decoders reject the input,
  * the input gets rejected.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function either<TDecoders extends readonly Decoder<unknown>[]>(
   ...decoders: TDecoders
 ): Decoder<DecoderType<TDecoders[number]>> {
@@ -86,6 +87,7 @@ export function either<TDecoders extends readonly Decoder<unknown>[]>(
  * Accepts any value that is strictly-equal (using `===`) to one of the
  * specified values.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function oneOf<C extends Scalar>(constants: readonly C[]): Decoder<C> {
   return define((blob, ok, err) => {
     const index = constants.indexOf(blob as C);
@@ -99,6 +101,7 @@ export function oneOf<C extends Scalar>(constants: readonly C[]): Decoder<C> {
 /**
  * Accepts and return an enum value.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function enum_<TEnum extends Record<string, string | number>>(
   enumObj: TEnum,
 ): Decoder<TEnum[keyof TEnum]> {
@@ -147,6 +150,7 @@ export function enum_<TEnum extends Record<string, string | number>>(
  * error messages and is more performant at runtime because it doesn't have to
  * try all decoders one by one.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function taggedUnion<O extends Record<string, Decoder<unknown>>>(
   field: string,
   mapping: O,
@@ -171,6 +175,7 @@ export function taggedUnion<O extends Record<string, Decoder<unknown>>>(
  * works even if there isn't a single discriminator, or the discriminator isn't
  * a string.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function select<T, D extends Decoder<unknown>>(
   scout: Decoder<T>,
   selectFn: (result: T) => D,

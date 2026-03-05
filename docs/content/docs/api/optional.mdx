@@ -9,14 +9,14 @@ description: Decoders for handling optional and nullable values.
   name="optional"
   params="decoder: Decoder<T>"
   type="T | undefined"
-  source="basics.ts#L27-L44"
+  source="basics.ts#L27-L45"
 />
 
 <DecoderSig
   name="optional"
   params="decoder: Decoder<T>, defaultValue: V | (() => V)"
   type="T | V"
-  source="basics.ts#L27-L44"
+  source="basics.ts#L27-L45"
 />
 
 Accepts whatever the given decoder accepts, or `undefined`.
@@ -57,14 +57,14 @@ Which will decode to type:
   name="nullable"
   params="decoder: Decoder<T>"
   type="T | null"
-  source="basics.ts#L46-L63"
+  source="basics.ts#L47-L65"
 />
 
 <DecoderSig
   name="nullable"
   params="decoder: Decoder<T>, defaultValue: V | (() => V)"
   type="T | V"
-  source="basics.ts#L46-L63"
+  source="basics.ts#L47-L65"
 />
 
 Accepts whatever the given decoder accepts, or `null`.
@@ -93,14 +93,14 @@ decoder.verify(null); // the current date
   name="nullish"
   params="decoder: Decoder<T>"
   type="T | null | undefined"
-  source="basics.ts#L65-L82"
+  source="basics.ts#L67-L85"
 />
 
 <DecoderSig
   name="nullish"
   params="decoder: Decoder<T>, defaultValue: V | (() => V)"
   type="T | V"
-  source="basics.ts#L65-L82"
+  source="basics.ts#L67-L85"
 />
 
 Accepts whatever the given decoder accepts, or `null`, or `undefined`.

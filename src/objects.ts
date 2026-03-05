@@ -56,6 +56,7 @@ export const pojo: Decoder<Record<string, unknown>> = define((blob, ok, err) =>
  * Accepts objects with fields matching the given decoders. Extra fields that
  * exist on the input object are ignored and will not be returned.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function object(decoders: Record<any, never>): Decoder<Record<string, never>>;
 export function object<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
@@ -139,6 +140,7 @@ export function object<Ds extends Record<string, Decoder<unknown>>>(
  * Like `object()`, but will reject inputs that contain extra fields that are
  * not specified explicitly.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function exact(decoders: Record<any, never>): Decoder<Record<string, never>>;
 export function exact<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
@@ -166,6 +168,7 @@ export function exact<Ds extends Record<string, Decoder<unknown>>>(
  * Like `object()`, but will pass through any extra fields on the input object
  * unvalidated that will thus be of `unknown` type statically.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function inexact(decoders: Record<any, never>): Decoder<Record<string, unknown>>;
 export function inexact<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,

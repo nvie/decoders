@@ -42,6 +42,7 @@
     "lint:package": "publint --strict && attw --pack",
     "format": "oxlint --fix src/ test/ ; prettier --write src/ test/ test-d/ docs/content/ ; npm run docs:update-sources ; npm run docs:update-redirects",
     "test": "vitest run --coverage",
+    "test:compile": "npm run build && node bin/compile.ts",
     "test:completeness": "./bin/check.sh",
     "test:typescript": "tsc --noEmit",
     "test:types": "npm run build && tsd --typings ./dist/index.d.ts",
