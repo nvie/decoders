@@ -9,7 +9,7 @@ import { isBigInt, isNumber } from '~/lib/utils';
  * want to deliberately accept those, you'll likely want to use the
  * `number` decoder instead.
  */
-export const anyNumber: Decoder<number> = /* #__PURE__ */ define((blob, ok, err) =>
+export const anyNumber: Decoder<number> = define((blob, ok, err) =>
   isNumber(blob) ? ok(blob) : err('Must be number'),
 );
 
@@ -51,8 +51,9 @@ export const positiveInteger: Decoder<number> = /* #__PURE__ */ integer.refine(
  * Defaults to the ``number`` decoder if none is provided. Pass a
  * different decoder to further restrict accepted values, e.g. ``min(0, integer)``.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function min(min: number, decoder: Decoder<number> = number): Decoder<number> {
-  return /* #__PURE__ */ decoder.reject((value) =>
+  return decoder.reject((value) =>
     value < min ? `Too low, must be at least ${min}` : null,
   );
 }
@@ -62,8 +63,9 @@ export function min(min: number, decoder: Decoder<number> = number): Decoder<num
  * Defaults to the ``number`` decoder if none is provided. Pass a
  * different decoder to further restrict accepted values, e.g. ``max(100, integer)``.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function max(max: number, decoder: Decoder<number> = number): Decoder<number> {
-  return /* #__PURE__ */ decoder.reject((value) =>
+  return decoder.reject((value) =>
     value > max ? `Too high, must be at most ${max}` : null,
   );
 }
@@ -73,12 +75,13 @@ export function max(max: number, decoder: Decoder<number> = number): Decoder<num
  * Defaults to the ``number`` decoder if none is provided. Pass a
  * different decoder to further restrict accepted values, e.g. ``between(1, 10, integer)``.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function between(
   min: number,
   max: number,
   decoder: Decoder<number> = number,
 ): Decoder<number> {
-  return /* #__PURE__ */ decoder.reject((value) =>
+  return decoder.reject((value) =>
     value < min
       ? `Too low, must be between ${min} and ${max}`
       : value > max
@@ -90,6 +93,6 @@ export function between(
 /**
  * Accepts any valid ``bigint`` value.
  */
-export const bigint: Decoder<bigint> = /* #__PURE__ */ define((blob, ok, err) =>
+export const bigint: Decoder<bigint> = define((blob, ok, err) =>
   isBigInt(blob) ? ok(blob) : err('Must be bigint'),
 );
