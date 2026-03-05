@@ -9,7 +9,7 @@ description: Instance methods available on all Decoder instances.
   name=".verify"
   params="blob: unknown"
   returnType="T"
-  source="core/Decoder.ts#L188-L200"
+  source="core/Decoder.ts#L189-L201"
 />
 
 Verifies the untrusted/unknown input and either accepts or rejects it. When accepted,
@@ -29,7 +29,7 @@ returns a value of type `T`. Otherwise fail with a runtime error.
   name=".value"
   params="blob: unknown"
   returnType="T | undefined"
-  source="core/Decoder.ts#L202-L212"
+  source="core/Decoder.ts#L203-L213"
 />
 
 Verifies the untrusted/unknown input and either accepts or rejects it. When accepted,
@@ -51,7 +51,7 @@ Use this when you're not interested in programmatically handling the error messa
   name=".decode"
   params="blob: unknown"
   returnType="DecodeResult<T>"
-  source="core/Decoder.ts#L172-L186"
+  source="core/Decoder.ts#L173-L187"
 />
 
 Verifies the untrusted/unknown input and either accepts or rejects it.
@@ -78,7 +78,7 @@ number.decode('hi'); // { ok: false, error: { type: 'scalar', value: 'hi', text:
   name=".transform"
   params="transformFn: (T) => V"
   returnType="Decoder<V>"
-  source="core/Decoder.ts#L214-L222"
+  source="core/Decoder.ts#L215-L223"
 />
 
 Accepts any value the given decoder accepts, and on success, will call the given function
@@ -98,7 +98,7 @@ decoder will fail using the error message as the failure reason.
   name=".refine"
   params="predicate: T => boolean, message: string"
   returnType="Decoder<T>"
-  source="core/Decoder.ts#L224-L237"
+  source="core/Decoder.ts#L225-L238"
 />
 
 Adds an extra predicate to a decoder. The new decoder is like the original decoder, but
@@ -117,7 +117,7 @@ then this will be reflected in the return type, too.
 
 ## Decoder.refineType
 
-<Sig name=".refineType" returnType="Decoder<SubT>" source="core/Decoder.ts#L239-L245" />
+<Sig name=".refineType" returnType="Decoder<SubT>" source="core/Decoder.ts#L240-L246" />
 
 <Since version="2.7" />
 
@@ -136,7 +136,7 @@ const user = object({ name: string }).refineType<Person>();
   name=".reject"
   params="rejectFn: T => string | null"
   returnType="Decoder<T>"
-  source="core/Decoder.ts#L289-L307"
+  source="core/Decoder.ts#L290-L308"
 />
 
 Adds an extra predicate to a decoder. The new decoder is like the original decoder, but
@@ -160,7 +160,7 @@ Unlike [`.refine()`][], you can use this function to return a dynamic error mess
   name=".describe"
   params="message: string"
   returnType="Decoder<T>"
-  source="core/Decoder.ts#L309-L326"
+  source="core/Decoder.ts#L310-L327"
 />
 
 Uses the given decoder, but will use an alternative error message in case it rejects. This
@@ -185,14 +185,14 @@ can be used to simplify or shorten otherwise long or low-level/technical errors.
   name=".chain"
   params="next: (blob: T, ok, err) => DecodeResult<V> | Decoder<V>"
   returnType="Decoder<V>"
-  source="core/Decoder.ts#L247-L265"
+  source="core/Decoder.ts#L248-L266"
 />
 
 <Sig
   name=".chain"
   params="next: Decoder<V>"
   returnType="Decoder<V>"
-  source="core/Decoder.ts#L247-L265"
+  source="core/Decoder.ts#L248-L266"
 />
 
 Send the output of the current decoder into another decoder or acceptance function. The
@@ -217,14 +217,14 @@ given acceptance function will receive the output of the current decoder as its 
   name=".pipe"
   params="next: Decoder<V>"
   returnType="Decoder<V>"
-  source="core/Decoder.ts#L267-L287"
+  source="core/Decoder.ts#L268-L288"
 />
 
 <Sig
   name=".pipe"
   params="next: (blob: T) => Decoder<V>"
   returnType="Decoder<V>"
-  source="core/Decoder.ts#L267-L287"
+  source="core/Decoder.ts#L268-L288"
 />
 
 <Since version="2.4" />

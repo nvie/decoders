@@ -14,7 +14,8 @@ import { either } from './unions';
  * \4 - the port (optional)
  * \5 - the path (optional)
  */
-const url_re = /* #__PURE__ */
+const url_re =
+  /* #__PURE__ */
   /^([A-Za-z]{2,12}(?:[+][A-Za-z]{2,12})?):\/\/(?:([^@:]*:?(?:[^@]+)?)@)?(?:([A-Za-z0-9.-]+)(?::([0-9]{2,5}))?)(\/(?:[-+~%/.,\w]*)?(?:\?[-+=&;%@.,/\w]*)?(?:#[.,!/\w]*)?)?$/;
 
 /**
@@ -128,7 +129,8 @@ export const uuid: Decoder<string> = regex(
  * [UUIDv1](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_%28date-time_and_MAC_address%29)
  * strings.
  */
-export const uuidv1: Decoder<string> =  /* #__PURE__ */
+export const uuidv1: Decoder<string> =
+  /* #__PURE__ */
   // https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_(date-time_and_MAC_address)
   uuid.refine((value) => value[14] === '1', 'Must be uuidv1');
 
@@ -137,7 +139,8 @@ export const uuidv1: Decoder<string> =  /* #__PURE__ */
  * [UUIDv4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_%28random%29)
  * strings.
  */
-export const uuidv4: Decoder<string> = /* #__PURE__ */
+export const uuidv4: Decoder<string> =
+  /* #__PURE__ */
   // https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)
   uuid.refine((value) => value[14] === '4', 'Must be uuidv4');
 

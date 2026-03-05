@@ -1,4 +1,13 @@
-import { object, number, date, string, array, oneOf, nullable, urlString } from "decoders";
+import {
+  object,
+  number,
+  date,
+  string,
+  array,
+  oneOf,
+  nullable,
+  urlString,
+} from 'decoders';
 
 const stringWithLength = (min: number, max: number) =>
   string.refine(
@@ -16,7 +25,7 @@ const imageDecoder = object({
   id: number,
   created: date,
   title: stringWithLength(1, 100),
-  type: oneOf(["jpg", "png"]),
+  type: oneOf(['jpg', 'png']),
   size: number,
   url: urlString,
 });

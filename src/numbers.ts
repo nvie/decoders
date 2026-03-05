@@ -78,7 +78,7 @@ export function between(
   max: number,
   decoder: Decoder<number> = number,
 ): Decoder<number> {
-  return  /* #__PURE__ */ decoder.reject((value) =>
+  return /* #__PURE__ */ decoder.reject((value) =>
     value < min
       ? `Too low, must be between ${min} and ${max}`
       : value > max

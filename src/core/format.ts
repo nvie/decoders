@@ -60,7 +60,6 @@ export function summarize(
   return [...result, `${prefix}${text}`];
 }
 
-
 function serializeString(s: string, width: number = 80): string {
   // Full string
   // Abbreviated to $maxlen i.e. "Vincent Driess..." [truncated]

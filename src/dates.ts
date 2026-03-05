@@ -34,7 +34,9 @@ export const isoDateString: Decoder<string> = /* #__PURE__ */ regex(
  * Accepts [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings,
  * returns them as `Date` instances.
  */
-export const isoDate: Decoder<Date> = /* #__PURE__ */ isoDateString.transform((value) => new Date(value));
+export const isoDate: Decoder<Date> = /* #__PURE__ */ isoDateString.transform(
+  (value) => new Date(value),
+);
 
 /**
  * Accepts either a Date, or an ISO date string, returns a Date instance.
