@@ -15,6 +15,7 @@ export type Formatter = (err: Annotation) => string | Error;
  * Walks the annotation tree and emits the annotation's key path within the
  * object tree, and the message as a series of messages (array of strings).
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function summarize(
   ann: Annotation,
   keypath: readonly (number | string)[] = [],
@@ -58,6 +59,7 @@ export function summarize(
   }
   return [...result, `${prefix}${text}`];
 }
+
 
 function serializeString(s: string, width: number = 80): string {
   // Full string

@@ -168,6 +168,7 @@ function format(err: Annotation, formatter: Formatter): Error {
  * helper functions. Please note that `ok()` and `err()` don't perform side
  * effects! You'll need to _return_ those values.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
   /**
    * Verifies the untrusted/unknown input and either accepts or rejects it.
@@ -369,6 +370,7 @@ function brand<D extends Decoder<unknown>>(decoder: D): D {
 /**
  * Returns whether the given value is a Decoder instance.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function isDecoder(value: unknown): value is Decoder<unknown> {
   return _register.has(value as Decoder<unknown>);
 }

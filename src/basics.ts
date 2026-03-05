@@ -30,6 +30,7 @@ const nullish_: Decoder<null | undefined> = define((blob, ok, err) =>
  * If a default value is explicitly provided, return that instead in the
  * `undefined` case.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function optional<T>(decoder: Decoder<T>): Decoder<T | undefined>;
 export function optional<T, C extends Scalar>(decoder: Decoder<T>, defaultValue: (() => C) | C): Decoder<NonNullable<T> | C>; // prettier-ignore
 export function optional<T, V>(decoder: Decoder<T>, defaultValue: (() => V) | V): Decoder<NonNullable<T> | V>; // prettier-ignore
@@ -49,6 +50,7 @@ export function optional<T, V>(
  * If a default value is explicitly provided, return that instead in the `null`
  * case.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function nullable<T>(decoder: Decoder<T>): Decoder<T | null>;
 export function nullable<T, C extends Scalar>(decoder: Decoder<T>, defaultValue: (() => C) | C): Decoder<NonNullable<T> | C>; // prettier-ignore
 export function nullable<T, V>(decoder: Decoder<T>, defaultValue: (() => V) | V): Decoder<NonNullable<T> | V>; // prettier-ignore
@@ -68,6 +70,7 @@ export function nullable<T, V>(
  * If a default value is explicitly provided, return that instead in the
  * `null`/`undefined` case.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function nullish<T>(decoder: Decoder<T>): Decoder<T | null | undefined>;
 export function nullish<T, C extends Scalar>(decoder: Decoder<T>, defaultValue: (() => C) | C): Decoder<NonNullable<T> | C>; // prettier-ignore
 export function nullish<T, V>(decoder: Decoder<T>, defaultValue: (() => V) | V): Decoder<NonNullable<T> | V>; // prettier-ignore
@@ -84,6 +87,7 @@ export function nullish<T, V>(
 /**
  * Accepts only the given constant value.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function constant<C extends Scalar>(value: C): Decoder<C> {
   return define((blob, ok, err) =>
     blob === value
@@ -98,6 +102,7 @@ export function constant<C extends Scalar>(value: C): Decoder<C> {
  *
  * This is useful to manually add extra fields to object decoders.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function always<C extends Scalar>(value: C): Decoder<C>;
 export function always<T>(value: (() => T) | T): Decoder<T>;
 export function always<T>(value: (() => T) | T): Decoder<T> {
@@ -112,6 +117,7 @@ export function always<T>(value: (() => T) | T): Decoder<T> {
  * Rejects all inputs, and always fails with the given error message. May be
  * useful for explicitly disallowing keys, or for testing purposes.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function never(msg: string): Decoder<never> {
   return define((_, __, err) => err(msg));
 }

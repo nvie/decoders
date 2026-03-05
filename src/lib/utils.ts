@@ -1,11 +1,14 @@
+/* #__NO_SIDE_EFFECTS__ */
 export function isNumber(value: unknown): value is number {
   return typeof value === 'number';
 }
 
+/* #__NO_SIDE_EFFECTS__ */
 export function isString(value: unknown): value is string {
   return typeof value === 'string';
 }
 
+/* #__NO_SIDE_EFFECTS__ */
 export function isBigInt(value: unknown): value is bigint {
   return typeof value === 'bigint';
 }
@@ -14,6 +17,7 @@ export function isBigInt(value: unknown): value is bigint {
  * Returns whether the given value is a Date object.
  * NOTE: Invalid dates are not considered dates by this check.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function isDate(value: unknown): value is Date {
   //
   // `x instanceof Date` checks are unreliable across stack frames (that
@@ -32,6 +36,7 @@ export function isDate(value: unknown): value is Date {
 /**
  * Returns whether the given value is a Promise-like, i.e. has a `then` method.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function isPromiseLike(value: unknown): value is PromiseLike<unknown> {
   return (
     typeof value === 'object' &&
@@ -44,6 +49,7 @@ export function isPromiseLike(value: unknown): value is PromiseLike<unknown> {
 /**
  * Returns whether the given value is a plain old JS object (POJO).
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function isPlainObject(value: unknown): value is Record<string, unknown> {
   return (
     value !== null &&

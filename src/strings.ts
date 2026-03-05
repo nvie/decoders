@@ -14,7 +14,7 @@ import { either } from './unions';
  * \4 - the port (optional)
  * \5 - the path (optional)
  */
-const url_re =
+const url_re = /* #__PURE__ */
   /^([A-Za-z]{2,12}(?:[+][A-Za-z]{2,12})?):\/\/(?:([^@:]*:?(?:[^@]+)?)@)?(?:([A-Za-z0-9.-]+)(?::([0-9]{2,5}))?)(\/(?:[-+~%/.,\w]*)?(?:\?[-+=&;%@.,/\w]*)?(?:#[.,!/\w]*)?)?$/;
 
 /**
@@ -32,6 +32,7 @@ export const nonEmptyString: Decoder<string> = regex(/\S/, 'Must be non-empty st
 /**
  * Accepts and returns strings that match the given regular expression.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function regex(regex: RegExp, msg: string): Decoder<string> {
   return string.refine((s) => regex.test(s), msg);
 }
@@ -39,6 +40,7 @@ export function regex(regex: RegExp, msg: string): Decoder<string> {
 /**
  * Accepts and returns strings that start with the given prefix.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function startsWith<P extends string>(prefix: P): Decoder<`${P}${string}`> {
   return string.refine(
     (s): s is `${P}${string}` => s.startsWith(prefix),
@@ -49,6 +51,7 @@ export function startsWith<P extends string>(prefix: P): Decoder<`${P}${string}`
 /**
  * Accepts and returns strings that end with the given suffix.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function endsWith<S extends string>(suffix: S): Decoder<`${string}${S}`> {
   return string.refine(
     (s): s is `${string}${S}` => s.endsWith(suffix),
@@ -69,7 +72,7 @@ export const email: Decoder<string> = regex(
 /**
  * Accepts strings that are valid URLs.
  */
-export const urlString: Decoder<string> = string.refine(
+export const urlString: Decoder<string> = /* #__PURE__ */ string.refine(
   (s) => URL.canParse(s),
   'Must be URL',
 );
@@ -78,7 +81,7 @@ export const urlString: Decoder<string> = string.refine(
  * Accepts strings that are valid URLs, returns the value as a URL instance.
  */
 export const url: Decoder<URL> = either(
-  regex(url_re, 'Must be URL').transform((value) => new URL(value)),
+  /* #__PURE__ */ regex(url_re, 'Must be URL').transform((value) => new URL(value)),
   instanceOf(URL),
 );
 
@@ -86,7 +89,7 @@ export const url: Decoder<URL> = either(
  * Accepts strings that are valid URLs, but only HTTPS ones. Returns the value
  * as a URL instance.
  */
-export const httpsUrl: Decoder<URL> = url.refine(
+export const httpsUrl: Decoder<URL> = /* #__PURE__ */ url.refine(
   (value) => value.protocol === 'https:',
   'Must be an HTTPS URL',
 );
@@ -105,6 +108,7 @@ export const identifier: Decoder<string> = regex(
  * values. It assumes the default nanoid alphabet. If you're using a custom
  * alphabet, use `regex()` instead.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function nanoid(options?: SizeOptions): Decoder<string> {
   return sized(regex(/^[a-z0-9_-]+$/i, 'Must be nano ID'), options ?? { size: 21 });
 }
@@ -124,7 +128,7 @@ export const uuid: Decoder<string> = regex(
  * [UUIDv1](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_%28date-time_and_MAC_address%29)
  * strings.
  */
-export const uuidv1: Decoder<string> =
+export const uuidv1: Decoder<string> =  /* #__PURE__ */
   // https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_(date-time_and_MAC_address)
   uuid.refine((value) => value[14] === '1', 'Must be uuidv1');
 
@@ -133,7 +137,7 @@ export const uuidv1: Decoder<string> =
  * [UUIDv4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_%28random%29)
  * strings.
  */
-export const uuidv4: Decoder<string> =
+export const uuidv4: Decoder<string> = /* #__PURE__ */
   // https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)
   uuid.refine((value) => value[14] === '4', 'Must be uuidv4');
 
@@ -156,4 +160,4 @@ export const hexadecimal: Decoder<string> = regex(
  * To only accept numerical strings and keep them as string values, use the
  * `decimal` decoder.
  */
-export const numeric: Decoder<number> = decimal.transform(Number);
+export const numeric: Decoder<number> = /* #__PURE__ */ decimal.transform(Number);

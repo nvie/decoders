@@ -15,6 +15,7 @@ export type Instance<K> = K extends Klass<infer T> ? T : never;
  * Accepts any value that is an ``instanceof`` the given class.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+/* #__NO_SIDE_EFFECTS__ */
 export function instanceOf<K extends Klass<any>>(klass: K): Decoder<Instance<K>> {
   return define((blob, ok, err) =>
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
@@ -26,6 +27,7 @@ export function instanceOf<K extends Klass<any>>(klass: K): Decoder<Instance<K>>
  * Lazily evaluate the given decoder. This is useful to build self-referential
  * types for recursive data structures.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function lazy<T>(decoderFn: () => Decoder<T>): Decoder<T> {
   return define((blob) => decoderFn().decode(blob));
 }
@@ -33,6 +35,7 @@ export function lazy<T>(decoderFn: () => Decoder<T>): Decoder<T> {
 /**
  * Only accept strings, arrays, or sets with given length constraints.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function sized<T extends Sized>(
   decoder: Decoder<T>,
   options: SizeOptions,
@@ -46,6 +49,7 @@ export function sized<T extends Sized>(
  * it to the decoder. Of course, the input value at that point is still of
  * ``unknown`` type, so you will have to deal with that accordingly.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function prep<T>(
   mapperFn: (blob: unknown) => unknown,
   decoder: Decoder<T>,
