@@ -9,9 +9,22 @@
   --color-fd-ring: #d46b08;
 }
 
+:root {
+  --font-mono: var(--font-inconsolata), monospace;
+  font-size: 17px;
+}
+
+pre code {
+  font-size: 1.1em;
+}
+
+.prose :not(pre) > code {
+  font-size: 0.95em;
+}
+
 .fn-sig {
-  font-size: 1.2em;
-  line-height: 1.5em;
+  font-size: 1.1rem;
+  line-height: 1.6rem;
 }
 
 .fn-sig + .fn-sig {
@@ -22,7 +35,7 @@
   text-decoration: none;
 }
 
-.prose a {
+.prose a:not(h1 a, h2 a, h3 a, h4 a) {
   color: #d46b08;
 }
 
@@ -51,7 +64,7 @@
 }
 
 .fn-sig-badge {
-  font-size: 0.65em;
+  font-size: 0.75em;
   font-style: normal;
   font-weight: 500;
   padding: 0.15em 0.45em;
@@ -64,8 +77,14 @@
 }
 
 .fn-sig-deprecated .fn-sig-badge {
-  color: #c2410c;
-  border-color: #fdba74;
+  color: #92400e;
+  background: #fde68a;
+  border-color: #f59e0b;
+}
+
+.dark .fn-sig-deprecated .fn-sig-badge {
+  color: #fbbf24;
+  background: #422006;
 }
 
 .fn-sig-deprecated > .fn-sig-content {
@@ -97,13 +116,45 @@
   padding: 0.4em 0.7em;
   border-radius: 0.375rem;
   background: #fff;
+  color: #374151;
   border: 1px solid var(--color-fd-border, #e5e7eb);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.dark .deprecated-info-popover {
+  background: #1c1c1e;
+  color: #d1d5db;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
   z-index: 50;
 }
 
 .deprecated-info:hover .deprecated-info-popover {
   display: block;
+}
+
+/* TOC styling */
+#nd-toc > p {
+  opacity: 0.85;
+}
+
+#nd-toc a.ps-3 {
+  color: var(--color-fd-foreground);
+  opacity: 0.5;
+}
+
+#nd-toc a.ps-3:hover,
+#nd-toc a.ps-6:hover {
+  opacity: 1;
+  color: var(--color-fd-foreground) !important;
+}
+
+#nd-toc a.ps-3[data-active='true'],
+#nd-toc a.ps-6[data-active='true'] {
+  opacity: 1;
+}
+
+#nd-toc a.ps-6 {
+  opacity: 0.65;
 }
 
 .dark {

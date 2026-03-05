@@ -20,7 +20,7 @@ const userDecoder = object({
 });
 ```
 
-Then call `.verify()` on untrusted input to validate it and get full type inference:
+Then call [`.verify()`][] on untrusted input to validate it and get full type inference:
 
 ```typescript
 const user = userDecoder.verify(externalData);
@@ -78,15 +78,10 @@ bun add decoders
 pnpm add decoders
 ```
 
-You must set `strict: true` in your `tsconfig.json` for type inference to work correctly:
-
-```json
-{
-  "compilerOptions": {
-    "strict": true
-  }
-}
-```
+<Callout type="warn">
+  Make sure you have `strict: true` in your `tsconfig.json` for type inference to work
+  correctly.
+</Callout>
 
 ## How it works
 
@@ -95,8 +90,8 @@ untrusted input and either accepts it (returning a value of type `T`) or rejects
 helpful error.
 
 Small decoders compose together like LEGO to build larger ones. In the example above,
-`string`, `number`, and `isoDate` are all individual decoders that get combined with
-`object`, `array`, and `optional`.
+[`string`][], [`number`][], and [`isoDate`][] are all individual decoders that get
+combined with [`object`][], [`array`][], and [`optional`][].
 
 ![Decoder composition](/decoder-composition.gif)
 
@@ -163,6 +158,12 @@ decoder.verify([{ name: 'Alice', age: '33' }], formatShort);
 // Decoding error: Value at keypath '0.age': Must be number
 ```
 
-[`.verify()`]: /.verify
-[`.value()`]: /.value
 [`.decode()`]: /.decode
+[`.value()`]: /.value
+[`.verify()`]: /.verify
+[`array`]: /array
+[`isoDate`]: /isoDate
+[`number`]: /number
+[`object`]: /object
+[`optional`]: /optional
+[`string`]: /string

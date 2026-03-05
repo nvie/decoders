@@ -99,7 +99,7 @@ function renderType(type: string): ReactNode {
     i = j + 1;
   }
 
-  return <em>{parts}</em>;
+  return <span>{parts}</span>;
 }
 
 /**
@@ -149,13 +149,22 @@ export function Sig({
   source?: string;
 }) {
   return (
-    <p className="fn-sig">
+    <p className="fn-sig font-mono">
+      {params !== undefined ? (
+        name.includes('.') ? (
+          <span className="font-sans" style={{ color: GRAY }}>
+            Method{' '}
+          </span>
+        ) : (
+          <span style={{ color: GRAY }}>function </span>
+        )
+      ) : null}
       <strong style={{ fontWeight: 700 }}>{name}</strong>
       {params !== undefined ? (
         <>
           {'(\u200A'}
           {renderParams(params)}
-          {'\u2009)'}
+          {'\u200A)'}
         </>
       ) : null}
       {': '}
@@ -206,32 +215,34 @@ export function DecoderSig({
         name={name}
         params={params}
         returnType={
-          <em>
+          <span>
             <span style={{ color: GRAY }}>{'Decoder<'}</span>
             <span style={{ color: TEAL }}>{type}</span>
             <span style={{ color: GRAY }}>{'>'}</span>
-          </em>
+          </span>
         }
         source={source}
       />
       {aliases?.map((alias) => (
-        <p key={alias.name} className={`fn-sig${alias.deprecated ? ' fn-sig-deprecated' : ''}`}>
+        <p
+          key={alias.name}
+          className={`fn-sig font-mono${alias.deprecated ? ' fn-sig-deprecated' : ''}`}
+        >
           <span className={alias.deprecated ? 'fn-sig-content' : undefined}>
             <strong style={{ fontWeight: 700 }}>{alias.name}</strong>
             {params !== undefined ? (
               <>
                 {'(\u200A'}
                 {renderParams(params)}
-                {'\u2009)'}
+                {'\u200A)'}
               </>
             ) : null}
             {': '}
-            <em>
+            <span>
               <span style={{ color: GRAY }}>{'Decoder<'}</span>
               <span style={{ color: TEAL }}>{type}</span>
               <span style={{ color: GRAY }}>{'>'}</span>
-            </em>
-            {' '}
+            </span>{' '}
             <span className="fn-sig-badge">
               {alias.deprecated ? 'deprecated' : 'alias'}
             </span>

@@ -17,6 +17,7 @@
     "api/utilities",
     "---Guides---",
     "building-your-own",
-    "dependency-setup"
+    "for-library-authors",
+    "using-in-monorepos"
   ]
 }

@@ -69,9 +69,12 @@ function formatValue(value: unknown): string {
   if (typeof value === 'bigint') return `${value}n`;
   if (value instanceof URL) return `URL { href: ${JSON.stringify(value.href)} }`;
   if (value instanceof Date) return `Date { ${JSON.stringify(value.toISOString())} }`;
-  if (value instanceof Error) return `${value.constructor.name} { ${JSON.stringify(value.message)} }`;
-  if (value instanceof Set) return `Set(${value.size}) { ${[...value].map(formatValue).join(', ')} }`;
-  if (value instanceof Map) return `Map(${value.size}) { ${[...value].map(([k, v]) => `${formatValue(k)} => ${formatValue(v)}`).join(', ')} }`;
+  if (value instanceof Error)
+    return `${value.constructor.name} { ${JSON.stringify(value.message)} }`;
+  if (value instanceof Set)
+    return `Set(${value.size}) { ${[...value].map(formatValue).join(', ')} }`;
+  if (value instanceof Map)
+    return `Map(${value.size}) { ${[...value].map(([k, v]) => `${formatValue(k)} => ${formatValue(v)}`).join(', ')} }`;
   try {
     if (Array.isArray(value)) return `[${value.map(formatValue).join(', ')}]`;
     return JSON.stringify(value, null, 2).replace(/\n\s*/g, ' ');
@@ -184,7 +187,11 @@ function statusComment(cell: CellResult | undefined): string {
   return '';
 }
 
-function renderCellContent(cell: CellResult | undefined, input: string, mode: Mode): React.ReactNode {
+function renderCellContent(
+  cell: CellResult | undefined,
+  input: string,
+  mode: Mode,
+): React.ReactNode {
   if (!input) return null;
   if (!cell) return <span className="text-fd-muted-foreground">&hellip;</span>;
   if (cell.status === 'accepted') {
@@ -206,14 +213,10 @@ function renderCellContent(cell: CellResult | undefined, input: string, mode: Mo
 
 export function DecoderPlayground(props: Props) {
   const decoderEntries: [string, string][] =
-    typeof props.decoder === 'string'
-      ? [['Result', props.decoder]]
-      : props.decoder;
+    typeof props.decoder === 'string' ? [['Result', props.decoder]] : props.decoder;
   const isMulti = decoderEntries.length > 1;
   const decoderKey =
-    typeof props.decoder === 'string'
-      ? props.decoder
-      : JSON.stringify(props.decoder);
+    typeof props.decoder === 'string' ? props.decoder : JSON.stringify(props.decoder);
 
   const globalMode = useSignal(mode$);
   const mode = props.mode ?? globalMode;
@@ -258,7 +261,9 @@ export function DecoderPlayground(props: Props) {
         switch (m) {
           case 'verify': {
             if (accepted) {
-              const result = compartment.evaluate(`(${decoderExpr}).verify(${inputExpr})`);
+              const result = compartment.evaluate(
+                `(${decoderExpr}).verify(${inputExpr})`,
+              );
               return { status: 'accepted', value: formatValue(result) };
             }
             const formatted = compartment.evaluate(
@@ -354,7 +359,9 @@ export function DecoderPlayground(props: Props) {
           setRows((prev) =>
             prev.map((row) => ({
               input: row.input,
-              cells: decoderEntries.map(([, expr]) => evalCell(expr, row.input, mode, fmt)),
+              cells: decoderEntries.map(([, expr]) =>
+                evalCell(expr, row.input, mode, fmt),
+              ),
             })),
           );
           setReady(true);
@@ -507,48 +514,59 @@ export function DecoderPlayground(props: Props) {
           </Popover>
         )}
       </div>
-      <div className="border-b border-fd-border [&_figure]:!m-0 [&_figure]:!rounded-none [&_figure]:!border-0 [&_figure]:!bg-transparent [&_pre]:!bg-transparent [&_pre]:!text-xs [&_pre]:!py-1.5 [&_pre]:!px-3 [&_button]:!hidden">
+      <div className="border-b border-fd-border [&_figure]:!m-0 [&_figure]:!rounded-none [&_figure]:!border-0 [&_figure]:!bg-transparent [&_pre]:!bg-transparent [&_pre]:!py-1.5 [&_button]:!hidden">
         <DynamicCodeBlock lang="ts" code={codeSnippet} />
       </div>
       <div className="overflow-x-auto">
-      <table className="w-full">
-        <thead>
-          <tr className="border-b border-fd-border text-left text-xs text-fd-muted-foreground">
-            <th className="px-3 py-2 font-medium" style={{ width: colWidth, minWidth: 150 }}>Input</th>
-            {decoderEntries.map(([name]) => (
-              <th key={name} className="px-3 py-2 font-medium" style={{ width: colWidth, minWidth: 150 }}>{name}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row, i) => (
-            <tr
-              key={i}
-              onClick={() => setActiveRow(i)}
-              className={`border-b border-fd-border last:border-b-0 align-top cursor-pointer ${activeRow === i ? 'bg-black/[0.02] dark:bg-white/[0.04]' : ''}`}
-            >
-              <td className="px-3 py-1.5">
-                <input
-                  data-playground-input
-                  type="text"
-                  value={row.input}
-                  onChange={(e) => updateRow(i, e.target.value)}
-                  onFocus={() => setActiveRow(i)}
-                  onKeyDown={(e) => handleKeyDown(e, i)}
-                  placeholder="Type an expression\u2026"
-                  disabled={!ready}
-                  className="w-full bg-transparent font-mono text-xs text-fd-foreground placeholder:text-fd-muted-foreground focus:outline-none"
-                />
-              </td>
-              {decoderEntries.map(([name], j) => (
-                <td key={name} className="px-3 py-1.5">
-                  {renderCellContent(row.cells[j], row.input, mode)}
-                </td>
+        <table className="w-full">
+          <thead>
+            <tr className="border-b border-fd-border text-left text-xs text-fd-muted-foreground">
+              <th
+                className="px-3 py-2 font-medium"
+                style={{ width: colWidth, minWidth: 150 }}
+              >
+                Input
+              </th>
+              {decoderEntries.map(([name]) => (
+                <th
+                  key={name}
+                  className="px-3 py-2 font-medium"
+                  style={{ width: colWidth, minWidth: 150 }}
+                >
+                  {name}
+                </th>
               ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {rows.map((row, i) => (
+              <tr
+                key={i}
+                onClick={() => setActiveRow(i)}
+                className={`border-b border-fd-border last:border-b-0 align-top cursor-pointer ${activeRow === i ? 'bg-black/[0.02] dark:bg-white/[0.04]' : ''}`}
+              >
+                <td className="px-3 py-1.5">
+                  <input
+                    data-playground-input
+                    type="text"
+                    value={row.input}
+                    onChange={(e) => updateRow(i, e.target.value)}
+                    onFocus={() => setActiveRow(i)}
+                    onKeyDown={(e) => handleKeyDown(e, i)}
+                    placeholder="Type an expression\u2026"
+                    disabled={!ready}
+                    className="w-full bg-transparent font-mono text-[1.1em] text-fd-foreground placeholder:text-fd-muted-foreground focus:outline-none"
+                  />
+                </td>
+                {decoderEntries.map(([name], j) => (
+                  <td key={name} className="px-3 py-1.5">
+                    {renderCellContent(row.cells[j], row.input, mode)}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

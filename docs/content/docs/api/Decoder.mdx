@@ -117,7 +117,12 @@ then this will be reflected in the return type, too.
 
 ## Decoder.refineType
 
-<Sig name=".refineType" returnType="Decoder<SubT>" source="core/Decoder.ts#L239-L245" />
+<Sig
+  name=".refineType"
+  params=""
+  returnType="Decoder<SubT>"
+  source="core/Decoder.ts#L239-L245"
+/>
 
 <Since version="2.7" />
 
@@ -185,7 +190,6 @@ can be used to simplify or shorten otherwise long or low-level/technical errors.
   name=".chain"
   params="next: (blob: T, ok, err) => DecodeResult<V> | Decoder<V>"
   returnType="Decoder<V>"
-  source="core/Decoder.ts#L247-L265"
 />
 
 <Sig
@@ -220,12 +224,7 @@ given acceptance function will receive the output of the current decoder as its 
   source="core/Decoder.ts#L267-L287"
 />
 
-<Sig
-  name=".pipe"
-  params="next: (blob: T) => Decoder<V>"
-  returnType="Decoder<V>"
-  source="core/Decoder.ts#L267-L287"
-/>
+<Sig name=".pipe" params="next: (blob: T) => Decoder<V>" returnType="Decoder<V>" />
 
 <Since version="2.4" />
 

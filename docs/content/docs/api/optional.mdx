@@ -16,7 +16,6 @@ description: Decoders for handling optional and nullable values.
   name="optional"
   params="decoder: Decoder<T>, defaultValue: V | (() => V)"
   type="T | V"
-  source="basics.ts#L27-L44"
 />
 
 Accepts whatever the given decoder accepts, or `undefined`.
@@ -64,7 +63,6 @@ Which will decode to type:
   name="nullable"
   params="decoder: Decoder<T>, defaultValue: V | (() => V)"
   type="T | V"
-  source="basics.ts#L46-L63"
 />
 
 Accepts whatever the given decoder accepts, or `null`.
@@ -100,7 +98,6 @@ decoder.verify(null); // the current date
   name="nullish"
   params="decoder: Decoder<T>, defaultValue: V | (() => V)"
   type="T | V"
-  source="basics.ts#L65-L82"
 />
 
 Accepts whatever the given decoder accepts, or `null`, or `undefined`.
