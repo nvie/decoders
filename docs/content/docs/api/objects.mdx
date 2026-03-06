@@ -3,7 +3,9 @@ title: Objects
 description: Object decoders for validating structured data.
 ---
 
-## object
+## Object shapes
+
+### object
 
 <DecoderSig
   name="object"
@@ -21,12 +23,12 @@ input object are ignored and will not be returned.
   examples={['{ x: 1, y: 2 }', '{ x: 1, y: 2, z: 3 }', '{ x: 1 }']}
 />
 
-For more information, see also
-[Difference between `object`, `exact`, and `inexact`](#difference-between-object-exact-and-inexact).
+Read more here about [the differences between](#whats-the-difference) `object`, `exact`,
+and `inexact`.
 
 ---
 
-## exact
+### exact
 
 <DecoderSig
   name="exact"
@@ -44,12 +46,12 @@ fields that are not specified explicitly.
   examples={['{ x: 1, y: 2 }', '{ x: 1, y: 2, z: 3 }', '{ x: 1 }']}
 />
 
-For more information, see also
-[Difference between `object`, `exact`, and `inexact`](#difference-between-object-exact-and-inexact).
+Read more here about [the differences between](#whats-the-difference) `object`, `exact`,
+and `inexact`.
 
 ---
 
-## inexact
+### inexact
 
 <DecoderSig
   name="inexact"
@@ -67,12 +69,39 @@ the input object unvalidated that will thus be of `unknown` type statically.
   examples={['{ x: 1, y: 2 }', '{ x: 1, y: 2, z: 3 }', '{ x: 1 }']}
 />
 
-For more information, see also
-[Difference between `object`, `exact`, and `inexact`](#difference-between-object-exact-and-inexact).
+Read more here about [the differences between](#whats-the-difference) `object`, `exact`,
+and `inexact`.
 
 ---
 
-## record
+### What's the difference?
+
+The three decoders in the "object" family are very similar and differ only in how they
+treat extra properties on input values.
+
+<DecoderPlayground
+  globals={{
+    fields: '{ x: number, y: number }',
+  }}
+  preface={`
+    const fields = {
+      x: number,
+      y: number,
+    };
+  `}
+  decoder={[
+    ['object', 'object(fields)'],
+    ['exact', 'exact(fields)'],
+    ['inexact', 'inexact(fields)'],
+  ]}
+  examples={['{ x: 1, y: 2, z: 3 }', '{ x: 1, y: 2 }']}
+/>
+
+---
+
+## Dictionary shapes
+
+### record
 
 <DecoderSig
   name="record"
@@ -92,7 +121,7 @@ Accepts objects where all values match the given decoder, and returns the result
 
 This is useful to validate inputs like `{ [key: string]: V }`.
 
-### Decoding values only
+#### Decoding values only
 
 The default call takes a single argument and will validate all _values_. For example, to
 validate that all values in the object are numbers:
@@ -102,7 +131,7 @@ validate that all values in the object are numbers:
   examples={['{ red: 1, blue: 2, green: 3 }', "{ hi: 'not a number' }"]}
 />
 
-### Decoding keys and values
+#### Decoding keys and values
 
 If you also want to validate that keys are of a specific form, use the two-argument form:
 `record(key, value)`. Note that the given key decoder must return strings.
@@ -116,7 +145,9 @@ For example, to enforce that all keys are emails:
 
 ---
 
-## pojo
+## Simple objects
+
+### pojo
 
 <DecoderSig name="pojo" type="Record<string, unknown>" source="objects.ts#L47-L53" />
 
@@ -126,31 +157,6 @@ further.
 <DecoderPlayground
   decoder="pojo"
   examples={['{}', "{ name: 'hi' }", "'hi'", '[]', 'new Date()', 'null']}
-/>
-
----
-
-## Difference between `object`, `exact`, and `inexact`
-
-The three decoders in the "object" family are very similar and only differ in how they
-treat extra properties on input values.
-
-<DecoderPlayground
-  globals={{
-    fields: '{ x: number, y: number }',
-  }}
-  preface={`
-    const fields = {
-      x: number,
-      y: number,
-    };
-  `}
-  decoder={[
-    ['object', 'object(fields)'],
-    ['exact', 'exact(fields)'],
-    ['inexact', 'inexact(fields)'],
-  ]}
-  examples={['{ x: 1, y: 2, z: 3 }', '{ x: 1, y: 2 }']}
 />
 
 [`object()`]: /object
