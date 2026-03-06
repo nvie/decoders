@@ -21,7 +21,7 @@
   - `iso8601` → `isoDate` (`iso8601` will be kept as alias)
   - `dateString` → `isoDateString` (deprecated, will be removed in 3.x)
   - `datelike` → `flexDate` (deprecated, will be removed in 3.x)
-- Improve error messages for `flexDate` decoder
+- Cleaner error messages for `flexDate` and `url` decoders
 - Add missing top-level type exports for annotations
 
 ## [2.8.0] - 2026-02-22

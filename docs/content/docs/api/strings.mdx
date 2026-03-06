@@ -148,18 +148,16 @@ mean that the email address actually exist.)
 
 <Since version="2.9" />
 
-Accepts strings that are valid URLs, returns the value as a string (not a URL instance).
-Uses `URL.canParse()` for validation.
+Accepts strings that are valid URLs, returns the value as a string.
 
 <DecoderPlayground
   decoder="urlString"
   examples={[
-    "'http://nvie.com'",
     "'https://nvie.com'",
-    "'git+ssh://user@github.com/foo/bar.git'",
-    "'foo'",
-    "'@acme.org'",
+    "'git+ssh://github.com/nvie/decoders.git'",
+    "new URL('https://nvie.com')",
     "'/search?q=foo'",
+    "'javascript:alert(1)'",
   ]}
 />
 
@@ -169,17 +167,16 @@ Uses `URL.canParse()` for validation.
 
 <DecoderSig name="url" type="URL" source="strings.ts#L77-L83" />
 
-Accepts strings that are valid URLs, returns the value as a URL instance.
+Accepts either URL strings or URL instances, returns the value as a URL instance.
 
 <DecoderPlayground
   decoder="url"
   examples={[
-    "'http://nvie.com'",
     "'https://nvie.com'",
-    "'git+ssh://user@github.com/foo/bar.git'",
-    "'foo'",
-    "'@acme.org'",
+    "'git+ssh://github.com/nvie/decoders.git'",
+    "new URL('https://nvie.com')",
     "'/search?q=foo'",
+    "'javascript:alert(1)'",
   ]}
 />
 
@@ -189,7 +186,7 @@ Accepts strings that are valid URLs, returns the value as a URL instance.
 
 <DecoderSig name="httpsUrl" type="URL" source="strings.ts#L85-L92" />
 
-Accepts strings that are valid URLs, but only HTTPS ones. Returns the value as a URL
+Accepts URL strings and URL instances, but only HTTPS ones. Returns the value as a URL
 instance.
 
 <DecoderPlayground
@@ -197,7 +194,7 @@ instance.
   examples={[
     "'https://nvie.com:443'",
     "'http://nvie.com'",
-    "'git+ssh://user@github.com/foo/bar.git'",
+    "'git+ssh://github.com/nvie/decoders.git'",
   ]}
 />
 

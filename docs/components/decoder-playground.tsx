@@ -344,7 +344,7 @@ export function DecoderPlayground(props: Props) {
 
         const decodersMod = await import('decoders');
 
-        const compartment = new Compartment({ ...decodersMod });
+        const compartment = new Compartment({ ...decodersMod, URL });
 
         // Evaluate extra globals (e.g. custom decoders) and inject them
         if (props.globals) {

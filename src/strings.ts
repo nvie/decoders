@@ -5,7 +5,8 @@ import { sized } from '~/misc';
 import { isString } from '~/lib/utils';
 
 import { instanceOf } from './misc';
-import { either } from './unions';
+import { select } from './unions';
+import { unknown } from './basics';
 
 /** Match groups in this regex:
  * \1 - the scheme
@@ -69,17 +70,15 @@ export const email: Decoder<string> = regex(
 /**
  * Accepts strings that are valid URLs.
  */
-export const urlString: Decoder<string> = string.refine(
-  (s) => URL.canParse(s),
-  'Must be URL',
-);
+export const urlString: Decoder<string> = regex(url_re, 'Must be URL');
 
 /**
  * Accepts strings that are valid URLs, returns the value as a URL instance.
  */
-export const url: Decoder<URL> = either(
-  regex(url_re, 'Must be URL').transform((value) => new URL(value)),
-  instanceOf(URL),
+export const url: Decoder<URL> = select(unknown, (blob) =>
+  typeof blob === 'string'
+    ? urlString.transform((s) => new URL(s))
+    : instanceOf(URL).describe('Must be URL'),
 );
 
 /**
@@ -88,7 +87,7 @@ export const url: Decoder<URL> = either(
  */
 export const httpsUrl: Decoder<URL> = url.refine(
   (value) => value.protocol === 'https:',
-  'Must be an HTTPS URL',
+  'Must be HTTPS URL',
 );
 
 /**

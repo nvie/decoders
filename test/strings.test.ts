@@ -226,7 +226,7 @@ describe('url', () => {
     expect(() => decoder.verify('bleh://nvie.com')).toThrow(); // Must be HTTPS scheme
     expect(() => decoder.verify('foo')).toThrow('Must be URL');
     expect(() => decoder.verify('me@nvie.com ')).toThrow('Must be URL');
-    expect(() => decoder.verify(123)).toThrow('Must be string');
+    expect(() => decoder.verify(123)).toThrow('Must be URL');
   });
 });
 
