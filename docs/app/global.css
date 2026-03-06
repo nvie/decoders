@@ -143,18 +143,24 @@ pre code {
 }
 
 #nd-toc a.ps-3:hover,
-#nd-toc a.ps-6:hover {
+#nd-toc a.ps-6:hover,
+#nd-toc a.ps-8:hover {
   opacity: 1;
   color: var(--color-fd-foreground) !important;
 }
 
 #nd-toc a.ps-3[data-active='true'],
-#nd-toc a.ps-6[data-active='true'] {
+#nd-toc a.ps-6[data-active='true'],
+#nd-toc a.ps-8[data-active='true'] {
   opacity: 1;
 }
 
 #nd-toc a.ps-6 {
   opacity: 0.65;
+}
+
+#nd-toc a.ps-8 {
+  opacity: 0.5;
 }
 
 .prose td,
