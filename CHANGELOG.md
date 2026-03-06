@@ -1,7 +1,5 @@
 ## [Unreleased]
 
-## [2.9.0-pre.5] - 2026-03-06
-
 **Breaking!**
 
 - Rename `Decoder.then()` → `Decoder.chain()` to avoid confusion with Promises (custom
@@ -75,8 +73,7 @@ Bad release, please use 2.7.5 instead.
 ## [2.7.0] - 2025-03-31
 
 - Add new `dateString` decoder (see [docs](https://decoders.cc/dateString))
-- Add new `.refineType<SubT>()` method (see
-  [docs](https://decoders.cc/.refineType))
+- Add new `.refineType<SubT>()` method (see [docs](https://decoders.cc/.refineType))
 - Reduce peak memory usage of `array()` decoder
 
 ## [2.6.1] - 2025-02-25
@@ -151,7 +148,7 @@ Bad release, please use 2.7.5 instead.
 
 **New features:**
 
-- All `enum` types are now supported ([docs](https://decoders.cc/enum_))
+- All `enum` types are now supported ([docs](https://decoders.cc/enum))
 - Record decoder now supports both `record(values)` and `record(keys, values)` forms
   ([docs](https://decoders.cc/record))
 - Add `datelike` decoder ([docs](https://decoders.cc/datelike))
@@ -161,7 +158,7 @@ Bad release, please use 2.7.5 instead.
 
 **New decoders:**
 
-- `enum_` (see [docs](https://decoders.cc/enum_))
+- `enum_` (see [docs](https://decoders.cc/enum))
 - `record()` (see [docs](https://decoders.cc/record))
 - `select()` (see [docs](https://decoders.cc/select))
 - `bigint` (see [docs](https://decoders.cc/bigint))
@@ -336,9 +333,8 @@ New decoders:
 Other improvements:
 
 - [`optional()`](https://decoders.cc/optional),
-  [`nullable()`](https://decoders.cc/nullable), and
-  [`maybe()`](https://decoders.cc/maybe) now each take an optional 2nd param to
-  specify a default value
+  [`nullable()`](https://decoders.cc/nullable), and [`maybe()`](https://decoders.cc/maybe)
+  now each take an optional 2nd param to specify a default value
 - Better error messages for nested `either`s
 
 Implementation changes:
