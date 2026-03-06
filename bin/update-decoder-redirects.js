@@ -31,8 +31,8 @@ const decoderSigRe = /<(?:DecoderSig|Sig)\b([\s\S]*?)\/>/g;
 const nameAttrRe = /name="([^"]+)"/;
 const aliasNameRe = /name:\s*'([^']+)'/g;
 
-// Regex to find ## headings
-const headingRe = /^## (.+)/gm;
+// Regex to find ## and ### headings
+const headingRe = /^#{2,3} (.+)/gm;
 
 for (const file of mdxFiles) {
   const slug = file.replace(/\.mdx$/, '');
