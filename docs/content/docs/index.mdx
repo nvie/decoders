@@ -4,48 +4,97 @@ description:
   Elegant and battle-tested validation library for type-safe input data for TypeScript.
 ---
 
-## Example
+## Installation
 
-You write a decoder that describes the shape of data you expect. It looks almost identical
-to the TypeScript type it produces:
+```bash tab="npm"
+npm install decoders
+```
 
-```typescript
-import { array, isoDate, number, object, optional, string } from 'decoders';
+```bash tab="bun"
+bun add decoders
+```
+
+```bash tab="pnpm"
+pnpm add decoders
+```
+
+<Callout type="success">
+  Make sure you have `strict: true` in your `tsconfig.json` for type inference to work
+  correctly.
+</Callout>
+
+---
+
+## Getting started
+
+Let’s look at a simple decoder to validate user data.
+
+<Steps>
+
+<Step>
+### Define your shape
+
+```ts
+import { email, number, object, optional, string } from 'decoders';
 
 const userDecoder = object({
   id: number,
   name: string,
-  createdAt: optional(isoDate),
-  tags: array(string),
+  email: optional(email),
 });
 ```
 
-Then call [`.verify()`][] on untrusted input to validate it and get full type inference:
+</Step>
+
+<Step>
+### Validate inputs at runtime
+
+```ts
+function handleRequest(body: unknown) {
+  // [!code highlight]
+  const user = userDecoder.verify(body);
+  // If we get here, user is guaranteed to be of the expected shape
+  return saveUser(user);
+}
+```
+
+</Step>
+
+<Step>
+### You get full type inference...
 
 ```typescript
-const user = userDecoder.verify(externalData);
+const user = userDecoder.verify(body);
 //    ^^^^
 //    TypeScript will infer this type as:
 //    {
 //      id: number;
 //      name: string;
-//      createdAt?: Date;
-//      tags: string[];
+//      email?: string | undefined;
 //    }
 ```
 
-If verification fails, you get a clear error message pointing at the problem:
+</Step>
+
+<Step>
+### ...or a beautiful runtime error
+If verification fails, you will see a clear error message pointing out the problem.
 
 ```text
 Decoding error:
 {
   id: 123,
-  name: "Alison Roberts",
-  createdAt: "not-a-date",
-             ^^^^^^^^^^^^ Must be Date
-  tags: ["foo", "bar"],
+  name: "Alison",
+  email: "not an email",
+         ^^^^^^^^^^^^^^ Must be email
 }
 ```
+
+</Step>
+
+</Steps>
+
+---
 
 ## Why decoders?
 
@@ -64,60 +113,40 @@ since 2017. Here's what makes it different:
 - **[Standard Schema](https://github.com/standard-schema/standard-schema) compliant** —
   Works out of the box with any framework that supports Standard Schema.
 
-## Getting started
+---
 
-```bash tab="npm"
-npm install decoders
-```
+## When to use decoders
 
-```bash tab="bun"
-bun add decoders
-```
+Use decoders whenever you need to validate untrusted data. Typically at the boundaries of
+your application.
 
-```bash tab="pnpm"
-pnpm add decoders
-```
+- **API responses** - Validate data from external APIs
+- **User input** - Validate form submissions and user-provided data
+- **Configuration files** - Validate JSON/YAML configuration
+- **Database queries** - Validate data from databases
+- **Message queues** - Validate messages from queues
+- **Environment variables** - Validate and parse environment configuration
+- **File uploads** - Validate uploaded file contents
+- **Eliminating `any`** - Turn unsafe `any` or `unknown` values into fully typed data
 
-<Callout type="warn">
-  Make sure you have `strict: true` in your `tsconfig.json` for type inference to work
-  correctly.
-</Callout>
+---
 
-## How it works
+## Composing decoders
 
-The central building block is the [Decoder](/docs/api/Decoder). A `Decoder<T>` takes
-untrusted input and either accepts it (returning a value of type `T`) or rejects it with a
-helpful error.
-
-Small decoders compose together like LEGO to build larger ones. In the example above,
+Decoders compose together like LEGO® blocks to build larger ones. In the example above,
 [`string`][], [`number`][], and [`isoDate`][] are all individual decoders that get
 combined with [`object`][], [`array`][], and [`optional`][].
-
-![Decoder composition](/decoder-composition.gif)
-
-### Using a decoder
-
-Call one of these methods on any decoder:
-
-| Method          | Returns          | On failure           |
-| --------------- | ---------------- | -------------------- |
-| [`.verify()`][] | `T`              | Throws an error      |
-| [`.value()`][]  | `T \| undefined` | Returns `undefined`  |
-| [`.decode()`][] | `Result<T>`      | Returns error result |
-
-Most of the time, [`.verify()`][] is what you want.
-
-### Composing decoders
 
 Every decoder in this library can be used standalone or composed with others. You can also
 [build your own](/docs/building-your-own) to match any shape of data.
 
 ```typescript
-// Compose decoders to describe complex shapes
+const zipCode = regex(/^\d{5}$/, 'Must be 5-digit zip code');
+
 const addressDecoder = object({
   street: string,
   city: string,
-  zip: regex(/^\d{5}$/, 'Must be 5-digit zip code'),
+  zip: zipCode,
 });
 
 const userDecoder = object({
@@ -128,25 +157,28 @@ const userDecoder = object({
 });
 ```
 
+---
+
 ## Error formatting
 
 By default, [`.verify()`][] uses `formatInline`, which echoes back the input with errors
 inlined:
 
-```typescript
-import { array, object, string, number } from 'decoders';
+```ts
+import { object, string, number } from 'decoders';
 
-const decoder = array(object({ name: string, age: number }));
+const decoder = object({
+  name: string,
+  age: number,
+});
 
-decoder.verify([{ name: 'Alice', age: '33' }]);
+decoder.verify({ name: 'Alison', age: '33' });
 // Decoding error:
-// [
-//   {
-//     name: "Alice",
-//     age: "33",
-//          ^^^^ Must be number
-//   },
-// ]
+// {
+//   name: "Alison",
+//   age: "33",
+//        ^^^^ Must be number
+// }
 ```
 
 You can also use `formatShort` for a compact single-line format:
@@ -154,9 +186,11 @@ You can also use `formatShort` for a compact single-line format:
 ```typescript
 import { formatShort } from 'decoders';
 
-decoder.verify([{ name: 'Alice', age: '33' }], formatShort);
-// Decoding error: Value at keypath '0.age': Must be number
+decoder.verify({ name: 'Alison', age: '33' }, formatShort);
+// Decoding error: Value at key 'age': Must be number
 ```
+
+For more information, see [Error Formatting](/docs/api/error-formatting).
 
 [`.decode()`]: /.decode
 [`.value()`]: /.value

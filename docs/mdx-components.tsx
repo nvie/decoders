@@ -1,5 +1,7 @@
 import type { MDXComponents } from "mdx/types";
 import defaultMdxComponents from "fumadocs-ui/mdx";
+import { Step, Steps } from "fumadocs-ui/components/steps";
+import { Card, Cards } from "fumadocs-ui/components/card";
 import { Sig, DecoderSig } from "@/components/sig";
 import { DecoderPlayground } from "@/components/decoder-playground";
 import { Since } from "@/components/since";
@@ -11,6 +13,10 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     Sig,
     DecoderSig,
     DecoderPlayground,
+    Steps,
+    Step,
+    Cards,
+    Card,
     Since,
     Info,
     ...components,
