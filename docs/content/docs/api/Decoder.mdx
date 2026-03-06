@@ -88,7 +88,7 @@ number.decode('hi'); // { ok: false, error: ... }
 | Method          | Returns           | On failure           | When to use?                          |
 | --------------- | ----------------- | -------------------- | ------------------------------------- |
 | [`.verify()`][] | `T`               | Throws               | You want to just fail fast.           |
-| [`.value()`][]  | `T \| undefined`  | Returns `undefined`  | You have sensible defaults.           |
+| [`.value()`][]  | `T`                | Returns `undefined`  | You have sensible defaults.           |
 | [`.decode()`][] | `DecodeResult<T>` | Returns full details | You need fine-grained error handling. |
 
 ---
