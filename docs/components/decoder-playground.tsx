@@ -195,19 +195,19 @@ function renderCellContent(
   if (!input) return null;
   if (!cell) return <span className="text-fd-muted-foreground">&hellip;</span>;
   if (cell.status === 'accepted') {
-    return <code className="whitespace-pre text-xs">{highlight(cell.value)}</code>;
+    return <span className="whitespace-pre">{highlight(cell.value)}</span>;
   }
   // In value mode, rejected inputs show "undefined" as a normal value
   if (mode === 'value') {
-    return <code className="whitespace-pre text-xs">{highlight(cell.error)}</code>;
+    return <span className="whitespace-pre">{highlight(cell.error)}</span>;
   }
   return (
-    <code
-      className="whitespace-pre-wrap text-xs"
+    <span
+      className="whitespace-pre-wrap"
       style={{ color: 'light-dark(#c4210a, #e5534b)' }}
     >
       {cell.error.trim()}
-    </code>
+    </span>
   );
 }
 
@@ -550,7 +550,7 @@ export function DecoderPlayground(props: Props) {
               ))}
             </tr>
           </thead>
-          <tbody>
+          <tbody className="font-mono text-[1.1em]">
             {rows.map((row, i) => (
               <tr
                 key={i}
@@ -567,7 +567,7 @@ export function DecoderPlayground(props: Props) {
                     onKeyDown={(e) => handleKeyDown(e, i)}
                     placeholder="Type an expression\u2026"
                     disabled={!ready}
-                    className="w-full bg-transparent font-mono text-[1.1em] text-fd-foreground placeholder:text-fd-muted-foreground focus:outline-none"
+                    className="w-full bg-transparent text-fd-foreground placeholder:text-fd-muted-foreground focus:outline-none"
                   />
                 </td>
                 {decoderEntries.map(([name], j) => (

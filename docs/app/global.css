@@ -157,6 +157,11 @@ pre code {
   opacity: 0.65;
 }
 
+.prose td,
+.prose th {
+  vertical-align: top !important;
+}
+
 .dark {
   --color-fd-primary: #e27b50;
   --color-fd-primary-foreground: #1c1017;
