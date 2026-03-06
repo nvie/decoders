@@ -96,6 +96,14 @@ pre code {
   vertical-align: middle;
 }
 
+.info-icon-circle {
+  fill: #b0b0b0;
+}
+
+.dark .info-icon-circle {
+  fill: #9ca3af;
+}
+
 .deprecated-info {
   position: relative;
   display: inline-block;

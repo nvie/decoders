@@ -20,7 +20,8 @@ Accepts only the given constant value.
 
 <DecoderSig name="null_" type="null" source="basics.ts#L12-L15" />
 
-Accepts and returns only the literal `null` value.
+Accepts and returns only the literal `null` value. <Info>Named `null_` because `null` is a
+reserved keyword in TypeScript.</Info>
 
 <DecoderPlayground
   decoder="null_"
@@ -33,7 +34,8 @@ Accepts and returns only the literal `null` value.
 
 <DecoderSig name="undefined_" type="undefined" source="basics.ts#L17-L20" />
 
-Accepts and returns only the literal `undefined` value.
+Accepts and returns only the literal `undefined` value. <Info>Named `undefined_` because
+`undefined` is a reserved keyword in TypeScript.</Info>
 
 <DecoderPlayground
   decoder="undefined_"
@@ -51,7 +53,8 @@ Accepts and returns only the literal `undefined` value.
   source="unions.ts#L99-L120"
 />
 
-Accepts and return an enum value.
+Accepts and returns an enum value. <Info>Named `enum_` because `enum` is a reserved
+keyword in TypeScript.</Info>
 
 It works with numeric enums:
 
