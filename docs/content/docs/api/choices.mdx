@@ -50,6 +50,7 @@ oneOf(['foo', 'bar']);
   params="field: string, mapping: { value1: Decoder<A>, value2: Decoder<B>, ... }"
   type="A | B | ..."
   source="unions.ts#L122-L163"
+  multiline
 />
 
 If you are decoding tagged unions you may want to use the [`taggedUnion()`][] decoder
@@ -97,6 +98,7 @@ and is more performant at runtime because it doesn't have to try all decoders on
   params="scout: Decoder<T>, selectFn: (result: T) => Decoder<A> | Decoder<B> | ..."
   type="A | B | ..."
   source="unions.ts#L165-L182"
+  multiline
 />
 
 Briefly peek at a runtime input using a "scout" decoder first, then decide which decoder

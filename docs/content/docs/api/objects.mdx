@@ -10,6 +10,7 @@ description: Object decoders for validating structured data.
   params="{ field1: Decoder<A>, field2: Decoder<B>, ... }"
   type="{ field1: A, field2: B, ... }"
   source="objects.ts#L55-L136"
+  multiline
 />
 
 Accepts objects with fields matching the given decoders. Extra fields that exist on the
@@ -32,6 +33,7 @@ For more information, see also
   params="{ field1: Decoder<A>, field2: Decoder<B>, ... }"
   type="{ field1: A, field2: B, ... }"
   source="objects.ts#L138-L163"
+  multiline
 />
 
 A "strict object" decoder. Like [`object()`][], but will reject inputs that contain extra
@@ -54,6 +56,7 @@ For more information, see also
   params="{ field1: Decoder<A>, field2: Decoder<B>, ... }"
   type="{ field1: A, field2: B, ... }"
   source="objects.ts#L165-L200"
+  multiline
 />
 
 A "loose object" decoder. Like [`object()`][], but will pass through any extra fields on

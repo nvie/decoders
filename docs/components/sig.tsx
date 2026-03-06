@@ -186,9 +186,6 @@ export function Sig({
   source?: string;
   multiline?: boolean;
 }) {
-  const MULTILINE_THRESHOLD = 50;
-  const useMultiline = multiline ?? (params !== undefined && params.length > MULTILINE_THRESHOLD);
-
   return (
     <pre className="fn-sig font-mono" style={{ margin: 0, background: 'none', border: 'none', padding: 0 }}>
       {params !== undefined ? (
@@ -202,7 +199,7 @@ export function Sig({
       ) : null}
       <strong style={{ fontWeight: 700 }}>{name}</strong>
       {params !== undefined ? (
-        useMultiline ? (
+        multiline ? (
           renderMultilineParams(params)
         ) : (
           <>
@@ -257,18 +254,21 @@ export function DecoderSig({
   params,
   type,
   source,
+  multiline,
 }: {
   name: string;
   aliases?: Alias[];
   params?: string;
   type: string;
   source?: string;
+  multiline?: boolean;
 }) {
   return (
     <>
       <Sig
         name={name}
         params={params}
+        multiline={multiline}
         returnType={renderDecoderReturnType(type)}
         source={source}
       />
@@ -281,7 +281,7 @@ export function DecoderSig({
           <span className={alias.deprecated ? 'fn-sig-content' : undefined}>
             <strong style={{ fontWeight: 700 }}>{alias.name}</strong>
             {params !== undefined ? (
-              params.length > 50 ? (
+              multiline ? (
                 renderMultilineParams(params)
               ) : (
                 <>
