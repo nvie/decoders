@@ -500,14 +500,22 @@ describe('sized', () => {
   });
 
   test('size takes precedence over min', () => {
-    const decoder = sized(string, { size: 3, min: 10 });
+    const decoder = sized(
+      string,
+      // @ts-expect-error - size + min is not a valid combo
+      { size: 3, min: 10 },
+    );
     expect(decoder.verify('abc')).toBe('abc');
     expect(() => decoder.verify('ab')).toThrow('Too short, must be 3 chars');
     expect(() => decoder.verify('abcd')).toThrow('Too long, must be 3 chars');
   });
 
   test('size takes precedence over max', () => {
-    const decoder = sized(string, { size: 3, max: 1 });
+    const decoder = sized(
+      string,
+      // @ts-expect-error - size + max is not a valid combo
+      { size: 3, max: 1 },
+    );
     expect(decoder.verify('abc')).toBe('abc');
     expect(() => decoder.verify('ab')).toThrow('Too short, must be 3 chars');
     expect(() => decoder.verify('abcd')).toThrow('Too long, must be 3 chars');

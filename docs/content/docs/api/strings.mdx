@@ -89,7 +89,7 @@ Accepts and returns strings that end with the given suffix.
 
 ## decimal
 
-<DecoderSig name="decimal" type="string" source="strings.ts#L139-L143" />
+<DecoderSig name="decimal" type="string" source="strings.ts#L140-L144" />
 
 Accepts and returns strings with decimal digits only (base-10). To convert these to
 numbers, use the [`numeric`][] decoder.
@@ -103,7 +103,7 @@ numbers, use the [`numeric`][] decoder.
 
 ## hexadecimal
 
-<DecoderSig name="hexadecimal" type="string" source="strings.ts#L145-L151" />
+<DecoderSig name="hexadecimal" type="string" source="strings.ts#L146-L152" />
 
 Accepts and returns strings with hexadecimal digits only (base-16).
 
@@ -116,7 +116,7 @@ Accepts and returns strings with hexadecimal digits only (base-16).
 
 ## numeric
 
-<DecoderSig name="numeric" type="number" source="strings.ts#L153-L158" />
+<DecoderSig name="numeric" type="number" source="strings.ts#L154-L159" />
 
 Accepts valid numerical strings (in base-10) and returns them as a number. To only accept
 numerical strings and keep them as string values, use the [`decimal`][] decoder.
@@ -242,15 +242,15 @@ Accepts and returns strings that are valid identifiers in most programming langu
   name="nanoid"
   params="options?: SizeOptions"
   type="string"
-  source="strings.ts#L102-L109"
+  source="strings.ts#L102-L110"
 />
 
 <Since version="2.4" />
 
 Accepts and returns [Nano ID](https://zelark.github.io/nano-id-cc) string values. By
 default, expects a standard 21-char nanoid, but you can optionally specify different size
-constraints. It assumes the default nanoid alphabet. If you're using a custom alphabet, use
-[`regex()`][] instead.
+constraints. It assumes the default nanoid alphabet. If you're using a custom alphabet,
+use [`regex()`][] instead.
 
 <DecoderPlayground
   decoder="nanoid()"
@@ -267,7 +267,7 @@ constraints. It assumes the default nanoid alphabet. If you're using a custom al
 
 ## uuid
 
-<DecoderSig name="uuid" type="string" source="strings.ts#L111-L119" />
+<DecoderSig name="uuid" type="string" source="strings.ts#L112-L120" />
 
 Accepts strings that are valid
 [UUIDs](https://en.wikipedia.org/wiki/universally_unique_identifier) (universally unique
@@ -287,7 +287,7 @@ identifier).
 
 ## uuidv1
 
-<DecoderSig name="uuidv1" type="string" source="strings.ts#L121-L128" />
+<DecoderSig name="uuidv1" type="string" source="strings.ts#L122-L129" />
 
 Like [`uuid`][], but only accepts
 [UUIDv1](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_%28date-time_and_MAC_address%29)
@@ -305,7 +305,7 @@ strings.
 
 ## uuidv4
 
-<DecoderSig name="uuidv4" type="string" source="strings.ts#L130-L137" />
+<DecoderSig name="uuidv4" type="string" source="strings.ts#L131-L138" />
 
 Like [`uuid`][], but only accepts
 [UUIDv4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_%28random%29)
