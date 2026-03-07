@@ -7,7 +7,7 @@ export default defineConfig({
     coverage: {
       provider: 'istanbul',
       reporter: ['text', 'html'],
-      include: ['src/'],
+      include: ['src/**/*.ts'],
 
       // Require 100% test coverage
       thresholds: {
