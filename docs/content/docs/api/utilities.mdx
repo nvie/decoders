@@ -135,10 +135,15 @@ Lazily evaluate the given decoder. Useful to build recursive decoders.
 
 <Since version="2.9" />
 
-Takes any decoder of a sized value (string, array, or set) and rejects values that don't
-match the given size constraints.
+Rejects strings, arrays, or sets that don't match the given size constraints. Works on any
+type that has a `.length` or `.size` property.
 
-`SizeOptions` accepts `min`, `max`, or `size` (shorthand for exact length).
+```ts
+type SizeOptions =
+  | { size: number }
+  | { min: number; max?: number }
+  | { min?: number; max: number };
+```
 
 For strings, error messages refer to "chars". For arrays and sets, error messages refer to
 "items".

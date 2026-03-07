@@ -550,7 +550,7 @@ export function DecoderPlayground(props: Props) {
               ))}
             </tr>
           </thead>
-          <tbody className="font-mono text-[1.1em]">
+          <tbody className="font-mono">
             {rows.map((row, i) => (
               <tr
                 key={i}

@@ -187,7 +187,7 @@ export function Sig({
   multiline?: boolean;
 }) {
   return (
-    <pre className="fn-sig font-mono" style={{ margin: 0, background: 'none', border: 'none', padding: 0 }}>
+    <pre className="fn-sig font-mono overflow-x-auto" style={{ margin: 0, background: 'none', border: 'none', padding: 0 }}>
       {params !== undefined ? (
         name.includes('.') ? (
           <span className="font-sans" style={{ color: GRAY }}>

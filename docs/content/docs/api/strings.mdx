@@ -240,7 +240,13 @@ Accepts and returns strings that are valid identifiers in most programming langu
 
 <DecoderSig
   name="nanoid"
-  params="options?: SizeOptions"
+  params="{ size: number }"
+  type="string"
+  source="strings.ts#L102-L110"
+/>
+<DecoderSig
+  name="nanoid"
+  params="{ min?: number; max?: number }"
   type="string"
   source="strings.ts#L102-L110"
 />
@@ -325,7 +331,13 @@ strings.
 
 <DecoderSig
   name="sized"
-  params="decoder: Decoder<string>, options: SizeOptions"
+  params="decoder: Decoder<string>, limit: { size: number }"
+  type="string"
+  source="misc.ts#L33-L41"
+/>
+<DecoderSig
+  name="sized"
+  params="decoder: Decoder<string>, limit: { min?: number; max?: number }"
   type="string"
   source="misc.ts#L33-L41"
 />
