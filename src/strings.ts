@@ -100,9 +100,10 @@ export const identifier: Decoder<string> = regex(
 );
 
 /**
- * Accepts and returns [nanoid](https://zelark.github.io/nano-id-cc) string
- * values. It assumes the default nanoid alphabet. If you're using a custom
- * alphabet, use `regex()` instead.
+ * Accepts and returns [Nano ID](https://zelark.github.io/nano-id-cc) string
+ * values. By default, expects a standard 21-char nanoid, but you can
+ * optionally specify different size constraints. It assumes the default nanoid
+ * alphabet.
  */
 export function nanoid(options?: SizeOptions): Decoder<string> {
   return sized(regex(/^[a-z0-9_-]+$/i, 'Must be nano ID'), options ?? { size: 21 });

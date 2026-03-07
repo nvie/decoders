@@ -1,10 +1,11 @@
 import type { Relax } from './Relax';
 
-export type SizeOptions = {
-  min?: number;
-  max?: number;
-  size?: number;
-};
+// prettier-ignore
+export type SizeOptions = Relax<
+  | { size: number }
+  | { min: number; max?: number }
+  | { min?: number; max: number }
+>;
 
 /**
  * Anything with a .length or .size property, like strings, arrays, or sets.

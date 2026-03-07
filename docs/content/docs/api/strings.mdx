@@ -247,9 +247,10 @@ Accepts and returns strings that are valid identifiers in most programming langu
 
 <Since version="2.4" />
 
-Accepts and returns [nanoid](https://zelark.github.io/nano-id-cc) string values. It
-assumes the default nanoid alphabet. If you're using a custom alphabet, use [`regex()`][]
-instead.
+Accepts and returns [Nano ID](https://zelark.github.io/nano-id-cc) string values. By
+default, expects a standard 21-char nanoid, but you can optionally specify different size
+constraints. It assumes the default nanoid alphabet. If you're using a custom alphabet, use
+[`regex()`][] instead.
 
 <DecoderPlayground
   decoder="nanoid()"

@@ -376,7 +376,6 @@ describe('nanoid', () => {
   test('default accepts', () => {
     expect(nanoid().verify('1-QskICa3CaPGcKuYYTm1')).toEqual('1-QskICa3CaPGcKuYYTm1');
     expect(nanoid().verify('vA4mt7CUWnouU6jTGbMP_')).toEqual('vA4mt7CUWnouU6jTGbMP_');
-    expect(nanoid({}).verify('vA4mt7CUWnouU6jTGbMP_')).toEqual('vA4mt7CUWnouU6jTGbMP_');
     expect(nanoid({ min: 7 }).verify('yH8mx-7')).toEqual('yH8mx-7');
     expect(nanoid({ max: 7 }).verify('yH8mx-7')).toEqual('yH8mx-7');
     expect(nanoid({ min: 7, max: 10 }).verify('yH8mx-7')).toEqual('yH8mx-7');
@@ -478,6 +477,40 @@ describe('sized', () => {
     expect(decoder.verify([1, 2])).toEqual(new Set([1, 2]));
     expect(() => decoder.verify([1])).toThrow('Must have at least 2 items');
     expect(() => decoder.verify([1, 2, 3, 4, 5, 6])).toThrow('Must have at most 5 items');
+  });
+
+  test('negative size', () => {
+    const decoder = sized(string, { size: -3 });
+    expect(() => decoder.verify('')).toThrow('Too long, must be -3 chars'); // nonsensical but hey, it's what you said
+    expect(() => decoder.verify('hello')).toThrow('Too long, must be -3 chars'); // nonsensical but hey, it's what you said
+  });
+
+  test('invalid range where min > max (string)', () => {
+    const decoder = sized(string, { min: 5, max: -3 });
+    // Nothing can pass: short strings fail min, long strings fail max
+    expect(() => decoder.verify('')).toThrow('Too short, must be at least 5 chars');
+    expect(() => decoder.verify('hi')).toThrow('Too short, must be at least 5 chars');
+    expect(() => decoder.verify('hello')).toThrow('Too long, must be at most -3 chars'); // nonsensical but hey, it's what you said
+  });
+
+  test('invalid range where min > max (array)', () => {
+    const decoder = sized(array(number), { min: 5, max: -3 });
+    expect(() => decoder.verify([])).toThrow('Must have at least 5 items'); // nonsensical but hey, it's what you said
+    expect(() => decoder.verify([1, 2, 3])).toThrow('Must have at least 5 items'); // nonsensical but hey, it's what you said
+  });
+
+  test('size takes precedence over min', () => {
+    const decoder = sized(string, { size: 3, min: 10 });
+    expect(decoder.verify('abc')).toBe('abc');
+    expect(() => decoder.verify('ab')).toThrow('Too short, must be 3 chars');
+    expect(() => decoder.verify('abcd')).toThrow('Too long, must be 3 chars');
+  });
+
+  test('size takes precedence over max', () => {
+    const decoder = sized(string, { size: 3, max: 1 });
+    expect(decoder.verify('abc')).toBe('abc');
+    expect(() => decoder.verify('ab')).toThrow('Too short, must be 3 chars');
+    expect(() => decoder.verify('abcd')).toThrow('Too long, must be 3 chars');
   });
 });
 
