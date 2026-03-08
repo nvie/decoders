@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [2.9.0] - 2026-03-08
+
 **Breaking!**
 
 - Rename `Decoder.then()` → `Decoder.chain()` to avoid confusion with Promises (custom
