@@ -65,6 +65,11 @@ jobs:
         env:
           CI: true
 
+      - name: Tree-shaking
+        run: npm run test:treeshake
+        env:
+          CI: true
+
       - name: Lint packages
         run: npm run lint:package
         env:

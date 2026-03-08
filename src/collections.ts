@@ -9,7 +9,6 @@ import { pojo } from './objects';
  * Accepts objects where all values match the given decoder, and returns the
  * result as a `Record<string, V>`.
  */
-/* #__NO_SIDE_EFFECTS__ */
 export function record<V>(valueDecoder: Decoder<V>): Decoder<Record<string, V>>;
 /**
  * Accepts objects where all keys and values match the given decoders, and
@@ -17,6 +16,7 @@ export function record<V>(valueDecoder: Decoder<V>): Decoder<Record<string, V>>;
  * strings.
  */
 export function record<K extends string, V>(keyDecoder: Decoder<K>, valueDecoder: Decoder<V>): Decoder<Record<K, V>>; // prettier-ignore
+/* #__NO_SIDE_EFFECTS__ */
 export function record<K extends string, V>(
   fst: Decoder<K> | Decoder<V>,
   snd?: Decoder<V>,

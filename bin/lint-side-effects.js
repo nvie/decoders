@@ -88,17 +88,21 @@ for (const src of project.getSourceFiles('src/**/*.ts')) {
     if (!fn.isExported()) continue;
     if (!involvesDecoder(fn.getReturnType())) continue;
 
-    const overloads = fn.getOverloads();
-    const nodesToCheck = overloads.length > 0 ? [fn, ...overloads] : [fn];
-    const has = nodesToCheck.some(
-      (n) => hasMarker(n, '#__NO_SIDE_EFFECTS__') || hasMarker(n, '#__SIDE_EFFECTS__'),
-    );
+    // The annotation must be on the implementation, not on an overload
+    // signature. TypeScript erases overload signatures, so annotations
+    // placed there won't survive into the JS output.
+    const hasOnImpl = hasMarker(fn, '#__NO_SIDE_EFFECTS__') || hasMarker(fn, '#__SIDE_EFFECTS__');
 
-    if (!has) {
+    if (!hasOnImpl) {
+      const overloads = fn.getOverloads();
+      const hasOnOverload = overloads.some(
+        (n) => hasMarker(n, '#__NO_SIDE_EFFECTS__') || hasMarker(n, '#__SIDE_EFFECTS__'),
+      );
       violations.push({
         loc: loc(fn),
         name: fn.getName(),
         kind: 'function',
+        onOverload: hasOnOverload,
       });
     }
   }
@@ -152,7 +156,9 @@ Violations:
 `);
 
   for (const v of violations) {
-    if (v.kind === 'function') {
+    if (v.kind === 'function' && v.onOverload) {
+      console.error(`  ${v.loc}: function "${v.name}" - annotation is on overload signature, move to implementation`);
+    } else if (v.kind === 'function') {
       console.error(`  ${v.loc}: function "${v.name}"`);
     } else {
       console.error(`  ${v.loc}: const "${v.name}"`);
@@ -168,6 +174,10 @@ How to fix:
 
     /* #__SIDE_EFFECTS__ */                 <-- opt-out: has side effects
     export function myDecoder(...) { ... }
+
+  For overloaded functions, the annotation MUST be on the implementation,
+  not on an overload signature. TypeScript erases overload signatures, so
+  annotations there won't survive into the JS output.
 
   For const declarations:
     export const foo = /* #__PURE__ */ define(...)     <-- default: pure
