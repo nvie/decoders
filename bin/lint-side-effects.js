@@ -136,55 +136,19 @@ for (const src of project.getSourceFiles('src/**/*.ts')) {
 }
 
 if (violations.length > 0) {
-  console.error(`\
-Tree-shaking annotation check
-==============================
-
-Bundlers need explicit annotations to tree-shake unused decoders:
-
-  - Exported functions returning a Decoder need /* #__NO_SIDE_EFFECTS__ */
-    so that all call sites are automatically tree-shakeable.
-
-  - Exported const Decoders initialized with a call expression need
-    /* #__PURE__ */ before the call, unless the called function already
-    has /* #__NO_SIDE_EFFECTS__ */.
-
-Without these, bundlers must assume side effects and will include
-unused decoders in the output bundle.
-
-Violations:
-`);
+  console.error('Missing tree-shaking annotations:\n');
 
   for (const v of violations) {
     if (v.kind === 'function' && v.onOverload) {
-      console.error(`  ${v.loc}: function "${v.name}" - annotation is on overload signature, move to implementation`);
+      console.error(`  ${v.loc}: "${v.name}" — move annotation from overload to implementation`);
     } else if (v.kind === 'function') {
-      console.error(`  ${v.loc}: function "${v.name}"`);
+      console.error(`  ${v.loc}: "${v.name}" — add /* #__NO_SIDE_EFFECTS__ */ before implementation`);
     } else {
-      console.error(`  ${v.loc}: const "${v.name}"`);
+      console.error(`  ${v.loc}: "${v.name}" — add /* #__PURE__ */ before the call`);
     }
   }
 
-  console.error(`
-How to fix:
-
-  For functions:
-    /* #__NO_SIDE_EFFECTS__ */              <-- default: no side effects
-    export function myDecoder(...) { ... }
-
-    /* #__SIDE_EFFECTS__ */                 <-- opt-out: has side effects
-    export function myDecoder(...) { ... }
-
-  For overloaded functions, the annotation MUST be on the implementation,
-  not on an overload signature. TypeScript erases overload signatures, so
-  annotations there won't survive into the JS output.
-
-  For const declarations:
-    export const foo = /* #__PURE__ */ define(...)     <-- default: pure
-    export const foo = /* #__IMPURE__ */ define(...)   <-- opt-out: impure
-
-${violations.length} violation(s) found.
-`);
+  console.error(`\n${violations.length} violation(s) found.`);
   process.exit(1);
 } else {
   console.log('All Decoder exports have proper tree-shaking annotations.');
