@@ -9,7 +9,7 @@ description: Array and tuple decoders for validating collections of values.
   name="array"
   params="decoder: Decoder<T>"
   type="T[]"
-  source="arrays.ts#L16-L46"
+  source="arrays.ts#L16-L47"
 />
 
 Accepts arrays of whatever the given decoder accepts.
@@ -27,7 +27,7 @@ Accepts arrays of whatever the given decoder accepts.
   name="nonEmptyArray"
   params="decoder: Decoder<T>"
   type="[T, ...T[]]"
-  source="arrays.ts#L52-L57"
+  source="arrays.ts#L53-L59"
 />
 
 Like [`array()`][], but will reject arrays with 0 elements.
@@ -60,7 +60,7 @@ Accepts any array, but doesn't validate its items further.
   name="tuple"
   params="Decoder<A>, Decoder<B>, ..."
   type="[A, B, ...]"
-  source="arrays.ts#L66-L96"
+  source="arrays.ts#L69-L100"
 />
 
 Accepts a tuple (an array with exactly _n_ items) of values accepted by the _n_ given
@@ -79,7 +79,7 @@ decoders.
   name="sized"
   params="decoder: Decoder<T[]>, options: SizeOptions"
   type="T[]"
-  source="misc.ts#L33-L41"
+  source="misc.ts#L35-L44"
 />
 
 <Since version="2.9" />
