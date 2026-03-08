@@ -41,8 +41,8 @@ Like [`string`][], but will reject the empty string or strings containing only w
 Accepts and returns strings that match the given regular expression.
 
 <DecoderPlayground
-  decoder="regex(/^\d{5}(-\d{4})?$/, 'Must be ZIP code')"
-  examples={["'90210'", "'12345-6789'", "'12345-6'", '12345']}
+  decoder="regex(/^\d{5}$/, 'Must be ZIP code')"
+  examples={["'90210'", "'1234'", "'123456'", '12345']}
 />
 
 ---
