@@ -16,13 +16,8 @@ import {
 } from 'fumadocs-ui/components/ui/popover';
 import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
 import { Signal } from '@/lib/signals';
-
-type CellResult =
-  | { status: 'accepted'; value: string }
-  | { status: 'rejected'; error: string };
-
-type Mode = 'verify' | 'value' | 'decode';
-type Fmt = 'formatShort' | 'formatInline';
+import type { CellResult, Mode, Fmt } from '@/lib/playground-types';
+import { formatValue } from '@/lib/playground-types';
 
 const MODE_OPTIONS: { mode: Mode; label: string; description: string }[] = [
   { mode: 'verify', label: 'Use .verify()', description: 'Value or throw' },
@@ -59,28 +54,8 @@ interface Props {
   globals?: Record<string, string>;
   /** Code displayed above the decoder call in the snippet, e.g. an enum definition */
   preface?: string;
-}
-
-function formatValue(value: unknown): string {
-  if (typeof value === 'string') return JSON.stringify(value);
-  if (value === undefined) return 'undefined';
-  if (value === null) return 'null';
-  if (typeof value === 'number' || typeof value === 'boolean') return String(value);
-  if (typeof value === 'bigint') return `${value}n`;
-  if (value instanceof URL) return `URL { href: ${JSON.stringify(value.href)} }`;
-  if (value instanceof Date) return `Date { ${JSON.stringify(value.toISOString())} }`;
-  if (value instanceof Error)
-    return `${value.constructor.name} { ${JSON.stringify(value.message)} }`;
-  if (value instanceof Set)
-    return `Set(${value.size}) { ${[...value].map(formatValue).join(', ')} }`;
-  if (value instanceof Map)
-    return `Map(${value.size}) { ${[...value].map(([k, v]) => `${formatValue(k)} => ${formatValue(v)}`).join(', ')} }`;
-  try {
-    if (Array.isArray(value)) return `[${value.map(formatValue).join(', ')}]`;
-    return JSON.stringify(value, null, 2).replace(/\n\s*/g, ' ');
-  } catch {
-    return String(value);
-  }
+  /** Server-pre-evaluated cell results to avoid layout shift before client SES loads */
+  initialResults?: (CellResult | undefined)[][];
 }
 
 interface Row {
@@ -225,7 +200,10 @@ export function DecoderPlayground(props: Props) {
   const showFmt = mode !== 'value';
   const showPopover = !modeLocked || showFmt;
   const [rows, setRows] = useState<Row[]>(() =>
-    props.examples.map((input) => ({ input, cells: [] })),
+    props.examples.map((input, i) => ({
+      input,
+      cells: props.initialResults?.[i] ?? [],
+    })),
   );
   const [activeRow, setActiveRow] = useState(0);
   const [ready, setReady] = useState(false);

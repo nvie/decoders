@@ -3,7 +3,7 @@ import defaultMdxComponents from "fumadocs-ui/mdx";
 import { Step, Steps } from "fumadocs-ui/components/steps";
 import { Card, Cards } from "fumadocs-ui/components/card";
 import { Sig, DecoderSig } from "@/components/sig";
-import { DecoderPlayground } from "@/components/decoder-playground";
+import { DecoderPlayground } from "@/components/decoder-playground-server";
 import { Since } from "@/components/since";
 import { Info } from "@/components/info";
 
