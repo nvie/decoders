@@ -39,7 +39,7 @@ export const jsonArray: Decoder<JSONArray> = lazy(() => array(json));
  *     | JSONValue[]
  * ```
  */
-export const json: Decoder<JSONValue> = either(
+export const json: Decoder<JSONValue> = /* #__PURE__ */ either(
   null_,
   string,
   number,

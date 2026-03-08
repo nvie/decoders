@@ -32,18 +32,12 @@ jobs:
 
       - name: Test TypeScript
         run: npm run test:typescript
-        env:
-          CI: true
 
       - name: Unit tests
         run: npm run test
-        env:
-          CI: true
 
       - name: Completeness check
         run: npm run test:completeness
-        env:
-          CI: true
 
       - name: Check docs source lines are up to date
         run: |
@@ -52,20 +46,15 @@ jobs:
 
       - name: Lints
         run: npm run lint
-        env:
-          CI: true
 
       - name: Build
         run: npm run build
-        env:
-          CI: true
 
       - name: Test type inference
         run: npm run test:types
-        env:
-          CI: true
+
+      - name: Tree-shaking
+        run: npm run test:treeshake
 
       - name: Lint packages
         run: npm run lint:package
-        env:
-          CI: true

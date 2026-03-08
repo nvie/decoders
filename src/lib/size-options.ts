@@ -12,6 +12,7 @@ export type SizeOptions = Relax<
  */
 export type Sized = Relax<{ length: number } | { size: number }>;
 
+/* #__NO_SIDE_EFFECTS__ */
 export function bySizeOptions(options: SizeOptions): (value: Sized) => string | null {
   const size = options.size;
   const min = size ?? options.min;

@@ -17,7 +17,7 @@ export const anyNumber: Decoder<number> = define((blob, ok, err) =>
  * Accepts finite numbers (can be integer or float values). Values `NaN`,
  * or positive and negative `Infinity` will get rejected.
  */
-export const number: Decoder<number> = anyNumber.refine(
+export const number: Decoder<number> = /* #__PURE__ */ anyNumber.refine(
   (n) => Number.isFinite(n),
   'Number must be finite',
 );
@@ -25,7 +25,7 @@ export const number: Decoder<number> = anyNumber.refine(
 /**
  * Accepts only finite whole numbers.
  */
-export const integer: Decoder<number> = number.refine(
+export const integer: Decoder<number> = /* #__PURE__ */ number.refine(
   (n) => Number.isInteger(n),
   'Number must be an integer',
 );
@@ -33,7 +33,7 @@ export const integer: Decoder<number> = number.refine(
 /**
  * Accepts only non-negative (zero or positive) finite numbers.
  */
-export const positiveNumber: Decoder<number> = number.refine(
+export const positiveNumber: Decoder<number> = /* #__PURE__ */ number.refine(
   (n) => n >= 0 && !Object.is(n, -0),
   'Number must be positive',
 );
@@ -41,7 +41,7 @@ export const positiveNumber: Decoder<number> = number.refine(
 /**
  * Accepts only non-negative (zero or positive) finite whole numbers.
  */
-export const positiveInteger: Decoder<number> = integer.refine(
+export const positiveInteger: Decoder<number> = /* #__PURE__ */ integer.refine(
   (n) => n >= 0 && !Object.is(n, -0),
   'Number must be positive',
 );
@@ -51,6 +51,7 @@ export const positiveInteger: Decoder<number> = integer.refine(
  * Defaults to the ``number`` decoder if none is provided. Pass a
  * different decoder to further restrict accepted values, e.g. ``min(0, integer)``.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function min(min: number, decoder: Decoder<number> = number): Decoder<number> {
   return decoder.reject((value) =>
     value < min ? `Too low, must be at least ${min}` : null,
@@ -62,6 +63,7 @@ export function min(min: number, decoder: Decoder<number> = number): Decoder<num
  * Defaults to the ``number`` decoder if none is provided. Pass a
  * different decoder to further restrict accepted values, e.g. ``max(100, integer)``.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function max(max: number, decoder: Decoder<number> = number): Decoder<number> {
   return decoder.reject((value) =>
     value > max ? `Too high, must be at most ${max}` : null,
@@ -73,6 +75,7 @@ export function max(max: number, decoder: Decoder<number> = number): Decoder<num
  * Defaults to the ``number`` decoder if none is provided. Pass a
  * different decoder to further restrict accepted values, e.g. ``between(1, 10, integer)``.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function between(
   min: number,
   max: number,

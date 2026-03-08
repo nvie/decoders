@@ -20,6 +20,7 @@ export type Result<T, E> = Ok<T> | Err<E>;
 /**
  * Create a new Result instance representing a successful computation.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function ok<T>(value: T): Ok<T> {
   return { ok: true, value, error: undefined };
 }
@@ -27,6 +28,7 @@ export function ok<T>(value: T): Ok<T> {
 /**
  * Create a new Result instance representing a failed computation.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function err<E>(error: E): Err<E> {
   return { ok: false, value: undefined, error };
 }

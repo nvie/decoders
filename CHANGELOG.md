@@ -23,6 +23,7 @@
   - `datelike` → `flexDate` (deprecated, will be removed in 3.x)
 - Cleaner error messages for `flexDate` and `url` decoders
 - Add missing top-level type exports for annotations
+- Improve deeper tree-shaking support (thanks @EskiMojo14!)
 
 ## [2.8.0] - 2026-02-22
 

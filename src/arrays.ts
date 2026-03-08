@@ -16,6 +16,7 @@ export const poja: Decoder<unknown[]> = define((blob, ok, err) => {
 /**
  * Accepts arrays of whatever the given decoder accepts.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function array<T>(decoder: Decoder<T>): Decoder<T[]> {
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const decodeFn = decoder.decode;
@@ -52,10 +53,12 @@ function isNonEmpty<T>(arr: readonly T[]): arr is [T, ...T[]] {
 /**
  * Like `array()`, but will reject arrays with 0 elements.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function nonEmptyArray<T>(decoder: Decoder<T>): Decoder<[T, ...T[]]> {
   return array(decoder).refine(isNonEmpty, 'Must be non-empty array');
 }
 
+/* #__NO_SIDE_EFFECTS__ */
 const ntuple = (n: number) =>
   poja.refine((arr) => arr.length === n, `Must be a ${n}-tuple`);
 
@@ -67,6 +70,7 @@ type TupleDecoderType<Ds extends readonly Decoder<unknown>[]> = {
  * Accepts a tuple (an array with exactly _n_ items) of values accepted by the
  * _n_ given decoders.
  */
+/* #__NO_SIDE_EFFECTS__ */
 export function tuple<
   Ds extends readonly [first: Decoder<unknown>, ...rest: readonly Decoder<unknown>[]],
 >(...decoders: Ds): Decoder<TupleDecoderType<Ds>> {

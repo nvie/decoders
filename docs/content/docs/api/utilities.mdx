@@ -9,7 +9,7 @@ description: Utility decoders for custom logic, preprocessing, and advanced use 
   name="unknown"
   aliases={[{ name: 'anything', deprecated: false }]}
   type="unknown"
-  source="basics.ts#L124-L131"
+  source="basics.ts#L130-L137"
 />
 
 Accepts anything and returns it unchanged.
@@ -27,7 +27,7 @@ further refine it yourself.
 
 ## always
 
-<DecoderSig name="always" params="value: T" type="T" source="basics.ts#L95-L109" />
+<DecoderSig name="always" params="value: T" type="T" source="basics.ts#L99-L114" />
 
 Accepts anything, completely ignores it, and always returns the provided value instead.
 
@@ -51,7 +51,7 @@ now.verify('dummy'); // e.g. new Date('2022-02-07T09:36:58.848Z')
   name="never"
   aliases={[{ name: 'fail', deprecated: false }]}
   type="never"
-  source="basics.ts#L111-L117"
+  source="basics.ts#L116-L123"
 />
 
 Rejects all inputs, and always fails with the given error message. May be useful for
@@ -70,7 +70,7 @@ explicitly disallowing keys, or for testing purposes.
   name="instanceOf"
   params="klass: Klass<T>"
   type="T"
-  source="misc.ts#L14-L23"
+  source="misc.ts#L14-L24"
 />
 
 Accepts any value that is an `instanceof` the given class.
@@ -88,7 +88,7 @@ Accepts any value that is an `instanceof` the given class.
   name="lazy"
   params="decoderFn: () => Decoder<T>"
   type="T"
-  source="misc.ts#L25-L31"
+  source="misc.ts#L26-L33"
 />
 
 Lazily evaluate the given decoder. Useful to build recursive decoders.
@@ -120,7 +120,7 @@ Lazily evaluate the given decoder. Useful to build recursive decoders.
   name="sized"
   params="decoder: Decoder<string>, options: SizeOptions"
   type="string"
-  source="misc.ts#L33-L41"
+  source="misc.ts#L35-L44"
 />
 <DecoderSig
   name="sized"
@@ -161,7 +161,7 @@ For strings, error messages refer to "chars". For arrays and sets, error message
   name="define"
   params="fn: (blob: unknown, ok, err) => DecodeResult<T>"
   type="T"
-  source="core/Decoder.ts#L158-L355"
+  source="core/Decoder.ts#L158-L356"
 />
 
 Defines a new `Decoder<T>`, by implementing a custom acceptance function. The function
@@ -217,7 +217,7 @@ uppercase.verify(123); // throws: Must be string
   name="prep"
   params="mapperFn: (raw: unknown) => unknown, decoder: Decoder<T>"
   type="T"
-  source="misc.ts#L43-L73"
+  source="misc.ts#L46-L77"
 />
 
 Pre-process the data input before passing it into the decoder. This gives you the ability

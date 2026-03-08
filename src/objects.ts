@@ -60,6 +60,7 @@ export function object(decoders: Record<any, never>): Decoder<Record<string, nev
 export function object<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds>>;
+/* #__NO_SIDE_EFFECTS__ */
 export function object<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds>> {
@@ -143,6 +144,7 @@ export function exact(decoders: Record<any, never>): Decoder<Record<string, neve
 export function exact<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds>>;
+/* #__NO_SIDE_EFFECTS__ */
 export function exact<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds>> {
@@ -170,6 +172,7 @@ export function inexact(decoders: Record<any, never>): Decoder<Record<string, un
 export function inexact<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds> & Record<string, unknown>>;
+/* #__NO_SIDE_EFFECTS__ */
 export function inexact<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds> & Record<string, unknown>> {
