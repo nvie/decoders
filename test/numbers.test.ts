@@ -211,6 +211,15 @@ describe('between', () => {
   test('rejects non-numbers', () => {
     expect(() => between(0, 10).verify('5')).toThrow('Must be number');
   });
+
+  test('invalid range where min > max', () => {
+    // between does not mind if you construct useless ranges like this
+    const decoder = between(5, -3);
+    expect(() => decoder.verify(0)).toThrow('Too low, must be between 5 and -3'); // nonsensical but hey, it's what you said
+    expect(() => decoder.verify(3)).toThrow('Too low, must be between 5 and -3'); // nonsensical but hey, it's what you said
+    expect(() => decoder.verify(10)).toThrow('Too high, must be between 5 and -3'); // nonsensical but hey, it's what you said
+    expect(() => decoder.verify(-5)).toThrow('Too low, must be between 5 and -3'); // nonsensical but hey, it's what you said
+  });
 });
 
 describe('bigint', () => {

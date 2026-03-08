@@ -1,0 +1,37 @@
+---
+title: For library authors
+description: How to declare decoders as a dependency when publishing a library to npm.
+---
+
+It's recommended to declare decoders as a _peer dependency_ in your library instead of a
+regular dependency. This lets your library's users control which version of `decoders`
+they wish to use, and your library simply adopts their preference.
+
+Your library should not force a specific version of decoders on your users. Always prefer
+`*` to maximize compatibility by default. If you absolutely require a minimum version, use
+a wide range and be sure to also include the next major, otherwise your users can't
+upgrade without waiting for a new release from your library.
+
+```jsonc title="package.json" tab="Recommended"
+{
+  "peerDependencies": {
+    "decoders": "*",
+  },
+}
+```
+
+```jsonc title="package.json" tab="Minimum version"
+{
+  "peerDependencies": {
+    "decoders": "^2.9 || ^3.0", // Only if you must (Be sure to include next major too)
+  },
+}
+```
+
+```jsonc title="package.json" tab="Definitely don't do this"
+{
+  "peerDependencies": {
+    "decoders": "^2.8.0", // Too narrow, it's asking for version conflicts
+  },
+}
+```

@@ -56,7 +56,7 @@ replace" command for these:
 ## `map()` is now `.transform()`
 
 The `map()` decoder has been renamed to the
-[`.transform`](https://decoders.cc/Decoder.html#transform) decoder method:
+[`.transform`](https://decoders.cc/.transform) decoder method:
 
 ```typescript
 // ❌ 1.x
@@ -71,7 +71,7 @@ const uppercase = string.transform((s) => s.toUpperCase());
 
 The `compose()` and `predicate()` decoders from v1 where mostly used in tandem and used to
 add additional checks to existing decoders. Predicates have been moved to the
-[`.refine()`](https://decoders.cc/Decoder.html#refine) decoder method:
+[`.refine()`](https://decoders.cc/.refine) decoder method:
 
 ```typescript
 // ❌ 1.x
@@ -93,7 +93,7 @@ The concept of "guards" has been removed entirely. The following APIs have been 
 - The type `Guard<T>`
 - The helper type `GuardType<T>`
 
-Instead, all decoders now have a [`.verify()`](https://decoders.cc/Decoder.html#verify)
+Instead, all decoders now have a [`.verify()`](https://decoders.cc/.verify)
 method which does the exact same thing.
 
 ```ts
@@ -111,7 +111,7 @@ const value: Whatever = whatever.verify(externalData);
 
 The signature of the old `url` decoder has changed. Compare
 [old](https://github.com/nvie/decoders/blob/v1.25.5/src/string.js#L55-L66) vs
-[new](https://decoders.cc/api.html#url).
+[new](https://decoders.cc/url).
 
 1. `url()` is no longer a function taking a list of schemes.
 2. `url` now returns a `URL` instance, no longer a string.
@@ -121,8 +121,8 @@ The signature of the old `url` decoder has changed. Compare
 
 | Replace this v1 pattern... |     | ...with this v2 API                                                                        |
 | :------------------------- | --- | :----------------------------------------------------------------------------------------- |
-| `url()`                    | →   | [`httpsUrl`](https://decoders.cc/api.html#httpsUrl)                                        |
-| `url([])`                  | →   | [`url`](https://decoders.cc/api.html#url)                                                  |
+| `url()`                    | →   | [`httpsUrl`](https://decoders.cc/httpsUrl)                                        |
+| `url([])`                  | →   | [`url`](https://decoders.cc/url)                                                  |
 | `url(['git'])`             | →   | Define manually ([example](https://gist.github.com/nvie/9e912992102b44b5c843c26ee3b19450)) |
 
 ## Rewriting imports from `lemons` or `debrief`
@@ -147,7 +147,7 @@ export const buffer: Decoder<Buffer> = (blob) =>
 ```
 
 In 2.x the `ok` and `err` helpers get passed to you by
-[`.define()`](https://decoders.cc/api.html#define), so you no longer have to import them
+[`.define()`](https://decoders.cc/define), so you no longer have to import them
 yourself. Also, notice how you no longer have to manually annotate the blob in simple
 cases like this. You can simply return a string `err` message directly.
 

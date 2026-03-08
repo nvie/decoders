@@ -69,8 +69,8 @@ do that by adding a [`.transform()`][] function:
       return string.transform((s) => s.substring(0, size));
     }
   `}
-  decoder="truncated(20)"
-  examples={["'hi'", "'Lorem ipsum dolor sit amet.'", '123']}
+  decoder="truncated(23)"
+  examples={["'hello'", "'long strings will truncate!'", '123']}
 />
 
 Compared to example 1, you can see how the "lorem ipsum" string now gets accepted (but

@@ -31,8 +31,8 @@ const decoderSigRe = /<(?:DecoderSig|Sig)\b([\s\S]*?)\/>/g;
 const nameAttrRe = /name="([^"]+)"/;
 const aliasNameRe = /name:\s*'([^']+)'/g;
 
-// Regex to find ## headings
-const headingRe = /^## (.+)/gm;
+// Regex to find ## and ### headings
+const headingRe = /^#{2,3} (.+)/gm;
 
 for (const file of mdxFiles) {
   const slug = file.replace(/\.mdx$/, '');
@@ -99,15 +99,20 @@ for (const file of mdxFiles) {
   }
 }
 
-// Legacy aliases: names that no longer exist in the codebase but should still
-// redirect. Each key is resolved through the current redirects map, so if the
-// target is ever renamed again the legacy alias follows automatically.
-const LEGACY_ALIASES = {
+// Aliases: each key resolves through the current redirects map, so if the
+// target is ever renamed the alias follows automatically.
+const ALIASES = {
+  // Legacy names
   '.then': '.chain',
   'decoder.then': 'decoder.chain',
+
+  // Underscore-free aliases for JS reserved words
+  enum: 'enum_',
+  null: 'null_',
+  undefined: 'undefined_',
 };
 
-for (const [alias, target] of Object.entries(LEGACY_ALIASES)) {
+for (const [alias, target] of Object.entries(ALIASES)) {
   const resolved = redirects.get(target);
   if (resolved) {
     redirects.set(alias, resolved);
@@ -115,9 +120,7 @@ for (const [alias, target] of Object.entries(LEGACY_ALIASES)) {
 }
 
 // Sort entries alphabetically
-const sorted = [...redirects.entries()].sort(([a], [b]) =>
-  a.localeCompare(b),
-);
+const sorted = [...redirects.entries()].sort(([a], [b]) => a.localeCompare(b));
 
 // Generate output
 const lines = [

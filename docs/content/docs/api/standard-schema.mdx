@@ -1,0 +1,89 @@
+---
+title: Standard Schema
+description: Decoders implements the Standard Schema v1 interface for interoperability
+---
+
+Every decoder implements the [Standard Schema](https://standardschema.dev/schema) v1
+interface. This means you can use decoders with any library that supports Standard Schema.
+
+## Using with TanStack Form
+
+[TanStack Form](https://tanstack.com/form) accepts any Standard Schema validator. Simply
+pass your decoder directly as a field validator:
+
+```tsx
+import { useForm } from '@tanstack/react-form';
+import { nonEmptyString, positiveInteger } from 'decoders';
+
+function MyForm() {
+  const form = useForm({
+    defaultValues: { name: '', age: 0 },
+    onSubmit: ({ value }) => console.log(value),
+  });
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        form.handleSubmit();
+      }}
+    >
+      // [!code highlight]
+      <form.Field name="name" validators={{ onChange: nonEmptyString }}>
+        {(field) => (
+          <input
+            value={field.state.value}
+            onChange={(e) => field.handleChange(e.target.value)}
+          />
+        )}
+      </form.Field>
+      // [!code highlight]
+      <form.Field name="age" validators={{ onChange: positiveInteger }}>
+        {(field) => (
+          <input
+            type="number"
+            value={field.state.value}
+            onChange={(e) => field.handleChange(Number(e.target.value))}
+          />
+        )}
+      </form.Field>
+    </form>
+  );
+}
+```
+
+## Using with tRPC
+
+[tRPC](https://trpc.io/) accepts Standard Schema validators for input parsing:
+
+```ts
+import { initTRPC } from '@trpc/server';
+import { object, nonEmptyString, positiveInteger } from 'decoders';
+
+// [!code highlight]
+const userDecoder = object({
+  // [!code highlight]
+  name: nonEmptyString,
+  // [!code highlight]
+  age: positiveInteger,
+  // [!code highlight]
+});
+
+const t = initTRPC.create();
+
+const appRouter = t.router({
+  createUser: t.procedure
+    // [!code highlight]
+    .input(userDecoder)
+    .mutation(({ input }) => {
+      // input is typed as { name: string; age: number }
+      return createUser(input);
+    }),
+});
+```
+
+## Compatible libraries
+
+Any library that supports Standard Schema works with decoders out of the box, including
+TanStack Form, tRPC, React Hook Form, Nuxt UI, T3 Env, and
+[many more](https://standardschema.dev/schema#what-tools-frameworks-accept-speccompliant-schemas).

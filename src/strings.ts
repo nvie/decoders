@@ -5,7 +5,8 @@ import { sized } from '~/misc';
 import { isString } from '~/lib/utils';
 
 import { instanceOf } from './misc';
-import { either } from './unions';
+import { select } from './unions';
+import { unknown } from './basics';
 
 /** Match groups in this regex:
  * \1 - the scheme
@@ -64,7 +65,7 @@ export function endsWith<S extends string>(suffix: S): Decoder<`${string}${S}`> 
  * Accepts and returns strings that are syntactically valid email addresses.
  * (This will not mean that the email address actually exist.)
  */
-export const email: Decoder<string> = regex(
+export const email: Decoder<string> = /* #__PURE__ */ regex(
   // The almost perfect email regex, taken from https://emailregex.com/
   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
   'Must be email',
@@ -73,17 +74,15 @@ export const email: Decoder<string> = regex(
 /**
  * Accepts strings that are valid URLs.
  */
-export const urlString: Decoder<string> = /* #__PURE__ */ string.refine(
-  (s) => URL.canParse(s),
-  'Must be URL',
-);
+export const urlString: Decoder<string> = /* #__PURE__ */ regex(url_re, 'Must be URL');
 
 /**
  * Accepts strings that are valid URLs, returns the value as a URL instance.
  */
-export const url: Decoder<URL> = either(
-  /* #__PURE__ */ regex(url_re, 'Must be URL').transform((value) => new URL(value)),
-  instanceOf(URL),
+export const url: Decoder<URL> = select(unknown, (blob) =>
+  typeof blob === 'string'
+    ? /* #__PURE__ */ urlString.transform((s) => new URL(s))
+    : /* #__PURE__ */ instanceOf(URL).describe('Must be URL'),
 );
 
 /**
@@ -92,7 +91,7 @@ export const url: Decoder<URL> = either(
  */
 export const httpsUrl: Decoder<URL> = /* #__PURE__ */ url.refine(
   (value) => value.protocol === 'https:',
-  'Must be an HTTPS URL',
+  'Must be HTTPS URL',
 );
 
 /**
@@ -105,9 +104,10 @@ export const identifier: Decoder<string> = regex(
 );
 
 /**
- * Accepts and returns [nanoid](https://zelark.github.io/nano-id-cc) string
- * values. It assumes the default nanoid alphabet. If you're using a custom
- * alphabet, use `regex()` instead.
+ * Accepts and returns [Nano ID](https://zelark.github.io/nano-id-cc) string
+ * values. By default, expects a standard 21-char nanoid, but you can
+ * optionally specify different size constraints. It assumes the default nanoid
+ * alphabet.
  */
 /* #__NO_SIDE_EFFECTS__ */
 export function nanoid(options?: SizeOptions): Decoder<string> {

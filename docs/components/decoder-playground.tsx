@@ -69,9 +69,12 @@ function formatValue(value: unknown): string {
   if (typeof value === 'bigint') return `${value}n`;
   if (value instanceof URL) return `URL { href: ${JSON.stringify(value.href)} }`;
   if (value instanceof Date) return `Date { ${JSON.stringify(value.toISOString())} }`;
-  if (value instanceof Error) return `${value.constructor.name} { ${JSON.stringify(value.message)} }`;
-  if (value instanceof Set) return `Set(${value.size}) { ${[...value].map(formatValue).join(', ')} }`;
-  if (value instanceof Map) return `Map(${value.size}) { ${[...value].map(([k, v]) => `${formatValue(k)} => ${formatValue(v)}`).join(', ')} }`;
+  if (value instanceof Error)
+    return `${value.constructor.name} { ${JSON.stringify(value.message)} }`;
+  if (value instanceof Set)
+    return `Set(${value.size}) { ${[...value].map(formatValue).join(', ')} }`;
+  if (value instanceof Map)
+    return `Map(${value.size}) { ${[...value].map(([k, v]) => `${formatValue(k)} => ${formatValue(v)}`).join(', ')} }`;
   try {
     if (Array.isArray(value)) return `[${value.map(formatValue).join(', ')}]`;
     return JSON.stringify(value, null, 2).replace(/\n\s*/g, ' ');
@@ -184,36 +187,36 @@ function statusComment(cell: CellResult | undefined): string {
   return '';
 }
 
-function renderCellContent(cell: CellResult | undefined, input: string, mode: Mode): React.ReactNode {
+function renderCellContent(
+  cell: CellResult | undefined,
+  input: string,
+  mode: Mode,
+): React.ReactNode {
   if (!input) return null;
   if (!cell) return <span className="text-fd-muted-foreground">&hellip;</span>;
   if (cell.status === 'accepted') {
-    return <code className="whitespace-pre text-xs">{highlight(cell.value)}</code>;
+    return <span className="whitespace-pre">{highlight(cell.value)}</span>;
   }
   // In value mode, rejected inputs show "undefined" as a normal value
   if (mode === 'value') {
-    return <code className="whitespace-pre text-xs">{highlight(cell.error)}</code>;
+    return <span className="whitespace-pre">{highlight(cell.error)}</span>;
   }
   return (
-    <code
-      className="whitespace-pre-wrap text-xs"
+    <span
+      className="whitespace-pre-wrap"
       style={{ color: 'light-dark(#c4210a, #e5534b)' }}
     >
       {cell.error.trim()}
-    </code>
+    </span>
   );
 }
 
 export function DecoderPlayground(props: Props) {
   const decoderEntries: [string, string][] =
-    typeof props.decoder === 'string'
-      ? [['Result', props.decoder]]
-      : props.decoder;
+    typeof props.decoder === 'string' ? [['Result', props.decoder]] : props.decoder;
   const isMulti = decoderEntries.length > 1;
   const decoderKey =
-    typeof props.decoder === 'string'
-      ? props.decoder
-      : JSON.stringify(props.decoder);
+    typeof props.decoder === 'string' ? props.decoder : JSON.stringify(props.decoder);
 
   const globalMode = useSignal(mode$);
   const mode = props.mode ?? globalMode;
@@ -258,7 +261,9 @@ export function DecoderPlayground(props: Props) {
         switch (m) {
           case 'verify': {
             if (accepted) {
-              const result = compartment.evaluate(`(${decoderExpr}).verify(${inputExpr})`);
+              const result = compartment.evaluate(
+                `(${decoderExpr}).verify(${inputExpr})`,
+              );
               return { status: 'accepted', value: formatValue(result) };
             }
             const formatted = compartment.evaluate(
@@ -339,7 +344,7 @@ export function DecoderPlayground(props: Props) {
 
         const decodersMod = await import('decoders');
 
-        const compartment = new Compartment({ ...decodersMod });
+        const compartment = new Compartment({ ...decodersMod, URL });
 
         // Evaluate extra globals (e.g. custom decoders) and inject them
         if (props.globals) {
@@ -354,7 +359,9 @@ export function DecoderPlayground(props: Props) {
           setRows((prev) =>
             prev.map((row) => ({
               input: row.input,
-              cells: decoderEntries.map(([, expr]) => evalCell(expr, row.input, mode, fmt)),
+              cells: decoderEntries.map(([, expr]) =>
+                evalCell(expr, row.input, mode, fmt),
+              ),
             })),
           );
           setReady(true);
@@ -434,8 +441,20 @@ export function DecoderPlayground(props: Props) {
     const cell = activeRowData?.cells[0];
     codeSnippet = `${formatSnippet(decoderEntries[0][1], mode, activeInput, fmt)}${statusComment(cell)}`;
   }
-  if (props.preface) {
-    codeSnippet = `${dedent(props.preface)}\n\n${codeSnippet}`;
+
+  let preface = props.preface;
+  if (!preface) {
+    //
+    // TODO Make this auto-import the right thing based on the decoder expression,
+    // e.g. if it's "string" or "array(string)", import { string, array } from "decoders"
+    //
+    // if (typeof props.decoder === 'string') {
+    //   const name = props.decoder.split(/[^\w]/g)[0];
+    //   preface = `import { ${name} } from "decoders";`;
+    // }
+  }
+  if (preface) {
+    codeSnippet = `${dedent(preface)}\n\n${codeSnippet}`;
   }
 
   const colCount = decoderEntries.length + 1;
@@ -507,48 +526,59 @@ export function DecoderPlayground(props: Props) {
           </Popover>
         )}
       </div>
-      <div className="border-b border-fd-border [&_figure]:!m-0 [&_figure]:!rounded-none [&_figure]:!border-0 [&_figure]:!bg-transparent [&_pre]:!bg-transparent [&_pre]:!text-xs [&_pre]:!py-1.5 [&_pre]:!px-3 [&_button]:!hidden">
+      <div className="border-b border-fd-border [&_figure]:!m-0 [&_figure]:!rounded-none [&_figure]:!border-0 [&_figure]:!bg-transparent [&_pre]:!bg-transparent [&_pre]:!py-1.5 [&_button]:!hidden">
         <DynamicCodeBlock lang="ts" code={codeSnippet} />
       </div>
       <div className="overflow-x-auto">
-      <table className="w-full">
-        <thead>
-          <tr className="border-b border-fd-border text-left text-xs text-fd-muted-foreground">
-            <th className="px-3 py-2 font-medium" style={{ width: colWidth, minWidth: 150 }}>Input</th>
-            {decoderEntries.map(([name]) => (
-              <th key={name} className="px-3 py-2 font-medium" style={{ width: colWidth, minWidth: 150 }}>{name}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row, i) => (
-            <tr
-              key={i}
-              onClick={() => setActiveRow(i)}
-              className={`border-b border-fd-border last:border-b-0 align-top cursor-pointer ${activeRow === i ? 'bg-black/[0.02] dark:bg-white/[0.04]' : ''}`}
-            >
-              <td className="px-3 py-1.5">
-                <input
-                  data-playground-input
-                  type="text"
-                  value={row.input}
-                  onChange={(e) => updateRow(i, e.target.value)}
-                  onFocus={() => setActiveRow(i)}
-                  onKeyDown={(e) => handleKeyDown(e, i)}
-                  placeholder="Type an expression\u2026"
-                  disabled={!ready}
-                  className="w-full bg-transparent font-mono text-xs text-fd-foreground placeholder:text-fd-muted-foreground focus:outline-none"
-                />
-              </td>
-              {decoderEntries.map(([name], j) => (
-                <td key={name} className="px-3 py-1.5">
-                  {renderCellContent(row.cells[j], row.input, mode)}
-                </td>
+        <table className="w-full">
+          <thead>
+            <tr className="border-b border-fd-border text-left text-xs text-fd-muted-foreground">
+              <th
+                className="px-3 py-2 font-medium"
+                style={{ width: colWidth, minWidth: 150 }}
+              >
+                Input
+              </th>
+              {decoderEntries.map(([name]) => (
+                <th
+                  key={name}
+                  className="px-3 py-2 font-medium"
+                  style={{ width: colWidth, minWidth: 150 }}
+                >
+                  {name}
+                </th>
               ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="font-mono">
+            {rows.map((row, i) => (
+              <tr
+                key={i}
+                onClick={() => setActiveRow(i)}
+                className={`border-b border-fd-border last:border-b-0 align-top cursor-pointer ${activeRow === i ? 'bg-black/[0.02] dark:bg-white/[0.04]' : ''}`}
+              >
+                <td className="px-3 py-1.5">
+                  <input
+                    data-playground-input
+                    type="text"
+                    value={row.input}
+                    onChange={(e) => updateRow(i, e.target.value)}
+                    onFocus={() => setActiveRow(i)}
+                    onKeyDown={(e) => handleKeyDown(e, i)}
+                    placeholder="Type an expression\u2026"
+                    disabled={!ready}
+                    className="w-full bg-transparent text-fd-foreground placeholder:text-fd-muted-foreground focus:outline-none"
+                  />
+                </td>
+                {decoderEntries.map(([name], j) => (
+                  <td key={name} className="px-3 py-1.5">
+                    {renderCellContent(row.cells[j], row.input, mode)}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

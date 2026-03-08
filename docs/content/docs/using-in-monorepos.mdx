@@ -1,0 +1,41 @@
+---
+title: Using decoders in monorepos
+description:
+  How to set up decoders in a monorepo with shared packages to avoid version conflicts.
+---
+
+In a monorepo, you might have a shared package that defines decoders (e.g. your validation
+schemas), used by multiple apps. If the shared package lists `decoders` as a regular
+dependency, each package can resolve its own copy. This means multiple copies of
+`decoders` can end up in your bundle, increasing bundle size. Worse, when those copies are
+different versions, things can break at runtime, because decoder instances from one copy
+aren't recognized by another.
+
+The fix: declare `decoders` as a _peer dependency_ in the shared package. This tells the
+package manager to use the host app's copy instead of installing a separate one.
+
+In your shared package's `package.json`:
+
+```json title="packages/shared-lib/package.json"
+{
+  "peerDependencies": {
+    "decoders": "*"
+  }
+}
+```
+
+The `peerDependencies` entry tells consumers to provide whichever version of `decoders`
+they want to use, and the shared package will adjust to that. Using `"*"` as the version
+range is typically the road of least pain.
+
+## Checking for duplicates
+
+If you suspect multiple copies of `decoders` are being bundled, check with:
+
+```bash
+npm ls decoders
+```
+
+This shows the dependency tree. If you see `decoders` listed more than once at different
+versions, you likely have the duplication problem described above. Switching to a peer
+dependency in the inner package will fix it.

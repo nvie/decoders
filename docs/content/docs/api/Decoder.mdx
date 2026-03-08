@@ -1,19 +1,28 @@
 ---
-title: Decoder
-description: Instance methods available on all Decoder instances.
+title: Decoder<T>
+description:
+  The Decoder class represents a type-safe decoder that validates and transforms untrusted
+  data
 ---
 
-## Decoder.verify
+The `Decoder<T>` class is the core abstraction in the decoders library. It represents a
+reusable, composable decoder that can validate and transform untrusted input data into
+typed values.
+
+## Decoding Methods
+
+### .verify()
 
 <Sig
   name=".verify"
   params="blob: unknown"
   returnType="T"
-  source="core/Decoder.ts#L189-L201"
+  source="core/Decoder.ts#L188-L200"
 />
 
-Verifies the untrusted/unknown input and either accepts or rejects it. When accepted,
-returns a value of type `T`. Otherwise fail with a runtime error.
+<Sig name=".verify" params="blob: unknown, formatter: Formatter" returnType="T" />
+
+Validates an input value. Returns the decoded value or throws.
 
 <DecoderPlayground
   mode="verify"
@@ -21,21 +30,20 @@ returns a value of type `T`. Otherwise fail with a runtime error.
   examples={['123', '3.1415', "'hello'"]}
 />
 
+{/* TODO: Talk about the formatter param here. The optional `formatter` controls how the error message is formatted when rejecting. */}
+
 ---
 
-## Decoder.value
+### .value()
 
 <Sig
   name=".value"
   params="blob: unknown"
   returnType="T | undefined"
-  source="core/Decoder.ts#L203-L213"
+  source="core/Decoder.ts#L202-L212"
 />
 
-Verifies the untrusted/unknown input and either accepts or rejects it. When accepted,
-returns the decoded `T` value directly. Otherwise returns `undefined`.
-
-Use this when you're not interested in programmatically handling the error message.
+Validates an input value. Returns the decoded value or return `undefined`. Never throws.
 
 <DecoderPlayground
   mode="value"
@@ -45,84 +53,96 @@ Use this when you're not interested in programmatically handling the error messa
 
 ---
 
-## Decoder.decode
+### .decode()
 
 <Sig
   name=".decode"
   params="blob: unknown"
   returnType="DecodeResult<T>"
-  source="core/Decoder.ts#L173-L187"
+  source="core/Decoder.ts#L172-L186"
 />
 
-Verifies the untrusted/unknown input and either accepts or rejects it.
+Validates an input value. Returns a `DecodeResult` type. Never throws.
 
-Contrasted with [`.verify()`][], calls to [`.decode()`][] will never fail and instead
-return a result type.
+{/* prettier-ignore */}
+```ts
+type DecodeResult<T> =
+  | { ok: true; value: T }
+  | { ok: false; error: Annotation };
+```
 
-For example, take this simple "number" decoder. When given an number value, it will return
-an `ok: true` result. Otherwise, it will return an `ok: false` result.
+In case of `error`, an `Annotation` will be returned, which is a structured "copy" of the
+input value with annotations inlined on the rejected parts. Typically you will want to
+call `formatInline` or `formatShort` on this. See
+[Error Formatting](/docs/api/error-formatting).
 
 ```ts
-// 👍
-number.decode(3); // { ok: true, value: 3 };
-
-// 👎
-number.decode('hi'); // { ok: false, error: { type: 'scalar', value: 'hi', text: 'Must be number' } }
+number.decode(3); // { ok: true, value: 3 }
+number.decode('hi'); // { ok: false, error: ... }
 ```
 
 ---
 
-## Decoder.transform
+### Best practices
+
+| Method          | Returns           | On failure           | When to use?                          |
+| --------------- | ----------------- | -------------------- | ------------------------------------- |
+| [`.verify()`][] | `T`               | Throws               | You want to just fail fast.           |
+| [`.value()`][]  | `T`               | Returns `undefined`  | You have sensible defaults.           |
+| [`.decode()`][] | `DecodeResult<T>` | Returns full details | You need fine-grained error handling. |
+
+---
+
+## Transformation Methods
+
+### .transform()
 
 <Sig
   name=".transform"
   params="transformFn: (T) => V"
   returnType="Decoder<V>"
-  source="core/Decoder.ts#L215-L223"
+  source="core/Decoder.ts#L214-L222"
 />
 
-Accepts any value the given decoder accepts, and on success, will call the given function
-**on the decoded result**. If the transformation function throws an error, the whole
-decoder will fail using the error message as the failure reason.
+Builds a new decoder that transforms the decoded value using a function.
 
 <DecoderPlayground
   decoder="string.transform(s => s.toUpperCase())"
-  examples={["'foo'", '4']}
+  examples={["'foo'", '"Hello, world!"', '4']}
 />
 
 ---
 
-## Decoder.refine
+### .refine()
 
 <Sig
   name=".refine"
   params="predicate: T => boolean, message: string"
   returnType="Decoder<T>"
-  source="core/Decoder.ts#L225-L238"
+  source="core/Decoder.ts#L224-L237"
 />
 
-Adds an extra predicate to a decoder. The new decoder is like the original decoder, but
-only accepts values that also meet the predicate.
+Adds an extra condition. Rejects values that don't match the predicate.
 
 <DecoderPlayground
   decoder="number.refine(n => n % 2 !== 0, 'Must be odd')"
   examples={['3', '42', "'hi'"]}
 />
 
-In TypeScript, if you provide a predicate that also is a
-[type predicate](https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates),
-then this will be reflected in the return type, too.
-
 ---
 
-## Decoder.refineType
+### .refineType()
 
-<Sig name=".refineType" returnType="Decoder<SubT>" source="core/Decoder.ts#L240-L246" />
+<Sig
+  name=".refineType"
+  params=""
+  returnType="Decoder<SubT>"
+  source="core/Decoder.ts#L239-L245"
+/>
 
 <Since version="2.7" />
 
-Cast the return type of this read-only decoder to a narrower type. This is useful to
-return "branded" types. This method has no runtime effect.
+Narrows the return type to a subtype. Useful for branded types. No runtime effect.
 
 ```ts
 const user = object({ name: string }).refineType<Person>();
@@ -130,22 +150,17 @@ const user = object({ name: string }).refineType<Person>();
 
 ---
 
-## Decoder.reject
+### .reject()
 
 <Sig
   name=".reject"
   params="rejectFn: T => string | null"
   returnType="Decoder<T>"
-  source="core/Decoder.ts#L290-L308"
+  source="core/Decoder.ts#L289-L307"
 />
 
-Adds an extra predicate to a decoder. The new decoder is like the original decoder, but
-only accepts values that aren't rejected by the given function.
-
-The given function can return `null` to accept the decoded value, or return a specific
-error message to reject.
-
-Unlike [`.refine()`][], you can use this function to return a dynamic error message.
+Like [`.refine()`][], but lets you return a dynamic error message. Return `null` to
+accept, or a string to reject.
 
 <DecoderPlayground
   decoder="string.reject(s => s.length > 5 ? `Too long (${s.length} chars)` : null)"
@@ -154,17 +169,16 @@ Unlike [`.refine()`][], you can use this function to return a dynamic error mess
 
 ---
 
-## Decoder.describe
+### .describe()
 
 <Sig
   name=".describe"
   params="message: string"
   returnType="Decoder<T>"
-  source="core/Decoder.ts#L310-L327"
+  source="core/Decoder.ts#L309-L326"
 />
 
-Uses the given decoder, but will use an alternative error message in case it rejects. This
-can be used to simplify or shorten otherwise long or low-level/technical errors.
+Overrides the error message when the decoder rejects.
 
 <DecoderPlayground
   decoder="oneOf(['a', 'e', 'i', 'o', 'u']).describe('Must be a vowel')"
@@ -173,71 +187,57 @@ can be used to simplify or shorten otherwise long or low-level/technical errors.
 
 ---
 
-## ~~Decoder.then~~
+## Composition Methods
+
+### ~~.then()~~
 
 `.then()` was renamed to [`.chain()`][] in 2.9 to avoid being mistaken for a Promise.
 
 ---
 
-## Decoder.chain
+### .chain()
 
 <Sig
   name=".chain"
   params="next: (blob: T, ok, err) => DecodeResult<V> | Decoder<V>"
   returnType="Decoder<V>"
-  source="core/Decoder.ts#L248-L266"
 />
 
 <Sig
   name=".chain"
   params="next: Decoder<V>"
   returnType="Decoder<V>"
-  source="core/Decoder.ts#L248-L266"
+  source="core/Decoder.ts#L247-L265"
 />
 
-Send the output of the current decoder into another decoder or acceptance function. The
-given acceptance function will receive the output of the current decoder as its input.
-
-<Callout title="This is an advanced, low-level, API" type="warning">
-  It’s not recommended to reach for this construct unless there is no other way. Most
-  cases can be covered more elegantly by [`.transform()`][], [`.refine()`][], or
-  [`.pipe()`][] instead.
-</Callout>
-
-<Callout type="info">
-  This method was named `.then()` in versions prior to 2.9. It was renamed to avoid
-  confusion with Promise thenables.
-</Callout>
+Low-level method to send decoded output into another decoder or acceptance function.
+Prefer [`.transform()`][], [`.refine()`][], or [`.pipe()`][] in most cases.
 
 ---
 
-## Decoder.pipe
+### .pipe()
 
 <Sig
   name=".pipe"
   params="next: Decoder<V>"
   returnType="Decoder<V>"
-  source="core/Decoder.ts#L268-L288"
+  source="core/Decoder.ts#L267-L287"
 />
 
-<Sig
-  name=".pipe"
-  params="next: (blob: T) => Decoder<V>"
-  returnType="Decoder<V>"
-  source="core/Decoder.ts#L268-L288"
-/>
+<Sig name=".pipe" params="next: (blob: T) => Decoder<V>" returnType="Decoder<V>" />
 
 <Since version="2.4" />
+
+Sends the decoded output into another decoder for further validation.
 
 <DecoderPlayground
   decoder="string.transform(s => s.split(',').map(Number)).pipe(array(positiveInteger))"
   examples={["'7'", "'1,2,3'", "'1,-3'", "'🚀'", "'3.14'", '123', 'true', 'null']}
 />
 
-## Dynamic decoder selection
+### Dynamic decoder selection
 
-With [`.pipe()`][] you can also dynamically select another decoder, based on dynamic
-runtime value.
+You can also use [`.pipe()`][] to dynamically select a decoder based on the input value.
 
 <DecoderPlayground
   globals={{
@@ -251,6 +251,34 @@ runtime value.
   decoder="string.transform(s => s.split(',').map(Number)).pipe(tup => tup.length === 2 ? point2d : tup.length === 3 ? point3d : never('Must be 2D or 3D point'))"
   examples={["'1'", "'1,2'", "'1,2,3'", "'1,2,3,4'"]}
 />
+
+---
+
+## Inferring the type of a Decoder
+
+Extracts the output type from a Decoder. Other libraries call this "infer".
+
+```ts
+import type { DecoderType } from 'decoders';
+import { array, number, object, string } from 'decoders';
+
+const tagsDecoder = array(string);
+
+const personDecoder = object({
+  name: string,
+  age: number,
+});
+
+// [!code highlight]
+type Tags = DecoderType<typeof tagsDecoder>;
+// [!code highlight]
+// string[]
+
+// [!code highlight]
+type Person = DecoderType<typeof personDecoder>;
+// [!code highlight]
+// { name: string; age: number }
+```
 
 [`.verify()`]: /.verify
 [`.value()`]: /.value

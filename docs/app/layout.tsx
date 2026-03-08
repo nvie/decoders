@@ -1,11 +1,16 @@
 import { RootProvider } from "fumadocs-ui/provider/next";
-import { Inter } from "next/font/google";
+import { Inconsolata, Rubik } from "next/font/google";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import "./global.css";
 
-const inter = Inter({
+const mainFont = Rubik({
   subsets: ["latin"],
+});
+
+const inconsolata = Inconsolata({
+  subsets: ["latin"],
+  variable: "--font-inconsolata",
 });
 
 export const metadata: Metadata = {
@@ -16,7 +21,7 @@ export const metadata: Metadata = {
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={inter.className} suppressHydrationWarning>
+    <html lang="en" className={`${mainFont.className} ${inconsolata.variable}`} suppressHydrationWarning>
       <body className="flex min-h-screen flex-col">
         <RootProvider>{children}</RootProvider>
       </body>

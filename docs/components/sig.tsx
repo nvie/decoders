@@ -99,7 +99,7 @@ function renderType(type: string): ReactNode {
     i = j + 1;
   }
 
-  return <em>{parts}</em>;
+  return <span>{parts}</span>;
 }
 
 /**
@@ -132,6 +132,42 @@ function renderParams(params: string): ReactNode {
 }
 
 /**
+ * Render params on multiple indented lines:
+ *   function name(
+ *     param1: Type,
+ *     param2: Type
+ *   )
+ */
+function renderMultilineParams(params: string): ReactNode {
+  const paramList = splitAtTopLevel(params, ', ');
+  return (
+    <>
+      {'(\n'}
+      {paramList.map((param, i) => {
+        const colonIdx = findTopLevelColon(param);
+        const separator = i < paramList.length - 1 ? ',' : '';
+        return (
+          <span key={i}>
+            {'  '}
+            {colonIdx === -1 ? (
+              renderType(param)
+            ) : (
+              <>
+                <span style={{ color: GRAY }}>{param.slice(0, colonIdx)}: </span>
+                {renderType(param.slice(colonIdx + 2))}
+              </>
+            )}
+            {separator}
+            {'\n'}
+          </span>
+        );
+      })}
+      {')'}
+    </>
+  );
+}
+
+/**
  * Renders a generic signature line.
  *
  * Usage:
@@ -142,21 +178,36 @@ export function Sig({
   params,
   returnType,
   source,
+  multiline,
 }: {
   name: string;
   params?: string;
   returnType: ReactNode;
   source?: string;
+  multiline?: boolean;
 }) {
   return (
-    <p className="fn-sig">
+    <pre className="fn-sig font-mono overflow-x-auto" style={{ margin: 0, background: 'none', border: 'none', padding: 0 }}>
+      {params !== undefined ? (
+        name.includes('.') ? (
+          <span className="font-sans" style={{ color: GRAY }}>
+            Method{' '}
+          </span>
+        ) : (
+          <span style={{ color: GRAY }}>function </span>
+        )
+      ) : null}
       <strong style={{ fontWeight: 700 }}>{name}</strong>
       {params !== undefined ? (
-        <>
-          {'(\u200A'}
-          {renderParams(params)}
-          {'\u2009)'}
-        </>
+        multiline ? (
+          renderMultilineParams(params)
+        ) : (
+          <>
+            {'(\u200A'}
+            {renderParams(params)}
+            {'\u200A)'}
+          </>
+        )
       ) : null}
       {': '}
       {returnType}
@@ -168,7 +219,7 @@ export function Sig({
           </a>
         </>
       ) : null}
-    </p>
+    </pre>
   );
 }
 
@@ -187,57 +238,67 @@ interface Alias {
   deprecated: boolean;
 }
 
+function renderDecoderReturnType(type: string): ReactNode {
+  return (
+    <span>
+      <span style={{ color: GRAY }}>{'Decoder<'}</span>
+      <span style={{ color: TEAL }}>{type}</span>
+      <span style={{ color: GRAY }}>{'>'}</span>
+    </span>
+  );
+}
+
 export function DecoderSig({
   name,
   aliases,
   params,
   type,
   source,
+  multiline,
 }: {
   name: string;
   aliases?: Alias[];
   params?: string;
   type: string;
   source?: string;
+  multiline?: boolean;
 }) {
   return (
     <>
       <Sig
         name={name}
         params={params}
-        returnType={
-          <em>
-            <span style={{ color: GRAY }}>{'Decoder<'}</span>
-            <span style={{ color: TEAL }}>{type}</span>
-            <span style={{ color: GRAY }}>{'>'}</span>
-          </em>
-        }
+        multiline={multiline}
+        returnType={renderDecoderReturnType(type)}
         source={source}
       />
       {aliases?.map((alias) => (
-        <p key={alias.name} className={`fn-sig${alias.deprecated ? ' fn-sig-deprecated' : ''}`}>
+        <pre
+          key={alias.name}
+          className={`fn-sig font-mono${alias.deprecated ? ' fn-sig-deprecated' : ''}`}
+          style={{ margin: 0, background: 'none', border: 'none', padding: 0 }}
+        >
           <span className={alias.deprecated ? 'fn-sig-content' : undefined}>
             <strong style={{ fontWeight: 700 }}>{alias.name}</strong>
             {params !== undefined ? (
-              <>
-                {'(\u200A'}
-                {renderParams(params)}
-                {'\u2009)'}
-              </>
+              multiline ? (
+                renderMultilineParams(params)
+              ) : (
+                <>
+                  {'(\u200A'}
+                  {renderParams(params)}
+                  {'\u200A)'}
+                </>
+              )
             ) : null}
             {': '}
-            <em>
-              <span style={{ color: GRAY }}>{'Decoder<'}</span>
-              <span style={{ color: TEAL }}>{type}</span>
-              <span style={{ color: GRAY }}>{'>'}</span>
-            </em>
-            {' '}
+            {renderDecoderReturnType(type)}{' '}
             <span className="fn-sig-badge">
               {alias.deprecated ? 'deprecated' : 'alias'}
             </span>
           </span>
           {alias.info && <Info>{alias.info}</Info>}
-        </p>
+        </pre>
       ))}
     </>
   );

@@ -21,7 +21,7 @@
   - `iso8601` → `isoDate` (`iso8601` will be kept as alias)
   - `dateString` → `isoDateString` (deprecated, will be removed in 3.x)
   - `datelike` → `flexDate` (deprecated, will be removed in 3.x)
-- Improve error messages for `flexDate` decoder
+- Cleaner error messages for `flexDate` and `url` decoders
 - Add missing top-level type exports for annotations
 
 ## [2.8.0] - 2026-02-22
@@ -72,9 +72,8 @@ Bad release, please use 2.7.5 instead.
 
 ## [2.7.0] - 2025-03-31
 
-- Add new `dateString` decoder (see [docs](https://decoders.cc/api.html#dateString))
-- Add new `.refineType<SubT>()` method (see
-  [docs](https://decoders.cc/Decoder.html#refineType))
+- Add new `dateString` decoder (see [docs](https://decoders.cc/dateString))
+- Add new `.refineType<SubT>()` method (see [docs](https://decoders.cc/.refineType))
 - Reduce peak memory usage of `array()` decoder
 
 ## [2.6.1] - 2025-02-25
@@ -94,8 +93,8 @@ Bad release, please use 2.7.5 instead.
 
 **New decoders:**
 
-- `startsWith()` ([docs](https://decoders.cc/api.html#startsWith))
-- `endsWith()` ([docs](https://decoders.cc/api.html#endsWith))
+- `startsWith()` ([docs](https://decoders.cc/startsWith))
+- `endsWith()` ([docs](https://decoders.cc/endsWith))
 
 - Officially drop Node 16 support (it may still work)
 
@@ -138,8 +137,8 @@ Bad release, please use 2.7.5 instead.
 
 **New decoders:**
 
-- `identifier` ([docs](https://decoders.cc/api.html#identifier))
-- `nanoid()` ([docs](https://decoders.cc/api.html#nanoid))
+- `identifier` ([docs](https://decoders.cc/identifier))
+- `nanoid()` ([docs](https://decoders.cc/nanoid))
 
 **Removed decoders:**
 
@@ -149,24 +148,24 @@ Bad release, please use 2.7.5 instead.
 
 **New features:**
 
-- All `enum` types are now supported ([docs](https://decoders.cc/api.html#enum_))
+- All `enum` types are now supported ([docs](https://decoders.cc/enum))
 - Record decoder now supports both `record(values)` and `record(keys, values)` forms
-  ([docs](https://decoders.cc/api.html#record))
-- Add `datelike` decoder ([docs](https://decoders.cc/api.html#datelike))
-- Add support for `bigint` ([docs](https://decoders.cc/api.html#bigint))
+  ([docs](https://decoders.cc/record))
+- Add `datelike` decoder ([docs](https://decoders.cc/datelike))
+- Add support for `bigint` ([docs](https://decoders.cc/bigint))
 - Add built-in support for common string validations
 - Better support for symbols in `constant()` and `oneOf()`
 
 **New decoders:**
 
-- `enum_` (see [docs](https://decoders.cc/api.html#enum_))
-- `record()` (see [docs](https://decoders.cc/api.html#record))
-- `select()` (see [docs](https://decoders.cc/api.html#select))
-- `bigint` (see [docs](https://decoders.cc/api.html#bigint))
-- `datelike` (see [docs](https://decoders.cc/api.html#datelike))
-- `decimal` (see [docs](https://decoders.cc/api.html#decimal))
-- `hexadecimal` (see [docs](https://decoders.cc/api.html#hexadecimal))
-- `numeric` (see [docs](https://decoders.cc/api.html#numeric))
+- `enum_` (see [docs](https://decoders.cc/enum))
+- `record()` (see [docs](https://decoders.cc/record))
+- `select()` (see [docs](https://decoders.cc/select))
+- `bigint` (see [docs](https://decoders.cc/bigint))
+- `datelike` (see [docs](https://decoders.cc/datelike))
+- `decimal` (see [docs](https://decoders.cc/decimal))
+- `hexadecimal` (see [docs](https://decoders.cc/hexadecimal))
+- `numeric` (see [docs](https://decoders.cc/numeric))
 
 **Renamed decoders:**
 
@@ -272,7 +271,7 @@ to pull requests! 🙏 )
   `{ [key: string]: T }` to `Record<string, T>`.
 
 - ![](./docs/assets/tiny-ts-logo.png) **TypeScript-only:** Fine-tune the type of
-  [`instanceOf()`](https://decoders.cc/api.html#instanceOf).
+  [`instanceOf()`](https://decoders.cc/instanceOf).
 
 ## [2.0.0]
 
@@ -322,21 +321,20 @@ Other potentially breaking changes:
 
 New decoders:
 
-- [`always`](https://decoders.cc/api.html#always)
-- [`anyNumber`](https://decoders.cc/api.html#anyNumber)
-- [`never`](https://decoders.cc/api.html#never)
-- [`prep()`](https://decoders.cc/api.html#prep)
-- [`set()`](https://decoders.cc/api.html#set)
-- [`uuid`](https://decoders.cc/api.html#uuid)
-- [`uuidv1`](https://decoders.cc/api.html#uuidv1)
-- [`uuidv4`](https://decoders.cc/api.html#uuidv4)
+- [`always`](https://decoders.cc/always)
+- [`anyNumber`](https://decoders.cc/anyNumber)
+- [`never`](https://decoders.cc/never)
+- [`prep()`](https://decoders.cc/prep)
+- [`set()`](https://decoders.cc/set)
+- [`uuid`](https://decoders.cc/uuid)
+- [`uuidv1`](https://decoders.cc/uuidv1)
+- [`uuidv4`](https://decoders.cc/uuidv4)
 
 Other improvements:
 
-- [`optional()`](https://decoders.cc/api.html#optional),
-  [`nullable()`](https://decoders.cc/api.html#nullable), and
-  [`maybe()`](https://decoders.cc/api.html#maybe) now each take an optional 2nd param to
-  specify a default value
+- [`optional()`](https://decoders.cc/optional),
+  [`nullable()`](https://decoders.cc/nullable), and [`maybe()`](https://decoders.cc/maybe)
+  now each take an optional 2nd param to specify a default value
 - Better error messages for nested `either`s
 
 Implementation changes:

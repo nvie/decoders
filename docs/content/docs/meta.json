@@ -15,7 +15,12 @@
     "api/constants",
     "api/json",
     "api/utilities",
+    "---Topics---",
+    "api/standard-schema",
+    "api/error-formatting",
     "---Guides---",
-    "building-your-own"
+    "building-your-own",
+    "for-library-authors",
+    "using-in-monorepos"
   ]
 }

@@ -9,7 +9,7 @@ description: Utility decoders for custom logic, preprocessing, and advanced use 
   name="unknown"
   aliases={[{ name: 'anything', deprecated: false }]}
   type="unknown"
-  source="basics.ts#L130-L137"
+  source="basics.ts#L124-L131"
 />
 
 Accepts anything and returns it unchanged.
@@ -27,7 +27,7 @@ further refine it yourself.
 
 ## always
 
-<DecoderSig name="always" params="value: T" type="T" source="basics.ts#L99-L114" />
+<DecoderSig name="always" params="value: T" type="T" source="basics.ts#L95-L109" />
 
 Accepts anything, completely ignores it, and always returns the provided value instead.
 
@@ -51,7 +51,7 @@ now.verify('dummy'); // e.g. new Date('2022-02-07T09:36:58.848Z')
   name="never"
   aliases={[{ name: 'fail', deprecated: false }]}
   type="never"
-  source="basics.ts#L116-L123"
+  source="basics.ts#L111-L117"
 />
 
 Rejects all inputs, and always fails with the given error message. May be useful for
@@ -70,7 +70,7 @@ explicitly disallowing keys, or for testing purposes.
   name="instanceOf"
   params="klass: Klass<T>"
   type="T"
-  source="misc.ts#L14-L24"
+  source="misc.ts#L14-L23"
 />
 
 Accepts any value that is an `instanceof` the given class.
@@ -88,7 +88,7 @@ Accepts any value that is an `instanceof` the given class.
   name="lazy"
   params="decoderFn: () => Decoder<T>"
   type="T"
-  source="misc.ts#L26-L33"
+  source="misc.ts#L25-L31"
 />
 
 Lazily evaluate the given decoder. Useful to build recursive decoders.
@@ -120,27 +120,30 @@ Lazily evaluate the given decoder. Useful to build recursive decoders.
   name="sized"
   params="decoder: Decoder<string>, options: SizeOptions"
   type="string"
-  source="misc.ts#L35-L44"
+  source="misc.ts#L33-L41"
 />
 <DecoderSig
   name="sized"
   params="decoder: Decoder<T[]>, options: SizeOptions"
   type="T[]"
-  source="misc.ts#L35-L44"
 />
 <DecoderSig
   name="sized"
   params="decoder: Decoder<Set<T>>, options: SizeOptions"
   type="Set<T>"
-  source="misc.ts#L35-L44"
 />
 
 <Since version="2.9" />
 
-Takes any decoder of a sized value (string, array, or set) and rejects values that don't
-match the given size constraints.
+Rejects strings, arrays, or sets that don't match the given size constraints. Works on any
+type that has a `.length` or `.size` property.
 
-`SizeOptions` accepts `min`, `max`, or `size` (shorthand for exact length).
+```ts
+type SizeOptions =
+  | { size: number }
+  | { min: number; max?: number }
+  | { min?: number; max: number };
+```
 
 For strings, error messages refer to "chars". For arrays and sets, error messages refer to
 "items".
@@ -158,7 +161,7 @@ For strings, error messages refer to "chars". For arrays and sets, error message
   name="define"
   params="fn: (blob: unknown, ok, err) => DecodeResult<T>"
   type="T"
-  source="core/Decoder.ts#L158-L356"
+  source="core/Decoder.ts#L158-L355"
 />
 
 Defines a new `Decoder<T>`, by implementing a custom acceptance function. The function
@@ -214,7 +217,7 @@ uppercase.verify(123); // throws: Must be string
   name="prep"
   params="mapperFn: (raw: unknown) => unknown, decoder: Decoder<T>"
   type="T"
-  source="misc.ts#L46-L77"
+  source="misc.ts#L43-L73"
 />
 
 Pre-process the data input before passing it into the decoder. This gives you the ability

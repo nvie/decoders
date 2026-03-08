@@ -1,0 +1,103 @@
+---
+title: Error Formatting
+description:
+  Built-in formatters to create human-readable error messages from decoder rejections
+---
+
+Decoders provides built-in formatters to create human-readable error messages.
+
+## formatInline (default)
+
+The default formatter used by [`.verify()`][]. Echoes back the full input with errors
+annotated inline:
+
+```ts
+import { object, string, number, formatInline } from 'decoders';
+
+const userDecoder = object({
+  id: number,
+  name: string,
+  email: string,
+});
+
+const result = userDecoder.decode({
+  id: '123',
+  name: 'Alice',
+  email: 42,
+});
+
+if (!result.ok) {
+  console.log(formatInline(result.error));
+  // {
+  //   id: "123",
+  //       ^^^^^ Must be number
+  //   name: "Alice",
+  //   email: 42,
+  //          ^^ Must be string
+  // }
+}
+```
+
+## formatShort
+
+Provides concise, line-by-line error summaries. Useful when you want compact messages, or
+when security is a concern and you want to avoid echoing back sensitive input data.
+
+```ts
+import { object, string, formatShort } from 'decoders';
+
+const credentials = object({
+  user: string,
+  password: string,
+});
+
+const result = credentials.decode({
+  user: 123,
+  password: 'p@ssw0rd',
+});
+
+if (!result.ok) {
+  console.log(formatShort(result.error));
+  // Value at key "user": Must be string
+}
+```
+
+<Callout type="warn">
+
+Avoid using `formatInline` when decoding sensitive inputs, as it echoes back the full
+input:
+
+```text
+{
+  user: 123,
+        ^^^ Must be string
+  password: "p@ssw0rd"
+}
+```
+
+</Callout>
+
+## When using Standard Schema
+
+When using decoders via [Standard Schema](/docs/api/standard-schema), errors are returned
+as an issue list:
+
+```ts
+import { object, string, number } from 'decoders';
+
+const userDecoder = object({
+  name: string,
+  age: number,
+});
+
+const result = userDecoder['~standard'].validate({ name: 'Alison', age: '33' });
+// {
+//   issues: [
+//     { message: 'Must be number', path: ['age'] },
+//   ]
+// }
+```
+
+{/* TODO Add section here later to describe how to build a custom error formatter */}
+
+[`.verify()`]: /.verify
