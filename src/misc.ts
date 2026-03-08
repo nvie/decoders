@@ -14,8 +14,8 @@ export type Instance<K> = K extends Klass<infer T> ? T : never;
 /**
  * Accepts any value that is an ``instanceof`` the given class.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 /* #__NO_SIDE_EFFECTS__ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function instanceOf<K extends Klass<any>>(klass: K): Decoder<Instance<K>> {
   return define((blob, ok, err) =>
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
