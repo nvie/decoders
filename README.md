@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/decoders.svg)](https://www.npmjs.com/package/decoders)
 [![Test Status](https://github.com/nvie/decoders/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/nvie/decoders/actions)
-[![Bundle size for decoders](https://pkg-size.dev/badge/bundle/4200)](https://pkg-size.dev/decoders)
+[![Bundle size](https://deno.bundlejs.com/badge?q=decoders@2.9.0&treeshake=[{number,object,optional,string}])](https://bundlejs.com/?q=decoders%402.9.0&treeshake=%5B%7B+number%2Cobject%2Coptional%2Cstring+%7D%5D)
 
 Elegant and battle-tested validation library for type-safe input data for TypeScript.
 
