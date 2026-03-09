@@ -65,7 +65,7 @@ interface Row {
 
 // Node.js REPL-style syntax highlighting
 const TOKEN_RE =
-  /((?:'(?:[^'\\]|\\.)*')|(?:"(?:[^"\\]|\\.)*"))|((?:\d+\.?\d*|\.\d+)(?:n\b)?)|\b(true|false)\b|\b(null)\b|\b(undefined)\b/g;
+  /((?:'(?:[^'\\]|\\.)*')|(?:"(?:[^"\\]|\\.)*"))|((?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?(?:n\b)?)|\b(true|false)\b|\b(null)\b|\b(undefined)\b/g;
 
 const COLORS = {
   string: { light: '#0a7e2e', dark: '#98c379' },
