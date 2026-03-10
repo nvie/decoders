@@ -54,6 +54,38 @@ pre code {
   text-decoration: none !important;
 }
 
+/* Highlight heading when navigated to via anchor link */
+@keyframes heading-highlight {
+  0% {
+    box-shadow: 0 0 0 0.4rem color-mix(in srgb, var(--color-fd-primary) 10%, transparent);
+    background-color: color-mix(in srgb, var(--color-fd-primary) 10%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 0.15rem transparent;
+    background-color: transparent;
+  }
+}
+
+.prose :is(h1, h2, h3, h4):target {
+  border-radius: 0.375rem;
+  animation: heading-highlight 1.5s ease-out 0.5s both;
+}
+
+.dark .prose :is(h1, h2, h3, h4):target {
+  animation-name: heading-highlight-dark;
+}
+
+@keyframes heading-highlight-dark {
+  0% {
+    box-shadow: 0 0 0 0.4rem rgba(226, 123, 80, 0.25);
+    background-color: rgba(226, 123, 80, 0.25);
+  }
+  100% {
+    box-shadow: 0 0 0 0.15rem transparent;
+    background-color: transparent;
+  }
+}
+
 .sig-source {
   font-size: 0.85em;
   text-decoration: none;
