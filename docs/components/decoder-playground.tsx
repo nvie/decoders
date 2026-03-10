@@ -186,6 +186,84 @@ function renderCellContent(
   );
 }
 
+const PLAYGROUND_EXPLORED_KEY = 'playground-explored';
+
+type HintState = 'hidden' | 'visible' | 'fading';
+
+function usePlaygroundHint(
+  containerRef: React.RefObject<HTMLDivElement | null>,
+  ready: boolean,
+  initialInput: string,
+): [HintState, () => void, () => void, () => void] {
+  const [hintState, setHintState] = useState<HintState>('hidden');
+  const dismissedRef = useRef(false);
+  const initialInputRef = useRef(initialInput);
+
+  // Hide on focus (visual only, no localStorage)
+  const hideHint = useCallback(() => {
+    setHintState((prev) => (prev === 'visible' ? 'fading' : prev));
+  }, []);
+
+  // Remove from DOM after fade-out completes
+  const removeHint = useCallback(() => {
+    setHintState('hidden');
+  }, []);
+
+  // Permanently dismiss when user types a different expression
+  const markExplored = useCallback(() => {
+    if (!dismissedRef.current) {
+      dismissedRef.current = true;
+      setHintState((prev) => (prev === 'hidden' ? 'hidden' : 'fading'));
+      try {
+        localStorage.setItem(PLAYGROUND_EXPLORED_KEY, '1');
+      } catch {}
+    }
+  }, []);
+
+  useEffect(() => {
+    // Already explored before — never show
+    try {
+      if (localStorage.getItem(PLAYGROUND_EXPLORED_KEY)) {
+        dismissedRef.current = true;
+        return;
+      }
+    } catch {}
+
+    if (!ready || !containerRef.current || dismissedRef.current) return;
+
+    let showTimer: ReturnType<typeof setTimeout> | undefined;
+    let hideTimer: ReturnType<typeof setTimeout> | undefined;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (dismissedRef.current) return;
+        if (entry.isIntersecting) {
+          showTimer = setTimeout(() => {
+            if (!dismissedRef.current) {
+              setHintState('visible');
+              hideTimer = setTimeout(() => setHintState('fading'), 6000);
+            }
+          }, 1000);
+        } else {
+          clearTimeout(showTimer);
+          clearTimeout(hideTimer);
+          setHintState('hidden');
+        }
+      },
+      { threshold: 0.3 },
+    );
+
+    observer.observe(containerRef.current);
+    return () => {
+      observer.disconnect();
+      clearTimeout(showTimer);
+      clearTimeout(hideTimer);
+    };
+  }, [ready, containerRef]);
+
+  return [hintState, hideHint, markExplored, removeHint];
+}
+
 export function DecoderPlayground(props: Props) {
   const decoderEntries: [string, string][] =
     typeof props.decoder === 'string' ? [['Result', props.decoder]] : props.decoder;
@@ -210,6 +288,11 @@ export function DecoderPlayground(props: Props) {
   const compartmentRef = useRef<{ evaluate: (code: string) => unknown }>(undefined);
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollAnchorRef = useRef<number | null>(null);
+  const [hintState, hideHint, markExplored, removeHint] = usePlaygroundHint(
+    containerRef,
+    ready,
+    props.examples[0] ?? '',
+  );
 
   // After mode/fmt change causes a re-render, compensate scroll so this
   // playground stays at the same viewport position.
@@ -532,21 +615,42 @@ export function DecoderPlayground(props: Props) {
             {rows.map((row, i) => (
               <tr
                 key={i}
-                onClick={() => setActiveRow(i)}
+                onClick={() => {
+                  setActiveRow(i);
+                  hideHint();
+                }}
                 className={`border-b border-fd-border last:border-b-0 align-top cursor-pointer ${activeRow === i ? 'bg-black/[0.02] dark:bg-white/[0.04]' : ''}`}
               >
-                <td className="px-3 py-1.5">
+                <td className="relative px-3 py-1.5">
                   <input
                     data-playground-input
                     type="text"
                     value={row.input}
-                    onChange={(e) => updateRow(i, e.target.value)}
-                    onFocus={() => setActiveRow(i)}
+                    onChange={(e) => {
+                      updateRow(i, e.target.value);
+                      if (i === 0 && e.target.value !== props.examples[0]) {
+                        markExplored();
+                      }
+                    }}
+                    onFocus={() => {
+                      setActiveRow(i);
+                      if (i === 0) hideHint();
+                    }}
                     onKeyDown={(e) => handleKeyDown(e, i)}
                     placeholder="Type an expression\u2026"
                     disabled={!ready}
                     className="w-full bg-transparent text-fd-foreground placeholder:text-fd-muted-foreground focus:outline-none"
                   />
+                  {i === 0 && hintState !== 'hidden' && (
+                    <span
+                      className={`playground-hint ${hintState === 'fading' ? 'playground-hint-out' : ''}`}
+                      onAnimationEnd={
+                        hintState === 'fading' ? removeHint : undefined
+                      }
+                    >
+                      Try any expression!
+                    </span>
+                  )}
                 </td>
                 {decoderEntries.map(([name], j) => (
                   <td key={name} className="px-3 py-1.5">

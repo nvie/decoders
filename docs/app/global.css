@@ -208,6 +208,96 @@ pre code {
   vertical-align: top !important;
 }
 
+/* Playground "try editing me" hint */
+.playground-hint {
+  position: absolute;
+  left: 0.75rem;
+  top: calc(100% - 0.5rem);
+  white-space: nowrap;
+  font-family: system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.25em 0.6em;
+  border-radius: 0.375rem;
+  background: #f5f0eb;
+  color: #78552e;
+  border: 1px solid #e8ddd2;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+  animation:
+    hint-fade-in 0.3s ease-out both,
+    hint-float 2s ease-in-out 0.3s infinite;
+  z-index: 10;
+}
+
+.dark .playground-hint {
+  background: #2a2420;
+  color: #e2a877;
+  border-color: #3d332b;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.playground-hint::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 1rem;
+  border: 0.3rem solid transparent;
+  border-bottom-color: #e8ddd2;
+}
+
+.playground-hint::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 1rem;
+  border: 0.3rem solid transparent;
+  border-bottom-color: #f5f0eb;
+  margin-bottom: -1px;
+}
+
+.dark .playground-hint::before {
+  border-bottom-color: #3d332b;
+}
+
+.dark .playground-hint::after {
+  border-bottom-color: #2a2420;
+}
+
+@keyframes hint-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.playground-hint-out {
+  animation: hint-fade-out 0.3s ease-in both;
+}
+
+@keyframes hint-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes hint-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 0.2rem;
+  }
+}
+
 .dark {
   --color-fd-primary: #e27b50;
   --color-fd-primary-foreground: #1c1017;
