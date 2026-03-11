@@ -28,8 +28,9 @@ further refine it yourself.
 ## always
 
 <DecoderSig name="always" params="value: T" type="T" source="basics.ts#L99-L114" />
+<DecoderSig name="always" params="value: () => T" type="T" />
 
-Accepts anything, completely ignores it, and always returns the provided value instead.
+Accepts any input, ignores it, and instead returns the provided value instead.
 
 This is useful to manually add extra fields to object decoders.
 
@@ -37,11 +38,10 @@ This is useful to manually add extra fields to object decoders.
 
 Or use it with a function instead of a constant:
 
-```ts
-const now = always(() => new Date());
-
-now.verify('dummy'); // e.g. new Date('2022-02-07T09:36:58.848Z')
-```
+<DecoderPlayground
+  decoder="always(() => Math.random().toFixed(2))"
+  examples={["'I will be ignored'", 123]}
+/>
 
 ---
 
