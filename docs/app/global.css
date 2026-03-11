@@ -66,12 +66,14 @@ pre code {
   }
 }
 
-.prose :is(h1, h2, h3, h4):target {
+.prose :is(h1, h2, h3, h4):target,
+.prose :is(h1, h2, h3, h4).heading-highlight {
   border-radius: 0.375rem;
   animation: heading-highlight 1.5s ease-out 0.5s both;
 }
 
-.dark .prose :is(h1, h2, h3, h4):target {
+.dark .prose :is(h1, h2, h3, h4):target,
+.dark .prose :is(h1, h2, h3, h4).heading-highlight {
   animation-name: heading-highlight-dark;
 }
 
