@@ -637,7 +637,7 @@ export function DecoderPlayground(props: Props) {
                       if (i === 0) hideHint();
                     }}
                     onKeyDown={(e) => handleKeyDown(e, i)}
-                    placeholder="Type an expression\u2026"
+                    placeholder="Type an expression…"
                     disabled={!ready}
                     className="w-full bg-transparent text-fd-foreground placeholder:text-fd-muted-foreground focus:outline-none"
                   />
