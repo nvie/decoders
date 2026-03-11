@@ -32,8 +32,7 @@ export function bySizeOptions(options: SizeOptions): (value: Sized) => string | 
     } else {
       if (min !== undefined && len < min)
         return `Must have ${atLeast}${qty(min, 'item')}`;
-      if (max !== undefined && len > max)
-        return `Must have ${atMost}${qty(max, 'item')}`;
+      if (max !== undefined && len > max) return `Must have ${atMost}${qty(max, 'item')}`;
     }
     return null;
   };

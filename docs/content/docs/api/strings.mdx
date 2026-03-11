@@ -20,7 +20,9 @@ Accepts and returns strings.
 
 <DecoderSig name="nonEmptyString" type="string" source="strings.ts#L29-L32" />
 
-Like [`string`][], but will reject the empty string or strings containing only whitespace. Note this is not the same as `sized(string, { min: 1 })`, which would accept whitespace-only strings.
+Like [`string`][], but will reject the empty string or strings containing only whitespace.
+Note this is not the same as `sized(string, { min: 1 })`, which would still accept
+whitespace-only strings.
 
 <DecoderPlayground
   decoder="nonEmptyString"

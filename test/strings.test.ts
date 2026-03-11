@@ -472,7 +472,9 @@ describe('sized', () => {
     expect(() => sized(array(number), { max: 1 }).verify([1, 2])).toThrow(
       'Must have at most 1 item',
     );
-    expect(() => sized(array(number), { size: 1 }).verify([])).toThrow('Must have 1 item');
+    expect(() => sized(array(number), { size: 1 }).verify([])).toThrow(
+      'Must have 1 item',
+    );
     expect(() => sized(string, { min: 1 }).verify('')).toThrow(
       'Too short, must be at least 1 char',
     );
