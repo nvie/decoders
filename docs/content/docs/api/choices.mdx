@@ -57,7 +57,9 @@ If you are decoding tagged unions you may want to use the [`taggedUnion()`][] de
 instead of the general purpose [`either()`][] decoder to get better error messages and
 better performance.
 
-This decoder is optimized for [tagged unions](https://en.wikipedia.org/wiki/Tagged_union),
+This decoder is optimized for [tagged unions](https://en.wikipedia.org/wiki/Tagged_union)
+(also known as
+[discriminated unions](https://www.typescriptlang.org/docs/handbook/2/narrowing.html#discriminated-unions)),
 i.e. a union of objects where one field is used as the discriminator.
 
 Decoding now works in two steps:
