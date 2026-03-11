@@ -23,6 +23,14 @@ const config = {
   async rewrites() {
     return [
       {
+        source: "/api.html",
+        destination: "/legacy-redirect",
+      },
+      {
+        source: "/Decoder.html",
+        destination: "/legacy-redirect",
+      },
+      {
         source: "/docs.mdx",
         destination: "/llms.mdx/docs",
       },
