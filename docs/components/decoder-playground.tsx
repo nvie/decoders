@@ -38,6 +38,7 @@ const FMT_OPTIONS: { fmt: Fmt; label: string; description: string }[] = [
 // Module-level signals shared by all playground instances on the page
 const mode$ = new Signal<Mode>('verify');
 const fmt$ = new Signal<Fmt>('formatInline');
+const inlineInput$ = new Signal<boolean>(false);
 
 function useSignal<T>(signal: Signal<T>): T {
   return useSyncExternalStore(signal.subscribe, signal.get, signal.get);
@@ -156,12 +157,6 @@ function formatSnippet(decoder: string, mode: Mode, input: string, fmt: Fmt): st
     .join('\n');
 }
 
-function statusComment(cell: CellResult | undefined): string {
-  if (cell?.status === 'accepted') return '  // accepted \u{1F44D}';
-  if (cell?.status === 'rejected') return '  // rejected \u{1F44E}';
-  return '';
-}
-
 function renderCellContent(
   cell: CellResult | undefined,
   input: string,
@@ -274,9 +269,10 @@ export function DecoderPlayground(props: Props) {
   const globalMode = useSignal(mode$);
   const mode = props.mode ?? globalMode;
   const fmt = useSignal(fmt$);
+  const inlineInput = useSignal(inlineInput$);
   const modeLocked = props.mode !== undefined;
   const showFmt = mode !== 'value';
-  const showPopover = !modeLocked || showFmt;
+  const showPopover = true;
   const [rows, setRows] = useState<Row[]>(() =>
     props.examples.map((input, i) => ({
       input,
@@ -487,20 +483,24 @@ export function DecoderPlayground(props: Props) {
     fmt$.set(f);
   }, []);
 
+  const toggleInlineInput = useCallback(() => {
+    if (containerRef.current) {
+      scrollAnchorRef.current = containerRef.current.getBoundingClientRect().top;
+    }
+    inlineInput$.set(!inlineInput$.get());
+  }, []);
+
   const activeRowData = rows[activeRow];
   const activeInput = activeRowData?.input || '\u2026';
+  const snippetInput = inlineInput ? activeInput : 'input';
 
   let codeSnippet: string;
   if (isMulti) {
     codeSnippet = decoderEntries
-      .map(([, expr], i) => {
-        const cell = activeRowData?.cells[i];
-        return `${formatSnippet(expr, mode, activeInput, fmt)}${statusComment(cell)}`;
-      })
+      .map(([, expr]) => formatSnippet(expr, mode, snippetInput, fmt))
       .join('\n');
   } else {
-    const cell = activeRowData?.cells[0];
-    codeSnippet = `${formatSnippet(decoderEntries[0][1], mode, activeInput, fmt)}${statusComment(cell)}`;
+    codeSnippet = formatSnippet(decoderEntries[0][1], mode, snippetInput, fmt);
   }
 
   let preface = props.preface;
@@ -583,6 +583,28 @@ export function DecoderPlayground(props: Props) {
                     </span>
                   </button>
                 ))}
+              {(!modeLocked || showFmt) && (
+                <hr className="my-1 border-fd-border" />
+              )}
+              <button
+                onClick={() => {
+                  toggleInlineInput();
+                  document.dispatchEvent(
+                    new KeyboardEvent('keydown', { key: 'Escape' }),
+                  );
+                }}
+                className="flex cursor-pointer items-start gap-2 rounded-lg p-2 text-start text-sm hover:bg-fd-accent hover:text-fd-accent-foreground"
+              >
+                <Check
+                  className={`mt-0.5 size-4 shrink-0 ${inlineInput ? 'opacity-100' : 'opacity-0'}`}
+                />
+                <span className="flex flex-col gap-0.5">
+                  <span className="font-medium">Inline input expressions</span>
+                  <span className="text-xs text-fd-muted-foreground">
+                    Show input values in code
+                  </span>
+                </span>
+              </button>
             </PopoverContent>
           </Popover>
         )}
@@ -619,7 +641,7 @@ export function DecoderPlayground(props: Props) {
                   setActiveRow(i);
                   hideHint();
                 }}
-                className={`border-b border-fd-border last:border-b-0 align-top cursor-pointer ${activeRow === i ? 'bg-black/[0.02] dark:bg-white/[0.04]' : ''}`}
+                className={`border-b border-fd-border last:border-b-0 align-top ${inlineInput ? 'cursor-pointer' : ''} ${inlineInput && activeRow === i ? 'bg-black/[0.02] dark:bg-white/[0.04]' : ''}`}
               >
                 <td className="relative px-3 py-1.5">
                   <input

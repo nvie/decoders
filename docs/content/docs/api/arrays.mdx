@@ -30,7 +30,8 @@ Accepts arrays of whatever the given decoder accepts.
   source="arrays.ts#L53-L59"
 />
 
-Like [`array()`][], but will reject arrays with 0 elements.
+Like [`array()`][], but will reject arrays with 0 elements.  
+Equivalent to `sized(array(decoder), { min: 1 })`.
 
 <DecoderPlayground
   decoder="nonEmptyArray(string)"
