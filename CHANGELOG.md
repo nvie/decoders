@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+- Fix `sized()` error messages to use singular "item"/"char" when count is 1
+- Tweak `nonEmptyArray()` error message (from "Must be non-empty array" to "Must have at
+  least 1 item")
+
 ## [2.9.0] - 2026-03-08
 
 **Breaking!**

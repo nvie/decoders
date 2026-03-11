@@ -53,8 +53,8 @@ describe('nonEmptyArray', () => {
   });
 
   test('but empty array throw, too', () => {
-    expect(() => strings.verify([])).toThrow('Must be non-empty array');
-    expect(() => numbers.verify([])).toThrow('Must be non-empty array');
+    expect(() => strings.verify([])).toThrow('Must have at least 1 item');
+    expect(() => numbers.verify([])).toThrow('Must have at least 1 item');
   });
 });
 

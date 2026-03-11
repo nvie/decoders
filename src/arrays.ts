@@ -55,7 +55,7 @@ function isNonEmpty<T>(arr: readonly T[]): arr is [T, ...T[]] {
  */
 /* #__NO_SIDE_EFFECTS__ */
 export function nonEmptyArray<T>(decoder: Decoder<T>): Decoder<[T, ...T[]]> {
-  return array(decoder).refine(isNonEmpty, 'Must be non-empty array');
+  return array(decoder).refine(isNonEmpty, 'Must have at least 1 item');
 }
 
 /* #__NO_SIDE_EFFECTS__ */

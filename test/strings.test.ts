@@ -465,6 +465,25 @@ describe('sized', () => {
     expect(() => decoder.verify([1, 2, 3, 4, 5, 6])).toThrow('Must have at most 5 items');
   });
 
+  test('singular item/char messages', () => {
+    expect(() => sized(array(number), { min: 1 }).verify([])).toThrow(
+      'Must have at least 1 item',
+    );
+    expect(() => sized(array(number), { max: 1 }).verify([1, 2])).toThrow(
+      'Must have at most 1 item',
+    );
+    expect(() => sized(array(number), { size: 1 }).verify([])).toThrow('Must have 1 item');
+    expect(() => sized(string, { min: 1 }).verify('')).toThrow(
+      'Too short, must be at least 1 char',
+    );
+    expect(() => sized(string, { max: 1 }).verify('abc')).toThrow(
+      'Too long, must be at most 1 char',
+    );
+    expect(() => sized(string, { size: 1 }).verify('')).toThrow(
+      'Too short, must be 1 char',
+    );
+  });
+
   test('exact size (set)', () => {
     const decoder = sized(setFromArray(number), { size: 3 });
     expect(decoder.verify([1, 2, 3])).toEqual(new Set([1, 2, 3]));

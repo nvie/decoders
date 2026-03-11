@@ -1,4 +1,9 @@
 /* #__NO_SIDE_EFFECTS__ */
+export function qty(n: number, unit: string): string {
+  return n === 1 ? `${n} ${unit}` : `${n} ${unit}s`;
+}
+
+/* #__NO_SIDE_EFFECTS__ */
 export function isNumber(value: unknown): value is number {
   return typeof value === 'number';
 }

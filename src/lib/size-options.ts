@@ -1,4 +1,5 @@
 import type { Relax } from './Relax';
+import { qty } from './utils';
 
 // prettier-ignore
 export type SizeOptions = Relax<
@@ -25,12 +26,14 @@ export function bySizeOptions(options: SizeOptions): (value: Sized) => string | 
     const len = value.length ?? value.size;
     if (typeof value === 'string') {
       if (min !== undefined && len < min)
-        return `Too short, must be ${atLeast}${min} chars`;
+        return `Too short, must be ${atLeast}${qty(min, 'char')}`;
       if (max !== undefined && len > max)
-        return `Too long, must be ${atMost}${max} chars`;
+        return `Too long, must be ${atMost}${qty(max, 'char')}`;
     } else {
-      if (min !== undefined && len < min) return `Must have ${atLeast}${min} items`;
-      if (max !== undefined && len > max) return `Must have ${atMost}${max} items`;
+      if (min !== undefined && len < min)
+        return `Must have ${atLeast}${qty(min, 'item')}`;
+      if (max !== undefined && len > max)
+        return `Must have ${atMost}${qty(max, 'item')}`;
     }
     return null;
   };
