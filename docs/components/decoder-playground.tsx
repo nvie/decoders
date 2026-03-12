@@ -281,7 +281,7 @@ export function DecoderPlayground(props: Props) {
   );
   const [activeRow, setActiveRow] = useState(0);
   const [ready, setReady] = useState(false);
-  const compartmentRef = useRef<{ evaluate: (code: string) => unknown }>(undefined);
+  const compartmentRef = useRef<{ evaluate: (code: string) => unknown; globalThis: Record<string, unknown> }>(undefined);
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollAnchorRef = useRef<number | null>(null);
   const [hintState, hideHint, markExplored, removeHint] = usePlaygroundHint(
