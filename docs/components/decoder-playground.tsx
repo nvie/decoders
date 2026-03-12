@@ -281,7 +281,7 @@ export function DecoderPlayground(props: Props) {
   );
   const [activeRow, setActiveRow] = useState(0);
   const [ready, setReady] = useState(false);
-  const compartmentRef = useRef<{ evaluate: (code: string) => unknown; globalThis: Record<string, unknown> }>(undefined);
+  const compartmentRef = useRef<{ evaluate: (code: string) => unknown }>(undefined);
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollAnchorRef = useRef<number | null>(null);
   const [hintState, hideHint, markExplored, removeHint] = usePlaygroundHint(
@@ -309,48 +309,46 @@ export function DecoderPlayground(props: Props) {
       if (!inputExpr || !compartment) return undefined;
 
       try {
-        // Evaluate the input expression once and reuse the result, so
-        // non-deterministic expressions (e.g. Math.random()) are consistent.
-        compartment.globalThis.__input__ = compartment.evaluate(`(${inputExpr})`);
-        const inputRef = '__input__';
-
-        // Check acceptance via .decode()
-        const decodeResult = compartment.evaluate(
-          `(${decoderExpr}).decode(${inputRef})`,
-        ) as { ok: boolean; value?: unknown; error?: unknown };
-        const accepted = decodeResult.ok;
+        // Evaluate everything in a single IIFE so the input expression is
+        // evaluated once (stable for non-deterministic expressions like
+        // Math.random()) and never leaks onto globalThis.
+        const { ok, value, formattedError } = compartment.evaluate(
+          `(() => {
+            const __input = (${inputExpr});
+            const __result = (${decoderExpr}).decode(__input);
+            return {
+              ok: __result.ok,
+              value: __result.value,
+              formattedError: __result.ok ? undefined : ${f}(__result.error),
+            };
+          })()`,
+        ) as { ok: boolean; value?: unknown; formattedError?: string };
 
         switch (m) {
           case 'verify': {
-            if (accepted) {
-              return { status: 'accepted', value: formatValue(decodeResult.value) };
+            if (ok) {
+              return { status: 'accepted', value: formatValue(value) };
             }
-            const formatted = compartment.evaluate(
-              `${f}((${decoderExpr}).decode(${inputRef}).error)`,
-            ) as string;
-            return { status: 'rejected', error: formatted };
+            return { status: 'rejected', error: formattedError! };
           }
 
           case 'value': {
-            if (accepted) {
-              return { status: 'accepted', value: formatValue(decodeResult.value) };
+            if (ok) {
+              return { status: 'accepted', value: formatValue(value) };
             }
             return { status: 'rejected', error: formatValue(undefined) };
           }
 
           case 'decode': {
-            if (accepted) {
+            if (ok) {
               return {
                 status: 'accepted',
-                value: `{ ok: true, value: ${formatValue(decodeResult.value)} }`,
+                value: `{ ok: true, value: ${formatValue(value)} }`,
               };
             }
-            const annotation = compartment.evaluate(
-              `${f}((${decoderExpr}).decode(${inputRef}).error)`,
-            ) as string;
             return {
               status: 'rejected',
-              error: `{ ok: false, error: ${JSON.stringify(annotation)} }`,
+              error: `{ ok: false, error: ${JSON.stringify(formattedError)} }`,
             };
           }
         }
