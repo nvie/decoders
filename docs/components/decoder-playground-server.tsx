@@ -45,9 +45,9 @@ function evalCell(
 
     switch (mode) {
       case 'verify': {
-        if (accepted) {
+        if (accepted)
           return { status: 'accepted', value: formatValue(decodeResult.value) };
-        }
+
         const fmtFn = new Function(
           ...keysWithInput,
           `return ${fmt}((${decoderExpr}).decode(__input__).error)`,
@@ -56,27 +56,9 @@ function evalCell(
       }
 
       case 'value': {
-        if (accepted) {
-          return { status: 'accepted', value: formatValue(decodeResult.value) };
-        }
-        return { status: 'rejected', error: formatValue(undefined) };
-      }
-
-      case 'decode': {
-        if (accepted) {
-          return {
-            status: 'accepted',
-            value: `{ ok: true, value: ${formatValue(decodeResult.value)} }`,
-          };
-        }
-        const fmtFn = new Function(
-          ...keysWithInput,
-          `return ${fmt}((${decoderExpr}).decode(__input__).error)`,
-        );
-        return {
-          status: 'rejected',
-          error: `{ ok: false, error: ${JSON.stringify(fmtFn(...valsWithInput))} }`,
-        };
+        return accepted
+          ? { status: 'accepted', value: formatValue(decodeResult.value) }
+          : { status: 'rejected', error: formatValue(undefined) };
       }
     }
   } catch {

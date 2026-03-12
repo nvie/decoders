@@ -2,7 +2,7 @@ export type CellResult =
   | { status: 'accepted'; value: string }
   | { status: 'rejected'; error: string };
 
-export type Mode = 'verify' | 'value' | 'decode';
+export type Mode = 'verify' | 'value';
 export type Fmt = 'formatShort' | 'formatInline';
 
 export function formatValue(value: unknown): string {

@@ -18,12 +18,11 @@ import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
 import { Signal } from '@/lib/signals';
 import type { CellResult, Mode, Fmt } from '@/lib/playground-types';
 import { formatValue } from '@/lib/playground-types';
+import type { Relax } from 'decoders';
 
 const MODE_OPTIONS: { mode: Mode; label: string; description: string }[] = [
   { mode: 'verify', label: 'Use .verify()', description: 'Value or throw' },
   { mode: 'value', label: 'Use .value()', description: 'Value or undefined' },
-  // TODO Commenting out this mode for now, as Annotation does not have an easy visual representation
-  // { mode: 'decode', label: 'Use .decode()', description: 'DecodeResult object' },
 ];
 
 const FMT_OPTIONS: { fmt: Fmt; label: string; description: string }[] = [
@@ -322,34 +321,17 @@ export function DecoderPlayground(props: Props) {
               formattedError: __result.ok ? undefined : ${f}(__result.error),
             };
           })()`,
-        ) as { ok: boolean; value?: unknown; formattedError?: string };
+        ) as Relax<{ ok: true; value: unknown } | { ok: false; formattedError: string }>;
 
         switch (m) {
           case 'verify': {
-            if (ok) {
-              return { status: 'accepted', value: formatValue(value) };
-            }
-            return { status: 'rejected', error: formattedError! };
+            if (ok) return { status: 'accepted', value: formatValue(value) };
+            else return { status: 'rejected', error: formattedError };
           }
 
           case 'value': {
-            if (ok) {
-              return { status: 'accepted', value: formatValue(value) };
-            }
-            return { status: 'rejected', error: formatValue(undefined) };
-          }
-
-          case 'decode': {
-            if (ok) {
-              return {
-                status: 'accepted',
-                value: `{ ok: true, value: ${formatValue(value)} }`,
-              };
-            }
-            return {
-              status: 'rejected',
-              error: `{ ok: false, error: ${JSON.stringify(formattedError)} }`,
-            };
+            if (ok) return { status: 'accepted', value: formatValue(value) };
+            else return { status: 'rejected', error: formatValue(undefined) };
           }
         }
       } catch (e: unknown) {
@@ -572,15 +554,11 @@ export function DecoderPlayground(props: Props) {
                     </span>
                   </button>
                 ))}
-              {(!modeLocked || showFmt) && (
-                <hr className="my-1 border-fd-border" />
-              )}
+              {(!modeLocked || showFmt) && <hr className="my-1 border-fd-border" />}
               <button
                 onClick={() => {
                   toggleInlineInput();
-                  document.dispatchEvent(
-                    new KeyboardEvent('keydown', { key: 'Escape' }),
-                  );
+                  document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
                 }}
                 className="flex cursor-pointer items-start gap-2 rounded-lg p-2 text-start text-sm hover:bg-fd-accent hover:text-fd-accent-foreground"
               >
@@ -655,9 +633,7 @@ export function DecoderPlayground(props: Props) {
                   {i === 0 && hintState !== 'hidden' && (
                     <span
                       className={`playground-hint ${hintState === 'fading' ? 'playground-hint-out' : ''}`}
-                      onAnimationEnd={
-                        hintState === 'fading' ? removeHint : undefined
-                      }
+                      onAnimationEnd={hintState === 'fading' ? removeHint : undefined}
                     >
                       Try any expression!
                     </span>
