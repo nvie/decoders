@@ -24,11 +24,19 @@ function evalCell(
   const vals = Object.values(context);
 
   try {
+    // Evaluate the input expression once and reuse the result, so
+    // non-deterministic expressions (e.g. Math.random()) are consistent.
+    const inputFn = new Function(...keys, `return (${inputExpr})`);
+    const inputValue = inputFn(...vals);
+
+    const keysWithInput = [...keys, '__input__'];
+    const valsWithInput = [...vals, inputValue];
+
     const decodeFn = new Function(
-      ...keys,
-      `return (${decoderExpr}).decode(${inputExpr})`,
+      ...keysWithInput,
+      `return (${decoderExpr}).decode(__input__)`,
     );
-    const decodeResult = decodeFn(...vals) as {
+    const decodeResult = decodeFn(...valsWithInput) as {
       ok: boolean;
       value?: unknown;
       error?: unknown;
@@ -38,28 +46,20 @@ function evalCell(
     switch (mode) {
       case 'verify': {
         if (accepted) {
-          const verifyFn = new Function(
-            ...keys,
-            `return (${decoderExpr}).verify(${inputExpr})`,
-          );
-          return { status: 'accepted', value: formatValue(verifyFn(...vals)) };
+          return { status: 'accepted', value: formatValue(decodeResult.value) };
         }
         const fmtFn = new Function(
-          ...keys,
-          `return ${fmt}((${decoderExpr}).decode(${inputExpr}).error)`,
+          ...keysWithInput,
+          `return ${fmt}((${decoderExpr}).decode(__input__).error)`,
         );
-        return { status: 'rejected', error: fmtFn(...vals) as string };
+        return { status: 'rejected', error: fmtFn(...valsWithInput) as string };
       }
 
       case 'value': {
-        const valueFn = new Function(
-          ...keys,
-          `return (${decoderExpr}).value(${inputExpr})`,
-        );
-        const result = valueFn(...vals);
-        return accepted
-          ? { status: 'accepted', value: formatValue(result) }
-          : { status: 'rejected', error: formatValue(result) };
+        if (accepted) {
+          return { status: 'accepted', value: formatValue(decodeResult.value) };
+        }
+        return { status: 'rejected', error: formatValue(undefined) };
       }
 
       case 'decode': {
@@ -70,12 +70,12 @@ function evalCell(
           };
         }
         const fmtFn = new Function(
-          ...keys,
-          `return ${fmt}((${decoderExpr}).decode(${inputExpr}).error)`,
+          ...keysWithInput,
+          `return ${fmt}((${decoderExpr}).decode(__input__).error)`,
         );
         return {
           status: 'rejected',
-          error: `{ ok: false, error: ${JSON.stringify(fmtFn(...vals))} }`,
+          error: `{ ok: false, error: ${JSON.stringify(fmtFn(...valsWithInput))} }`,
         };
       }
     }
