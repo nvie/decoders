@@ -69,7 +69,7 @@
     "fast-check": "^4.6.0",
     "itertools": "^2.6.0",
     "oxlint": "^1.52.0",
-    "pkg-pr-new": "^0.0.65",
+    "pkg-pr-new": "^0.0.66",
     "prettier": "^3.8.1",
     "publint": "^0.3.18",
     "release-it": "^19.2.4",
