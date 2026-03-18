@@ -19,6 +19,7 @@ const NOT_DECODERS = new Set([
   'JSONArray',
   'JSONObject',
   'JSONValue',
+  'Relax',
   'Scalar',
 
   'Sized',
