@@ -147,6 +147,26 @@ describe('urlString', () => {
     expect(decoder.verify('https://user:pass@nvie.com:443/foo?q=bar#qux')).toBe(
       'https://user:pass@nvie.com:443/foo?q=bar#qux',
     );
+
+    // URLs with fragments
+    expect(decoder.verify('https://example.com#section')).toBe(
+      'https://example.com#section',
+    );
+    expect(decoder.verify('https://example.com/#section')).toBe(
+      'https://example.com/#section',
+    );
+    expect(decoder.verify('https://example.com/page#section')).toBe(
+      'https://example.com/page#section',
+    );
+    expect(decoder.verify('https://example.com/page?q=1#section')).toBe(
+      'https://example.com/page?q=1#section',
+    );
+    expect(decoder.verify('https://do.dev/#further-reading')).toBe(
+      'https://do.dev/#further-reading',
+    );
+    expect(decoder.verify('https://example.com/path#key=value&foo=bar!baz(1)')).toBe(
+      'https://example.com/path#key=value&foo=bar!baz(1)',
+    );
   });
 
   test('returns the original string unchanged', () => {
@@ -163,6 +183,7 @@ describe('urlString', () => {
     expect(() => decoder.verify('/search?q=foo')).toThrow('Must be URL');
     expect(() => decoder.verify('')).toThrow('Must be URL');
     expect(() => decoder.verify(123)).toThrow('Must be string');
+    expect(() => decoder.verify('https://nvie.com/#white space')).toThrow('Must be URL');
   });
 });
 

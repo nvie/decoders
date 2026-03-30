@@ -1,5 +1,8 @@
 ## [Unreleased]
 
+- Fix `urlString`, `url`, and `httpsUrl` decoders to accept a wider range of URL fragments
+  (e.g. `https://foo.bar/#a-b` was previously rejected)
+
 ## [2.9.1] - 2026-03-11
 
 - Fix `sized()` error messages to use singular "item"/"char" when count is 1
