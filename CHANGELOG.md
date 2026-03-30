@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [2.9.2] - 2026-03-30
+
 - Fix `urlString`, `url`, and `httpsUrl` decoders to accept a wider range of URL fragments
   (e.g. `https://foo.bar/#a-b` was previously rejected)
 
