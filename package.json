@@ -65,10 +65,10 @@
     "@arethetypeswrong/cli": "^0.18.2",
     "@release-it/keep-a-changelog": "^7.0.1",
     "@standard-schema/spec": "^1.1.0",
-    "@vitest/coverage-istanbul": "^4.1.0",
+    "@vitest/coverage-istanbul": "^4.1.2",
     "fast-check": "^4.6.0",
     "itertools": "^2.6.0",
-    "oxlint": "^1.56.0",
+    "oxlint": "^1.57.0",
     "pkg-pr-new": "^0.0.66",
     "prettier": "^3.8.1",
     "publint": "^0.3.18",
@@ -78,7 +78,7 @@
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "vite-tsconfig-paths": "^6.1.1",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.2"
   },
   "githubUrl": "https://github.com/nvie/decoders",
   "sideEffects": false
