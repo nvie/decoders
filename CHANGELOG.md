@@ -1,5 +1,8 @@
 ## [Unreleased]
 
+- Fix `url` and `urlString` decoders to accept all RFC 3986 valid characters in paths and
+  query strings (e.g. `:`, `!`, `$`, `'`, `(`, `)`, `*` were previously rejected)
+
 ## [2.9.2] - 2026-03-30
 
 - Fix `urlString`, `url`, and `httpsUrl` decoders to accept a wider range of URL fragments

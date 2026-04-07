@@ -167,6 +167,58 @@ describe('urlString', () => {
     expect(decoder.verify('https://example.com/path#key=value&foo=bar!baz(1)')).toBe(
       'https://example.com/path#key=value&foo=bar!baz(1)',
     );
+
+    // RFC 3986 sub-delims and special chars in path
+    expect(decoder.verify('https://example.com/path/with!excl')).toBe(
+      'https://example.com/path/with!excl',
+    );
+    expect(decoder.verify('https://example.com/path/$dollars')).toBe(
+      'https://example.com/path/$dollars',
+    );
+    expect(decoder.verify("https://example.com/path/it's")).toBe(
+      "https://example.com/path/it's",
+    );
+    expect(decoder.verify('https://example.com/path/(parens)')).toBe(
+      'https://example.com/path/(parens)',
+    );
+    expect(decoder.verify('https://example.com/path/wild*card')).toBe(
+      'https://example.com/path/wild*card',
+    );
+    expect(decoder.verify('https://example.com/path/a:b')).toBe(
+      'https://example.com/path/a:b',
+    );
+    expect(decoder.verify('https://example.com/path/a;b')).toBe(
+      'https://example.com/path/a;b',
+    );
+    expect(decoder.verify('https://example.com/path/a=b')).toBe(
+      'https://example.com/path/a=b',
+    );
+    expect(decoder.verify('https://example.com/path/a&b')).toBe(
+      'https://example.com/path/a&b',
+    );
+
+    // RFC 3986 sub-delims and special chars in query string
+    expect(decoder.verify('https://example.com/?q=hello~world')).toBe(
+      'https://example.com/?q=hello~world',
+    );
+    expect(decoder.verify('https://example.com/?q=hello!world')).toBe(
+      'https://example.com/?q=hello!world',
+    );
+    expect(decoder.verify('https://example.com/?q=$100')).toBe(
+      'https://example.com/?q=$100',
+    );
+    expect(decoder.verify("https://example.com/?q=it's")).toBe(
+      "https://example.com/?q=it's",
+    );
+    expect(decoder.verify('https://example.com/?q=(grouped)')).toBe(
+      'https://example.com/?q=(grouped)',
+    );
+    expect(decoder.verify('https://example.com/?q=wild*')).toBe(
+      'https://example.com/?q=wild*',
+    );
+    expect(decoder.verify('https://example.com/?q=a:b')).toBe(
+      'https://example.com/?q=a:b',
+    );
   });
 
   test('returns the original string unchanged', () => {
