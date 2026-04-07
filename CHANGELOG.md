@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [2.9.3] - 2026-04-07
+
 - Fix `url` and `urlString` decoders to accept all RFC 3986 valid characters in paths and
   query strings (e.g. `:`, `!`, `$`, `'`, `(`, `)`, `*` were previously rejected)
 
