@@ -75,15 +75,15 @@ function remarkDecoderSigSearch() {
       if (!nameAttr || typeof nameAttr.value !== "string") return;
 
       // Primary name
-      node.data = { ...node.data, _string: `${nameAttr.value} decoder` };
+      (node.data as Record<string, unknown>) = { ...node.data, _string: `${nameAttr.value} decoder` };
 
       // Insert a hidden paragraph node for each alias so they become
       // separate search entries pointing to the same section
       const aliasNames = extractAliasNames(node);
       const aliasNodes: Paragraph[] = aliasNames.map((alias) => ({
-        type: "paragraph",
+        type: "paragraph" as const,
         children: [],
-        data: { _string: `${alias} decoder (alias)` },
+        data: { _string: `${alias} decoder (alias)` } as Paragraph["data"],
       }));
 
       if (aliasNodes.length > 0) {
