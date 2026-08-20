@@ -8,16 +8,11 @@ import { instanceOf } from './misc';
 import { select } from './unions';
 import { unknown } from './basics';
 
-/** Match groups in this regex:
- * \1 - the scheme
- * \2 - the username/password (optional)
- * \3 - the host
- * \4 - the port (optional)
- * \5 - the path (optional)
- */
 const url_re =
   /* #__PURE__ */
-  /^([A-Za-z]{2,12}(?:[+][A-Za-z]{2,12})?):\/\/(?:([^@:]*:?(?:[^@]+)?)@)?(?:([A-Za-z0-9.-]+)(?::([0-9]{2,5}))?)(\/(?:[-+~%/.,!$&'()*:;=@\w]*)?(?:\?[-+~%/.,!$&'()*:;=@?\w]*)?)?(?:#[^\s#]*)?$/;
+  /^[A-Za-z]{2,12}(?:[+][A-Za-z]{2,12})?:\/\/(?:[^@]*@)?[A-Za-z0-9.-]+(?::[0-9]{2,5})?(?:\/[-+~%/.,!$&'()*:;=@\w]*(?:\?[-+~%/.,!$&'()*:;=@?\w]*)?)?(?:#[^\s#]*)?$/;
+//   scheme           +sub              ://      usr:pass@               :port            /path                       ?query                               #fragment
+//                                                       host
 
 /**
  * Accepts and returns strings.
@@ -67,7 +62,7 @@ export function endsWith<S extends string>(suffix: S): Decoder<`${string}${S}`> 
  */
 export const email: Decoder<string> = /* #__PURE__ */ regex(
   // The almost perfect email regex, taken from https://emailregex.com/
-  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+  /^(?:[^<>()[\]\\.,;:\s@"]+(?:\.[^<>()[\]\\.,;:\s@"]+)*|".+")@(?:\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}]|(?:[a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})$/,
   'Must be email',
 );
 

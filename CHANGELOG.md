@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+- Fix potential ReDoS on `url`, `urlString`, and `httpsUrl` decoders
+- Drop unused capture groups from the built-in `url` and `email` patterns, making both
+  faster on long inputs
+
 ## [2.9.3] - 2026-04-07
 
 - Fix `url` and `urlString` decoders to accept all RFC 3986 valid characters in paths and

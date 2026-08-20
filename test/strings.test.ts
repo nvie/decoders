@@ -229,6 +229,20 @@ describe('urlString', () => {
     expect(result).toBe(input);
   });
 
+  // The optional `user:pass@` group used to be written as two overlapping
+  // "anything but @" runs, so on an @-less URL the engine tried every way to
+  // split them: quadratic in the length of the input, and hit on valid URLs
+  // just as hard as on invalid ones. These inputs took minutes; they now take
+  // milliseconds, so a regression trips the test timeout rather than flaking.
+  test('matches in linear time, regardless of length', () => {
+    const long = 'a'.repeat(500_000);
+    expect(decoder.verify(`https://example.com/search?q=${long}`)).toContain(long);
+    expect(() => decoder.verify(`https://example.com/search?q=${long} `)).toThrow(
+      'Must be URL',
+    );
+    expect(() => decoder.verify(`https://${long}!`)).toThrow('Must be URL');
+  });
+
   test('invalid', () => {
     expect(() => decoder.verify('www.nvie.com')).toThrow('Must be URL');
     expect(() => decoder.verify('foo')).toThrow('Must be URL');
