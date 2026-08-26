@@ -1,8 +1,14 @@
 ## [Unreleased]
 
-- Fix potential ReDoS on `url`, `urlString`, and `httpsUrl` decoders
-- Drop unused capture groups from the built-in `url` and `email` patterns, making both
-  faster on long inputs
+**Security fixes:**
+
+- Fix potential ReDoS in the `url`, `urlString`, and `httpsUrl` decoders.
+- Fix prototype pollution via `__proto__` keys in `exact()`, `inexact()`, and `record()`
+  inputs.
+
+**Performance:**
+
+- Make `url` and `email` regex patterns ~15-20% faster to match.
 
 ## [2.9.3] - 2026-04-07
 

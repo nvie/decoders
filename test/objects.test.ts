@@ -522,3 +522,54 @@ describe('record with key validation', () => {
     );
   });
 });
+
+// A `__proto__` key is an ordinary string key as far as JSON is concerned, but
+// assigning it with `obj[key] = value` would reassign the prototype instead of
+// adding an own property. These inputs must be built with JSON.parse: an object
+// literal `{ __proto__: ... }` sets the prototype at parse time.
+describe('__proto__ keys', () => {
+  // Build these with JSON.parse: in an object literal, `__proto__` sets the
+  // prototype rather than defining a key.
+  const payload = () => JSON.parse('{"safe": 1, "__proto__": {"isAdmin": true}}');
+
+  test('object() ignores it, like any other unknown key', () => {
+    const rv = object({ safe: number }).verify(payload());
+    expect(Object.keys(rv)).toEqual(['safe']);
+    expect(Object.getPrototypeOf(rv)).toBe(Object.prototype);
+    expect((rv as Record<string, unknown>).isAdmin).toBeUndefined();
+  });
+
+  test('exact() rejects it as a disallowed key, not merely an extra one', () => {
+    expect(() => exact({ safe: number }).verify(payload())).toThrow('Unsafe key');
+
+    // ...while genuinely unknown keys keep their own message
+    expect(() => exact({ safe: number }).verify({ safe: 1, other: 2 })).toThrow(
+      "Unexpected extra keys: 'other'",
+    );
+  });
+
+  test('inexact() rejects it instead of passing it through', () => {
+    expect(() => inexact({ safe: number }).verify(payload())).toThrow('Unsafe key');
+  });
+
+  test('record() rejects it', () => {
+    expect(() => record(unknown).verify(payload())).toThrow('Unsafe key');
+  });
+
+  test('mapping() rejects it too, being built on record()', () => {
+    expect(() => mapping(unknown).verify(payload())).toThrow('Unsafe key');
+  });
+
+  test('declaring one in the definition is refused outright', () => {
+    expect(() => object({ ['__proto__']: number })).toThrow('not supported');
+    expect(() => exact({ ['__proto__']: number })).toThrow('not supported');
+    expect(() => inexact({ ['__proto__']: number })).toThrow('not supported');
+  });
+
+  test('the global Object.prototype is never touched', () => {
+    object({ safe: number }).verify(payload());
+    expect(() => record(unknown).verify(payload())).toThrow();
+    expect(() => inexact({ safe: number }).verify(payload())).toThrow();
+    expect(({} as Record<string, unknown>).isAdmin).toBeUndefined();
+  });
+});

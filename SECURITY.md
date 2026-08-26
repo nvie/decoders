@@ -34,8 +34,11 @@ In scope:
 - a decoder accepting input it should reject, so that the resulting value does not match
   its static type — the type system then lies to every caller downstream
 - prototype pollution or other unexpected property leakage through `object()`, `exact()`,
-  or `record()` — e.g. `__proto__` or `constructor` keys in the input affecting anything
-  beyond the decoded result
+  `inexact()`, or `record()`. decoders never reads or writes a `__proto__` key: `object()`
+  ignores one in its input, `exact()`, `inexact()`, and `record()` reject it, and
+  declaring one in a decoder definition is refused outright. A decoded result that carries
+  a `__proto__` own property, or whose prototype is anything but `Object.prototype`, is a
+  bug worth reporting.
 - catastrophic backtracking (ReDoS) in one of the built-in patterns: `email`, `urlString`,
   `url`, `httpsUrl`, `isoDate`, `uuid`, `identifier`, `nanoid`, and friends. These run on
   attacker-controlled strings by design, so a quadratic path through one of them is a real

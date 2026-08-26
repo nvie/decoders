@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import type { Annotation, Decoder, DecodeResult, DecoderType } from '~/core';
-import { annotateObject, define, merge, updateText } from '~/core';
+import { annotate, annotateObject, define, merge, updateText } from '~/core';
 import { difference } from '~/lib/set-methods';
 import { quote } from '~/lib/text';
 import { isPlainObject } from '~/lib/utils';
@@ -45,6 +45,36 @@ type ObjectDecoderType<Ds extends Record<string, Decoder<unknown>>> =
   }>;
 
 /**
+ * Rejects decoder definitions that declare a `__proto__` key.
+ *
+ * In an object literal, both `{ __proto__: d }` and `{ "__proto__": d }` set
+ * the prototype instead of defining a key, so such a definition has no keys at
+ * all and the decoder would silently validate nothing. Only the computed form
+ * `{ ['__proto__']: d }` defines a real key -- and that is the only form that
+ * could write the key to a decoded result, so that is the one rejected here.
+ */
+/* #__NO_SIDE_EFFECTS__ */
+function rejectProtoKey(decoders: Record<string, unknown>): void {
+  if (Object.prototype.hasOwnProperty.call(decoders, '__proto__')) {
+    throw new Error(
+      'A "__proto__" key is not supported in object(), exact(), or inexact() definitions',
+    );
+  }
+}
+
+/**
+ * Annotates the `__proto__` field of an input object as disallowed. Reported on
+ * the field itself, like any other bad field, rather than on the outer object.
+ */
+/* #__NO_SIDE_EFFECTS__ */
+function disallowedProtoKey(plainObj: Record<string, unknown>): Annotation {
+  return merge(
+    annotateObject(plainObj),
+    new Map([['__proto__', annotate(plainObj['__proto__'], 'Unsafe key')]]),
+  );
+}
+
+/**
  * Accepts any "plain old JavaScript object", but doesn't validate its keys or
  * values further.
  */
@@ -56,12 +86,12 @@ export const pojo: Decoder<Record<string, unknown>> = define((blob, ok, err) =>
  * Accepts objects with fields matching the given decoders. Extra fields that
  * exist on the input object are ignored and will not be returned.
  */
-export function object(decoders: Record<any, never>): Decoder<Record<string, never>>;
-export function object<Ds extends Record<string, Decoder<unknown>>>(
-  decoders: Ds,
-): Decoder<ObjectDecoderType<Ds>>;
+/**
+ * The shared implementation of `object()`, for callers that have already
+ * rejected a `__proto__` key in the definition.
+ */
 /* #__NO_SIDE_EFFECTS__ */
-export function object<Ds extends Record<string, Decoder<unknown>>>(
+function buildObject<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds>> {
   // Compute this set at decoder definition time
@@ -76,7 +106,7 @@ export function object<Ds extends Record<string, Decoder<unknown>>>(
     // value.
     const missingKeys = difference(knownKeys, actualKeys);
 
-    const record = {};
+    const record: Record<string, unknown> = {};
     let errors: Map<string, Annotation> | null = null;
 
     for (const key of Object.keys(decoders)) {
@@ -87,7 +117,6 @@ export function object<Ds extends Record<string, Decoder<unknown>>>(
       if (result.ok) {
         const value = result.value;
         if (value !== undefined) {
-          // @ts-expect-error - look into this later
           record[key] = value;
         }
 
@@ -136,6 +165,18 @@ export function object<Ds extends Record<string, Decoder<unknown>>>(
   });
 }
 
+export function object(decoders: Record<any, never>): Decoder<Record<string, never>>;
+export function object<Ds extends Record<string, Decoder<unknown>>>(
+  decoders: Ds,
+): Decoder<ObjectDecoderType<Ds>>;
+/* #__NO_SIDE_EFFECTS__ */
+export function object<Ds extends Record<string, Decoder<unknown>>>(
+  decoders: Ds,
+): Decoder<ObjectDecoderType<Ds>> {
+  rejectProtoKey(decoders);
+  return buildObject(decoders);
+}
+
 /**
  * Like `object()`, but will reject inputs that contain extra fields that are
  * not specified explicitly.
@@ -148,25 +189,38 @@ export function exact<Ds extends Record<string, Decoder<unknown>>>(
 export function exact<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds>> {
+  rejectProtoKey(decoders);
+
   // Compute this set at decoder definition time
   const allowedKeys = new Set(Object.keys(decoders));
 
   // Check the inputted object for any unexpected extra keys
-  const checked = pojo.reject((plainObj) => {
+  const checked = pojo.chain<Record<string, unknown>>((plainObj, ok, err) => {
     const actualKeys = new Set(Object.keys(plainObj));
+
+    // `__proto__` can never be a declared key, so it is never merely
+    // "unexpected" here -- it is disallowed outright
+    if (actualKeys.has('__proto__')) {
+      return err(disallowedProtoKey(plainObj));
+    }
+
     const extraKeys = difference(actualKeys, allowedKeys);
     return extraKeys.size > 0
-      ? `Unexpected extra keys: ${Array.from(extraKeys).map(quote).join(', ')}`
-      : null;
+      ? err(`Unexpected extra keys: ${Array.from(extraKeys).map(quote).join(', ')}`)
+      : ok(plainObj);
   });
 
   // Defer to the "object" decoder for doing the real decoding work
-  return checked.pipe(object(decoders));
+  return checked.pipe(buildObject(decoders));
 }
 
 /**
  * Like `object()`, but will pass through any extra fields on the input object
  * unvalidated that will thus be of `unknown` type statically.
+ *
+ * A `__proto__` key is the one exception: it cannot be passed through without
+ * reassigning the prototype of the returned object, so inputs containing one
+ * are rejected.
  */
 export function inexact(decoders: Record<any, never>): Decoder<Record<string, unknown>>;
 export function inexact<Ds extends Record<string, Decoder<unknown>>>(
@@ -176,28 +230,38 @@ export function inexact<Ds extends Record<string, Decoder<unknown>>>(
 export function inexact<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds> & Record<string, unknown>> {
-  return pojo.pipe((plainObj) => {
-    const allkeys = new Set(Object.keys(plainObj));
-    return object(decoders).transform((safepart) => {
-      const safekeys = new Set(Object.keys(decoders));
+  rejectProtoKey(decoders);
 
-      // To account for hard-coded keys that aren't part of the input
-      for (const k of safekeys) allkeys.add(k);
+  return pojo.chain<ObjectDecoderType<Ds> & Record<string, unknown>>(
+    (plainObj, _ok, err) => {
+      const allkeys = new Set(Object.keys(plainObj));
 
-      const rv = {} as ObjectDecoderType<Ds> & Record<string, unknown>;
-      for (const k of allkeys) {
-        if (safekeys.has(k)) {
-          const value = safepart[k];
-          if (value !== undefined) {
-            // @ts-expect-error - look into this later
-            rv[k] = value;
-          }
-        } else {
-          // @ts-expect-error - look into this later
-          rv[k] = plainObj[k];
-        }
+      // Bail out before validating anything else. Passing this key through
+      // would reassign the prototype of the result rather than adding a key
+      // to it, and there is no way to ask for it explicitly.
+      if (allkeys.has('__proto__')) {
+        return err(disallowedProtoKey(plainObj));
       }
-      return rv;
-    });
-  });
+
+      return buildObject(decoders).transform((safepart) => {
+        const safekeys = new Set(Object.keys(decoders));
+
+        // To account for hard-coded keys that aren't part of the input
+        for (const k of safekeys) allkeys.add(k);
+
+        const rv: Record<string, unknown> = {};
+        for (const k of allkeys) {
+          if (safekeys.has(k)) {
+            const value = safepart[k];
+            if (value !== undefined) {
+              rv[k] = value;
+            }
+          } else {
+            rv[k] = plainObj[k];
+          }
+        }
+        return rv as ObjectDecoderType<Ds> & Record<string, unknown>;
+      });
+    },
+  );
 }

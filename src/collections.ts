@@ -29,6 +29,16 @@ export function record<K extends string, V>(
 
     for (const key of Object.keys(input)) {
       const value = input[key];
+
+      // Writing this key would reassign the prototype of `rv` rather than
+      // adding a key to it, and `record()` has no way to declare that one is
+      // expected, so report it like any other bad field.
+      if (key === '__proto__') {
+        errors.set(key, annotate(value, 'Unsafe key'));
+        rv = {} as Record<K, V>; // Clear the success value so it can get garbage collected early
+        continue;
+      }
+
       const keyResult = keyDecoder?.decode(key);
       if (keyResult?.ok === false) {
         return err(
