@@ -45,7 +45,7 @@ type ObjectDecoderType<Ds extends Record<string, Decoder<unknown>>> =
   }>;
 
 /**
- * Rejects decoder definitions that declare a `__proto__` key.
+ * Refuses decoder definitions that declare an unsafe `__proto__` key.
  *
  * In an object literal, both `{ __proto__: d }` and `{ "__proto__": d }` set
  * the prototype instead of defining a key, so such a definition has no keys at
@@ -54,20 +54,20 @@ type ObjectDecoderType<Ds extends Record<string, Decoder<unknown>>> =
  * could write the key to a decoded result, so that is the one rejected here.
  */
 /* #__NO_SIDE_EFFECTS__ */
-function rejectProtoKey(decoders: Record<string, unknown>): void {
+function rejectUnsafeKey(decoders: Record<string, unknown>): void {
   if (Object.prototype.hasOwnProperty.call(decoders, '__proto__')) {
     throw new Error(
-      'A "__proto__" key is not supported in object(), exact(), or inexact() definitions',
+      'Unsafe key: "__proto__" cannot be used in an object(), exact(), or inexact() definition',
     );
   }
 }
 
 /**
- * Annotates the `__proto__` field of an input object as disallowed. Reported on
- * the field itself, like any other bad field, rather than on the outer object.
+ * Marks the `__proto__` field of an input object as unsafe. Reported on the
+ * field itself, like any other bad field, rather than on the outer object.
  */
 /* #__NO_SIDE_EFFECTS__ */
-function disallowedProtoKey(plainObj: Record<string, unknown>): Annotation {
+function annotateUnsafeKey(plainObj: Record<string, unknown>): Annotation {
   return merge(
     annotateObject(plainObj),
     new Map([['__proto__', annotate(plainObj['__proto__'], 'Unsafe key')]]),
@@ -173,7 +173,7 @@ export function object<Ds extends Record<string, Decoder<unknown>>>(
 export function object<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds>> {
-  rejectProtoKey(decoders);
+  rejectUnsafeKey(decoders);
   return buildObject(decoders);
 }
 
@@ -189,7 +189,7 @@ export function exact<Ds extends Record<string, Decoder<unknown>>>(
 export function exact<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds>> {
-  rejectProtoKey(decoders);
+  rejectUnsafeKey(decoders);
 
   // Compute this set at decoder definition time
   const allowedKeys = new Set(Object.keys(decoders));
@@ -199,9 +199,9 @@ export function exact<Ds extends Record<string, Decoder<unknown>>>(
     const actualKeys = new Set(Object.keys(plainObj));
 
     // `__proto__` can never be a declared key, so it is never merely
-    // "unexpected" here -- it is disallowed outright
+    // "unexpected" here -- it is unsafe outright
     if (actualKeys.has('__proto__')) {
-      return err(disallowedProtoKey(plainObj));
+      return err(annotateUnsafeKey(plainObj));
     }
 
     const extraKeys = difference(actualKeys, allowedKeys);
@@ -230,7 +230,7 @@ export function inexact<Ds extends Record<string, Decoder<unknown>>>(
 export function inexact<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds> & Record<string, unknown>> {
-  rejectProtoKey(decoders);
+  rejectUnsafeKey(decoders);
 
   return pojo.chain<ObjectDecoderType<Ds> & Record<string, unknown>>(
     (plainObj, _ok, err) => {
@@ -240,7 +240,7 @@ export function inexact<Ds extends Record<string, Decoder<unknown>>>(
       // would reassign the prototype of the result rather than adding a key
       // to it, and there is no way to ask for it explicitly.
       if (allkeys.has('__proto__')) {
-        return err(disallowedProtoKey(plainObj));
+        return err(annotateUnsafeKey(plainObj));
       }
 
       return buildObject(decoders).transform((safepart) => {

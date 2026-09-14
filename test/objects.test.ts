@@ -561,9 +561,9 @@ describe('__proto__ keys', () => {
   });
 
   test('declaring one in the definition is refused outright', () => {
-    expect(() => object({ ['__proto__']: number })).toThrow('not supported');
-    expect(() => exact({ ['__proto__']: number })).toThrow('not supported');
-    expect(() => inexact({ ['__proto__']: number })).toThrow('not supported');
+    expect(() => object({ ['__proto__']: number })).toThrow('Unsafe key');
+    expect(() => exact({ ['__proto__']: number })).toThrow('Unsafe key');
+    expect(() => inexact({ ['__proto__']: number })).toThrow('Unsafe key');
   });
 
   test('the global Object.prototype is never touched', () => {

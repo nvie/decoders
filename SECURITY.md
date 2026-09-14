@@ -34,7 +34,7 @@ In scope:
 - a decoder accepting input it should reject, so that the resulting value does not match
   its static type — the type system then lies to every caller downstream
 - prototype pollution or other unexpected property leakage through `object()`, `exact()`,
-  `inexact()`, or `record()`. decoders never reads or writes a `__proto__` key: `object()`
+  `inexact()`, or `record()`. No decoded result ever carries a `__proto__` key: `object()`
   ignores one in its input, `exact()`, `inexact()`, and `record()` reject it, and
   declaring one in a decoder definition is refused outright. A decoded result that carries
   a `__proto__` own property, or whose prototype is anything but `Object.prototype`, is a
