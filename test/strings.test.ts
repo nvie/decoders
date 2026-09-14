@@ -648,9 +648,39 @@ describe('uuid', () => {
     );
   });
 
+  test('accepts every RFC 9562 version, and the Nil and Max UUIDs', () => {
+    for (const value of [
+      '1ec9414c-232a-6b00-b3c8-9f6bdeced846', // v6
+      '017f22e2-79b0-7cc3-98c4-dc0c0c07398f', // v7
+      '2489e9ad-2ee2-8e00-8ec9-32d5f69181c0', // v8
+      '00000000-0000-0000-0000-000000000000', // Nil
+      'ffffffff-ffff-ffff-ffff-ffffffffffff', // Max
+      'FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF', // Max
+    ]) {
+      expect(decoder.verify(value)).toBe(value);
+    }
+  });
+
   test('rejects', () => {
     expect(decoder.decode('123e4567-e89b-12d3-a456-42661417400x').ok).toBe(false);
     expect(decoder.decode('123e4567e89b12d3a456426614174000').ok).toBe(false);
+  });
+
+  test('rejects an out-of-range version', () => {
+    expect(decoder.decode('123e4567-e89b-02d3-a456-426614174000').ok).toBe(false);
+    expect(decoder.decode('123e4567-e89b-92d3-a456-426614174000').ok).toBe(false);
+    expect(decoder.decode('123e4567-e89b-f2d3-a456-426614174000').ok).toBe(false);
+  });
+
+  test('rejects an out-of-range variant', () => {
+    expect(decoder.decode('123e4567-e89b-42d3-0456-426614174000').ok).toBe(false);
+    expect(decoder.decode('123e4567-e89b-42d3-7456-426614174000').ok).toBe(false);
+    expect(decoder.decode('123e4567-e89b-42d3-c456-426614174000').ok).toBe(false);
+  });
+
+  test('rejects strings that only look like Nil or Max', () => {
+    expect(decoder.decode('00000000-0000-0000-0000-000000000001').ok).toBe(false);
+    expect(decoder.decode('ffffffff-ffff-ffff-ffff-fffffffffffe').ok).toBe(false);
   });
 });
 
@@ -670,6 +700,10 @@ describe('uuidv1', () => {
     expect(decoder.decode('123e4567-e89b-12d3-a456-42661417400x').ok).toBe(false);
     expect(decoder.decode('123e4567e89b12d3a456426614174000').ok).toBe(false);
   });
+
+  test('rejects an out-of-range variant', () => {
+    expect(decoder.decode('123e4567-e89b-12d3-c456-426614174000').ok).toBe(false);
+  });
 });
 
 describe('uuidv4', () => {
@@ -688,5 +722,9 @@ describe('uuidv4', () => {
     expect(decoder.decode('123e4567-e89b-42d3-a456-42661417400x').ok).toBe(false);
     expect(decoder.decode('123E4567-E89B-12d3-A456-426614174000').ok).toBe(false);
     expect(decoder.decode('123e4567e89b42d3a456426614174000').ok).toBe(false);
+  });
+
+  test('rejects an out-of-range variant', () => {
+    expect(decoder.decode('123e4567-e89b-42d3-c456-426614174000').ok).toBe(false);
   });
 });

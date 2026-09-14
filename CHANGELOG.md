@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Fix `uuid`, `uuidv1`, and `uuidv4` to check the RFC 9562 version and variant nibbles
+
 ## [2.10.0] - 2026-09-14
 
 **Security fixes:**
