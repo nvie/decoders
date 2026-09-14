@@ -140,9 +140,7 @@ type that has a `.length` or `.size` property.
 
 ```ts
 type SizeOptions =
-  | { size: number }
-  | { min: number; max?: number }
-  | { min?: number; max: number };
+  { size: number } | { min: number; max?: number } | { min?: number; max: number };
 ```
 
 For strings, error messages refer to "chars". For arrays and sets, error messages refer to

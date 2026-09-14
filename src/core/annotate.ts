@@ -30,10 +30,7 @@ export interface OpaqueAnnotation {
 }
 
 export type Annotation =
-  | ObjectAnnotation
-  | ArrayAnnotation
-  | ScalarAnnotation
-  | OpaqueAnnotation;
+  ObjectAnnotation | ArrayAnnotation | ScalarAnnotation | OpaqueAnnotation;
 
 /** @internal */
 function brand<A extends Annotation>(ann: A): A {
