@@ -117,7 +117,7 @@ export function nanoid(options?: SizeOptions): Decoder<string> {
 export const uuid: Decoder<string> = regex(
   // https://www.rfc-editor.org/rfc/rfc9562#section-4
   // Version 1-8 with variant 8, 9, a, or b, plus the Nil and Max UUIDs (sections 5.9, 5.10)
-  /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|0{8}-0{4}-0{4}-0{4}-0{12}|f{8}-f{4}-f{4}-f{4}-f{12})$/i,
+  /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$/i,
   'Must be uuid',
 );
 
