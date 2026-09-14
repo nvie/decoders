@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [2.10.0] - 2026-09-14
+
 **Security fixes:**
 
 - Fix potential ReDoS in the `url`, `urlString`, and `httpsUrl` decoders.
