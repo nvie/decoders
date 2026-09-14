@@ -5,7 +5,7 @@ description: String decoders for validating and parsing string values.
 
 ## string
 
-<DecoderSig name="string" type="string" source="strings.ts#L22-L27" />
+<DecoderSig name="string" type="string" source="strings.ts#L17-L22" />
 
 Accepts and returns strings.
 
@@ -18,7 +18,7 @@ Accepts and returns strings.
 
 ## nonEmptyString
 
-<DecoderSig name="nonEmptyString" type="string" source="strings.ts#L29-L32" />
+<DecoderSig name="nonEmptyString" type="string" source="strings.ts#L24-L27" />
 
 Like [`string`][], but will reject the empty string or strings containing only whitespace.
 Note this is not the same as `sized(string, { min: 1 })`, which would still accept
@@ -37,7 +37,7 @@ whitespace-only strings.
   name="regex"
   params="pattern: RegExp, message: string"
   type="string"
-  source="strings.ts#L34-L40"
+  source="strings.ts#L29-L35"
 />
 
 Accepts and returns strings that match the given regular expression.
@@ -55,7 +55,7 @@ Accepts and returns strings that match the given regular expression.
   name="startsWith"
   params="prefix: P"
   type="`${P}${string}`"
-  source="strings.ts#L42-L51"
+  source="strings.ts#L37-L46"
 />
 
 <Since version="2.5" />
@@ -75,7 +75,7 @@ Accepts and returns strings that start with the given prefix.
   name="endsWith"
   params="suffix: S"
   type="`${string}${S}`"
-  source="strings.ts#L53-L62"
+  source="strings.ts#L48-L57"
 />
 
 <Since version="2.5" />
@@ -91,7 +91,7 @@ Accepts and returns strings that end with the given suffix.
 
 ## decimal
 
-<DecoderSig name="decimal" type="string" source="strings.ts#L147-L151" />
+<DecoderSig name="decimal" type="string" source="strings.ts#L142-L146" />
 
 Accepts and returns strings with decimal digits only (base-10). To convert these to
 numbers, use the [`numeric`][] decoder.
@@ -105,7 +105,7 @@ numbers, use the [`numeric`][] decoder.
 
 ## hexadecimal
 
-<DecoderSig name="hexadecimal" type="string" source="strings.ts#L153-L159" />
+<DecoderSig name="hexadecimal" type="string" source="strings.ts#L148-L154" />
 
 Accepts and returns strings with hexadecimal digits only (base-16).
 
@@ -118,7 +118,7 @@ Accepts and returns strings with hexadecimal digits only (base-16).
 
 ## numeric
 
-<DecoderSig name="numeric" type="number" source="strings.ts#L161-L166" />
+<DecoderSig name="numeric" type="number" source="strings.ts#L156-L161" />
 
 Accepts valid numerical strings (in base-10) and returns them as a number. To only accept
 numerical strings and keep them as string values, use the [`decimal`][] decoder.
@@ -132,7 +132,7 @@ numerical strings and keep them as string values, use the [`decimal`][] decoder.
 
 ## email
 
-<DecoderSig name="email" type="string" source="strings.ts#L64-L72" />
+<DecoderSig name="email" type="string" source="strings.ts#L59-L67" />
 
 Accepts and returns strings that are syntactically valid email addresses. (This will not
 mean that the email address actually exist.)
@@ -146,7 +146,7 @@ mean that the email address actually exist.)
 
 ## urlString
 
-<DecoderSig name="urlString" type="string" source="strings.ts#L74-L77" />
+<DecoderSig name="urlString" type="string" source="strings.ts#L69-L72" />
 
 <Since version="2.9" />
 
@@ -167,7 +167,7 @@ Accepts strings that are valid URLs, returns the value as a string.
 
 ## url
 
-<DecoderSig name="url" type="URL" source="strings.ts#L79-L86" />
+<DecoderSig name="url" type="URL" source="strings.ts#L74-L81" />
 
 Accepts either URL strings or URL instances, returns the value as a URL instance.
 
@@ -186,7 +186,7 @@ Accepts either URL strings or URL instances, returns the value as a URL instance
 
 ## httpsUrl
 
-<DecoderSig name="httpsUrl" type="URL" source="strings.ts#L88-L95" />
+<DecoderSig name="httpsUrl" type="URL" source="strings.ts#L83-L90" />
 
 Accepts URL strings and URL instances, but only HTTPS ones. Returns the value as a URL
 instance.
@@ -216,7 +216,7 @@ const gitUrl: Decoder<URL> = url.refine(
 
 ## identifier
 
-<DecoderSig name="identifier" type="string" source="strings.ts#L97-L104" />
+<DecoderSig name="identifier" type="string" source="strings.ts#L92-L99" />
 
 <Since version="2.4" />
 
@@ -244,13 +244,13 @@ Accepts and returns strings that are valid identifiers in most programming langu
   name="nanoid"
   params="{ size: number }"
   type="string"
-  source="strings.ts#L106-L115"
+  source="strings.ts#L101-L110"
 />
 <DecoderSig
   name="nanoid"
   params="{ min?: number; max?: number }"
   type="string"
-  source="strings.ts#L106-L115"
+  source="strings.ts#L101-L110"
 />
 
 <Since version="2.4" />
@@ -275,7 +275,7 @@ use [`regex()`][] instead.
 
 ## uuid
 
-<DecoderSig name="uuid" type="string" source="strings.ts#L117-L125" />
+<DecoderSig name="uuid" type="string" source="strings.ts#L112-L120" />
 
 Accepts strings that are valid
 [UUIDs](https://en.wikipedia.org/wiki/universally_unique_identifier) (universally unique
@@ -295,7 +295,7 @@ identifier).
 
 ## uuidv1
 
-<DecoderSig name="uuidv1" type="string" source="strings.ts#L127-L135" />
+<DecoderSig name="uuidv1" type="string" source="strings.ts#L122-L130" />
 
 Like [`uuid`][], but only accepts
 [UUIDv1](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_%28date-time_and_MAC_address%29)
@@ -313,7 +313,7 @@ strings.
 
 ## uuidv4
 
-<DecoderSig name="uuidv4" type="string" source="strings.ts#L137-L145" />
+<DecoderSig name="uuidv4" type="string" source="strings.ts#L132-L140" />
 
 Like [`uuid`][], but only accepts
 [UUIDv4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_%28random%29)

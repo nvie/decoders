@@ -11,7 +11,7 @@ description: Object decoders for validating structured data.
   name="object"
   params="{ field1: Decoder<A>, field2: Decoder<B>, ... }"
   type="{ field1: A, field2: B, ... }"
-  source="objects.ts#L55-L137"
+  source="objects.ts#L168-L178"
   multiline
 />
 
@@ -34,7 +34,7 @@ and `inexact`.
   name="exact"
   params="{ field1: Decoder<A>, field2: Decoder<B>, ... }"
   type="{ field1: A, field2: B, ... }"
-  source="objects.ts#L139-L165"
+  source="objects.ts#L180-L215"
   multiline
 />
 
@@ -57,12 +57,15 @@ and `inexact`.
   name="inexact"
   params="{ field1: Decoder<A>, field2: Decoder<B>, ... }"
   type="{ field1: A, field2: B, ... }"
-  source="objects.ts#L167-L203"
+  source="objects.ts#L217-L267"
   multiline
 />
 
 A "loose object" decoder. Like [`object()`][], but will pass through any extra fields on
 the input object unvalidated that will thus be of `unknown` type statically.
+
+The one exception is a `__proto__` key, which cannot be passed through safely. See
+[Unsafe keys](#unsafe-keys).
 
 <DecoderPlayground
   decoder="inexact({ x: number, y: number })"
@@ -99,6 +102,36 @@ treat extra properties on input values.
 
 ---
 
+### Unsafe keys
+
+`__proto__` is the only key that cannot be written to a plain object without reassigning
+its prototype instead of adding a field. Decoded results therefore never contain one:
+
+| decoder     | input containing a `__proto__` key   |
+| ----------- | ------------------------------------ |
+| `object()`  | ignored, like any other unknown key  |
+| `exact()`   | rejected                             |
+| `inexact()` | rejected, rather than passed through |
+| `record()`  | rejected                             |
+
+Where a decoder rejects, the error is reported on the `__proto__` field itself, so it
+reads like any other field error:
+
+```text
+{
+  "theme": "dark",
+  "__proto__": {
+    "isAdmin": true,
+  },
+               ^ Unsafe key
+}
+```
+
+Declaring a `__proto__` key in a decoder definition throws. If you genuinely need to read
+a field named `__proto__`, write a custom decoder with [`define()`][].
+
+---
+
 ## Dictionary shapes
 
 ### record
@@ -107,7 +140,7 @@ treat extra properties on input values.
   name="record"
   params="values: Decoder<V>"
   type="Record<string, V>"
-  source="collections.ts#L8-L58"
+  source="collections.ts#L8-L68"
 />
 
 <DecoderSig
@@ -120,6 +153,8 @@ Accepts objects where all values match the given decoder, and returns the result
 `Record<string, V>`.
 
 This is useful to validate inputs like `{ [key: string]: V }`.
+
+Inputs containing a `__proto__` key are rejected. See [Unsafe keys](#unsafe-keys).
 
 #### Decoding values only
 
@@ -149,7 +184,7 @@ For example, to enforce that all keys are emails:
 
 ### pojo
 
-<DecoderSig name="pojo" type="Record<string, unknown>" source="objects.ts#L47-L53" />
+<DecoderSig name="pojo" type="Record<string, unknown>" source="objects.ts#L77-L83" />
 
 Accepts any "plain old JavaScript object", but doesn't validate its keys or values
 further.
@@ -160,3 +195,4 @@ further.
 />
 
 [`object()`]: /object
+[`define()`]: /docs/api/utilities#define
