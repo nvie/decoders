@@ -65,7 +65,7 @@
     "@arethetypeswrong/cli": "^0.18.5",
     "@release-it/keep-a-changelog": "^8.0.1",
     "@standard-schema/spec": "^1.1.0",
-    "@vitest/coverage-istanbul": "^4.1.11",
+    "@vitest/coverage-istanbul": "^5.0.0",
     "fast-check": "^4.10.0",
     "itertools": "^2.7.1",
     "oxlint": "^1.83.0",
