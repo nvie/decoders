@@ -11,6 +11,11 @@ import type { Metadata } from "next";
 import { createRelativeLink } from "fumadocs-ui/mdx";
 import { GotoDecoderLink } from "@/components/decoder-link";
 import { PageActions } from "@/components/page-actions";
+import { TOC } from "@/components/toc";
+import {
+  TOCPopover,
+  TOCProvider,
+} from "fumadocs-ui/layouts/docs/page/slots/toc";
 
 const GITHUB_CONTENT_URL =
   "https://github.com/nvie/decoders/edit/main/docs/content/docs";
@@ -25,7 +30,17 @@ export default async function Page(props: {
   const MDX = page.data.body;
 
   return (
-    <DocsPage toc={page.data.toc} full={page.data.full} tableOfContent={{ single: true }}>
+    <DocsPage
+      toc={page.data.toc}
+      full={page.data.full}
+      tableOfContentPopover={{
+        list: {
+          className:
+            "[&_a>svg]:hidden [&>div]:hidden border-s border-fd-foreground/10",
+        },
+      }}
+      slots={{ toc: { provider: TOCProvider, main: TOC, popover: TOCPopover } }}
+    >
       <div className="flex items-start justify-between gap-4">
         <DocsTitle>{page.data.title}</DocsTitle>
         <PageActions
