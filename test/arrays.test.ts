@@ -168,3 +168,38 @@ describe('tuples', () => {
     expect(decoder.decode(['foo', 1, 2, 3, 4, 5]).ok).toBe(false);
   });
 });
+
+describe('array with size options', () => {
+  test('rejects oversized input before validating items', () => {
+    const decoder = array(string, { max: 20 });
+    const huge = Array(1_000_000).fill('x');
+    huge[999_999] = 42;
+
+    expect(() => decoder.verify(huge)).toThrow('Must have at most 20 items');
+  });
+
+  test('rejects undersized input', () => {
+    const decoder = array(string, { min: 2 });
+    expect(() => decoder.verify([])).toThrow('Must have at least 2 items');
+    expect(() => decoder.verify(['foo'])).toThrow('Must have at least 2 items');
+    expect(decoder.verify(['foo', 'bar'])).toEqual(['foo', 'bar']);
+  });
+
+  test('still validates items when the size is acceptable', () => {
+    const decoder = array(string, { min: 1, max: 20 });
+    expect(decoder.verify(['foo', 'bar'])).toEqual(['foo', 'bar']);
+    expect(() => decoder.verify(['foo', 42])).toThrow('Must be string (at index 1)');
+  });
+
+  test('accepts an exact size', () => {
+    const decoder = array(string, { size: 2 });
+    expect(decoder.verify(['foo', 'bar'])).toEqual(['foo', 'bar']);
+    expect(() => decoder.verify(['foo'])).toThrow('Must have 2 items');
+    expect(() => decoder.verify(['foo', 'bar', 'qux'])).toThrow('Must have 2 items');
+  });
+
+  test('checks the size before the item type', () => {
+    const decoder = array(string, { max: 1 });
+    expect(() => decoder.verify([42, 42])).toThrow('Must have at most 1 item');
+  });
+});

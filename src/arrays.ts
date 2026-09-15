@@ -1,5 +1,7 @@
 import type { Decoder, DecoderType } from '~/core';
 import { annotate, define } from '~/core';
+import type { SizeOptions } from '~/lib/size-options';
+import { sized } from '~/misc';
 
 /**
  * Accepts any array, but doesn't validate its items further.
@@ -17,10 +19,11 @@ export const poja: Decoder<unknown[]> = define((blob, ok, err) => {
  * Accepts arrays of whatever the given decoder accepts.
  */
 /* #__NO_SIDE_EFFECTS__ */
-export function array<T>(decoder: Decoder<T>): Decoder<T[]> {
+export function array<T>(decoder: Decoder<T>, options?: SizeOptions): Decoder<T[]> {
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const decodeFn = decoder.decode;
-  return poja.chain((inputs: readonly unknown[], ok, err) => {
+  const base = options !== undefined ? sized(poja, options) : poja;
+  return base.chain((inputs: readonly unknown[], ok, err) => {
     const results: T[] = [];
     for (let i = 0; i < inputs.length; ++i) {
       const blob = inputs[i];
@@ -46,16 +49,12 @@ export function array<T>(decoder: Decoder<T>): Decoder<T[]> {
   });
 }
 
-function isNonEmpty<T>(arr: readonly T[]): arr is [T, ...T[]] {
-  return arr.length > 0;
-}
-
 /**
  * Like `array()`, but will reject arrays with 0 elements.
  */
 /* #__NO_SIDE_EFFECTS__ */
 export function nonEmptyArray<T>(decoder: Decoder<T>): Decoder<[T, ...T[]]> {
-  return array(decoder).refine(isNonEmpty, 'Must have at least 1 item');
+  return array(decoder, { min: 1 }) as Decoder<[T, ...T[]]>;
 }
 
 /* #__NO_SIDE_EFFECTS__ */

@@ -1,5 +1,20 @@
 ## [Unreleased]
 
+**New APIs:**
+
+- New: `array()` now takes optional `SizeOptions` as its second argument:
+  ```ts
+  // ✅ Now preferred
+  array(string, { min: 1, max: 5 });
+  array(number, { size: 3 });
+
+  // Equivalent to
+  sized(array(string), { min: 1, max: 5 });
+  sized(array(number), { size: 3 });
+  ```
+  This syntax is not only shorter than the `sized()`-wrapped variant, but also slightly
+  faster at runtime.
+
 ## [2.10.1] - 2026-09-14
 
 - Fix `uuid`, `uuidv1`, and `uuidv4` to check the RFC 9562 version and variant nibbles

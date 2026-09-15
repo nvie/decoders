@@ -7,9 +7,9 @@ description: Array and tuple decoders for validating collections of values.
 
 <DecoderSig
   name="array"
-  params="decoder: Decoder<T>"
+  params="decoder: Decoder<T>, options?: SizeOptions"
   type="T[]"
-  source="arrays.ts#L16-L47"
+  source="arrays.ts#L18-L50"
 />
 
 Accepts arrays of whatever the given decoder accepts.
@@ -17,6 +17,15 @@ Accepts arrays of whatever the given decoder accepts.
 <DecoderPlayground
   decoder="array(string)"
   examples={["['hello', 'world']", '[]', "['hello', 1.2]"]}
+/>
+
+The optional `options` argument constrains the array's length. It accepts `min`, `max`, or
+`size` (shorthand for an exact length), and is checked _before_ any item is decoded. See
+[limiting array sizes](#limiting-array-sizes).
+
+<DecoderPlayground
+  decoder="array(string, { min: 1, max: 3 })"
+  examples={["['hello', 'world']", '[]', "['a', 'b', 'c', 'd']", "['hello', 1.2]"]}
 />
 
 ---
@@ -27,11 +36,11 @@ Accepts arrays of whatever the given decoder accepts.
   name="nonEmptyArray"
   params="decoder: Decoder<T>"
   type="[T, ...T[]]"
-  source="arrays.ts#L53-L59"
+  source="arrays.ts#L52-L60"
 />
 
 Like [`array()`][], but will reject arrays with 0 elements.  
-Equivalent to `sized(array(decoder), { min: 1 })`.
+Equivalent to `array(decoder, { min: 1 })`.
 
 <DecoderPlayground
   decoder="nonEmptyArray(string)"
@@ -42,7 +51,7 @@ Equivalent to `sized(array(decoder), { min: 1 })`.
 
 ## poja
 
-<DecoderSig name="poja" type="unknown[]" source="arrays.ts#L4-L14" />
+<DecoderSig name="poja" type="unknown[]" source="arrays.ts#L6-L16" />
 
 Accepts any array, but doesn't validate its items further.
 
@@ -61,7 +70,7 @@ Accepts any array, but doesn't validate its items further.
   name="tuple"
   params="Decoder<A>, Decoder<B>, ..."
   type="[A, B, ...]"
-  source="arrays.ts#L69-L100"
+  source="arrays.ts#L70-L101"
 />
 
 Accepts a tuple (an array with exactly _n_ items) of values accepted by the _n_ given
@@ -94,6 +103,17 @@ Also works with [strings][sized-strings] and [sets][sized-sets].
   decoder="sized(array(number), { min: 2, max: 4 })"
   examples={['[1, 2, 3]', '[1, 2]', '[1]', '[1, 2, 3, 4, 5]', '[]']}
 />
+
+For arrays, prefer passing the options to [`array()`][] directly:
+
+<DecoderPlayground
+  decoder="array(number, { min: 2, max: 4 })"
+  examples={['[1, 2, 3]', '[1, 2]', '[1]', '[1, 2, 3, 4, 5]', '[]']}
+/>
+
+`sized()` wraps the array decoder, so every item is decoded before the length is checked.
+An out-of-range input then reports the first bad item instead of the length, and for large
+inputs that error can be big. `array(decoder, options)` checks the length first.
 
 [`array()`]: /array
 [`pojo`]: /pojo
