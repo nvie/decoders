@@ -2,7 +2,7 @@ import { isPlainObject, isPromiseLike } from '~/lib/utils';
 
 const kAnnotationRegistry = Symbol.for('decoders.kAnnotationRegistry');
 // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
-const _register: WeakSet<Annotation> = ((globalThis as any)[kAnnotationRegistry] ??=
+const _stamped: WeakSet<Annotation> = ((globalThis as any)[kAnnotationRegistry] ??=
   new WeakSet());
 
 export interface ObjectAnnotation {
@@ -33,8 +33,8 @@ export type Annotation =
   ObjectAnnotation | ArrayAnnotation | ScalarAnnotation | OpaqueAnnotation;
 
 /** @internal */
-function brand<A extends Annotation>(ann: A): A {
-  _register.add(ann);
+function stamp<A extends Annotation>(ann: A): A {
+  _stamped.add(ann);
   return ann;
 }
 
@@ -43,7 +43,7 @@ export function makeObjectAnn(
   fields: ReadonlyMap<string, Annotation>,
   text?: string,
 ): ObjectAnnotation {
-  return brand({ type: 'object', fields, text });
+  return stamp({ type: 'object', fields, text });
 }
 
 /** @internal */
@@ -51,17 +51,17 @@ export function makeArrayAnn(
   items: readonly Annotation[],
   text?: string,
 ): ArrayAnnotation {
-  return brand({ type: 'array', items, text });
+  return stamp({ type: 'array', items, text });
 }
 
 /** @internal */
 export function makeOpaqueAnn(value: string, text?: string): OpaqueAnnotation {
-  return brand({ type: 'opaque', value, text });
+  return stamp({ type: 'opaque', value, text });
 }
 
 /** @internal */
 export function makeScalarAnn(value: unknown, text?: string): ScalarAnnotation {
-  return brand({ type: 'scalar', value, text });
+  return stamp({ type: 'scalar', value, text });
 }
 
 /**
@@ -70,7 +70,7 @@ export function makeScalarAnn(value: unknown, text?: string): ScalarAnnotation {
  */
 export function updateText<A extends Annotation>(annotation: A, text?: string): A {
   if (text !== undefined) {
-    return brand({ ...annotation, text });
+    return stamp({ ...annotation, text });
   } else {
     return annotation;
   }
@@ -90,7 +90,7 @@ export function merge(
 
 /** @internal */
 export function isAnnotation(thing: unknown): thing is Annotation {
-  return _register.has(thing as Annotation);
+  return _stamped.has(thing as Annotation);
 }
 
 type RefSet = WeakSet<object>;

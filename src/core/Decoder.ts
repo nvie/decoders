@@ -326,7 +326,7 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
     });
   }
 
-  const unregistered: Decoder<T> = {
+  const newDecoder: Decoder<T> = {
     verify,
     value,
     decode,
@@ -351,19 +351,19 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
       },
     },
   };
-  const self = brand(unregistered);
+  const self = stamp(newDecoder);
   return self;
 }
 
 /** @internal */
 const kDecoderRegistry = Symbol.for('decoders.kDecoderRegistry');
 // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
-const _register: WeakSet<Decoder<unknown>> = ((globalThis as any)[kDecoderRegistry] ??=
+const _stamped: WeakSet<Decoder<unknown>> = ((globalThis as any)[kDecoderRegistry] ??=
   new WeakSet());
 
 /** @internal */
-function brand<D extends Decoder<unknown>>(decoder: D): D {
-  _register.add(decoder);
+function stamp<D extends Decoder<unknown>>(decoder: D): D {
+  _stamped.add(decoder);
   return decoder;
 }
 
@@ -372,5 +372,5 @@ function brand<D extends Decoder<unknown>>(decoder: D): D {
  */
 /* #__NO_SIDE_EFFECTS__ */
 export function isDecoder(value: unknown): value is Decoder<unknown> {
-  return _register.has(value as Decoder<unknown>);
+  return _stamped.has(value as Decoder<unknown>);
 }
