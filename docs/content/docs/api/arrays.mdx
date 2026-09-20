@@ -36,7 +36,7 @@ The optional `options` argument constrains the array's length. It accepts `min`,
   name="nonEmptyArray"
   params="decoder: Decoder<T>"
   type="[T, ...T[]]"
-  source="arrays.ts#L52-L60"
+  source="arrays.ts#L52-L58"
 />
 
 Like [`array()`][], but will reject arrays with 0 elements.  
@@ -70,7 +70,7 @@ Accepts any array, but doesn't validate its items further.
   name="tuple"
   params="Decoder<A>, Decoder<B>, ..."
   type="[A, B, ...]"
-  source="arrays.ts#L70-L101"
+  source="arrays.ts#L68-L99"
 />
 
 Accepts a tuple (an array with exactly _n_ items) of values accepted by the _n_ given
