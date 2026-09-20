@@ -50,8 +50,11 @@ function declRange(node) {
   let start = jsDocStartLine(node) ?? node.getStartLineNumber();
   const end = node.getEndLineNumber();
 
-  // For function implementations with overloads, include the overloads
-  if (Node.isFunctionDeclaration(node) && node.hasBody()) {
+  // For function/method implementations with overloads, include the overloads
+  if (
+    (Node.isFunctionDeclaration(node) || Node.isMethodDeclaration(node)) &&
+    node.hasBody()
+  ) {
     const overloads = node.getOverloads();
     if (overloads.length > 0) {
       const first = overloads[0];
@@ -89,26 +92,25 @@ for (const sf of project.getSourceFiles()) {
   }
 }
 
-// Special: inner functions inside `define()` in core/Decoder.ts
+// Special: the Decoder methods, which live on the DecoderImpl class in
+// core/Decoder.ts. `.decode`, `.verify` and `.value` are property
+// declarations there (they're own closures, assigned in the constructor), the
+// rest are regular methods.
 const decoderFile = project.getSourceFile(
   path.join(SRC_DIR, 'core', 'Decoder.ts'),
 );
 if (decoderFile) {
-  const defineFunc = decoderFile.getFunction('define');
-  if (defineFunc && defineFunc.hasBody()) {
-    // `define` itself (exported)
-    const { start, end } = declRange(defineFunc);
-    addEntry('core/Decoder.ts', 'define', start, end);
-
-    // Inner functions (Decoder methods)
-    const body = defineFunc.getBody();
-    for (const stmt of body.getStatements()) {
-      if (Node.isFunctionDeclaration(stmt)) {
-        const name = stmt.getName();
-        if (!name || !stmt.hasBody()) continue;
-        const { start, end } = declRange(stmt);
-        addEntry('core/Decoder.ts', `.${name}`, start, end);
+  const impl = decoderFile.getClass('DecoderImpl');
+  if (impl) {
+    for (const member of impl.getMembers()) {
+      if (Node.isMethodDeclaration(member) && !member.hasBody()) continue; // overload signature
+      if (!Node.isMethodDeclaration(member) && !Node.isPropertyDeclaration(member)) {
+        continue;
       }
+      const name = member.getName();
+      if (!name) continue;
+      const { start, end } = declRange(member);
+      addEntry('core/Decoder.ts', `.${name}`, start, end);
     }
   }
 }

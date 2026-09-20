@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 
 import { always } from '~/basics';
-import { annotate, define, formatInline, formatShort } from '~/core';
+import {annotate, define, formatInline, formatShort, isDecoder} from '~/core';
 import { natural, number } from '~/numbers';
 import { pojo } from '~/objects';
 import { string } from '~/strings';
@@ -285,5 +285,20 @@ describe('.describe()', () => {
 
   test('invalid', () => {
     expect(() => decoder.verify(0)).toThrow(/Must be text/);
+  });
+});
+
+describe('isDecoder()', () => {
+  test('recognizes decoders', () => {
+    expect(isDecoder(string)).toBe(true);
+    expect(isDecoder(string.refine(() => true, 'x'))).toBe(true);
+    expect(isDecoder(define((_, ok) => ok(42)))).toBe(true);
+  });
+
+  test('rejects non-decoders', () => {
+    expect(isDecoder(undefined)).toBe(false);
+    expect(isDecoder(null)).toBe(false);
+    expect(isDecoder('string')).toBe(false);
+    expect(isDecoder({ decode: () => {} })).toBe(false);
   });
 });

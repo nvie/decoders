@@ -2,6 +2,15 @@
 
 **Breaking!**
 
+- Decoders from 2.x and 3.x no longer recognize each other. Normally this isn't a problem,
+  as it's encouraged to
+  [not have multiple copies](https://decoders.cc/docs/using-in-monorepos) of decoders in
+  your project anyway.
+
+---
+
+**Breaking!**
+
 - Drop support for TypeScript < 5.0
 
 **Fixes:**
@@ -47,8 +56,11 @@
 
 **Performance:**
 
+- Decoders take ~82% less memory and are ~4x faster to construct.
+- Decoding large arrays is ~3x faster.
 - `either()`, and thus `optional()` and `nullable()`, no longer deep-copies the input for
   every branch it discards. E.g. `optional(array(string))` on 100k items: ~39ms → ~0.5ms.
+- The `~standard` API is only built on-demand.
 
 ## [2.10.1] - 2026-09-14
 
