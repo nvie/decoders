@@ -1,5 +1,20 @@
 ## [Unreleased]
 
+**Breaking!**
+
+- Decoders from 2.x and 3.x no longer recognize each other. Normally this isn't a problem,
+  as it's encouraged to
+  [not have multiple copies](https://decoders.cc/docs/using-in-monorepos) of decoders in
+  your project anyway.
+
+**Performance:**
+
+Compared to 2.12.1:
+
+- Decoders take ~11% less memory and are ~9x faster to construct.
+- Decoders using `.transform()`, `.refine()`, `.reject()`, `.chain()`, or `.pipe()` decode
+  up to ~12% faster.
+
 ## [2.12.1] - 2026-09-25
 
 **Performance:**
