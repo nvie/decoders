@@ -127,19 +127,9 @@ describe('.chain() with acceptance function returning a decoder', () => {
 });
 
 describe('.chain() directly taking a decoder', () => {
-  const decoder = string.transform(Number).chain(natural);
-
-  test('valid type of decode result', () => {
-    expect(decoder.verify('100')).toEqual(100);
-    expect(decoder.verify(' 123  ')).toEqual(123);
-    expect(decoder.verify('2387213979')).toEqual(2387213979);
-  });
-
-  test('invalid', () => {
-    expect(() => decoder.verify('not a numeric string')).toThrow('Number must be finite');
-    expect(() => decoder.verify(42)).toThrow('Must be string');
-    expect(() => decoder.verify('-123')).toThrow('Number must be positive');
-    expect(() => decoder.verify('3.14')).toThrow('Number must be an integer');
+  test('throws, pointing to .pipe()', () => {
+    // @ts-expect-error - .chain() only takes acceptance functions
+    expect(() => string.transform(Number).chain(natural)).toThrow('use .pipe() instead');
   });
 });
 
@@ -160,10 +150,19 @@ describe('.pipe() with single decoder arg', () => {
   });
 });
 
-describe('.pipe() with decoder function arg', () => {
+describe('.pipe() directly taking a function', () => {
+  test('throws, pointing to .chain()', () => {
+    // @ts-expect-error - .pipe() only takes decoders
+    expect(() => string.transform(Number).pipe(() => natural)).toThrow(
+      'use .chain() instead',
+    );
+  });
+});
+
+describe('.chain() with a function picking a decoder', () => {
   const decoder = string
     .transform(Number)
-    .pipe((x) => (isNaN(x) || x <= 999 ? natural : always('A big number!')));
+    .chain((x) => (isNaN(x) || x <= 999 ? natural : always('A big number!')));
 
   test('valid type of decode result', () => {
     expect(decoder.verify('0')).toEqual(0);

@@ -17,7 +17,7 @@ typed values.
   name=".verify"
   params="blob: unknown"
   returnType="T"
-  source="core/Decoder.ts#L225-L232"
+  source="core/Decoder.ts#L219-L226"
 />
 
 <Sig name=".verify" params="blob: unknown, formatter: Formatter" returnType="T" />
@@ -40,7 +40,7 @@ Validates an input value. Returns the decoded value or throws.
   name=".value"
   params="blob: unknown"
   returnType="T | undefined"
-  source="core/Decoder.ts#L234-L234"
+  source="core/Decoder.ts#L228-L228"
 />
 
 Validates an input value. Returns the decoded value or return `undefined`. Never throws.
@@ -59,7 +59,7 @@ Validates an input value. Returns the decoded value or return `undefined`. Never
   name=".decode"
   params="blob: unknown"
   returnType="DecodeResult<T>"
-  source="core/Decoder.ts#L215-L223"
+  source="core/Decoder.ts#L209-L217"
 />
 
 Validates an input value. Returns a `DecodeResult` type. Never throws.
@@ -101,7 +101,7 @@ number.decode('hi'); // { ok: false, error: ... }
   name=".transform"
   params="transformFn: (T) => V"
   returnType="Decoder<V>"
-  source="core/Decoder.ts#L241-L249"
+  source="core/Decoder.ts#L235-L243"
 />
 
 Builds a new decoder that transforms the decoded value using a function.
@@ -119,7 +119,7 @@ Builds a new decoder that transforms the decoded value using a function.
   name=".refine"
   params="predicate: T => boolean, message: string"
   returnType="Decoder<T>"
-  source="core/Decoder.ts#L251-L266"
+  source="core/Decoder.ts#L245-L260"
 />
 
 Adds an extra condition. Rejects values that don't match the predicate.
@@ -137,7 +137,7 @@ Adds an extra condition. Rejects values that don't match the predicate.
   name=".refineType"
   params=""
   returnType="Decoder<SubT>"
-  source="core/Decoder.ts#L268-L274"
+  source="core/Decoder.ts#L262-L268"
 />
 
 <Since version="2.7" />
@@ -156,7 +156,7 @@ const user = object({ name: string }).refineType<Person>();
   name=".reject"
   params="rejectFn: T => string | null"
   returnType="Decoder<T>"
-  source="core/Decoder.ts#L317-L335"
+  source="core/Decoder.ts#L330-L348"
 />
 
 Like [`.refine()`][], but lets you return a dynamic error message. Return `null` to
@@ -175,7 +175,7 @@ accept, or a string to reject.
   name=".describe"
   params="message: string"
   returnType="Decoder<T>"
-  source="core/Decoder.ts#L337-L355"
+  source="core/Decoder.ts#L350-L368"
 />
 
 Overrides the error message when the decoder rejects.
@@ -201,40 +201,19 @@ Overrides the error message when the decoder rejects.
   name=".chain"
   params="next: (blob: T, ok, err) => DecodeResult<V> | Decoder<V>"
   returnType="Decoder<V>"
-  source="core/Decoder.ts#L276-L295"
+  source="core/Decoder.ts#L270-L302"
 />
 
 Low-level method to send decoded output into an acceptance function. Prefer
 [`.transform()`][], [`.refine()`][], or [`.pipe()`][] in most cases.
 
-Passing a decoder directly, as in `.chain(decoder)`, is deprecated since 2.11. Use
-`.pipe(decoder)` instead, which does the same thing.
-
----
-
-### .pipe()
-
-<Sig
-  name=".pipe"
-  params="next: Decoder<V>"
-  returnType="Decoder<V>"
-  source="core/Decoder.ts#L297-L315"
-/>
-
-<Sig name=".pipe" params="next: (blob: T) => Decoder<V>" returnType="Decoder<V>" />
-
-<Since version="2.4" />
-
-Sends the decoded output into another decoder for further validation.
-
-<DecoderPlayground
-  decoder="string.transform(s => s.split(',').map(Number)).pipe(array(natural))"
-  examples={["'7'", "'1,2,3'", "'1,-3'", "'🚀'", "'3.14'", '123', 'true', 'null']}
-/>
+Passing a decoder directly, as in `.chain(decoder)`, is no longer supported since 3.0 (it
+was deprecated in 2.11). Use `.pipe(decoder)` instead.
 
 ### Dynamic decoder selection
 
-You can also use [`.pipe()`][] to dynamically select a decoder based on the input value.
+The function can also return a decoder, to dynamically select the next decoder based on
+the decoded value.
 
 <DecoderPlayground
   globals={{
@@ -245,8 +224,31 @@ You can also use [`.pipe()`][] to dynamically select a decoder based on the inpu
     const point2d = tuple(number, number);
     const point3d = tuple(number, number, number);
   `}
-  decoder="string.transform(s => s.split(',').map(Number)).pipe(tup => tup.length === 2 ? point2d : tup.length === 3 ? point3d : never('Must be 2D or 3D point'))"
+  decoder="string.transform(s => s.split(',').map(Number)).chain(tup => tup.length === 2 ? point2d : tup.length === 3 ? point3d : never('Must be 2D or 3D point'))"
   examples={["'1'", "'1,2'", "'1,2,3'", "'1,2,3,4'"]}
+/>
+
+---
+
+### .pipe()
+
+<Sig
+  name=".pipe"
+  params="next: Decoder<V>"
+  returnType="Decoder<V>"
+  source="core/Decoder.ts#L304-L328"
+/>
+
+<Since version="2.4" />
+
+Sends the decoded output into another decoder for further validation.
+
+Passing a function, as in `.pipe((value) => decoder)`, is no longer supported since 3.0.
+Use [`.chain()`][] instead, see [dynamic decoder selection](#dynamic-decoder-selection).
+
+<DecoderPlayground
+  decoder="string.transform(s => s.split(',').map(Number)).pipe(array(natural))"
+  examples={["'7'", "'1,2,3'", "'1,-3'", "'🚀'", "'3.14'", '123', 'true', 'null']}
 />
 
 ---
