@@ -627,6 +627,7 @@ export function DecoderPlayground(props: Props) {
                     }}
                     onKeyDown={(e) => handleKeyDown(e, i)}
                     placeholder="Type an expression…"
+                    autoComplete="off"
                     disabled={!ready}
                     className="w-full bg-transparent text-fd-foreground placeholder:text-fd-muted-foreground focus:outline-none"
                   />
