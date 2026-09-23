@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [2.11.0] - 2026-09-23
+
 **New APIs:**
 
 - New: `array()` now takes optional `SizeOptions` as its second argument:
