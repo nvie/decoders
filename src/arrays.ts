@@ -54,7 +54,7 @@ export function array<T>(decoder: Decoder<T>, options?: SizeOptions): Decoder<T[
  */
 /* #__NO_SIDE_EFFECTS__ */
 export function nonEmptyArray<T>(decoder: Decoder<T>): Decoder<[T, ...T[]]> {
-  return array(decoder, { min: 1 }) as Decoder<[T, ...T[]]>;
+  return array(decoder, { min: 1 }).refineType<[T, ...T[]]>();
 }
 
 /* #__NO_SIDE_EFFECTS__ */

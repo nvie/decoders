@@ -41,8 +41,11 @@ The optional `options` argument constrains the array's length. It accepts `min`,
   source="arrays.ts#L52-L58"
 />
 
-Like [`array()`][], but will reject arrays with 0 elements.  
-Equivalent to `array(decoder, { min: 1 })`.
+Like [`array()`][], but will reject arrays with 0 elements.
+
+Accepts the same inputs as `array(decoder, { min: 1 })`, but its return type is
+`[T, ...T[]]` instead of `T[]`, so TypeScript knows the first element exists. Use it when
+that type is useful to you, and `array(decoder, { min: 1 })` otherwise.
 
 <DecoderPlayground
   decoder="nonEmptyArray(string)"
