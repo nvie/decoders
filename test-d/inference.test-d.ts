@@ -217,9 +217,9 @@ expectType<number | string>(
 );
 
 // .chain()
-expectType<number>(infer(string.transform(Number).chain(positiveInteger)));
+expectError(string.transform(Number).chain(positiveInteger));
 expectType<number>(infer(string.transform(Number).chain(positiveInteger.decode)));
-expectType<boolean>(infer(string.transform(Number).transform(String).chain(truthy)));
+expectError(string.transform(Number).transform(String).chain(truthy));
 expectType<boolean>(
   infer(string.transform(Number).transform(String).chain(truthy.decode)),
 );
@@ -231,15 +231,24 @@ expectType<boolean>(infer(string.transform(Number).transform(String).pipe(truthy
 expectType<number | string>(
   infer(string.transform(Number).pipe(Math.random() < 0.5 ? positiveInteger : string)),
 );
-// .pipe() with function with branches infers decoder from both branches
+// .pipe() no longer takes a function
+expectError(string.transform(Number).pipe(() => positiveInteger));
+expectError(
+  string.transform(Number).pipe((x: number) => (x < 0.5 ? positiveInteger : string)),
+);
+
+// .chain() with function with branches infers decoder from both branches
+expectType<number>(infer(string.transform(Number).chain(() => positiveInteger)));
 expectType<number | string>(
   infer(
-    string.transform(Number).pipe(() => (Math.random() < 0.5 ? positiveInteger : string)),
+    string
+      .transform(Number)
+      .chain(() => (Math.random() < 0.5 ? positiveInteger : string)),
   ),
 );
-// .pipe() with input function with branches infers decoder from both branches
+// .chain() with input function with branches infers decoder from both branches
 expectType<number | string>(
-  infer(string.transform(Number).pipe((x) => (x < 0.5 ? positiveInteger : string))),
+  infer(string.transform(Number).chain((x) => (x < 0.5 ? positiveInteger : string))),
 );
 
 expectType<string>(infer(string.refine((s) => s.startsWith('x'), 'Must start with x')));

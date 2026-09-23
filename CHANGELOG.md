@@ -8,6 +8,11 @@
   your project anyway.
 - Remove `dateString`, `iso8601`, and `datelike`, which were deprecated in 2.9. Use
   `isoDateString`, `isoDate`, and `flexDate` instead.
+- `.chain()` no longer accepts a decoder (deprecated since 2.11), and throws when given
+  one. Use `.pipe()` instead.
+- `.pipe()` no longer accepts a function, and throws when given one. To dynamically pick
+  the next decoder, use `.chain((value) => decoder)` instead, which now infers the union
+  type when the function returns different decoders.
 
 **Performance:**
 
