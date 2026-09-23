@@ -236,6 +236,12 @@ interface Alias {
   name: string;
   info?: ReactNode;
   deprecated: boolean;
+  /**
+   * Version in which the alias was removed from the library. Removed aliases
+   * stay documented, so that links to them keep redirecting and they remain
+   * searchable.
+   */
+  removed?: string;
 }
 
 function renderDecoderReturnType(type: string): ReactNode {
@@ -275,10 +281,12 @@ export function DecoderSig({
       {aliases?.map((alias) => (
         <pre
           key={alias.name}
-          className={`fn-sig font-mono${alias.deprecated ? ' fn-sig-deprecated' : ''}`}
+          className={`fn-sig font-mono${alias.deprecated || alias.removed ? ' fn-sig-deprecated' : ''}`}
           style={{ margin: 0, background: 'none', border: 'none', padding: 0 }}
         >
-          <span className={alias.deprecated ? 'fn-sig-content' : undefined}>
+          <span
+            className={alias.deprecated || alias.removed ? 'fn-sig-content' : undefined}
+          >
             <strong style={{ fontWeight: 700 }}>{alias.name}</strong>
             {params !== undefined ? (
               multiline ? (
@@ -294,7 +302,11 @@ export function DecoderSig({
             {': '}
             {renderDecoderReturnType(type)}{' '}
             <span className="fn-sig-badge">
-              {alias.deprecated ? 'deprecated' : 'alias'}
+              {alias.removed
+                ? `removed in ${alias.removed}`
+                : alias.deprecated
+                  ? 'deprecated'
+                  : 'alias'}
             </span>
           </span>
           {alias.info && <Info>{alias.info}</Info>}
