@@ -80,16 +80,25 @@ export interface Decoder<T> {
   describe(message: string): Decoder<T>;
 
   /**
-   * Send the output of the current decoder into another decoder or acceptance
-   * function. The given acceptance function will receive the output of the
-   * current decoder as its input.
+   * Send the output of the current decoder into an acceptance function. The
+   * given acceptance function will receive the output of the current decoder
+   * as its input.
    *
    * > _**NOTE:** This is an advanced, low-level, API. It's not recommended
    * > to reach for this construct unless there is no other way. Most cases can
    * > be covered more elegantly by `.transform()`, `.refine()`, or `.pipe()`
    * > instead._
    */
-  chain<V>(next: Next<V, T>): Decoder<V>;
+  chain<V>(
+    next: (
+      blob: T,
+      ok: (value: V) => DecodeResult<V>,
+      err: (msg: string | Annotation) => DecodeResult<V>,
+    ) => DecodeResult<V> | Decoder<V>,
+  ): Decoder<V>;
+  /** @deprecated To send the output into another decoder, use `.pipe()` instead. */
+  // eslint-disable-next-line typescript/unified-signatures -- separate overload so only the decoder form is marked deprecated
+  chain<V>(next: Decoder<V>): Decoder<V>;
 
   /**
    * Send the output of this decoder as input to another decoder.
