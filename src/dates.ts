@@ -53,7 +53,7 @@ export const flexDate: Decoder<Date> = select(unknown, (blob) =>
 
 /** @deprecated Renamed to `isoDateString`. This alias will be removed in 3.x. */
 export const dateString: Decoder<string> = isoDateString;
-/** Alias of `isoDate`. */
+/** @deprecated Renamed to `isoDate`. */
 export const iso8601: Decoder<Date> = isoDate;
 /** @deprecated Renamed to `flexDate`. This alias will be removed in 3.x. */
 export const datelike: Decoder<Date> = flexDate;

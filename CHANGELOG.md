@@ -20,6 +20,7 @@
 - Rename decoders that include 0, so they're no longer called "positive":
   - `positiveNumber` → `nonNegativeNumber` (old name kept as a deprecated alias)
   - `positiveInteger` → `natural` (old name kept as a deprecated alias)
+- Deprecate `iso8601`, the alias for `isoDate` since 2.9
 
 **Performance:**
 
