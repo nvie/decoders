@@ -1,5 +1,5 @@
 import { INDENT, indent, isMultiline, quote } from '~/lib/text';
-import { isDate } from '~/lib/utils';
+import { assertNever, isDate } from '~/lib/utils';
 
 import type {
   Annotation,
@@ -217,6 +217,10 @@ function* iterAnnotation(ann: Annotation, stack: PropertyKey[]): Generator<Std.I
       // Nothing extra to iterate here, they are leafs
       break;
     }
+
+    // istanbul ignore next -- @preserve
+    default:
+      assertNever(ann, 'Unknown annotation type');
   }
 }
 

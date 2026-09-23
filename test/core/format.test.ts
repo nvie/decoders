@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest';
 
-import { __annotate, annotate, formatInline, formatShort } from '~/core';
+import { array, object, string } from '~';
+import { __annotate, annotate, formatAsIssues, formatInline, formatShort } from '~/core';
 
 const whitespace_re = /^\s*$/;
 
@@ -312,5 +313,61 @@ describe('formatShort', () => {
       [annotate({ name: annotate(123, 'Must be number') }, "Missing key 'foo'")],
       "Value at keypath '0.name': Must be number\nValue at index 0: Missing key 'foo'",
     );
+  });
+});
+
+describe('formatting decoder errors', () => {
+  test('field errors, index errors, missing keys, and untouched subtrees', () => {
+    const decoder = object({
+      name: string,
+      tags: array(string),
+      meta: object({ id: string }),
+    });
+    const input = {
+      name: 1,
+      tags: ['a', 2],
+      meta: { extra: [1, { deep: true }] },
+      other: { x: 1 },
+    };
+    const result = decoder.decode(input);
+    if (result.ok) throw new Error('Expected decoding to fail');
+
+    expect(formatInline(result.error)).toEqual(
+      dedent(`
+        {
+          "name": 1,
+                  ^ Must be string
+          "tags": [
+            "a",
+            2,
+            ^ Must be string (at index 1)
+          ],
+          "meta": {
+            "extra": [
+              1,
+              {
+                "deep": true,
+              },
+            ],
+          },
+                  ^ Missing key: 'id'
+          "other": {
+            "x": 1,
+          },
+        }
+      `),
+    );
+    expect(formatShort(result.error)).toEqual(
+      dedent(`
+        Value at key 'name': Must be string
+        Value at keypath 'tags.1': Must be string (at index 1)
+        Value at key 'meta': Missing key: 'id'
+      `),
+    );
+    expect(formatAsIssues(result.error)).toEqual([
+      { message: 'Must be string', path: ['name'] },
+      { message: 'Must be string (at index 1)', path: ['tags', 1] },
+      { message: "Missing key: 'id'", path: ['meta'] },
+    ]);
   });
 });

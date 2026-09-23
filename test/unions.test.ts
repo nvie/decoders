@@ -1,12 +1,14 @@
 import * as fc from 'fast-check';
 import { partition } from 'itertools';
-import { describe, expect, test } from 'vitest';
+import { beforeEach, describe, expect, test } from 'vitest';
 
 import {
+  array,
   boolean,
   constant,
   either,
   enum_,
+  nullable,
   number,
   object,
   oneOf,
@@ -16,6 +18,7 @@ import {
   string,
   taggedUnion,
   undefined_,
+  unknown,
 } from '~';
 import type { Decoder } from '~/core';
 
@@ -115,6 +118,51 @@ test('nested eithers', () => {
   expect(() => decoder.verify(null)).toThrow(
     'Either:\n- Must be string\n- Must be boolean\n- Must be number\n- Must be undefined',
   );
+});
+
+describe('discarded branches do not walk the input', () => {
+  let reads = 0;
+  const spy = {
+    get value() {
+      reads++;
+      return 42;
+    },
+  };
+  const spied = object({ value: number });
+
+  beforeEach(() => {
+    reads = 0;
+  });
+
+  test('optional', () => {
+    expect(optional(spied).decode(spy).ok).toBe(true);
+    expect(reads).toBe(1); // Only by the winning branch
+  });
+
+  test('described branch', () => {
+    expect(either(undefined_.describe('Nope'), spied).decode(spy).ok).toBe(true);
+    expect(reads).toBe(1);
+  });
+
+  test('nested nullable', () => {
+    expect(optional(nullable(spied)).decode(spy).ok).toBe(true);
+    expect(reads).toBe(1);
+  });
+
+  test('object with missing keys', () => {
+    expect(either(object({ missing: string }), spied).decode(spy).ok).toBe(true);
+    expect(reads).toBe(1);
+  });
+
+  test('object with invalid field', () => {
+    expect(either(object({ value: string }), spied).decode(spy).ok).toBe(true);
+    expect(reads).toBe(2); // Once by each branch's field decoder
+  });
+
+  test('array with invalid item', () => {
+    expect(either(array(string), array(unknown)).decode([spy]).ok).toBe(true);
+    expect(reads).toBe(0);
+  });
 });
 
 test('either fails without decoders', () => {

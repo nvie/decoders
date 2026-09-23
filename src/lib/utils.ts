@@ -64,3 +64,11 @@ export function isPlainObject(value: unknown): value is Record<string, unknown> 
     Object.prototype.toString.call(value) === '[object Object]'
   );
 }
+
+/**
+ * Compile-time exhaustiveness check. Throws if ever reached at runtime.
+ */
+// istanbul ignore next -- @preserve
+export function assertNever(_value: never, msg: string = 'Unhandled case'): never {
+  throw new Error(msg);
+}

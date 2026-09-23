@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest';
+import { beforeEach, describe, expect, test } from 'vitest';
 
 import type { Annotation, ObjectAnnotation } from '~/core/annotate';
 import {
@@ -9,9 +9,10 @@ import {
   makeScalarAnn,
   merge as mergeOriginal,
 } from '~/core/annotate';
+import { formatInline } from '~/core/format';
 
 function makeObjectAnn(obj: Record<string, Annotation>, text?: string) {
-  return makeObjectAnnOriginal(new Map(Object.entries(obj)), text);
+  return makeObjectAnnOriginal(() => new Map(Object.entries(obj)), text);
 }
 
 function merge(
@@ -72,12 +73,19 @@ describe('parsing (composite)', () => {
   test('arrays', () => {
     const arr1 = [1, 'foo'];
     expect(annotate(arr1)).toEqual(
-      makeArrayAnn([makeScalarAnn(1), makeScalarAnn('foo')]),
+      makeArrayAnn(() => [makeScalarAnn(1), makeScalarAnn('foo')]),
     );
 
     const arr2 = [annotate(1, 'uno'), 'foo'];
     expect(annotate(arr2)).toEqual(
-      makeArrayAnn([makeScalarAnn(1, 'uno'), makeScalarAnn('foo')]),
+      makeArrayAnn(() => [makeScalarAnn(1, 'uno'), makeScalarAnn('foo')]),
+    );
+  });
+
+  test('sparse arrays', () => {
+    // eslint-disable-next-line no-sparse-arrays
+    expect(annotate([1, , 3])).toEqual(
+      makeArrayAnn(() => [makeScalarAnn(1), makeScalarAnn(undefined), makeScalarAnn(3)]),
     );
   });
 
@@ -151,9 +159,9 @@ describe('annotating circular objects', () => {
     const circularArray: any[] = ['foo', [42 /* circular ref will go here */]];
     circularArray[1].push(circularArray);
 
-    const expected = makeArrayAnn([
+    const expected = makeArrayAnn(() => [
       makeScalarAnn('foo'),
-      makeArrayAnn([makeScalarAnn(42), makeOpaqueAnn('<circular ref>')]),
+      makeArrayAnn(() => [makeScalarAnn(42), makeOpaqueAnn('<circular ref>')]),
     ]);
 
     expect(annotate(circularArray)).toEqual(expected);
@@ -183,5 +191,64 @@ describe('annotating circular objects', () => {
 
     // Annotations are idempotent
     expect(annotate(annotate(annotate(circularObject)))).toEqual(expected);
+  });
+});
+
+describe('laziness', () => {
+  let reads = 0;
+  const spy = {
+    get value() {
+      reads++;
+      return 42;
+    },
+  };
+  const spyArray: unknown[] = [];
+  Object.defineProperty(spyArray, 0, {
+    enumerable: true,
+    get() {
+      reads++;
+      return 42;
+    },
+  });
+
+  beforeEach(() => {
+    reads = 0;
+  });
+
+  test('does not walk the input until fields or items are read', () => {
+    const objAnn = annotate(spy, 'Oops');
+    const arrAnn = annotate(spyArray, 'Oops');
+    expect(reads).toBe(0);
+
+    expect(formatInline(objAnn)).toContain('"value": 42');
+    expect(reads).toBe(1);
+    expect(formatInline(arrAnn)).toContain('42');
+    expect(reads).toBe(2);
+  });
+
+  test('updating the text does not walk the input', () => {
+    annotate(annotate(spy, 'Oops'), 'Changed');
+    annotate(annotate(spyArray, 'Oops'), 'Changed');
+    expect(reads).toBe(0);
+  });
+
+  test('reflects changes made to the input before the first read', () => {
+    const input = { name: 'Alice' };
+    const ann = annotate(input, 'Oops');
+    input.name = 'Bob';
+    expect(ann).toEqual(makeObjectAnn({ name: makeScalarAnn('Bob') }, 'Oops'));
+
+    // But once read, the annotation no longer changes
+    input.name = 'Charlie';
+    expect(ann).toEqual(makeObjectAnn({ name: makeScalarAnn('Bob') }, 'Oops'));
+  });
+
+  test('updating the text shares the walked tree', () => {
+    const original = annotate(spy, 'Original');
+    const updated = annotate(original, 'Updated');
+
+    expect(updated).toEqual(makeObjectAnn({ value: makeScalarAnn(42) }, 'Updated'));
+    expect(original).toEqual(makeObjectAnn({ value: makeScalarAnn(42) }, 'Original'));
+    expect(reads).toBe(1);
   });
 });

@@ -1,4 +1,4 @@
-import { isPlainObject, isPromiseLike } from '~/lib/utils';
+import { assertNever, isPlainObject, isPromiseLike } from '~/lib/utils';
 
 const kAnnotationRegistry = Symbol.for('decoders.kAnnotationRegistry');
 // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
@@ -38,20 +38,40 @@ function stamp<A extends Annotation>(ann: A): A {
   return ann;
 }
 
-/** @internal */
+/**
+ * @internal
+ * Creates an ObjectAnnotation whose fields are only computed when first read.
+ */
 export function makeObjectAnn(
-  fields: ReadonlyMap<string, Annotation>,
+  getFields: () => ReadonlyMap<string, Annotation>,
   text?: string,
 ): ObjectAnnotation {
-  return stamp({ type: 'object', fields, text });
+  let fields: ReadonlyMap<string, Annotation> | undefined;
+  return stamp({
+    type: 'object',
+    get fields() {
+      return (fields ??= getFields());
+    },
+    text,
+  });
 }
 
-/** @internal */
+/**
+ * @internal
+ * Creates an ArrayAnnotation whose items are only computed when first read.
+ */
 export function makeArrayAnn(
-  items: readonly Annotation[],
+  getItems: () => readonly Annotation[],
   text?: string,
 ): ArrayAnnotation {
-  return stamp({ type: 'array', items, text });
+  let items: readonly Annotation[] | undefined;
+  return stamp({
+    type: 'array',
+    get items() {
+      return (items ??= getItems());
+    },
+    text,
+  });
 }
 
 /** @internal */
@@ -67,12 +87,28 @@ export function makeScalarAnn(value: unknown, text?: string): ScalarAnnotation {
 /**
  * @internal
  * Given an existing Annotation, set the annotation's text to a new value.
+ * Does not force the evaluation of lazy fields or items.
  */
-export function updateText<A extends Annotation>(annotation: A, text?: string): A {
-  if (text !== undefined) {
-    return stamp({ ...annotation, text });
-  } else {
+export function updateText(annotation: ObjectAnnotation, text?: string): ObjectAnnotation;
+export function updateText(annotation: Annotation, text?: string): Annotation;
+export function updateText(annotation: Annotation, text?: string): Annotation {
+  if (text === undefined) {
     return annotation;
+  }
+
+  switch (annotation.type) {
+    case 'object':
+      return makeObjectAnn(() => annotation.fields, text);
+    case 'array':
+      return makeArrayAnn(() => annotation.items, text);
+    case 'scalar':
+      return makeScalarAnn(annotation.value, text);
+    case 'opaque':
+      return makeOpaqueAnn(annotation.value, text);
+
+    // istanbul ignore next -- @preserve
+    default:
+      return assertNever(annotation, 'Unknown annotation type');
   }
 }
 
@@ -84,8 +120,10 @@ export function merge(
   objAnnotation: ObjectAnnotation,
   fields: ReadonlyMap<string, Annotation>,
 ): ObjectAnnotation {
-  const newFields = new Map([...objAnnotation.fields, ...fields]);
-  return makeObjectAnn(newFields, objAnnotation.text);
+  return makeObjectAnn(
+    () => new Map([...objAnnotation.fields, ...fields]),
+    objAnnotation.text,
+  );
 }
 
 /** @internal */
@@ -103,13 +141,11 @@ function annotateArray(
 ): ArrayAnnotation | OpaqueAnnotation {
   seen.add(arr);
 
-  // Cannot use .map() here because it won't work correctly if `arr` is
-  // a sparse array.
-  const items = [];
-  for (const value of arr) {
-    items.push(__annotate(value, undefined, seen));
-  }
-  return makeArrayAnn(items, text);
+  // Not arr.map(), which would skip the holes in sparse arrays like [1, , 3]
+  return makeArrayAnn(
+    () => Array.from(arr, (value) => __annotate(value, undefined, seen)),
+    text,
+  );
 }
 
 /** @internal */
@@ -120,12 +156,14 @@ function annotateObject(
 ): ObjectAnnotation {
   seen.add(obj);
 
-  const fields = new Map<string, Annotation>();
-  for (const key of Object.keys(obj)) {
-    const value = obj[key];
-    fields.set(key, __annotate(value, undefined, seen));
-  }
-  return makeObjectAnn(fields, text);
+  return makeObjectAnn(() => {
+    const fields = new Map<string, Annotation>();
+    for (const key of Object.keys(obj)) {
+      const value = obj[key];
+      fields.set(key, __annotate(value, undefined, seen));
+    }
+    return fields;
+  }, text);
 }
 
 /** @internal */

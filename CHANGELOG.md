@@ -15,6 +15,11 @@
   This syntax is not only shorter than the `sized()`-wrapped variant, but also slightly
   faster at runtime.
 
+**Performance:**
+
+- `either()`, and thus `optional()` and `nullable()`, no longer deep-copies the input for
+  every branch it discards. E.g. `optional(array(string))` on 100k items: ~39ms → ~0.5ms.
+
 ## [2.10.1] - 2026-09-14
 
 - Fix `uuid`, `uuidv1`, and `uuidv4` to check the RFC 9562 version and variant nibbles
