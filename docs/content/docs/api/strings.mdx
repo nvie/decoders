@@ -348,7 +348,8 @@ strings.
 <Since version="2.9" />
 
 Takes any string decoder and rejects values that don't match the given size constraints.
-Also works with [arrays][sized-arrays] and [sets][sized-sets].
+Also works with [sets][sized-sets]. For arrays, use
+[`array(decoder, options)`][sized-arrays] instead.
 
 `SizeOptions` accepts `min`, `max`, or `size` (shorthand for exact length).
 

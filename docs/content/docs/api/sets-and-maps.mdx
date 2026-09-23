@@ -54,7 +54,8 @@ Similar to [`array()`][], but returns the result as an
 <Since version="2.9" />
 
 Takes any set decoder and rejects values that don't match the given size constraints. Also
-works with [strings][sized-strings] and [arrays][sized-arrays].
+works with [strings][sized-strings]. For arrays, use
+[`array(decoder, options)`][sized-arrays] instead.
 
 `SizeOptions` accepts `min`, `max`, or `size` (shorthand for exact length).
 

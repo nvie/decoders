@@ -23,7 +23,7 @@ function isReleased(sinceVersion: string, currentVersion: string): boolean {
   return curPatch >= sinPatch;
 }
 
-export function Since({ version }: { version: string }) {
+export function Since({ what, version }: { what?: string; version: string }) {
   const [major, minor, patch] = parseVersion(version);
   const shortVersion = patch === 0 ? `${major}.${minor}` : `${major}.${minor}.${patch}`;
   const released = isReleased(version, process.env.WIP_DECODERS_VERSION!);
@@ -31,14 +31,15 @@ export function Since({ version }: { version: string }) {
   if (!released) {
     return (
       <p>
-        Will be available once <strong>{shortVersion}</strong> is released.
+        {what !== undefined ? `${what} will be available` : 'Will be available'} once{' '}
+        <strong>{shortVersion}</strong> is released.
       </p>
     );
   }
 
   return (
     <p>
-      Available since{' '}
+      {what !== undefined ? `${what} is available` : 'Available'} since{' '}
       <a
         href={`https://github.com/nvie/decoders/releases/tag/v${major}.${minor}.${patch}`}
         target="_blank"

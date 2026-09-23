@@ -146,6 +146,9 @@ type SizeOptions =
 For strings, error messages refer to "chars". For arrays and sets, error messages refer to
 "items".
 
+For arrays, prefer [`array(decoder, options)`](/docs/api/arrays#limiting-array-sizes): it
+checks the length before decoding any items.
+
 <DecoderPlayground
   decoder="sized(string, { min: 2, max: 10 })"
   examples={["'hello'", "'hi'", "'x'", "'this string is too long'", '42']}
