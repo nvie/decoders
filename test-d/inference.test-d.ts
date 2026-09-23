@@ -41,9 +41,11 @@ import {
   lazy,
   mapping,
   nanoid,
+  natural,
   never,
   nonEmptyArray,
   nonEmptyString,
+  nonNegativeNumber,
   null_,
   nullable,
   nullish,
@@ -115,7 +117,9 @@ expectType<unknown>(test(anything));
 expectType<number>(test(anyNumber));
 expectType<number>(test(integer));
 expectType<number>(test(number));
+expectType<number>(test(natural));
 expectType<number>(test(positiveInteger));
+expectType<number>(test(nonNegativeNumber));
 expectType<number>(test(positiveNumber));
 expectType<number>(test(numeric));
 expectType<number>(test(min(0)));

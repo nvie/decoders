@@ -229,11 +229,11 @@ that accordingly.
 ```ts
 const decoder = prep(
   // Will convert any input to an int first, before feeding it to
-  // positiveInteger. This will effectively also allow numeric strings
+  // natural. This will effectively also allow numeric strings
   // to be accepted (and returned) as integers. If this ever throws,
   // then the error message will be what gets annotated on the input.
   (x) => parseInt(x),
-  positiveInteger,
+  natural,
 );
 
 // 👍

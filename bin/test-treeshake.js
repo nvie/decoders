@@ -17,7 +17,7 @@ const MUST_BE_ABSENT = [
   ['Must be a Date', 'date not imported'],
   ['Must be bigint', 'bigint imported but unused'],
   ['Must be uuid', 'uuid not imported'],
-  ['Number must be an integer', 'positiveInteger imported but unused'],
+  ['Number must be an integer', 'natural imported but unused'],
 ];
 
 // Build with tsup

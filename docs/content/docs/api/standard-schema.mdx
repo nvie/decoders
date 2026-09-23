@@ -13,7 +13,7 @@ pass your decoder directly as a field validator:
 
 ```tsx
 import { useForm } from '@tanstack/react-form';
-import { nonEmptyString, positiveInteger } from 'decoders';
+import { natural, nonEmptyString } from 'decoders';
 
 function MyForm() {
   const form = useForm({
@@ -38,7 +38,7 @@ function MyForm() {
         )}
       </form.Field>
       // [!code highlight]
-      <form.Field name="age" validators={{ onChange: positiveInteger }}>
+      <form.Field name="age" validators={{ onChange: natural }}>
         {(field) => (
           <input
             type="number"
@@ -58,14 +58,14 @@ function MyForm() {
 
 ```ts
 import { initTRPC } from '@trpc/server';
-import { object, nonEmptyString, positiveInteger } from 'decoders';
+import { natural, nonEmptyString, object } from 'decoders';
 
 // [!code highlight]
 const userDecoder = object({
   // [!code highlight]
   name: nonEmptyString,
   // [!code highlight]
-  age: positiveInteger,
+  age: natural,
   // [!code highlight]
 });
 

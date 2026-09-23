@@ -8,6 +8,8 @@ import {
   integer,
   max,
   min,
+  natural,
+  nonNegativeNumber,
   number,
   positiveInteger,
   positiveNumber,
@@ -53,8 +55,8 @@ describe('anyNumber', () => {
   });
 });
 
-describe('positiveNumber', () => {
-  const decoder = positiveNumber;
+describe('nonNegativeNumber', () => {
+  const decoder = nonNegativeNumber;
   const [okay, not_okay] = partition(
     INPUTS,
     (n) => typeof n === 'number' && Number.isFinite(n) && n >= 0,
@@ -79,6 +81,10 @@ describe('positiveNumber', () => {
       expect(decoder.decode(value).ok).toBe(false);
     }
   });
+
+  test('deprecated alias', () => {
+    expect(positiveNumber).toBe(nonNegativeNumber);
+  });
 });
 
 describe('integer', () => {
@@ -100,8 +106,8 @@ describe('integer', () => {
   });
 });
 
-describe('positiveInteger', () => {
-  const decoder = positiveInteger;
+describe('natural', () => {
+  const decoder = natural;
   const [okay, not_okay] = partition(
     INPUTS,
     (n) => typeof n === 'number' && Number.isInteger(n) && n >= 0,
@@ -125,6 +131,10 @@ describe('positiveInteger', () => {
     for (const value of not_okay) {
       expect(decoder.decode(value).ok).toBe(false);
     }
+  });
+
+  test('deprecated alias', () => {
+    expect(positiveInteger).toBe(natural);
   });
 });
 

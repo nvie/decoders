@@ -15,6 +15,12 @@
   This syntax is not only shorter than the `sized()`-wrapped variant, but also slightly
   faster at runtime.
 
+**Changes:**
+
+- Rename decoders that include 0, so they're no longer called "positive":
+  - `positiveNumber` → `nonNegativeNumber` (old name kept as a deprecated alias)
+  - `positiveInteger` → `natural` (old name kept as a deprecated alias)
+
 **Performance:**
 
 - `either()`, and thus `optional()` and `nullable()`, no longer deep-copies the input for

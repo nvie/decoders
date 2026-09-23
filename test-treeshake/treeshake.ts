@@ -5,10 +5,10 @@ import {
   either,
   email,
   mapping,
+  natural,
   number,
   object,
   optional,
-  positiveInteger,
   select,
   string,
   taggedUnion,
@@ -16,9 +16,9 @@ import {
 } from 'decoders';
 
 // Imported but intentionally unused — should be tree-shaken:
-// bigint, positiveInteger, number
+// bigint, natural, number
 void bigint;
-void mapping(positiveInteger);
+void mapping(natural);
 void number;
 
 const myDecoder = object({

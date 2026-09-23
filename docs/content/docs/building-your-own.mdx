@@ -187,7 +187,7 @@ define an `id` decoder for this:
 ```typescript
 const id: Decoder<string> = either(
   string,
-  positiveInteger.transform((n) => String(n)),
+  natural.transform((n) => String(n)),
 );
 ```
 

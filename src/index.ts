@@ -15,10 +15,11 @@ export {
   integer,
   max,
   min,
+  natural,
   number,
-  positiveInteger,
-  positiveNumber,
+  nonNegativeNumber,
 } from '~/numbers';
+export { positiveInteger, positiveNumber } from '~/numbers';
 export { bigint } from '~/numbers';
 export { exact, inexact, object, pojo } from '~/objects';
 export { endsWith, nonEmptyString, regex, startsWith, string } from '~/strings';

@@ -7,8 +7,8 @@ description: Number decoders for validating and parsing numeric values.
 
 <DecoderSig name="number" type="number" source="numbers.ts#L16-L23" />
 
-Accepts finite numbers (can be integer or float values). Values `NaN`, or positive and
-negative `Infinity` will get rejected.
+Accepts only finite numbers (e.g. -3.14, 0, 1, 42, ...). Integers or floats, but not `NaN`
+or `Infinity`.
 
 <DecoderPlayground
   decoder="number"
@@ -19,9 +19,9 @@ negative `Infinity` will get rejected.
 
 ## integer
 
-<DecoderSig name="integer" type="number" source="numbers.ts#L25-L31" />
+<DecoderSig name="integer" type="number" source="numbers.ts#L25-L32" />
 
-Accepts only finite whole numbers.
+Accepts only integers (e.g. ..., -2, -1, 0, 1, 2, ...). Whole numbers, and finite.
 
 <DecoderPlayground
   decoder="integer"
@@ -30,27 +30,62 @@ Accepts only finite whole numbers.
 
 ---
 
-## positiveNumber
+## nonNegativeNumber
 
-<DecoderSig name="positiveNumber" type="number" source="numbers.ts#L33-L39" />
+<DecoderSig
+  name="nonNegativeNumber"
+  aliases={[
+    {
+      name: 'positiveNumber',
+      deprecated: true,
+      info: (
+        <>
+          Renamed to <code>nonNegativeNumber</code> in 2.11, since it includes 0.
+        </>
+      ),
+    },
+  ]}
+  type="number"
+  source="numbers.ts#L34-L41"
+/>
 
-Accepts only non-negative (zero or positive) finite numbers.
+<Since version="2.11" />
+
+Accepts only non-negative numbers (e.g. 0, 0.5, 1, 3.14, ...). Integers or floats, >= 0,
+and finite.
 
 <DecoderPlayground
-  decoder="positiveNumber"
+  decoder="nonNegativeNumber"
   examples={['123', '3.14', '0', '-42', 'Infinity', 'NaN', "'not a number'", '-0']}
 />
 
 ---
 
-## positiveInteger
+## natural
 
-<DecoderSig name="positiveInteger" type="number" source="numbers.ts#L41-L47" />
+<DecoderSig
+  name="natural"
+  aliases={[
+    {
+      name: 'positiveInteger',
+      deprecated: true,
+      info: (
+        <>
+          Renamed to <code>natural</code> in 2.11, since it includes 0.
+        </>
+      ),
+    },
+  ]}
+  type="number"
+  source="numbers.ts#L43-L50"
+/>
 
-Accepts only non-negative (zero or positive) finite whole numbers.
+<Since version="2.11" />
+
+Accepts only the natural numbers (e.g. 0, 1, 2, 3, ...). Whole numbers, >= 0, and finite.
 
 <DecoderPlayground
-  decoder="positiveInteger"
+  decoder="natural"
   examples={['123', '0', '-3', '3.14', 'Infinity', 'NaN', "'not a number'", '-0']}
 />
 
@@ -74,7 +109,7 @@ deliberately accept those, you'll likely want to use the [`number`][] decoder in
 
 ## bigint
 
-<DecoderSig name="bigint" type="bigint" source="numbers.ts#L93-L98" />
+<DecoderSig name="bigint" type="bigint" source="numbers.ts#L101-L106" />
 
 Accepts any valid `bigint` value.
 
@@ -91,20 +126,20 @@ Accepts any valid `bigint` value.
   name="min"
   params="min: number, decoder?: Decoder<number>"
   type="number"
-  source="numbers.ts#L49-L59"
+  source="numbers.ts#L57-L67"
 />
 <DecoderSig
   name="max"
   params="max: number, decoder?: Decoder<number>"
   type="number"
-  source="numbers.ts#L61-L71"
+  source="numbers.ts#L69-L79"
 />
 <DecoderSig
   name="between"
   params="min: number, max: number, decoder?: Decoder<number>"
   multiline
   type="number"
-  source="numbers.ts#L73-L91"
+  source="numbers.ts#L81-L99"
 />
 
 <Since version="2.9" />

@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest';
 
 import { always } from '~/basics';
 import { annotate, define, formatInline, formatShort } from '~/core';
-import { number, positiveInteger } from '~/numbers';
+import { natural, number } from '~/numbers';
 import { pojo } from '~/objects';
 import { string } from '~/strings';
 
@@ -110,7 +110,7 @@ describe('.chain() with acceptance function', () => {
 });
 
 describe('.chain() with acceptance function returning a decoder', () => {
-  const decoder = string.transform(Number).chain(() => positiveInteger);
+  const decoder = string.transform(Number).chain(() => natural);
 
   test('valid type of decode result', () => {
     expect(decoder.verify('100')).toEqual(100);
@@ -127,7 +127,7 @@ describe('.chain() with acceptance function returning a decoder', () => {
 });
 
 describe('.chain() directly taking a decoder', () => {
-  const decoder = string.transform(Number).chain(positiveInteger);
+  const decoder = string.transform(Number).chain(natural);
 
   test('valid type of decode result', () => {
     expect(decoder.verify('100')).toEqual(100);
@@ -144,7 +144,7 @@ describe('.chain() directly taking a decoder', () => {
 });
 
 describe('.pipe() with single decoder arg', () => {
-  const decoder = string.transform(Number).pipe(positiveInteger);
+  const decoder = string.transform(Number).pipe(natural);
 
   test('valid type of decode result', () => {
     expect(decoder.verify('100')).toEqual(100);
@@ -163,7 +163,7 @@ describe('.pipe() with single decoder arg', () => {
 describe('.pipe() with decoder function arg', () => {
   const decoder = string
     .transform(Number)
-    .pipe((x) => (isNaN(x) || x <= 999 ? positiveInteger : always('A big number!')));
+    .pipe((x) => (isNaN(x) || x <= 999 ? natural : always('A big number!')));
 
   test('valid type of decode result', () => {
     expect(decoder.verify('0')).toEqual(0);
