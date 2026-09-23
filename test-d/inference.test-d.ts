@@ -13,8 +13,6 @@ import {
   boolean,
   constant,
   date,
-  datelike,
-  dateString,
   flexDate,
   decimal,
   define,
@@ -34,7 +32,6 @@ import {
   integer,
   isoDate,
   isoDateString,
-  iso8601,
   json,
   jsonArray,
   jsonObject,
@@ -453,13 +450,8 @@ expectType<JSONValue | undefined>(infer(jsonObject).abc);
 
 expectType<Date>(infer(date));
 expectType<Date>(infer(isoDate));
-expectType<Date>(infer(iso8601)); // alias of isoDate
 expectType<string>(infer(isoDateString));
 expectType<Date>(infer(flexDate));
-
-// Deprecated aliases (should still work)
-expectType<Date>(infer(datelike));
-expectType<string>(infer(dateString));
 
 expectType<never>(infer(fail('I will never return')));
 expectType<never>(infer(never('I will never return')));

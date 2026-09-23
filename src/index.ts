@@ -5,7 +5,6 @@ export { null_, nullable, nullish, optional, undefined_ } from '~/basics';
 export { boolean, truthy } from '~/booleans';
 export { mapping, record, setFromArray } from '~/collections';
 export { date, flexDate, isoDate, isoDateString } from '~/dates';
-export { datelike, dateString, iso8601 } from '~/dates';
 export type { JSONArray, JSONObject, JSONValue } from '~/json';
 export { json, jsonArray, jsonObject } from '~/json';
 export { instanceOf, lazy, prep, sized } from '~/misc';

@@ -6,6 +6,8 @@
   as it's encouraged to
   [not have multiple copies](https://decoders.cc/docs/using-in-monorepos) of decoders in
   your project anyway.
+- Remove `dateString`, `iso8601`, and `datelike`, which were deprecated in 2.9. Use
+  `isoDateString`, `isoDate`, and `flexDate` instead.
 
 **Performance:**
 
