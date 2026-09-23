@@ -13,48 +13,52 @@ jobs:
       matrix:
         node-version: [
             # From https://github.com/nodejs/Release
-            '20.x', # EoL by 2026-04-30
             '22.x', # EoL by 2027-04-30
             '24.x', # EoL by 2028-04-30
+            '26.x', # EoL by 2029-04-30
             'latest',
           ]
 
     steps:
       - uses: actions/checkout@v5
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Set up Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v5
         with:
           node-version: ${{ matrix.node-version }}
+          cache: pnpm
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Test TypeScript
-        run: npm run test:typescript
+        run: pnpm run test:typescript
 
       - name: Unit tests
-        run: npm run test
+        run: pnpm run test
 
       - name: Completeness check
-        run: npm run test:completeness
+        run: pnpm run test:completeness
 
       - name: Check docs source lines are up to date
         run: |
-          npm run docs:update-sources
+          pnpm run docs:update-sources
           git diff --exit-code docs/content/docs/api/
 
       - name: Lints
-        run: npm run lint
+        run: pnpm run lint
 
       - name: Build
-        run: npm run build
+        run: pnpm run build
 
       - name: Test type inference
-        run: npm run test:types
+        run: pnpm run test:types
 
       - name: Tree-shaking
-        run: npm run test:treeshake
+        run: pnpm run test:treeshake
 
       - name: Lint packages
-        run: npm run lint:package
+        run: pnpm run lint:package

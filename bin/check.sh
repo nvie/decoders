@@ -37,7 +37,7 @@ list_decoders | while read dec; do
   if ! grep -q "\"$lower\":" "docs/lib/decoder-redirects.ts"; then
     echo "❌ $dec" >&2
     echo "Decoder \"$dec\" has no redirect entry!" >&2
-    echo "Run 'npm run format' to regenerate." >&2
+    echo "Run 'pnpm run format' to regenerate." >&2
     exit 5
   fi
 done

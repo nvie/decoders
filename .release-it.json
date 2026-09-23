@@ -19,7 +19,7 @@
     "releaseName": "v${version}"
   },
   "hooks": {
-    "before:init": ["npm run build", "npm run lint", "npm run lint:package"],
+    "before:init": ["pnpm run build", "pnpm run lint", "pnpm run lint:package"],
     "after:bump": "prettier --write package.json"
   }
 }
