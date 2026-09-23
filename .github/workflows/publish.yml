@@ -56,6 +56,6 @@ jobs:
           if [[ "${{ github.event.inputs.dry-run }}" == "true" ]]; then
             ARGS+=" --dry-run"
           fi
-          pnpm run release -- $ARGS --ci
+          pnpm run release $ARGS --ci
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
