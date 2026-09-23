@@ -2,8 +2,9 @@
   "name": "docs",
   "version": "0.0.0",
   "private": true,
+  "packageManager": "pnpm@11.24.0",
   "scripts": {
-    "build": "cd .. && npm install --include=dev && npm run build && cp -r dist/ docs/decoders-latest-snapshot/ && cd docs && next build",
+    "build": "cd .. && pnpm install --frozen-lockfile --prod=false && pnpm run build && cp -r dist/ docs/decoders-latest-snapshot/ && cd docs && next build",
     "dev": "next dev",
     "start": "next start",
     "postinstall": "fumadocs-mdx"
@@ -16,14 +17,17 @@
     "next": "^16.3.5",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
-    "ses": "^1.15.0"
+    "ses": "^1.15.0",
+    "unist-util-visit": "^5.1.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
+    "@types/mdast": "^4.0.4",
     "@types/mdx": "^2.0.14",
     "@types/node": "^24.13.4",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "mdast-util-mdx": "^3.0.0",
     "postcss": "^8.5.28",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3"
