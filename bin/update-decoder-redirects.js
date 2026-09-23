@@ -26,8 +26,9 @@ const mdxFiles = fs
   .filter((f) => f.endsWith('.mdx'))
   .sort();
 
-// Regex to match self-closing <DecoderSig .../> and <Sig .../> tags (possibly multiline)
-const decoderSigRe = /<(?:DecoderSig|Sig)\b([\s\S]*?)\/>/g;
+// Regex to match self-closing <DecoderSig .../> and <Sig .../> tags (possibly multiline),
+// skipping the `</>` that closes a JSX fragment inside an attribute
+const decoderSigRe = /<(?:DecoderSig|Sig)\b([\s\S]*?)(?<!<)\/>/g;
 const nameAttrRe = /name="([^"]+)"/;
 const aliasNameRe = /name:\s*'([^']+)'/g;
 

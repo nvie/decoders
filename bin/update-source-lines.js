@@ -122,8 +122,9 @@ const mdxFiles = fs
   .filter((f) => f.endsWith('.mdx'))
   .map((f) => path.join(DOCS_API, f));
 
-// Regex to match self-closing <DecoderSig .../> and <Sig .../> tags (possibly multiline)
-const tagRe = /<(DecoderSig|Sig)\b([\s\S]*?)\/>/g;
+// Regex to match self-closing <DecoderSig .../> and <Sig .../> tags (possibly multiline),
+// skipping the `</>` that closes a JSX fragment inside an attribute
+const tagRe = /<(DecoderSig|Sig)\b([\s\S]*?)(?<!<)\/>/g;
 const nameRe = /name="([^"]+)"/;
 const sourceRe = /source="([^"]+)"/;
 
