@@ -20,6 +20,7 @@
     "api/error-formatting",
     "---Guides---",
     "building-your-own",
+    "idiomatic-decoders",
     "for-library-authors",
     "using-in-monorepos"
   ]

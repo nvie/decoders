@@ -1,6 +1,7 @@
 ---
 title: Building your own
-description: Learn how to define custom decoders using .refine() and .transform().
+description:
+  Learn how to define custom decoders using .refine(), .transform(), and .pipe().
 ---
 
 When defining new decoders, it's important to understand the difference between what
@@ -38,6 +39,7 @@ The **tl;dr** is:
 - Optionally, narrow down what will get **accepted** by adding extra criteria with
   [`.refine()`][]
 - Optionally, to change what your custom decoder **returns**, use [`.transform()`][]
+- Optionally, to feed that result into another decoder, use [`.pipe()`][]
 
 Now, let's build a few custom decoders to illustrate the above.
 
@@ -78,9 +80,9 @@ returned in truncated form).
 
 ## Example 3: Accepting Wordle words
 
-Suppose you want to build your own [Wordle](https://www.powerlanguage.co.uk/wordle/)
-clone. At the boundary of your program, you'll want to enforce that these are 5-letter
-words with only alphabetical letters.
+Suppose you want to build your own [Wordle](https://www.nytimes.com/games/wordle/) clone.
+At the boundary of your program, you'll want to enforce that these are 5-letter words with
+only alphabetical letters.
 
 We want to build this as a decoder that:
 
@@ -111,24 +113,24 @@ Then, we'll transform any accepted words to uppercase automatically.
 ## Example 4: Making a transformation reusable
 
 The wordle example above will uppercase the output before returning it. Suppose that you
-want to use that on other string decoders as well. Do you all just stick
-[`.transform()`][] after those?
+want to use that on other string decoders as well. Do you just stick [`.transform()`][]
+after those?
 
 You can define this as a higher-order decoder which works for _any_ string decoder (aka
 `Decoder<string>`). Simply define this as a function if you want to make writing these
 easier:
 
 ```ts
-function lower(decoder) {
+function lower(decoder: Decoder<string>): Decoder<string> {
   return decoder.transform((s) => s.toLowerCase());
 }
 
-function upper(decoder) {
+function upper(decoder: Decoder<string>): Decoder<string> {
   return decoder.transform((s) => s.toUpperCase());
 }
 ```
 
-Then you can use reuse them anywhere in your decoders.
+Then you can reuse them anywhere in your decoders.
 
 <DecoderPlayground
   globals={{
@@ -216,7 +218,12 @@ We'll want to look at the `labels` field as an array of strings, but we're given
 We can build a comma-separated helper decoder like so:
 
 ```typescript
-const commaSeparated = string.transform((s) => s.split(',').filter(Boolean));
+const commaSeparated = string.transform((s) =>
+  s
+    .split(',')
+    .map((part) => part.trim())
+    .filter(Boolean),
+);
 ```
 
 ### Putting it all together
@@ -248,27 +255,13 @@ eventsDecoder.verify(/* JSON example from above */);
 // }
 ```
 
-## A note on naming
+## Next steps
 
-To make decoders maximally useful, refrain from naming decoders after the _field_ they're
-used for. **Think of a decoder as the description of a _data type_**, and name them
-accordingly. That's why the decoder [in the example above](#putting-it-all-together) is
-called `commaSeparated` and not `labelsDecoder` or something like that! In the case of the
-`id` field, it happens to be also named `id` because it makes sense to think of it as an
-ID _data type_. That the field also happens to be named `id` is a coincidence.
+Now that you know how to build your own decoders, read
+[Idiomatic decoders](/idiomatic-decoders) for a list of common mistakes to avoid, like
+naming decoders after fields, or baking [`nullable()`][] into reusable decoders.
 
-## Keep edge cases outside your decoders
-
-Try to keep `null`s, `undefined`s, or other edge cases outside of the decoder as much as
-possible, and instead wrap them in [`nullable()`][]s where you use them in your call
-sites - typically in those big [`object()`][] decoders.
-
-Take [the example above](#putting-it-all-together). It would be easy to let the
-`commaSeparated` decoder be infected with the `null`-case and handle it too. But this is
-less composable. Keeping the `null`-case outside of that decoder makes it a smaller, and
-thus a more reusable, building block. It's cheap to wrap it in a [`nullable()`][] where
-you put it all together.
-
+[`.pipe()`]: /.pipe
 [`.refine()`]: /.refine
 [`.transform()`]: /.transform
 [`email`]: /email
