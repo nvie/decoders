@@ -23,6 +23,11 @@ export const NUMBERS: number[] = [
   Number.EPSILON,
   Math.PI,
   42,
+  Number.MAX_SAFE_INTEGER,
+  Number.MIN_SAFE_INTEGER,
+  2 ** 53,
+  -(2 ** 53),
+  1e300,
 ];
 
 export const BIGINTS: bigint[] = [
