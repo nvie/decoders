@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [2.12.0] - 2026-09-24
+
 **Breaking!**
 
 - Drop support for TypeScript < 5.0
