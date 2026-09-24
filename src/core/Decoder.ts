@@ -204,8 +204,6 @@ class DecoderImpl<T> implements Decoder<T> {
   readonly value: (blob: unknown) => T | undefined;
 
   constructor(fn: AcceptanceFn<T>) {
-    // These are own closures rather than prototype methods, so they keep
-    // working when detached from the decoder, e.g. `const { verify } = decoder`
     const decode = (blob: unknown): DecodeResult<T> => {
       // Pass a more flexible error constructor to the acceptance function which
       // can also "just" error with a string, so users don't have to build the
@@ -216,8 +214,7 @@ class DecoderImpl<T> implements Decoder<T> {
       return fn(blob, makeOk, makeFlexErr);
     };
 
-    this.decode = decode;
-    this.verify = (blob, formatter = formatInline) => {
+    const verify = (blob: unknown, formatter: Formatter = formatInline): T => {
       const result = decode(blob);
       if (result.ok) {
         return result.value;
@@ -225,7 +222,12 @@ class DecoderImpl<T> implements Decoder<T> {
         throw format(result.error, formatter);
       }
     };
-    this.value = (blob) => decode(blob).value;
+
+    const value = (blob: unknown): T | undefined => decode(blob).value;
+
+    this.decode = decode;
+    this.verify = verify;
+    this.value = value;
   }
 
   /**
