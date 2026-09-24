@@ -21,11 +21,12 @@ or `Infinity`.
 
 <DecoderSig name="integer" type="number" source="numbers.ts#L25-L32" />
 
-Accepts only integers (e.g. ..., -2, -1, 0, 1, 2, ...). Whole numbers, and finite.
+Accepts only integers (e.g. ..., -2, -1, 0, 1, 2, ...). Whole numbers, and safe (between
+-(2^53-1) and 2^53-1).
 
 <DecoderPlayground
   decoder="integer"
-  examples={['123', '-3.14', 'Infinity', 'NaN', "'not a integer'"]}
+  examples={['123', '-3.14', '2 ** 53', 'Infinity', 'NaN', "'not a integer'"]}
 />
 
 ---
@@ -82,7 +83,8 @@ and finite.
 
 <Since version="2.11" />
 
-Accepts only the natural numbers (e.g. 0, 1, 2, 3, ...). Whole numbers, >= 0, and finite.
+Accepts only the natural numbers (e.g. 0, 1, 2, 3, ...). Whole numbers, >= 0, and safe (up
+to 2^53-1).
 
 <DecoderPlayground
   decoder="natural"
@@ -97,8 +99,9 @@ Accepts only the natural numbers (e.g. 0, 1, 2, 3, ...). Whole numbers, >= 0, an
 
 Accepts any valid `number` value.
 
-This also accepts special values like `NaN` and `Infinity`. Unless you want to
-deliberately accept those, you'll likely want to use the [`number`][] decoder instead.
+This also accepts special values like `NaN` and `Infinity`, and unsafe integers (beyond
+±(2^53-1)). Unless you want to deliberately accept those, you'll likely want to use the
+[`number`][] or [`integer`][] decoder instead.
 
 <DecoderPlayground
   decoder="anyNumber"
@@ -168,3 +171,4 @@ numbers are accepted:
 />
 
 [`number`]: /number
+[`integer`]: /integer

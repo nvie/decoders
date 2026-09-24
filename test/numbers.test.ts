@@ -89,7 +89,7 @@ describe('nonNegativeNumber', () => {
 
 describe('integer', () => {
   const decoder = integer;
-  const [okay, not_okay] = partition(INPUTS, (n) => Number.isInteger(n));
+  const [okay, not_okay] = partition(INPUTS, (n) => Number.isSafeInteger(n));
 
   test('valid', () => {
     expect(okay.length).not.toBe(0);
@@ -104,13 +104,22 @@ describe('integer', () => {
       expect(decoder.decode(value).ok).toBe(false);
     }
   });
+
+  test('rejects unsafe integers', () => {
+    expect(decoder.verify(Number.MAX_SAFE_INTEGER)).toBe(Number.MAX_SAFE_INTEGER);
+    expect(decoder.verify(Number.MIN_SAFE_INTEGER)).toBe(Number.MIN_SAFE_INTEGER);
+    expect(() => decoder.verify(2 ** 53)).toThrow('Number must be an integer');
+    expect(() => decoder.verify(-(2 ** 53))).toThrow('Number must be an integer');
+    expect(() => decoder.verify(1e300)).toThrow('Number must be an integer');
+    expect(() => decoder.verify(3.5)).toThrow('Number must be an integer');
+  });
 });
 
 describe('natural', () => {
   const decoder = natural;
   const [okay, not_okay] = partition(
     INPUTS,
-    (n) => typeof n === 'number' && Number.isInteger(n) && n >= 0,
+    (n) => typeof n === 'number' && Number.isSafeInteger(n) && n >= 0,
   );
 
   test('valid', () => {
@@ -124,6 +133,11 @@ describe('natural', () => {
   test('rejects -0', () => {
     expect(decoder.decode(0).ok).toBe(true);
     expect(decoder.decode(-0).ok).toBe(false);
+  });
+
+  test('rejects unsafe integers', () => {
+    expect(decoder.verify(Number.MAX_SAFE_INTEGER)).toBe(Number.MAX_SAFE_INTEGER);
+    expect(() => decoder.verify(2 ** 53)).toThrow('Number must be an integer');
   });
 
   test('invalid', () => {
