@@ -165,34 +165,48 @@ function format(err: Annotation, formatter: Formatter): Error {
 }
 
 /**
- * Defines a new `Decoder<T>`, by implementing a custom acceptance function.
- * The function receives three arguments:
+ * Brand identifying a value as a Decoder. It lives on the shared prototype, so
+ * decoders carry it for free. `Symbol.for()` is used so that decoders are
+ * still recognized across duplicate copies of this library.
  *
- * 1. `blob` - the raw/unknown input (aka your external data)
- * 2. `ok` - Call `ok(value)` to accept the input and return ``value``
- * 3. `err` - Call `err(message)` to reject the input with error ``message``
- *
- * The expected return value should be a `DecodeResult<T>`, which can be
- * obtained by returning the result of calling the provided `ok` or `err`
- * helper functions. Please note that `ok()` and `err()` don't perform side
- * effects! You'll need to _return_ those values.
+ * @internal
  */
-/* #__NO_SIDE_EFFECTS__ */
-export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
+const kBrand = Symbol.for('decoders.Decoder.v3');
+
+/**
+ * Memoizes the `~standard` props. Kept outside the decoder rather than in
+ * a field, so that a decoder is a one-slot object with nothing internal on it.
+ *
+ * @internal
+ */
+const _standard = new WeakMap<object, StandardSchemaV1.Props<unknown, never>>();
+
+/**
+ * The implementation behind every `Decoder<T>`.
+ *
+ * @internal
+ */
+class DecoderImpl<T> implements Decoder<T> {
   /**
    * Verifies the untrusted/unknown input and either accepts or rejects it.
    *
    * Contrasted with `.verify()`, calls to `.decode()` will never fail and
    * instead return a result type.
    */
-  function decode(blob: unknown): DecodeResult<T> {
-    // Pass a more flexible error constructor to the acceptance function which
-    // can also "just" error with a string, so users don't have to build the
-    // Annotation object themselves in all custom Decoders.
-    const makeFlexErr = (msg: Annotation | string) =>
-      makeErr(isAnnotation(msg) ? msg : annotate(blob, msg));
+  readonly decode: (blob: unknown) => DecodeResult<T>;
 
-    return fn(blob, makeOk, makeFlexErr);
+  constructor(fn: AcceptanceFn<T>) {
+    const decode = (blob: unknown): DecodeResult<T> => {
+      // Pass a more flexible error constructor to the acceptance function which
+      // can also "just" error with a string, so users don't have to build the
+      // Annotation object themselves in all custom Decoders.
+      const makeFlexErr = (msg: Annotation | string) =>
+        makeErr(isAnnotation(msg) ? msg : annotate(blob, msg));
+
+      return fn(blob, makeOk, makeFlexErr);
+    };
+
+    this.decode = decode;
   }
 
   /**
@@ -200,8 +214,8 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
    * When accepted, returns a value of type `T`. Otherwise fail with
    * a runtime error.
    */
-  function verify(blob: unknown, formatter: Formatter = formatInline): T {
-    const result = decode(blob);
+  verify(blob: unknown, formatter: Formatter = formatInline): T {
+    const result = this.decode(blob);
     if (result.ok) {
       return result.value;
     } else {
@@ -217,8 +231,8 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
    * Use this when you're not interested in programmatically handling the
    * error message.
    */
-  function value(blob: unknown): T | undefined {
-    return decode(blob).value;
+  value(blob: unknown): T | undefined {
+    return this.decode(blob).value;
   }
 
   /**
@@ -227,8 +241,8 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
    * function throws an error, the whole decoder will fail using the error
    * message as the failure reason.
    */
-  function transform<V>(transformFn: (result: T) => V): Decoder<V> {
-    return chain(noThrow(transformFn));
+  transform<V>(transformFn: (result: T) => V): Decoder<V> {
+    return this.chain(noThrow(transformFn));
   }
 
   /**
@@ -236,8 +250,10 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
    * original decoder, but only accepts values that also meet the
    * predicate.
    */
-  function refine(predicateFn: (value: T) => boolean, errmsg: string): Decoder<T> {
-    return reject((value) =>
+  refine<N extends T>(predicate: (value: T) => value is N, msg: string): Decoder<N>;
+  refine(predicate: (value: T) => boolean, msg: string): Decoder<T>;
+  refine(predicateFn: (value: T) => boolean, errmsg: string): Decoder<T> {
+    return this.reject((value) =>
       predicateFn(value)
         ? // Don't reject
           null
@@ -250,8 +266,8 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
    * Cast the return type of this read-only decoder to a narrower type. This is
    * useful to return "branded" types. This method has no runtime effect.
    */
-  function refineType<SubT extends T>() {
-    return self as unknown as Decoder<SubT>;
+  refineType<SubT extends T>(): Decoder<SubT> {
+    return this as unknown as Decoder<SubT>;
   }
 
   /**
@@ -264,7 +280,8 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
    * > be covered more elegantly by `.transform()`, `.refine()`, or `.pipe()`
    * > instead._
    */
-  function chain<V>(next: Next<V, T>): Decoder<V> {
+  chain<V>(next: Next<V, T>): Decoder<V> {
+    const decode = this.decode;
     return define((blob, ok, err) => {
       const r1 = decode(blob);
       if (!r1.ok) return r1; // Rejected
@@ -287,13 +304,11 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
    *
    *   string.pipe((s) => s.startsWith('@') ? username : email)
    */
-  function pipe<V, D extends Decoder<V>>(
-    next: D | ((blob: T) => D),
-  ): Decoder<DecoderType<D>> {
+  pipe<V, D extends Decoder<V>>(next: D | ((blob: T) => D)): Decoder<DecoderType<D>> {
     // Technically, .pipe() is just an alias of .chain(), but its signature is
     // more focused on the more convenient use case of working with Decoders
     // directly.
-    return chain(next) as Decoder<DecoderType<D>>;
+    return this.chain(next) as Decoder<DecoderType<D>>;
   }
 
   /**
@@ -307,8 +322,8 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
    * Unlike `.refine()`, you can use this function to return a dynamic error
    * message.
    */
-  function reject(rejectFn: (value: T) => string | Annotation | null): Decoder<T> {
-    return chain((blob, ok, err) => {
+  reject(rejectFn: (value: T) => string | Annotation | null): Decoder<T> {
+    return this.chain((blob, ok, err) => {
       const errmsg = rejectFn(blob);
       return errmsg === null
         ? ok(blob)
@@ -321,7 +336,8 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
    * case it rejects. This can be used to simplify or shorten otherwise
    * long or low-level/technical errors.
    */
-  function describe(message: string): Decoder<T> {
+  describe(message: string): Decoder<T> {
+    const decode = this.decode;
     return define((blob, _, err) => {
       // Decode using the given decoder...
       const result = decode(blob);
@@ -335,18 +351,15 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
     });
   }
 
-  const newDecoder: Decoder<T> = {
-    verify,
-    value,
-    decode,
-    transform,
-    refine,
-    refineType,
-    reject,
-    describe,
-    chain,
-    pipe,
-    '~standard': {
+  /**
+   * The Standard Schema interface for this decoder.
+   */
+  get '~standard'(): StandardSchemaV1.Props<unknown, T> {
+    const decode = this.decode;
+    const memo = _standard.get(this) as StandardSchemaV1.Props<unknown, T> | undefined;
+    if (memo !== undefined) return memo;
+
+    const props: StandardSchemaV1.Props<unknown, T> = {
       version: 1,
       vendor: 'decoders',
       validate: (blob) => {
@@ -358,22 +371,35 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
           return { issues };
         }
       },
-    },
-  };
-  const self = stamp(newDecoder);
-  return self;
+    };
+    _standard.set(this, props as StandardSchemaV1.Props<unknown, never>);
+    return props;
+  }
 }
 
-/** @internal */
-const kDecoderRegistry = Symbol.for('decoders.kDecoderRegistry');
-// eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
-const _stamped: WeakSet<Decoder<unknown>> = ((globalThis as any)[kDecoderRegistry] ??=
-  new WeakSet());
+// @ts-expect-error: Brand is set on the prototype for performance, not the instance
+DecoderImpl.prototype[kBrand] = true;
 
-/** @internal */
-function stamp<D extends Decoder<unknown>>(decoder: D): D {
-  _stamped.add(decoder);
-  return decoder;
+// The binding can't be named `Decoder` (that's the public interface), but the
+// class's name is what shows up in `console.log()` and `.constructor.name`
+Object.defineProperty(DecoderImpl, 'name', { value: 'Decoder' });
+
+/**
+ * Defines a new `Decoder<T>`, by implementing a custom acceptance function.
+ * The function receives three arguments:
+ *
+ * 1. `blob` - the raw/unknown input (aka your external data)
+ * 2. `ok` - Call `ok(value)` to accept the input and return ``value``
+ * 3. `err` - Call `err(message)` to reject the input with error ``message``
+ *
+ * The expected return value should be a `DecodeResult<T>`, which can be
+ * obtained by returning the result of calling the provided `ok` or `err`
+ * helper functions. Please note that `ok()` and `err()` don't perform side
+ * effects! You'll need to _return_ those values.
+ */
+/* #__NO_SIDE_EFFECTS__ */
+export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
+  return new DecoderImpl(fn);
 }
 
 /**
@@ -381,5 +407,5 @@ function stamp<D extends Decoder<unknown>>(decoder: D): D {
  */
 /* #__NO_SIDE_EFFECTS__ */
 export function isDecoder(value: unknown): value is Decoder<unknown> {
-  return _stamped.has(value as Decoder<unknown>);
+  return typeof value === 'object' && value !== null && kBrand in value;
 }
