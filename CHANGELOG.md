@@ -23,9 +23,8 @@
   - `positiveNumber` → `nonNegativeNumber` (old name kept as a deprecated alias)
   - `positiveInteger` → `natural` (old name kept as a deprecated alias)
 - Deprecate `iso8601`, the alias for `isoDate` since 2.9
-- Deprecate passing a decoder to `.chain()`. Use `.pipe(decoder)` instead (this
-  already does the same thing). Passing an acceptance function to `.chain()` is
-  unaffected.
+- Deprecate passing a decoder to `.chain()`. Use `.pipe(decoder)` instead (this already
+  does the same thing). Passing an acceptance function to `.chain()` is unaffected.
 
 **Performance:**
 
