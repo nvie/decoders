@@ -118,7 +118,7 @@ export interface Decoder<T> {
   /**
    * The Standard Schema interface for this decoder.
    */
-  '~standard': StandardSchemaV1.Props<unknown, T>;
+  readonly '~standard': StandardSchemaV1.Props<unknown, T>;
 }
 
 /**
@@ -204,6 +204,8 @@ class DecoderImpl<T> implements Decoder<T> {
   readonly value: (blob: unknown) => T | undefined;
 
   constructor(fn: AcceptanceFn<T>) {
+    // Per-instance closures rather than methods, so they keep working when
+    // detached from the decoder, e.g. `.filter(decoder.value)`
     const decode = (blob: unknown): DecodeResult<T> => {
       // Pass a more flexible error constructor to the acceptance function which
       // can also "just" error with a string, so users don't have to build the
