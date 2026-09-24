@@ -1,5 +1,24 @@
 ## [Unreleased]
 
+**Breaking!**
+
+- Drop support for TypeScript < 5.0
+
+**Fixes:**
+
+- Fix `oneOf()` losing its literal types _when nested inside another decoder_, no more
+  `as const` needed:
+  ```ts
+  // ✅ This was already correct before...
+  oneOf(['a', 'b']);
+  // Decoder<'a' | 'b'>
+
+  // ...but now this is also correct (no longer needs `as const`)
+  optional(oneOf(['a', 'b']));
+  // Before: ❌ Decoder<string | undefined>
+  // Now:    ✅ Decoder<'a' | 'b' | undefined>
+  ```
+
 ## [2.11.0] - 2026-09-23
 
 **New APIs:**

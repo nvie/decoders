@@ -35,10 +35,12 @@ Accepts any value that is strictly-equal (using `===`) to one of the specified v
   examples={["'foo'", '3', "'hello'", '4', 'false']}
 />
 
-For example, given an array of strings, like so:
+The literal values are inferred as the output type, so no `as const` is needed, not even
+when nested inside another decoder:
 
 ```ts
-oneOf(['foo', 'bar']);
+oneOf(['foo', 'bar']); // Decoder<'foo' | 'bar'>
+optional(oneOf(['foo', 'bar'])); // Decoder<'foo' | 'bar' | undefined>
 ```
 
 ---

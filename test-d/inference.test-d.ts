@@ -477,6 +477,24 @@ expectType<string>(
 
 expectType<'foo' | 'bar'>(test(oneOf(['foo', 'bar'])));
 
+// Literal types must also be preserved when oneOf() or constant() are nested
+// in another generic call. Assigning to a variable first avoids expectType's
+// contextual type from influencing inference.
+const oneOfNums = oneOf([1, 2, 3]);
+const optionalOneOf = optional(oneOf(['foo', 'bar']));
+const nullableOneOf = nullable(oneOf(['foo', 'bar']));
+const nullishOneOf = nullish(oneOf(['foo', 'bar']));
+const optionalOneOfWithDefault = optional(oneOf(['foo', 'bar']), 'foo');
+const optionalConstant = optional(constant('foo'));
+const nullableConstant = nullable(constant('foo'));
+expectType<1 | 2 | 3>(test(oneOfNums));
+expectType<'foo' | 'bar' | undefined>(test(optionalOneOf));
+expectType<'foo' | 'bar' | null>(test(nullableOneOf));
+expectType<'foo' | 'bar' | null | undefined>(test(nullishOneOf));
+expectType<'foo' | 'bar'>(test(optionalOneOfWithDefault));
+expectType<'foo' | undefined>(test(optionalConstant));
+expectType<'foo' | null>(test(nullableConstant));
+
 enum Fruit {
   Apple = 'a',
   Banana = 'b',
@@ -493,6 +511,11 @@ enum Primes {
 // TypeScript thinks these aren't equal types.
 expectAssignable<Fruit>(test(enum_(Fruit)));
 expectAssignable<Primes>(test(enum_(Primes)));
+
+const oneOfEnumMembers = oneOf([Fruit.Apple, Fruit.Banana]);
+const optionalOneOfEnumMembers = optional(oneOf([Fruit.Apple, Fruit.Banana]));
+expectType<Fruit.Apple | Fruit.Banana>(test(oneOfEnumMembers));
+expectType<Fruit.Apple | Fruit.Banana | undefined>(test(optionalOneOfEnumMembers));
 
 const ConstEnum = {
   Five: 'five',

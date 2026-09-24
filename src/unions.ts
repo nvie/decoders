@@ -88,7 +88,7 @@ export function either<TDecoders extends readonly Decoder<unknown>[]>(
  * specified values.
  */
 /* #__NO_SIDE_EFFECTS__ */
-export function oneOf<C extends Scalar>(constants: readonly C[]): Decoder<C> {
+export function oneOf<const C extends Scalar>(constants: readonly C[]): Decoder<C> {
   return define((blob, ok, err) => {
     const index = constants.indexOf(blob as C);
     if (index !== -1) {
