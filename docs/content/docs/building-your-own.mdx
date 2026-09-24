@@ -255,26 +255,11 @@ eventsDecoder.verify(/* JSON example from above */);
 // }
 ```
 
-## A note on naming
+## Next steps
 
-To make decoders maximally useful, refrain from naming decoders after the _field_ they're
-used for. **Think of a decoder as the description of a _data type_**, and name them
-accordingly. That's why the decoder [in the example above](#putting-it-all-together) is
-called `commaSeparated` and not `labelsDecoder` or something like that! In the case of the
-`id` field, it happens to be also named `id` because it makes sense to think of it as an
-ID _data type_. That the field also happens to be named `id` is a coincidence.
-
-## Keep edge cases outside your decoders
-
-Try to keep `null`s, `undefined`s, or other edge cases outside of the decoder as much as
-possible, and instead wrap them in [`nullable()`][]s where you use them in your call
-sites - typically in those big [`object()`][] decoders.
-
-Take [the example above](#putting-it-all-together). It would be easy to let the
-`commaSeparated` decoder be infected with the `null`-case and handle it too. But this is
-less composable. Keeping the `null`-case outside of that decoder makes it a smaller, and
-thus a more reusable, building block. It's cheap to wrap it in a [`nullable()`][] where
-you put it all together.
+Now that you know how to build your own decoders, read
+[Idiomatic decoders](/idiomatic-decoders) for a list of common mistakes to avoid, like
+naming decoders after fields, or baking [`nullable()`][] into reusable decoders.
 
 [`.pipe()`]: /.pipe
 [`.refine()`]: /.refine

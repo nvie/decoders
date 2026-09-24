@@ -39,7 +39,7 @@ pre code {
   color: #d46b08;
 }
 
-.prose a:has(> code:only-child) {
+.prose a.code-link {
   color: inherit;
 }
 

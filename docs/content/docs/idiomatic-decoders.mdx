@@ -1,0 +1,429 @@
+---
+title: Idiomatic decoders
+description: Common mistakes when writing decoders, and what to write instead.
+---
+
+Decoders are small building blocks that you snap together. Most mistakes come from
+forgetting that, and writing validation logic _by hand_ where a composed decoder would do
+the job better. This guide lists the most common patterns to avoid, each with a
+side-by-side "don't" and "do".
+
+In short:
+
+| ❌ Don't                                                                               | ✅ Do instead                                 |
+| :------------------------------------------------------------------------------------- | :-------------------------------------------- |
+| [Name decoders after fields](#name-decoders-after-data-types-not-fields)               | Name them after the data type                 |
+| [Bake `optional()` into a reusable decoder](#keep-optional-out-of-reusable-decoders)   | Apply `optional()` where the field is defined |
+| [Hand-roll checks with `typeof`](#describe-the-shape-dont-check-it-by-hand)            | Describe the shape with [`object()`][]        |
+| [Use `either()` for objects with a "kind" field](#use-taggedunion-for-tagged-objects)  | Use [`taggedUnion()`][]                       |
+| [Use `either()` if the "kind" can be missing](#when-the-tag-can-be-missing-use-select) | Use [`select()`][] to pick a decoder          |
+| [Build decoders inside callbacks](#build-decoders-once)                                | Build them once, at the module level          |
+| [Validate inside `.transform()`](#dont-validate-inside-transform)                      | Compose decoders, then transform              |
+| [Call `.verify()` inside `.transform()`](#use-pipe-to-feed-into-another-decoder)       | Use [`.pipe()`][]                             |
+
+---
+
+## Name decoders after data types, not fields
+
+A decoder describes a **kind of value**: an email address, a user ID, a date. It does not
+describe the field it happens to be stored in. Name decoders after what the value _is_,
+and reuse them for every field that holds that kind of value.
+
+```ts title="❌ Don't"
+// [!code highlight:2]
+const createdByDecoder = regex(/^user_\w+$/, 'Invalid creator');
+const assigneeDecoder = regex(/^user_\w+$/, 'Invalid assignee');
+
+const task = object({
+  createdBy: createdByDecoder,
+  assignee: optional(assigneeDecoder),
+});
+```
+
+```ts title="✅ Do"
+// [!code highlight]
+const userId = regex(/^user_\w+$/, 'Must be a user ID');
+
+const task = object({
+  // [!code highlight:2]
+  createdBy: userId,
+  assignee: optional(userId),
+});
+```
+
+There's no need for field-specific error messages either: decoders already report which
+field failed.
+
+The field names belong in the [`object()`][] definition. The decoder captures the rules
+for the _data type_, so they're written once and stay consistent everywhere. If the format
+of a user ID ever changes, there's exactly one place to update.
+
+---
+
+## Keep `optional()` out of reusable decoders
+
+Whether a value may be missing is a property of the **field**, not of the value. So don't
+bake [`optional()`][], [`nullable()`][], or [`nullish()`][] into a named, reusable
+decoder. Apply them where the field is defined instead.
+
+```ts title="❌ Don't"
+// [!code highlight]
+export const userId = optional(regex(/^user_\w+$/, 'Must be a user ID'));
+
+const task = object({
+  // [!code highlight]
+  createdBy: userId, // Oops, now this may be missing too!
+  assignee: userId,
+});
+```
+
+```ts title="✅ Do"
+// [!code highlight]
+export const userId = regex(/^user_\w+$/, 'Must be a user ID');
+
+const task = object({
+  createdBy: userId,
+  // [!code highlight]
+  assignee: optional(userId),
+});
+```
+
+In the first version, _every_ user of `userId` silently accepts `undefined`, even in
+places where a user ID is required. The type `string | undefined` then leaks into all code
+that touches it. Keeping the edge case outside makes the decoder a smaller and more
+reusable building block, and wrapping it in `optional()` at the call site is cheap.
+
+---
+
+## Describe the shape, don't check it by hand
+
+If you catch yourself writing `typeof x === "..."` checks, or little helpers like
+`hasOptionalString(obj, key)`, it’s often a smell.
+
+```ts title="❌ Don't"
+function hasOptionalString(obj, key) {
+  // [!code highlight]
+  return !(key in obj) || typeof obj[key] === 'string';
+}
+
+function isUser(x): x is User {
+  return (
+    // [!code highlight:4]
+    typeof x === 'object' &&
+    x !== null &&
+    typeof x.name === 'string' &&
+    hasOptionalString(x, 'nickname')
+  );
+}
+
+const user = unknown.refine(isUser, 'Must be a user');
+```
+
+```ts title="✅ Do"
+const user = object({
+  // [!code highlight:2]
+  name: string,
+  nickname: optional(string),
+});
+```
+
+The composed version is shorter, infers the `User` type for you (no separate type to keep
+in sync), and gives precise error messages. The hand-rolled version also has a subtle bug:
+`{ nickname: undefined }` is rejected because the `in` check sees the key. Compare:
+
+<DecoderPlayground
+  globals={{
+    handRolled:
+      "unknown.refine((x) => typeof x === 'object' && x !== null && typeof x.name === 'string' && (!('nickname' in x) || typeof x.nickname === 'string'), 'Must be a user')",
+    user: 'object({ name: string, nickname: optional(string) })',
+  }}
+  preface={`
+    const handRolled = unknown.refine(isUser, 'Must be a user');
+    const user = object({ name: string, nickname: optional(string) });
+  `}
+  decoder={[
+    ['❌ handRolled', 'handRolled'],
+    ['✅ user', 'user'],
+  ]}
+  examples={[
+    "{ name: 'Alice' }",
+    "{ name: 'Alice', nickname: undefined }",
+    "{ name: 'Alice', nickname: 42 }",
+    "{ nickname: 'Al' }",
+  ]}
+/>
+
+Notice how the hand-rolled version can only ever say "Must be a user", while the composed
+version points at exactly what's wrong.
+
+---
+
+## Use `taggedUnion()` for tagged objects
+
+A common data shape is a set of objects that share a "tag" field, like `kind` or `type`,
+that tells you which shape the rest of the object has. You _can_ decode those with
+[`either()`][], but you shouldn't.
+
+```ts title="❌ Don't"
+const circle = object({ kind: constant('circle'), radius: number });
+const square = object({ kind: constant('square'), size: number });
+
+// [!code highlight]
+const shape = either(circle, square);
+```
+
+```ts title="✅ Do"
+const circle = object({ kind: constant('circle'), radius: number });
+const square = object({ kind: constant('square'), size: number });
+
+// [!code highlight]
+const shape = taggedUnion('kind', { circle, square });
+```
+
+[`either()`][] tries each decoder in turn and, if they all fail, reports _every_ failure.
+[`taggedUnion()`][] looks at the `kind` field first, and then only runs the one decoder
+that matches. That's faster, and the error messages are much clearer:
+
+<DecoderPlayground
+  globals={{
+    circle: "object({ kind: constant('circle'), radius: number })",
+    square: "object({ kind: constant('square'), size: number })",
+  }}
+  preface={`
+    const circle = object({ kind: constant('circle'), radius: number });
+    const square = object({ kind: constant('square'), size: number });
+  `}
+  decoder={[
+    ['❌ either', 'either(circle, square)'],
+    ['✅ taggedUnion', "taggedUnion('kind', { circle, square })"],
+  ]}
+  examples={[
+    "{ kind: 'square', size: 3 }",
+    "{ kind: 'square', size: 'big' }",
+    "{ kind: 'triangle' }",
+  ]}
+/>
+
+---
+
+## When the tag can be missing, use `select()`
+
+Sometimes the tag field isn't always there. For example, older records were saved before
+the `kind` field was introduced, and all of those were circles. [`taggedUnion()`][] can't
+handle a missing tag, so it's tempting to fall back to [`either()`][] again. Instead, use
+[`select()`][]: peek at the tag first, and then _pick_ the decoder to use.
+
+```ts title="❌ Don't"
+const legacyCircle = object({ radius: number }).transform(({ radius }) => ({
+  kind: 'circle' as const,
+  radius,
+}));
+
+// [!code highlight]
+const shape = either(circle, square, legacyCircle);
+```
+
+```ts title="✅ Do"
+const legacyCircle = object({ radius: number }).transform(({ radius }) => ({
+  kind: 'circle' as const,
+  radius,
+}));
+const byKind = taggedUnion('kind', { circle, square });
+
+const shape = select(
+  // [!code highlight:2]
+  object({ kind: unknown }), // peek at the tag...
+  ({ kind }) => (kind === undefined ? legacyCircle : byKind), // ...then pick
+);
+```
+
+This works exactly like [`taggedUnion()`][], but you decide how to map the tag to a
+decoder. Every input still goes through exactly one decoder, so the error messages stay
+focused:
+
+<DecoderPlayground
+  globals={{
+    circle: "object({ kind: constant('circle'), radius: number })",
+    square: "object({ kind: constant('square'), size: number })",
+    legacyCircle:
+      "object({ radius: number }).transform(({ radius }) => ({ kind: 'circle', radius }))",
+    byKind: "taggedUnion('kind', { circle, square })",
+    shape:
+      'select(object({ kind: unknown }), ({ kind }) => (kind === undefined ? legacyCircle : byKind))',
+  }}
+  preface={`
+    const byKind = taggedUnion('kind', { circle, square });
+    const shape = select(
+      object({ kind: unknown }),
+      ({ kind }) => (kind === undefined ? legacyCircle : byKind),
+    );
+  `}
+  decoder="shape"
+  examples={[
+    '{ radius: 3 }',
+    "{ kind: 'circle', radius: 3 }",
+    "{ kind: 'square', size: 2 }",
+    "{ kind: 'triangle' }",
+  ]}
+/>
+
+---
+
+## Build decoders once
+
+Decoders are **values**. Creating one does some upfront work, so build every decoder once,
+at the module level. Callbacks, like the one you pass to [`select()`][], run on _every
+single decode_. They should typically only _pick_ an existing decoder, not construct a new
+one on every call.
+
+```ts title="❌ Don't"
+const shape = select(object({ kind: unknown }), ({ kind }) =>
+  // [!code highlight]
+  kind === undefined ? legacyCircle : taggedUnion('kind', { circle, square }),
+);
+```
+
+```ts title="✅ Do"
+// [!code highlight]
+// Construct it once, upfront
+// [!code highlight]
+const byKind = taggedUnion('kind', { circle, square });
+
+const shape = select(object({ kind: unknown }), ({ kind }) =>
+  kind === undefined ? legacyCircle : byKind,
+);
+```
+
+In the first version, a brand new [`taggedUnion()`][] gets built for every value you
+decode.
+
+The same applies inside your own factory functions: build the branches in the body of the
+factory, outside of any callback.
+
+```ts title="❌ Don't"
+function withLegacy(legacy, mapping) {
+  return select(object({ kind: unknown }), ({ kind }) =>
+    // [!code highlight]
+    kind === undefined ? legacy : taggedUnion('kind', mapping),
+  );
+}
+```
+
+```ts title="✅ Do"
+function withLegacy(legacy, mapping) {
+  // [!code highlight]
+  const byKind = taggedUnion('kind', mapping);
+  return select(object({ kind: unknown }), ({ kind }) =>
+    // [!code highlight]
+    kind === undefined ? legacy : byKind,
+  );
+}
+```
+
+---
+
+## Don't validate inside `.transform()`
+
+A [`.transform()`][] is for changing a value that's _already_ been validated. If your
+transform contains `if` statements, `as` casts, or returns "sentinel" values like `null`
+or `false` that get rejected later, it's doing validation by hand. And hand-rolled
+validation only checks what its author thought of, so it quietly accepts everything else.
+
+Here's an example: a screen resolution, written as a string like `"1920x1080"`, that we
+want to turn into `{ width: 1920, height: 1080 }`.
+
+```ts title="❌ Don't"
+const resolution = string
+  .transform((s) => {
+    const parts = s.split('x');
+    // [!code highlight:4]
+    if (parts.length < 2) {
+      return null;
+    }
+    return { width: Number(parts[0]), height: Number(parts[1]) };
+  })
+  // [!code highlight]
+  .reject((v) => (v === null ? 'Invalid resolution' : null));
+```
+
+```ts title="✅ Do"
+const resolution = string
+  .transform((s) => s.split('x'))
+  // [!code highlight]
+  .pipe(tuple(numeric, numeric))
+  .transform(([width, height]) => ({ width, height }));
+```
+
+In the composed version, **the shape _is_ the validation**: "exactly two parts, both
+numeric". The types are inferred without any casts, and there's nothing to forget. The
+hand-rolled version only checks that there are _at least_ two parts. It happily accepts
+`"1920x"` (because `Number('')` is `0`), non-numbers (which become `NaN`), and extra junk
+at the end.
+
+### Use a factory when copies only differ by a parameter
+
+If you have several near-identical decoders, turn them into a function:
+
+```ts
+function numberPair(separator: string) {
+  return string.transform((s) => s.split(separator)).pipe(tuple(numeric, numeric));
+}
+
+const resolution = numberPair('x'); // "1920x1080"
+const aspectRatio = numberPair(':'); // "16:9"
+```
+
+---
+
+## Use `.pipe()` to feed into another decoder
+
+Calling `.verify()`, `.decode()`, or `.value()` on another decoder inside a
+[`.transform()`][] is a code smell. To send a transformed value into another decoder, use
+[`.pipe()`][].
+
+```ts title="❌ Don't"
+const tags = string
+  .transform((s) => s.split(','))
+  // [!code highlight]
+  .transform((parts) => array(nonEmptyString).verify(parts));
+```
+
+```ts title="✅ Do"
+const tags = string
+  .transform((s) => s.split(','))
+  // [!code highlight]
+  .pipe(array(nonEmptyString));
+```
+
+`.transform()` catches anything thrown inside it, and turns the error _message_ into a
+plain-text error on the outer value. So `.verify()` first formats the inner error into a
+string, and that string then gets stuffed into the outer error. You end up with an error
+message inside an error message:
+
+<DecoderPlayground
+  decoder={[
+    [
+      '❌ verify',
+      "string.transform((s) => s.split(',')).transform((parts) => array(nonEmptyString).verify(parts))",
+    ],
+    ['✅ pipe', "string.transform((s) => s.split(',')).pipe(array(nonEmptyString))"],
+  ]}
+  examples={["'red,green,blue'", "'red,,blue'"]}
+/>
+
+With `.pipe()`, the inner error is kept intact and composes like any other decoder error.
+
+The same goes for [`.refine()`][] and [`.reject()`][] predicates, and for the callbacks of
+[`select()`][] and [`.pipe()`][]: _return_ the decoder to use, and never run it yourself.
+
+[`.pipe()`]: /.pipe
+[`.refine()`]: /.refine
+[`.reject()`]: /.reject
+[`.transform()`]: /.transform
+[`either()`]: /either
+[`nullable()`]: /nullable
+[`nullish()`]: /nullish
+[`object()`]: /object
+[`optional()`]: /optional
+[`select()`]: /select
+[`taggedUnion()`]: /taggedUnion

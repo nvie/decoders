@@ -1,3 +1,4 @@
+import { rehypeCodeDefaultOptions } from "fumadocs-core/mdx-plugins";
 import { defineConfig, defineDocs } from "fumadocs-mdx/config";
 import { visit, SKIP } from "unist-util-visit";
 import type { Root, Paragraph } from "mdast";
@@ -97,6 +98,7 @@ function remarkDecoderSigSearch() {
 export default defineConfig({
   mdxOptions: {
     remarkPlugins: [remarkDecoderSigSearch],
+    rehypeCodeOptions: { ...rehypeCodeDefaultOptions, icon: false },
     remarkHeadingOptions: {
       slug: (_root, _heading, text) =>
         text
