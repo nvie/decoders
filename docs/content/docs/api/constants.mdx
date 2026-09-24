@@ -50,7 +50,7 @@ Accepts and returns only the literal `undefined` value. <Info>Named `undefined_`
   name="enum_"
   params="enum: MyEnum"
   type="MyEnum"
-  source="unions.ts#L101-L123"
+  source="unions.ts#L101-L124"
 />
 
 Accepts and returns an enum value. <Info>Named `enum_` because `enum` is a reserved
@@ -86,6 +86,24 @@ As well as with string enums:
       Banana = 'b',
       Cherry = 'c',
     }
+  `}
+  decoder="enum_(Fruit)"
+  examples={['Fruit.Apple', 'Fruit.Banana', "'a'", "'b'", "'Apple'", '0']}
+/>
+
+It also works with `as const` objects, a common alternative to TypeScript enums. Prefer
+this over `oneOf(Object.values(MyObj))`:
+
+<DecoderPlayground
+  globals={{
+    Fruit: "Object.freeze({ Apple: 'a', Banana: 'b', Cherry: 'c' })",
+  }}
+  preface={`
+    const Fruit = {  // Not enum
+      Apple: 'a',
+      Banana: 'b',
+      Cherry: 'c',
+    } as const;
   `}
   decoder="enum_(Fruit)"
   examples={['Fruit.Apple', 'Fruit.Banana', "'a'", "'b'", "'Apple'", '0']}

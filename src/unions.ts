@@ -99,7 +99,8 @@ export function oneOf<C extends Scalar>(constants: readonly C[]): Decoder<C> {
 }
 
 /**
- * Accepts and return an enum value.
+ * Accepts and return an enum value. Works with TypeScript enums, as well as
+ * with `as const` objects.
  */
 /* #__NO_SIDE_EFFECTS__ */
 export function enum_<TEnum extends Record<string, string | number>>(
