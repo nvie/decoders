@@ -3,6 +3,9 @@
 **Breaking!**
 
 - Drop support for TypeScript < 5.0
+- Only `.decode()`, `.verify()`, and `.value()` can still be called when detached from
+  their decoder (e.g. `const { transform } = string` no longer works). This is unlikely to
+  affect you.
 
 **Fixes:**
 
@@ -18,6 +21,11 @@
   // Before: ❌ Decoder<string | undefined>
   // Now:    ✅ Decoder<'a' | 'b' | undefined>
   ```
+
+**Performance:**
+
+- Decoders take ~68% less memory and are ~4x faster to construct.
+- The `~standard` API is only built on-demand.
 
 ## [2.11.0] - 2026-09-23
 

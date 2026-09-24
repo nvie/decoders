@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 
 import { always } from '~/basics';
-import { annotate, define, formatInline, formatShort } from '~/core';
+import { annotate, define, formatInline, formatShort, isDecoder } from '~/core';
 import { natural, number } from '~/numbers';
 import { pojo } from '~/objects';
 import { string } from '~/strings';
@@ -285,5 +285,39 @@ describe('.describe()', () => {
 
   test('invalid', () => {
     expect(() => decoder.verify(0)).toThrow(/Must be text/);
+  });
+});
+
+describe('isDecoder()', () => {
+  test('recognizes decoders', () => {
+    expect(isDecoder(string)).toBe(true);
+    expect(isDecoder(string.refine(() => true, 'x'))).toBe(true);
+    expect(isDecoder(define((_, ok) => ok(42)))).toBe(true);
+  });
+
+  test('rejects non-decoders', () => {
+    expect(isDecoder(undefined)).toBe(false);
+    expect(isDecoder(null)).toBe(false);
+    expect(isDecoder('string')).toBe(false);
+    expect(isDecoder({ decode: () => {} })).toBe(false);
+  });
+});
+
+describe('detached methods', () => {
+  test('.decode(), .verify(), and .value() work without `this`', () => {
+    const { decode, verify, value } = string;
+    expect(decode('hi')).toEqual({ ok: true, value: 'hi' });
+    expect(verify('hi')).toBe('hi');
+    expect(() => verify(42)).toThrow(/Must be string/);
+    expect(value('hi')).toBe('hi');
+    expect(value(42)).toBeUndefined();
+    expect(['a', 42, 'b'].filter(value)).toEqual(['a', 'b']);
+  });
+});
+
+describe('class name', () => {
+  test('decoders show up as "Decoder"', () => {
+    expect(string.constructor.name).toBe('Decoder');
+    expect(define((_, ok) => ok(42)).constructor.name).toBe('Decoder');
   });
 });

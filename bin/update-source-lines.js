@@ -50,8 +50,11 @@ function declRange(node) {
   let start = jsDocStartLine(node) ?? node.getStartLineNumber();
   const end = node.getEndLineNumber();
 
-  // For function implementations with overloads, include the overloads
-  if (Node.isFunctionDeclaration(node) && node.hasBody()) {
+  // For function/method implementations with overloads, include the overloads
+  if (
+    (Node.isFunctionDeclaration(node) || Node.isMethodDeclaration(node)) &&
+    node.hasBody()
+  ) {
     const overloads = node.getOverloads();
     if (overloads.length > 0) {
       const first = overloads[0];
@@ -89,26 +92,59 @@ for (const sf of project.getSourceFiles()) {
   }
 }
 
-// Special: inner functions inside `define()` in core/Decoder.ts
+/**
+ * For a property that's assigned in the constructor (`this.name = ...`),
+ * return the line range of its implementation (including JSDoc). If the
+ * assigned value is a local variable, that's the variable's declaration,
+ * otherwise the assignment itself.
+ */
+function ctorAssignmentRange(ctor, name) {
+  for (const stmt of ctor.getStatements()) {
+    if (!Node.isExpressionStatement(stmt)) continue;
+    const expr = stmt.getExpression();
+    if (!Node.isBinaryExpression(expr)) continue;
+    if (expr.getOperatorToken().getKind() !== SyntaxKind.EqualsToken) continue;
+    const lhs = expr.getLeft();
+    if (!Node.isPropertyAccessExpression(lhs)) continue;
+    if (lhs.getExpression().getKind() !== SyntaxKind.ThisKeyword) continue;
+    if (lhs.getName() !== name) continue;
+
+    const rhs = expr.getRight();
+    if (Node.isIdentifier(rhs)) {
+      const local = ctor
+        .getVariableStatements()
+        .find((vs) => vs.getDeclarations().some((d) => d.getName() === rhs.getText()));
+      if (local) return declRange(local);
+    }
+    return declRange(stmt);
+  }
+  return null;
+}
+
+// Special: the Decoder methods, which live on the DecoderImpl class in
+// core/Decoder.ts. `.decode`, `.verify` and `.value` are property
+// declarations there (they're own closures, assigned in the constructor), so
+// they point to their implementation in the constructor. The rest are regular
+// methods.
 const decoderFile = project.getSourceFile(
   path.join(SRC_DIR, 'core', 'Decoder.ts'),
 );
 if (decoderFile) {
-  const defineFunc = decoderFile.getFunction('define');
-  if (defineFunc && defineFunc.hasBody()) {
-    // `define` itself (exported)
-    const { start, end } = declRange(defineFunc);
-    addEntry('core/Decoder.ts', 'define', start, end);
-
-    // Inner functions (Decoder methods)
-    const body = defineFunc.getBody();
-    for (const stmt of body.getStatements()) {
-      if (Node.isFunctionDeclaration(stmt)) {
-        const name = stmt.getName();
-        if (!name || !stmt.hasBody()) continue;
-        const { start, end } = declRange(stmt);
-        addEntry('core/Decoder.ts', `.${name}`, start, end);
+  const impl = decoderFile.getClass('DecoderImpl');
+  if (impl) {
+    const ctor = impl.getConstructors()[0];
+    for (const member of impl.getMembers()) {
+      if (Node.isMethodDeclaration(member) && !member.hasBody()) continue; // overload signature
+      if (!Node.isMethodDeclaration(member) && !Node.isPropertyDeclaration(member)) {
+        continue;
       }
+      const name = member.getName();
+      if (!name) continue;
+      const range =
+        (Node.isPropertyDeclaration(member) && ctor
+          ? ctorAssignmentRange(ctor, name)
+          : null) ?? declRange(member);
+      addEntry('core/Decoder.ts', `.${name}`, range.start, range.end);
     }
   }
 }
