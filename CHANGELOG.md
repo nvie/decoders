@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [2.12.1] - 2026-09-25
+
 **Performance:**
 
 - Faster repeated reads of `~standard` (memoized now)
