@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+**Performance:**
+
+- Faster repeated reads of `~standard` (memoized now)
+
 ## [2.12.0] - 2026-09-24
 
 **Breaking!**

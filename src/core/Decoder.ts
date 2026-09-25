@@ -165,14 +165,6 @@ function format(err: Annotation, formatter: Formatter): Error {
 }
 
 /**
- * Memoizes the `~standard` props. Kept outside the decoder rather than in
- * a field, so that `~standard` doesn't cost every decoder an extra slot.
- *
- * @internal
- */
-const _standard = new WeakMap<object, StandardSchemaV1.Props<unknown, unknown>>();
-
-/**
  * The implementation behind every `Decoder<T>`.
  *
  * @internal
@@ -202,6 +194,11 @@ class DecoderImpl<T> implements Decoder<T> {
    * error message.
    */
   readonly value: (blob: unknown) => T | undefined;
+
+  /**
+   * Memoized `~standard` props, built on first access.
+   */
+  #standard: StandardSchemaV1.Props<unknown, T> | undefined;
 
   constructor(fn: AcceptanceFn<T>) {
     // Per-instance closures rather than methods, so they keep working when
@@ -352,11 +349,8 @@ class DecoderImpl<T> implements Decoder<T> {
    * The Standard Schema interface for this decoder.
    */
   get '~standard'(): StandardSchemaV1.Props<unknown, T> {
-    const memo = _standard.get(this) as StandardSchemaV1.Props<unknown, T> | undefined;
-    if (memo !== undefined) return memo;
-
     const decode = this.decode;
-    const props: StandardSchemaV1.Props<unknown, T> = {
+    return (this.#standard ??= {
       version: 1,
       vendor: 'decoders',
       validate: (blob) => {
@@ -368,9 +362,7 @@ class DecoderImpl<T> implements Decoder<T> {
           return { issues };
         }
       },
-    };
-    _standard.set(this, props);
-    return props;
+    });
   }
 }
 

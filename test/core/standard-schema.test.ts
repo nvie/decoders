@@ -7,6 +7,11 @@ import { string } from '~/strings';
 import { either } from '~/unions';
 
 describe('standard-schema', () => {
+  test('~standard is stable across reads', () => {
+    expect(string['~standard']).toBe(string['~standard']);
+    expect(string['~standard']).not.toBe(number['~standard']);
+  });
+
   test('valid', async () => {
     const schema = string;
     const result = await schema['~standard'].validate("I'm a string");
