@@ -108,6 +108,7 @@ if (decoderFile) {
       if (!Node.isMethodDeclaration(member) && !Node.isPropertyDeclaration(member)) {
         continue;
       }
+      if (Node.isPrivateIdentifier(member.getNameNode())) continue; // not public API
       const name = member.getName();
       if (!name) continue;
       const range = declRange(
