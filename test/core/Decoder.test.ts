@@ -119,9 +119,7 @@ describe('.chain() with acceptance function returning a decoder', () => {
   });
 
   test('invalid', () => {
-    expect(() => decoder.verify('not a numeric string')).toThrow(
-      'Number must be an integer',
-    );
+    expect(() => decoder.verify('not a numeric string')).toThrow('Number must be finite');
     expect(() => decoder.verify(42)).toThrow('Must be string');
     expect(() => decoder.verify('-123')).toThrow('Number must be positive');
     expect(() => decoder.verify('3.14')).toThrow('Number must be an integer');
@@ -145,9 +143,7 @@ describe('.pipe() with single decoder arg', () => {
   });
 
   test('invalid', () => {
-    expect(() => decoder.verify('not a numeric string')).toThrow(
-      'Number must be an integer',
-    );
+    expect(() => decoder.verify('not a numeric string')).toThrow('Number must be finite');
     expect(() => decoder.verify(42)).toThrow('Must be string');
     expect(() => decoder.verify('-123')).toThrow('Number must be positive');
     expect(() => decoder.verify('3.14')).toThrow('Number must be an integer');
@@ -178,9 +174,7 @@ describe('.chain() with a function picking a decoder', () => {
   });
 
   test('invalid', () => {
-    expect(() => decoder.verify('not a numeric string')).toThrow(
-      'Number must be an integer',
-    );
+    expect(() => decoder.verify('not a numeric string')).toThrow('Number must be finite');
     expect(() => decoder.verify(42)).toThrow('Must be string');
     expect(() => decoder.verify('-123')).toThrow('Number must be positive');
     expect(() => decoder.verify('3.14')).toThrow('Number must be an integer');
