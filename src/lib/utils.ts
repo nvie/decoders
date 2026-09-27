@@ -8,6 +8,24 @@ export function isNumber(value: unknown): value is number {
   return typeof value === 'number';
 }
 
+/**
+ * Returns whether the given number has a positive sign (+0 through +∞).
+ * Excludes NaN.
+ */
+/* #__NO_SIDE_EFFECTS__ */
+export function isSignPositive(n: number): boolean {
+  return n > 0 || Object.is(n, 0);
+}
+
+/**
+ * Returns whether the given number has a negative sign (-0 through -∞).
+ * Excludes NaN.
+ */
+/* #__NO_SIDE_EFFECTS__ */
+export function isSignNegative(n: number): boolean {
+  return n < 0 || Object.is(n, -0);
+}
+
 /* #__NO_SIDE_EFFECTS__ */
 export function isString(value: unknown): value is string {
   return typeof value === 'string';
