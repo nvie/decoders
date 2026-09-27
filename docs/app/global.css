@@ -305,3 +305,18 @@ pre code {
   --color-fd-primary-foreground: #1c1017;
   --color-fd-ring: #d46b08;
 }
+
+/* Playground results: show a shadow on the right edge while there is more
+   content to scroll to. The cover is attached to the content ("local"), so it
+   only slides over the shadow once scrolled all the way to the end. */
+.playground-scroll {
+  background:
+    linear-gradient(to right, transparent, var(--color-fd-background) 70%) right / 2.5rem
+      100% no-repeat local,
+    radial-gradient(
+        farthest-side at 100% 50%,
+        color-mix(in srgb, var(--color-fd-foreground) 15%, transparent),
+        transparent
+      )
+      right / 0.75rem 100% no-repeat scroll;
+}

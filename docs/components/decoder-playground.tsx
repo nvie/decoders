@@ -489,8 +489,9 @@ export function DecoderPlayground(props: Props) {
     codeSnippet = `${dedent(preface)}\n\n${codeSnippet}`;
   }
 
-  const colCount = decoderEntries.length + 1;
-  const colWidth = `${100 / colCount}%`;
+  // The input column shrinks to fit its content (see the sizer span below),
+  // the result columns share the remaining width
+  const resultColWidth = `${100 / decoderEntries.length}%`;
 
   return (
     <div
@@ -579,21 +580,18 @@ export function DecoderPlayground(props: Props) {
       <div className="border-b border-fd-border [&_figure]:!m-0 [&_figure]:!rounded-none [&_figure]:!border-0 [&_figure]:!bg-transparent [&_pre]:!bg-transparent [&_pre]:!py-1.5 [&_button]:!hidden">
         <DynamicCodeBlock lang="ts" code={codeSnippet} />
       </div>
-      <div className="overflow-x-auto">
+      <div className="playground-scroll overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr className="border-b border-fd-border text-left text-xs text-fd-muted-foreground">
-              <th
-                className="px-3 py-2 font-medium"
-                style={{ width: colWidth, minWidth: 150 }}
-              >
+              <th className="py-2 pl-3 pr-9 font-medium" style={{ width: '1%' }}>
                 Input
               </th>
               {decoderEntries.map(([name]) => (
                 <th
                   key={name}
                   className="px-3 py-2 font-medium"
-                  style={{ width: colWidth, minWidth: 150 }}
+                  style={{ width: resultColWidth, minWidth: 150 }}
                 >
                   {name}
                 </th>
@@ -610,27 +608,38 @@ export function DecoderPlayground(props: Props) {
                 }}
                 className={`border-b border-fd-border last:border-b-0 align-top ${inlineInput ? 'cursor-pointer' : ''} ${inlineInput && activeRow === i ? 'bg-black/[0.02] dark:bg-white/[0.04]' : ''}`}
               >
-                <td className="relative px-3 py-1.5">
-                  <input
-                    data-playground-input
-                    type="text"
-                    value={row.input}
-                    onChange={(e) => {
-                      updateRow(i, e.target.value);
-                      if (i === 0 && e.target.value !== props.examples[0]) {
-                        markExplored();
-                      }
-                    }}
-                    onFocus={() => {
-                      setActiveRow(i);
-                      if (i === 0) hideHint();
-                    }}
-                    onKeyDown={(e) => handleKeyDown(e, i)}
-                    placeholder="Type an expression…"
-                    autoComplete="off"
-                    disabled={!ready}
-                    className="w-full bg-transparent text-fd-foreground placeholder:text-fd-muted-foreground focus:outline-none"
-                  />
+                <td className="relative py-1.5 pl-3 pr-9">
+                  {/* An <input> has no intrinsic content width, so an invisible
+                      copy of its text gives the column a content-based width,
+                      and the input is overlaid on top of it */}
+                  <div className="relative min-w-[8rem]">
+                    <span
+                      aria-hidden
+                      className="invisible block max-w-[40ch] overflow-hidden whitespace-pre pr-[1ch]"
+                    >
+                      {row.input || 'Type an expression…'}
+                    </span>
+                    <input
+                      data-playground-input
+                      type="text"
+                      value={row.input}
+                      onChange={(e) => {
+                        updateRow(i, e.target.value);
+                        if (i === 0 && e.target.value !== props.examples[0]) {
+                          markExplored();
+                        }
+                      }}
+                      onFocus={() => {
+                        setActiveRow(i);
+                        if (i === 0) hideHint();
+                      }}
+                      onKeyDown={(e) => handleKeyDown(e, i)}
+                      placeholder="Type an expression…"
+                      autoComplete="off"
+                      disabled={!ready}
+                      className="absolute inset-0 w-full bg-transparent text-fd-foreground placeholder:text-fd-muted-foreground focus:outline-none"
+                    />
+                  </div>
                   {i === 0 && hintState !== 'hidden' && (
                     <span
                       className={`playground-hint ${hintState === 'fading' ? 'playground-hint-out' : ''}`}
