@@ -12,6 +12,14 @@ export const docs = defineDocs({
 
 export default defineConfig({
   mdxOptions: {
+    remarkStructureOptions: {
+      stringify: {
+        handlers: {
+          // Render reference-style links (e.g. [`number`][]) as their text only
+          linkReference: (node, _, state, info) => state.containerPhrasing(node, info),
+        },
+      },
+    },
     rehypeCodeOptions: { ...rehypeCodeDefaultOptions, icon: false },
     remarkHeadingOptions: {
       slug: (_root, _heading, text) =>
