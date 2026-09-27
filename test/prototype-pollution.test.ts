@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 
 import type { Decoder } from '~';
-import { inexact, mapping, record, string, unknown } from '~';
+import { inexact, record, string, unknown } from '~';
 
 /**
  * These tests assert the *harm* is unreachable, not which policy prevents it.
@@ -42,26 +42,15 @@ function deepMerge(
   return target;
 }
 
-/**
- * What a caller can actually observe on a decoded value. `mapping()` returns a
- * Map, so compare its entries rather than the Map instance itself.
- */
-function observable(value: unknown): Record<string, unknown> {
-  return value instanceof Map
-    ? Object.fromEntries(value)
-    : (value as Record<string, unknown>);
-}
-
 /** Decodes, treating a rejection as a safe (inert) outcome. */
-function decodeOrInert(decoder: Decoder<unknown>, payload: string) {
+function decodeOrInert(decoder: Decoder<Record<string, unknown>>, payload: string) {
   const result = decoder.decode(JSON.parse(payload));
-  return result.ok ? observable(result.value) : {};
+  return result.ok ? result.value : {};
 }
 
-const subjects: [string, Decoder<unknown>][] = [
+const subjects: [string, Decoder<Record<string, unknown>>][] = [
   ['inexact()', inexact({ theme: string })],
   ['record()', record(unknown)],
-  ['mapping()', mapping(unknown)],
 ];
 
 describe('prototype pollution', () => {

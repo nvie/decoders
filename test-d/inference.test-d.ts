@@ -36,7 +36,6 @@ import {
   jsonArray,
   jsonObject,
   lazy,
-  mapping,
   nanoid,
   natural,
   never,
@@ -59,7 +58,6 @@ import {
   record,
   regex,
   select,
-  setFromArray,
   sized,
   startsWith,
   string,
@@ -138,7 +136,14 @@ expectType<`foo-${string}`>(infer(startsWith('foo-')));
 expectType<`${string}-bar`>(infer(endsWith('-bar')));
 expectType<string>(infer(sized(string, { min: 1, max: 10 })));
 expectType<number[]>(infer(sized(array(number), { min: 1, max: 10 })));
-expectType<Set<number>>(infer(sized(setFromArray(number), { size: 3 })));
+expectType<Set<number>>(
+  infer(
+    sized(
+      array(number).transform((xs) => new Set(xs)),
+      { size: 3 },
+    ),
+  ),
+);
 expectType<URL>(infer(url));
 expectType<string>(infer(urlString));
 expectType<URL>(infer(httpsUrl));
@@ -162,8 +167,6 @@ expectError(infer(array(string, { bogus: 3 })));
 expectType<unknown[]>(infer(poja));
 expectType<[string, ...string[]]>(infer(nonEmptyArray(string)));
 expectType<[number, ...number[]]>(infer(nonEmptyArray(number)));
-expectType<Set<string>>(infer(setFromArray(string)));
-expectType<Set<number>>(infer(setFromArray(number)));
 
 expectType<[string]>(infer(tuple(string)));
 expectType<[string, number]>(infer(tuple(string, number)));
@@ -405,7 +408,6 @@ expectType<unknown>(infer(inexact({})).a);
 expectType<unknown>(infer(inexact({})).b);
 
 expectType<Record<string, unknown>>(infer(pojo));
-expectType<Map<string, number>>(infer(mapping(number)));
 
 // Single-argument form (validate values only)
 expectType<Record<string, number>>(infer(record(number)));

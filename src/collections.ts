@@ -4,7 +4,6 @@ import type { SizeOptions } from '~/lib/size-options';
 import { bySizeOptions } from '~/lib/size-options';
 import { quote } from '~/lib/text';
 
-import { array } from './arrays';
 import { pojo } from './objects';
 
 /**
@@ -81,23 +80,4 @@ export function record<K extends string, V>(
       return ok(rv);
     }
   });
-}
-
-/**
- * Similar to `array()`, but returns the result as an [ES6
- * Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set).
- */
-/* #__NO_SIDE_EFFECTS__ */
-export function setFromArray<T>(decoder: Decoder<T>): Decoder<Set<T>> {
-  return array(decoder).transform((items) => new Set(items));
-}
-
-/**
- * Similar to `record()`, but returns the result as a `Map<string, T>` (an [ES6
- * Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map))
- * instead.
- */
-/* #__NO_SIDE_EFFECTS__ */
-export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
-  return record(decoder).transform((obj) => new Map(Object.entries(obj)));
 }

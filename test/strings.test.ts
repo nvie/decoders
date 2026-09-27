@@ -13,7 +13,6 @@ import {
   nanoid,
   nonEmptyString,
   number,
-  setFromArray,
   sized,
   numeric,
   regex,
@@ -515,6 +514,8 @@ describe('nanoid', () => {
 });
 
 describe('sized', () => {
+  const numberSet = array(number).transform((xs) => new Set(xs));
+
   test('exact size (string)', () => {
     const decoder = sized(string, { size: 5 });
     expect(decoder.verify('hello')).toBe('hello');
@@ -574,14 +575,14 @@ describe('sized', () => {
   });
 
   test('exact size (set)', () => {
-    const decoder = sized(setFromArray(number), { size: 3 });
+    const decoder = sized(numberSet, { size: 3 });
     expect(decoder.verify([1, 2, 3])).toEqual(new Set([1, 2, 3]));
     expect(() => decoder.verify([1])).toThrow('Must have 3 items');
     expect(() => decoder.verify([1, 2, 3, 4])).toThrow('Must have 3 items');
   });
 
   test('min and max (set)', () => {
-    const decoder = sized(setFromArray(number), { min: 2, max: 5 });
+    const decoder = sized(numberSet, { min: 2, max: 5 });
     expect(decoder.verify([1, 2])).toEqual(new Set([1, 2]));
     expect(() => decoder.verify([1])).toThrow('Must have at least 2 items');
     expect(() => decoder.verify([1, 2, 3, 4, 5, 6])).toThrow('Must have at most 5 items');

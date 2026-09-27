@@ -179,15 +179,22 @@ export function Sig({
   returnType,
   source,
   multiline,
+  removed,
 }: {
   name: string;
   params?: string;
   returnType: ReactNode;
   source?: string;
   multiline?: boolean;
+  /**
+   * Version in which this was removed from the library. Removed APIs stay
+   * documented, so that links to them keep redirecting and they remain
+   * searchable.
+   */
+  removed?: string;
 }) {
-  return (
-    <pre className="fn-sig font-mono overflow-x-auto" style={{ margin: 0, background: 'none', border: 'none', padding: 0 }}>
+  const content = (
+    <>
       {params !== undefined ? (
         name.includes('.') ? (
           <span className="font-sans" style={{ color: GRAY }}>
@@ -211,6 +218,20 @@ export function Sig({
       ) : null}
       {': '}
       {returnType}
+    </>
+  );
+  return (
+    <pre
+      className={`fn-sig font-mono overflow-x-auto${removed ? ' fn-sig-deprecated' : ''}`}
+      style={{ margin: 0, background: 'none', border: 'none', padding: 0 }}
+    >
+      {removed ? (
+        <span className="fn-sig-content">
+          {content} <span className="fn-sig-badge">removed in {removed}</span>
+        </span>
+      ) : (
+        content
+      )}
       {source ? (
         <>
           {' '}
@@ -261,6 +282,7 @@ export function DecoderSig({
   type,
   source,
   multiline,
+  removed,
 }: {
   name: string;
   aliases?: Alias[];
@@ -268,6 +290,7 @@ export function DecoderSig({
   type: string;
   source?: string;
   multiline?: boolean;
+  removed?: string;
 }) {
   return (
     <>
@@ -277,6 +300,7 @@ export function DecoderSig({
         multiline={multiline}
         returnType={renderDecoderReturnType(type)}
         source={source}
+        removed={removed}
       />
       {aliases?.map((alias) => (
         <pre

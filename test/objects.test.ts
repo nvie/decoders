@@ -6,7 +6,6 @@ import {
   decimal,
   exact,
   inexact,
-  mapping,
   number,
   object,
   optional,
@@ -418,39 +417,6 @@ describe('arrays are not objects', () => {
   });
 });
 
-describe('mapping', () => {
-  const decoder = mapping(object({ name: string }));
-
-  test('valid', () => {
-    const input = {
-      '18': { name: 'foo' },
-      '23': { name: 'bar' },
-      key: { name: 'value' },
-    };
-    const output = new Map([
-      ['18', { name: 'foo' }],
-      ['23', { name: 'bar' }],
-      ['key', { name: 'value' }],
-    ]);
-    expect(decoder.verify(input)).toEqual(output);
-  });
-
-  test('invalid', () => {
-    expect(() => decoder.verify('foo')).toThrow('Must be an object');
-    expect(() => decoder.verify({ foo: 1 })).toThrow('Must be an object');
-    expect(() => decoder.verify({ foo: {} })).toThrow("Missing key: 'name'");
-    expect(() =>
-      decoder.verify({
-        '124': { invalid: true },
-        '125': { name: 'bar' },
-      }),
-    ).toThrow("Missing key: 'name'");
-
-    // More than one error
-    expect(() => decoder.verify({ foo: 42, bar: 42 })).toThrow();
-  });
-});
-
 // Single-argument form of record() only specifies value type
 describe('record', () => {
   const decoder = record(object({ name: string }));
@@ -592,10 +558,6 @@ describe('__proto__ keys', () => {
 
   test('record() rejects it', () => {
     expect(() => record(unknown).verify(payload())).toThrow('Unsafe key');
-  });
-
-  test('mapping() rejects it too, being built on record()', () => {
-    expect(() => mapping(unknown).verify(payload())).toThrow('Unsafe key');
   });
 
   test('declaring one in the definition is refused outright', () => {

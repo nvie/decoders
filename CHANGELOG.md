@@ -14,6 +14,8 @@
   the next decoder, use `.chain((value) => decoder)` instead, which now infers the union
   type when the function returns different decoders.
 - `integer`, `natural`, and `positiveInteger` now reject unsafe integers (beyond ±2^53−1).
+- Remove `setFromArray` and `mapping`. Use `array(d).transform((xs) => new Set(xs))` and
+  `record(d).transform((obj) => new Map(Object.entries(obj)))` instead.
 
 **New APIs:**
 
