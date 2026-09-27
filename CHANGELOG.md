@@ -15,6 +15,15 @@
   type when the function returns different decoders.
 - `integer`, `natural`, and `positiveInteger` now reject unsafe integers (beyond ±2^53−1).
 
+**New APIs:**
+
+- `record()` now takes optional `SizeOptions` to constrain the number of keys, checked
+  before any key or value is decoded:
+  ```ts
+  record(number, { max: 10 });
+  record(email, boolean, { min: 1 });
+  ```
+
 **Performance:**
 
 Compared to 2.12.1:

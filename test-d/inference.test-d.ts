@@ -416,6 +416,8 @@ expectType<Record<'foo' | 'bar', number>>(
 );
 expectType<Record<string, number>>(infer(record(decimal, number)));
 expectType<Record<string, boolean>>(infer(record(email, boolean)));
+expectType<Record<string, number>>(infer(record(number, { max: 10 })));
+expectType<Record<string, boolean>>(infer(record(email, boolean, { min: 1 })));
 
 expectType<string>(infer(lazy(() => string)));
 expectType<number>(infer(lazy(() => number)));

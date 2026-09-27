@@ -523,6 +523,44 @@ describe('record with key validation', () => {
   });
 });
 
+describe('record with size options', () => {
+  test('rejects too many keys before validating values', () => {
+    const decoder = record(string, { max: 2 });
+    expect(() => decoder.verify({ a: 'x', b: 'y', c: 42 })).toThrow(
+      'Must have at most 2 keys',
+    );
+  });
+
+  test('rejects too few keys', () => {
+    const decoder = record(string, { min: 1 });
+    expect(() => decoder.verify({})).toThrow('Must have at least 1 key');
+    expect(decoder.verify({ a: 'x' })).toEqual({ a: 'x' });
+  });
+
+  test('still validates values when the size is acceptable', () => {
+    const decoder = record(string, { min: 1, max: 2 });
+    expect(decoder.verify({ a: 'x', b: 'y' })).toEqual({ a: 'x', b: 'y' });
+    expect(() => decoder.verify({ a: 'x', b: 42 })).toThrow('Must be string');
+  });
+
+  test('accepts an exact size', () => {
+    const decoder = record(string, { size: 2 });
+    expect(decoder.verify({ a: 'x', b: 'y' })).toEqual({ a: 'x', b: 'y' });
+    expect(() => decoder.verify({ a: 'x' })).toThrow('Must have 2 keys');
+  });
+
+  test('works with a key decoder', () => {
+    const decoder = record(decimal, boolean, { max: 1 });
+    expect(decoder.verify({ '1': true })).toEqual({ '1': true });
+    expect(() => decoder.verify({ '1': true, '2': false })).toThrow(
+      'Must have at most 1 key',
+    );
+    expect(() => decoder.verify({ x: true })).toThrow(
+      "Invalid key 'x': Must only contain digits",
+    );
+  });
+});
+
 // A `__proto__` key is an ordinary string key as far as JSON is concerned, but
 // assigning it with `obj[key] = value` would reassign the prototype instead of
 // adding an own property. These inputs must be built with JSON.parse: an object
