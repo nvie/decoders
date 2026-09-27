@@ -1,7 +1,7 @@
 import type { Decoder } from '~/core';
 import { annotate, define } from '~/core';
-import type { Sized, SizeOptions } from '~/lib/size-options';
-import { bySizeOptions } from '~/lib/size-options';
+import type { Sized, SizeOptions } from '~/lib/options';
+import { bySizeOptions } from '~/lib/options';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 export interface Klass<T> extends Function {
