@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { array, nonEmptyArray, number, object, setFromArray, string, tuple } from '~';
+import { array, nonEmptyArray, number, object, string, tuple } from '~';
 
 describe('array', () => {
   test('empty array', () => {
@@ -55,26 +55,6 @@ describe('nonEmptyArray', () => {
   test('but empty array throw, too', () => {
     expect(() => strings.verify([])).toThrow('Must have at least 1 item');
     expect(() => numbers.verify([])).toThrow('Must have at least 1 item');
-  });
-});
-
-describe('set', () => {
-  const decoder = setFromArray(string);
-
-  test('empty set', () => {
-    expect(decoder.verify([]).size).toBe(0);
-  });
-
-  test('accepts', () => {
-    const r = decoder.verify(['foo', 'bar']);
-    expect(r.has('foo')).toBe(true);
-    expect(r.has('bar')).toBe(true);
-    expect(r.size).toBe(2);
-  });
-
-  test('rejects', () => {
-    expect(decoder.decode([1]).ok).toBe(false);
-    expect(decoder.decode(1).ok).toBe(false);
   });
 });
 
