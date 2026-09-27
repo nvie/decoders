@@ -44,7 +44,7 @@ export type {
 } from '~/core';
 export { define, err, formatInline, formatShort, isDecoder, ok } from '~/core';
 export type { Relax } from '~/lib/Relax';
-export type { Sized, SizeOptions } from '~/lib/size-options';
+export type { Sized, SizeOptions } from '~/lib/options';
 export type { Scalar } from '~/lib/types';
 export { isDate, isPlainObject, isPromiseLike } from '~/lib/utils';
 

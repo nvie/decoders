@@ -1,7 +1,7 @@
 import type { Annotation, Decoder } from '~/core';
 import { annotate, annotateObject, formatShort, isDecoder, merge } from '~/core';
-import type { SizeOptions } from '~/lib/size-options';
-import { bySizeOptions } from '~/lib/size-options';
+import type { SizeOptions } from '~/lib/options';
+import { bySizeOptions } from '~/lib/options';
 import { quote } from '~/lib/text';
 
 import { pojo } from './objects';
