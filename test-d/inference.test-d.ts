@@ -80,7 +80,7 @@ import {
 import { expectError, expectType, expectAssignable } from 'tsd';
 
 // Helper function to "test" a decoder on some input, and assert the return type
-function test<T>(decoder: Decoder<T>): T {
+function infer<T>(decoder: Decoder<T>): T {
   return decoder.verify('dummy');
 }
 
@@ -94,7 +94,7 @@ function foo(
 ) {}
 
 expectType<123 | 'hi'>(
-  test(
+  infer(
     define((blob, ok, err) => {
       expectType<unknown>(blob);
       return Math.random() < 0.5 ? ok(123) : Math.random() < 0.5 ? ok('hi') : err('fail');
@@ -104,83 +104,85 @@ expectType<123 | 'hi'>(
 
 expectType<(p: string, q: number[], r: string[], s: boolean) => void>(foo);
 
-expectType<'foo'>(test(constant('foo')));
-expectType<'foo'>(test(always('foo')));
-expectType<42>(test(always(42)));
-expectType<Date>(test(always(() => new Date())));
+expectType<'foo'>(infer(constant('foo')));
+expectType<'foo'>(infer(always('foo')));
+expectType<42>(infer(always(42)));
+expectType<Date>(infer(always(() => new Date())));
 
-expectType<null>(test(null_));
-expectType<undefined>(test(undefined_));
-expectType<unknown>(test(unknown));
-expectType<unknown>(test(anything));
+expectType<null>(infer(null_));
+expectType<undefined>(infer(undefined_));
+expectType<unknown>(infer(unknown));
+expectType<unknown>(infer(anything));
 
-expectType<number>(test(anyNumber));
-expectType<number>(test(integer));
-expectType<number>(test(number));
-expectType<number>(test(natural));
-expectType<number>(test(positiveInteger));
-expectType<number>(test(nonNegativeNumber));
-expectType<number>(test(positiveNumber));
-expectType<number>(test(numeric));
-expectType<number>(test(min(0)));
-expectType<number>(test(min(0, number)));
-expectType<number>(test(max(100)));
-expectType<number>(test(max(100, number)));
-expectType<number>(test(between(0, 100)));
-expectType<number>(test(between(0, 100, number)));
-expectType<number>(test(between(1, 10, integer)));
-expectType<bigint>(test(bigint));
+expectType<number>(infer(anyNumber));
+expectType<number>(infer(integer));
+expectType<number>(infer(number));
+expectType<number>(infer(natural));
+expectType<number>(infer(positiveInteger));
+expectType<number>(infer(nonNegativeNumber));
+expectType<number>(infer(positiveNumber));
+expectType<number>(infer(numeric));
+expectType<number>(infer(min(0)));
+expectType<number>(infer(min(0, number)));
+expectType<number>(infer(max(100)));
+expectType<number>(infer(max(100, number)));
+expectType<number>(infer(between(0, 100)));
+expectType<number>(infer(between(0, 100, number)));
+expectType<number>(infer(between(1, 10, integer)));
+expectType<bigint>(infer(bigint));
 
-expectType<string>(test(string));
-expectType<string>(test(nonEmptyString));
-expectType<string>(test(decimal));
-expectType<string>(test(hexadecimal));
-expectType<string>(test(email));
-expectType<string>(test(regex(/foo/, 'Must be foo')));
-expectType<`foo-${string}`>(test(startsWith('foo-')));
-expectType<`${string}-bar`>(test(endsWith('-bar')));
-expectType<string>(test(sized(string, { min: 1, max: 10 })));
-expectType<number[]>(test(sized(array(number), { min: 1, max: 10 })));
-expectType<Set<number>>(test(sized(setFromArray(number), { size: 3 })));
-expectType<URL>(test(url));
-expectType<string>(test(urlString));
-expectType<URL>(test(httpsUrl));
-expectType<string>(test(identifier));
-expectType<string>(test(nanoid()));
-expectType<string>(test(nanoid({ size: 7 })));
-expectType<string>(test(nanoid({ min: 8 })));
-expectType<string>(test(nanoid({ max: 16 })));
-expectType<string>(test(nanoid({ min: 8, max: 16 })));
-expectType<string>(test(uuid));
-expectType<string>(test(uuidv1));
-expectType<string>(test(uuidv4));
+expectType<string>(infer(string));
+expectType<string>(infer(nonEmptyString));
+expectType<string>(infer(decimal));
+expectType<string>(infer(hexadecimal));
+expectType<string>(infer(email));
+expectType<string>(infer(regex(/foo/, 'Must be foo')));
+expectType<`foo-${string}`>(infer(startsWith('foo-')));
+expectType<`${string}-bar`>(infer(endsWith('-bar')));
+expectType<string>(infer(sized(string, { min: 1, max: 10 })));
+expectType<number[]>(infer(sized(array(number), { min: 1, max: 10 })));
+expectType<Set<number>>(infer(sized(setFromArray(number), { size: 3 })));
+expectType<URL>(infer(url));
+expectType<string>(infer(urlString));
+expectType<URL>(infer(httpsUrl));
+expectType<string>(infer(identifier));
+expectType<string>(infer(nanoid()));
+expectType<string>(infer(nanoid({ size: 7 })));
+expectType<string>(infer(nanoid({ min: 8 })));
+expectType<string>(infer(nanoid({ max: 16 })));
+expectType<string>(infer(nanoid({ min: 8, max: 16 })));
+expectType<string>(infer(uuid));
+expectType<string>(infer(uuidv1));
+expectType<string>(infer(uuidv4));
 
-expectType<string[]>(test(array(string)));
-expectType<number[]>(test(array(number)));
-expectType<number[][]>(test(array(array(number))));
-expectType<string[]>(test(array(string, { min: 1, max: 20 })));
-expectType<string[]>(test(array(string, { size: 3 })));
-expectError(test(array(string, {})));
-expectError(test(array(string, { bogus: 3 })));
-expectType<unknown[]>(test(poja));
-expectType<[string, ...string[]]>(test(nonEmptyArray(string)));
-expectType<[number, ...number[]]>(test(nonEmptyArray(number)));
-expectType<Set<string>>(test(setFromArray(string)));
-expectType<Set<number>>(test(setFromArray(number)));
+expectType<string[]>(infer(array(string)));
+expectType<number[]>(infer(array(number)));
+expectType<number[][]>(infer(array(array(number))));
+expectType<string[]>(infer(array(string, { min: 1, max: 20 })));
+expectType<string[]>(infer(array(string, { size: 3 })));
+expectError(infer(array(string, {})));
+expectError(infer(array(string, { bogus: 3 })));
+expectType<unknown[]>(infer(poja));
+expectType<[string, ...string[]]>(infer(nonEmptyArray(string)));
+expectType<[number, ...number[]]>(infer(nonEmptyArray(number)));
+expectType<Set<string>>(infer(setFromArray(string)));
+expectType<Set<number>>(infer(setFromArray(number)));
 
-expectType<[string]>(test(tuple(string)));
-expectType<[string, number]>(test(tuple(string, number)));
-expectType<[string, string, number]>(test(tuple(string, string, number)));
-expectType<[string, string, number, string]>(test(tuple(string, string, number, string)));
+expectType<[string]>(infer(tuple(string)));
+expectType<[string, number]>(infer(tuple(string, number)));
+expectType<[string, string, number]>(infer(tuple(string, string, number)));
+expectType<[string, string, number, string]>(
+  infer(tuple(string, string, number, string)),
+);
 expectType<[string, string, number, string, number]>(
-  test(tuple(string, string, number, string, number)),
+  infer(tuple(string, string, number, string, number)),
 );
 expectType<[string, string, number, string, number, string]>(
-  test(tuple(string, string, number, string, number, string)),
+  infer(tuple(string, string, number, string, number, string)),
 );
 
 expectType<{ name: string; tags: string[] }>(
-  test(
+  infer(
     object({
       name: string,
       tags: array(string),
@@ -188,7 +190,7 @@ expectType<{ name: string; tags: string[] }>(
   ),
 );
 
-expectType<Record<string, never>>(test(object({})));
+expectType<Record<string, never>>(infer(object({})));
 
 // Style argument
 string.verify('dummy', formatInline);
@@ -197,16 +199,16 @@ string.verify('dummy', formatShort);
 expectType<number | undefined>(number.value('dummy'));
 expectType<string | undefined>(string.value('dummy'));
 
-expectType<number>(test(string.chain((value: string, ok) => ok(value.length))));
+expectType<number>(infer(string.chain((value: string, ok) => ok(value.length))));
 expectType<number>(
-  test(
+  infer(
     string.chain((value: string, ok, err) =>
       Math.random() < 0.5 ? ok(value.length) : err('Nope'),
     ),
   ),
 );
 expectType<number | string>(
-  test(
+  infer(
     string.chain((value: string, ok, err) =>
       Math.random() < 0.3
         ? ok(value.length)
@@ -218,39 +220,39 @@ expectType<number | string>(
 );
 
 // .chain()
-expectType<number>(test(string.transform(Number).chain(positiveInteger)));
-expectType<number>(test(string.transform(Number).chain(positiveInteger.decode)));
-expectType<boolean>(test(string.transform(Number).transform(String).chain(truthy)));
+expectType<number>(infer(string.transform(Number).chain(positiveInteger)));
+expectType<number>(infer(string.transform(Number).chain(positiveInteger.decode)));
+expectType<boolean>(infer(string.transform(Number).transform(String).chain(truthy)));
 expectType<boolean>(
-  test(string.transform(Number).transform(String).chain(truthy.decode)),
+  infer(string.transform(Number).transform(String).chain(truthy.decode)),
 );
 
 // .pipe()
-expectType<number>(test(string.transform(Number).pipe(positiveInteger)));
-expectType<boolean>(test(string.transform(Number).transform(String).pipe(truthy)));
+expectType<number>(infer(string.transform(Number).pipe(positiveInteger)));
+expectType<boolean>(infer(string.transform(Number).transform(String).pipe(truthy)));
 // .pipe() with branch infers decoder from both branches
 expectType<number | string>(
-  test(string.transform(Number).pipe(Math.random() < 0.5 ? positiveInteger : string)),
+  infer(string.transform(Number).pipe(Math.random() < 0.5 ? positiveInteger : string)),
 );
 // .pipe() with function with branches infers decoder from both branches
 expectType<number | string>(
-  test(
+  infer(
     string.transform(Number).pipe(() => (Math.random() < 0.5 ? positiveInteger : string)),
   ),
 );
 // .pipe() with input function with branches infers decoder from both branches
 expectType<number | string>(
-  test(string.transform(Number).pipe((x) => (x < 0.5 ? positiveInteger : string))),
+  infer(string.transform(Number).pipe((x) => (x < 0.5 ? positiveInteger : string))),
 );
 
-expectType<string>(test(string.refine((s) => s.startsWith('x'), 'Must start with x')));
+expectType<string>(infer(string.refine((s) => s.startsWith('x'), 'Must start with x')));
 
 expectType<string>(
-  test(unknown.refine((foo): foo is string => typeof foo === 'string', 'Is string')),
+  infer(unknown.refine((foo): foo is string => typeof foo === 'string', 'Is string')),
 );
 
 expectType<'a' | 'b'>(
-  test(
+  infer(
     string.refine(
       (foo: string): foo is 'a' | 'b' => foo === 'a' || foo === 'b',
       'Is a or b',
@@ -259,7 +261,7 @@ expectType<'a' | 'b'>(
 );
 
 expectType<number[]>(
-  test(
+  infer(
     array(number).reject((numbers) =>
       numbers.reduce((acc, n) => acc + n) > 0
         ? `Sum of ${numbers.join(' + ')} must be positive`
@@ -268,57 +270,59 @@ expectType<number[]>(
   ),
 );
 
-expectType<string>(test(string.describe('xxx')));
-expectType<number>(test(number.describe('xxx')));
+expectType<string>(infer(string.describe('xxx')));
+expectType<number>(infer(number.describe('xxx')));
 
-expectType<string>(test(prep(Number, string)));
-expectType<string>(test(prep(String, string)));
-expectType<number>(test(prep(Number, number)));
-expectType<number>(test(prep(String, number)));
-expectType<string | number>(test(prep(String, either(number, string))));
+expectType<string>(infer(prep(Number, string)));
+expectType<string>(infer(prep(String, string)));
+expectType<number>(infer(prep(Number, number)));
+expectType<number>(infer(prep(String, number)));
+expectType<string | number>(infer(prep(String, either(number, string))));
 
-expectType<string | number>(test(prep(Number, either(number, string))));
+expectType<string | number>(infer(prep(Number, either(number, string))));
 
 // Ensure regression from https://github.com/nvie/decoders/issues/941 doesn't play up again
 expectType<{ a: string; b: string; c: string } | { a: string }>(
-  test(either(object({ a: string, b: string, c: string }), object({ a: string }))),
+  infer(either(object({ a: string, b: string, c: string }), object({ a: string }))),
 );
 
-expectType<string[]>(test(array(string)));
-expectType<number[]>(test(array(number)));
-expectType<number[][]>(test(array(array(number))));
-expectType<unknown[]>(test(poja));
+expectType<string[]>(infer(array(string)));
+expectType<number[]>(infer(array(number)));
+expectType<number[][]>(infer(array(array(number))));
+expectType<unknown[]>(infer(poja));
 
-expectType<boolean>(test(boolean));
-expectType<boolean>(test(truthy));
+expectType<boolean>(infer(boolean));
+expectType<boolean>(infer(truthy));
 
-expectType<string | undefined>(test(optional(string)));
-expectType<string | undefined>(test(optional(optional(string))));
-expectType<string | 42>(test(optional(string, 42)));
-expectType<string | 42>(test(optional(optional(string), 42)));
-expectType<string | 42 | undefined>(test(optional(optional(string, 42))));
-expectType<string | Date>(test(optional(string, () => new Date())));
-expectType<string | Date>(test(optional(optional(string), () => new Date())));
-expectType<string | Date | undefined>(test(optional(optional(string, () => new Date()))));
+expectType<string | undefined>(infer(optional(string)));
+expectType<string | undefined>(infer(optional(optional(string))));
+expectType<string | 42>(infer(optional(string, 42)));
+expectType<string | 42>(infer(optional(optional(string), 42)));
+expectType<string | 42 | undefined>(infer(optional(optional(string, 42))));
+expectType<string | Date>(infer(optional(string, () => new Date())));
+expectType<string | Date>(infer(optional(optional(string), () => new Date())));
+expectType<string | Date | undefined>(
+  infer(optional(optional(string, () => new Date()))),
+);
 
-expectType<string | null>(test(nullable(string)));
-expectType<string | null>(test(nullable(nullable(string))));
-expectType<string | 42>(test(nullable(string, 42)));
-expectType<string | 42>(test(nullable(nullable(string), 42)));
-expectType<string | 42 | null>(test(nullable(nullable(string, 42))));
-expectType<string | Date>(test(nullable(string, () => new Date())));
-expectType<string | Date>(test(nullable(nullable(string), () => new Date())));
-expectType<string | Date | null>(test(nullable(nullable(string, () => new Date()))));
+expectType<string | null>(infer(nullable(string)));
+expectType<string | null>(infer(nullable(nullable(string))));
+expectType<string | 42>(infer(nullable(string, 42)));
+expectType<string | 42>(infer(nullable(nullable(string), 42)));
+expectType<string | 42 | null>(infer(nullable(nullable(string, 42))));
+expectType<string | Date>(infer(nullable(string, () => new Date())));
+expectType<string | Date>(infer(nullable(nullable(string), () => new Date())));
+expectType<string | Date | null>(infer(nullable(nullable(string, () => new Date()))));
 
-expectType<string | null | undefined>(test(nullish(string)));
-expectType<string | null | undefined>(test(nullish(nullish(string))));
-expectType<string | 42>(test(nullish(string, 42)));
-expectType<string | 42>(test(nullish(nullish(string), 42)));
-expectType<string | 42 | null | undefined>(test(nullish(nullish(string, 42))));
-expectType<string | Date>(test(nullish(string, () => new Date())));
-expectType<string | Date>(test(nullish(nullish(string), () => new Date())));
+expectType<string | null | undefined>(infer(nullish(string)));
+expectType<string | null | undefined>(infer(nullish(nullish(string))));
+expectType<string | 42>(infer(nullish(string, 42)));
+expectType<string | 42>(infer(nullish(nullish(string), 42)));
+expectType<string | 42 | null | undefined>(infer(nullish(nullish(string, 42))));
+expectType<string | Date>(infer(nullish(string, () => new Date())));
+expectType<string | Date>(infer(nullish(nullish(string), () => new Date())));
 expectType<string | Date | null | undefined>(
-  test(nullish(nullish(string, () => new Date()))),
+  infer(nullish(nullish(string, () => new Date()))),
 );
 
 // object()
@@ -339,8 +343,8 @@ expectType<string | Date | null | undefined>(
     bar: { baz: string };
     qux: never;
     quxx?: never;
-  }>(test(d));
-  const x = test(d);
+  }>(infer(d));
+  const x = infer(d);
   expectType<string | undefined>(x.foo);
   expectType<string | null | undefined>(x.fooOrNull1);
   expectType<string | null | undefined>(x.fooOrNull2);
@@ -351,17 +355,17 @@ expectType<string | Date | null | undefined>(
   expectType<undefined>(x.quxx);
 
   // With "unknown" fields (which implicitly contain "undefined")
-  expectType<{ a?: unknown }>(test(object({ a: unknown })));
+  expectType<{ a?: unknown }>(infer(object({ a: unknown })));
 
   // With "never" fields
-  expectType<{ nope: never }>(test(object({ nope: fail('not allowed') })));
-  expectType<{ nope?: never }>(test(object({ nope: optional(fail('not allowed')) })));
+  expectType<{ nope: never }>(infer(object({ nope: fail('not allowed') })));
+  expectType<{ nope?: never }>(infer(object({ nope: optional(fail('not allowed')) })));
 }
 
 // exact() (w/ empty mapping)
-expectType<Record<string, never>>(test(object({})));
-expectType<never>(test(object({})).a);
-expectType<never>(test(object({})).b);
+expectType<Record<string, never>>(infer(object({})));
+expectType<never>(infer(object({})).a);
+expectType<never>(infer(object({})).b);
 
 // exact()
 {
@@ -370,8 +374,8 @@ expectType<never>(test(object({})).b);
     bar: object({ qux: string }),
   });
 
-  expectType<{ bar: { qux: string }; foo?: string }>(test(d));
-  const x = test(d);
+  expectType<{ bar: { qux: string }; foo?: string }>(infer(d));
+  const x = infer(d);
   expectType<string | undefined>(x.foo);
   expectType<{ qux: string }>(x.bar);
   expectError(x.a);
@@ -379,41 +383,41 @@ expectType<never>(test(object({})).b);
 }
 
 // exact() (w/ empty mapping)
-expectType<Record<string, never>>(test(exact({})));
-expectType<never>(test(exact({})).a);
-expectType<never>(test(exact({})).b);
+expectType<Record<string, never>>(infer(exact({})));
+expectType<never>(infer(exact({})).a);
+expectType<never>(infer(exact({})).b);
 
 // inexact()
-expectType<{ id: number } & Record<string, unknown>>(test(inexact({ id: number })));
-expectType<number>(test(inexact({ id: number })).id);
-expectType<unknown>(test(inexact({ id: number })).a);
-expectType<unknown>(test(inexact({ id: number })).b);
+expectType<{ id: number } & Record<string, unknown>>(infer(inexact({ id: number })));
+expectType<number>(infer(inexact({ id: number })).id);
+expectType<unknown>(infer(inexact({ id: number })).a);
+expectType<unknown>(infer(inexact({ id: number })).b);
 
 // inexact() (w/ empty mapping)
-expectType<Record<string, unknown>>(test(inexact({})));
-expectType<unknown>(test(inexact({})).a);
-expectType<unknown>(test(inexact({})).b);
+expectType<Record<string, unknown>>(infer(inexact({})));
+expectType<unknown>(infer(inexact({})).a);
+expectType<unknown>(infer(inexact({})).b);
 
-expectType<Record<string, unknown>>(test(pojo));
-expectType<Map<string, number>>(test(mapping(number)));
+expectType<Record<string, unknown>>(infer(pojo));
+expectType<Map<string, number>>(infer(mapping(number)));
 
 // Single-argument form (validate values only)
-expectType<Record<string, number>>(test(record(number)));
+expectType<Record<string, number>>(infer(record(number)));
 
 // Two-argument form (validate keys and values)
 expectType<Record<'foo' | 'bar', number>>(
-  test(record(oneOf(['foo', 'bar'] as const), number)),
+  infer(record(oneOf(['foo', 'bar'] as const), number)),
 );
-expectType<Record<string, number>>(test(record(decimal, number)));
-expectType<Record<string, boolean>>(test(record(email, boolean)));
+expectType<Record<string, number>>(infer(record(decimal, number)));
+expectType<Record<string, boolean>>(infer(record(email, boolean)));
 
-expectType<string>(test(lazy(() => string)));
-expectType<number>(test(lazy(() => number)));
+expectType<string>(infer(lazy(() => string)));
+expectType<number>(infer(lazy(() => number)));
 
-expectType<JSONValue>(test(json));
-expectType<JSONObject>(test(jsonObject));
-expectType<JSONArray>(test(jsonArray));
-expectType<JSONValue | undefined>(test(jsonObject).abc);
+expectType<JSONValue>(infer(json));
+expectType<JSONObject>(infer(jsonObject));
+expectType<JSONArray>(infer(jsonArray));
+expectType<JSONValue | undefined>(infer(jsonObject).abc);
 
 {
   interface Animal {
@@ -429,53 +433,53 @@ expectType<JSONValue | undefined>(test(jsonObject).abc);
     name = 'labrador';
   }
 
-  expectType<Labrador>(test(instanceOf(Labrador)));
-  expectType<Dog>(test(instanceOf(Dog)));
-  expectType<Cat>(test(instanceOf(Cat)));
+  expectType<Labrador>(infer(instanceOf(Labrador)));
+  expectType<Dog>(infer(instanceOf(Dog)));
+  expectType<Cat>(infer(instanceOf(Cat)));
 
   // Or use it on existing types
-  expectType<Error>(test(instanceOf(Error)));
-  expectType<RegExp>(test(instanceOf(RegExp)));
+  expectType<Error>(infer(instanceOf(Error)));
+  expectType<RegExp>(infer(instanceOf(RegExp)));
 
   // Weird case... due to the way the TypeError constructor is defined in the
   // standard library, this doesn't work for TypeError...
   // expectType<TypeError>(test(instanceOf(TypeError)));
 
   // Parameterized classes cannot be inferred automatically...
-  expectType<Promise<unknown>>(test(instanceOf(Promise)));
-  expectType<Set<unknown>>(test(instanceOf(Set)));
-  expectType<Map<unknown, unknown>>(test(instanceOf(Map)));
+  expectType<Promise<unknown>>(infer(instanceOf(Promise)));
+  expectType<Set<unknown>>(infer(instanceOf(Set)));
+  expectType<Map<unknown, unknown>>(infer(instanceOf(Map)));
 }
 
-expectType<Date>(test(date));
-expectType<Date>(test(isoDate));
-expectType<Date>(test(iso8601)); // alias of isoDate
-expectType<string>(test(isoDateString));
-expectType<Date>(test(flexDate));
+expectType<Date>(infer(date));
+expectType<Date>(infer(isoDate));
+expectType<Date>(infer(iso8601)); // alias of isoDate
+expectType<string>(infer(isoDateString));
+expectType<Date>(infer(flexDate));
 
 // Deprecated aliases (should still work)
-expectType<Date>(test(datelike));
-expectType<string>(test(dateString));
+expectType<Date>(infer(datelike));
+expectType<string>(infer(dateString));
 
-expectType<never>(test(fail('I will never return')));
-expectType<never>(test(never('I will never return')));
+expectType<never>(infer(fail('I will never return')));
+expectType<never>(infer(never('I will never return')));
 
-expectType<string | number>(test(either(string, number)));
-expectType<string | number>(test(either(string, string, number)));
+expectType<string | number>(infer(either(string, number)));
+expectType<string | number>(infer(either(string, string, number)));
 expectType<string | number | boolean | number[]>(
-  test(either(string, boolean, number, array(number))),
+  infer(either(string, boolean, number, array(number))),
 );
-expectType<string>(test(either(string, string, string, string, string)));
-expectType<string>(test(either(string, string, string, string, string, string)));
-expectType<string>(test(either(string, string, string, string, string, string, string)));
+expectType<string>(infer(either(string, string, string, string, string)));
+expectType<string>(infer(either(string, string, string, string, string, string)));
+expectType<string>(infer(either(string, string, string, string, string, string, string)));
 expectType<string>(
-  test(either(string, string, string, string, string, string, string, string)),
+  infer(either(string, string, string, string, string, string, string, string)),
 );
 expectType<string>(
-  test(either(string, string, string, string, string, string, string, string, string)),
+  infer(either(string, string, string, string, string, string, string, string, string)),
 );
 
-expectType<'foo' | 'bar'>(test(oneOf(['foo', 'bar'])));
+expectType<'foo' | 'bar'>(infer(oneOf(['foo', 'bar'])));
 
 // Literal types must also be preserved when oneOf() or constant() are nested
 // in another generic call. Assigning to a variable first avoids expectType's
@@ -487,13 +491,13 @@ const nullishOneOf = nullish(oneOf(['foo', 'bar']));
 const optionalOneOfWithDefault = optional(oneOf(['foo', 'bar']), 'foo');
 const optionalConstant = optional(constant('foo'));
 const nullableConstant = nullable(constant('foo'));
-expectType<1 | 2 | 3>(test(oneOfNums));
-expectType<'foo' | 'bar' | undefined>(test(optionalOneOf));
-expectType<'foo' | 'bar' | null>(test(nullableOneOf));
-expectType<'foo' | 'bar' | null | undefined>(test(nullishOneOf));
-expectType<'foo' | 'bar'>(test(optionalOneOfWithDefault));
-expectType<'foo' | undefined>(test(optionalConstant));
-expectType<'foo' | null>(test(nullableConstant));
+expectType<1 | 2 | 3>(infer(oneOfNums));
+expectType<'foo' | 'bar' | undefined>(infer(optionalOneOf));
+expectType<'foo' | 'bar' | null>(infer(nullableOneOf));
+expectType<'foo' | 'bar' | null | undefined>(infer(nullishOneOf));
+expectType<'foo' | 'bar'>(infer(optionalOneOfWithDefault));
+expectType<'foo' | undefined>(infer(optionalConstant));
+expectType<'foo' | null>(infer(nullableConstant));
 
 enum Fruit {
   Apple = 'a',
@@ -509,13 +513,13 @@ enum Primes {
 
 // Not sure why this isn't strictly expectType?
 // TypeScript thinks these aren't equal types.
-expectAssignable<Fruit>(test(enum_(Fruit)));
-expectAssignable<Primes>(test(enum_(Primes)));
+expectAssignable<Fruit>(infer(enum_(Fruit)));
+expectAssignable<Primes>(infer(enum_(Primes)));
 
 const oneOfEnumMembers = oneOf([Fruit.Apple, Fruit.Banana]);
 const optionalOneOfEnumMembers = optional(oneOf([Fruit.Apple, Fruit.Banana]));
-expectType<Fruit.Apple | Fruit.Banana>(test(oneOfEnumMembers));
-expectType<Fruit.Apple | Fruit.Banana | undefined>(test(optionalOneOfEnumMembers));
+expectType<Fruit.Apple | Fruit.Banana>(infer(oneOfEnumMembers));
+expectType<Fruit.Apple | Fruit.Banana | undefined>(infer(optionalOneOfEnumMembers));
 
 const ConstEnum = {
   Five: 'five',
@@ -525,7 +529,7 @@ const ConstEnum = {
 
 type MixedConstEnumType = (typeof ConstEnum)[keyof typeof ConstEnum];
 
-expectType<MixedConstEnumType>(test(enum_(ConstEnum)));
+expectType<MixedConstEnumType>(infer(enum_(ConstEnum)));
 
 interface Rect {
   _type: 'rect';
@@ -559,9 +563,9 @@ const circle: Decoder<Circle> = object({
   radius: number,
 });
 
-expectType<Shape>(test(taggedUnion('_type', { rect, circle })));
+expectType<Shape>(infer(taggedUnion('_type', { rect, circle })));
 
-expectType<Shape>(test(select(unknown, (_) => (Math.random() < 0.5 ? rect : circle))));
+expectType<Shape>(infer(select(unknown, (_) => (Math.random() < 0.5 ? rect : circle))));
 
 {
   function takesShape(_d: Decoder<Shape>) {}
@@ -618,17 +622,17 @@ const circle1: Decoder<Circle1> = object({
   radius: number,
 });
 
-expectType<Shape1>(test(taggedUnion('_type', { 0: rect1, 1: circle1 })));
+expectType<Shape1>(infer(taggedUnion('_type', { 0: rect1, 1: circle1 })));
 
 // Branded types
 type UppercaseString = string & { __brand: 'UppercaseString' };
 
 // Branding can be done, but only to narrower types
-expectType<string>(test(string.refineType()));
-expectType<UppercaseString>(test(string.refineType<UppercaseString>()));
-expectType<'foo' | 'bar'>(test(string.refineType<'foo' | 'bar'>()));
+expectType<string>(infer(string.refineType()));
+expectType<UppercaseString>(infer(string.refineType<UppercaseString>()));
+expectType<'foo' | 'bar'>(infer(string.refineType<'foo' | 'bar'>()));
 
 // Casting to wider types is not allowed
-expectError(test(string.refineType<string | 42>()));
-expectError(test(string.refineType<'foo' | 'bar' | 42>()));
-expectError(test(string.refineType<unknown>()));
+expectError(infer(string.refineType<string | 42>()));
+expectError(infer(string.refineType<'foo' | 'bar' | 42>()));
+expectError(infer(string.refineType<unknown>()));
