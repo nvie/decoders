@@ -10,16 +10,16 @@ side-by-side "don't" and "do".
 
 In short:
 
-| ❌ Don't                                                                               | ✅ Do instead                                 |
-| :------------------------------------------------------------------------------------- | :-------------------------------------------- |
-| [Name decoders after fields](#name-decoders-after-data-types-not-fields)               | Name them after the data type                 |
-| [Bake `optional()` into a reusable decoder](#keep-optional-out-of-reusable-decoders)   | Apply `optional()` where the field is defined |
-| [Hand-roll checks with `typeof`](#describe-the-shape-dont-check-it-by-hand)            | Describe the shape with [`object()`][]        |
-| [Use `either()` for objects with a "kind" field](#use-taggedunion-for-tagged-objects)  | Use [`taggedUnion()`][]                       |
-| [Use `either()` if the "kind" can be missing](#when-the-tag-can-be-missing-use-select) | Use [`select()`][] to pick a decoder          |
-| [Build decoders inside callbacks](#build-decoders-once)                                | Build them once, at the module level          |
-| [Validate inside `.transform()`](#dont-validate-inside-transform)                      | Compose decoders, then transform              |
-| [Call `.verify()` inside `.transform()`](#use-pipe-to-feed-into-another-decoder)       | Use [`.pipe()`][]                             |
+| ❌ Don't                                       | ✅ Do instead                                                                            |
+| :--------------------------------------------- | :--------------------------------------------------------------------------------------- |
+| Name decoders after fields                     | [Name them after the data type](#name-decoders-after-data-types-not-fields)              |
+| Bake `optional()` into a reusable decoder      | [Apply `optional()` where the field is defined](#keep-optional-out-of-reusable-decoders) |
+| Hand-roll checks with `typeof`                 | [Describe the shape with `object()`](#describe-the-shape-dont-check-it-by-hand)          |
+| Use `either()` for objects with a "kind" field | [Use `taggedUnion()`](#use-taggedunion-for-tagged-objects)                               |
+| Use `either()` if the "kind" can be missing    | [Use `select()` to pick a decoder](#when-the-tag-can-be-missing-use-select)              |
+| Build decoders inside callbacks                | [Build them once, at the module level](#build-decoders-once)                             |
+| Validate inside `.transform()`                 | [Compose decoders, then transform](#dont-validate-inside-transform)                      |
+| Call `.verify()` inside `.transform()`         | [Use `.pipe()`](#use-pipe-to-feed-into-another-decoder)                                  |
 
 ---
 
