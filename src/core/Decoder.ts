@@ -168,6 +168,11 @@ function format(err: Annotation, formatter: Formatter): Error {
 const kBrand = Symbol.for('decoders.Decoder.v3');
 
 /**
+ * Memoized `~standard` props per decoder, built on first access.
+ */
+const standardCache = new WeakMap<object, StandardSchemaV1.Props<unknown, unknown>>();
+
+/**
  * The implementation behind every `Decoder<T>`.
  *
  * @internal
@@ -197,11 +202,6 @@ class DecoderImpl<T> implements Decoder<T> {
    * error message.
    */
   readonly value: (blob: unknown) => T | undefined;
-
-  /**
-   * Memoized `~standard` props, built on first access.
-   */
-  #standard: StandardSchemaV1.Props<unknown, T> | undefined;
 
   constructor(fn: AcceptanceFn<T>) {
     // Per-instance closures rather than methods, so they keep working when
@@ -371,20 +371,26 @@ class DecoderImpl<T> implements Decoder<T> {
    * The Standard Schema interface for this decoder.
    */
   get '~standard'(): StandardSchemaV1.Props<unknown, T> {
-    const decode = this.decode;
-    return (this.#standard ??= {
-      version: 1,
-      vendor: 'decoders',
-      validate: (blob) => {
-        const result = decode(blob);
-        if (result.ok) {
-          return { value: result.value };
-        } else {
-          const issues = formatAsIssues(result.error);
-          return { issues };
-        }
-      },
-    });
+    let props = standardCache.get(this);
+    if (props === undefined) {
+      const decode = this.decode;
+      props = {
+        version: 1,
+        vendor: 'decoders',
+        validate: (blob) => {
+          const result = decode(blob);
+          if (result.ok) {
+            return { value: result.value };
+          } else {
+            const issues = formatAsIssues(result.error);
+            return { issues };
+          }
+        },
+      };
+      standardCache.set(this, props);
+    }
+    // The cache is keyed by decoder, so the props always match its T
+    return props as StandardSchemaV1.Props<unknown, T>;
   }
 }
 
