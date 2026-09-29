@@ -135,8 +135,7 @@ function buildObject<Ds extends Record<string, Decoder<unknown>>>(
           // keys).
           missingKeys.add(key);
         } else {
-          errors ??= new Map();
-          errors.set(key, ann);
+          (errors ??= new Map()).set(key, ann);
         }
       }
     }
