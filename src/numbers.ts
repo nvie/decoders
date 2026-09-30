@@ -40,13 +40,12 @@ export const integer: Decoder<number> = /* #__PURE__ */ anyNumber.reject((n) =>
  * Accepts only non-negative numbers (e.g. 0, 0.5, 1, 3.14, ...).
  * Integers or floats, >= 0, and finite.
  */
-export const nonNegativeNumber: Decoder<number> = /* #__PURE__ */ anyNumber.reject(
-  (n) =>
-    Number.isFinite(n) && isSignPositive(n)
-      ? null
-      : isSignNegative(n)
-        ? 'Number must be positive'
-        : 'Number must be finite',
+export const nonNegativeNumber: Decoder<number> = /* #__PURE__ */ anyNumber.reject((n) =>
+  Number.isFinite(n) && isSignPositive(n)
+    ? null
+    : isSignNegative(n)
+      ? 'Number must be positive'
+      : 'Number must be finite',
 );
 
 /**
