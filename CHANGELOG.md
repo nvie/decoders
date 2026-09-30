@@ -38,6 +38,17 @@ Compared to 2.12.1:
   up to ~12% faster.
 - `integer`, `natural`, and `nonNegativeNumber` decode faster on valid and invalid inputs.
 
+## [2.12.2] - 2026-09-30
+
+**Performance:**
+
+- Roughly ~2x faster `object()`, `exact()`, and `inexact()` on valid inputs, by no longer
+  allocating intermediate sets or decoders on every decode call.
+
+**Fixes:**
+
+- "Missing keys" errors now list keys in definition order
+
 ## [2.12.1] - 2026-09-25
 
 **Performance:**
