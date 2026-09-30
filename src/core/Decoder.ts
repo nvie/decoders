@@ -23,13 +23,11 @@ export type AcceptanceFn<O, I = unknown> = (
 
 //          Output  Input
 //              \    /
-export type Next<O, I = unknown> =
-  | Decoder<O>
-  | ((
-      blob: I,
-      ok: (value: O) => DecodeResult<O>,
-      err: (msg: string | Annotation) => DecodeResult<O>,
-    ) => DecodeResult<O> | Decoder<O>);
+export type Next<O, I = unknown> = (
+  blob: I,
+  ok: (value: O) => DecodeResult<O>,
+  err: (msg: string | Annotation) => DecodeResult<O>,
+) => DecodeResult<O> | Decoder<O>;
 
 export interface Decoder<T> {
   /**
@@ -88,17 +86,17 @@ export interface Decoder<T> {
    * > to reach for this construct unless there is no other way. Most cases can
    * > be covered more elegantly by `.transform()`, `.refine()`, or `.pipe()`
    * > instead._
+   *
+   * The function can also return a decoder, to dynamically pick the next
+   * decoder based on the decoded value:
+   *
+   *   string.chain((s) => s.startsWith('@') ? username : email)
    */
-  chain<V>(
-    next: (
-      blob: T,
-      ok: (value: V) => DecodeResult<V>,
-      err: (msg: string | Annotation) => DecodeResult<V>,
-    ) => DecodeResult<V> | Decoder<V>,
-  ): Decoder<V>;
-  /** @deprecated To send the output into another decoder, use `.pipe()` instead. */
-  // eslint-disable-next-line typescript/unified-signatures -- separate overload so only the decoder form is marked deprecated
-  chain<V>(next: Decoder<V>): Decoder<V>;
+  // Overload order matters: the first one gives `(blob, ok, err) => ...`
+  // callbacks their parameter types, the second one infers `A | B` for
+  // functions returning decoders of different types
+  chain<V>(next: Next<V, T>): Decoder<V>;
+  chain<D extends Decoder<unknown>>(next: (blob: T) => D): Decoder<DecoderType<D>>;
 
   /**
    * Send the output of this decoder as input to another decoder.
@@ -108,12 +106,8 @@ export interface Decoder<T> {
    *   string
    *     .transform((s) => s.split(','))
    *     .pipe(array(nonEmptyString))
-   *
-   * You can also conditionally pipe:
-   *
-   *   string.pipe((s) => s.startsWith('@') ? username : email)
    */
-  pipe<V, D extends Decoder<V>>(next: D | ((blob: T) => D)): Decoder<DecoderType<D>>;
+  pipe<D extends Decoder<unknown>>(next: D): Decoder<DecoderType<D>>;
 
   /**
    * The Standard Schema interface for this decoder.
@@ -165,6 +159,20 @@ function format(err: Annotation, formatter: Formatter): Error {
 }
 
 /**
+ * Brand identifying a value as a Decoder. It lives on the shared prototype, so
+ * decoders carry it for free. `Symbol.for()` is used so that decoders are
+ * still recognized across duplicate copies of this library.
+ *
+ * @internal
+ */
+const kBrand = Symbol.for('decoders.Decoder.v3');
+
+/**
+ * Memoized `~standard` props per decoder, built on first access.
+ */
+const standardCache = new WeakMap<object, StandardSchemaV1.Props<unknown, unknown>>();
+
+/**
  * The implementation behind every `Decoder<T>`.
  *
  * @internal
@@ -194,11 +202,6 @@ class DecoderImpl<T> implements Decoder<T> {
    * error message.
    */
   readonly value: (blob: unknown) => T | undefined;
-
-  /**
-   * Memoized `~standard` props, built on first access.
-   */
-  #standard: StandardSchemaV1.Props<unknown, T> | undefined;
 
   constructor(fn: AcceptanceFn<T>) {
     // Per-instance closures rather than methods, so they keep working when
@@ -265,22 +268,35 @@ class DecoderImpl<T> implements Decoder<T> {
   }
 
   /**
-   * Send the output of the current decoder into another decoder or acceptance
-   * function. The given acceptance function will receive the output of the
-   * current decoder as its input.
+   * Send the output of the current decoder into an acceptance function. The
+   * given acceptance function will receive the output of the current decoder
+   * as its input.
    *
    * > _**NOTE:** This is an advanced, low-level, API. It's not recommended
    * > to reach for this construct unless there is no other way. Most cases can
    * > be covered more elegantly by `.transform()`, `.refine()`, or `.pipe()`
    * > instead._
+   *
+   * The function can also return a decoder, to dynamically pick the next
+   * decoder based on the decoded value:
+   *
+   *   string.chain((s) => s.startsWith('@') ? username : email)
    */
+  chain<V>(next: Next<V, T>): Decoder<V>;
+  chain<D extends Decoder<unknown>>(next: (blob: T) => D): Decoder<DecoderType<D>>;
   chain<V>(next: Next<V, T>): Decoder<V> {
+    if (isDecoder(next)) {
+      throw new Error(
+        'Passing a decoder to .chain() is no longer supported, use .pipe() instead',
+      );
+    }
+
     const decode = this.decode;
     return define((blob, ok, err) => {
       const r1 = decode(blob);
       if (!r1.ok) return r1; // Rejected
 
-      const r2 = isDecoder(next) ? next : next(r1.value, ok, err);
+      const r2 = next(r1.value, ok, err);
       return isDecoder(r2) ? r2.decode(r1.value) : r2;
     });
   }
@@ -293,16 +309,22 @@ class DecoderImpl<T> implements Decoder<T> {
    *   string
    *     .transform((s) => s.split(','))
    *     .pipe(array(nonEmptyString))
-   *
-   * You can also conditionally pipe:
-   *
-   *   string.pipe((s) => s.startsWith('@') ? username : email)
    */
-  pipe<V, D extends Decoder<V>>(next: D | ((blob: T) => D)): Decoder<DecoderType<D>> {
-    // Technically, .pipe() is just an alias of .chain(), but its signature is
-    // more focused on the more convenient use case of working with Decoders
-    // directly.
-    return this.chain(next) as Decoder<DecoderType<D>>;
+  pipe<D extends Decoder<unknown>>(next: D): Decoder<DecoderType<D>> {
+    if (!isDecoder(next)) {
+      throw new Error(
+        'Passing a function to .pipe() is no longer supported, use .chain() instead',
+      );
+    }
+
+    const decode = this.decode;
+    return define((blob) => {
+      const r1 = decode(blob);
+      if (!r1.ok) return r1; // Rejected
+
+      // TS can't prove that a generic D is a Decoder<DecoderType<D>>
+      return next.decode(r1.value) as DecodeResult<DecoderType<D>>;
+    });
   }
 
   /**
@@ -349,22 +371,31 @@ class DecoderImpl<T> implements Decoder<T> {
    * The Standard Schema interface for this decoder.
    */
   get '~standard'(): StandardSchemaV1.Props<unknown, T> {
-    const decode = this.decode;
-    return (this.#standard ??= {
-      version: 1,
-      vendor: 'decoders',
-      validate: (blob) => {
-        const result = decode(blob);
-        if (result.ok) {
-          return { value: result.value };
-        } else {
-          const issues = formatAsIssues(result.error);
-          return { issues };
-        }
-      },
-    });
+    let props = standardCache.get(this);
+    if (props === undefined) {
+      const decode = this.decode;
+      props = {
+        version: 1,
+        vendor: 'decoders',
+        validate: (blob) => {
+          const result = decode(blob);
+          if (result.ok) {
+            return { value: result.value };
+          } else {
+            const issues = formatAsIssues(result.error);
+            return { issues };
+          }
+        },
+      };
+      standardCache.set(this, props);
+    }
+    // The cache is keyed by decoder, so the props always match its T
+    return props as StandardSchemaV1.Props<unknown, T>;
   }
 }
+
+// @ts-expect-error: Brand is set on the prototype for performance, not the instance
+DecoderImpl.prototype[kBrand] = true;
 
 // The binding can't be named `Decoder` (that's the public interface), but the
 // class's name is what shows up in `console.log()` and `.constructor.name`
@@ -385,20 +416,7 @@ Object.defineProperty(DecoderImpl, 'name', { value: 'Decoder' });
  */
 /* #__NO_SIDE_EFFECTS__ */
 export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
-  const decoder: Decoder<T> = new DecoderImpl(fn);
-  return stamp(decoder);
-}
-
-/** @internal */
-const kDecoderRegistry = Symbol.for('decoders.kDecoderRegistry');
-// eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
-const _stamped: WeakSet<Decoder<unknown>> = ((globalThis as any)[kDecoderRegistry] ??=
-  new WeakSet());
-
-/** @internal */
-function stamp<D extends Decoder<unknown>>(decoder: D): D {
-  _stamped.add(decoder);
-  return decoder;
+  return new DecoderImpl(fn);
 }
 
 /**
@@ -406,5 +424,5 @@ function stamp<D extends Decoder<unknown>>(decoder: D): D {
  */
 /* #__NO_SIDE_EFFECTS__ */
 export function isDecoder(value: unknown): value is Decoder<unknown> {
-  return _stamped.has(value as Decoder<unknown>);
+  return typeof value === 'object' && value !== null && kBrand in value;
 }

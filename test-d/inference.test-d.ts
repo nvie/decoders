@@ -13,8 +13,6 @@ import {
   boolean,
   constant,
   date,
-  datelike,
-  dateString,
   flexDate,
   decimal,
   define,
@@ -34,12 +32,10 @@ import {
   integer,
   isoDate,
   isoDateString,
-  iso8601,
   json,
   jsonArray,
   jsonObject,
   lazy,
-  mapping,
   nanoid,
   natural,
   never,
@@ -62,7 +58,6 @@ import {
   record,
   regex,
   select,
-  setFromArray,
   sized,
   startsWith,
   string,
@@ -141,7 +136,14 @@ expectType<`foo-${string}`>(infer(startsWith('foo-')));
 expectType<`${string}-bar`>(infer(endsWith('-bar')));
 expectType<string>(infer(sized(string, { min: 1, max: 10 })));
 expectType<number[]>(infer(sized(array(number), { min: 1, max: 10 })));
-expectType<Set<number>>(infer(sized(setFromArray(number), { size: 3 })));
+expectType<Set<number>>(
+  infer(
+    sized(
+      array(number).transform((xs) => new Set(xs)),
+      { size: 3 },
+    ),
+  ),
+);
 expectType<URL>(infer(url));
 expectType<string>(infer(urlString));
 expectType<URL>(infer(httpsUrl));
@@ -165,8 +167,6 @@ expectError(infer(array(string, { bogus: 3 })));
 expectType<unknown[]>(infer(poja));
 expectType<[string, ...string[]]>(infer(nonEmptyArray(string)));
 expectType<[number, ...number[]]>(infer(nonEmptyArray(number)));
-expectType<Set<string>>(infer(setFromArray(string)));
-expectType<Set<number>>(infer(setFromArray(number)));
 
 expectType<[string]>(infer(tuple(string)));
 expectType<[string, number]>(infer(tuple(string, number)));
@@ -220,9 +220,9 @@ expectType<number | string>(
 );
 
 // .chain()
-expectType<number>(infer(string.transform(Number).chain(positiveInteger)));
+expectError(string.transform(Number).chain(positiveInteger));
 expectType<number>(infer(string.transform(Number).chain(positiveInteger.decode)));
-expectType<boolean>(infer(string.transform(Number).transform(String).chain(truthy)));
+expectError(string.transform(Number).transform(String).chain(truthy));
 expectType<boolean>(
   infer(string.transform(Number).transform(String).chain(truthy.decode)),
 );
@@ -234,15 +234,24 @@ expectType<boolean>(infer(string.transform(Number).transform(String).pipe(truthy
 expectType<number | string>(
   infer(string.transform(Number).pipe(Math.random() < 0.5 ? positiveInteger : string)),
 );
-// .pipe() with function with branches infers decoder from both branches
+// .pipe() no longer takes a function
+expectError(string.transform(Number).pipe(() => positiveInteger));
+expectError(
+  string.transform(Number).pipe((x: number) => (x < 0.5 ? positiveInteger : string)),
+);
+
+// .chain() with function with branches infers decoder from both branches
+expectType<number>(infer(string.transform(Number).chain(() => positiveInteger)));
 expectType<number | string>(
   infer(
-    string.transform(Number).pipe(() => (Math.random() < 0.5 ? positiveInteger : string)),
+    string
+      .transform(Number)
+      .chain(() => (Math.random() < 0.5 ? positiveInteger : string)),
   ),
 );
-// .pipe() with input function with branches infers decoder from both branches
+// .chain() with input function with branches infers decoder from both branches
 expectType<number | string>(
-  infer(string.transform(Number).pipe((x) => (x < 0.5 ? positiveInteger : string))),
+  infer(string.transform(Number).chain((x) => (x < 0.5 ? positiveInteger : string))),
 );
 
 expectType<string>(infer(string.refine((s) => s.startsWith('x'), 'Must start with x')));
@@ -399,7 +408,6 @@ expectType<unknown>(infer(inexact({})).a);
 expectType<unknown>(infer(inexact({})).b);
 
 expectType<Record<string, unknown>>(infer(pojo));
-expectType<Map<string, number>>(infer(mapping(number)));
 
 // Single-argument form (validate values only)
 expectType<Record<string, number>>(infer(record(number)));
@@ -410,6 +418,8 @@ expectType<Record<'foo' | 'bar', number>>(
 );
 expectType<Record<string, number>>(infer(record(decimal, number)));
 expectType<Record<string, boolean>>(infer(record(email, boolean)));
+expectType<Record<string, number>>(infer(record(number, { max: 10 })));
+expectType<Record<string, boolean>>(infer(record(email, boolean, { min: 1 })));
 
 expectType<string>(infer(lazy(() => string)));
 expectType<number>(infer(lazy(() => number)));
@@ -453,13 +463,8 @@ expectType<JSONValue | undefined>(infer(jsonObject).abc);
 
 expectType<Date>(infer(date));
 expectType<Date>(infer(isoDate));
-expectType<Date>(infer(iso8601)); // alias of isoDate
 expectType<string>(infer(isoDateString));
 expectType<Date>(infer(flexDate));
-
-// Deprecated aliases (should still work)
-expectType<Date>(infer(datelike));
-expectType<string>(infer(dateString));
 
 expectType<never>(infer(fail('I will never return')));
 expectType<never>(infer(never('I will never return')));

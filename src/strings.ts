@@ -1,6 +1,6 @@
 import type { Decoder } from '~/core';
 import { define } from '~/core';
-import type { SizeOptions } from '~/lib/size-options';
+import type { SizeOptions } from '~/lib/options';
 import { sized } from '~/misc';
 import { isString } from '~/lib/utils';
 

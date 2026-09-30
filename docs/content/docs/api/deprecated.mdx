@@ -1,0 +1,41 @@
+---
+title: Deprecated
+description: Decoders that have been removed, and what to use instead.
+---
+
+## mapping
+
+<DecoderSig
+  name="mapping"
+  params="decoder: Decoder<T>"
+  type="Map<string, T>"
+  removed="3.0"
+/>
+
+Removed in 3.0. It accepted the same inputs as [`record()`][], but returned the result as
+a `Map<string, T>`. To get the same result, transform the output of `record()`:
+
+```ts
+record(decoder).transform((obj) => new Map(Object.entries(obj)));
+```
+
+---
+
+## setFromArray
+
+<DecoderSig
+  name="setFromArray"
+  params="decoder: Decoder<T>"
+  type="Set<T>"
+  removed="3.0"
+/>
+
+Removed in 3.0. It accepted the same inputs as [`array()`][], but returned the result as a
+`Set<T>`. To get the same result, transform the output of `array()`:
+
+```ts
+array(decoder).transform((items) => new Set(items));
+```
+
+[`record()`]: /record
+[`array()`]: /array

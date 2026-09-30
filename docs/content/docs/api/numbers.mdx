@@ -19,13 +19,14 @@ or `Infinity`.
 
 ## integer
 
-<DecoderSig name="integer" type="number" source="numbers.ts#L25-L32" />
+<DecoderSig name="integer" type="number" source="numbers.ts#L25-L37" />
 
-Accepts only integers (e.g. ..., -2, -1, 0, 1, 2, ...). Whole numbers, and finite.
+Accepts only integers (e.g. ..., -2, -1, 0, 1, 2, ...). Whole numbers, and safe (between
+-(2^53-1) and 2^53-1).
 
 <DecoderPlayground
   decoder="integer"
-  examples={['123', '-3.14', 'Infinity', 'NaN', "'not a integer'"]}
+  examples={['123', '-3.14', '2 ** 53', 'Infinity', 'NaN', "'not a integer'"]}
 />
 
 ---
@@ -46,7 +47,7 @@ Accepts only integers (e.g. ..., -2, -1, 0, 1, 2, ...). Whole numbers, and finit
     },
   ]}
   type="number"
-  source="numbers.ts#L34-L41"
+  source="numbers.ts#L39-L49"
 />
 
 <Since version="2.11" />
@@ -77,12 +78,13 @@ and finite.
     },
   ]}
   type="number"
-  source="numbers.ts#L43-L50"
+  source="numbers.ts#L51-L65"
 />
 
 <Since version="2.11" />
 
-Accepts only the natural numbers (e.g. 0, 1, 2, 3, ...). Whole numbers, >= 0, and finite.
+Accepts only the natural numbers (e.g. 0, 1, 2, 3, ...). Whole numbers, >= 0, and safe (up
+to 2^53-1).
 
 <DecoderPlayground
   decoder="natural"
@@ -97,8 +99,9 @@ Accepts only the natural numbers (e.g. 0, 1, 2, 3, ...). Whole numbers, >= 0, an
 
 Accepts any valid `number` value.
 
-This also accepts special values like `NaN` and `Infinity`. Unless you want to
-deliberately accept those, you'll likely want to use the [`number`][] decoder instead.
+This also accepts special values like `NaN` and `Infinity`, and unsafe integers (beyond
+±(2^53-1)). Unless you want to deliberately accept those, you'll likely want to use the
+[`number`][] or [`integer`][] decoder instead.
 
 <DecoderPlayground
   decoder="anyNumber"
@@ -109,7 +112,7 @@ deliberately accept those, you'll likely want to use the [`number`][] decoder in
 
 ## bigint
 
-<DecoderSig name="bigint" type="bigint" source="numbers.ts#L101-L106" />
+<DecoderSig name="bigint" type="bigint" source="numbers.ts#L116-L121" />
 
 Accepts any valid `bigint` value.
 
@@ -126,20 +129,20 @@ Accepts any valid `bigint` value.
   name="min"
   params="min: number, decoder?: Decoder<number>"
   type="number"
-  source="numbers.ts#L57-L67"
+  source="numbers.ts#L72-L82"
 />
 <DecoderSig
   name="max"
   params="max: number, decoder?: Decoder<number>"
   type="number"
-  source="numbers.ts#L69-L79"
+  source="numbers.ts#L84-L94"
 />
 <DecoderSig
   name="between"
   params="min: number, max: number, decoder?: Decoder<number>"
   multiline
   type="number"
-  source="numbers.ts#L81-L99"
+  source="numbers.ts#L96-L114"
 />
 
 <Since version="2.9" />
@@ -168,3 +171,4 @@ numbers are accepted:
 />
 
 [`number`]: /number
+[`integer`]: /integer

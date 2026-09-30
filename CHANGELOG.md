@@ -1,5 +1,43 @@
 ## [Unreleased]
 
+**Breaking!**
+
+- Decoders from 2.x and 3.x no longer recognize each other. Normally this isn't a problem,
+  as it's encouraged to
+  [not have multiple copies](https://decoders.cc/docs/using-in-monorepos) of decoders in
+  your project anyway.
+- Remove `dateString`, `iso8601`, and `datelike`, which were deprecated in 2.9. Use
+  `isoDateString`, `isoDate`, and `flexDate` instead.
+- `.chain()` no longer accepts a decoder (deprecated since 2.11), and throws when given
+  one. Use `.pipe()` instead.
+- `.pipe()` no longer accepts a function, and throws when given one. To dynamically pick
+  the next decoder, use `.chain((value) => decoder)` instead, which now infers the union
+  type when the function returns different decoders.
+- `integer`, `natural`, and `positiveInteger` now reject unsafe integers
+  (beyond ±2^53−1).
+- `natural` and `nonNegativeNumber` now check the sign first (happy path
+  optimization). This can lead to a different error message compared to 2.x.
+- Remove `setFromArray` and `mapping`. Use `array(d).transform((xs) => new Set(xs))` and
+  `record(d).transform((obj) => new Map(Object.entries(obj)))` instead.
+
+**New APIs:**
+
+- `record()` now takes optional `SizeOptions` to constrain the number of keys, checked
+  before any key or value is decoded:
+  ```ts
+  record(number, { max: 10 });
+  record(email, boolean, { min: 1 });
+  ```
+
+**Performance:**
+
+Compared to 2.12.2:
+
+- Decoders take ~11% less memory and are ~9x faster to construct.
+- Decoders using `.transform()`, `.refine()`, `.reject()`, `.chain()`, or `.pipe()` decode
+  up to ~12% faster.
+- `integer`, `natural`, and `nonNegativeNumber` decode faster on valid and invalid inputs.
+
 ## [2.12.2] - 2026-09-30
 
 **Performance:**

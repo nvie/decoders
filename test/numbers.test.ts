@@ -75,6 +75,14 @@ describe('nonNegativeNumber', () => {
     expect(decoder.decode(-0).ok).toBe(false);
   });
 
+  test('error messages', () => {
+    expect(() => decoder.verify(NaN)).toThrow('Number must be finite');
+    expect(() => decoder.verify(Infinity)).toThrow('Number must be finite');
+    expect(() => decoder.verify(-Infinity)).toThrow('Number must be positive');
+    expect(() => decoder.verify(-0)).toThrow('Number must be positive');
+    expect(() => decoder.verify(-3.5)).toThrow('Number must be positive');
+  });
+
   test('invalid', () => {
     expect(not_okay.length).not.toBe(0);
     for (const value of not_okay) {
@@ -89,7 +97,7 @@ describe('nonNegativeNumber', () => {
 
 describe('integer', () => {
   const decoder = integer;
-  const [okay, not_okay] = partition(INPUTS, (n) => Number.isInteger(n));
+  const [okay, not_okay] = partition(INPUTS, (n) => Number.isSafeInteger(n));
 
   test('valid', () => {
     expect(okay.length).not.toBe(0);
@@ -104,13 +112,24 @@ describe('integer', () => {
       expect(decoder.decode(value).ok).toBe(false);
     }
   });
+
+  test('rejects unsafe integers', () => {
+    expect(decoder.verify(Number.MAX_SAFE_INTEGER)).toBe(Number.MAX_SAFE_INTEGER);
+    expect(decoder.verify(Number.MIN_SAFE_INTEGER)).toBe(Number.MIN_SAFE_INTEGER);
+    expect(() => decoder.verify(2 ** 53)).toThrow('Number must be a safe integer');
+    expect(() => decoder.verify(-(2 ** 53))).toThrow('Number must be a safe integer');
+    expect(() => decoder.verify(1e300)).toThrow('Number must be a safe integer');
+    expect(() => decoder.verify(3.5)).toThrow('Number must be an integer');
+    expect(() => decoder.verify(Infinity)).toThrow('Number must be finite');
+    expect(() => decoder.verify(NaN)).toThrow('Number must be finite');
+  });
 });
 
 describe('natural', () => {
   const decoder = natural;
   const [okay, not_okay] = partition(
     INPUTS,
-    (n) => typeof n === 'number' && Number.isInteger(n) && n >= 0,
+    (n) => typeof n === 'number' && Number.isSafeInteger(n) && n >= 0,
   );
 
   test('valid', () => {
@@ -124,6 +143,22 @@ describe('natural', () => {
   test('rejects -0', () => {
     expect(decoder.decode(0).ok).toBe(true);
     expect(decoder.decode(-0).ok).toBe(false);
+  });
+
+  test('rejects unsafe integers', () => {
+    expect(decoder.verify(Number.MAX_SAFE_INTEGER)).toBe(Number.MAX_SAFE_INTEGER);
+    expect(() => decoder.verify(2 ** 53)).toThrow('Number must be a safe integer');
+  });
+
+  test('error messages', () => {
+    expect(() => decoder.verify(NaN)).toThrow('Number must be finite');
+    expect(() => decoder.verify(-Infinity)).toThrow('Number must be positive');
+    expect(() => decoder.verify(-3.5)).toThrow('Number must be positive');
+    expect(() => decoder.verify(3.5)).toThrow('Number must be an integer');
+    expect(() => decoder.verify(Infinity)).toThrow('Number must be finite');
+    expect(() => decoder.verify(-1)).toThrow('Number must be positive');
+    expect(() => decoder.verify(-(2 ** 53))).toThrow('Number must be positive');
+    expect(() => decoder.verify(-2.3e43)).toThrow('Number must be positive');
   });
 
   test('invalid', () => {

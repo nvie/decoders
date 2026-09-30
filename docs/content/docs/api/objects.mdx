@@ -138,21 +138,19 @@ a field named `__proto__`, write a custom decoder with [`define()`][].
 
 <DecoderSig
   name="record"
-  params="values: Decoder<V>"
+  params="values: Decoder<V>, options?: SizeOptions"
   type="Record<string, V>"
-  source="collections.ts#L8-L68"
+  source="collections.ts#L9-L83"
 />
 
 <DecoderSig
   name="record"
-  params="keys: Decoder<K>, values: Decoder<V>"
+  params="keys: Decoder<K>, values: Decoder<V>, options?: SizeOptions"
   type="Record<K, V>"
 />
 
 Accepts objects where all values match the given decoder, and returns the result as a
 `Record<string, V>`.
-
-This is useful to validate inputs like `{ [key: string]: V }`.
 
 Inputs containing a `__proto__` key are rejected. See [Unsafe keys](#unsafe-keys).
 
@@ -178,6 +176,19 @@ For example, to enforce that all keys are emails:
   examples={["{ 'me@nvie.com': 1 }", "{ 'no-email': 1 }"]}
 />
 
+#### Limiting the number of keys
+
+The optional `options` argument constrains the number of keys. It accepts `min`, `max`, or
+`size` (shorthand for an exact number), and is checked _before_ any key or value is
+decoded, like it is for [`array()`][].
+
+<Since what="The options argument to record()" version="3.0" />
+
+<DecoderPlayground
+  decoder="record(number, { max: 2 })"
+  examples={['{ red: 1, blue: 2 }', '{ red: 1, blue: 2, green: 3 }']}
+/>
+
 ---
 
 ## Simple objects
@@ -195,4 +206,5 @@ further.
 />
 
 [`object()`]: /object
+[`array()`]: /array
 [`define()`]: /docs/api/utilities#define

@@ -8,7 +8,6 @@ import {
   exact,
   formatInline,
   inexact,
-  mapping,
   number,
   object,
   optional,
@@ -420,39 +419,6 @@ describe('arrays are not objects', () => {
   });
 });
 
-describe('mapping', () => {
-  const decoder = mapping(object({ name: string }));
-
-  test('valid', () => {
-    const input = {
-      '18': { name: 'foo' },
-      '23': { name: 'bar' },
-      key: { name: 'value' },
-    };
-    const output = new Map([
-      ['18', { name: 'foo' }],
-      ['23', { name: 'bar' }],
-      ['key', { name: 'value' }],
-    ]);
-    expect(decoder.verify(input)).toEqual(output);
-  });
-
-  test('invalid', () => {
-    expect(() => decoder.verify('foo')).toThrow('Must be an object');
-    expect(() => decoder.verify({ foo: 1 })).toThrow('Must be an object');
-    expect(() => decoder.verify({ foo: {} })).toThrow("Missing key: 'name'");
-    expect(() =>
-      decoder.verify({
-        '124': { invalid: true },
-        '125': { name: 'bar' },
-      }),
-    ).toThrow("Missing key: 'name'");
-
-    // More than one error
-    expect(() => decoder.verify({ foo: 42, bar: 42 })).toThrow();
-  });
-});
-
 // Single-argument form of record() only specifies value type
 describe('record', () => {
   const decoder = record(object({ name: string }));
@@ -525,6 +491,44 @@ describe('record with key validation', () => {
   });
 });
 
+describe('record with size options', () => {
+  test('rejects too many keys before validating values', () => {
+    const decoder = record(string, { max: 2 });
+    expect(() => decoder.verify({ a: 'x', b: 'y', c: 42 })).toThrow(
+      'Must have at most 2 keys',
+    );
+  });
+
+  test('rejects too few keys', () => {
+    const decoder = record(string, { min: 1 });
+    expect(() => decoder.verify({})).toThrow('Must have at least 1 key');
+    expect(decoder.verify({ a: 'x' })).toEqual({ a: 'x' });
+  });
+
+  test('still validates values when the size is acceptable', () => {
+    const decoder = record(string, { min: 1, max: 2 });
+    expect(decoder.verify({ a: 'x', b: 'y' })).toEqual({ a: 'x', b: 'y' });
+    expect(() => decoder.verify({ a: 'x', b: 42 })).toThrow('Must be string');
+  });
+
+  test('accepts an exact size', () => {
+    const decoder = record(string, { size: 2 });
+    expect(decoder.verify({ a: 'x', b: 'y' })).toEqual({ a: 'x', b: 'y' });
+    expect(() => decoder.verify({ a: 'x' })).toThrow('Must have 2 keys');
+  });
+
+  test('works with a key decoder', () => {
+    const decoder = record(decimal, boolean, { max: 1 });
+    expect(decoder.verify({ '1': true })).toEqual({ '1': true });
+    expect(() => decoder.verify({ '1': true, '2': false })).toThrow(
+      'Must have at most 1 key',
+    );
+    expect(() => decoder.verify({ x: true })).toThrow(
+      "Invalid key 'x': Must only contain digits",
+    );
+  });
+});
+
 // A `__proto__` key is an ordinary string key as far as JSON is concerned, but
 // assigning it with `obj[key] = value` would reassign the prototype instead of
 // adding an own property. These inputs must be built with JSON.parse: an object
@@ -556,10 +560,6 @@ describe('__proto__ keys', () => {
 
   test('record() rejects it', () => {
     expect(() => record(unknown).verify(payload())).toThrow('Unsafe key');
-  });
-
-  test('mapping() rejects it too, being built on record()', () => {
-    expect(() => mapping(unknown).verify(payload())).toThrow('Unsafe key');
   });
 
   test('declaring one in the definition is refused outright', () => {

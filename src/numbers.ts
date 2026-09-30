@@ -1,13 +1,13 @@
 import type { Decoder } from '~/core';
 import { define } from '~/core';
-import { isBigInt, isNumber } from '~/lib/utils';
+import { isBigInt, isNumber, isSignNegative, isSignPositive } from '~/lib/utils';
 
 /**
  * Accepts any valid ``number`` value.
  *
- * This also accepts special values like `NaN` and `Infinity`. Unless you
- * want to deliberately accept those, you'll likely want to use the
- * `number` decoder instead.
+ * This also accepts special values like `NaN` and `Infinity`, and unsafe
+ * integers (beyond ±(2^53-1)). Unless you want to deliberately accept those,
+ * you'll likely want to use the `number` or `integer` decoder instead.
  */
 export const anyNumber: Decoder<number> = define((blob, ok, err) =>
   isNumber(blob) ? ok(blob) : err('Must be number'),
@@ -24,29 +24,44 @@ export const number: Decoder<number> = /* #__PURE__ */ anyNumber.refine(
 
 /**
  * Accepts only integers (e.g. ..., -2, -1, 0, 1, 2, ...).
- * Whole numbers, and finite.
+ * Whole numbers, and safe (between -(2^53-1) and 2^53-1).
  */
-export const integer: Decoder<number> = /* #__PURE__ */ number.refine(
-  (n) => Number.isInteger(n),
-  'Number must be an integer',
+export const integer: Decoder<number> = /* #__PURE__ */ anyNumber.reject((n) =>
+  Number.isSafeInteger(n)
+    ? null
+    : !Number.isFinite(n)
+      ? 'Number must be finite'
+      : !Number.isInteger(n)
+        ? 'Number must be an integer'
+        : 'Number must be a safe integer',
 );
 
 /**
  * Accepts only non-negative numbers (e.g. 0, 0.5, 1, 3.14, ...).
  * Integers or floats, >= 0, and finite.
  */
-export const nonNegativeNumber: Decoder<number> = /* #__PURE__ */ number.refine(
-  (n) => n >= 0 && !Object.is(n, -0),
-  'Number must be positive',
+export const nonNegativeNumber: Decoder<number> = /* #__PURE__ */ anyNumber.reject((n) =>
+  Number.isFinite(n) && isSignPositive(n)
+    ? null
+    : isSignNegative(n)
+      ? 'Number must be positive'
+      : 'Number must be finite',
 );
 
 /**
  * Accepts only the natural numbers (e.g. 0, 1, 2, 3, ...).
- * Whole numbers, >= 0, and finite.
+ * Whole numbers, >= 0, and safe (up to 2^53-1).
  */
-export const natural: Decoder<number> = /* #__PURE__ */ integer.refine(
-  (n) => n >= 0 && !Object.is(n, -0),
-  'Number must be positive',
+export const natural: Decoder<number> = /* #__PURE__ */ anyNumber.reject((n) =>
+  Number.isSafeInteger(n) && isSignPositive(n)
+    ? null
+    : isSignNegative(n)
+      ? 'Number must be positive'
+      : !Number.isFinite(n)
+        ? 'Number must be finite'
+        : !Number.isInteger(n)
+          ? 'Number must be an integer'
+          : 'Number must be a safe integer',
 );
 
 /** @deprecated Renamed to `nonNegativeNumber`. */

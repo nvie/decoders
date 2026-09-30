@@ -13,8 +13,15 @@ export type SizeOptions = Relax<
  */
 export type Sized = Relax<{ length: number } | { size: number }>;
 
+/**
+ * Returns a rejection function for the given size options. Strings are measured
+ * in chars, anything else in the given unit (items by default).
+ */
 /* #__NO_SIDE_EFFECTS__ */
-export function bySizeOptions(options: SizeOptions): (value: Sized) => string | null {
+export function bySizeOptions(
+  options: SizeOptions,
+  unit: string = 'item',
+): (value: Sized) => string | null {
   const size = options.size;
   const min = size ?? options.min;
   const max = size ?? options.max;
@@ -30,9 +37,8 @@ export function bySizeOptions(options: SizeOptions): (value: Sized) => string | 
       if (max !== undefined && len > max)
         return `Too long, must be ${atMost}${qty(max, 'char')}`;
     } else {
-      if (min !== undefined && len < min)
-        return `Must have ${atLeast}${qty(min, 'item')}`;
-      if (max !== undefined && len > max) return `Must have ${atMost}${qty(max, 'item')}`;
+      if (min !== undefined && len < min) return `Must have ${atLeast}${qty(min, unit)}`;
+      if (max !== undefined && len > max) return `Must have ${atMost}${qty(max, unit)}`;
     }
     return null;
   };

@@ -4,11 +4,11 @@ import {
   constant,
   either,
   email,
-  mapping,
   natural,
   number,
   object,
   optional,
+  record,
   select,
   string,
   taggedUnion,
@@ -18,7 +18,7 @@ import {
 // Imported but intentionally unused — should be tree-shaken:
 // bigint, natural, number
 void bigint;
-void mapping(natural);
+void record(natural);
 void number;
 
 const myDecoder = object({
