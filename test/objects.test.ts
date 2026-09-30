@@ -1,10 +1,12 @@
 import { describe, expect, test } from 'vitest';
 
+import type { Decoder } from '~';
 import {
   always,
   boolean,
   decimal,
   exact,
+  formatInline,
   inexact,
   mapping,
   number,
@@ -571,5 +573,90 @@ describe('__proto__ keys', () => {
     expect(() => record(unknown).verify(payload())).toThrow();
     expect(() => inexact({ safe: number }).verify(payload())).toThrow();
     expect(({} as Record<string, unknown>).isAdmin).toBeUndefined();
+  });
+});
+
+type ObjectLike = (
+  decoders: Record<string, Decoder<unknown>>,
+) => Decoder<Record<string, unknown>>;
+
+const objectLikes: [string, ObjectLike][] = [
+  ['object', object],
+  ['exact', exact],
+  ['inexact', inexact],
+];
+
+describe.each(objectLikes)('missing keys in %s()', (_, objectLike) => {
+  function errorOf(decoder: Decoder<unknown>, input: unknown): string {
+    const result = decoder.decode(input);
+    if (result.ok) throw new Error('Expected decoding to fail');
+    return formatInline(result.error);
+  }
+
+  test('absent key, rejected undefined → missing key', () => {
+    const decoder = objectLike({ id: number });
+    expect(errorOf(decoder, {})).toBe("{}\n^^ Missing key: 'id'");
+  });
+
+  test('explicit undefined, rejected undefined → missing key (not an inline error)', () => {
+    const decoder = objectLike({ id: number });
+    expect(errorOf(decoder, { id: undefined })).toBe(
+      '{\n  "id": undefined,\n}\n^ Missing key: \'id\'',
+    );
+  });
+
+  test('absent key or explicit undefined, accepted undefined → not missing', () => {
+    const decoder = objectLike({ a: optional(string), b: unknown, c: always(42) });
+    expect(decoder.verify({})).toEqual({ c: 42 });
+    expect(Object.keys(decoder.verify({}))).toEqual(['c']);
+    expect(decoder.verify({ a: undefined, b: undefined })).toEqual({ c: 42 });
+  });
+
+  test('absent key, undefined replaced by a default → not missing', () => {
+    const decoder = objectLike({ a: optional(string, 'default') });
+    expect(decoder.verify({})).toEqual({ a: 'default' });
+  });
+
+  test('present but invalid value → inline error only, not missing', () => {
+    const decoder = objectLike({ id: number });
+    expect(errorOf(decoder, { id: 'x' })).toBe(
+      '{\n  "id": "x",\n        ^^^ Must be number\n}',
+    );
+  });
+
+  test('inline errors and missing keys are reported together', () => {
+    const decoder = objectLike({ id: number, name: string });
+    expect(errorOf(decoder, { name: 42 })).toBe(
+      '{\n  "name": 42,\n          ^^ Must be string\n}\n^ Missing key: \'id\'',
+    );
+  });
+
+  test('missing keys are listed in definition order', () => {
+    const decoder = objectLike({ id: number, name: string });
+    expect(errorOf(decoder, {})).toBe("{}\n^^ Missing keys: 'id', 'name'");
+
+    // Explicit undefineds don't affect the order
+    expect(errorOf(decoder, { id: undefined })).toBe(
+      "{\n  \"id\": undefined,\n}\n^ Missing keys: 'id', 'name'",
+    );
+  });
+
+  describe('keys that also exist on Object.prototype', () => {
+    test('an inherited value is read as if it were present', () => {
+      // Known quirk: values are read with `plainObj[key]`, which includes
+      // inherited properties, so an absent `toString` key decodes as
+      // `Object.prototype.toString`
+      const decoder = objectLike({ toString: unknown });
+      expect(decoder.verify({}).toString).toBe(Object.prototype.toString);
+      expect(() => objectLike({ toString: optional(string) }).verify({})).toThrow(
+        'Must be string',
+      );
+    });
+
+    test('a rejected inherited value is an inline error, not a missing key', () => {
+      const decoder = objectLike({ toString: string });
+      expect(errorOf(decoder, {})).not.toContain('Missing key');
+      expect(errorOf(decoder, {})).toContain('Must be string');
+    });
   });
 });
