@@ -31,7 +31,7 @@
 
 **Performance:**
 
-Compared to 2.12.1:
+Compared to 2.12.2:
 
 - Decoders take ~11% less memory and are ~9x faster to construct.
 - Decoders using `.transform()`, `.refine()`, `.reject()`, `.chain()`, or `.pipe()` decode
