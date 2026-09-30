@@ -244,18 +244,19 @@ decoders from one cannot always be composed with the other anymore. Make sure yo
 Nothing here is required, but the old forms are deprecated and your editor will strike
 them through:
 
-| Replace this v2 pattern...             |     | ...with this v3 API             |
-| :------------------------------------- | --- | :------------------------------ |
-| `sized(string, { max: 10 })`           | →   | `string({ max: 10 })`           |
-| `sized(array(d), { min: 1 })`          | →   | `array(d, { min: 1 })`          |
-| `sized(startsWith('x_'), { size: 8 })` | →   | `startsWith('x_', { size: 8 })` |
-| `min(0)`                               | →   | `number({ min: 0 })`            |
-| `max(10, integer)`                     | →   | `integer({ max: 10 })`          |
-| `between(1, 10)`                       | →   | `number({ min: 1, max: 10 })`   |
-| `min(1, natural)`                      | →   | `natural({ min: 1 })`           |
-| `number.refine((n) => n > 0, '…')`     | →   | `number({ gt: 0 })`             |
-| `positiveNumber`                       | →   | `nonNegativeNumber`             |
-| `positiveInteger`                      | →   | `natural`                       |
+| Replace this v2 pattern...             |     | ...with this v3 API                      |
+| :------------------------------------- | --- | :--------------------------------------- |
+| `sized(string, { max: 10 })`           | →   | `string({ max: 10 })`                    |
+| `sized(array(d), { min: 1 })`          | →   | `array(d, { min: 1 })`                   |
+| `sized(startsWith('x_'), { size: 8 })` | →   | `startsWith('x_', { size: 8 })`          |
+| `sized(regex(re, 'msg'), { max: 20 })` | →   | `regex(re, { max: 20, message: 'msg' })` |
+| `min(0)`                               | →   | `number({ min: 0 })`                     |
+| `max(10, integer)`                     | →   | `integer({ max: 10 })`                   |
+| `between(1, 10)`                       | →   | `number({ min: 1, max: 10 })`            |
+| `min(1, natural)`                      | →   | `natural({ min: 1 })`                    |
+| `number.refine((n) => n > 0, '…')`     | →   | `number({ gt: 0 })`                      |
+| `positiveNumber`                       | →   | `nonNegativeNumber`                      |
+| `positiveInteger`                      | →   | `natural`                                |
 
 `string()`, `number()` etc. also work, but are flagged as deprecated. Prefer `string` over
 `string()`.

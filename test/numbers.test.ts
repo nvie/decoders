@@ -267,6 +267,116 @@ describe('between', () => {
   });
 });
 
+describe('number({ ... })', () => {
+  test('min', () => {
+    const decoder = number({ min: 0 });
+    expect(decoder.verify(0)).toBe(0);
+    expect(decoder.verify(3.5)).toBe(3.5);
+    expect(() => decoder.verify(-1)).toThrow('Too low, must be at least 0');
+  });
+
+  test('max', () => {
+    const decoder = number({ max: 10 });
+    expect(decoder.verify(10)).toBe(10);
+    expect(decoder.verify(-3.5)).toBe(-3.5);
+    expect(() => decoder.verify(11)).toThrow('Too high, must be at most 10');
+  });
+
+  test('min and max', () => {
+    const decoder = number({ min: 2, max: 5 });
+    expect(decoder.verify(2)).toBe(2);
+    expect(decoder.verify(5)).toBe(5);
+    expect(() => decoder.verify(1)).toThrow('Too low, must be between 2 and 5');
+    expect(() => decoder.verify(6)).toThrow('Too high, must be between 2 and 5');
+  });
+
+  test('gt', () => {
+    const decoder = number({ gt: 0 });
+    expect(decoder.verify(0.001)).toBe(0.001);
+    expect(() => decoder.verify(0)).toThrow('Too low, must be greater than 0');
+  });
+
+  test('lt', () => {
+    const decoder = number({ lt: 1 });
+    expect(decoder.verify(0.999)).toBe(0.999);
+    expect(() => decoder.verify(1)).toThrow('Too high, must be less than 1');
+  });
+
+  test('gt and max', () => {
+    const decoder = number({ gt: 0, max: 1 });
+    expect(decoder.verify(1)).toBe(1);
+    expect(() => decoder.verify(0)).toThrow(
+      'Too low, must be greater than 0 and at most 1',
+    );
+    expect(() => decoder.verify(1.5)).toThrow(
+      'Too high, must be greater than 0 and at most 1',
+    );
+  });
+
+  test('min and lt', () => {
+    const decoder = number({ min: 0, lt: 1 });
+    expect(decoder.verify(0)).toBe(0);
+    expect(() => decoder.verify(-1)).toThrow(
+      'Too low, must be at least 0 and less than 1',
+    );
+    expect(() => decoder.verify(1)).toThrow(
+      'Too high, must be at least 0 and less than 1',
+    );
+  });
+
+  test('gt and lt', () => {
+    const decoder = number({ gt: 0, lt: 1 });
+    expect(decoder.verify(0.5)).toBe(0.5);
+    expect(() => decoder.verify(0)).toThrow(
+      'Too low, must be greater than 0 and less than 1',
+    );
+    expect(() => decoder.verify(1)).toThrow(
+      'Too high, must be greater than 0 and less than 1',
+    );
+  });
+
+  test('both bounds on one side', () => {
+    // Garbage in, garbage out: passing both bounds for one side makes no sense,
+    // so neither does the result. These tests only pin down what happens (min
+    // and max win), they don't bless it.
+    const decoder = number({ min: 2, gt: 5, max: 10, lt: 8 });
+    expect(decoder.verify(3)).toBe(3);
+    expect(decoder.verify(9)).toBe(9);
+    expect(() => decoder.verify(1)).toThrow('Too low, must be between 2 and 10');
+    expect(() => decoder.verify(11)).toThrow('Too high, must be between 2 and 10');
+  });
+});
+
+describe('number decoders with options', () => {
+  test('called without options', () => {
+    expect(number()).toBe(number);
+    expect(integer()).toBe(integer);
+    expect(natural()).toBe(natural);
+    expect(nonNegativeNumber()).toBe(nonNegativeNumber);
+  });
+
+  test('integer', () => {
+    const decoder = integer({ max: 10 });
+    expect(decoder.verify(10)).toBe(10);
+    expect(() => decoder.verify(11)).toThrow('Too high, must be at most 10');
+    expect(() => decoder.verify(3.5)).toThrow('Number must be an integer');
+  });
+
+  test('natural', () => {
+    const decoder = natural({ max: 10 });
+    expect(decoder.verify(0)).toBe(0);
+    expect(() => decoder.verify(11)).toThrow('Too high, must be at most 10');
+    expect(() => decoder.verify(-1)).toThrow('Number must be positive');
+  });
+
+  test('nonNegativeNumber', () => {
+    const decoder = nonNegativeNumber({ gt: 0 });
+    expect(decoder.verify(0.5)).toBe(0.5);
+    expect(() => decoder.verify(0)).toThrow('Too low, must be greater than 0');
+    expect(() => decoder.verify(-1)).toThrow('Number must be positive');
+  });
+});
+
 describe('bigint', () => {
   const decoder = bigint;
   const [okay, not_okay] = partition(INPUTS, (n) => typeof n === 'bigint');

@@ -455,7 +455,7 @@ describe('record with key validation', () => {
   });
 
   test('valid (another example)', () => {
-    const key = regex(/^a+$/, "Must be all a's");
+    const key = regex(/^a+$/, { message: "Must be all a's" });
     const decoder = record(key, boolean);
     expect(decoder.verify({ a: true })).toEqual({ a: true });
     expect(decoder.verify({ aa: true })).toEqual({ aa: true });
@@ -466,7 +466,7 @@ describe('record with key validation', () => {
   });
 
   test('valid (another example with key transformations)', () => {
-    const key = regex(/^a+$/, "Must be all a's");
+    const key = regex(/^a+$/, { message: "Must be all a's" });
     const decoder = record(
       key.transform(() => 'a'),
       boolean,
@@ -515,6 +515,12 @@ describe('record with size options', () => {
     const decoder = record(string, { size: 2 });
     expect(decoder.verify({ a: 'x', b: 'y' })).toEqual({ a: 'x', b: 'y' });
     expect(() => decoder.verify({ a: 'x' })).toThrow('Must have 2 keys');
+  });
+
+  test('tells a callable value decoder apart from options', () => {
+    const decoder = record(string, number);
+    expect(decoder.verify({ a: 1 })).toEqual({ a: 1 });
+    expect(() => decoder.verify({ a: 'x' })).toThrow('Must be number');
   });
 
   test('works with a key decoder', () => {

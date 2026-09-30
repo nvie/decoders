@@ -22,6 +22,21 @@
 
 **New APIs:**
 
+- `string`, `number`, `integer`, `natural`, and `nonNegativeNumber` can now be called with
+  options, to put the constraint right next to the type:
+  ```ts
+  string({ min: 2, max: 10 }); // instead of sized(string, { min: 2, max: 10 })
+  number({ min: 0 }); // instead of min(0)
+  integer({ max: 100 }); // instead of max(100, integer)
+  number({ gt: 0, lt: 1 }); // new: exclusive bounds
+  ```
+  Number decoders take `min`/`max` (inclusive) and `gt`/`lt` (exclusive). Calling them
+  without options (`string()`) works, but is deprecated: use `string`.
+- `regex()` now takes options: size bounds, checked before the regex runs, and the error
+  message. `regex(re, msg)` still works, but is deprecated:
+  ```ts
+  regex(/^[a-z]+$/, { max: 20, message: 'Must be lowercase' });
+  ```
 - `record()` now takes optional `SizeOptions` to constrain the number of keys, checked
   before any key or value is decoded:
   ```ts

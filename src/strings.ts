@@ -1,6 +1,7 @@
-import type { Decoder } from '~/core';
-import { define } from '~/core';
-import type { SizeOptions } from '~/lib/options';
+import type { CallableDecoder, Decoder } from '~/core';
+import { callable, define } from '~/core';
+import type { RegexOptions, SizeOptions } from '~/lib/options';
+import { bySizeOptions } from '~/lib/options';
 import { sized } from '~/misc';
 import { isString } from '~/lib/utils';
 
@@ -17,21 +18,35 @@ const url_re =
 /**
  * Accepts and returns strings.
  */
-export const string: Decoder<string> = define((blob, ok, err) =>
-  isString(blob) ? ok(blob) : err('Must be string'),
+export const string: CallableDecoder<string, SizeOptions> = /* #__PURE__ */ callable(
+  define((blob, ok, err) => (isString(blob) ? ok(blob) : err('Must be string'))),
+  sized,
 );
 
 /**
  * Like `string`, but will reject the empty string or strings containing only whitespace.
  */
-export const nonEmptyString: Decoder<string> = regex(/\S/, 'Must be non-empty string');
+export const nonEmptyString: Decoder<string> = regex(/\S/, {
+  message: 'Must be non-empty string',
+});
 
 /**
  * Accepts and returns strings that match the given regular expression.
+ * Size options are checked before the regex runs.
  */
+export function regex(regex: RegExp, options?: RegexOptions): Decoder<string>;
+/** @deprecated Use `regex(re, { message })` instead */
+export function regex(regex: RegExp, msg: string): Decoder<string>;
 /* #__NO_SIDE_EFFECTS__ */
-export function regex(regex: RegExp, msg: string): Decoder<string> {
-  return string.refine((s) => regex.test(s), msg);
+export function regex(regex: RegExp, options?: RegexOptions | string): Decoder<string> {
+  const { message = `Must match ${regex}`, ...sizeOptions } =
+    typeof options === 'string' ? { message: options } : (options ?? {});
+  const hasBounds =
+    sizeOptions.size !== undefined ||
+    sizeOptions.min !== undefined ||
+    sizeOptions.max !== undefined;
+  const base = hasBounds ? string.reject(bySizeOptions(sizeOptions)) : string;
+  return base.refine((s) => regex.test(s), message);
 }
 
 /**
@@ -63,13 +78,15 @@ export function endsWith<S extends string>(suffix: S): Decoder<`${string}${S}`> 
 export const email: Decoder<string> = /* #__PURE__ */ regex(
   // The almost perfect email regex, taken from https://emailregex.com/
   /^(?:[^<>()[\]\\.,;:\s@"]+(?:\.[^<>()[\]\\.,;:\s@"]+)*|".+")@(?:\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}]|(?:[a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})$/,
-  'Must be email',
+  { message: 'Must be email' },
 );
 
 /**
  * Accepts strings that are valid URLs.
  */
-export const urlString: Decoder<string> = /* #__PURE__ */ regex(url_re, 'Must be URL');
+export const urlString: Decoder<string> = /* #__PURE__ */ regex(url_re, {
+  message: 'Must be URL',
+});
 
 /**
  * Accepts strings that are valid URLs, returns the value as a URL instance.
@@ -93,10 +110,9 @@ export const httpsUrl: Decoder<URL> = /* #__PURE__ */ url.refine(
  * Accepts and returns strings that are valid identifiers in most programming
  * languages.
  */
-export const identifier: Decoder<string> = regex(
-  /^[a-z_][a-z0-9_]*$/i,
-  'Must be valid identifier',
-);
+export const identifier: Decoder<string> = regex(/^[a-z_][a-z0-9_]*$/i, {
+  message: 'Must be valid identifier',
+});
 
 /**
  * Accepts and returns [Nano ID](https://zelark.github.io/nano-id-cc) string
@@ -106,7 +122,10 @@ export const identifier: Decoder<string> = regex(
  */
 /* #__NO_SIDE_EFFECTS__ */
 export function nanoid(options?: SizeOptions): Decoder<string> {
-  return sized(regex(/^[a-z0-9_-]+$/i, 'Must be nano ID'), options ?? { size: 21 });
+  return regex(/^[a-z0-9_-]+$/i, {
+    ...(options ?? { size: 21 }),
+    message: 'Must be nano ID',
+  });
 }
 
 /**
@@ -118,7 +137,7 @@ export const uuid: Decoder<string> = regex(
   // https://www.rfc-editor.org/rfc/rfc9562#section-4
   // Version 1-8 with variant 8, 9, a, or b, plus the Nil and Max UUIDs (sections 5.9, 5.10)
   /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$/i,
-  'Must be uuid',
+  { message: 'Must be uuid' },
 );
 
 /**
@@ -145,15 +164,16 @@ export const uuidv4: Decoder<string> =
  * Accepts and returns strings with decimal digits only (base-10).
  * To convert these to numbers, use the `numeric` decoder.
  */
-export const decimal: Decoder<string> = regex(/^[0-9]+$/, 'Must only contain digits');
+export const decimal: Decoder<string> = regex(/^[0-9]+$/, {
+  message: 'Must only contain digits',
+});
 
 /**
  * Accepts and returns strings with hexadecimal digits only (base-16).
  */
-export const hexadecimal: Decoder<string> = regex(
-  /^[0-9a-f]+$/i,
-  'Must only contain hexadecimal digits',
-);
+export const hexadecimal: Decoder<string> = regex(/^[0-9a-f]+$/i, {
+  message: 'Must only contain hexadecimal digits',
+});
 
 /**
  * Accepts valid numerical strings (in base-10) and returns them as a number.

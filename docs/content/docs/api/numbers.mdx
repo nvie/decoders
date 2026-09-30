@@ -5,7 +5,7 @@ description: Number decoders for validating and parsing numeric values.
 
 ## number
 
-<DecoderSig name="number" type="number" source="numbers.ts#L16-L23" />
+<DecoderSig name="number" type="number" source="numbers.ts#L23-L30" />
 
 Accepts only finite numbers (e.g. -3.14, 0, 1, 42, ...). Integers or floats, but not `NaN`
 or `Infinity`.
@@ -19,7 +19,7 @@ or `Infinity`.
 
 ## integer
 
-<DecoderSig name="integer" type="number" source="numbers.ts#L25-L37" />
+<DecoderSig name="integer" type="number" source="numbers.ts#L32-L47" />
 
 Accepts only integers (e.g. ..., -2, -1, 0, 1, 2, ...). Whole numbers, and safe (between
 -(2^53-1) and 2^53-1).
@@ -47,7 +47,7 @@ Accepts only integers (e.g. ..., -2, -1, 0, 1, 2, ...). Whole numbers, and safe 
     },
   ]}
   type="number"
-  source="numbers.ts#L39-L49"
+  source="numbers.ts#L49-L63"
 />
 
 <Since version="2.11" />
@@ -78,7 +78,7 @@ and finite.
     },
   ]}
   type="number"
-  source="numbers.ts#L51-L65"
+  source="numbers.ts#L65-L82"
 />
 
 <Since version="2.11" />
@@ -95,7 +95,7 @@ to 2^53-1).
 
 ## anyNumber
 
-<DecoderSig name="anyNumber" type="number" source="numbers.ts#L5-L14" />
+<DecoderSig name="anyNumber" type="number" source="numbers.ts#L12-L21" />
 
 Accepts any valid `number` value.
 
@@ -112,7 +112,7 @@ This also accepts special values like `NaN` and `Infinity`, and unsafe integers 
 
 ## bigint
 
-<DecoderSig name="bigint" type="bigint" source="numbers.ts#L116-L121" />
+<DecoderSig name="bigint" type="bigint" source="numbers.ts#L133-L138" />
 
 Accepts any valid `bigint` value.
 
@@ -129,20 +129,20 @@ Accepts any valid `bigint` value.
   name="min"
   params="min: number, decoder?: Decoder<number>"
   type="number"
-  source="numbers.ts#L72-L82"
+  source="numbers.ts#L89-L99"
 />
 <DecoderSig
   name="max"
   params="max: number, decoder?: Decoder<number>"
   type="number"
-  source="numbers.ts#L84-L94"
+  source="numbers.ts#L101-L111"
 />
 <DecoderSig
   name="between"
   params="min: number, max: number, decoder?: Decoder<number>"
   multiline
   type="number"
-  source="numbers.ts#L96-L114"
+  source="numbers.ts#L113-L131"
 />
 
 <Since version="2.9" />

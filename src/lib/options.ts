@@ -9,6 +9,12 @@ export type SizeOptions = Relax<
 >;
 
 /**
+ * Options for `regex()`: optional size bounds, checked before the regex runs,
+ * and an optional error message.
+ */
+export type RegexOptions = Partial<SizeOptions> & { message?: string };
+
+/**
  * Anything with a .length or .size property, like strings, arrays, or sets.
  */
 export type Sized = Relax<{ length: number } | { size: number }>;
@@ -19,7 +25,7 @@ export type Sized = Relax<{ length: number } | { size: number }>;
  */
 /* #__NO_SIDE_EFFECTS__ */
 export function bySizeOptions(
-  options: SizeOptions,
+  options: Partial<SizeOptions>,
   unit: string = 'item',
 ): (value: Sized) => string | null {
   const size = options.size;
@@ -42,4 +48,47 @@ export function bySizeOptions(
     }
     return null;
   };
+}
+
+/**
+ * `min` and `max` are inclusive, `gt` and `lt` are exclusive. When both bounds
+ * for one side are given, `min`/`max` win.
+ */
+export type RangeOptions = { min?: number; max?: number; gt?: number; lt?: number };
+
+/**
+ * Returns a rejection function for the given range options.
+ */
+/* #__NO_SIDE_EFFECTS__ */
+export function byRangeOptions(options: RangeOptions): (value: number) => string | null {
+  const { min, gt, max, lt } = options;
+
+  // Every message states the whole allowed range
+  const lower =
+    min !== undefined
+      ? `at least ${min}`
+      : gt !== undefined
+        ? `greater than ${gt}`
+        : null;
+  const upper =
+    max !== undefined ? `at most ${max}` : lt !== undefined ? `less than ${lt}` : null;
+  const range =
+    min !== undefined && max !== undefined
+      ? `between ${min} and ${max}`
+      : lower !== null && upper !== null
+        ? `${lower} and ${upper}`
+        : (lower ?? upper);
+  const lowMsg = `Too low, must be ${range}`;
+  const highMsg = `Too high, must be ${range}`;
+
+  const lo = min ?? gt ?? -Infinity;
+  const hi = max ?? lt ?? Infinity;
+  const loExclusive = gt !== undefined;
+  const hiExclusive = lt !== undefined;
+  return (value: number) =>
+    value < lo || (loExclusive && value === lo)
+      ? lowMsg
+      : value > hi || (hiExclusive && value === hi)
+        ? highMsg
+        : null;
 }

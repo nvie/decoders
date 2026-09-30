@@ -22,10 +22,9 @@ export const date: Decoder<Date> = define((blob, ok, err) => {
 /**
  * Accepts and returns [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings.
  */
-export const isoDateString: Decoder<string> = /* #__PURE__ */ regex(
-  iso8601_re,
-  'Must be ISO8601 format',
-).refine(
+export const isoDateString: Decoder<string> = /* #__PURE__ */ regex(iso8601_re, {
+  message: 'Must be ISO8601 format',
+}).refine(
   (value: string) => !Number.isNaN(new Date(value).getTime()),
   'Must be valid date/time value',
 );

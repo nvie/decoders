@@ -1,6 +1,6 @@
 import * as fc from 'fast-check';
 import { partition } from 'itertools';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 
 import {
   array,
@@ -46,6 +46,21 @@ describe('string', () => {
   });
 });
 
+describe('string({ ... })', () => {
+  test('called without options', () => {
+    expect(string()).toBe(string);
+  });
+
+  test('size options', () => {
+    const decoder = string({ min: 2, max: 3 });
+    expect(decoder.verify('ab')).toBe('ab');
+    expect(() => decoder.verify('a')).toThrow('Too short, must be at least 2 chars');
+    expect(() => decoder.verify('abcd')).toThrow('Too long, must be at most 3 chars');
+    expect(() => decoder.verify('ABCD')).toThrow('Too long, must be at most 3 chars');
+    expect(() => decoder.verify(42)).toThrow('Must be string');
+  });
+});
+
 describe('regex', () => {
   const decoder = regex(/[0-9]{4}-[0-9]{2}-[0-9]{2}/, 'Must be YYYY-MM-DD');
 
@@ -61,6 +76,36 @@ describe('regex', () => {
     expect(() => decoder.verify(42)).toThrow('Must be string'); // All regexes must be strings
     expect(() => decoder.verify('11-22-33')).toThrow('Must be YYYY-MM-DD');
     expect(() => decoder.verify('invalid')).toThrow('Must be YYYY-MM-DD');
+  });
+});
+
+describe('regex with options', () => {
+  test('message', () => {
+    const decoder = regex(/^[a-z]+$/, { message: 'Must be lowercase' });
+    expect(decoder.verify('abc')).toBe('abc');
+    expect(() => decoder.verify('ABC')).toThrow('Must be lowercase');
+  });
+
+  test('default message', () => {
+    expect(() => regex(/^[a-z]+$/).verify('ABC')).toThrow('Must match /^[a-z]+$/');
+  });
+
+  test('size options', () => {
+    const decoder = regex(/^[a-z]+$/, { min: 2, max: 3, message: 'Must be lowercase' });
+    expect(decoder.verify('abc')).toBe('abc');
+    expect(() => decoder.verify('a')).toThrow('Too short, must be at least 2 chars');
+    expect(() => decoder.verify('abcd')).toThrow('Too long, must be at most 3 chars');
+    expect(() => decoder.verify('AB')).toThrow('Must be lowercase');
+  });
+
+  test('checks the length before running the regex', () => {
+    const re = /^[a-z]+$/;
+    const spy = vi.spyOn(re, 'test');
+    const decoder = regex(re, { max: 3, message: 'Must be lowercase' });
+    expect(() => decoder.verify('ABCDEFGHIJ')).toThrow(
+      'Too long, must be at most 3 chars',
+    );
+    expect(spy).not.toHaveBeenCalled();
   });
 });
 

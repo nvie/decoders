@@ -1,6 +1,13 @@
-import type { Decoder } from '~/core';
-import { define } from '~/core';
+import type { CallableDecoder, Decoder } from '~/core';
+import { callable, define } from '~/core';
+import type { RangeOptions } from '~/lib/options';
+import { byRangeOptions } from '~/lib/options';
 import { isBigInt, isNumber, isSignNegative, isSignPositive } from '~/lib/utils';
+
+/* #__NO_SIDE_EFFECTS__ */
+function ranged(decoder: Decoder<number>, options: RangeOptions): Decoder<number> {
+  return decoder.reject(byRangeOptions(options));
+}
 
 /**
  * Accepts any valid ``number`` value.
@@ -17,57 +24,67 @@ export const anyNumber: Decoder<number> = define((blob, ok, err) =>
  * Accepts only finite numbers (e.g. -3.14, 0, 1, 42, ...).
  * Integers or floats, but not `NaN` or `Infinity`.
  */
-export const number: Decoder<number> = /* #__PURE__ */ anyNumber.refine(
-  (n) => Number.isFinite(n),
-  'Number must be finite',
+export const number: CallableDecoder<number, RangeOptions> = /* #__PURE__ */ callable(
+  /* #__PURE__ */ anyNumber.refine((n) => Number.isFinite(n), 'Number must be finite'),
+  ranged,
 );
 
 /**
  * Accepts only integers (e.g. ..., -2, -1, 0, 1, 2, ...).
  * Whole numbers, and safe (between -(2^53-1) and 2^53-1).
  */
-export const integer: Decoder<number> = /* #__PURE__ */ anyNumber.reject((n) =>
-  Number.isSafeInteger(n)
-    ? null
-    : !Number.isFinite(n)
-      ? 'Number must be finite'
-      : !Number.isInteger(n)
-        ? 'Number must be an integer'
-        : 'Number must be a safe integer',
+export const integer: CallableDecoder<number, RangeOptions> = /* #__PURE__ */ callable(
+  /* #__PURE__ */ anyNumber.reject((n) =>
+    Number.isSafeInteger(n)
+      ? null
+      : !Number.isFinite(n)
+        ? 'Number must be finite'
+        : !Number.isInteger(n)
+          ? 'Number must be an integer'
+          : 'Number must be a safe integer',
+  ),
+  ranged,
 );
 
 /**
  * Accepts only non-negative numbers (e.g. 0, 0.5, 1, 3.14, ...).
  * Integers or floats, >= 0, and finite.
  */
-export const nonNegativeNumber: Decoder<number> = /* #__PURE__ */ anyNumber.reject((n) =>
-  Number.isFinite(n) && isSignPositive(n)
-    ? null
-    : isSignNegative(n)
-      ? 'Number must be positive'
-      : 'Number must be finite',
-);
+export const nonNegativeNumber: CallableDecoder<number, RangeOptions> =
+  /* #__PURE__ */ callable(
+    /* #__PURE__ */ anyNumber.reject((n) =>
+      Number.isFinite(n) && isSignPositive(n)
+        ? null
+        : isSignNegative(n)
+          ? 'Number must be positive'
+          : 'Number must be finite',
+    ),
+    ranged,
+  );
 
 /**
  * Accepts only the natural numbers (e.g. 0, 1, 2, 3, ...).
  * Whole numbers, >= 0, and safe (up to 2^53-1).
  */
-export const natural: Decoder<number> = /* #__PURE__ */ anyNumber.reject((n) =>
-  Number.isSafeInteger(n) && isSignPositive(n)
-    ? null
-    : isSignNegative(n)
-      ? 'Number must be positive'
-      : !Number.isFinite(n)
-        ? 'Number must be finite'
-        : !Number.isInteger(n)
-          ? 'Number must be an integer'
-          : 'Number must be a safe integer',
+export const natural: CallableDecoder<number, RangeOptions> = /* #__PURE__ */ callable(
+  /* #__PURE__ */ anyNumber.reject((n) =>
+    Number.isSafeInteger(n) && isSignPositive(n)
+      ? null
+      : isSignNegative(n)
+        ? 'Number must be positive'
+        : !Number.isFinite(n)
+          ? 'Number must be finite'
+          : !Number.isInteger(n)
+            ? 'Number must be an integer'
+            : 'Number must be a safe integer',
+  ),
+  ranged,
 );
 
 /** @deprecated Renamed to `nonNegativeNumber`. */
-export const positiveNumber: Decoder<number> = nonNegativeNumber;
+export const positiveNumber: CallableDecoder<number, RangeOptions> = nonNegativeNumber;
 /** @deprecated Renamed to `natural`. */
-export const positiveInteger: Decoder<number> = natural;
+export const positiveInteger: CallableDecoder<number, RangeOptions> = natural;
 
 /**
  * Accepts numbers greater than or equal to the given minimum.

@@ -68,11 +68,14 @@ in core, which every app bundles. Not worth it for decoders almost nobody needs.
 
 ## `RangeOptions` is `{ min, max, gt, lt }`
 
-`min`/`max` are inclusive, `gt`/`lt` exclusive, at most one per side. Exclusive bounds are
-there for floats (`number({ gt: 0 })`), and map onto
-`exclusiveMinimum`/`exclusiveMaximum`. No `gte`/`lte` aliases: two spellings for one bound
-means more invalid combinations to forbid (`{ min, gte }`), and `min`/`max` already mean
+`min`/`max` are inclusive, `gt`/`lt` exclusive. Exclusive bounds are there for floats
+(`number({ gt: 0 })`), and map onto `exclusiveMinimum`/`exclusiveMaximum`. No `gte`/`lte`
+aliases: two spellings for one bound is one too many, and `min`/`max` already mean
 "inclusive" in `SizeOptions`. No `size`: an exact number is `constant(n)`.
+
+The type is four optional fields, not a union that forbids `{}` or `{ min, gt }`: that
+union made every hover unreadable, to rule out combinations that are harmless (`{}` adds
+no bounds) or contrived (with both bounds on one side, `min`/`max` win).
 
 ## Every number decoder is callable, except `anyNumber`
 

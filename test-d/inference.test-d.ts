@@ -72,7 +72,7 @@ import {
   uuidv1,
   uuidv4,
 } from '../dist';
-import { expectError, expectType, expectAssignable } from 'tsd';
+import { expectDeprecated, expectError, expectType, expectAssignable } from 'tsd';
 
 // Helper function to "test" a decoder on some input, and assert the return type
 function infer<T>(decoder: Decoder<T>): T {
@@ -124,6 +124,30 @@ expectType<number>(infer(max(100, number)));
 expectType<number>(infer(between(0, 100)));
 expectType<number>(infer(between(0, 100, number)));
 expectType<number>(infer(between(1, 10, integer)));
+
+// Callable atomics
+expectType<string>(infer(string({ min: 2, max: 10 })));
+expectType<string>(infer(string({ size: 3 })));
+expectType<number>(infer(number({ min: 0 })));
+expectType<number>(infer(number({ gt: 0, lt: 1 })));
+expectType<number>(infer(number({ min: 0, lt: 1 })));
+expectType<number>(infer(integer({ max: 100 })));
+expectType<number>(infer(natural({ max: 10 })));
+expectType<number>(infer(nonNegativeNumber({ gt: 0 })));
+expectType<string>(infer(string()));
+expectType<number>(infer(number()));
+expectDeprecated(string());
+expectDeprecated(number());
+expectError(number({ size: 3 }));
+expectError(string({ gt: 3 }));
+expectError(anyNumber({ min: 0 }));
+expectType<string | number>(infer(either(string({ max: 3 }), number({ min: 0 }))));
+expectType<{ name: string; age: number }>(
+  infer(object({ name: string({ min: 1 }), age: natural })),
+);
+expectAssignable<Decoder<unknown>>(string);
+expectAssignable<Record<string, Decoder<unknown>>>({ s: string, n: number });
+expectType<number>(infer(string.transform(Number).pipe(natural)));
 expectType<bigint>(infer(bigint));
 
 expectType<string>(infer(string));
@@ -131,7 +155,14 @@ expectType<string>(infer(nonEmptyString));
 expectType<string>(infer(decimal));
 expectType<string>(infer(hexadecimal));
 expectType<string>(infer(email));
+expectType<string>(infer(regex(/foo/)));
+expectType<string>(infer(regex(/foo/, { message: 'Must be foo' })));
+expectType<string>(infer(regex(/foo/, { max: 10, message: 'Must be foo' })));
+expectType<string>(infer(regex(/foo/, { size: 3 })));
+expectError(regex(/foo/, { size: 3, max: 10 }));
+expectError(regex(/foo/, { bogus: 3 }));
 expectType<string>(infer(regex(/foo/, 'Must be foo')));
+expectDeprecated(regex(/foo/, 'Must be foo'));
 expectType<`foo-${string}`>(infer(startsWith('foo-')));
 expectType<`${string}-bar`>(infer(endsWith('-bar')));
 expectType<string>(infer(sized(string, { min: 1, max: 10 })));
@@ -220,7 +251,6 @@ expectType<number | string>(
 );
 
 // .chain()
-expectError(string.transform(Number).chain(positiveInteger));
 expectType<number>(infer(string.transform(Number).chain(positiveInteger.decode)));
 expectError(string.transform(Number).transform(String).chain(truthy));
 expectType<boolean>(

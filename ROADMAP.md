@@ -20,7 +20,8 @@ _Quick wins (independent, settled):_
 
 _Main track (each step builds on the previous):_
 
-- [ ] `string`/`number`/`integer({...})`, `string()` & co. deprecated (Feature 1)
+- [x] `string`/`number`/`integer({...})`, `string()` & co. deprecated (Feature 1)
+- [x] `regex(re, { max, message? })`, `regex(re, msg)` deprecated
 - [ ] `hexadecimal({ size })` & co.
 - [ ] `startsWith`/`endsWith` size options
 - [ ] `trimmed`
@@ -251,8 +252,7 @@ branches of the same type, and of different types.
 
 ```ts
 // src/lib/options.ts (next to SizeOptions)
-// At least one bound, and at most one per side: `min` or `gt`, `max` or `lt`
-type RangeOptions = { min: number } | { gt: number } | { max: number } | { lt: number } | ...;
+type RangeOptions = { min?: number; max?: number; gt?: number; lt?: number };
 byRangeOptions(o) -> (value: number) => string | null
 
 sized(d, o)  = d.reject(bySizeOptions(o));   // as today
@@ -284,8 +284,8 @@ checks the length. The callable form recomposes in the cheap-first order, exactl
 
 ```ts
 export const hexadecimal = callable(
-  regex(/^[0-9A-Fa-f]+$/, 'Must only contain hexadecimal digits'),
-  (self, o) => sized(string, o).refine(HEX_TEST, HEX_MSG), // length first, regex second
+  regex(HEX_RE, { message: HEX_MSG }),
+  (self, o) => regex(HEX_RE, { ...o, message: HEX_MSG }), // length first, regex second
 );
 hexadecimal({ size: 64 });
 ```
@@ -294,6 +294,16 @@ The `configure` callback owns the composition, so any string atomic (`decimal`,
 `identifier`, `nonEmptyString`, `uuid`) can take the same treatment without touching the
 core. There is no numeric shorthand: it's always `hexadecimal({ size: 24 })`, never
 `hexadecimal(24)`.
+
+`regex` itself becomes `regex(re, { min, max, size, message? })`: `SizeOptions` plus an
+optional message, checked length first, regex second. Everything after the pattern is
+optional, so `regex(/^\d+$/)` works too (message: `Must match /^\d+$/`). `regex(re, msg)`
+keeps working as a deprecated overload, told apart by `typeof` on the second argument.
+
+```ts
+regex(/^[a-z]+$/, { max: 20, message: 'Must be lowercase' });
+regex(/^[a-z]+$/, 'Must be lowercase'); // deprecated
+```
 
 `startsWith` and `endsWith` are free functions, so they take `SizeOptions` positionally,
 like `array(d, opts)`, with the same length-first order. Bounds count the whole string,

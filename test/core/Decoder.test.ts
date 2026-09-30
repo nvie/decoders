@@ -128,7 +128,6 @@ describe('.chain() with acceptance function returning a decoder', () => {
 
 describe('.chain() directly taking a decoder', () => {
   test('throws, pointing to .pipe()', () => {
-    // @ts-expect-error - .chain() only takes acceptance functions
     expect(() => string.transform(Number).chain(natural)).toThrow('use .pipe() instead');
   });
 });
@@ -294,11 +293,38 @@ describe('isDecoder()', () => {
     expect(isDecoder(define((_, ok) => ok(42)))).toBe(true);
   });
 
+  test('recognizes callable decoders', () => {
+    expect(isDecoder(number)).toBe(true);
+    expect(isDecoder(number({ min: 0 }))).toBe(true);
+  });
+
   test('rejects non-decoders', () => {
     expect(isDecoder(undefined)).toBe(false);
     expect(isDecoder(null)).toBe(false);
     expect(isDecoder('string')).toBe(false);
     expect(isDecoder({ decode: () => {} })).toBe(false);
+    expect(isDecoder(() => {})).toBe(false);
+  });
+});
+
+describe('callable decoders', () => {
+  test('methods work', () => {
+    expect(number.transform(String).verify(42)).toBe('42');
+    expect(() => number.refine((n) => n > 0, 'Must be > 0').verify(0)).toThrow(
+      'Must be > 0',
+    );
+    expect(string.transform(Number).pipe(number).verify('3.5')).toBe(3.5);
+  });
+
+  test('~standard works', () => {
+    expect(number['~standard'].validate(42)).toEqual({ value: 42 });
+    expect(number({ max: 1 })['~standard'].validate(2)).toEqual({
+      issues: [{ message: 'Too high, must be at most 1' }],
+    });
+  });
+
+  test('show up as "Decoder"', () => {
+    expect(number.constructor.name).toBe('Decoder');
   });
 });
 

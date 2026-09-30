@@ -116,6 +116,16 @@ export interface Decoder<T> {
 }
 
 /**
+ * A decoder that can also be called with options, to get a constrained version
+ * of itself, e.g. `number({ min: 0 })`.
+ */
+export interface CallableDecoder<T, O> extends Decoder<T> {
+  /** @deprecated Prefer not calling, e.g. `string` instead of `string()` */
+  (): Decoder<T>;
+  (options: O): Decoder<T>;
+}
+
+/**
  * Helper type to return the output type of a Decoder.
  * It’s the inverse of Decoder<T>.
  *
@@ -420,9 +430,34 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
 }
 
 /**
+ * Turns the given decoder into a callable one. Calling it without options
+ * returns the decoder itself, calling it with options hands both to
+ * `configure` to build the constrained decoder.
+ *
+ * @internal
+ */
+/* #__NO_SIDE_EFFECTS__ */
+export function callable<T, O>(
+  base: Decoder<T>,
+  configure: (self: Decoder<T>, options: O) => Decoder<T>,
+): CallableDecoder<T, O> {
+  const fn = (options?: O): Decoder<T> =>
+    options === undefined ? self : configure(self, options);
+  Object.setPrototypeOf(fn, DecoderImpl.prototype);
+  // Copies the base decoder's own fields, in order, so all callables share
+  // one shape
+  const self: CallableDecoder<T, O> = Object.assign(fn, base);
+  return self;
+}
+
+/**
  * Returns whether the given value is a Decoder instance.
  */
 /* #__NO_SIDE_EFFECTS__ */
 export function isDecoder(value: unknown): value is Decoder<unknown> {
-  return typeof value === 'object' && value !== null && kBrand in value;
+  return (
+    // Callable decoders are functions
+    ((typeof value === 'object' && value !== null) || typeof value === 'function') &&
+    kBrand in value
+  );
 }
