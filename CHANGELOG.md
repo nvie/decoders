@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [2.12.2] - 2026-09-30
+
 **Performance:**
 
 - Roughly ~2x faster `object()`, `exact()`, and `inexact()` on valid inputs, by no longer
