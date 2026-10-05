@@ -1,5 +1,5 @@
 import type { Annotation, Decoder, DecoderType, ReadonlyDecoder } from '~/core';
-import { define, defineReadonly, summarize } from '~/core';
+import { define, defineReadonly, make, summarize } from '~/core';
 import { indent, quote } from '~/lib/text';
 import type { Scalar } from '~/lib/types';
 import { isNumber, isString } from '~/lib/utils';
@@ -54,6 +54,12 @@ function nest(errText: string): string {
  * first one that accepts the input "wins". If all decoders reject the input,
  * the input gets rejected.
  */
+export function either<TDecoders extends readonly ReadonlyDecoder<unknown>[]>(
+  ...decoders: TDecoders
+): ReadonlyDecoder<DecoderType<TDecoders[number]>>;
+export function either<TDecoders extends readonly Decoder<unknown>[]>(
+  ...decoders: TDecoders
+): Decoder<DecoderType<TDecoders[number]>>;
 /* #__NO_SIDE_EFFECTS__ */
 export function either<TDecoders extends readonly Decoder<unknown>[]>(
   ...decoders: TDecoders
@@ -63,24 +69,27 @@ export function either<TDecoders extends readonly Decoder<unknown>[]>(
   }
 
   type T = DecoderType<TDecoders[number]>;
-  return define<T>((blob, _, err) => {
-    // Collect errors here along the way
-    const errors: Annotation[] = [];
+  return make<T>(
+    (blob, _, err) => {
+      // Collect errors here along the way
+      const errors: Annotation[] = [];
 
-    for (const decoder of decoders) {
-      const result = (decoder as Decoder<T>).decode(blob);
-      if (result.ok) {
-        return result;
-      } else {
-        errors.push(result.error);
+      for (const decoder of decoders) {
+        const result = (decoder as Decoder<T>).decode(blob);
+        if (result.ok) {
+          return result;
+        } else {
+          errors.push(result.error);
+        }
       }
-    }
 
-    // Decoding all alternatives failed, return the combined error message
-    const text =
-      EITHER_PREFIX + errors.map((err) => nest(summarize(err).join('\n'))).join('\n');
-    return err(text);
-  });
+      // Decoding all alternatives failed, return the combined error message
+      const text =
+        EITHER_PREFIX + errors.map((err) => nest(summarize(err).join('\n'))).join('\n');
+      return err(text);
+    },
+    decoders.every((d) => d.isReadonly),
+  );
 }
 
 /**

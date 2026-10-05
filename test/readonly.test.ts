@@ -10,6 +10,7 @@ import {
   constant,
   date,
   decimal,
+  either,
   email,
   endsWith,
   enum_,
@@ -28,9 +29,12 @@ import {
   nonEmptyString,
   nonNegativeNumber,
   null_,
+  nullable,
+  nullish,
   number,
   numeric,
   oneOf,
+  optional,
   poja,
   pojo,
   positiveInteger,
@@ -124,5 +128,40 @@ describe('atomics', () => {
     expect(unknown.verify(obj)).toBe(obj);
     expect(date.verify(d)).toBe(d);
     expect(instanceOf(Date).verify(d)).toBe(d);
+  });
+});
+
+describe('either', () => {
+  test('readonly iff every branch is', () => {
+    expect(either(string, number).isReadonly).toBe(true);
+    expect(either(string, numeric).isReadonly).toBe(false);
+  });
+
+  test('hands back the input itself', () => {
+    const obj = { a: 1 };
+    expect(either(string, pojo).verify(obj)).toBe(obj);
+  });
+});
+
+describe('optional, nullable, nullish', () => {
+  test.each([
+    ['optional', optional(pojo)],
+    ['nullable', nullable(pojo)],
+    ['nullish', nullish(pojo)],
+  ] satisfies [string, Decoder<unknown>][])('%s(d) inherits from d', (_, decoder) => {
+    expect(decoder.isReadonly).toBe(true);
+    const obj = { a: 1 };
+    expect(decoder.verify(obj)).toBe(obj);
+  });
+
+  test.each([
+    ['optional', optional(numeric)],
+    ['nullable', nullable(numeric)],
+    ['nullish', nullish(numeric)],
+    ['optional with default', optional(pojo, {})],
+    ['nullable with default', nullable(pojo, {})],
+    ['nullish with default', nullish(pojo, {})],
+  ] satisfies [string, Decoder<unknown>][])('%s is not readonly', (_, decoder) => {
+    expect(decoder.isReadonly).toBe(false);
   });
 });

@@ -19,9 +19,10 @@ export const null_ = constant(null);
  */
 export const undefined_ = constant(undefined);
 
-const nullish_: Decoder<null | undefined> = define((blob, ok, err) =>
-  // Equiv to either(undefined_, null_), but combined for better error message
-  blob == null ? ok(blob) : err('Must be undefined or null'),
+// Equiv to either(undefined_, null_), but combined for better error message
+const nullish_: ReadonlyDecoder<null | undefined> = defineReadonly(
+  (blob): blob is null | undefined => blob == null,
+  'Must be undefined or null',
 );
 
 /**
@@ -30,6 +31,7 @@ const nullish_: Decoder<null | undefined> = define((blob, ok, err) =>
  * If a default value is explicitly provided, return that instead in the
  * `undefined` case.
  */
+export function optional<T>(decoder: ReadonlyDecoder<T>): ReadonlyDecoder<T | undefined>;
 export function optional<T>(decoder: Decoder<T>): Decoder<T | undefined>;
 export function optional<T, C extends Scalar>(decoder: Decoder<T>, defaultValue: (() => C) | C): Decoder<NonNullable<T> | C>; // prettier-ignore
 export function optional<T, V>(decoder: Decoder<T>, defaultValue: (() => V) | V): Decoder<NonNullable<T> | V>; // prettier-ignore
@@ -50,6 +52,7 @@ export function optional<T, V>(
  * If a default value is explicitly provided, return that instead in the `null`
  * case.
  */
+export function nullable<T>(decoder: ReadonlyDecoder<T>): ReadonlyDecoder<T | null>;
 export function nullable<T>(decoder: Decoder<T>): Decoder<T | null>;
 export function nullable<T, C extends Scalar>(decoder: Decoder<T>, defaultValue: (() => C) | C): Decoder<NonNullable<T> | C>; // prettier-ignore
 export function nullable<T, V>(decoder: Decoder<T>, defaultValue: (() => V) | V): Decoder<NonNullable<T> | V>; // prettier-ignore
@@ -70,6 +73,9 @@ export function nullable<T, V>(
  * If a default value is explicitly provided, return that instead in the
  * `null`/`undefined` case.
  */
+export function nullish<T>(
+  decoder: ReadonlyDecoder<T>,
+): ReadonlyDecoder<T | null | undefined>;
 export function nullish<T>(decoder: Decoder<T>): Decoder<T | null | undefined>;
 export function nullish<T, C extends Scalar>(decoder: Decoder<T>, defaultValue: (() => C) | C): Decoder<NonNullable<T> | C>; // prettier-ignore
 export function nullish<T, V>(decoder: Decoder<T>, defaultValue: (() => V) | V): Decoder<NonNullable<T> | V>; // prettier-ignore

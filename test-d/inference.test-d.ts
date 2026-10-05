@@ -168,6 +168,16 @@ expectNotAssignable<ReadonlyDecoder<string>>(trimmed);
 expectNotAssignable<ReadonlyDecoder<number>>(numeric);
 expectNotAssignable<ReadonlyDecoder<boolean>>(truthy);
 
+// Readonly either/optional
+expectType<ReadonlyDecoder<string | number>>(either(string, number));
+expectType<Decoder<string | number>>(either(string, numeric));
+expectType<ReadonlyDecoder<string | undefined>>(optional(string));
+expectType<ReadonlyDecoder<string | null>>(nullable(string));
+expectType<ReadonlyDecoder<string | null | undefined>>(nullish(string));
+expectType<Decoder<number | undefined>>(optional(numeric));
+expectType<Decoder<string>>(optional(string, 'default'));
+expectNotAssignable<ReadonlyDecoder<string>>(optional(string, 'default'));
+
 expectType<'foo'>(infer(constant('foo')));
 expectType<'foo'>(infer(always('foo')));
 expectType<42>(infer(always(42)));

@@ -499,6 +499,18 @@ export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
 }
 
 /**
+ * Defines a new decoder with the given readonly-ness. Combinators use this to
+ * derive their flag from their children, and must only pass `true` when every
+ * accepted input is handed back as-is.
+ *
+ * @internal
+ */
+/* #__NO_SIDE_EFFECTS__ */
+export function make<T>(fn: AcceptanceFn<T>, isReadonly: boolean): Decoder<T> {
+  return new DecoderImpl(fn, isReadonly);
+}
+
+/**
  * Defines a new `ReadonlyDecoder<T>` from a type guard. Accepted inputs are
  * handed back as-is, rejected ones fail with the given message.
  */
