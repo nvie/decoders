@@ -160,6 +160,14 @@ export function enum_<TEnum extends Record<string, string | number>>(
  * error messages and is more performant at runtime because it doesn't have to
  * try all decoders one by one.
  */
+export function taggedUnion<O extends Record<string, ReadonlyDecoder<unknown>>>(
+  field: string,
+  mapping: O,
+): ReadonlyDecoder<DecoderType<O[keyof O]>>;
+export function taggedUnion<O extends Record<string, Decoder<unknown>>>(
+  field: string,
+  mapping: O,
+): Decoder<DecoderType<O[keyof O]>>;
 /* #__NO_SIDE_EFFECTS__ */
 export function taggedUnion<O extends Record<string, Decoder<unknown>>>(
   field: string,
@@ -170,9 +178,12 @@ export function taggedUnion<O extends Record<string, Decoder<unknown>>>(
   const scout = object({
     [field]: prep(String, oneOf(Object.keys(mapping))),
   }).transform((o) => o[field]);
-  return select(
-    scout, // peek...
-    (key) => mapping[key] as Decoder<T>, // ...then select
+  return make<T>(
+    (blob) => {
+      const result = scout.decode(blob); // peek...
+      return result.ok ? (mapping[result.value] as Decoder<T>).decode(blob) : result; // ...then select
+    },
+    Object.values(mapping).every((d) => d.isReadonly),
   );
 }
 

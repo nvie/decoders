@@ -177,6 +177,14 @@ expectType<ReadonlyDecoder<string | null | undefined>>(nullish(string));
 expectType<Decoder<number | undefined>>(optional(numeric));
 expectType<Decoder<string>>(optional(string, 'default'));
 expectNotAssignable<ReadonlyDecoder<string>>(optional(string, 'default'));
+const roA = pojo.refineType<{ type: 'a'; x: string }>();
+const roB = pojo.refineType<{ type: 'b'; y: number }>();
+expectType<ReadonlyDecoder<{ type: 'a'; x: string } | { type: 'b'; y: number }>>(
+  taggedUnion('type', { a: roA, b: roB }),
+);
+expectType<Decoder<{ type: 'a'; x: string } | { type: 'b' }>>(
+  taggedUnion('type', { a: roA, b: object({ type: constant('b') }) }),
+);
 
 expectType<'foo'>(infer(constant('foo')));
 expectType<'foo'>(infer(always('foo')));

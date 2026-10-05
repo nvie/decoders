@@ -14,6 +14,7 @@ import {
   email,
   endsWith,
   enum_,
+  exact,
   fail,
   flexDate,
   hexadecimal,
@@ -33,6 +34,7 @@ import {
   nullish,
   number,
   numeric,
+  object,
   oneOf,
   optional,
   poja,
@@ -43,6 +45,7 @@ import {
   sized,
   startsWith,
   string,
+  taggedUnion,
   trimmed,
   truthy,
   undefined_,
@@ -163,5 +166,21 @@ describe('optional, nullable, nullish', () => {
     ['nullish with default', nullish(pojo, {})],
   ] satisfies [string, Decoder<unknown>][])('%s is not readonly', (_, decoder) => {
     expect(decoder.isReadonly).toBe(false);
+  });
+});
+
+describe('taggedUnion', () => {
+  const a = exact({ type: constant('a'), x: string });
+  const b = exact({ type: constant('b'), y: number });
+
+  test('readonly iff every branch is', () => {
+    expect(taggedUnion('type', { a: pojo, b: pojo }).isReadonly).toBe(true);
+    expect(taggedUnion('type', { a: pojo, b: object({}) }).isReadonly).toBe(false);
+    expect(taggedUnion('type', { a, b }).isReadonly).toBe(a.isReadonly && b.isReadonly);
+  });
+
+  test('hands back the input itself', () => {
+    const input = { type: 'a', x: 'hi' };
+    expect(taggedUnion('type', { a: pojo, b: pojo }).verify(input)).toBe(input);
   });
 });
