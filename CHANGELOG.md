@@ -17,6 +17,9 @@
   (beyond ±2^53−1).
 - `natural` and `nonNegativeNumber` now check the sign first (happy path
   optimization). This can lead to a different error message compared to 2.x.
+- `lazy()` now calls its function once, on first decode, and reuses the resulting decoder.
+  If you relied on it being called on every decode to pick a decoder dynamically, use
+  `select()` or `.chain()` instead.
 - Remove `setFromArray` and `mapping`. Use `array(d).transform((xs) => new Set(xs))` and
   `record(d).transform((obj) => new Map(Object.entries(obj)))` instead.
 

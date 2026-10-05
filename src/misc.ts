@@ -25,11 +25,13 @@ export function instanceOf<K extends Klass<any>>(klass: K): Decoder<Instance<K>>
 
 /**
  * Lazily evaluate the given decoder. This is useful to build self-referential
- * types for recursive data structures.
+ * types for recursive data structures. The factory is called once, on first
+ * decode, and its result is reused from then on.
  */
 /* #__NO_SIDE_EFFECTS__ */
 export function lazy<T>(decoderFn: () => Decoder<T>): Decoder<T> {
-  return define((blob) => decoderFn().decode(blob));
+  let decoder: Decoder<T> | undefined;
+  return define((blob) => (decoder ??= decoderFn()).decode(blob));
 }
 
 /**
