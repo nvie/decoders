@@ -31,6 +31,13 @@ export type Next<O, I = unknown> = (
 
 export interface Decoder<T> {
   /**
+   * Whether this decoder is guaranteed to hand back its input as-is, i.e.
+   * `verify(x) === x` for every accepted `x`. When `false`, the decoder may
+   * or may not copy.
+   */
+  readonly isReadonly: boolean;
+
+  /**
    * Verifies untrusted input. Either returns a value, or throws a decoding
    * error.
    */
@@ -116,6 +123,13 @@ export interface Decoder<T> {
 }
 
 /**
+ * A decoder that validates without copying: `verify(x)` returns `x` itself.
+ */
+export interface ReadonlyDecoder<T> extends Decoder<T> {
+  readonly isReadonly: true;
+}
+
+/**
  * A decoder that can also be called with options, to get a constrained version
  * of itself, e.g. `number({ min: 0 })`.
  */
@@ -187,7 +201,7 @@ const standardCache = new WeakMap<object, StandardSchemaV1.Props<unknown, unknow
  *
  * @internal
  */
-class DecoderImpl<T> implements Decoder<T> {
+class DecoderImpl<T, RO extends boolean = boolean> implements Decoder<T> {
   /**
    * Verifies the untrusted/unknown input and either accepts or rejects it.
    *
@@ -213,7 +227,9 @@ class DecoderImpl<T> implements Decoder<T> {
    */
   readonly value: (blob: unknown) => T | undefined;
 
-  constructor(fn: AcceptanceFn<T>) {
+  readonly isReadonly: RO;
+
+  constructor(fn: AcceptanceFn<T>, isReadonly: RO) {
     // Per-instance closures rather than methods, so they keep working when
     // detached from the decoder, e.g. `.filter(decoder.value)`
     const decode = (blob: unknown): DecodeResult<T> => {
@@ -240,6 +256,7 @@ class DecoderImpl<T> implements Decoder<T> {
     this.decode = decode;
     this.verify = verify;
     this.value = value;
+    this.isReadonly = isReadonly;
   }
 
   /**
@@ -426,7 +443,22 @@ Object.defineProperty(DecoderImpl, 'name', { value: 'Decoder' });
  */
 /* #__NO_SIDE_EFFECTS__ */
 export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
-  return new DecoderImpl(fn);
+  return new DecoderImpl(fn, false);
+}
+
+/**
+ * Defines a new `ReadonlyDecoder<T>` from a type guard. Accepted inputs are
+ * handed back as-is, rejected ones fail with the given message.
+ */
+/* #__NO_SIDE_EFFECTS__ */
+export function defineReadonly<T>(
+  predicate: (blob: unknown) => blob is T,
+  msg: string,
+): ReadonlyDecoder<T> {
+  return new DecoderImpl(
+    (blob, ok, err) => (predicate(blob) ? ok(blob) : err(msg)),
+    true,
+  );
 }
 
 /**

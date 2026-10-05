@@ -39,10 +39,19 @@ export type {
   ObjectAnnotation,
   Ok,
   OpaqueAnnotation,
+  ReadonlyDecoder,
   Result,
   ScalarAnnotation,
 } from '~/core';
-export { define, err, formatInline, formatShort, isDecoder, ok } from '~/core';
+export {
+  define,
+  defineReadonly,
+  err,
+  formatInline,
+  formatShort,
+  isDecoder,
+  ok,
+} from '~/core';
 export type { Relax } from '~/lib/Relax';
 export type { RangeOptions, Sized, SizeOptions } from '~/lib/options';
 export type { Scalar } from '~/lib/types';

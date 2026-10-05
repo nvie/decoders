@@ -12,6 +12,7 @@ const NOT_DECODERS = new Set([
   'Decoder',
   'DecodeResult',
   'DecoderType',
+  'ReadonlyDecoder',
   'isDate',
   'isDecoder',
   'isPlainObject',

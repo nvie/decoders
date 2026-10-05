@@ -1,4 +1,11 @@
-import type { Decoder, DecoderType, JSONValue, JSONObject, JSONArray } from '../dist';
+import type {
+  Decoder,
+  DecoderType,
+  JSONValue,
+  JSONObject,
+  JSONArray,
+  ReadonlyDecoder,
+} from '../dist';
 import {
   // Decoders
   // Formatters
@@ -16,6 +23,7 @@ import {
   flexDate,
   decimal,
   define,
+  defineReadonly,
   either,
   email,
   endsWith,
@@ -105,6 +113,14 @@ expectType<123 | 'hi'>(
 );
 
 expectType<(p: string, q: number[], r: string[], s: boolean) => void>(foo);
+
+// Readonly
+const isStringArray = (blob: unknown): blob is string[] =>
+  Array.isArray(blob) && blob.every((x) => typeof x === 'string');
+expectType<ReadonlyDecoder<string[]>>(defineReadonly(isStringArray, 'Must be string[]'));
+expectType<boolean>(define((blob, ok) => ok(blob)).isReadonly);
+expectAssignable<Decoder<string[]>>(defineReadonly(isStringArray, 'Must be string[]'));
+expectError(defineReadonly((blob: unknown) => blob !== 0, 'Not a guard'));
 
 expectType<'foo'>(infer(constant('foo')));
 expectType<'foo'>(infer(always('foo')));

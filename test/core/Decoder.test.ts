@@ -1,7 +1,14 @@
 import { describe, expect, test } from 'vitest';
 
 import { always } from '~/basics';
-import { annotate, define, formatInline, formatShort, isDecoder } from '~/core';
+import {
+  annotate,
+  define,
+  defineReadonly,
+  formatInline,
+  formatShort,
+  isDecoder,
+} from '~/core';
 import { natural, number } from '~/numbers';
 import { pojo } from '~/objects';
 import { string } from '~/strings';
@@ -30,6 +37,22 @@ describe('define()', () => {
     expect(() => decoder.verify(new Date())).toThrow();
     expect(() => decoder.verify([])).toThrow();
     expect(() => decoder.verify('hey')).toThrow(/fail!/);
+  });
+});
+
+describe('readonly', () => {
+  test('define() is never readonly', () => {
+    expect(define((blob, ok) => ok(blob)).isReadonly).toBe(false);
+  });
+
+  test('defineReadonly() hands back the input itself', () => {
+    const isArray = (blob: unknown): blob is unknown[] => Array.isArray(blob);
+    const decoder = defineReadonly(isArray, 'Must be array');
+    expect(decoder.isReadonly).toBe(true);
+
+    const input = [1, 2, 3];
+    expect(decoder.verify(input)).toBe(input);
+    expect(() => decoder.verify('nope')).toThrow('Must be array');
   });
 });
 
