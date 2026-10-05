@@ -37,6 +37,11 @@
   ```ts
   hexadecimal({ size: 64 }); // instead of sized(hexadecimal, { size: 64 })
   ```
+- New `trimmed` decoder, which returns strings with surrounding whitespace removed. Size
+  options apply to the trimmed value:
+  ```ts
+  trimmed({ min: 1, max: 100 }); // '  hi  ' → 'hi', '   ' → Too short
+  ```
 - `regex()` now takes options: size bounds, checked before the regex runs, and the error
   message. `regex(re, msg)` remains as shorthand for `regex(re, { message: msg })`:
   ```ts

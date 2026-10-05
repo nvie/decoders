@@ -66,6 +66,7 @@ import {
   tuple,
   undefined_,
   unknown,
+  trimmed,
   url,
   urlString,
   uuid,
@@ -164,6 +165,9 @@ expectType<string>(infer(nonEmptyString({ max: 10 })));
 expectType<string>(infer(decimal({ min: 1, max: 10 })));
 expectType<string>(infer(hexadecimal({ size: 64 })));
 expectType<string>(infer(identifier({ max: 32 })));
+expectType<string>(infer(trimmed));
+expectType<string>(infer(trimmed({ min: 1, max: 100 })));
+expectError(trimmed(1));
 expectDeprecated(hexadecimal());
 expectError(hexadecimal(64));
 expectError(hexadecimal({ size: 64, max: 10 }));

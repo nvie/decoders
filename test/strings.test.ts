@@ -18,6 +18,7 @@ import {
   regex,
   startsWith,
   string,
+  trimmed,
   url,
   urlString,
   uuid,
@@ -380,6 +381,28 @@ describe('nonEmptyString', () => {
     expect(() => decoder.verify('	')).toThrow();
     expect(() => decoder.verify('\n')).toThrow();
     expect(() => decoder.verify('     \n ')).toThrow();
+  });
+});
+
+describe('trimmed', () => {
+  test('trims', () => {
+    expect(trimmed.verify('hi')).toBe('hi');
+    expect(trimmed.verify('  hi  ')).toBe('hi');
+    expect(trimmed.verify(' \n\thi there\n ')).toBe('hi there');
+    expect(trimmed.verify('   ')).toBe('');
+    expect(() => trimmed.verify(42)).toThrow('Must be string');
+  });
+
+  test('called without options', () => {
+    expect(trimmed()).toBe(trimmed);
+  });
+
+  test('size options apply to the trimmed value', () => {
+    const decoder = trimmed({ min: 1, max: 3 });
+    expect(decoder.verify('  ab  ')).toBe('ab');
+    expect(decoder.verify('   abc   ')).toBe('abc');
+    expect(() => decoder.verify('   ')).toThrow('Too short, must be at least 1 char');
+    expect(() => decoder.verify(' abcd ')).toThrow('Too long, must be at most 3 chars');
   });
 });
 

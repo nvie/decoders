@@ -24,7 +24,7 @@ _Main track (each step builds on the previous):_
 - [x] `regex(re, { max, message? })`, `regex(re, msg)` kept as shorthand
 - [x] Size options on `nonEmptyString`, `decimal`, `hexadecimal`, `identifier`
 - [ ] `startsWith`/`endsWith` size options
-- [ ] `trimmed`
+- [x] `trimmed`
 - [ ] Deprecate `min`, `max`, `between`
 - [ ] Readonly: `isReadonly`, `ReadonlyDecoder<T>`, `defineReadonly()` (Feature 2)
 - [ ] `jsonYolo`

@@ -30,6 +30,15 @@ export const nonEmptyString: CallableDecoder<string, SizeOptions> =
   /* #__PURE__ */ sizedRegex(/\S/, 'Must be non-empty string');
 
 /**
+ * Accepts strings and returns them with surrounding whitespace removed. Size
+ * options apply to the trimmed value.
+ */
+export const trimmed: CallableDecoder<string, SizeOptions> = /* #__PURE__ */ callable(
+  string.transform((s) => s.trim()),
+  sized,
+);
+
+/**
  * Accepts and returns strings that match the given regular expression.
  * Size options are checked before the regex runs.
  */
