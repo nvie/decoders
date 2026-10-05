@@ -70,22 +70,30 @@ function sizedRegex(re: RegExp, message: string): CallableDecoder<string, SizeOp
 }
 
 /**
- * Accepts and returns strings that start with the given prefix.
+ * Accepts and returns strings that start with the given prefix. Size options
+ * count the whole string, prefix included, and are checked first.
  */
 /* #__NO_SIDE_EFFECTS__ */
-export function startsWith<P extends string>(prefix: P): Decoder<`${P}${string}`> {
-  return string.refine(
+export function startsWith<P extends string>(
+  prefix: P,
+  options?: SizeOptions,
+): Decoder<`${P}${string}`> {
+  return (options ? string(options) : string).refine(
     (s): s is `${P}${string}` => s.startsWith(prefix),
     `Must start with '${prefix}'`,
   );
 }
 
 /**
- * Accepts and returns strings that end with the given suffix.
+ * Accepts and returns strings that end with the given suffix. Size options
+ * count the whole string, suffix included, and are checked first.
  */
 /* #__NO_SIDE_EFFECTS__ */
-export function endsWith<S extends string>(suffix: S): Decoder<`${string}${S}`> {
-  return string.refine(
+export function endsWith<S extends string>(
+  suffix: S,
+  options?: SizeOptions,
+): Decoder<`${string}${S}`> {
+  return (options ? string(options) : string).refine(
     (s): s is `${string}${S}` => s.endsWith(suffix),
     `Must end with '${suffix}'`,
   );

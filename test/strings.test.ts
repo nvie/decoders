@@ -126,6 +126,15 @@ describe('startsWith', () => {
     expect(() => decoder.verify('FoO')).toThrow("Must start with 'foo'");
     expect(() => decoder.verify('fo')).toThrow("Must start with 'foo'");
   });
+
+  test('size options count the whole string, prefix included', () => {
+    const decoder = startsWith('foo_', { size: 6 });
+    expect(decoder.verify('foo_ab')).toBe('foo_ab');
+    expect(() => decoder.verify('foo_a')).toThrow('Too short, must be 6 chars');
+    expect(() => decoder.verify('foo_abc')).toThrow('Too long, must be 6 chars');
+    // Length is checked before the prefix
+    expect(() => decoder.verify('bar')).toThrow('Too short, must be 6 chars');
+  });
 });
 
 describe('endsWith', () => {
@@ -144,6 +153,16 @@ describe('endsWith', () => {
     expect(() => decoder.verify('baro')).toThrow("Must end with 'bar'");
     expect(() => decoder.verify('arb')).toThrow("Must end with 'bar'");
     expect(() => decoder.verify('BaR')).toThrow("Must end with 'bar'");
+  });
+
+  test('size options count the whole string, suffix included', () => {
+    const decoder = endsWith('.ts', { min: 4, max: 6 });
+    expect(decoder.verify('a.ts')).toBe('a.ts');
+    expect(decoder.verify('abc.ts')).toBe('abc.ts');
+    expect(() => decoder.verify('.ts')).toThrow('Too short, must be at least 4 chars');
+    expect(() => decoder.verify('abcd.ts')).toThrow('Too long, must be at most 6 chars');
+    // Length is checked before the suffix
+    expect(() => decoder.verify('abcdefgh')).toThrow('Too long, must be at most 6 chars');
   });
 });
 

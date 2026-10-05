@@ -186,6 +186,10 @@ expectType<string>(infer(regex(/foo/, 'Must be foo')));
 expectNotDeprecated(regex(/foo/, 'Must be foo'));
 expectType<`foo-${string}`>(infer(startsWith('foo-')));
 expectType<`${string}-bar`>(infer(endsWith('-bar')));
+expectType<`foo-${string}`>(infer(startsWith('foo-', { size: 24 })));
+expectType<`${string}-bar`>(infer(endsWith('-bar', { min: 5, max: 10 })));
+expectError(startsWith('foo-', 24));
+expectError(endsWith('-bar', { size: 3, max: 10 }));
 expectType<string>(infer(sized(string, { min: 1, max: 10 })));
 expectType<number[]>(infer(sized(array(number), { min: 1, max: 10 })));
 expectType<Set<number>>(

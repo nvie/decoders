@@ -37,6 +37,11 @@
   ```ts
   hexadecimal({ size: 64 }); // instead of sized(hexadecimal, { size: 64 })
   ```
+- `startsWith()` and `endsWith()` now take optional size options, which count the whole
+  string (prefix or suffix included) and are checked first:
+  ```ts
+  startsWith('henk_', { size: 24 }); // instead of sized(startsWith('henk_'), { size: 24 })
+  ```
 - `numeric` can now be called with range options, which apply to the decoded number:
   ```ts
   numeric({ min: 1, max: 100 }); // '42' → 42, '101' → Too high
