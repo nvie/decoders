@@ -195,6 +195,13 @@ expectType<ReadonlyDecoder<[string, ...string[]]>>(nonEmptyArray(string));
 expectType<Decoder<[number, ...number[]]>>(nonEmptyArray(numeric));
 expectType<ReadonlyDecoder<[string, number]>>(tuple(string, number));
 expectType<Decoder<[string, number]>>(tuple(string, numeric));
+expectType<ReadonlyDecoder<Record<string, string>>>(record(string));
+expectType<ReadonlyDecoder<Record<string, string>>>(record(string, { max: 3 }));
+expectType<ReadonlyDecoder<Record<`a${string}`, number>>>(
+  record(startsWith('a'), number),
+);
+expectType<Decoder<Record<string, number>>>(record(numeric));
+expectType<Decoder<Record<string, string>>>(record(trimmed, string));
 
 expectType<'foo'>(infer(constant('foo')));
 expectType<'foo'>(infer(always('foo')));
