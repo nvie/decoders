@@ -135,6 +135,9 @@ expectType<number>(infer(max(100, number)));
 expectType<number>(infer(between(0, 100)));
 expectType<number>(infer(between(0, 100, number)));
 expectType<number>(infer(between(1, 10, integer)));
+expectDeprecated(min(0));
+expectDeprecated(max(100));
+expectDeprecated(between(0, 100));
 
 // Callable atomics
 expectType<string>(infer(string({ min: 2, max: 10 })));

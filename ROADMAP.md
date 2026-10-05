@@ -26,7 +26,7 @@ _Main track (each step builds on the previous):_
 - [x] `startsWith`/`endsWith` size options
 - [x] `trimmed`
 - [x] `numeric({ min, max, gt, lt })`, bounding the decoded number
-- [ ] Deprecate `min`, `max`, `between`
+- [x] Deprecate `min`, `max`, `between`
 - [ ] Readonly: `isReadonly`, `ReadonlyDecoder<T>`, `defineReadonly()` (Feature 2)
 - [ ] `jsonYolo`
 - [ ] `toJSONSchema()`, `~standard.jsonSchema` (Feature 3)
@@ -1405,7 +1405,6 @@ same applies to every future removal.
 | `max(n)`, `max(n, integer)`               | `number({ max: n })`, `integer({ max: n })`                 |
 | `between(a, b)`, `between(a, b, integer)` | `number({ min: a, max: b })`, `integer({ min: a, max: b })` |
 | `min(n, natural)` & co.                   | `natural({ min: n })`, `nonNegativeNumber({ min: n })`      |
-| `min(n, anyNumber)`, `min(n, myDecoder)`  | `.reject((x) => (x < n ? 'Too low, …' : null))`             |
 
 These go deprecated only once the callable `number`/`integer` ship, so there is always a
 non-deprecated way to say the same thing.

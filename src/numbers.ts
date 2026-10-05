@@ -87,33 +87,23 @@ export const positiveNumber: CallableDecoder<number, RangeOptions> = nonNegative
 export const positiveInteger: CallableDecoder<number, RangeOptions> = natural;
 
 /**
- * Accepts numbers greater than or equal to the given minimum.
- * Defaults to the ``number`` decoder if none is provided. Pass a
- * different decoder to further restrict accepted values, e.g. ``min(0, integer)``.
+ * @deprecated Use `number({ min })`, or e.g. `integer({ min })`.
  */
 /* #__NO_SIDE_EFFECTS__ */
 export function min(min: number, decoder: Decoder<number> = number): Decoder<number> {
-  return decoder.reject((value) =>
-    value < min ? `Too low, must be at least ${min}` : null,
-  );
+  return ranged(decoder, { min });
 }
 
 /**
- * Accepts numbers less than or equal to the given maximum.
- * Defaults to the ``number`` decoder if none is provided. Pass a
- * different decoder to further restrict accepted values, e.g. ``max(100, integer)``.
+ * @deprecated Use `number({ max })`, or e.g. `integer({ max })`.
  */
 /* #__NO_SIDE_EFFECTS__ */
 export function max(max: number, decoder: Decoder<number> = number): Decoder<number> {
-  return decoder.reject((value) =>
-    value > max ? `Too high, must be at most ${max}` : null,
-  );
+  return ranged(decoder, { max });
 }
 
 /**
- * Accepts numbers within the given range (bounds are inclusive).
- * Defaults to the ``number`` decoder if none is provided. Pass a
- * different decoder to further restrict accepted values, e.g. ``between(1, 10, integer)``.
+ * @deprecated Use `number({ min, max })`, or e.g. `integer({ min, max })`.
  */
 /* #__NO_SIDE_EFFECTS__ */
 export function between(
@@ -121,13 +111,7 @@ export function between(
   max: number,
   decoder: Decoder<number> = number,
 ): Decoder<number> {
-  return decoder.reject((value) =>
-    value < min
-      ? `Too low, must be between ${min} and ${max}`
-      : value > max
-        ? `Too high, must be between ${min} and ${max}`
-        : null,
-  );
+  return ranged(decoder, { min, max });
 }
 
 /**

@@ -63,6 +63,11 @@
   record(email, boolean, { min: 1 });
   ```
 
+**Deprecated:**
+
+- `min()`, `max()`, and `between()`. Use the range options instead, e.g.
+  `number({ min: 0 })` or `integer({ min: 1, max: 10 })`.
+
 **Performance:**
 
 Compared to 2.12.2:
