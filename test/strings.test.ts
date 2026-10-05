@@ -503,6 +503,45 @@ describe('identifier', () => {
   });
 });
 
+describe('callable string atomics', () => {
+  test.each([
+    {
+      decoder: nonEmptyString,
+      valid: 'ab',
+      invalid: '  ',
+      message: 'Must be non-empty string',
+    },
+    { decoder: decimal, valid: '12', invalid: 'xy', message: 'Must only contain digits' },
+    {
+      decoder: hexadecimal,
+      valid: 'ff',
+      invalid: 'xy',
+      message: 'Must only contain hexadecimal digits',
+    },
+    {
+      decoder: identifier,
+      valid: 'ab',
+      invalid: '1x',
+      message: 'Must be valid identifier',
+    },
+  ])('$valid / $invalid', ({ decoder, valid, invalid, message }) => {
+    expect(decoder()).toBe(decoder);
+
+    const sized = decoder({ min: 2, max: 3 });
+    expect(sized.verify(valid)).toBe(valid);
+    expect(() => sized.verify(invalid)).toThrow(message);
+    expect(() => sized.verify('a')).toThrow('Too short, must be at least 2 chars');
+    expect(() => sized.verify(42)).toThrow('Must be string');
+
+    // Length is checked before the regex
+    expect(() => sized.verify('!!!!')).toThrow('Too long, must be at most 3 chars');
+
+    const exact = decoder({ size: 2 });
+    expect(exact.verify(valid)).toBe(valid);
+    expect(() => exact.verify(valid + valid)).toThrow('Too long, must be 2 chars');
+  });
+});
+
 describe('nanoid', () => {
   test('default accepts', () => {
     expect(nanoid().verify('1-QskICa3CaPGcKuYYTm1')).toEqual('1-QskICa3CaPGcKuYYTm1');

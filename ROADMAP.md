@@ -22,7 +22,7 @@ _Main track (each step builds on the previous):_
 
 - [x] `string`/`number`/`integer({...})`, `string()` & co. deprecated (Feature 1)
 - [x] `regex(re, { max, message? })`, `regex(re, msg)` kept as shorthand
-- [ ] Size options on `nonEmptyString`, `decimal`, `hexadecimal`, `identifier`
+- [x] Size options on `nonEmptyString`, `decimal`, `hexadecimal`, `identifier`
 - [ ] `startsWith`/`endsWith` size options
 - [ ] `trimmed`
 - [ ] Deprecate `min`, `max`, `between`

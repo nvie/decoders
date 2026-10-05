@@ -249,6 +249,7 @@ them through:
 | `sized(string, { max: 10 })`           | →   | `string({ max: 10 })`                    |
 | `sized(array(d), { min: 1 })`          | →   | `array(d, { min: 1 })`                   |
 | `sized(startsWith('x_'), { size: 8 })` | →   | `startsWith('x_', { size: 8 })`          |
+| `sized(hexadecimal, { size: 64 })`     | →   | `hexadecimal({ size: 64 })`              |
 | `sized(regex(re, 'msg'), { max: 20 })` | →   | `regex(re, { max: 20, message: 'msg' })` |
 | `min(0)`                               | →   | `number({ min: 0 })`                     |
 | `max(10, integer)`                     | →   | `integer({ max: 10 })`                   |

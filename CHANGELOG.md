@@ -32,6 +32,11 @@
   ```
   Number decoders take `min`/`max` (inclusive) and `gt`/`lt` (exclusive). Calling them
   without options (`string()`) works, but is deprecated: use `string`.
+- `nonEmptyString`, `decimal`, `hexadecimal`, and `identifier` can now be called with size
+  options too, checked before the regex runs:
+  ```ts
+  hexadecimal({ size: 64 }); // instead of sized(hexadecimal, { size: 64 })
+  ```
 - `regex()` now takes options: size bounds, checked before the regex runs, and the error
   message. `regex(re, msg)` remains as shorthand for `regex(re, { message: msg })`:
   ```ts

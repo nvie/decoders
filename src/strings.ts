@@ -26,9 +26,8 @@ export const string: CallableDecoder<string, SizeOptions> = /* #__PURE__ */ call
 /**
  * Like `string`, but will reject the empty string or strings containing only whitespace.
  */
-export const nonEmptyString: Decoder<string> = regex(/\S/, {
-  message: 'Must be non-empty string',
-});
+export const nonEmptyString: CallableDecoder<string, SizeOptions> =
+  /* #__PURE__ */ sizedRegex(/\S/, 'Must be non-empty string');
 
 /**
  * Accepts and returns strings that match the given regular expression.
@@ -47,6 +46,17 @@ export function regex(regex: RegExp, options?: RegexOptions | string): Decoder<s
     sizeOptions.max !== undefined;
   const base = hasBounds ? string.reject(bySizeOptions(sizeOptions)) : string;
   return base.refine((s) => regex.test(s), message);
+}
+
+/**
+ * A callable regex decoder: calling it with size options gives a decoder that
+ * checks those before the regex runs.
+ */
+/* #__NO_SIDE_EFFECTS__ */
+function sizedRegex(re: RegExp, message: string): CallableDecoder<string, SizeOptions> {
+  return callable(regex(re, { message }), (_, options) =>
+    regex(re, { ...options, message }),
+  );
 }
 
 /**
@@ -110,9 +120,8 @@ export const httpsUrl: Decoder<URL> = /* #__PURE__ */ url.refine(
  * Accepts and returns strings that are valid identifiers in most programming
  * languages.
  */
-export const identifier: Decoder<string> = regex(/^[a-z_][a-z0-9_]*$/i, {
-  message: 'Must be valid identifier',
-});
+export const identifier: CallableDecoder<string, SizeOptions> =
+  /* #__PURE__ */ sizedRegex(/^[a-z_][a-z0-9_]*$/i, 'Must be valid identifier');
 
 /**
  * Accepts and returns [Nano ID](https://zelark.github.io/nano-id-cc) string
@@ -164,16 +173,16 @@ export const uuidv4: Decoder<string> =
  * Accepts and returns strings with decimal digits only (base-10).
  * To convert these to numbers, use the `numeric` decoder.
  */
-export const decimal: Decoder<string> = regex(/^[0-9]+$/, {
-  message: 'Must only contain digits',
-});
+export const decimal: CallableDecoder<string, SizeOptions> = /* #__PURE__ */ sizedRegex(
+  /^[0-9]+$/,
+  'Must only contain digits',
+);
 
 /**
  * Accepts and returns strings with hexadecimal digits only (base-16).
  */
-export const hexadecimal: Decoder<string> = regex(/^[0-9a-f]+$/i, {
-  message: 'Must only contain hexadecimal digits',
-});
+export const hexadecimal: CallableDecoder<string, SizeOptions> =
+  /* #__PURE__ */ sizedRegex(/^[0-9a-f]+$/i, 'Must only contain hexadecimal digits');
 
 /**
  * Accepts valid numerical strings (in base-10) and returns them as a number.
