@@ -58,6 +58,16 @@ export interface Decoder<T> {
    * Build a new decoder from the the current one, with an extra acceptance
    * criterium.
    */
+  refine<N extends T>(
+    this: ReadonlyDecoder<T>,
+    predicate: (value: T) => value is N,
+    msg: string,
+  ): ReadonlyDecoder<N>;
+  refine(
+    this: ReadonlyDecoder<T>,
+    predicate: (value: T) => boolean,
+    msg: string,
+  ): ReadonlyDecoder<T>;
   refine<N extends T>(predicate: (value: T) => value is N, msg: string): Decoder<N>;
   refine(predicate: (value: T) => boolean, msg: string): Decoder<T>;
 
@@ -65,12 +75,17 @@ export interface Decoder<T> {
    * Cast the return type of this read-only decoder to a narrower type. This is
    * useful to return "branded" types. This method has no runtime effect.
    */
+  refineType<SubT extends T>(this: ReadonlyDecoder<T>): ReadonlyDecoder<SubT>;
   refineType<SubT extends T>(): Decoder<SubT>;
 
   /**
    * Build a new decoder from the current one, with an extra rejection
    * criterium.
    */
+  reject(
+    this: ReadonlyDecoder<T>,
+    rejectFn: (value: T) => string | Annotation | null,
+  ): ReadonlyDecoder<T>;
   reject(rejectFn: (value: T) => string | Annotation | null): Decoder<T>;
 
   /**
@@ -82,6 +97,7 @@ export interface Decoder<T> {
    * Build a new decoder from the current one, with a mutated error message
    * in case of a rejection.
    */
+  describe(this: ReadonlyDecoder<T>, message: string): ReadonlyDecoder<T>;
   describe(message: string): Decoder<T>;
 
   /**
@@ -114,6 +130,7 @@ export interface Decoder<T> {
    *     .transform((s) => s.split(','))
    *     .pipe(array(nonEmptyString))
    */
+  pipe<V>(this: ReadonlyDecoder<T>, next: ReadonlyDecoder<V>): ReadonlyDecoder<V>;
   pipe<D extends Decoder<unknown>>(next: D): Decoder<DecoderType<D>>;
 
   /**
@@ -274,6 +291,16 @@ class DecoderImpl<T, RO extends boolean = boolean> implements Decoder<T> {
    * original decoder, but only accepts values that also meet the
    * predicate.
    */
+  refine<N extends T>(
+    this: ReadonlyDecoder<T>,
+    predicate: (value: T) => value is N,
+    msg: string,
+  ): ReadonlyDecoder<N>;
+  refine(
+    this: ReadonlyDecoder<T>,
+    predicate: (value: T) => boolean,
+    msg: string,
+  ): ReadonlyDecoder<T>;
   refine<N extends T>(predicate: (value: T) => value is N, msg: string): Decoder<N>;
   refine(predicate: (value: T) => boolean, msg: string): Decoder<T>;
   refine(predicateFn: (value: T) => boolean, errmsg: string): Decoder<T> {
@@ -290,6 +317,8 @@ class DecoderImpl<T, RO extends boolean = boolean> implements Decoder<T> {
    * Cast the return type of this read-only decoder to a narrower type. This is
    * useful to return "branded" types. This method has no runtime effect.
    */
+  refineType<SubT extends T>(this: ReadonlyDecoder<T>): ReadonlyDecoder<SubT>;
+  refineType<SubT extends T>(): Decoder<SubT>;
   refineType<SubT extends T>(): Decoder<SubT> {
     return this as unknown as Decoder<SubT>;
   }
@@ -337,6 +366,8 @@ class DecoderImpl<T, RO extends boolean = boolean> implements Decoder<T> {
    *     .transform((s) => s.split(','))
    *     .pipe(array(nonEmptyString))
    */
+  pipe<V>(this: ReadonlyDecoder<T>, next: ReadonlyDecoder<V>): ReadonlyDecoder<V>;
+  pipe<D extends Decoder<unknown>>(next: D): Decoder<DecoderType<D>>;
   pipe<D extends Decoder<unknown>>(next: D): Decoder<DecoderType<D>> {
     if (!isDecoder(next)) {
       throw new Error(
@@ -345,13 +376,13 @@ class DecoderImpl<T, RO extends boolean = boolean> implements Decoder<T> {
     }
 
     const decode = this.decode;
-    return define((blob) => {
+    return new DecoderImpl((blob) => {
       const r1 = decode(blob);
       if (!r1.ok) return r1; // Rejected
 
       // TS can't prove that a generic D is a Decoder<DecoderType<D>>
       return next.decode(r1.value) as DecodeResult<DecoderType<D>>;
-    });
+    }, this.isReadonly && next.isReadonly);
   }
 
   /**
@@ -365,13 +396,22 @@ class DecoderImpl<T, RO extends boolean = boolean> implements Decoder<T> {
    * Unlike `.refine()`, you can use this function to return a dynamic error
    * message.
    */
+  reject(
+    this: ReadonlyDecoder<T>,
+    rejectFn: (value: T) => string | Annotation | null,
+  ): ReadonlyDecoder<T>;
+  reject(rejectFn: (value: T) => string | Annotation | null): Decoder<T>;
   reject(rejectFn: (value: T) => string | Annotation | null): Decoder<T> {
-    return this.chain((blob, ok, err) => {
-      const errmsg = rejectFn(blob);
+    const decode = this.decode;
+    return new DecoderImpl((blob, _, err) => {
+      const result = decode(blob);
+      if (!result.ok) return result; // Rejected
+
+      const errmsg = rejectFn(result.value);
       return errmsg === null
-        ? ok(blob)
-        : err(typeof errmsg === 'string' ? annotate(blob, errmsg) : errmsg);
-    });
+        ? result
+        : err(typeof errmsg === 'string' ? annotate(result.value, errmsg) : errmsg);
+    }, this.isReadonly);
   }
 
   /**
@@ -379,9 +419,11 @@ class DecoderImpl<T, RO extends boolean = boolean> implements Decoder<T> {
    * case it rejects. This can be used to simplify or shorten otherwise
    * long or low-level/technical errors.
    */
+  describe(this: ReadonlyDecoder<T>, message: string): ReadonlyDecoder<T>;
+  describe(message: string): Decoder<T>;
   describe(message: string): Decoder<T> {
     const decode = this.decode;
-    return define((blob, _, err) => {
+    return new DecoderImpl((blob, _, err) => {
       // Decode using the given decoder...
       const result = decode(blob);
       if (result.ok) {
@@ -391,7 +433,7 @@ class DecoderImpl<T, RO extends boolean = boolean> implements Decoder<T> {
         // message instead
         return err(annotate(result.error, message));
       }
-    });
+    }, this.isReadonly);
   }
 
   /**

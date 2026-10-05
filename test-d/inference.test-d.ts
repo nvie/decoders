@@ -122,6 +122,27 @@ expectType<boolean>(define((blob, ok) => ok(blob)).isReadonly);
 expectAssignable<Decoder<string[]>>(defineReadonly(isStringArray, 'Must be string[]'));
 expectError(defineReadonly((blob: unknown) => blob !== 0, 'Not a guard'));
 
+const ro = defineReadonly(isStringArray, 'Must be string[]');
+const notRo = define<string[]>((blob, ok, err) =>
+  isStringArray(blob) ? ok(blob) : err('Must be string[]'),
+);
+expectType<ReadonlyDecoder<string[]>>(ro.refine((xs) => xs.length > 0, 'Empty'));
+expectType<ReadonlyDecoder<['a']>>(
+  ro.refine((xs): xs is ['a'] => xs.length === 1 && xs[0] === 'a', 'Not [a]'),
+);
+expectType<ReadonlyDecoder<string[]>>(ro.reject(() => null));
+expectType<ReadonlyDecoder<string[]>>(ro.describe('Must be list'));
+expectType<ReadonlyDecoder<['x']>>(ro.refineType<['x']>());
+expectType<ReadonlyDecoder<string[]>>(ro.pipe(ro));
+expectType<Decoder<string[]>>(ro.pipe(notRo));
+expectType<Decoder<number>>(ro.transform((xs) => xs.length));
+expectType<Decoder<string[]>>(ro.chain((xs, ok) => ok(xs)));
+expectType<Decoder<string[]>>(notRo.refine((xs) => xs.length > 0, 'Empty'));
+expectType<Decoder<string[]>>(notRo.reject(() => null));
+expectType<Decoder<string[]>>(notRo.describe('Must be list'));
+expectType<Decoder<['x']>>(notRo.refineType<['x']>());
+expectType<Decoder<string[]>>(notRo.pipe(ro));
+
 expectType<'foo'>(infer(constant('foo')));
 expectType<'foo'>(infer(always('foo')));
 expectType<42>(infer(always(42)));

@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest';
 
 import { always } from '~/basics';
+import type { Decoder } from '~/core';
 import {
   annotate,
   define,
@@ -53,6 +54,41 @@ describe('readonly', () => {
     const input = [1, 2, 3];
     expect(decoder.verify(input)).toBe(input);
     expect(() => decoder.verify('nope')).toThrow('Must be array');
+  });
+
+  describe('methods', () => {
+    const isArray = (blob: unknown): blob is unknown[] => Array.isArray(blob);
+    const ro = defineReadonly(isArray, 'Must be array');
+    const notRo = define<unknown[]>((blob, ok, err) =>
+      Array.isArray(blob) ? ok(blob) : err('Must be array'),
+    );
+    const roOther = defineReadonly(isArray, 'Must be array');
+    const input = [1, 2, 3];
+
+    test.each([
+      [
+        'refine',
+        (d: Decoder<unknown[]>) => d.refine((xs) => xs.length > 0, 'Must not be empty'),
+      ],
+      ['reject', (d: Decoder<unknown[]>) => d.reject(() => null)],
+      ['describe', (d: Decoder<unknown[]>) => d.describe('Must be a list')],
+      ['refineType', (d: Decoder<unknown[]>) => d.refineType<number[]>()],
+      ['pipe(readonly)', (d: Decoder<unknown[]>) => d.pipe(roOther)],
+    ])('.%s() keeps readonly-ness', (_, method) => {
+      const decoder = method(ro);
+      expect(decoder.isReadonly).toBe(true);
+      expect(decoder.verify(input)).toBe(input);
+      expect(method(notRo).isReadonly).toBe(false);
+    });
+
+    test.each([
+      ['transform', (d: Decoder<unknown[]>) => d.transform((xs) => xs)],
+      ['chain', (d: Decoder<unknown[]>) => d.chain((xs, ok) => ok(xs))],
+      ['pipe(non-readonly)', (d: Decoder<unknown[]>) => d.pipe(notRo)],
+    ])('.%s() is never readonly', (_, method) => {
+      expect(method(ro).isReadonly).toBe(false);
+      expect(method(notRo).isReadonly).toBe(false);
+    });
   });
 });
 
