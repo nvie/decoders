@@ -44,6 +44,7 @@ import {
   pojo,
   positiveInteger,
   positiveNumber,
+  record,
   regex,
   sized,
   startsWith,
@@ -221,5 +222,37 @@ describe('array, nonEmptyArray, tuple', () => {
   test('readonly arrays still reject bad items', () => {
     expect(() => array(string).verify(['a', 1])).toThrow('Must be string (at index 1)');
     expect(() => tuple(string, string).verify(['a', 1])).toThrow('Must be string');
+  });
+});
+
+describe('record', () => {
+  test.each([
+    ['record(v)', record(pojo), { a: { x: 1 } }],
+    ['record(v, options)', record(string, { max: 2 }), { a: 'x' }],
+    ['record(k, v)', record(regex(/^[a-z]+$/), string), { a: 'x' }],
+  ] satisfies [string, Decoder<unknown>, unknown][])(
+    '%s of readonly decoders hands back the input itself',
+    (_, decoder, input) => {
+      expect(decoder.isReadonly).toBe(true);
+      expect(decoder.verify(input)).toBe(input);
+    },
+  );
+
+  test.each([
+    ['record(v)', record(numeric), { a: '1' }],
+    ['record(k, v)', record(trimmed, string), { a: 'x' }],
+  ] satisfies [string, Decoder<unknown>, unknown][])(
+    '%s with a non-readonly decoder copies',
+    (_, decoder, input) => {
+      expect(decoder.isReadonly).toBe(false);
+      expect(decoder.verify(input)).not.toBe(input);
+    },
+  );
+
+  test('readonly records still reject bad values and unsafe keys', () => {
+    expect(() => record(string).verify({ a: 1 })).toThrow('Must be string');
+    expect(() => record(string).verify(JSON.parse('{"__proto__": "x"}'))).toThrow(
+      'Unsafe key',
+    );
   });
 });
