@@ -5,6 +5,7 @@ import {
   always,
   anyNumber,
   anything,
+  array,
   bigint,
   boolean,
   constant,
@@ -27,6 +28,7 @@ import {
   nanoid,
   natural,
   never,
+  nonEmptyArray,
   nonEmptyString,
   nonNegativeNumber,
   null_,
@@ -48,6 +50,7 @@ import {
   taggedUnion,
   trimmed,
   truthy,
+  tuple,
   undefined_,
   unknown,
   url,
@@ -182,5 +185,38 @@ describe('taggedUnion', () => {
   test('hands back the input itself', () => {
     const input = { type: 'a', x: 'hi' };
     expect(taggedUnion('type', { a: pojo, b: pojo }).verify(input)).toBe(input);
+  });
+});
+
+describe('array, nonEmptyArray, tuple', () => {
+  test.each([
+    ['array', array(pojo), [{ a: 1 }, { b: 2 }]],
+    ['array with options', array(pojo, { max: 3 }), [{ a: 1 }]],
+    ['nonEmptyArray', nonEmptyArray(pojo), [{ a: 1 }]],
+    ['tuple', tuple(pojo, string), [{ a: 1 }, 'x']],
+    ['nested', array(array(string)), [['a'], ['b', 'c']]],
+  ] satisfies [string, Decoder<unknown>, unknown][])(
+    '%s of readonly items hands back the input itself',
+    (_, decoder, input) => {
+      expect(decoder.isReadonly).toBe(true);
+      expect(decoder.verify(input)).toBe(input);
+    },
+  );
+
+  test.each([
+    ['array', array(numeric), ['1']],
+    ['nonEmptyArray', nonEmptyArray(numeric), ['1']],
+    ['tuple', tuple(string, numeric), ['x', '1']],
+  ] satisfies [string, Decoder<unknown>, unknown][])(
+    '%s of non-readonly items copies',
+    (_, decoder, input) => {
+      expect(decoder.isReadonly).toBe(false);
+      expect(decoder.verify(input)).not.toBe(input);
+    },
+  );
+
+  test('readonly arrays still reject bad items', () => {
+    expect(() => array(string).verify(['a', 1])).toThrow('Must be string (at index 1)');
+    expect(() => tuple(string, string).verify(['a', 1])).toThrow('Must be string');
   });
 });

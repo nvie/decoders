@@ -185,6 +185,13 @@ expectType<ReadonlyDecoder<{ type: 'a'; x: string } | { type: 'b'; y: number }>>
 expectType<Decoder<{ type: 'a'; x: string } | { type: 'b' }>>(
   taggedUnion('type', { a: roA, b: object({ type: constant('b') }) }),
 );
+expectType<ReadonlyDecoder<string[]>>(array(string));
+expectType<ReadonlyDecoder<string[][]>>(array(array(string), { max: 3 }));
+expectType<Decoder<number[]>>(array(numeric));
+expectType<ReadonlyDecoder<[string, ...string[]]>>(nonEmptyArray(string));
+expectType<Decoder<[number, ...number[]]>>(nonEmptyArray(numeric));
+expectType<ReadonlyDecoder<[string, number]>>(tuple(string, number));
+expectType<Decoder<[string, number]>>(tuple(string, numeric));
 
 expectType<'foo'>(infer(constant('foo')));
 expectType<'foo'>(infer(always('foo')));
