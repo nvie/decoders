@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { Annotation, Decoder, DecodeResult, DecoderType } from '~/core';
-import { annotate, annotateObject, define, merge, updateText } from '~/core';
+import type {
+  Annotation,
+  Decoder,
+  DecodeResult,
+  DecoderType,
+  ReadonlyDecoder,
+} from '~/core';
+import { annotate, annotateObject, defineReadonly, merge, updateText } from '~/core';
 import { quote } from '~/lib/text';
 import { isPlainObject } from '~/lib/utils';
 
@@ -77,8 +83,9 @@ function annotateUnsafeKey(plainObj: Record<string, unknown>): Annotation {
  * Accepts any "plain old JavaScript object", but doesn't validate its keys or
  * values further.
  */
-export const pojo: Decoder<Record<string, unknown>> = define((blob, ok, err) =>
-  isPlainObject(blob) ? ok(blob) : err('Must be an object'),
+export const pojo: ReadonlyDecoder<Record<string, unknown>> = defineReadonly(
+  isPlainObject,
+  'Must be an object',
 );
 
 /**

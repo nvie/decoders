@@ -1,5 +1,5 @@
-import type { Annotation, Decoder, DecoderType } from '~/core';
-import { define, summarize } from '~/core';
+import type { Annotation, Decoder, DecoderType, ReadonlyDecoder } from '~/core';
+import { define, defineReadonly, summarize } from '~/core';
 import { indent, quote } from '~/lib/text';
 import type { Scalar } from '~/lib/types';
 import { isNumber, isString } from '~/lib/utils';
@@ -88,14 +88,14 @@ export function either<TDecoders extends readonly Decoder<unknown>[]>(
  * specified values.
  */
 /* #__NO_SIDE_EFFECTS__ */
-export function oneOf<const C extends Scalar>(constants: readonly C[]): Decoder<C> {
-  return define((blob, ok, err) => {
-    const index = constants.indexOf(blob as C);
-    if (index !== -1) {
-      return ok(constants[index]);
-    }
-    return err(`Must be one of ${constants.map((value) => quote(value)).join(', ')}`);
-  });
+export function oneOf<const C extends Scalar>(
+  constants: readonly C[],
+): ReadonlyDecoder<C> {
+  return defineReadonly(
+    // Not .includes(), which would also match NaN
+    (blob): blob is C => constants.indexOf(blob as C) !== -1,
+    `Must be one of ${constants.map((value) => quote(value)).join(', ')}`,
+  );
 }
 
 /**
@@ -105,10 +105,10 @@ export function oneOf<const C extends Scalar>(constants: readonly C[]): Decoder<
 /* #__NO_SIDE_EFFECTS__ */
 export function enum_<TEnum extends Record<string, string | number>>(
   enumObj: TEnum,
-): Decoder<TEnum[keyof TEnum]> {
+): ReadonlyDecoder<TEnum[keyof TEnum]> {
   const values = Object.values(enumObj);
   if (!values.some(isNumber)) {
-    return oneOf(values) as Decoder<TEnum[keyof TEnum]>;
+    return oneOf(values) as ReadonlyDecoder<TEnum[keyof TEnum]>;
   } else {
     // Numeric enums (or mixed enums) require a bit more work. We'll definitely
     // want to allow all the numeric values.
@@ -119,7 +119,7 @@ export function enum_<TEnum extends Record<string, string | number>>(
     // numeric values we already covered
     const strings = values.filter(isString).filter((val) => !ignore.has(val));
 
-    return oneOf([...nums, ...strings]) as Decoder<TEnum[keyof TEnum]>;
+    return oneOf([...nums, ...strings]) as ReadonlyDecoder<TEnum[keyof TEnum]>;
   }
 }
 

@@ -1,5 +1,5 @@
-import type { Decoder, DecoderType } from '~/core';
-import { annotate, define } from '~/core';
+import type { Decoder, DecoderType, ReadonlyDecoder } from '~/core';
+import { annotate, defineReadonly } from '~/core';
 import type { SizeOptions } from '~/lib/options';
 import { sized } from '~/misc';
 
@@ -8,12 +8,10 @@ import { sized } from '~/misc';
  *
  * "poja" means "plain old JavaScript array", a play on `pojo()`.
  */
-export const poja: Decoder<unknown[]> = define((blob, ok, err) => {
-  if (!Array.isArray(blob)) {
-    return err('Must be an array');
-  }
-  return ok(blob as unknown[]);
-});
+export const poja: ReadonlyDecoder<unknown[]> = defineReadonly(
+  (blob): blob is unknown[] => Array.isArray(blob),
+  'Must be an array',
+);
 
 /**
  * Accepts arrays of whatever the given decoder accepts.

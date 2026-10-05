@@ -31,6 +31,7 @@ export { either, enum_, oneOf, select, taggedUnion } from '~/unions';
 export type {
   Annotation,
   ArrayAnnotation,
+  CallableDecoder,
   Decoder,
   DecodeResult,
   DecoderType,
@@ -39,6 +40,7 @@ export type {
   ObjectAnnotation,
   Ok,
   OpaqueAnnotation,
+  ReadonlyCallableDecoder,
   ReadonlyDecoder,
   Result,
   ScalarAnnotation,

@@ -84,6 +84,7 @@ import {
 import {
   expectDeprecated,
   expectError,
+  expectNotAssignable,
   expectNotDeprecated,
   expectType,
   expectAssignable,
@@ -142,6 +143,30 @@ expectType<Decoder<string[]>>(notRo.reject(() => null));
 expectType<Decoder<string[]>>(notRo.describe('Must be list'));
 expectType<Decoder<['x']>>(notRo.refineType<['x']>());
 expectType<Decoder<string[]>>(notRo.pipe(ro));
+
+// Readonly atomics
+expectAssignable<ReadonlyDecoder<string>>(string);
+expectAssignable<ReadonlyDecoder<number>>(number);
+expectAssignable<ReadonlyDecoder<boolean>>(boolean);
+expectAssignable<ReadonlyDecoder<unknown>>(unknown);
+expectAssignable<ReadonlyDecoder<Record<string, unknown>>>(pojo);
+expectAssignable<ReadonlyDecoder<unknown[]>>(poja);
+expectAssignable<ReadonlyDecoder<Date>>(date);
+expectAssignable<ReadonlyDecoder<string>>(hexadecimal);
+expectType<ReadonlyDecoder<'a'>>(constant('a'));
+expectType<ReadonlyDecoder<'a' | 'b'>>(oneOf(['a', 'b']));
+expectType<ReadonlyDecoder<string>>(string({ max: 5 }));
+expectType<ReadonlyDecoder<number>>(integer({ min: 0 }));
+expectType<ReadonlyDecoder<string>>(hexadecimal({ size: 4 }));
+expectType<ReadonlyDecoder<string>>(email);
+expectType<ReadonlyDecoder<`foo-${string}`>>(startsWith('foo-', { max: 10 }));
+expectType<ReadonlyDecoder<string>>(sized(string, { max: 3 }));
+expectType<ReadonlyDecoder<string>>(string.refine((s) => s.length > 0, 'Empty'));
+expectError(string.refine((s) => s.length > 0, 'Empty')({ max: 3 }));
+expectType<Decoder<string>>(trimmed({ max: 5 }));
+expectNotAssignable<ReadonlyDecoder<string>>(trimmed);
+expectNotAssignable<ReadonlyDecoder<number>>(numeric);
+expectNotAssignable<ReadonlyDecoder<boolean>>(truthy);
 
 expectType<'foo'>(infer(constant('foo')));
 expectType<'foo'>(infer(always('foo')));

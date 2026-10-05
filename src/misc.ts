@@ -1,5 +1,5 @@
-import type { Decoder } from '~/core';
-import { annotate, define } from '~/core';
+import type { Decoder, ReadonlyDecoder } from '~/core';
+import { annotate, define, defineReadonly } from '~/core';
 import type { Sized, SizeOptions } from '~/lib/options';
 import { bySizeOptions } from '~/lib/options';
 
@@ -16,10 +16,10 @@ export type Instance<K> = K extends Klass<infer T> ? T : never;
  */
 /* #__NO_SIDE_EFFECTS__ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function instanceOf<K extends Klass<any>>(klass: K): Decoder<Instance<K>> {
-  return define((blob, ok, err) =>
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    blob instanceof klass ? ok(blob) : err(`Must be ${klass.name} instance`),
+export function instanceOf<K extends Klass<any>>(klass: K): ReadonlyDecoder<Instance<K>> {
+  return defineReadonly(
+    (blob): blob is Instance<K> => blob instanceof klass,
+    `Must be ${klass.name} instance`,
   );
 }
 
@@ -37,6 +37,14 @@ export function lazy<T>(decoderFn: () => Decoder<T>): Decoder<T> {
 /**
  * Only accept strings, arrays, or sets with given length constraints.
  */
+export function sized<T extends Sized>(
+  decoder: ReadonlyDecoder<T>,
+  options: SizeOptions,
+): ReadonlyDecoder<T>;
+export function sized<T extends Sized>(
+  decoder: Decoder<T>,
+  options: SizeOptions,
+): Decoder<T>;
 /* #__NO_SIDE_EFFECTS__ */
 export function sized<T extends Sized>(
   decoder: Decoder<T>,

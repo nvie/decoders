@@ -1,5 +1,5 @@
-import type { Decoder } from '~/core';
-import { define } from '~/core';
+import type { Decoder, ReadonlyDecoder } from '~/core';
+import { define, defineReadonly } from '~/core';
 import { quote } from '~/lib/text';
 import type { Scalar } from '~/lib/types';
 
@@ -88,11 +88,10 @@ export function nullish<T, V>(
  * Accepts only the given constant value.
  */
 /* #__NO_SIDE_EFFECTS__ */
-export function constant<C extends Scalar>(value: C): Decoder<C> {
-  return define((blob, ok, err) =>
-    blob === value
-      ? ok(value)
-      : err(`Must be ${typeof value === 'symbol' ? String(value) : quote(value)}`),
+export function constant<C extends Scalar>(value: C): ReadonlyDecoder<C> {
+  return defineReadonly(
+    (blob): blob is C => blob === value,
+    `Must be ${typeof value === 'symbol' ? String(value) : quote(value)}`,
   );
 }
 
@@ -118,8 +117,8 @@ export function always<T>(value: (() => T) | T): Decoder<T> {
  * useful for explicitly disallowing keys, or for testing purposes.
  */
 /* #__NO_SIDE_EFFECTS__ */
-export function never(msg: string): Decoder<never> {
-  return define((_, __, err) => err(msg));
+export function never(msg: string): ReadonlyDecoder<never> {
+  return defineReadonly((_): _ is never => false, msg);
 }
 
 /**
@@ -134,9 +133,12 @@ export const fail = never;
  * course, the downside is that you won't know the type of the value statically
  * and you'll have to further refine it yourself.
  */
-export const unknown: Decoder<unknown> = define((blob, ok, _) => ok(blob));
+export const unknown: ReadonlyDecoder<unknown> = defineReadonly(
+  (_): _ is unknown => true,
+  'Must be anything',
+);
 
 /**
  * Alias of `unknown`.
  */
-export const anything: Decoder<unknown> = unknown;
+export const anything: ReadonlyDecoder<unknown> = unknown;

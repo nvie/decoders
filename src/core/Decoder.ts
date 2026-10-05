@@ -157,6 +157,16 @@ export interface CallableDecoder<T, O> extends Decoder<T> {
 }
 
 /**
+ * A readonly decoder that can also be called with options, to get
+ * a constrained version of itself, e.g. `string({ max: 10 })`.
+ */
+export interface ReadonlyCallableDecoder<T, O> extends ReadonlyDecoder<T> {
+  /** @deprecated Prefer not calling, e.g. `string` instead of `string()` */
+  (): ReadonlyDecoder<T>;
+  (options: O): ReadonlyDecoder<T>;
+}
+
+/**
  * Helper type to return the output type of a Decoder.
  * It’s the inverse of Decoder<T>.
  *
@@ -510,17 +520,25 @@ export function defineReadonly<T>(
  *
  * @internal
  */
-/* #__NO_SIDE_EFFECTS__ */
+export function callable<T, O>(
+  base: ReadonlyDecoder<T>,
+  configure: (self: ReadonlyDecoder<T>, options: O) => ReadonlyDecoder<T>,
+): ReadonlyCallableDecoder<T, O>;
 export function callable<T, O>(
   base: Decoder<T>,
   configure: (self: Decoder<T>, options: O) => Decoder<T>,
-): CallableDecoder<T, O> {
-  const fn = (options?: O): Decoder<T> =>
+): CallableDecoder<T, O>;
+/* #__NO_SIDE_EFFECTS__ */
+export function callable<D extends Decoder<unknown>, O>(
+  base: D,
+  configure: (self: D, options: O) => D,
+): D & ((options?: O) => D) {
+  const fn = (options?: O): D =>
     options === undefined ? self : configure(self, options);
   Object.setPrototypeOf(fn, DecoderImpl.prototype);
   // Copies the base decoder's own fields, in order, so all callables share
   // one shape
-  const self: CallableDecoder<T, O> = Object.assign(fn, base);
+  const self = Object.assign(fn, base);
   return self;
 }
 
