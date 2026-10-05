@@ -21,7 +21,7 @@ _Quick wins (independent, settled):_
 _Main track (each step builds on the previous):_
 
 - [x] `string`/`number`/`integer({...})`, `string()` & co. deprecated (Feature 1)
-- [x] `regex(re, { max, message? })`, `regex(re, msg)` deprecated
+- [x] `regex(re, { max, message? })`, `regex(re, msg)` kept as shorthand
 - [ ] `hexadecimal({ size })` & co.
 - [ ] `startsWith`/`endsWith` size options
 - [ ] `trimmed`
@@ -298,11 +298,12 @@ core. There is no numeric shorthand: it's always `hexadecimal({ size: 24 })`, ne
 `regex` itself becomes `regex(re, { min, max, size, message? })`: `SizeOptions` plus an
 optional message, checked length first, regex second. Everything after the pattern is
 optional, so `regex(/^\d+$/)` works too (message: `Must match /^\d+$/`). `regex(re, msg)`
-keeps working as a deprecated overload, told apart by `typeof` on the second argument.
+stays as shorthand for `regex(re, { message: msg })`, told apart by `typeof` on the second
+argument.
 
 ```ts
 regex(/^[a-z]+$/, { max: 20, message: 'Must be lowercase' });
-regex(/^[a-z]+$/, 'Must be lowercase'); // deprecated
+regex(/^[a-z]+$/, 'Must be lowercase'); // shorthand
 ```
 
 `startsWith` and `endsWith` are free functions, so they take `SizeOptions` positionally,

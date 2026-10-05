@@ -72,7 +72,13 @@ import {
   uuidv1,
   uuidv4,
 } from '../dist';
-import { expectDeprecated, expectError, expectType, expectAssignable } from 'tsd';
+import {
+  expectDeprecated,
+  expectError,
+  expectNotDeprecated,
+  expectType,
+  expectAssignable,
+} from 'tsd';
 
 // Helper function to "test" a decoder on some input, and assert the return type
 function infer<T>(decoder: Decoder<T>): T {
@@ -162,7 +168,7 @@ expectType<string>(infer(regex(/foo/, { size: 3 })));
 expectError(regex(/foo/, { size: 3, max: 10 }));
 expectError(regex(/foo/, { bogus: 3 }));
 expectType<string>(infer(regex(/foo/, 'Must be foo')));
-expectDeprecated(regex(/foo/, 'Must be foo'));
+expectNotDeprecated(regex(/foo/, 'Must be foo'));
 expectType<`foo-${string}`>(infer(startsWith('foo-')));
 expectType<`${string}-bar`>(infer(endsWith('-bar')));
 expectType<string>(infer(sized(string, { min: 1, max: 10 })));

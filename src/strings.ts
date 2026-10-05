@@ -35,7 +35,7 @@ export const nonEmptyString: Decoder<string> = regex(/\S/, {
  * Size options are checked before the regex runs.
  */
 export function regex(regex: RegExp, options?: RegexOptions): Decoder<string>;
-/** @deprecated Use `regex(re, { message })` instead */
+/** Shorthand for `regex(re, { message })` */
 export function regex(regex: RegExp, msg: string): Decoder<string>;
 /* #__NO_SIDE_EFFECTS__ */
 export function regex(regex: RegExp, options?: RegexOptions | string): Decoder<string> {

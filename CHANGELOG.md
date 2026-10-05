@@ -33,7 +33,7 @@
   Number decoders take `min`/`max` (inclusive) and `gt`/`lt` (exclusive). Calling them
   without options (`string()`) works, but is deprecated: use `string`.
 - `regex()` now takes options: size bounds, checked before the regex runs, and the error
-  message. `regex(re, msg)` still works, but is deprecated:
+  message. `regex(re, msg)` remains as shorthand for `regex(re, { message: msg })`:
   ```ts
   regex(/^[a-z]+$/, { max: 20, message: 'Must be lowercase' });
   ```
