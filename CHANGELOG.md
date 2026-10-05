@@ -37,6 +37,10 @@
   ```ts
   hexadecimal({ size: 64 }); // instead of sized(hexadecimal, { size: 64 })
   ```
+- `numeric` can now be called with range options, which apply to the decoded number:
+  ```ts
+  numeric({ min: 1, max: 100 }); // '42' → 42, '101' → Too high
+  ```
 - New `trimmed` decoder, which returns strings with surrounding whitespace removed. Size
   options apply to the trimmed value:
   ```ts

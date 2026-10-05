@@ -25,6 +25,7 @@ _Main track (each step builds on the previous):_
 - [x] Size options on `nonEmptyString`, `decimal`, `hexadecimal`, `identifier`
 - [ ] `startsWith`/`endsWith` size options
 - [x] `trimmed`
+- [x] `numeric({ min, max, gt, lt })`, bounding the decoded number
 - [ ] Deprecate `min`, `max`, `between`
 - [ ] Readonly: `isReadonly`, `ReadonlyDecoder<T>`, `defineReadonly()` (Feature 2)
 - [ ] `jsonYolo`
@@ -332,8 +333,9 @@ trimmed({ min: 1, max: 100 }); // '   '    → Too short
 ```
 
 The options constrain the decoded value, which is the rule for every callable atomic: for
-the others the decoded value _is_ the input, so the distinction never showed. It isn't a
-special case here either, since `sized` is a `.reject()` and rejects always see the
+most others the decoded value _is_ the input, so the distinction never showed. `numeric`
+is the other exception: `numeric({ max: 100 })` bounds the number, not the string's
+length. It isn't a special case here either, since `sized` is a `.reject()` and rejects always see the
 output. The same goes for the schema: `trimmed` is not readonly, so `constrain`
 (Feature 3) publishes no `minLength`/`maxLength` on the input, which is correct, because
 `'  ab  '` passes `{ max: 3 }`.
@@ -1487,7 +1489,7 @@ the callable-atomics WIP is `stash@{0}` on this branch and is superseded.
 
 **Callable atomics**
 
-- Deprecations to fold into the same major: `numeric`, `truthy`.
+- Deprecations to fold into the same major: `truthy`.
 - `inexact(fields, rest)` types as `ObjectDecoderType<Ds> & Record<string, R>`, so a field
   whose type is not assignable to `R` collapses toward `never` on read. Reject that at the
   type level (constrain `Ds` to decoders of `R`), or type the rest part as "other keys"

@@ -428,6 +428,14 @@ describe('numeric', () => {
     );
   });
 
+  test('range options apply to the decoded number', () => {
+    const decoder = numeric({ min: 1, max: 100 });
+    expect(decoder.verify('100')).toBe(100);
+    expect(decoder.verify('0001')).toBe(1);
+    expect(() => decoder.verify('0')).toThrow('Too low, must be between 1 and 100');
+    expect(() => decoder.verify('101')).toThrow('Too high, must be between 1 and 100');
+  });
+
   test('fuzz', () => {
     fc.assert(
       fc.property(fc.anything(), (input) => {

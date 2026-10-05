@@ -1,9 +1,9 @@
 import type { CallableDecoder, Decoder } from '~/core';
 import { callable, define } from '~/core';
-import type { RegexOptions, SizeOptions } from '~/lib/options';
+import type { RangeOptions, RegexOptions, SizeOptions } from '~/lib/options';
 import { bySizeOptions } from '~/lib/options';
 import { sized } from '~/misc';
-import { natural } from '~/numbers';
+import { natural, ranged } from '~/numbers';
 import { isString } from '~/lib/utils';
 
 import { instanceOf } from './misc';
@@ -195,10 +195,12 @@ export const hexadecimal: CallableDecoder<string, SizeOptions> =
   /* #__PURE__ */ sizedRegex(/^[0-9a-f]+$/i, 'Must only contain hexadecimal digits');
 
 /**
- * Accepts valid numerical strings (in base-10) and returns them as a number.
+ * Accepts valid numerical strings (in base-10) and returns them as a safe
+ * natural number. Range options apply to the number, not to the string.
  * To only accept numerical strings and keep them as string values, use the
  * `decimal` decoder.
  */
-export const numeric: Decoder<number> = /* #__PURE__ */ decimal
-  .transform(Number)
-  .pipe(natural);
+export const numeric: CallableDecoder<number, RangeOptions> = /* #__PURE__ */ callable(
+  /* #__PURE__ */ decimal.transform(Number).pipe(natural),
+  ranged,
+);

@@ -5,7 +5,7 @@ import { byRangeOptions } from '~/lib/options';
 import { isBigInt, isNumber, isSignNegative, isSignPositive } from '~/lib/utils';
 
 /* #__NO_SIDE_EFFECTS__ */
-function ranged(decoder: Decoder<number>, options: RangeOptions): Decoder<number> {
+export function ranged(decoder: Decoder<number>, options: RangeOptions): Decoder<number> {
   return decoder.reject(byRangeOptions(options));
 }
 
