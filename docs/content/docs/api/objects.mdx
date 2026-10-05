@@ -11,7 +11,7 @@ description: Object decoders for validating structured data.
   name="object"
   params="{ field1: Decoder<A>, field2: Decoder<B>, ... }"
   type="{ field1: A, field2: B, ... }"
-  source="objects.ts#L154-L164"
+  source="objects.ts#L183-L193"
   multiline
 />
 
@@ -34,7 +34,7 @@ and `inexact`.
   name="exact"
   params="{ field1: Decoder<A>, field2: Decoder<B>, ... }"
   type="{ field1: A, field2: B, ... }"
-  source="objects.ts#L166-L206"
+  source="objects.ts#L195-L253"
   multiline
 />
 
@@ -57,7 +57,7 @@ and `inexact`.
   name="inexact"
   params="{ field1: Decoder<A>, field2: Decoder<B>, ... }"
   type="{ field1: A, field2: B, ... }"
-  source="objects.ts#L208-L260"
+  source="objects.ts#L255-L325"
   multiline
 />
 
@@ -140,7 +140,7 @@ a field named `__proto__`, write a custom decoder with [`define()`][].
   name="record"
   params="values: Decoder<V>, options?: SizeOptions"
   type="Record<string, V>"
-  source="collections.ts#L9-L83"
+  source="collections.ts#L10-L97"
 />
 
 <DecoderSig
@@ -195,7 +195,7 @@ decoded, like it is for [`array()`][].
 
 ### pojo
 
-<DecoderSig name="pojo" type="Record<string, unknown>" source="objects.ts#L76-L82" />
+<DecoderSig name="pojo" type="Record<string, unknown>" source="objects.ts#L89-L96" />
 
 Accepts any "plain old JavaScript object", but doesn't validate its keys or values
 further.

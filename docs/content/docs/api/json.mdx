@@ -5,7 +5,7 @@ description: Decoders for validating JSON-compatible values.
 
 ## json
 
-<DecoderSig name="json" type="JSONValue" source="json.ts#L26-L49" />
+<DecoderSig name="json" type="JSONValue" source="json.ts#L30-L53" />
 
 Accepts any value that's a valid JSON value.
 
@@ -31,7 +31,7 @@ type JSONValue = null | string | number | boolean | { [string]: JSONValue } | JS
 
 ## jsonObject
 
-<DecoderSig name="jsonObject" type="{ [string]: JSONValue }" source="json.ts#L16-L19" />
+<DecoderSig name="jsonObject" type="{ [string]: JSONValue }" source="json.ts#L16-L21" />
 
 Accepts objects that contain only valid JSON values.
 
@@ -44,7 +44,7 @@ Accepts objects that contain only valid JSON values.
 
 ## jsonArray
 
-<DecoderSig name="jsonArray" type="JSONValue[]" source="json.ts#L21-L24" />
+<DecoderSig name="jsonArray" type="JSONValue[]" source="json.ts#L23-L28" />
 
 Accepts arrays that contain only valid JSON values.
 
