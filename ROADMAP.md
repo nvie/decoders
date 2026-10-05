@@ -22,7 +22,7 @@ _Main track (each step builds on the previous):_
 
 - [x] `string`/`number`/`integer({...})`, `string()` & co. deprecated (Feature 1)
 - [x] `regex(re, { max, message? })`, `regex(re, msg)` kept as shorthand
-- [ ] `hexadecimal({ size })` & co.
+- [ ] Size options on `nonEmptyString`, `decimal`, `hexadecimal`, `identifier`
 - [ ] `startsWith`/`endsWith` size options
 - [ ] `trimmed`
 - [ ] Deprecate `min`, `max`, `between`
@@ -290,10 +290,10 @@ export const hexadecimal = callable(
 hexadecimal({ size: 64 });
 ```
 
-The `configure` callback owns the composition, so any string atomic (`decimal`,
-`identifier`, `nonEmptyString`, `uuid`) can take the same treatment without touching the
-core. There is no numeric shorthand: it's always `hexadecimal({ size: 24 })`, never
-`hexadecimal(24)`.
+The `configure` callback owns the composition, so any string atomic can take the same
+treatment without touching the core. In 3.0, `nonEmptyString`, `decimal`, `hexadecimal`
+and `identifier` all get size options this way. There is no numeric shorthand: it's
+always `hexadecimal({ size: 24 })`, never `hexadecimal(24)`.
 
 `regex` itself becomes `regex(re, { min, max, size, message? })`: `SizeOptions` plus an
 optional message, checked length first, regex second. Everything after the pattern is
@@ -308,8 +308,8 @@ regex(/^[a-z]+$/, 'Must be lowercase'); // shorthand
 
 `startsWith` and `endsWith` are free functions, so they take `SizeOptions` positionally,
 like `array(d, opts)`, with the same length-first order. Bounds count the whole string,
-prefix included, matching `sized()` and the emitted `maxLength`. The return type keeps its
-template literal:
+prefix included, matching `sized()` and the emitted `maxLength`. No numeric shorthand here
+either: never `startsWith('henk_', 24)`. The return type keeps its template literal:
 
 ```ts
 startsWith('henk_', { size: 24 }); // Decoder<`henk_${string}`>
@@ -1487,8 +1487,6 @@ the callable-atomics WIP is `stash@{0}` on this branch and is superseded.
 
 **Callable atomics**
 
-- Which string atomics become callable in 3.0 beyond `string`: `nonEmptyString`,
-  `decimal`, `hexadecimal`, `identifier`? `nanoid(options?)` stays a function.
 - Deprecations to fold into the same major: `numeric`, `truthy`.
 - `inexact(fields, rest)` types as `ObjectDecoderType<Ds> & Record<string, R>`, so a field
   whose type is not assignable to `R` collapses toward `never` on read. Reject that at the
