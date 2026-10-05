@@ -165,6 +165,15 @@ function format(err: Annotation, formatter: Formatter): Error {
 }
 
 /**
+ * Brand identifying a value as a Decoder. It lives on the shared prototype, so
+ * decoders carry it for free. `Symbol.for()` is used so that decoders are
+ * still recognized across duplicate copies of this library.
+ *
+ * @internal
+ */
+const kBrand = Symbol.for('decoders.Decoder.v3');
+
+/**
  * The implementation behind every `Decoder<T>`.
  *
  * @internal
@@ -366,6 +375,9 @@ class DecoderImpl<T> implements Decoder<T> {
   }
 }
 
+// @ts-expect-error: Brand is set on the prototype for performance, not the instance
+DecoderImpl.prototype[kBrand] = true;
+
 // The binding can't be named `Decoder` (that's the public interface), but the
 // class's name is what shows up in `console.log()` and `.constructor.name`
 Object.defineProperty(DecoderImpl, 'name', { value: 'Decoder' });
@@ -385,20 +397,7 @@ Object.defineProperty(DecoderImpl, 'name', { value: 'Decoder' });
  */
 /* #__NO_SIDE_EFFECTS__ */
 export function define<T>(fn: AcceptanceFn<T>): Decoder<T> {
-  const decoder: Decoder<T> = new DecoderImpl(fn);
-  return stamp(decoder);
-}
-
-/** @internal */
-const kDecoderRegistry = Symbol.for('decoders.kDecoderRegistry');
-// eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
-const _stamped: WeakSet<Decoder<unknown>> = ((globalThis as any)[kDecoderRegistry] ??=
-  new WeakSet());
-
-/** @internal */
-function stamp<D extends Decoder<unknown>>(decoder: D): D {
-  _stamped.add(decoder);
-  return decoder;
+  return new DecoderImpl(fn);
 }
 
 /**
@@ -406,5 +405,5 @@ function stamp<D extends Decoder<unknown>>(decoder: D): D {
  */
 /* #__NO_SIDE_EFFECTS__ */
 export function isDecoder(value: unknown): value is Decoder<unknown> {
-  return _stamped.has(value as Decoder<unknown>);
+  return typeof value === 'object' && value !== null && kBrand in value;
 }
