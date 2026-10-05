@@ -9,7 +9,7 @@ description: Decoders for union types and tagged unions.
   name="either"
   params="Decoder<A>, Decoder<B>, ..."
   type="A | B | ..."
-  source="unions.ts#L50-L84"
+  source="unions.ts#L50-L93"
 />
 
 Accepts values accepted by any of the given decoders.
@@ -26,7 +26,7 @@ accepts the input "wins". If all decoders reject the input, the input gets rejec
 
 ## oneOf
 
-<DecoderSig name="oneOf" params="values: T[]" type="T" source="unions.ts#L86-L99" />
+<DecoderSig name="oneOf" params="values: T[]" type="T" source="unions.ts#L95-L108" />
 
 Accepts any value that is strictly-equal (using `===`) to one of the specified values.
 
@@ -51,7 +51,7 @@ optional(oneOf(['foo', 'bar'])); // Decoder<'foo' | 'bar' | undefined>
   name="taggedUnion"
   params="field: string, mapping: { value1: Decoder<A>, value2: Decoder<B>, ... }"
   type="A | B | ..."
-  source="unions.ts#L126-L168"
+  source="unions.ts#L135-L188"
   multiline
 />
 
@@ -101,7 +101,7 @@ and is more performant at runtime because it doesn't have to try all decoders on
   name="select"
   params="scout: Decoder<T>, selectFn: (result: T) => Decoder<A> | Decoder<B> | ..."
   type="A | B | ..."
-  source="unions.ts#L170-L188"
+  source="unions.ts#L190-L227"
   multiline
 />
 
