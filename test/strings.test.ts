@@ -421,16 +421,29 @@ describe('numeric', () => {
     expect(() => decoder.verify('7e4')).toThrow();
   });
 
+  test('rejects unsafe integers', () => {
+    expect(decoder.verify('9007199254740991')).toBe(9007199254740991);
+    expect(() => decoder.verify('9007199254740992')).toThrow(
+      'Number must be a safe integer',
+    );
+  });
+
   test('fuzz', () => {
     fc.assert(
       fc.property(fc.anything(), (input) => {
-        if (typeof input === 'string' && /^[0-9]+$/.test(input)) {
+        if (
+          typeof input === 'string' &&
+          /^[0-9]+$/.test(input) &&
+          BigInt(input) <= 9007199254740991n
+        ) {
           expect(decoder.verify(input)).toBe(Number(input));
         } else {
           expect(() => decoder.verify(input)).toThrow();
         }
       }),
-      { examples: [['0 '], ['.0'], ['0.'], ['-0'], ['+0'], ['00']] },
+      {
+        examples: [['0 '], ['.0'], ['0.'], ['-0'], ['+0'], ['00'], ['9007199254740992']],
+      },
     );
   });
 });

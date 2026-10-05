@@ -3,6 +3,7 @@ import { callable, define } from '~/core';
 import type { RegexOptions, SizeOptions } from '~/lib/options';
 import { bySizeOptions } from '~/lib/options';
 import { sized } from '~/misc';
+import { natural } from '~/numbers';
 import { isString } from '~/lib/utils';
 
 import { instanceOf } from './misc';
@@ -198,4 +199,6 @@ export const hexadecimal: CallableDecoder<string, SizeOptions> =
  * To only accept numerical strings and keep them as string values, use the
  * `decimal` decoder.
  */
-export const numeric: Decoder<number> = /* #__PURE__ */ decimal.transform(Number);
+export const numeric: Decoder<number> = /* #__PURE__ */ decimal
+  .transform(Number)
+  .pipe(natural);

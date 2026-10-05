@@ -13,7 +13,7 @@
 - `.pipe()` no longer accepts a function, and throws when given one. To dynamically pick
   the next decoder, use `.chain((value) => decoder)` instead, which now infers the union
   type when the function returns different decoders.
-- `integer`, `natural`, and `positiveInteger` now reject unsafe integers
+- `integer`, `natural`, `positiveInteger`, and `numeric` now reject unsafe integers
   (beyond ±2^53−1).
 - `natural` and `nonNegativeNumber` now check the sign first (happy path
   optimization). This can lead to a different error message compared to 2.x.
