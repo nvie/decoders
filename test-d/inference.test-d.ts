@@ -202,6 +202,20 @@ expectType<ReadonlyDecoder<Record<`a${string}`, number>>>(
 );
 expectType<Decoder<Record<string, number>>>(record(numeric));
 expectType<Decoder<Record<string, string>>>(record(trimmed, string));
+expectType<ReadonlyDecoder<{ a: string; b?: number | undefined }>>(
+  exact({ a: string, b: optional(number) }),
+);
+expectType<ReadonlyDecoder<Record<string, never>>>(exact({}));
+expectType<Decoder<{ a: number }>>(exact({ a: numeric }));
+expectType<ReadonlyDecoder<{ a: string } & Record<string, unknown>>>(
+  inexact({ a: string }),
+);
+expectType<Decoder<{ a: number } & Record<string, unknown>>>(inexact({ a: numeric }));
+expectNotAssignable<ReadonlyDecoder<unknown>>(object({ a: string }));
+function needsRo<T>(_d: ReadonlyDecoder<T>) {}
+needsRo(exact({ a: string, b: array(number) }));
+expectError(needsRo(object({ a: string })));
+expectError(needsRo(exact({ a: string.transform((s) => s) })));
 
 expectType<'foo'>(infer(constant('foo')));
 expectType<'foo'>(infer(always('foo')));
