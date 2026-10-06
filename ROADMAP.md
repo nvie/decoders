@@ -321,8 +321,8 @@ hexadecimal({ size: 64 });
 
 The `configure` callback owns the composition, so any string atomic can take the same
 treatment without touching the core. In 3.0, `nonEmptyString`, `decimal`, `hexadecimal`
-and `identifier` all get size options this way. There is no numeric shorthand: it's
-always `hexadecimal({ size: 24 })`, never `hexadecimal(24)`.
+and `identifier` all get size options this way. There is no numeric shorthand: it's always
+`hexadecimal({ size: 24 })`, never `hexadecimal(24)`.
 
 `regex` itself becomes `regex(re, { min, max, size, message? })`: `SizeOptions` plus an
 optional message, checked length first, regex second. Everything after the pattern is
@@ -363,10 +363,10 @@ trimmed({ min: 1, max: 100 }); // '   '    → Too short
 The options constrain the decoded value, which is the rule for every callable atomic: for
 most others the decoded value _is_ the input, so the distinction never showed. `numeric`
 is the other exception: `numeric({ max: 100 })` bounds the number, not the string's
-length. It isn't a special case here either, since `sized` is a `.reject()` and rejects always see the
-output. The same goes for the schema: `trimmed` is not readonly, so `constrain`
-(Feature 3) publishes no `minLength`/`maxLength` on the input, which is correct, because
-`'  ab  '` passes `{ max: 3 }`.
+length. It isn't a special case here either, since `sized` is a `.reject()` and rejects
+always see the output. The same goes for the schema: `trimmed` is not readonly, so
+`constrain` (Feature 3) publishes no `minLength`/`maxLength` on the input, which is
+correct, because `'  ab  '` passes `{ max: 3 }`.
 
 Not `string({ trim: true })`: that would make `string` a transforming decoder for some
 options, and it would stop being readonly depending on an argument. Two names keep
