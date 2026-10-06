@@ -27,6 +27,7 @@ import {
   isoDate,
   isoDateString,
   ksuid,
+  lazy,
   nanoid,
   natural,
   never,
@@ -47,6 +48,7 @@ import {
   positiveNumber,
   record,
   regex,
+  select,
   sized,
   startsWith,
   string,
@@ -302,5 +304,38 @@ describe('exact, inexact, object', () => {
     expect(() =>
       inexact({ a: string }).verify(JSON.parse('{"a":"x","__proto__":1}')),
     ).toThrow('Unsafe key');
+  });
+});
+
+describe('lazy, select', () => {
+  test('not readonly by default', () => {
+    expect(lazy(() => string).isReadonly).toBe(false);
+    expect(select(unknown, () => string).isReadonly).toBe(false);
+  });
+
+  test('readonly when declared so', () => {
+    const obj = { a: 1 };
+
+    const lazyDecoder = lazy(() => pojo, { readonly: true });
+    expect(lazyDecoder.isReadonly).toBe(true);
+    expect(lazyDecoder.verify(obj)).toBe(obj);
+
+    const selectDecoder = select(unknown, () => pojo, { readonly: true });
+    expect(selectDecoder.isReadonly).toBe(true);
+    expect(selectDecoder.verify(obj)).toBe(obj);
+  });
+
+  test('throw when the declared readonly decoder is not', () => {
+    // @ts-expect-error: the types reject this too
+    const lazyDecoder = lazy(() => object({}), { readonly: true });
+    expect(() => lazyDecoder.decode({})).toThrow(
+      'lazy() was declared readonly, but its decoder is not',
+    );
+
+    // @ts-expect-error: the types reject this too
+    const selectDecoder = select(unknown, () => object({}), { readonly: true });
+    expect(() => selectDecoder.decode({})).toThrow(
+      'select() was declared readonly, but the selected decoder is not',
+    );
   });
 });
