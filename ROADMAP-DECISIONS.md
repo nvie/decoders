@@ -12,22 +12,44 @@ Four independent reasons, any one of which is sufficient:
    swapped prototype, never `new DecoderImpl()`. The interface is the contract; the class
    is one way to satisfy it, and `callable()` is another.
 2. **A class cannot have a call signature.**
-   `interface StringDecoder extends ReadonlyDecoder<string> { (options: SizeOptions): ReadonlyDecoder<string> }`
+   `interface ReadonlyCallableDecoder<T, O> extends ReadonlyDecoder<T> { (options: O): ReadonlyDecoder<T> }`
    is expressible only as an interface. Callable atomics are impossible otherwise.
 3. **Internals would leak.** `schema` and `isReadonly` live on the implementation.
    Publishing the class publishes them — in hovers, in `.d.ts`, in every user's
    autocomplete.
 4. **`ReadonlyDecoder<T>` is interface composition.** Narrowing `isReadonly` to `true` by
-   extension, and resolving `Like<this, U>` through polymorphic `this`, both want an
-   interface.
+   extension, and picking an overload by the type of `this`, both want an interface.
 
-## `Like<this, X>`, not a bare `this` return
+## `this:`-parameter overloads, not `Like<this, X>`
 
-`Like<this, X>` rather than a bare `this` return is what keeps the callable atomics
-honest: with `this`, `string.refine(p, msg)` would type as `StringDecoder`, i.e. still
-callable, and `string.refine(p, 'x')({ max: 5 })` would compile and then crash, because
-`refine` hands back a plain decoder. `Like` erases the call signature and keeps only the
-readonly-ness.
+A readonly-preserving method has two overloads on `Decoder<T>`, picked by the type of the
+receiver:
+
+```ts
+reject(this: ReadonlyDecoder<T>, f: RejectFn<T>): ReadonlyDecoder<T>;
+reject(f: RejectFn<T>): Decoder<T>;
+```
+
+A bare `this` return was never an option: `string.refine(p, msg)` would type as a callable
+decoder, so `string.refine(p, 'x')({ max: 5 })` would compile and then crash, because
+`refine` hands back a plain decoder. The overloads return plain `ReadonlyDecoder<T>` or
+`Decoder<T>`, which erases the call signature.
+
+A conditional `Like<this, X>` return type was the original design, but TS can't resolve it
+inside the implementing class, so every method would need a cast, and `Like` (plus `Wrap`
+for the free-function combinators) would have to be exported, since it shows up in
+inferred types. The overloads need neither.
+
+The cost: inside a generic helper, the overload is picked before the receiver is known, so
+readonly-ness is lost
+(`function f<D extends Decoder<string>>(d: D) { return d.refine(...) }` returns
+`Decoder<string>`). That's accepted: a helper that takes a decoder can't promise readonly
+anyway, since it may just as well call `.transform()`.
+
+Free-function combinators follow the same pattern, with a readonly overload first:
+`array(d: ReadonlyDecoder<T>): ReadonlyDecoder<T[]>`, then
+`array(d: Decoder<T>): Decoder<T[]>`. Internally they're built with
+`make(fn, isReadonly)`, which derives the flag from the children at construction.
 
 ## Nothing re-declared on `ReadonlyDecoder<T>`
 
@@ -36,7 +58,29 @@ overload pair, but `refineType<S extends T>(): ReadonlyDecoder<S>` breaks assign
 `Decoder<unknown>`. It takes no parameters, so there is nothing to infer from and TS has
 to relate the constraints directly (`string` against `unknown`). `ReadonlyDecoder<T>`
 therefore narrows `isReadonly` and re-declares nothing; the readonly-ness of method
-results comes from `Like<this, X>` on `Decoder<T>` itself.
+results comes from the `this:` overloads on `Decoder<T>` itself.
+
+## Two callable types
+
+Most callable atomics are readonly (`string`, `number`, `hexadecimal`, …), but `trimmed`
+and `numeric` transform their input. So there are two interfaces, both exported:
+`ReadonlyCallableDecoder<T, O>` (extends `ReadonlyDecoder<T>`, and calling it returns one)
+and `CallableDecoder<T, O>` (extends `Decoder<T>`).
+
+## A readonly `lazy()` or `select()` that resolves to a non-readonly decoder throws
+
+`lazy(fn, { readonly: true })` and `select(scout, fn, { readonly: true })` require `fn` to
+return a `ReadonlyDecoder` at the type level, so a mismatch only happens through casts or
+`any`. At runtime it throws a setup error when the decoder resolves: on the first decode
+for `lazy()` (it's memoized), on each selection for `select()`. It's a programmer error,
+like `.chain(decoder)` throwing, so it's not reported as a decode error, even though it
+means `.decode()` can throw in this one misuse case.
+
+## Readonly `exact()`/`inexact()` keep the input's shape
+
+Handing back the input means explicitly `undefined` keys are kept, and keys keep the
+input's order instead of the definition's. Both are inherent to not copying. `object()`,
+which always copies, keeps the normalized shape.
 
 ## `either()` does not dispatch
 

@@ -22,8 +22,26 @@
   `select()` or `.chain()` instead.
 - Remove `setFromArray` and `mapping`. Use `array(d).transform((xs) => new Set(xs))` and
   `record(d).transform((obj) => new Map(Object.entries(obj)))` instead.
+- `exact`, `inexact`, `array`, `nonEmptyArray`, `tuple`, `record`, and `json` now return
+  the input itself instead of a copy when all of their children only validate. For
+  `exact` and `inexact`, this means explicitly `undefined` keys are kept, and keys keep
+  the input's order. `object()` still always copies. See the
+  [migration guide](./MIGRATING-v3.md).
 
 **New APIs:**
+
+- Readonly decoders: `decoder.isReadonly` is `true` when a decoder is guaranteed to hand
+  back its input as-is, i.e. `decoder.verify(x) === x`. Readonly decoders are typed as
+  `ReadonlyDecoder<T>`.
+  ```ts
+  json.verify(input) === input; // true
+  exact({ name: string }).isReadonly; // true
+  exact({ name: string.transform(upper) }).isReadonly; // false
+  object({ name: string }).isReadonly; // false: strips unknown keys
+  ```
+- `defineReadonly(guard, msg)` defines a custom readonly decoder from a type guard.
+- `lazy()` and `select()` take a `{ readonly: true }` option, to declare that the decoder
+  they resolve to is readonly.
 
 - `string`, `number`, `integer`, `natural`, and `nonNegativeNumber` can now be called with
   options, to put the constraint right next to the type:

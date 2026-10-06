@@ -102,8 +102,10 @@ You can check this with `decoder.isReadonly`:
 - `false`: may return a copy, a transformed value, or the input itself. Depends on the
   implementation.
 
-Related: keys that are explicitly `undefined` in the input are now retained in the output
-of `exact` and `inexact` (`{ a: undefined }` stays `{ a: undefined }`).
+Related: when `exact` or `inexact` return the input itself, keys that are explicitly
+`undefined` in the input are retained (`{ a: undefined }` stays `{ a: undefined }`), and
+keys keep the input's order rather than the order of the definition. Use `object()`, which
+always copies, if you need the normalized shape.
 
 ## Don't destructure methods
 

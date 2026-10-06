@@ -27,7 +27,7 @@ _Main track (each step builds on the previous):_
 - [x] `trimmed`
 - [x] `numeric({ min, max, gt, lt })`, bounding the decoded number
 - [x] Deprecate `min`, `max`, `between`
-- [ ] Readonly: `isReadonly`, `ReadonlyDecoder<T>`, `defineReadonly()` (Feature 2)
+- [x] Readonly: `isReadonly`, `ReadonlyDecoder<T>`, `defineReadonly()` (Feature 2)
 - [ ] `jsonYolo`
 - [ ] `toJSONSchema()`, `~standard.jsonSchema` (Feature 3)
 - [ ] `taggedUnion(key, ...branches)`, object form removed (Feature 5)
@@ -182,17 +182,35 @@ own fields in the same order (verified: all callables share one hidden class, me
 speed identical to a plain instance):
 
 ```ts
-function callable<T, O>(base: Decoder<T>, configure: (self: Decoder<T>, options: O) => Decoder<T>) {
+function callable<T, O>(
+  base: Decoder<T>,
+  configure: (self: Decoder<T>, options: O) => Decoder<T>,
+) {
   const self = (options?: O) => (options === undefined ? self : configure(self, options)); // string() -> string
   Object.setPrototypeOf(self, DecoderImpl.prototype);
   return init(self, base); // copies base's own fields, in order
 }
 
-export const string: StringDecoder = callable(define(...), sized);
-export const number: NumberDecoder = callable(anyNumber.refine(Number.isFinite, 'Number must be finite'), ranged);
-export const integer: NumberDecoder = callable(anyNumber.reject(/* see Safe integers */), ranged);
-export const natural: NumberDecoder = callable(anyNumber.reject(/* … */), ranged);
-export const nonNegativeNumber: NumberDecoder = callable(anyNumber.reject(/* … */), ranged);
+export const string: ReadonlyCallableDecoder<string, SizeOptions> = callable(
+  defineReadonly(isString, 'Must be string'),
+  sized,
+);
+export const number: ReadonlyCallableDecoder<number, RangeOptions> = callable(
+  anyNumber.refine(Number.isFinite, 'Number must be finite'),
+  ranged,
+);
+export const integer: ReadonlyCallableDecoder<number, RangeOptions> = callable(
+  anyNumber.reject(/* see Safe integers */),
+  ranged,
+);
+export const natural: ReadonlyCallableDecoder<number, RangeOptions> = callable(
+  anyNumber.reject(/* … */),
+  ranged,
+);
+export const nonNegativeNumber: ReadonlyCallableDecoder<number, RangeOptions> = callable(
+  anyNumber.reject(/* … */),
+  ranged,
+);
 ```
 
 Every number decoder takes `RangeOptions`, except `anyNumber`: it accepts `NaN`, which
@@ -207,19 +225,20 @@ flows through `either()`, `object()`, `.pipe()` and `Record<string, Decoder<unkn
 like any other decoder:
 
 ```ts
-interface StringDecoder extends Decoder<string> {
-  /** @deprecated Prefer `string` over `string()` */
-  (): Decoder<string>;
-  (options: SizeOptions): Decoder<string>;
+interface ReadonlyCallableDecoder<T, O> extends ReadonlyDecoder<T> {
+  /** @deprecated Prefer not calling, e.g. `string` instead of `string()` */
+  (): ReadonlyDecoder<T>;
+  (options: O): ReadonlyDecoder<T>;
 }
-interface NumberDecoder extends Decoder<number> {
-  /** @deprecated Prefer `number` over `number()` */
-  (): Decoder<number>;
-  (options: RangeOptions): Decoder<number>;
+interface CallableDecoder<T, O> extends Decoder<T> {
+  /** @deprecated Prefer not calling, e.g. `string` instead of `string()` */
+  (): Decoder<T>;
+  (options: O): Decoder<T>;
 }
 
-string({ min: 2, max: 10 }); // Decoder<string>
-either(string({ max: 3 }), number({ min: 0 })); // Decoder<string | number>
+string({ min: 2, max: 10 }); // ReadonlyDecoder<string>
+either(string({ max: 3 }), number({ min: 0 })); // ReadonlyDecoder<string | number>
+trimmed({ max: 5 }); // Decoder<string>: trims, so not readonly
 string(); // works, returns `string` itself, but flagged as deprecated
 ```
 
@@ -231,8 +250,9 @@ message. The options overload must come last if anything still infers from the c
 signature, since TS infers from the last overload. That was `.pipe(fn)`, which is gone
 (below), so this may no longer matter (verify in `test-d`).
 
-Once readonly lands (Feature 2) the base becomes `ReadonlyDecoder<string>` and the call
-signature returns one too; nothing else in these signatures changes.
+With readonly (Feature 2), a readonly base gives a `ReadonlyCallableDecoder`, whose call
+signature returns a `ReadonlyDecoder` too. `trimmed` and `numeric` transform their input,
+so they're plain `CallableDecoder`s.
 
 `.pipe()` takes decoders only, and `.chain()` takes functions only. Each throws at
 construction when given the other kind, pointing to the right method. For `.chain()`
@@ -407,9 +427,13 @@ export function exact(fields) {
 }
 ```
 
-One `decodeFields(keys, decodes, obj, out | null)` loop serves `object`, `exact`, and
-`inexact`. "Missing key" is exactly "the field decoder rejected `undefined`", which
-removes today's three `Set`s while keeping error messages byte for byte.
+One `decodeFields(decoders, keys, obj, out | null)` loop serves `object`, `exact`, and
+`inexact`, keeping error messages byte for byte. With `out === null` it only validates.
+"Missing key" is exactly "the field decoder rejected `undefined`".
+
+Handing back the input means a readonly `exact()`/`inexact()` keeps explicitly `undefined`
+keys, and keeps the input's key order instead of the definition's. `object()`, which
+always copies, keeps the normalized shape.
 
 `object()` is never readonly, because it strips unknown keys: its output is not always its
 input. That only means it _may_ copy, not that it must. The implementation is free to copy
@@ -431,8 +455,10 @@ readonly by construction, and its schema is `{}`, since it accepts anything.
 
 The two places a factory hides the child from static analysis, `lazy()` and `select()`,
 take an explicit `{ readonly: true }` that is type-checked (`() => ReadonlyDecoder<T>`)
-and verified once at resolution. `lazy()` memoizes its factory, which also fixes
-`jsonObject` constructing a fresh `record()` decoder per nested object per decode today.
+and verified at resolution: once for `lazy()`, per selection for `select()`. A mismatch
+(only possible through casts or `any`) throws a setup error. `lazy()` memoizes its
+factory, which also fixes `jsonObject` constructing a fresh `record()` decoder per nested
+object per decode.
 
 ```ts
 const jsonObject = lazy(() => record(json), { readonly: true });
@@ -453,74 +479,76 @@ interface Decoder<T> {
   verify(blob: unknown, formatter?: Formatter): T;
   value(blob: unknown): T | undefined;
 
-  refine<N extends T>(p: (v: T) => v is N, msg: string): Like<this, N>; // readonly-preserving
-  refine(p: (v: T) => boolean, msg: string): Like<this, T>;
-  reject(f: (v: T) => string | Annotation | null): Like<this, T>;
-  describe(msg: string): Like<this, T>;
-  refineType<S extends T>(): Like<this, S>;
+  // Readonly-preserving: one overload per receiver kind, picked by `this`
+  refine<N extends T>(
+    this: ReadonlyDecoder<T>,
+    p: (v: T) => v is N,
+    msg: string,
+  ): ReadonlyDecoder<N>;
+  refine(this: ReadonlyDecoder<T>, p: (v: T) => boolean, msg: string): ReadonlyDecoder<T>;
+  refine<N extends T>(p: (v: T) => v is N, msg: string): Decoder<N>;
+  refine(p: (v: T) => boolean, msg: string): Decoder<T>;
+  reject(
+    this: ReadonlyDecoder<T>,
+    f: (v: T) => string | Annotation | null,
+  ): ReadonlyDecoder<T>;
+  reject(f: (v: T) => string | Annotation | null): Decoder<T>;
+  describe(this: ReadonlyDecoder<T>, msg: string): ReadonlyDecoder<T>;
+  describe(msg: string): Decoder<T>;
+  refineType<S extends T>(this: ReadonlyDecoder<T>): ReadonlyDecoder<S>;
+  refineType<S extends T>(): Decoder<S>;
 
-  transform<V>(f: (v: T) => V): Decoder<V>; // readonly-destroying
+  // Readonly only if both sides are
+  pipe<V>(this: ReadonlyDecoder<T>, next: ReadonlyDecoder<V>): ReadonlyDecoder<V>;
+  pipe<D extends Decoder<unknown>>(next: D): Decoder<DecoderType<D>>;
+
+  // Readonly-destroying
+  transform<V>(f: (v: T) => V): Decoder<V>;
   chain<V>(next: Next<V, T>): Decoder<V>;
   chain<D extends Decoder<unknown>>(next: (v: T) => D): Decoder<DecoderType<D>>;
-  pipe<T2, RO extends boolean>(next: Decoder<T2> & { isReadonly: RO }): Wrap<T2, RO>;
 }
 
 /** Validates without copying: `verify(x)` returns `x` itself. */
 interface ReadonlyDecoder<T> extends Decoder<T> {
   readonly isReadonly: true;
 }
-
-/** ReadonlyDecoder<U> when the receiver is readonly, else Decoder<U>. */
-type Like<Self, U> =
-  Self extends ReadonlyDecoder<unknown> ? ReadonlyDecoder<U> : Decoder<U>;
-type Wrap<T, R> = [R] extends [true] ? ReadonlyDecoder<T> : Decoder<T>;
 ```
 
-Every readonly-preserving method returns `Like<this, X>`, which resolves eagerly on a
-concrete receiver, so hovers read `ReadonlyDecoder<string[]>` and
-`ReadonlyDecoder<{ a: string; b: number[] }>`, never a deferred helper name.
+On a concrete receiver the overload resolves right away, so hovers read
+`ReadonlyDecoder<string[]>` and `ReadonlyDecoder<{ a: string; b: number[] }>`. A callable
+atomic loses its call signature after a method call (`string.refine(...)` is a plain
+`ReadonlyDecoder<string>`), so `string.refine(p, 'x')({ max: 5 })` doesn't compile. See
+ROADMAP-DECISIONS.md for why this isn't a conditional `Like<this, X>` return type.
 
-Free-function combinators cannot use `this`. Unary ones name `T` (which preserves today's
-contextual inference into inline callbacks) and capture the flag by intersection:
-
-```ts
-function array<T, RO extends boolean>(
-  d: Decoder<T> & { isReadonly: RO },
-  opts?: SizeOptions,
-): Wrap<T[], RO>;
-function optional<T, RO extends boolean>(
-  d: Decoder<T> & { isReadonly: RO },
-): Wrap<T | undefined, RO>;
-```
-
-Variadic and record-shaped ones index the flag off the property, with one non-distributive
-helper so a union means "every member" and `exact({})` is readonly:
+Free-function combinators follow the same pattern, with the readonly overload first:
 
 ```ts
-type RoFlag<X> = [X] extends [true] ? true : boolean;
+function array<T>(d: ReadonlyDecoder<T>, opts?: SizeOptions): ReadonlyDecoder<T[]>;
+function array<T>(d: Decoder<T>, opts?: SizeOptions): Decoder<T[]>;
 
+function either<Ds extends readonly ReadonlyDecoder<unknown>[]>(
+  ...ds: Ds
+): ReadonlyDecoder<DecoderType<Ds[number]>>;
 function either<Ds extends readonly Decoder<unknown>[]>(
   ...ds: Ds
-): Wrap<DecoderType<Ds[number]>, RoFlag<Ds[number]['isReadonly']>>;
+): Decoder<DecoderType<Ds[number]>>;
+
+function exact<Ds extends Record<string, ReadonlyDecoder<unknown>>>(
+  ds: Ds,
+): ReadonlyDecoder<ObjectType<Ds>>;
 function exact<Ds extends Record<string, Decoder<unknown>>>(
   ds: Ds,
-): Wrap<ObjectType<Ds>, RoFlag<Ds[keyof Ds]['isReadonly']>>;
+): Decoder<ObjectType<Ds>>;
 ```
 
-The `RO extends boolean` type parameter survives only inside these signatures, where it is
-inferred and never written by a caller. It never appears in `Decoder`, in a return type,
-or in a hover.
+Internally, they build their decoder with `make(fn, isReadonly)`, deriving the flag from
+their children at construction. A readonly container hands back its validated input, which
+is the one place a cast is needed (`inputs as T[]`): TS can't know that every item was
+accepted as-is, but the readonly flag of the items guarantees it.
 
-A user can still write a readonly-preserving helper, which an overload pair cannot express
-(verified: with overloads, `listOf(string)` degrades to `Decoder<string[]>`):
+Requiring readonly works as you'd expect:
 
 ```ts
-function listOf<T, RO extends boolean>(d: Decoder<T> & { isReadonly: RO }) {
-  return array(d, { min: 1 });
-}
-listOf(string); // ReadonlyDecoder<string[]>
-listOf(numeric); // Decoder<number[]>
-
 function needsRo<T>(d: ReadonlyDecoder<T>) {
   /* ... */
 }
@@ -528,6 +556,11 @@ needsRo(exact({ a: string, b: array(number) })); // ok
 needsRo(object({ a: string })); // error: object() strips keys, never readonly
 needsRo(exact({ a: string.transform((s) => s) })); // error
 ```
+
+A generic helper that calls methods on a decoder it receives does not preserve
+readonly-ness: inside `function f<D extends Decoder<string>>(d: D)`, `d.refine(...)` picks
+the `Decoder<string>` overload. That's accepted, since such a helper can't promise
+readonly anyway.
 
 Constraints stay `Decoder<unknown>`, never `Decoder<any, any>`, which would leak `any`
 into inferred field types.
@@ -1617,12 +1650,12 @@ assertions checked into `test-d/`, and diff every error message against
    `string`, the number decoders and the regex-backed string atomics recomposed
    constraint-first. `.chain()` starts throwing on a decoder, `.pipe()` on a function.
    Nothing else in the core moves.
-2. **Readonly.** `defineReadonly`, the `isReadonly` field, `ReadonlyDecoder<T>` / `Like` /
-   `Wrap`, `decodeFields`, and the `{ readonly: true }` opt-in on `lazy()` and `select()`.
-   Then the decoder modules in dependency order (`basics`, `strings`, `numbers`, `arrays`,
-   `objects`, `collections`, `unions`, `dates`, `json`), each rewritten against
-   `make`/`defineReadonly`. The callable atomics from phase 1 become `ReadonlyDecoder` by
-   changing their base, nothing else.
+2. **Readonly.** `defineReadonly`, the `isReadonly` field, `ReadonlyDecoder<T>` and its
+   `this:`-parameter overloads, `decodeFields`, and the `{ readonly: true }` opt-in on
+   `lazy()` and `select()`. Then the decoder modules in dependency order (`basics`,
+   `strings`, `numbers`, `arrays`, `objects`, `collections`, `unions`, `dates`, `json`),
+   each rewritten against `make`/`defineReadonly`. The callable atomics from phase 1
+   become `ReadonlyDecoder` by changing their base, nothing else.
 3. **Schema.** The `schema` field, `constrain`/`merge`, `sizeKeywords`/`rangeKeywords`
    (which is where phase 1's options objects pay off), then the walker, `toJSONSchema()`
    and `~standard.jsonSchema`. Last, because nothing before it depends on it, and the
