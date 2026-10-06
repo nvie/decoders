@@ -216,6 +216,14 @@ function needsRo<T>(_d: ReadonlyDecoder<T>) {}
 needsRo(exact({ a: string, b: array(number) }));
 expectError(needsRo(object({ a: string })));
 expectError(needsRo(exact({ a: string.transform((s) => s) })));
+expectType<Decoder<string>>(lazy(() => string));
+expectType<ReadonlyDecoder<string>>(lazy(() => string, { readonly: true }));
+expectError(lazy(() => numeric, { readonly: true }));
+expectType<Decoder<string>>(select(unknown, () => string));
+expectType<ReadonlyDecoder<string | number>>(
+  select(unknown, (x) => (typeof x === 'string' ? string : number), { readonly: true }),
+);
+expectError(select(unknown, () => numeric, { readonly: true }));
 
 expectType<'foo'>(infer(constant('foo')));
 expectType<'foo'>(infer(always('foo')));

@@ -1,5 +1,5 @@
 import type { Decoder, ReadonlyDecoder } from '~/core';
-import { annotate, define, defineReadonly } from '~/core';
+import { annotate, define, defineReadonly, make } from '~/core';
 import type { Sized, SizeOptions } from '~/lib/options';
 import { bySizeOptions } from '~/lib/options';
 
@@ -27,11 +27,35 @@ export function instanceOf<K extends Klass<any>>(klass: K): ReadonlyDecoder<Inst
  * Lazily evaluate the given decoder. This is useful to build self-referential
  * types for recursive data structures. The factory is called once, on first
  * decode, and its result is reused from then on.
+ *
+ * Pass `{ readonly: true }` to declare the resulting decoder readonly. The
+ * decoder returned by the factory must then be readonly too, which is checked
+ * when it's first called.
  */
+export function lazy<T>(
+  decoderFn: () => ReadonlyDecoder<T>,
+  options: { readonly: true },
+): ReadonlyDecoder<T>;
+export function lazy<T>(decoderFn: () => Decoder<T>): Decoder<T>;
 /* #__NO_SIDE_EFFECTS__ */
-export function lazy<T>(decoderFn: () => Decoder<T>): Decoder<T> {
+export function lazy<T>(
+  decoderFn: () => Decoder<T>,
+  options?: { readonly: true },
+): Decoder<T> {
+  const ro = options?.readonly === true;
   let decoder: Decoder<T> | undefined;
-  return define((blob) => (decoder ??= decoderFn()).decode(blob));
+  return make((blob) => {
+    if (decoder === undefined) {
+      const d = decoderFn();
+      if (ro && !d.isReadonly) {
+        throw new Error(
+          'Decoder setup error: lazy() was declared readonly, but its decoder is not',
+        );
+      }
+      decoder = d;
+    }
+    return decoder.decode(blob);
+  }, ro);
 }
 
 /**

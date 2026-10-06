@@ -1,5 +1,5 @@
 import type { Annotation, Decoder, DecoderType, ReadonlyDecoder } from '~/core';
-import { define, defineReadonly, make, summarize } from '~/core';
+import { defineReadonly, make, summarize } from '~/core';
 import { indent, quote } from '~/lib/text';
 import type { Scalar } from '~/lib/types';
 import { isNumber, isString } from '~/lib/utils';
@@ -196,13 +196,32 @@ export function taggedUnion<O extends Record<string, Decoder<unknown>>>(
  * works even if there isn't a single discriminator, or the discriminator isn't
  * a string.
  */
+export function select<T, D extends ReadonlyDecoder<unknown>>(
+  scout: Decoder<T>,
+  selectFn: (result: T) => D,
+  options: { readonly: true },
+): ReadonlyDecoder<DecoderType<D>>;
+export function select<T, D extends Decoder<unknown>>(
+  scout: Decoder<T>,
+  selectFn: (result: T) => D,
+): Decoder<DecoderType<D>>;
 /* #__NO_SIDE_EFFECTS__ */
 export function select<T, D extends Decoder<unknown>>(
   scout: Decoder<T>,
   selectFn: (result: T) => D,
+  options?: { readonly: true },
 ): Decoder<DecoderType<D>> {
-  return define((blob) => {
+  const ro = options?.readonly === true;
+  return make((blob) => {
     const result = scout.decode(blob);
-    return result.ok ? selectFn(result.value).decode(blob) : result;
-  }) as Decoder<DecoderType<D>>;
+    if (!result.ok) return result;
+
+    const decoder = selectFn(result.value);
+    if (ro && !decoder.isReadonly) {
+      throw new Error(
+        'Decoder setup error: select() was declared readonly, but the selected decoder is not',
+      );
+    }
+    return decoder.decode(blob);
+  }, ro) as Decoder<DecoderType<D>>;
 }
