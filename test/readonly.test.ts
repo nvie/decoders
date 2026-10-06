@@ -26,6 +26,9 @@ import {
   integer,
   isoDate,
   isoDateString,
+  json,
+  jsonArray,
+  jsonObject,
   ksuid,
   lazy,
   nanoid,
@@ -337,5 +340,24 @@ describe('lazy, select', () => {
     expect(() => selectDecoder.decode({})).toThrow(
       'select() was declared readonly, but the selected decoder is not',
     );
+  });
+});
+
+describe('json', () => {
+  test.each([
+    ['json', json, { a: [1, 'x', null, { b: true }] }],
+    ['jsonObject', jsonObject, { a: { b: [1] } }],
+    ['jsonArray', jsonArray, [1, { a: 'x' }]],
+  ] satisfies [string, Decoder<unknown>, unknown][])(
+    '%s hands back the input itself',
+    (_, decoder, input) => {
+      expect(decoder.isReadonly).toBe(true);
+      expect(decoder.verify(input)).toBe(input);
+    },
+  );
+
+  test('still rejects non-JSON values', () => {
+    expect(() => json.verify({ a: [1, undefined] })).toThrow();
+    expect(() => json.verify({ a: new Date() })).toThrow();
   });
 });
