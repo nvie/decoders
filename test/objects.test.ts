@@ -9,6 +9,7 @@ import {
   formatInline,
   inexact,
   number,
+  numeric,
   object,
   optional,
   pojo,
@@ -305,8 +306,9 @@ describe('inexact objects', () => {
       bar: 'default',
     };
 
+    // Not readonly, so the result is a copy
     const decoder = inexact({
-      foo: optional(string),
+      foo: optional(string.transform((s) => s)),
     });
 
     expect({
@@ -315,6 +317,28 @@ describe('inexact objects', () => {
     }).toEqual({
       foo: 'default', // 'foo' is known and allowed-optional, so this will be implicit-undefined
       bar: undefined, // 'bar' is ignored so the explicit-undefined will override here
+    });
+  });
+
+  test('non-readonly inexact objects reject bad fields', () => {
+    const decoder = inexact({ a: numeric });
+    expect(decoder.verify({ a: '1', b: 2 })).toEqual({ a: 1, b: 2 });
+    expect(() => decoder.verify({ a: 'x', b: 2 })).toThrow('Must only contain digits');
+  });
+
+  test('readonly inexact objects keep explicit undefineds', () => {
+    const decoder = inexact({
+      foo: optional(string),
+    });
+
+    // Readonly, so the result is the input itself
+    expect({
+      foo: 'default',
+      bar: 'default',
+      ...decoder.verify({ foo: undefined, bar: undefined }),
+    }).toEqual({
+      foo: undefined,
+      bar: undefined,
     });
   });
 });

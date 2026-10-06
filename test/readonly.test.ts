@@ -21,6 +21,7 @@ import {
   hexadecimal,
   httpsUrl,
   identifier,
+  inexact,
   instanceOf,
   integer,
   isoDate,
@@ -254,5 +255,52 @@ describe('record', () => {
     expect(() => record(string).verify(JSON.parse('{"__proto__": "x"}'))).toThrow(
       'Unsafe key',
     );
+  });
+});
+
+describe('exact, inexact, object', () => {
+  test.each([
+    ['exact', exact({ a: string, b: optional(number) }), { a: 'x' }],
+    ['exact({})', exact({}), {}],
+    ['inexact', inexact({ a: string }), { a: 'x', extra: 1 }],
+    ['nested', exact({ a: exact({ b: array(string) }) }), { a: { b: ['x'] } }],
+  ] satisfies [string, Decoder<unknown>, unknown][])(
+    '%s of readonly fields hands back the input itself',
+    (_, decoder, input) => {
+      expect(decoder.isReadonly).toBe(true);
+      expect(decoder.verify(input)).toBe(input);
+    },
+  );
+
+  test.each([
+    ['exact', exact({ a: numeric }), { a: '1' }],
+    ['inexact', inexact({ a: numeric }), { a: '1' }],
+    ['object', object({ a: string }), { a: 'x' }],
+    ['object({})', object({}), {}],
+  ] satisfies [string, Decoder<unknown>, unknown][])('%s copies', (_, decoder, input) => {
+    expect(decoder.isReadonly).toBe(false);
+    expect(decoder.verify(input)).not.toBe(input);
+  });
+
+  test('keeps explicit undefined keys and input key order', () => {
+    const input = { b: undefined, a: 'x' };
+    const result = exact({ a: string, b: optional(string) }).verify(input);
+    expect('b' in result).toBe(true);
+    expect(Object.keys(result)).toEqual(['b', 'a']);
+  });
+
+  test('readonly objects still reject like before', () => {
+    const decoder = exact({ a: string, b: string });
+    expect(() => decoder.verify({ a: 1, b: 'x' })).toThrow('Must be string');
+    expect(() => decoder.verify({ a: 'x' })).toThrow("Missing key: 'b'");
+    expect(() => decoder.verify({ a: 'x', b: 'y', c: 1 })).toThrow(
+      "Unexpected extra keys: 'c'",
+    );
+    expect(() => decoder.verify(JSON.parse('{"a":"x","b":"y","__proto__":1}'))).toThrow(
+      'Unsafe key',
+    );
+    expect(() =>
+      inexact({ a: string }).verify(JSON.parse('{"a":"x","__proto__":1}')),
+    ).toThrow('Unsafe key');
   });
 });
