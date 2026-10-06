@@ -224,6 +224,12 @@ expectType<ReadonlyDecoder<string | number>>(
   select(unknown, (x) => (typeof x === 'string' ? string : number), { readonly: true }),
 );
 expectError(select(unknown, () => numeric, { readonly: true }));
+expectAssignable<ReadonlyDecoder<JSONValue>>(json);
+expectAssignable<ReadonlyDecoder<JSONObject>>(jsonObject);
+expectAssignable<ReadonlyDecoder<JSONArray>>(jsonArray);
+expectType<ReadonlyDecoder<{ id: string } & Record<string, unknown>>>(
+  inexact({ id: uuid }),
+);
 
 expectType<'foo'>(infer(constant('foo')));
 expectType<'foo'>(infer(always('foo')));
