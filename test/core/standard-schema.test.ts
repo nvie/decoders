@@ -42,11 +42,17 @@ describe('standard-schema', () => {
     ]);
 
     expect((await schema['~standard'].validate([{ a: '' }, 42, 42])).issues).toEqual([
-      { message: 'Must be an object (at index 1)', path: [1] },
+      { message: 'Must be an object', path: [1] },
+      { message: 'Must be an object', path: [2] },
     ]);
 
     expect((await schema['~standard'].validate([{}, {}])).issues).toEqual([
-      { message: "Missing key: 'a' (at index 0)", path: [0] },
+      { message: "Missing key: 'a'", path: [0] },
+      { message: "Missing key: 'a'", path: [1] },
+    ]);
+
+    expect((await schema['~standard'].validate([{ a: 42 }])).issues).toEqual([
+      { message: 'Must be string', path: [0, 'a'] },
     ]);
   });
 

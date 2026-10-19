@@ -1,6 +1,7 @@
 import type { Decoder, DecoderType, ReadonlyDecoder } from '~/core';
 import { annotate, defineReadonly, make } from '~/core';
 import type { SizeOptions } from '~/lib/options';
+import { MAX_ERRORS } from '~/lib/utils';
 import { sized } from '~/misc';
 
 /**
@@ -33,25 +34,30 @@ export function array<T>(decoder: Decoder<T>, options?: SizeOptions): Decoder<T[
 
     const inputs = base.value;
     const results: T[] = [];
+    let clone: unknown[] | null = null;
+    let errorCount = 0;
     for (let i = 0; i < inputs.length; ++i) {
       const result = itemDecodeFn(inputs[i]);
       if (result.ok) {
-        if (!ro) results.push(result.value);
+        if (!ro && clone === null) {
+          results.push(result.value);
+        }
       } else {
         results.length = 0; // Forget all results collected so far
-        const ann = result.error;
 
-        // Rewrite the annotation to include the index information, and inject it into the original blob
-        const clone = inputs.slice();
-        clone.splice(
-          i,
-          1,
-          annotate(ann, ann.text ? `${ann.text} (at index ${i})` : `index ${i}`),
-        );
+        // Inject the error annotation into the original blob
+        clone ??= inputs.slice();
+        clone[i] = result.error;
 
-        return err(annotate(clone));
+        if (++errorCount >= MAX_ERRORS) {
+          break;
+        }
       }
     }
+    if (clone !== null) {
+      return err(annotate(clone));
+    }
+
     // Readonly items were all accepted as-is, so the input is a valid T[]
     return ok(ro ? (inputs as T[]) : results);
   }, ro);

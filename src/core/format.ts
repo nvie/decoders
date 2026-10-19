@@ -81,8 +81,13 @@ function serializeArray(annotation: ArrayAnnotation, prefix: string): string {
   }
 
   const result: string[] = [];
-  for (const item of items) {
-    const [ser, ann] = serializeAnnotation(item, `${prefix}${INDENT}`);
+  for (let i = 0; i < items.length; ++i) {
+    // Array items are listed without their index, so mention it in the error
+    const [ser, ann] = serializeAnnotation(
+      items[i],
+      `${prefix}${INDENT}`,
+      `(at index ${i})`,
+    );
     result.push(`${prefix}${INDENT}${ser},`);
     if (ann !== undefined) {
       result.push(indent(ann, `${prefix}${INDENT}`));
@@ -145,6 +150,7 @@ export function serializeValue(value: unknown): string {
 export function serializeAnnotation(
   ann: Annotation,
   prefix: string = '',
+  location?: string,
 ): [string, string | undefined] {
   // The serialized data (the input object echoed back)
   let serialized: string;
@@ -163,7 +169,10 @@ export function serializeAnnotation(
   const text = ann.text;
   if (text !== undefined) {
     const sep = '^'.repeat(isMultiline(serialized) ? 1 : serialized.length);
-    return [serialized, [sep, text].join(isMultiline(text) ? '\n' : ' ')];
+    const annotation = isMultiline(text)
+      ? [location ? `${sep} ${location}` : sep, text].join('\n')
+      : [sep, text, location].filter(Boolean).join(' ');
+    return [serialized, annotation];
   } else {
     return [serialized, undefined];
   }

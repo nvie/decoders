@@ -80,6 +80,18 @@ Compared to 2.12.2:
   up to ~12% faster.
 - `integer`, `natural`, and `nonNegativeNumber` decode faster on valid and invalid inputs.
 
+## [2.12.3] - 2026-10-19
+
+**Fixes:**
+
+- `array()` now reports up to 3 errors, instead of only the first one
+- `record()` and `mapping()` now stop after 3 errors, so huge invalid inputs can no longer
+  build cause perf issues
+- Standard Schema issues and `formatShort()` no longer repeat the array index in the
+  message itself (it's already part of the reported error path)
+- Standard Schema issues and `formatShort()` no longer report a bogus `index 0` issue for
+  array items with only nested errors
+
 ## [2.12.2] - 2026-09-30
 
 **Performance:**

@@ -443,6 +443,37 @@ describe('record', () => {
       }),
     ).toThrow("Missing key: 'name'");
   });
+
+  test('reports at most 3 errors', () => {
+    const result = record(number).decode({
+      a: 1,
+      b: 'x',
+      c: 'x',
+      d: 'x',
+      e: 'x',
+      f: 'x',
+      g: 'x',
+      h: 'x',
+    });
+    if (result.ok) throw new Error('Expected decoding to fail');
+    expect(formatInline(result.error)).toEqual(
+      [
+        '{',
+        '  "a": 1,',
+        '  "b": "x",',
+        '       ^^^ Must be number',
+        '  "c": "x",',
+        '       ^^^ Must be number',
+        '  "d": "x",',
+        '       ^^^ Must be number',
+        '  "e": "x",',
+        '  "f": "x",',
+        '  "g": "x",',
+        '  "h": "x",',
+        '}',
+      ].join('\n'),
+    );
+  });
 });
 
 // Two-argument form of record() specifies keys and value types

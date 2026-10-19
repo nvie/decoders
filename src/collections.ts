@@ -3,6 +3,7 @@ import { annotate, annotateObject, formatShort, isDecoder, merge } from '~/core'
 import type { SizeOptions } from '~/lib/options';
 import { bySizeOptions } from '~/lib/options';
 import { quote } from '~/lib/text';
+import { MAX_ERRORS } from '~/lib/utils';
 
 import { pojo } from './objects';
 
@@ -71,6 +72,10 @@ export function record<K extends string, V>(
       } else {
         errors.set(key, result.error);
         rv = {} as Record<K, V>; // Clear the success value so it can get garbage collected early
+      }
+
+      if (errors.size >= MAX_ERRORS) {
+        break;
       }
     }
 

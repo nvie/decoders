@@ -9,7 +9,7 @@ description: Array and tuple decoders for validating collections of values.
   name="array"
   params="decoder: Decoder<T>, options?: SizeOptions"
   type="T[]"
-  source="arrays.ts#L18-L50"
+  source="arrays.ts#L19-L52"
 />
 
 Accepts arrays of whatever the given decoder accepts.
@@ -38,7 +38,7 @@ The optional `options` argument constrains the array's length. It accepts `min`,
   name="nonEmptyArray"
   params="decoder: Decoder<T>"
   type="[T, ...T[]]"
-  source="arrays.ts#L52-L58"
+  source="arrays.ts#L54-L60"
 />
 
 Like [`array()`][], but will reject arrays with 0 elements.
@@ -56,7 +56,7 @@ that type is useful to you, and `array(decoder, { min: 1 })` otherwise.
 
 ## poja
 
-<DecoderSig name="poja" type="unknown[]" source="arrays.ts#L6-L16" />
+<DecoderSig name="poja" type="unknown[]" source="arrays.ts#L7-L17" />
 
 Accepts any array, but doesn't validate its items further.
 
@@ -75,7 +75,7 @@ Accepts any array, but doesn't validate its items further.
   name="tuple"
   params="Decoder<A>, Decoder<B>, ..."
   type="[A, B, ...]"
-  source="arrays.ts#L68-L99"
+  source="arrays.ts#L70-L101"
 />
 
 Accepts a tuple (an array with exactly _n_ items) of values accepted by the _n_ given
