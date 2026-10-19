@@ -37,6 +37,7 @@ _Independent, open questions to settle first:_
 - [ ] Deep input never throws (Feature 4)
 - [ ] Typed `prep()` input (Feature 6)
 - [ ] Better branching than `select()` (see Open questions)
+- [ ] `masked(d)` (Feature 7)
 
 _Last:_
 
@@ -72,9 +73,13 @@ _Last:_
   construction, so it always picks exactly one branch (Feature 5). `either()` is
   unchanged: it tries its branches in order.
 - `prep()` behind `.pipe()` gets a typed input (Feature 6).
+- `masked(d)`: a value at that position never appears in an error (Feature 7).
+  ```ts
+  object({ username: string, password: masked(string) });
+  ```
 - `record(string, { max: 10 })`: bounds on the number of keys, like `array(d, { max })`.
 - `uniqueArray(string, { max: 10 })`: an array, deduplicated, bounds on the result.
-- New: `jsonYolo`, `defineReadonly()`, `ReadonlyDecoder<T>`.
+- New: `jsonYolo`, `defineReadonly()`, `ReadonlyDecoder<T>`, `masked()`.
 
 **Breaking!** See [MIGRATING-v3.md](./MIGRATING-v3.md).
 
@@ -108,6 +113,9 @@ keywords. Readonly means the decoder hands its input back, which is also what ma
 keywords true of the input and not just of the output. Both fields are assigned in the
 constructor, and the `decode` hot path never reads either, so atomics stay exactly as fast
 as they are.
+
+Masking (Feature 7) adds a third, internal one: how to echo an input value in an error. It
+is only read on the error path.
 
 # Feature 1: Callable atomics
 
@@ -1279,6 +1287,166 @@ Not breaking: today an annotated `(s: string) =>` doesn't compile at all, so no 
 call gets the new type. The schema doesn't change either: `.pipe(prep(...))` inherits the
 receiver's definition, as for any non-readonly pipe, and `prep()` is still ∅ on its own.
 
+# Feature 7: Masking
+
+Errors echo the input back. That is what makes them good, and what makes them unsafe to
+log when the input holds a password, a token, or a card number:
+
+```ts
+const login = object({ username: string, password: string });
+login.verify({ username: 123, password: 'hunter2' });
+// {
+//   "username": 123,
+//               ^^^ Must be string
+//   "password": "hunter2",
+// }
+```
+
+The password was fine, and still ends up in the thrown error, the error tracker, and the
+logs. `masked(d)` marks a position whose value never appears in an error:
+
+```ts
+const login = object({ username: string, password: masked(string) });
+
+login.verify({ username: 123, password: 'hunter2' });
+// {
+//   "username": 123,
+//               ^^^ Must be string
+//   "password": <masked>,
+// }
+
+login.verify({ username: 'nvie', password: 8972349894792 });
+// {
+//   "username": "nvie",
+//   "password": <masked>,
+//               ^^^^^^^^ Must be string
+// }
+
+masked(string, '***REDACTED***'); // custom placeholder
+```
+
+Decoding doesn't change: `masked(d)` accepts and returns exactly what `d` does, is
+readonly iff `d` is, and shares `d`'s schema. It only changes what errors may contain.
+Hiding the _decoded_ value (from a `console.log`, say) is a different feature, and a
+userland one: `masked(string).transform((s) => new Secret(s))`.
+
+## The invariant
+
+**A value at a masked position never appears in an error.** Not in the `Annotation` on
+`DecodeResult.error`, not in any formatter's output, not in Standard Schema issues, for
+any input.
+
+So masking happens when the annotation is built, not when it is formatted. `decode()`
+hands out the `Annotation` itself, and it ends up in `JSON.stringify(result)`, error
+trackers and custom formatters, none of which go through `format.ts`. A masked value
+becomes an `OpaqueAnnotation` whose `value` is the placeholder. The public union already
+has that kind (`'<circular ref>'`, `'<function>'`), so the formatters, `summarize()` and
+users' exhaustive switches need no change. That is what makes this feasible in 3.0 without
+touching the public types at all.
+
+Masking hides values, not keys. A masked composite keeps its shape and masks every leaf,
+which is what keeps a nested error findable:
+
+```ts
+object({ creds: masked(object({ pin: number, hint: string })) });
+// {
+//   "creds": {
+//     "pin": <masked>,
+//            ^^^^^^^^ Must be number
+//     "hint": <masked>,
+//   },
+// }
+```
+
+One `maskAnn(ann, placeholder)` helper does this: it rewrites every scalar and opaque leaf
+to the placeholder, keeps the texts and the shape, and stays lazy (it wraps `getFields` /
+`getItems`, never forces them). `masked(d)` applies it to `d`'s error, so `d` needs no
+cooperation, which also covers `masked(define(...))`.
+
+## Echo: masking the ancestors
+
+The failing node is the easy part. The value also leaks from every ancestor that echoes
+its input: above, `password` passed, and `object()` echoed it while reporting `username`.
+In `array(login)`, a failing item 3 echoes items 0–2, passwords included. So a container
+must annotate its input _through its children_, which means every decoder needs to know
+how to echo a value at its position:
+
+```ts
+class DecoderImpl<T> {
+  // decode, isReadonly, schema ...
+
+  /** @internal How a value at this position is echoed in an error. `undefined`: as-is. */
+  readonly echo: ((value: unknown, text?: string) => Annotation) | undefined;
+}
+```
+
+- `undefined` for every decoder with nothing masked below it. Those containers keep
+  calling `annotate()`/`annotateObject()` exactly as today, so their error text stays byte
+  for byte.
+- The `err()` that `make`/`define` hand an acceptance function annotates `blob` through
+  `echo`. That one change covers `.refine`, `.reject`, `.describe` and every `err('...')`
+  in the library.
+- No decode-path cost. `echo` is read only when an error is built, and inside a container
+  only when the lazy fields/items are first read, i.e. when the error is formatted.
+
+The rule for deriving it: a container maps each child position to that child's echo.
+Wherever a combinator can't map its input positions onto its children, and anything below
+is masked, it masks everything. Over-masking costs some debuggability; under-masking costs
+a secret.
+
+| decoder                                          | `echo`, when something below is masked                         |
+| ------------------------------------------------ | -------------------------------------------------------------- |
+| `masked(d, p)`                                   | `maskAnn(annotate(v), p)`                                      |
+| `object`, `exact`, `inexact(fields, rest?)`      | declared keys → field's echo; others → `rest`'s echo, or as-is |
+| `array`, `nonEmptyArray`, `uniqueArray`          | each item → the item decoder's echo                            |
+| `tuple`                                          | positional                                                     |
+| `record(v)`, `record(k, v)`                      | each value → `v`'s echo (keys: see Open questions)             |
+| `optional`, `nullable`, `nullish`                | `d`'s echo                                                     |
+| `.refine`, `.reject`, `.describe`, `.refineType` | `this`'s echo                                                  |
+| `.transform`, `.chain(fn)`, `.pipe(d)`           | `this`'s echo                                                  |
+| `taggedUnion`                                    | the tag's branch's echo; unknown tag → mask all                |
+| `either`                                         | mask all (see Open questions)                                  |
+| `prep(fn, d)`                                    | mask all: `fn` is opaque                                       |
+| `lazy(fn)`, `select(scout, fn)`                  | resolve at echo time, then delegate                            |
+
+`lazy()` and `select()` can't know at construction whether anything below them is masked,
+so they always carry a delegating `echo`. That's fine, because it only runs on the error
+path, where resolving the factory is allowed, and delegating to a decoder with nothing
+masked produces the same annotation `annotate()` would.
+
+## Errors about the output
+
+Echo describes the _input_ at a position. Some errors are about a decoder's _output_:
+`.reject(fn)` annotates `result.value`, and `.pipe(next)` lets `next` annotate the
+intermediate value, which `next` knows nothing about. `masked(string).pipe(regex(...))`
+would echo the password raw.
+
+Readonly settles it, the same way it settles `constrain` (Feature 3): a readonly decoder
+hands back its input, so its output is echoed with its own `echo`. A non-readonly decoder
+with something masked below it applies `maskAnn` to any error about its output, because
+nothing says where the masked values ended up after a transform.
+
+Error _texts_ are the one thing masking doesn't rewrite, and one source of them isn't
+written by anyone: `.transform()` and `prep()` report a caught exception's `message`. V8's
+`JSON.parse` quotes its input (`Unexpected token 'h', "hunter2" is not valid JSON`), so
+`masked(string).transform(JSON.parse)` would leak through the text. Below a masked
+position, a caught exception's message is therefore replaced by a fixed text. Messages the
+user writes (`.refine(p, msg)`, a `.reject()` return value) stay theirs, and the docs say
+not to interpolate the value into them.
+
+## Required tests
+
+- **The invariant, as a property test** (`fast-check`, like the schema soundness fuzzing).
+  Generate decoders from every combinator above with `masked(...)` positions, generate
+  inputs that put a sentinel string at those positions (and around them), and check the
+  sentinel appears nowhere: `formatInline`, `formatShort`, `formatAsIssues`, and a full
+  walk of the `Annotation`, with lazy fields forced.
+- **Byte for byte:** every existing error-message test passes unchanged, since none of
+  them has a masked position.
+- The cases from `origin/masking`'s `test/masking.test.ts`, plus masked composites, masked
+  items in arrays and records, `masked(d).transform(JSON.parse)`, and
+  `masked(d).pipe(...)`.
+
 # Collections: `uniqueArray`
 
 `setFromArray` and `mapping` are removed. Each takes one specific input shape and returns
@@ -1349,6 +1517,7 @@ child is.
 | `.refine`, `.reject`, `.describe`, `.refineType`                                                                                             | RO(this)                     | shared with parent                                            |
 | `.transform`, `.chain(fn)`                                                                                                                   | ✗                            | inherited                                                     |
 | `.pipe(d)`                                                                                                                                   | this ∧ d                     | `allOf[this, d]` if readonly, else `this`                     |
+| `masked(d, placeholder?)`                                                                                                                    | RO(d)                        | shared with `d`                                               |
 
 `taggedUnion` is implemented directly (`pojo.decode` + a `Map` from tag to child
 `decode`), deriving its flag from its branches at construction, instead of today's
@@ -1434,11 +1603,12 @@ emitted verbatim. `Annotation` gains a union-failure member, so exhaustive `swit
 `annotation.type` need a new case. `Either:` error text may change, and input nested past
 the `lazy()` depth limit rejects with `Too deeply nested` instead of throwing.
 `taggedUnion(key, { A, B })` is removed in favor of `taggedUnion(key, A, B)`.
-`setFromArray` and `mapping` are removed (see Collections for replacements).
+`setFromArray` and `mapping` are removed (see Collections for replacements). `masked()` is
+additive: error text for decoders with no masked position below them is unchanged.
 
 # Rollout
 
-Six phases, in the order of the sections above. Each is shippable on its own, and the
+Seven phases, in the order of the sections above. Each is shippable on its own, and the
 validation bar is the same for all three: run the repo's `tsd` with the propagation
 assertions checked into `test-d/`, and diff every error message against
 `test/objects.test.ts` and `test/core/standard-schema.test.ts` byte for byte.
@@ -1472,6 +1642,12 @@ assertions checked into `test-d/`, and diff every error message against
    6 checked into `test-d/`. If Feature 2 has landed, the overload joins the `Like`/`Wrap`
    pipe overloads and always returns a plain `Decoder<V>`, since `prep()` is never
    readonly.
+7. **Masking.** `maskAnn` and the internal `echo` field, the `err()` constructor and the
+   `annotate()`/`annotateObject()` call sites in the modules switched over to it, then
+   `masked()` itself. Independent of 3 and 5. Lands after 4, or together with it, so the
+   union-failure annotation is designed not to carry a raw copy of the input. Validation:
+   the leak property test in Feature 7, plus the byte-for-byte error-message diff for
+   every decoder without a masked position.
 
 **Final perf evaluation.** Once everything above has landed, re-measure against the latest
 published 2.x and update the Performance numbers in `CHANGELOG.md`, which were last
@@ -1482,7 +1658,10 @@ construction time, and `decode()` of an object decoder using `.refine`/`.transfo
 `.reject` in every field. Readonly (Feature 2) should move the decode number the most.
 
 The `readonly` branch is a reference for tests and expected behaviour, not a merge source;
-the callable-atomics WIP is `stash@{0}` on this branch and is superseded.
+the callable-atomics WIP is `stash@{0}` on this branch and is superseded. The same goes
+for `origin/masking`: its `OpaqueAnnotation` refactor is already on main, and its tests
+(`test/masking.test.ts`) are a starting point, but its `kMask` field on the public
+`Decoder` interface and `define(fn, { mask })` option are not the design here.
 
 # Open questions
 
@@ -1636,6 +1815,29 @@ better built-in support for branching like this"_. Two shapes show up:
   written after the `.pipe()` instead.
 - Should `select()` get the same treatment? Its scout function has the same `unknown`
   problem when it sits behind a `.pipe()`.
+
+**Masking**
+
+- Name: `masked(d)` (from `origin/masking`, reads like `optional(d)`/`trimmed`),
+  `sensitive(d)`, `redacted(d)`, or a `.mask()` method? A free function needs no
+  `this:`-overloads beyond the readonly pair every combinator already has.
+- Default placeholder: `<masked>`, `***`, or something else? It's printed verbatim, so it
+  should not look like valid JSON.
+- `either` with a masked branch, as a child of a failing container: mask the whole value
+  (proposed: simple, always safe), or re-run the branches at echo time and use the first
+  accepting branch's echo (exact, since that is the branch `either` picked)?
+- Keys: `record(masked(string), v)` and `inexact(fields, masked(rest))`. Masking keys
+  means placeholder field names, which collide in an `ObjectAnnotation`'s `Map`. Throw at
+  construction for a masked key decoder, or allow it and mask only the values? Either way
+  `Unexpected extra keys: 'x'` and `Invalid key 'x'` still quote input keys.
+- The fixed text that replaces a caught exception's message below a masked position:
+  something generic (`Invalid value`), or the exception's class name (`SyntaxError`)?
+- Should `masked(d)`'s schema say anything? JSON Schema's `writeOnly: true` and OpenAPI's
+  `format: 'password'` are both annotation keywords, so emitting them can't cause a LOSS.
+  Probably not by default: neither means "don't echo this", and a form generator reading
+  `format: 'password'` is the only consumer that would act on it.
+- Feature 4's union-failure annotation: its shape should not carry a raw copy of the input
+  next to the branch annotations, or `either` would bypass `echo`. Design both together.
 
 **`define()`'s `err()` returns `Pending<T>`?**
 
