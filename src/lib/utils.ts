@@ -1,3 +1,11 @@
+/**
+ * Max number of errors reported for collection decoders. Reporting just
+ * a handful of errors is enough to be useful, while protecting against
+ * performance issues from bad inputs, and against overwhelming the user
+ * with too many errors.
+ */
+export const MAX_ERRORS = 3;
+
 /* #__NO_SIDE_EFFECTS__ */
 export function qty(n: number, unit: string): string {
   return n === 1 ? `${n} ${unit}` : `${n} ${unit}s`;

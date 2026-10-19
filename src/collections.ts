@@ -1,6 +1,7 @@
 import type { Annotation, Decoder } from '~/core';
 import { annotate, annotateObject, formatShort, merge } from '~/core';
 import { quote } from '~/lib/text';
+import { MAX_ERRORS } from '~/lib/utils';
 
 import { array } from './arrays';
 import { pojo } from './objects';
@@ -56,6 +57,10 @@ export function record<K extends string, V>(
       } else {
         errors.set(key, result.error);
         rv = {} as Record<K, V>; // Clear the success value so it can get garbage collected early
+      }
+
+      if (errors.size >= MAX_ERRORS) {
+        break;
       }
     }
 

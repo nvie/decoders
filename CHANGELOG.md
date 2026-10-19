@@ -1,5 +1,10 @@
 ## [Unreleased]
 
+**Fixes:**
+
+- `record()` and `mapping()` now stop after 3 errors, so huge invalid inputs can no longer
+  build cause perf issues
+
 ## [2.12.2] - 2026-09-30
 
 **Performance:**
