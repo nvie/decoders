@@ -37,11 +37,10 @@ export function array<T>(decoder: Decoder<T>, options?: SizeOptions): Decoder<T[
         }
       } else {
         results.length = 0; // Forget all results collected so far
-        const ann = result.error;
 
-        // Rewrite the annotation to include the index information, and inject it into the original blob
+        // Inject the error annotation into the original blob
         clone ??= inputs.slice();
-        clone[i] = annotate(ann, ann.text ? `${ann.text} (at index ${i})` : `index ${i}`);
+        clone[i] = result.error;
 
         if (++errorCount >= MAX_ERRORS) {
           break;

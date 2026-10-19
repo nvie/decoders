@@ -45,7 +45,7 @@ describe('array', () => {
     );
 
     const decoder2 = array(object({ name: string }));
-    expect(() => decoder2.verify([{ name: 123 }])).toThrow('^ index 0');
+    expect(() => decoder2.verify([{ name: 123 }])).toThrow('Must be string');
   });
 
   test('reports at most 3 errors', () => {

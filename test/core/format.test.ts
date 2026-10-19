@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { array, object, string } from '~';
+import { array, number, object, string } from '~';
 import { __annotate, annotate, formatAsIssues, formatInline, formatShort } from '~/core';
 
 const whitespace_re = /^\s*$/;
@@ -191,7 +191,7 @@ describe('formatInline', () => {
       `
         [
           123,
-          ^^^
+          ^^^ (at index 0)
           Must be one of:
           1. a float
           2. a string
@@ -228,10 +228,10 @@ describe('formatInline', () => {
               [
                 [
                   1234,
-                  ^^^^ ABC
+                  ^^^^ ABC (at index 0)
                 ],
                 true,
-                ^^^^ not false
+                ^^^^ not false (at index 1)
               ]
             `,
     );
@@ -245,7 +245,7 @@ describe('formatInline', () => {
                 {
                   "name": 123,
                 },
-                ^ Missing key "foo"
+                ^ Missing key "foo" (at index 0)
               ]
             `,
     );
@@ -360,14 +360,38 @@ describe('formatting decoder errors', () => {
     expect(formatShort(result.error)).toEqual(
       dedent(`
         Value at key 'name': Must be string
-        Value at keypath 'tags.1': Must be string (at index 1)
+        Value at keypath 'tags.1': Must be string
         Value at key 'meta': Missing key: 'id'
       `),
     );
     expect(formatAsIssues(result.error)).toEqual([
       { message: 'Must be string', path: ['name'] },
-      { message: 'Must be string (at index 1)', path: ['tags', 1] },
+      { message: 'Must be string', path: ['tags', 1] },
       { message: "Missing key: 'id'", path: ['meta'] },
+    ]);
+  });
+
+  test('array items with only nested errors', () => {
+    const decoder = array(object({ a: number }));
+    const result = decoder.decode([{ a: 1 }, { a: 'x' }]);
+    if (result.ok) throw new Error('Expected decoding to fail');
+
+    expect(formatInline(result.error)).toEqual(
+      dedent(`
+        [
+          {
+            "a": 1,
+          },
+          {
+            "a": "x",
+                 ^^^ Must be number
+          },
+        ]
+      `),
+    );
+    expect(formatShort(result.error)).toEqual("Value at keypath '1.a': Must be number");
+    expect(formatAsIssues(result.error)).toEqual([
+      { message: 'Must be number', path: [1, 'a'] },
     ]);
   });
 });
