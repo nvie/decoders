@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [2.12.3] - 2026-10-19
+
 **Fixes:**
 
 - `array()` now reports up to 3 errors, instead of only the first one
