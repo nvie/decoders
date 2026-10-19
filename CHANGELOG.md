@@ -2,6 +2,7 @@
 
 **Fixes:**
 
+- `array()` now reports up to 3 errors, instead of only the first one
 - `record()` and `mapping()` now stop after 3 errors, so huge invalid inputs can no longer
   build cause perf issues
 

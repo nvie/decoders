@@ -1,6 +1,7 @@
 import type { Decoder, DecoderType } from '~/core';
 import { annotate, define } from '~/core';
 import type { SizeOptions } from '~/lib/size-options';
+import { MAX_ERRORS } from '~/lib/utils';
 import { sized } from '~/misc';
 
 /**
@@ -25,27 +26,29 @@ export function array<T>(decoder: Decoder<T>, options?: SizeOptions): Decoder<T[
   const base = options !== undefined ? sized(poja, options) : poja;
   return base.chain((inputs: readonly unknown[], ok, err) => {
     const results: T[] = [];
+    let clone: unknown[] | null = null;
+    let errorCount = 0;
     for (let i = 0; i < inputs.length; ++i) {
       const blob = inputs[i];
       const result = decodeFn(blob);
       if (result.ok) {
-        results.push(result.value);
+        if (clone === null) {
+          results.push(result.value);
+        }
       } else {
         results.length = 0; // Forget all results collected so far
         const ann = result.error;
 
         // Rewrite the annotation to include the index information, and inject it into the original blob
-        const clone = inputs.slice();
-        clone.splice(
-          i,
-          1,
-          annotate(ann, ann.text ? `${ann.text} (at index ${i})` : `index ${i}`),
-        );
+        clone ??= inputs.slice();
+        clone[i] = annotate(ann, ann.text ? `${ann.text} (at index ${i})` : `index ${i}`);
 
-        return err(annotate(clone));
+        if (++errorCount >= MAX_ERRORS) {
+          break;
+        }
       }
     }
-    return ok(results);
+    return clone !== null ? err(annotate(clone)) : ok(results);
   });
 }
 

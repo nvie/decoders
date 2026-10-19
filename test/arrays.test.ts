@@ -1,6 +1,15 @@
 import { describe, expect, test } from 'vitest';
 
-import { array, nonEmptyArray, number, object, setFromArray, string, tuple } from '~';
+import {
+  array,
+  formatInline,
+  nonEmptyArray,
+  number,
+  object,
+  setFromArray,
+  string,
+  tuple,
+} from '~';
 
 describe('array', () => {
   test('empty array', () => {
@@ -37,6 +46,44 @@ describe('array', () => {
 
     const decoder2 = array(object({ name: string }));
     expect(() => decoder2.verify([{ name: 123 }])).toThrow('^ index 0');
+  });
+
+  test('reports at most 3 errors', () => {
+    const result = array(number).decode([1, 'a', 2, 'b', 'c', 'd', 'e']);
+    if (result.ok) throw new Error('Expected decoding to fail');
+    expect(formatInline(result.error)).toEqual(
+      [
+        '[',
+        '  1,',
+        '  "a",',
+        '  ^^^ Must be number (at index 1)',
+        '  2,',
+        '  "b",',
+        '  ^^^ Must be number (at index 3)',
+        '  "c",',
+        '  ^^^ Must be number (at index 4)',
+        '  "d",',
+        '  "e",',
+        ']',
+      ].join('\n'),
+    );
+  });
+
+  test('reports errors at the right index in sparse arrays', () => {
+    // eslint-disable-next-line no-sparse-arrays
+    const result = array(number).decode([1, , 'x']);
+    if (result.ok) throw new Error('Expected decoding to fail');
+    expect(formatInline(result.error)).toEqual(
+      [
+        '[',
+        '  1,',
+        '  undefined,',
+        '  ^^^^^^^^^ Must be number (at index 1)',
+        '  "x",',
+        '  ^^^ Must be number (at index 2)',
+        ']',
+      ].join('\n'),
+    );
   });
 });
 
