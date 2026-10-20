@@ -1,5 +1,5 @@
-import type { Annotation, Decoder, DecoderType } from '~/core';
-import { define, summarize } from '~/core';
+import type { Annotation, Decoder, DecoderType, ReadonlyDecoder } from '~/core';
+import { defineReadonly, make, summarize } from '~/core';
 import { indent, quote } from '~/lib/text';
 import type { Scalar } from '~/lib/types';
 import { isNumber, isString } from '~/lib/utils';
@@ -54,6 +54,12 @@ function nest(errText: string): string {
  * first one that accepts the input "wins". If all decoders reject the input,
  * the input gets rejected.
  */
+export function either<TDecoders extends readonly ReadonlyDecoder<unknown>[]>(
+  ...decoders: TDecoders
+): ReadonlyDecoder<DecoderType<TDecoders[number]>>;
+export function either<TDecoders extends readonly Decoder<unknown>[]>(
+  ...decoders: TDecoders
+): Decoder<DecoderType<TDecoders[number]>>;
 /* #__NO_SIDE_EFFECTS__ */
 export function either<TDecoders extends readonly Decoder<unknown>[]>(
   ...decoders: TDecoders
@@ -63,24 +69,27 @@ export function either<TDecoders extends readonly Decoder<unknown>[]>(
   }
 
   type T = DecoderType<TDecoders[number]>;
-  return define<T>((blob, _, err) => {
-    // Collect errors here along the way
-    const errors: Annotation[] = [];
+  return make<T>(
+    (blob, _, err) => {
+      // Collect errors here along the way
+      const errors: Annotation[] = [];
 
-    for (const decoder of decoders) {
-      const result = (decoder as Decoder<T>).decode(blob);
-      if (result.ok) {
-        return result;
-      } else {
-        errors.push(result.error);
+      for (const decoder of decoders) {
+        const result = (decoder as Decoder<T>).decode(blob);
+        if (result.ok) {
+          return result;
+        } else {
+          errors.push(result.error);
+        }
       }
-    }
 
-    // Decoding all alternatives failed, return the combined error message
-    const text =
-      EITHER_PREFIX + errors.map((err) => nest(summarize(err).join('\n'))).join('\n');
-    return err(text);
-  });
+      // Decoding all alternatives failed, return the combined error message
+      const text =
+        EITHER_PREFIX + errors.map((err) => nest(summarize(err).join('\n'))).join('\n');
+      return err(text);
+    },
+    decoders.every((d) => d.isReadonly),
+  );
 }
 
 /**
@@ -88,14 +97,14 @@ export function either<TDecoders extends readonly Decoder<unknown>[]>(
  * specified values.
  */
 /* #__NO_SIDE_EFFECTS__ */
-export function oneOf<const C extends Scalar>(constants: readonly C[]): Decoder<C> {
-  return define((blob, ok, err) => {
-    const index = constants.indexOf(blob as C);
-    if (index !== -1) {
-      return ok(constants[index]);
-    }
-    return err(`Must be one of ${constants.map((value) => quote(value)).join(', ')}`);
-  });
+export function oneOf<const C extends Scalar>(
+  constants: readonly C[],
+): ReadonlyDecoder<C> {
+  return defineReadonly(
+    // Not .includes(), which would also match NaN
+    (blob): blob is C => constants.indexOf(blob as C) !== -1,
+    `Must be one of ${constants.map((value) => quote(value)).join(', ')}`,
+  );
 }
 
 /**
@@ -105,10 +114,10 @@ export function oneOf<const C extends Scalar>(constants: readonly C[]): Decoder<
 /* #__NO_SIDE_EFFECTS__ */
 export function enum_<TEnum extends Record<string, string | number>>(
   enumObj: TEnum,
-): Decoder<TEnum[keyof TEnum]> {
+): ReadonlyDecoder<TEnum[keyof TEnum]> {
   const values = Object.values(enumObj);
   if (!values.some(isNumber)) {
-    return oneOf(values) as Decoder<TEnum[keyof TEnum]>;
+    return oneOf(values) as ReadonlyDecoder<TEnum[keyof TEnum]>;
   } else {
     // Numeric enums (or mixed enums) require a bit more work. We'll definitely
     // want to allow all the numeric values.
@@ -119,7 +128,7 @@ export function enum_<TEnum extends Record<string, string | number>>(
     // numeric values we already covered
     const strings = values.filter(isString).filter((val) => !ignore.has(val));
 
-    return oneOf([...nums, ...strings]) as Decoder<TEnum[keyof TEnum]>;
+    return oneOf([...nums, ...strings]) as ReadonlyDecoder<TEnum[keyof TEnum]>;
   }
 }
 
@@ -151,6 +160,14 @@ export function enum_<TEnum extends Record<string, string | number>>(
  * error messages and is more performant at runtime because it doesn't have to
  * try all decoders one by one.
  */
+export function taggedUnion<O extends Record<string, ReadonlyDecoder<unknown>>>(
+  field: string,
+  mapping: O,
+): ReadonlyDecoder<DecoderType<O[keyof O]>>;
+export function taggedUnion<O extends Record<string, Decoder<unknown>>>(
+  field: string,
+  mapping: O,
+): Decoder<DecoderType<O[keyof O]>>;
 /* #__NO_SIDE_EFFECTS__ */
 export function taggedUnion<O extends Record<string, Decoder<unknown>>>(
   field: string,
@@ -161,9 +178,12 @@ export function taggedUnion<O extends Record<string, Decoder<unknown>>>(
   const scout = object({
     [field]: prep(String, oneOf(Object.keys(mapping))),
   }).transform((o) => o[field]);
-  return select(
-    scout, // peek...
-    (key) => mapping[key] as Decoder<T>, // ...then select
+  return make<T>(
+    (blob) => {
+      const result = scout.decode(blob); // peek...
+      return result.ok ? (mapping[result.value] as Decoder<T>).decode(blob) : result; // ...then select
+    },
+    Object.values(mapping).every((d) => d.isReadonly),
   );
 }
 
@@ -176,13 +196,32 @@ export function taggedUnion<O extends Record<string, Decoder<unknown>>>(
  * works even if there isn't a single discriminator, or the discriminator isn't
  * a string.
  */
+export function select<T, D extends ReadonlyDecoder<unknown>>(
+  scout: Decoder<T>,
+  selectFn: (result: T) => D,
+  options: { readonly: true },
+): ReadonlyDecoder<DecoderType<D>>;
+export function select<T, D extends Decoder<unknown>>(
+  scout: Decoder<T>,
+  selectFn: (result: T) => D,
+): Decoder<DecoderType<D>>;
 /* #__NO_SIDE_EFFECTS__ */
 export function select<T, D extends Decoder<unknown>>(
   scout: Decoder<T>,
   selectFn: (result: T) => D,
+  options?: { readonly: true },
 ): Decoder<DecoderType<D>> {
-  return define((blob) => {
+  const ro = options?.readonly === true;
+  return make((blob) => {
     const result = scout.decode(blob);
-    return result.ok ? selectFn(result.value).decode(blob) : result;
-  }) as Decoder<DecoderType<D>>;
+    if (!result.ok) return result;
+
+    const decoder = selectFn(result.value);
+    if (ro && !decoder.isReadonly) {
+      throw new Error(
+        'Decoder setup error: select() was declared readonly, but the selected decoder is not',
+      );
+    }
+    return decoder.decode(blob);
+  }, ro) as Decoder<DecoderType<D>>;
 }

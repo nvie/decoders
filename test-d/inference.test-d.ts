@@ -1,4 +1,11 @@
-import type { Decoder, DecoderType, JSONValue, JSONObject, JSONArray } from '../dist';
+import type {
+  Decoder,
+  DecoderType,
+  JSONValue,
+  JSONObject,
+  JSONArray,
+  ReadonlyDecoder,
+} from '../dist';
 import {
   // Decoders
   // Formatters
@@ -13,11 +20,10 @@ import {
   boolean,
   constant,
   date,
-  datelike,
-  dateString,
   flexDate,
   decimal,
   define,
+  defineReadonly,
   either,
   email,
   endsWith,
@@ -34,12 +40,10 @@ import {
   integer,
   isoDate,
   isoDateString,
-  iso8601,
   json,
   jsonArray,
   jsonObject,
   lazy,
-  mapping,
   ksuid,
   nanoid,
   natural,
@@ -63,7 +67,6 @@ import {
   record,
   regex,
   select,
-  setFromArray,
   sized,
   startsWith,
   string,
@@ -72,13 +75,21 @@ import {
   tuple,
   undefined_,
   unknown,
+  trimmed,
   url,
   urlString,
   uuid,
   uuidv1,
   uuidv4,
 } from '../dist';
-import { expectError, expectType, expectAssignable } from 'tsd';
+import {
+  expectDeprecated,
+  expectError,
+  expectNotAssignable,
+  expectNotDeprecated,
+  expectType,
+  expectAssignable,
+} from 'tsd';
 
 // Helper function to "test" a decoder on some input, and assert the return type
 function infer<T>(decoder: Decoder<T>): T {
@@ -105,6 +116,121 @@ expectType<123 | 'hi'>(
 
 expectType<(p: string, q: number[], r: string[], s: boolean) => void>(foo);
 
+// Readonly
+const isStringArray = (blob: unknown): blob is string[] =>
+  Array.isArray(blob) && blob.every((x) => typeof x === 'string');
+expectType<ReadonlyDecoder<string[]>>(defineReadonly(isStringArray, 'Must be string[]'));
+expectType<boolean>(define((blob, ok) => ok(blob)).isReadonly);
+expectAssignable<Decoder<string[]>>(defineReadonly(isStringArray, 'Must be string[]'));
+expectError(defineReadonly((blob: unknown) => blob !== 0, 'Not a guard'));
+
+const ro = defineReadonly(isStringArray, 'Must be string[]');
+const notRo = define<string[]>((blob, ok, err) =>
+  isStringArray(blob) ? ok(blob) : err('Must be string[]'),
+);
+expectType<ReadonlyDecoder<string[]>>(ro.refine((xs) => xs.length > 0, 'Empty'));
+expectType<ReadonlyDecoder<['a']>>(
+  ro.refine((xs): xs is ['a'] => xs.length === 1 && xs[0] === 'a', 'Not [a]'),
+);
+expectType<ReadonlyDecoder<string[]>>(ro.reject(() => null));
+expectType<ReadonlyDecoder<string[]>>(ro.describe('Must be list'));
+expectType<ReadonlyDecoder<['x']>>(ro.refineType<['x']>());
+expectType<ReadonlyDecoder<string[]>>(ro.pipe(ro));
+expectType<Decoder<string[]>>(ro.pipe(notRo));
+expectType<Decoder<number>>(ro.transform((xs) => xs.length));
+expectType<Decoder<string[]>>(ro.chain((xs, ok) => ok(xs)));
+expectType<Decoder<string[]>>(notRo.refine((xs) => xs.length > 0, 'Empty'));
+expectType<Decoder<string[]>>(notRo.reject(() => null));
+expectType<Decoder<string[]>>(notRo.describe('Must be list'));
+expectType<Decoder<['x']>>(notRo.refineType<['x']>());
+expectType<Decoder<string[]>>(notRo.pipe(ro));
+
+// Readonly atomics
+expectAssignable<ReadonlyDecoder<string>>(string);
+expectAssignable<ReadonlyDecoder<number>>(number);
+expectAssignable<ReadonlyDecoder<boolean>>(boolean);
+expectAssignable<ReadonlyDecoder<unknown>>(unknown);
+expectAssignable<ReadonlyDecoder<Record<string, unknown>>>(pojo);
+expectAssignable<ReadonlyDecoder<unknown[]>>(poja);
+expectAssignable<ReadonlyDecoder<Date>>(date);
+expectAssignable<ReadonlyDecoder<string>>(hexadecimal);
+expectType<ReadonlyDecoder<'a'>>(constant('a'));
+expectType<ReadonlyDecoder<'a' | 'b'>>(oneOf(['a', 'b']));
+expectType<ReadonlyDecoder<string>>(string({ max: 5 }));
+expectType<ReadonlyDecoder<number>>(integer({ min: 0 }));
+expectType<ReadonlyDecoder<string>>(ksuid());
+expectType<ReadonlyDecoder<`msg_${string}`>>(ksuid({ prefix: 'msg_' }));
+expectType<ReadonlyDecoder<string>>(hexadecimal({ size: 4 }));
+expectType<ReadonlyDecoder<string>>(email);
+expectType<ReadonlyDecoder<`foo-${string}`>>(startsWith('foo-', { max: 10 }));
+expectType<ReadonlyDecoder<string>>(sized(string, { max: 3 }));
+expectType<ReadonlyDecoder<string>>(string.refine((s) => s.length > 0, 'Empty'));
+expectError(string.refine((s) => s.length > 0, 'Empty')({ max: 3 }));
+expectType<Decoder<string>>(trimmed({ max: 5 }));
+expectNotAssignable<ReadonlyDecoder<string>>(trimmed);
+expectNotAssignable<ReadonlyDecoder<number>>(numeric);
+expectNotAssignable<ReadonlyDecoder<boolean>>(truthy);
+
+// Readonly either/optional
+expectType<ReadonlyDecoder<string | number>>(either(string, number));
+expectType<Decoder<string | number>>(either(string, numeric));
+expectType<ReadonlyDecoder<string | undefined>>(optional(string));
+expectType<ReadonlyDecoder<string | null>>(nullable(string));
+expectType<ReadonlyDecoder<string | null | undefined>>(nullish(string));
+expectType<Decoder<number | undefined>>(optional(numeric));
+expectType<Decoder<string>>(optional(string, 'default'));
+expectNotAssignable<ReadonlyDecoder<string>>(optional(string, 'default'));
+const roA = pojo.refineType<{ type: 'a'; x: string }>();
+const roB = pojo.refineType<{ type: 'b'; y: number }>();
+expectType<ReadonlyDecoder<{ type: 'a'; x: string } | { type: 'b'; y: number }>>(
+  taggedUnion('type', { a: roA, b: roB }),
+);
+expectType<Decoder<{ type: 'a'; x: string } | { type: 'b' }>>(
+  taggedUnion('type', { a: roA, b: object({ type: constant('b') }) }),
+);
+expectType<ReadonlyDecoder<string[]>>(array(string));
+expectType<ReadonlyDecoder<string[][]>>(array(array(string), { max: 3 }));
+expectType<Decoder<number[]>>(array(numeric));
+expectType<ReadonlyDecoder<[string, ...string[]]>>(nonEmptyArray(string));
+expectType<Decoder<[number, ...number[]]>>(nonEmptyArray(numeric));
+expectType<ReadonlyDecoder<[string, number]>>(tuple(string, number));
+expectType<Decoder<[string, number]>>(tuple(string, numeric));
+expectType<ReadonlyDecoder<Record<string, string>>>(record(string));
+expectType<ReadonlyDecoder<Record<string, string>>>(record(string, { max: 3 }));
+expectType<ReadonlyDecoder<Record<`a${string}`, number>>>(
+  record(startsWith('a'), number),
+);
+expectType<Decoder<Record<string, number>>>(record(numeric));
+expectType<Decoder<Record<string, string>>>(record(trimmed, string));
+expectType<ReadonlyDecoder<{ a: string; b?: number | undefined }>>(
+  exact({ a: string, b: optional(number) }),
+);
+expectType<ReadonlyDecoder<Record<string, never>>>(exact({}));
+expectType<Decoder<{ a: number }>>(exact({ a: numeric }));
+expectType<ReadonlyDecoder<{ a: string } & Record<string, unknown>>>(
+  inexact({ a: string }),
+);
+expectType<Decoder<{ a: number } & Record<string, unknown>>>(inexact({ a: numeric }));
+expectNotAssignable<ReadonlyDecoder<unknown>>(object({ a: string }));
+function needsRo<T>(_d: ReadonlyDecoder<T>) {}
+needsRo(exact({ a: string, b: array(number) }));
+expectError(needsRo(object({ a: string })));
+expectError(needsRo(exact({ a: string.transform((s) => s) })));
+expectType<Decoder<string>>(lazy(() => string));
+expectType<ReadonlyDecoder<string>>(lazy(() => string, { readonly: true }));
+expectError(lazy(() => numeric, { readonly: true }));
+expectType<Decoder<string>>(select(unknown, () => string));
+expectType<ReadonlyDecoder<string | number>>(
+  select(unknown, (x) => (typeof x === 'string' ? string : number), { readonly: true }),
+);
+expectError(select(unknown, () => numeric, { readonly: true }));
+expectAssignable<ReadonlyDecoder<JSONValue>>(json);
+expectAssignable<ReadonlyDecoder<JSONObject>>(jsonObject);
+expectAssignable<ReadonlyDecoder<JSONArray>>(jsonArray);
+expectType<ReadonlyDecoder<{ id: string } & Record<string, unknown>>>(
+  inexact({ id: uuid }),
+);
+
 expectType<'foo'>(infer(constant('foo')));
 expectType<'foo'>(infer(always('foo')));
 expectType<42>(infer(always(42)));
@@ -123,6 +249,10 @@ expectType<number>(infer(positiveInteger));
 expectType<number>(infer(nonNegativeNumber));
 expectType<number>(infer(positiveNumber));
 expectType<number>(infer(numeric));
+expectType<number>(infer(numeric({ min: 1, max: 100 })));
+expectType<number>(infer(numeric({ gt: 0 })));
+expectError(numeric({ size: 3 }));
+expectError(numeric(100));
 expectType<number>(infer(min(0)));
 expectType<number>(infer(min(0, number)));
 expectType<number>(infer(max(100)));
@@ -130,19 +260,74 @@ expectType<number>(infer(max(100, number)));
 expectType<number>(infer(between(0, 100)));
 expectType<number>(infer(between(0, 100, number)));
 expectType<number>(infer(between(1, 10, integer)));
+expectDeprecated(min(0));
+expectDeprecated(max(100));
+expectDeprecated(between(0, 100));
+
+// Callable atomics
+expectType<string>(infer(string({ min: 2, max: 10 })));
+expectType<string>(infer(string({ size: 3 })));
+expectType<number>(infer(number({ min: 0 })));
+expectType<number>(infer(number({ gt: 0, lt: 1 })));
+expectType<number>(infer(number({ min: 0, lt: 1 })));
+expectType<number>(infer(integer({ max: 100 })));
+expectType<number>(infer(natural({ max: 10 })));
+expectType<number>(infer(nonNegativeNumber({ gt: 0 })));
+expectType<string>(infer(string()));
+expectType<number>(infer(number()));
+expectDeprecated(string());
+expectDeprecated(number());
+expectError(number({ size: 3 }));
+expectError(string({ gt: 3 }));
+expectError(anyNumber({ min: 0 }));
+expectType<string | number>(infer(either(string({ max: 3 }), number({ min: 0 }))));
+expectType<{ name: string; age: number }>(
+  infer(object({ name: string({ min: 1 }), age: natural })),
+);
+expectAssignable<Decoder<unknown>>(string);
+expectAssignable<Record<string, Decoder<unknown>>>({ s: string, n: number });
+expectType<number>(infer(string.transform(Number).pipe(natural)));
 expectType<bigint>(infer(bigint));
 
 expectType<string>(infer(string));
 expectType<string>(infer(nonEmptyString));
 expectType<string>(infer(decimal));
 expectType<string>(infer(hexadecimal));
+expectType<string>(infer(nonEmptyString({ max: 10 })));
+expectType<string>(infer(decimal({ min: 1, max: 10 })));
+expectType<string>(infer(hexadecimal({ size: 64 })));
+expectType<string>(infer(identifier({ max: 32 })));
+expectType<string>(infer(trimmed));
+expectType<string>(infer(trimmed({ min: 1, max: 100 })));
+expectError(trimmed(1));
+expectDeprecated(hexadecimal());
+expectError(hexadecimal(64));
+expectError(hexadecimal({ size: 64, max: 10 }));
 expectType<string>(infer(email));
+expectType<string>(infer(regex(/foo/)));
+expectType<string>(infer(regex(/foo/, { message: 'Must be foo' })));
+expectType<string>(infer(regex(/foo/, { max: 10, message: 'Must be foo' })));
+expectType<string>(infer(regex(/foo/, { size: 3 })));
+expectError(regex(/foo/, { size: 3, max: 10 }));
+expectError(regex(/foo/, { bogus: 3 }));
 expectType<string>(infer(regex(/foo/, 'Must be foo')));
+expectNotDeprecated(regex(/foo/, 'Must be foo'));
 expectType<`foo-${string}`>(infer(startsWith('foo-')));
 expectType<`${string}-bar`>(infer(endsWith('-bar')));
+expectType<`foo-${string}`>(infer(startsWith('foo-', { size: 24 })));
+expectType<`${string}-bar`>(infer(endsWith('-bar', { min: 5, max: 10 })));
+expectError(startsWith('foo-', 24));
+expectError(endsWith('-bar', { size: 3, max: 10 }));
 expectType<string>(infer(sized(string, { min: 1, max: 10 })));
 expectType<number[]>(infer(sized(array(number), { min: 1, max: 10 })));
-expectType<Set<number>>(infer(sized(setFromArray(number), { size: 3 })));
+expectType<Set<number>>(
+  infer(
+    sized(
+      array(number).transform((xs) => new Set(xs)),
+      { size: 3 },
+    ),
+  ),
+);
 expectType<URL>(infer(url));
 expectType<string>(infer(urlString));
 expectType<URL>(infer(httpsUrl));
@@ -168,8 +353,6 @@ expectError(infer(array(string, { bogus: 3 })));
 expectType<unknown[]>(infer(poja));
 expectType<[string, ...string[]]>(infer(nonEmptyArray(string)));
 expectType<[number, ...number[]]>(infer(nonEmptyArray(number)));
-expectType<Set<string>>(infer(setFromArray(string)));
-expectType<Set<number>>(infer(setFromArray(number)));
 
 expectType<[string]>(infer(tuple(string)));
 expectType<[string, number]>(infer(tuple(string, number)));
@@ -223,9 +406,8 @@ expectType<number | string>(
 );
 
 // .chain()
-expectType<number>(infer(string.transform(Number).chain(positiveInteger)));
 expectType<number>(infer(string.transform(Number).chain(positiveInteger.decode)));
-expectType<boolean>(infer(string.transform(Number).transform(String).chain(truthy)));
+expectError(string.transform(Number).transform(String).chain(truthy));
 expectType<boolean>(
   infer(string.transform(Number).transform(String).chain(truthy.decode)),
 );
@@ -237,15 +419,24 @@ expectType<boolean>(infer(string.transform(Number).transform(String).pipe(truthy
 expectType<number | string>(
   infer(string.transform(Number).pipe(Math.random() < 0.5 ? positiveInteger : string)),
 );
-// .pipe() with function with branches infers decoder from both branches
+// .pipe() no longer takes a function
+expectError(string.transform(Number).pipe(() => positiveInteger));
+expectError(
+  string.transform(Number).pipe((x: number) => (x < 0.5 ? positiveInteger : string)),
+);
+
+// .chain() with function with branches infers decoder from both branches
+expectType<number>(infer(string.transform(Number).chain(() => positiveInteger)));
 expectType<number | string>(
   infer(
-    string.transform(Number).pipe(() => (Math.random() < 0.5 ? positiveInteger : string)),
+    string
+      .transform(Number)
+      .chain(() => (Math.random() < 0.5 ? positiveInteger : string)),
   ),
 );
-// .pipe() with input function with branches infers decoder from both branches
+// .chain() with input function with branches infers decoder from both branches
 expectType<number | string>(
-  infer(string.transform(Number).pipe((x) => (x < 0.5 ? positiveInteger : string))),
+  infer(string.transform(Number).chain((x) => (x < 0.5 ? positiveInteger : string))),
 );
 
 expectType<string>(infer(string.refine((s) => s.startsWith('x'), 'Must start with x')));
@@ -402,7 +593,6 @@ expectType<unknown>(infer(inexact({})).a);
 expectType<unknown>(infer(inexact({})).b);
 
 expectType<Record<string, unknown>>(infer(pojo));
-expectType<Map<string, number>>(infer(mapping(number)));
 
 // Single-argument form (validate values only)
 expectType<Record<string, number>>(infer(record(number)));
@@ -413,6 +603,8 @@ expectType<Record<'foo' | 'bar', number>>(
 );
 expectType<Record<string, number>>(infer(record(decimal, number)));
 expectType<Record<string, boolean>>(infer(record(email, boolean)));
+expectType<Record<string, number>>(infer(record(number, { max: 10 })));
+expectType<Record<string, boolean>>(infer(record(email, boolean, { min: 1 })));
 
 expectType<string>(infer(lazy(() => string)));
 expectType<number>(infer(lazy(() => number)));
@@ -456,13 +648,8 @@ expectType<JSONValue | undefined>(infer(jsonObject).abc);
 
 expectType<Date>(infer(date));
 expectType<Date>(infer(isoDate));
-expectType<Date>(infer(iso8601)); // alias of isoDate
 expectType<string>(infer(isoDateString));
 expectType<Date>(infer(flexDate));
-
-// Deprecated aliases (should still work)
-expectType<Date>(infer(datelike));
-expectType<string>(infer(dateString));
 
 expectType<never>(infer(fail('I will never return')));
 expectType<never>(infer(never('I will never return')));

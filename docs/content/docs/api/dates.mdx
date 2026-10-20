@@ -5,7 +5,7 @@ description: Date decoders for validating and parsing date values.
 
 ## date
 
-<DecoderSig name="date" type="Date" source="dates.ts#L15-L20" />
+<DecoderSig name="date" type="Date" source="dates.ts#L15-L18" />
 
 Accepts and returns `Date` instances.
 
@@ -21,15 +21,16 @@ Accepts and returns `Date` instances.
     {
       name: 'iso8601',
       deprecated: true,
+      removed: '3.0',
       info: (
         <>
-          Renamed to <code>isoDate</code> in 2.9.
+          Renamed to <code>isoDate</code> in 2.9. Removed in 3.0.
         </>
       ),
     },
   ]}
   type="Date"
-  source="dates.ts#L33-L39"
+  source="dates.ts#L30-L36"
 />
 
 <Since version="2.9" />
@@ -52,16 +53,16 @@ as `Date` instances.
     {
       name: 'dateString',
       deprecated: true,
+      removed: '3.0',
       info: (
         <>
-          Renamed to <code>isoDateString</code> in 2.9. Will be removed in the next major
-          release.
+          Renamed to <code>isoDateString</code> in 2.9. Removed in 3.0.
         </>
       ),
     },
   ]}
   type="string"
-  source="dates.ts#L22-L31"
+  source="dates.ts#L20-L28"
 />
 
 <Since version="2.9" />
@@ -83,16 +84,16 @@ Accepts and returns [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted 
     {
       name: 'datelike',
       deprecated: true,
+      removed: '3.0',
       info: (
         <>
-          Renamed to <code>flexDate</code> in 2.9. Will be removed in the next major
-          release.
+          Renamed to <code>flexDate</code> in 2.9. Removed in 3.0.
         </>
       ),
     },
   ]}
   type="Date"
-  source="dates.ts#L41-L52"
+  source="dates.ts#L38-L49"
 />
 
 <Since version="2.9" />

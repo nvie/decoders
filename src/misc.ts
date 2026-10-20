@@ -1,7 +1,7 @@
-import type { Decoder } from '~/core';
-import { annotate, define } from '~/core';
-import type { Sized, SizeOptions } from '~/lib/size-options';
-import { bySizeOptions } from '~/lib/size-options';
+import type { Decoder, ReadonlyDecoder } from '~/core';
+import { annotate, define, defineReadonly, make } from '~/core';
+import type { Sized, SizeOptions } from '~/lib/options';
+import { bySizeOptions } from '~/lib/options';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 export interface Klass<T> extends Function {
@@ -16,25 +16,59 @@ export type Instance<K> = K extends Klass<infer T> ? T : never;
  */
 /* #__NO_SIDE_EFFECTS__ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function instanceOf<K extends Klass<any>>(klass: K): Decoder<Instance<K>> {
-  return define((blob, ok, err) =>
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    blob instanceof klass ? ok(blob) : err(`Must be ${klass.name} instance`),
+export function instanceOf<K extends Klass<any>>(klass: K): ReadonlyDecoder<Instance<K>> {
+  return defineReadonly(
+    (blob): blob is Instance<K> => blob instanceof klass,
+    `Must be ${klass.name} instance`,
   );
 }
 
 /**
  * Lazily evaluate the given decoder. This is useful to build self-referential
- * types for recursive data structures.
+ * types for recursive data structures. The factory is called once, on first
+ * decode, and its result is reused from then on.
+ *
+ * Pass `{ readonly: true }` to declare the resulting decoder readonly. The
+ * decoder returned by the factory must then be readonly too, which is checked
+ * when it's first called.
  */
+export function lazy<T>(
+  decoderFn: () => ReadonlyDecoder<T>,
+  options: { readonly: true },
+): ReadonlyDecoder<T>;
+export function lazy<T>(decoderFn: () => Decoder<T>): Decoder<T>;
 /* #__NO_SIDE_EFFECTS__ */
-export function lazy<T>(decoderFn: () => Decoder<T>): Decoder<T> {
-  return define((blob) => decoderFn().decode(blob));
+export function lazy<T>(
+  decoderFn: () => Decoder<T>,
+  options?: { readonly: true },
+): Decoder<T> {
+  const ro = options?.readonly === true;
+  let decoder: Decoder<T> | undefined;
+  return make((blob) => {
+    if (decoder === undefined) {
+      const d = decoderFn();
+      if (ro && !d.isReadonly) {
+        throw new Error(
+          'Decoder setup error: lazy() was declared readonly, but its decoder is not',
+        );
+      }
+      decoder = d;
+    }
+    return decoder.decode(blob);
+  }, ro);
 }
 
 /**
  * Only accept strings, arrays, or sets with given length constraints.
  */
+export function sized<T extends Sized>(
+  decoder: ReadonlyDecoder<T>,
+  options: SizeOptions,
+): ReadonlyDecoder<T>;
+export function sized<T extends Sized>(
+  decoder: Decoder<T>,
+  options: SizeOptions,
+): Decoder<T>;
 /* #__NO_SIDE_EFFECTS__ */
 export function sized<T extends Sized>(
   decoder: Decoder<T>,

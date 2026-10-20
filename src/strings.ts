@@ -1,7 +1,14 @@
-import type { Decoder } from '~/core';
-import { define } from '~/core';
-import type { SizeOptions } from '~/lib/size-options';
+import type {
+  CallableDecoder,
+  Decoder,
+  ReadonlyCallableDecoder,
+  ReadonlyDecoder,
+} from '~/core';
+import { callable, defineReadonly } from '~/core';
+import type { RangeOptions, RegexOptions, SizeOptions } from '~/lib/options';
+import { bySizeOptions } from '~/lib/options';
 import { sized } from '~/misc';
+import { natural, ranged } from '~/numbers';
 import { isString } from '~/lib/utils';
 
 import { instanceOf } from './misc';
@@ -17,40 +24,93 @@ const url_re =
 /**
  * Accepts and returns strings.
  */
-export const string: Decoder<string> = define((blob, ok, err) =>
-  isString(blob) ? ok(blob) : err('Must be string'),
-);
+export const string: ReadonlyCallableDecoder<string, SizeOptions> =
+  /* #__PURE__ */ callable<string, SizeOptions>(
+    defineReadonly(isString, 'Must be string'),
+    sized,
+  );
 
 /**
  * Like `string`, but will reject the empty string or strings containing only whitespace.
  */
-export const nonEmptyString: Decoder<string> = regex(/\S/, 'Must be non-empty string');
+export const nonEmptyString: ReadonlyCallableDecoder<string, SizeOptions> =
+  /* #__PURE__ */ sizedRegex(/\S/, 'Must be non-empty string');
+
+/**
+ * Accepts strings and returns them with surrounding whitespace removed. Size
+ * options apply to the trimmed value.
+ */
+export const trimmed: CallableDecoder<string, SizeOptions> = /* #__PURE__ */ callable<
+  string,
+  SizeOptions
+>(
+  string.transform((s) => s.trim()),
+  sized,
+);
 
 /**
  * Accepts and returns strings that match the given regular expression.
+ * Size options are checked before the regex runs.
  */
+export function regex(regex: RegExp, options?: RegexOptions): ReadonlyDecoder<string>;
+/** Shorthand for `regex(re, { message })` */
+export function regex(regex: RegExp, msg: string): ReadonlyDecoder<string>;
 /* #__NO_SIDE_EFFECTS__ */
-export function regex(regex: RegExp, msg: string): Decoder<string> {
-  return string.refine((s) => regex.test(s), msg);
+export function regex(
+  regex: RegExp,
+  options?: RegexOptions | string,
+): ReadonlyDecoder<string> {
+  const { message = `Must match ${regex}`, ...sizeOptions } =
+    typeof options === 'string' ? { message: options } : (options ?? {});
+  const hasBounds =
+    sizeOptions.size !== undefined ||
+    sizeOptions.min !== undefined ||
+    sizeOptions.max !== undefined;
+  const base = hasBounds ? string.reject(bySizeOptions(sizeOptions)) : string;
+  return base.refine((s) => regex.test(s), message);
 }
 
 /**
- * Accepts and returns strings that start with the given prefix.
+ * A callable regex decoder: calling it with size options gives a decoder that
+ * checks those before the regex runs.
  */
 /* #__NO_SIDE_EFFECTS__ */
-export function startsWith<P extends string>(prefix: P): Decoder<`${P}${string}`> {
-  return string.refine(
+function sizedRegex(
+  re: RegExp,
+  message: string,
+): ReadonlyCallableDecoder<string, SizeOptions> {
+  return callable(regex(re, { message }), (_, options) =>
+    // Rebuilds instead of using sized(self, options), which would check size
+    // only after the regex ran: on unbounded input, with the regex's error
+    regex(re, { ...options, message }),
+  );
+}
+
+/**
+ * Accepts and returns strings that start with the given prefix. Size options
+ * count the whole string, prefix included, and are checked first.
+ */
+/* #__NO_SIDE_EFFECTS__ */
+export function startsWith<P extends string>(
+  prefix: P,
+  options?: SizeOptions,
+): ReadonlyDecoder<`${P}${string}`> {
+  return (options ? string(options) : string).refine(
     (s): s is `${P}${string}` => s.startsWith(prefix),
     `Must start with '${prefix}'`,
   );
 }
 
 /**
- * Accepts and returns strings that end with the given suffix.
+ * Accepts and returns strings that end with the given suffix. Size options
+ * count the whole string, suffix included, and are checked first.
  */
 /* #__NO_SIDE_EFFECTS__ */
-export function endsWith<S extends string>(suffix: S): Decoder<`${string}${S}`> {
-  return string.refine(
+export function endsWith<S extends string>(
+  suffix: S,
+  options?: SizeOptions,
+): ReadonlyDecoder<`${string}${S}`> {
+  return (options ? string(options) : string).refine(
     (s): s is `${string}${S}` => s.endsWith(suffix),
     `Must end with '${suffix}'`,
   );
@@ -60,16 +120,18 @@ export function endsWith<S extends string>(suffix: S): Decoder<`${string}${S}`> 
  * Accepts and returns strings that are syntactically valid email addresses.
  * (This will not mean that the email address actually exist.)
  */
-export const email: Decoder<string> = /* #__PURE__ */ regex(
+export const email: ReadonlyDecoder<string> = /* #__PURE__ */ regex(
   // The almost perfect email regex, taken from https://emailregex.com/
   /^(?:[^<>()[\]\\.,;:\s@"]+(?:\.[^<>()[\]\\.,;:\s@"]+)*|".+")@(?:\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}]|(?:[a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})$/,
-  'Must be email',
+  { message: 'Must be email' },
 );
 
 /**
  * Accepts strings that are valid URLs.
  */
-export const urlString: Decoder<string> = /* #__PURE__ */ regex(url_re, 'Must be URL');
+export const urlString: ReadonlyDecoder<string> = /* #__PURE__ */ regex(url_re, {
+  message: 'Must be URL',
+});
 
 /**
  * Accepts strings that are valid URLs, returns the value as a URL instance.
@@ -93,10 +155,8 @@ export const httpsUrl: Decoder<URL> = /* #__PURE__ */ url.refine(
  * Accepts and returns strings that are valid identifiers in most programming
  * languages.
  */
-export const identifier: Decoder<string> = regex(
-  /^[a-z_][a-z0-9_]*$/i,
-  'Must be valid identifier',
-);
+export const identifier: ReadonlyCallableDecoder<string, SizeOptions> =
+  /* #__PURE__ */ sizedRegex(/^[a-z_][a-z0-9_]*$/i, 'Must be valid identifier');
 
 /**
  * Accepts and returns [Nano ID](https://zelark.github.io/nano-id-cc) string
@@ -105,8 +165,11 @@ export const identifier: Decoder<string> = regex(
  * alphabet.
  */
 /* #__NO_SIDE_EFFECTS__ */
-export function nanoid(options?: SizeOptions): Decoder<string> {
-  return sized(regex(/^[a-z0-9_-]+$/i, 'Must be nano ID'), options ?? { size: 21 });
+export function nanoid(options?: SizeOptions): ReadonlyDecoder<string> {
+  return regex(/^[a-z0-9_-]+$/i, {
+    ...(options ?? { size: 21 }),
+    message: 'Must be nano ID',
+  });
 }
 
 /**
@@ -114,11 +177,11 @@ export function nanoid(options?: SizeOptions): Decoder<string> {
  * [UUIDs](https://en.wikipedia.org/wiki/universally_unique_identifier)
  * (universally unique identifier).
  */
-export const uuid: Decoder<string> = regex(
+export const uuid: ReadonlyDecoder<string> = regex(
   // https://www.rfc-editor.org/rfc/rfc9562#section-4
   // Version 1-8 with variant 8, 9, a, or b, plus the Nil and Max UUIDs (sections 5.9, 5.10)
   /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$/i,
-  'Must be uuid',
+  { message: 'Must be uuid' },
 );
 
 /**
@@ -126,7 +189,7 @@ export const uuid: Decoder<string> = regex(
  * [UUIDv1](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_%28date-time_and_MAC_address%29)
  * strings.
  */
-export const uuidv1: Decoder<string> =
+export const uuidv1: ReadonlyDecoder<string> =
   /* #__PURE__ */
   // https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_(date-time_and_MAC_address)
   uuid.refine((value) => value[14] === '1', 'Must be uuidv1');
@@ -136,7 +199,7 @@ export const uuidv1: Decoder<string> =
  * [UUIDv4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_%28random%29)
  * strings.
  */
-export const uuidv4: Decoder<string> =
+export const uuidv4: ReadonlyDecoder<string> =
   /* #__PURE__ */
   // https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)
   uuid.refine((value) => value[14] === '4', 'Must be uuidv4');
@@ -156,10 +219,12 @@ function isKsuid(value: string): boolean {
  * Optionally, specify a prefix the KSUID must be preceded by, e.g.
  * `ksuid({ prefix: 'msg_' })` accepts `msg_0ujtsYcgvSTl8PAuAdqWYSMnLOv`.
  */
-export function ksuid(): Decoder<string>;
-export function ksuid<P extends string>(options: { prefix: P }): Decoder<`${P}${string}`>;
+export function ksuid(): ReadonlyDecoder<string>;
+export function ksuid<P extends string>(options: {
+  prefix: P;
+}): ReadonlyDecoder<`${P}${string}`>;
 /* #__NO_SIDE_EFFECTS__ */
-export function ksuid(options?: { prefix: string }): Decoder<string> {
+export function ksuid(options?: { prefix: string }): ReadonlyDecoder<string> {
   const prefix = options?.prefix;
   return prefix
     ? startsWith(prefix).refine((s) => isKsuid(s.slice(prefix.length)), 'Must be ksuid')
@@ -170,19 +235,22 @@ export function ksuid(options?: { prefix: string }): Decoder<string> {
  * Accepts and returns strings with decimal digits only (base-10).
  * To convert these to numbers, use the `numeric` decoder.
  */
-export const decimal: Decoder<string> = regex(/^[0-9]+$/, 'Must only contain digits');
+export const decimal: ReadonlyCallableDecoder<string, SizeOptions> =
+  /* #__PURE__ */ sizedRegex(/^[0-9]+$/, 'Must only contain digits');
 
 /**
  * Accepts and returns strings with hexadecimal digits only (base-16).
  */
-export const hexadecimal: Decoder<string> = regex(
-  /^[0-9a-f]+$/i,
-  'Must only contain hexadecimal digits',
-);
+export const hexadecimal: ReadonlyCallableDecoder<string, SizeOptions> =
+  /* #__PURE__ */ sizedRegex(/^[0-9a-f]+$/i, 'Must only contain hexadecimal digits');
 
 /**
- * Accepts valid numerical strings (in base-10) and returns them as a number.
+ * Accepts valid numerical strings (in base-10) and returns them as a safe
+ * natural number. Range options apply to the number, not to the string.
  * To only accept numerical strings and keep them as string values, use the
  * `decimal` decoder.
  */
-export const numeric: Decoder<number> = /* #__PURE__ */ decimal.transform(Number);
+export const numeric: CallableDecoder<number, RangeOptions> = /* #__PURE__ */ callable(
+  /* #__PURE__ */ decimal.transform(Number).pipe(natural),
+  ranged,
+);

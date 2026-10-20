@@ -9,7 +9,7 @@ description: Utility decoders for custom logic, preprocessing, and advanced use 
   name="unknown"
   aliases={[{ name: 'anything', deprecated: false }]}
   type="unknown"
-  source="basics.ts#L130-L137"
+  source="basics.ts#L135-L145"
 />
 
 Accepts anything and returns it unchanged.
@@ -27,7 +27,7 @@ further refine it yourself.
 
 ## always
 
-<DecoderSig name="always" params="value: T" type="T" source="basics.ts#L99-L114" />
+<DecoderSig name="always" params="value: T" type="T" source="basics.ts#L104-L119" />
 <DecoderSig name="always" params="value: () => T" type="T" />
 
 Accepts any input, ignores it, and instead returns the provided value instead.
@@ -51,7 +51,7 @@ Or use it with a function instead of a constant:
   name="never"
   aliases={[{ name: 'fail', deprecated: false }]}
   type="never"
-  source="basics.ts#L116-L123"
+  source="basics.ts#L121-L128"
 />
 
 Rejects all inputs, and always fails with the given error message. May be useful for
@@ -88,10 +88,12 @@ Accepts any value that is an `instanceof` the given class.
   name="lazy"
   params="decoderFn: () => Decoder<T>"
   type="T"
-  source="misc.ts#L26-L33"
+  source="misc.ts#L26-L59"
 />
 
-Lazily evaluate the given decoder. Useful to build recursive decoders.
+Lazily evaluate the given decoder. Useful to build recursive decoders. The function is
+called once, on first decode, and the decoder it returns is reused from then on. To pick a
+decoder dynamically, use [`select()`][] or [`.chain()`][] instead.
 
 <DecoderPlayground
   globals={{
@@ -120,7 +122,7 @@ Lazily evaluate the given decoder. Useful to build recursive decoders.
   name="sized"
   params="decoder: Decoder<string>, options: SizeOptions"
   type="string"
-  source="misc.ts#L35-L44"
+  source="misc.ts#L61-L78"
 />
 <DecoderSig
   name="sized"
@@ -162,7 +164,7 @@ checks the length before decoding any items.
   name="define"
   params="fn: (blob: unknown, ok, err) => DecodeResult<T>"
   type="T"
-  source="core/Decoder.ts#L373-L390"
+  source="core/Decoder.ts#L483-L499"
 />
 
 Defines a new `Decoder<T>`, by implementing a custom acceptance function. The function
@@ -212,13 +214,37 @@ uppercase.verify(123); // throws: Must be string
 
 ---
 
+## defineReadonly
+
+<DecoderSig
+  name="defineReadonly"
+  params="guard: (blob: unknown) => blob is T, msg: string"
+  type="T"
+  source="core/Decoder.ts#L513-L526"
+/>
+
+<Since version="3.0" />
+
+Defines a new readonly decoder from a type guard. Accepted inputs are handed back as-is,
+never copied, so `decoder.verify(x) === x`. Rejected inputs fail with the given message.
+
+```ts
+const isBuffer = (blob: unknown): blob is Buffer => Buffer.isBuffer(blob);
+const buffer = defineReadonly(isBuffer, 'Must be buffer');
+```
+
+Unlike [`define()`][], which is never readonly, a decoder built this way keeps the
+composites it's used in readonly too.
+
+---
+
 ## prep
 
 <DecoderSig
   name="prep"
   params="mapperFn: (raw: unknown) => unknown, decoder: Decoder<T>"
   type="T"
-  source="misc.ts#L46-L77"
+  source="misc.ts#L80-L111"
 />
 
 Pre-process the data input before passing it into the decoder. This gives you the ability
@@ -244,3 +270,7 @@ decoder.verify('3') === 3;
 decoder.verify('-3'); // throws: not a positive number
 decoder.verify('hi'); // throws: not a number
 ```
+
+[`select()`]: /select
+[`.chain()`]: /.chain
+[`define()`]: /define

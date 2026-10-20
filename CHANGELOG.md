@@ -1,5 +1,103 @@
 ## [Unreleased]
 
+**Breaking!**
+
+- Decoders from 2.x and 3.x no longer recognize each other. Normally this isn't a problem,
+  as it's encouraged to
+  [not have multiple copies](https://decoders.cc/docs/using-in-monorepos) of decoders in
+  your project anyway.
+- Remove `dateString`, `iso8601`, and `datelike`, which were deprecated in 2.9. Use
+  `isoDateString`, `isoDate`, and `flexDate` instead.
+- `.chain()` no longer accepts a decoder (deprecated since 2.11), and throws when given
+  one. Use `.pipe()` instead.
+- `.pipe()` no longer accepts a function, and throws when given one. To dynamically pick
+  the next decoder, use `.chain((value) => decoder)` instead, which now infers the union
+  type when the function returns different decoders.
+- `integer`, `natural`, `positiveInteger`, and `numeric` now reject unsafe integers
+  (beyond ±2^53−1).
+- `natural` and `nonNegativeNumber` now check the sign first (happy path
+  optimization). This can lead to a different error message compared to 2.x.
+- `lazy()` now calls its function once, on first decode, and reuses the resulting decoder.
+  If you relied on it being called on every decode to pick a decoder dynamically, use
+  `select()` or `.chain()` instead.
+- Remove `setFromArray` and `mapping`. Use `array(d).transform((xs) => new Set(xs))` and
+  `record(d).transform((obj) => new Map(Object.entries(obj)))` instead.
+- `exact`, `inexact`, `array`, `nonEmptyArray`, `tuple`, `record`, and `json` now return
+  the input itself instead of a copy when all of their children only validate. For
+  `exact` and `inexact`, this means explicitly `undefined` keys are kept, and keys keep
+  the input's order. `object()` still always copies. See the
+  [migration guide](./MIGRATING-v3.md).
+
+**New APIs:**
+
+- Readonly decoders: `decoder.isReadonly` is `true` when a decoder is guaranteed to hand
+  back its input as-is, i.e. `decoder.verify(x) === x`. Readonly decoders are typed as
+  `ReadonlyDecoder<T>`.
+  ```ts
+  json.verify(input) === input; // true
+  exact({ name: string }).isReadonly; // true
+  exact({ name: string.transform(upper) }).isReadonly; // false
+  object({ name: string }).isReadonly; // false: strips unknown keys
+  ```
+- `defineReadonly(guard, msg)` defines a custom readonly decoder from a type guard.
+- `lazy()` and `select()` take a `{ readonly: true }` option, to declare that the decoder
+  they resolve to is readonly.
+
+- `string`, `number`, `integer`, `natural`, and `nonNegativeNumber` can now be called with
+  options, to put the constraint right next to the type:
+  ```ts
+  string({ min: 2, max: 10 }); // instead of sized(string, { min: 2, max: 10 })
+  number({ min: 0 }); // instead of min(0)
+  integer({ max: 100 }); // instead of max(100, integer)
+  number({ gt: 0, lt: 1 }); // new: exclusive bounds
+  ```
+  Number decoders take `min`/`max` (inclusive) and `gt`/`lt` (exclusive). Calling them
+  without options (`string()`) works, but is deprecated: use `string`.
+- `nonEmptyString`, `decimal`, `hexadecimal`, and `identifier` can now be called with size
+  options too, checked before the regex runs:
+  ```ts
+  hexadecimal({ size: 64 }); // instead of sized(hexadecimal, { size: 64 })
+  ```
+- `startsWith()` and `endsWith()` now take optional size options, which count the whole
+  string (prefix or suffix included) and are checked first:
+  ```ts
+  startsWith('henk_', { size: 24 }); // instead of sized(startsWith('henk_'), { size: 24 })
+  ```
+- `numeric` can now be called with range options, which apply to the decoded number:
+  ```ts
+  numeric({ min: 1, max: 100 }); // '42' → 42, '101' → Too high
+  ```
+- New `trimmed` decoder, which returns strings with surrounding whitespace removed. Size
+  options apply to the trimmed value:
+  ```ts
+  trimmed({ min: 1, max: 100 }); // '  hi  ' → 'hi', '   ' → Too short
+  ```
+- `regex()` now takes options: size bounds, checked before the regex runs, and the error
+  message. `regex(re, msg)` remains as shorthand for `regex(re, { message: msg })`:
+  ```ts
+  regex(/^[a-z]+$/, { max: 20, message: 'Must be lowercase' });
+  ```
+- `record()` now takes optional `SizeOptions` to constrain the number of keys, checked
+  before any key or value is decoded:
+  ```ts
+  record(number, { max: 10 });
+  record(email, boolean, { min: 1 });
+  ```
+
+**Deprecated:**
+
+- `min()`, `max()`, and `between()`. Use the range options instead, e.g.
+  `number({ min: 0 })` or `integer({ min: 1, max: 10 })`.
+
+**Performance:**
+
+Compared to 2.12.2:
+
+- Decoders take ~11% less memory and are ~9x faster to construct.
+- Decoders using `.transform()`, `.refine()`, `.reject()`, `.chain()`, or `.pipe()` decode
+  up to ~12% faster.
+- `integer`, `natural`, and `nonNegativeNumber` decode faster on valid and invalid inputs.
+
 ## [2.13.0] - 2026-10-20
 
 **New decoders:**

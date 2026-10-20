@@ -1,7 +1,15 @@
 import { describe, expect, test } from 'vitest';
 
 import { always } from '~/basics';
-import { annotate, define, formatInline, formatShort, isDecoder } from '~/core';
+import type { Decoder } from '~/core';
+import {
+  annotate,
+  define,
+  defineReadonly,
+  formatInline,
+  formatShort,
+  isDecoder,
+} from '~/core';
 import { natural, number } from '~/numbers';
 import { pojo } from '~/objects';
 import { string } from '~/strings';
@@ -30,6 +38,57 @@ describe('define()', () => {
     expect(() => decoder.verify(new Date())).toThrow();
     expect(() => decoder.verify([])).toThrow();
     expect(() => decoder.verify('hey')).toThrow(/fail!/);
+  });
+});
+
+describe('readonly', () => {
+  test('define() is never readonly', () => {
+    expect(define((blob, ok) => ok(blob)).isReadonly).toBe(false);
+  });
+
+  test('defineReadonly() hands back the input itself', () => {
+    const isArray = (blob: unknown): blob is unknown[] => Array.isArray(blob);
+    const decoder = defineReadonly(isArray, 'Must be array');
+    expect(decoder.isReadonly).toBe(true);
+
+    const input = [1, 2, 3];
+    expect(decoder.verify(input)).toBe(input);
+    expect(() => decoder.verify('nope')).toThrow('Must be array');
+  });
+
+  describe('methods', () => {
+    const isArray = (blob: unknown): blob is unknown[] => Array.isArray(blob);
+    const ro = defineReadonly(isArray, 'Must be array');
+    const notRo = define<unknown[]>((blob, ok, err) =>
+      Array.isArray(blob) ? ok(blob) : err('Must be array'),
+    );
+    const roOther = defineReadonly(isArray, 'Must be array');
+    const input = [1, 2, 3];
+
+    test.each([
+      [
+        'refine',
+        (d: Decoder<unknown[]>) => d.refine((xs) => xs.length > 0, 'Must not be empty'),
+      ],
+      ['reject', (d: Decoder<unknown[]>) => d.reject(() => null)],
+      ['describe', (d: Decoder<unknown[]>) => d.describe('Must be a list')],
+      ['refineType', (d: Decoder<unknown[]>) => d.refineType<number[]>()],
+      ['pipe(readonly)', (d: Decoder<unknown[]>) => d.pipe(roOther)],
+    ])('.%s() keeps readonly-ness', (_, method) => {
+      const decoder = method(ro);
+      expect(decoder.isReadonly).toBe(true);
+      expect(decoder.verify(input)).toBe(input);
+      expect(method(notRo).isReadonly).toBe(false);
+    });
+
+    test.each([
+      ['transform', (d: Decoder<unknown[]>) => d.transform((xs) => xs)],
+      ['chain', (d: Decoder<unknown[]>) => d.chain((xs, ok) => ok(xs))],
+      ['pipe(non-readonly)', (d: Decoder<unknown[]>) => d.pipe(notRo)],
+    ])('.%s() is never readonly', (_, method) => {
+      expect(method(ro).isReadonly).toBe(false);
+      expect(method(notRo).isReadonly).toBe(false);
+    });
   });
 });
 
@@ -127,19 +186,8 @@ describe('.chain() with acceptance function returning a decoder', () => {
 });
 
 describe('.chain() directly taking a decoder', () => {
-  const decoder = string.transform(Number).chain(natural);
-
-  test('valid type of decode result', () => {
-    expect(decoder.verify('100')).toEqual(100);
-    expect(decoder.verify(' 123  ')).toEqual(123);
-    expect(decoder.verify('2387213979')).toEqual(2387213979);
-  });
-
-  test('invalid', () => {
-    expect(() => decoder.verify('not a numeric string')).toThrow('Number must be finite');
-    expect(() => decoder.verify(42)).toThrow('Must be string');
-    expect(() => decoder.verify('-123')).toThrow('Number must be positive');
-    expect(() => decoder.verify('3.14')).toThrow('Number must be an integer');
+  test('throws, pointing to .pipe()', () => {
+    expect(() => string.transform(Number).chain(natural)).toThrow('use .pipe() instead');
   });
 });
 
@@ -160,10 +208,19 @@ describe('.pipe() with single decoder arg', () => {
   });
 });
 
-describe('.pipe() with decoder function arg', () => {
+describe('.pipe() directly taking a function', () => {
+  test('throws, pointing to .chain()', () => {
+    // @ts-expect-error - .pipe() only takes decoders
+    expect(() => string.transform(Number).pipe(() => natural)).toThrow(
+      'use .chain() instead',
+    );
+  });
+});
+
+describe('.chain() with a function picking a decoder', () => {
   const decoder = string
     .transform(Number)
-    .pipe((x) => (isNaN(x) || x <= 999 ? natural : always('A big number!')));
+    .chain((x) => (isNaN(x) || x <= 999 ? natural : always('A big number!')));
 
   test('valid type of decode result', () => {
     expect(decoder.verify('0')).toEqual(0);
@@ -295,11 +352,38 @@ describe('isDecoder()', () => {
     expect(isDecoder(define((_, ok) => ok(42)))).toBe(true);
   });
 
+  test('recognizes callable decoders', () => {
+    expect(isDecoder(number)).toBe(true);
+    expect(isDecoder(number({ min: 0 }))).toBe(true);
+  });
+
   test('rejects non-decoders', () => {
     expect(isDecoder(undefined)).toBe(false);
     expect(isDecoder(null)).toBe(false);
     expect(isDecoder('string')).toBe(false);
     expect(isDecoder({ decode: () => {} })).toBe(false);
+    expect(isDecoder(() => {})).toBe(false);
+  });
+});
+
+describe('callable decoders', () => {
+  test('methods work', () => {
+    expect(number.transform(String).verify(42)).toBe('42');
+    expect(() => number.refine((n) => n > 0, 'Must be > 0').verify(0)).toThrow(
+      'Must be > 0',
+    );
+    expect(string.transform(Number).pipe(number).verify('3.5')).toBe(3.5);
+  });
+
+  test('~standard works', () => {
+    expect(number['~standard'].validate(42)).toEqual({ value: 42 });
+    expect(number({ max: 1 })['~standard'].validate(2)).toEqual({
+      issues: [{ message: 'Too high, must be at most 1' }],
+    });
+  });
+
+  test('show up as "Decoder"', () => {
+    expect(number.constructor.name).toBe('Decoder');
   });
 });
 
