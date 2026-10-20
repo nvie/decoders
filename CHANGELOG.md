@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+**New decoders:**
+
+- [`ksuid()`](https://decoders.cc/ksuid)
+
 ## [2.12.3] - 2026-10-19
 
 **Fixes:**

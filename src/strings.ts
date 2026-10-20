@@ -141,6 +141,31 @@ export const uuidv4: Decoder<string> =
   // https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)
   uuid.refine((value) => value[14] === '4', 'Must be uuidv4');
 
+function isKsuid(value: string): boolean {
+  return (
+    /^[0-9a-z]{27}$/i.test(value) &&
+    // Base62 alphabet sorts like ASCII, so the 2^160 - 1 upper bound is a
+    // string comparison
+    value <= 'aWgEPTl1tmebfsQzFP4bxwgy80V'
+  );
+}
+
+/**
+ * Accepts and returns [KSUID](https://github.com/segmentio/ksuid) strings
+ * (K-Sortable Unique IDentifier): 27 base62 chars, encoding a 160-bit value.
+ * Optionally, specify a prefix the KSUID must be preceded by, e.g.
+ * `ksuid({ prefix: 'msg_' })` accepts `msg_0ujtsYcgvSTl8PAuAdqWYSMnLOv`.
+ */
+export function ksuid(): Decoder<string>;
+export function ksuid<P extends string>(options: { prefix: P }): Decoder<`${P}${string}`>;
+/* #__NO_SIDE_EFFECTS__ */
+export function ksuid(options?: { prefix: string }): Decoder<string> {
+  const prefix = options?.prefix;
+  return prefix
+    ? startsWith(prefix).refine((s) => isKsuid(s.slice(prefix.length)), 'Must be ksuid')
+    : string.refine(isKsuid, 'Must be ksuid');
+}
+
 /**
  * Accepts and returns strings with decimal digits only (base-10).
  * To convert these to numbers, use the `numeric` decoder.

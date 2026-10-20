@@ -56,6 +56,7 @@ export const DECODER_REDIRECTS: Record<string, string> = {
   "json": "/docs/api/json#json",
   "jsonarray": "/docs/api/json#jsonarray",
   "jsonobject": "/docs/api/json#jsonobject",
+  "ksuid": "/docs/api/strings#ksuid",
   "lazy": "/docs/api/utilities#lazy",
   "mapping": "/docs/api/sets-and-maps#mapping",
   "max": "/docs/api/numbers#limiting-number-ranges",

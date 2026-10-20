@@ -23,7 +23,7 @@ export { positiveInteger, positiveNumber } from '~/numbers';
 export { bigint } from '~/numbers';
 export { exact, inexact, object, pojo } from '~/objects';
 export { endsWith, nonEmptyString, regex, startsWith, string } from '~/strings';
-export { identifier, nanoid, uuid, uuidv1, uuidv4 } from '~/strings';
+export { identifier, ksuid, nanoid, uuid, uuidv1, uuidv4 } from '~/strings';
 export { email, httpsUrl, url, urlString } from '~/strings';
 export { decimal, hexadecimal, numeric } from '~/strings';
 export { either, enum_, oneOf, select, taggedUnion } from '~/unions';

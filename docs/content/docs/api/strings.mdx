@@ -91,7 +91,7 @@ Accepts and returns strings that end with the given suffix.
 
 ## decimal
 
-<DecoderSig name="decimal" type="string" source="strings.ts#L144-L148" />
+<DecoderSig name="decimal" type="string" source="strings.ts#L169-L173" />
 
 Accepts and returns strings with decimal digits only (base-10). To convert these to
 numbers, use the [`numeric`][] decoder.
@@ -105,7 +105,7 @@ numbers, use the [`numeric`][] decoder.
 
 ## hexadecimal
 
-<DecoderSig name="hexadecimal" type="string" source="strings.ts#L150-L156" />
+<DecoderSig name="hexadecimal" type="string" source="strings.ts#L175-L181" />
 
 Accepts and returns strings with hexadecimal digits only (base-16).
 
@@ -118,7 +118,7 @@ Accepts and returns strings with hexadecimal digits only (base-16).
 
 ## numeric
 
-<DecoderSig name="numeric" type="number" source="strings.ts#L158-L163" />
+<DecoderSig name="numeric" type="number" source="strings.ts#L183-L188" />
 
 Accepts valid numerical strings (in base-10) and returns them as a number. To only accept
 numerical strings and keep them as string values, use the [`decimal`][] decoder.
@@ -325,6 +325,47 @@ strings.
   examples={[
     "'123e4567-e89b-42d3-a456-426614174000'",
     "'123e4567-e89b-12d3-a456-426614174000'",
+  ]}
+/>
+
+---
+
+## ksuid
+
+<DecoderSig name="ksuid" params="" type="string" source="strings.ts#L153-L167" />
+<DecoderSig
+  name="ksuid"
+  params="{ prefix: P }"
+  type="`${P}${string}`"
+  source="strings.ts#L153-L167"
+/>
+
+<Since version="2.13" />
+
+Accepts and returns [KSUID](https://github.com/segmentio/ksuid) strings (K-Sortable Unique
+IDentifier): 27 base62 chars, encoding a 160-bit value.
+
+<DecoderPlayground
+  decoder="ksuid()"
+  examples={[
+    "'0ujtsYcgvSTl8PAuAdqWYSMnLOv'",
+    "'aWgEPTl1tmebfsQzFP4bxwgy80V'",
+    "'zzzzzzzzzzzzzzzzzzzzzzzzzzz'",
+    "'0ujtsYcgvSTl8PAuAdqWYSMnLO'",
+    "'123e4567-e89b-12d3-a456-426614174000'",
+  ]}
+/>
+
+Optionally, specify a prefix that must precede the KSUID. The prefix becomes part of the
+return type, e.g. `ksuid({ prefix: 'msg_' })` returns a ``Decoder<`msg_${string}`>``.
+
+<DecoderPlayground
+  decoder="ksuid({ prefix: 'msg_' })"
+  examples={[
+    "'msg_0ujtsYcgvSTl8PAuAdqWYSMnLOv'",
+    "'0ujtsYcgvSTl8PAuAdqWYSMnLOv'",
+    "'usr_0ujtsYcgvSTl8PAuAdqWYSMnLOv'",
+    "'msg_zzzzzzzzzzzzzzzzzzzzzzzzzzz'",
   ]}
 />
 

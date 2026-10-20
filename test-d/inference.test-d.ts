@@ -40,6 +40,7 @@ import {
   jsonObject,
   lazy,
   mapping,
+  ksuid,
   nanoid,
   natural,
   never,
@@ -154,6 +155,8 @@ expectType<string>(infer(nanoid({ min: 8, max: 16 })));
 expectType<string>(infer(uuid));
 expectType<string>(infer(uuidv1));
 expectType<string>(infer(uuidv4));
+expectType<string>(infer(ksuid()));
+expectType<`msg_${string}`>(infer(ksuid({ prefix: 'msg_' })));
 
 expectType<string[]>(infer(array(string)));
 expectType<number[]>(infer(array(number)));
