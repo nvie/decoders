@@ -25,6 +25,7 @@ import {
   integer,
   isoDate,
   isoDateString,
+  ksuid,
   nanoid,
   natural,
   never,
@@ -106,6 +107,8 @@ describe('atomics', () => {
     ['uuidv1', uuidv1],
     ['uuidv4', uuidv4],
     ['nanoid()', nanoid()],
+    ['ksuid()', ksuid()],
+    ['ksuid({ prefix })', ksuid({ prefix: 'msg_' })],
     ['isoDateString', isoDateString],
     ['sized(string)', sized(string, { max: 3 })],
   ] satisfies [string, Decoder<unknown>][])('%s is readonly', (_, decoder) => {

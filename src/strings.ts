@@ -219,10 +219,12 @@ function isKsuid(value: string): boolean {
  * Optionally, specify a prefix the KSUID must be preceded by, e.g.
  * `ksuid({ prefix: 'msg_' })` accepts `msg_0ujtsYcgvSTl8PAuAdqWYSMnLOv`.
  */
-export function ksuid(): Decoder<string>;
-export function ksuid<P extends string>(options: { prefix: P }): Decoder<`${P}${string}`>;
+export function ksuid(): ReadonlyDecoder<string>;
+export function ksuid<P extends string>(options: {
+  prefix: P;
+}): ReadonlyDecoder<`${P}${string}`>;
 /* #__NO_SIDE_EFFECTS__ */
-export function ksuid(options?: { prefix: string }): Decoder<string> {
+export function ksuid(options?: { prefix: string }): ReadonlyDecoder<string> {
   const prefix = options?.prefix;
   return prefix
     ? startsWith(prefix).refine((s) => isKsuid(s.slice(prefix.length)), 'Must be ksuid')

@@ -158,6 +158,8 @@ expectType<ReadonlyDecoder<'a'>>(constant('a'));
 expectType<ReadonlyDecoder<'a' | 'b'>>(oneOf(['a', 'b']));
 expectType<ReadonlyDecoder<string>>(string({ max: 5 }));
 expectType<ReadonlyDecoder<number>>(integer({ min: 0 }));
+expectType<ReadonlyDecoder<string>>(ksuid());
+expectType<ReadonlyDecoder<`msg_${string}`>>(ksuid({ prefix: 'msg_' }));
 expectType<ReadonlyDecoder<string>>(hexadecimal({ size: 4 }));
 expectType<ReadonlyDecoder<string>>(email);
 expectType<ReadonlyDecoder<`foo-${string}`>>(startsWith('foo-', { max: 10 }));
