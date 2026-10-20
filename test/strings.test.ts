@@ -21,6 +21,7 @@ import {
   trimmed,
   url,
   urlString,
+  ksuid,
   uuid,
   uuidv1,
   uuidv4,
@@ -874,5 +875,55 @@ describe('uuidv4', () => {
 
   test('rejects an out-of-range variant', () => {
     expect(decoder.decode('123e4567-e89b-42d3-c456-426614174000').ok).toBe(false);
+  });
+});
+
+describe('ksuid', () => {
+  const decoder = ksuid();
+
+  test('accepts', () => {
+    for (const value of [
+      '0ujtsYcgvSTl8PAuAdqWYSMnLOv',
+      '2Mqa4pQkW8bKyL0y8ZeTXlNb6Xm',
+      '000000000000000000000000000', // Nil
+      'aWgEPTl1tmebfsQzFP4bxwgy80V', // Max
+    ]) {
+      expect(decoder.verify(value)).toBe(value);
+    }
+  });
+
+  test('rejects', () => {
+    expect(decoder.decode('0ujtsYcgvSTl8PAuAdqWYSMnLO').ok).toBe(false); // too short
+    expect(decoder.decode('0ujtsYcgvSTl8PAuAdqWYSMnLOvx').ok).toBe(false); // too long
+    expect(decoder.decode('0ujtsYcgvSTl8PAuAdqWYSMnLO-').ok).toBe(false);
+    expect(decoder.decode('0ujtsYcgvSTl8PAuAdqWYSMnLO_').ok).toBe(false);
+    expect(decoder.decode('').ok).toBe(false);
+    expect(decoder.decode(42).ok).toBe(false);
+  });
+
+  test('rejects values above the 160-bit max', () => {
+    expect(decoder.decode('aWgEPTl1tmebfsQzFP4bxwgy80W').ok).toBe(false);
+    expect(decoder.decode('zzzzzzzzzzzzzzzzzzzzzzzzzzz').ok).toBe(false);
+    expect(() => decoder.verify('zzzzzzzzzzzzzzzzzzzzzzzzzzz')).toThrow('Must be ksuid');
+  });
+
+  test('with prefix', () => {
+    const decoder = ksuid({ prefix: 'msg_' });
+    expect(decoder.verify('msg_0ujtsYcgvSTl8PAuAdqWYSMnLOv')).toBe(
+      'msg_0ujtsYcgvSTl8PAuAdqWYSMnLOv',
+    );
+    expect(() => decoder.verify('0ujtsYcgvSTl8PAuAdqWYSMnLOv')).toThrow(
+      "Must start with 'msg_'",
+    );
+    expect(() => decoder.verify('usr_0ujtsYcgvSTl8PAuAdqWYSMnLOv')).toThrow(
+      "Must start with 'msg_'",
+    );
+    expect(() => decoder.verify('msg_0ujtsYcgvSTl8PAuAdqWYSMnLO')).toThrow(
+      'Must be ksuid',
+    );
+    expect(() => decoder.verify('msg_zzzzzzzzzzzzzzzzzzzzzzzzzzz')).toThrow(
+      'Must be ksuid',
+    );
+    expect(() => decoder.verify(42)).toThrow('Must be string');
   });
 });

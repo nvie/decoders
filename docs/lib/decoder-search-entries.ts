@@ -79,6 +79,7 @@ export const DECODER_SEARCH_ENTRIES: DecoderSearchEntry[] = [
   {"name":"uuid","page":"Strings","url":"/docs/api/strings#uuid"},
   {"name":"uuidv1","page":"Strings","url":"/docs/api/strings#uuidv1"},
   {"name":"uuidv4","page":"Strings","url":"/docs/api/strings#uuidv4"},
+  {"name":"ksuid","page":"Strings","url":"/docs/api/strings#ksuid"},
   {"name":"sized","page":"Strings","url":"/docs/api/strings#limiting-string-size"},
   {"name":"unknown","page":"Utilities","url":"/docs/api/utilities#unknown"},
   {"name":"anything","aliasOf":"unknown","page":"Utilities","url":"/docs/api/utilities#unknown"},

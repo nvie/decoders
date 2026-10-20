@@ -330,6 +330,47 @@ strings.
 
 ---
 
+## ksuid
+
+<DecoderSig name="ksuid" params="" type="string" source="strings.ts#L153-L167" />
+<DecoderSig
+  name="ksuid"
+  params="{ prefix: P }"
+  type="`${P}${string}`"
+  source="strings.ts#L153-L167"
+/>
+
+<Since version="2.13" />
+
+Accepts and returns [KSUID](https://github.com/segmentio/ksuid) strings (K-Sortable Unique
+IDentifier): 27 base62 chars, encoding a 160-bit value.
+
+<DecoderPlayground
+  decoder="ksuid()"
+  examples={[
+    "'0ujtsYcgvSTl8PAuAdqWYSMnLOv'",
+    "'aWgEPTl1tmebfsQzFP4bxwgy80V'",
+    "'zzzzzzzzzzzzzzzzzzzzzzzzzzz'",
+    "'0ujtsYcgvSTl8PAuAdqWYSMnLO'",
+    "'123e4567-e89b-12d3-a456-426614174000'",
+  ]}
+/>
+
+Optionally, specify a prefix that must precede the KSUID. The prefix becomes part of the
+return type, e.g. `ksuid({ prefix: 'msg_' })` returns a ``Decoder<`msg_${string}`>``.
+
+<DecoderPlayground
+  decoder="ksuid({ prefix: 'msg_' })"
+  examples={[
+    "'msg_0ujtsYcgvSTl8PAuAdqWYSMnLOv'",
+    "'0ujtsYcgvSTl8PAuAdqWYSMnLOv'",
+    "'usr_0ujtsYcgvSTl8PAuAdqWYSMnLOv'",
+    "'msg_zzzzzzzzzzzzzzzzzzzzzzzzzzz'",
+  ]}
+/>
+
+---
+
 ## Limiting string size
 
 <DecoderSig

@@ -80,6 +80,12 @@ Compared to 2.12.2:
   up to ~12% faster.
 - `integer`, `natural`, and `nonNegativeNumber` decode faster on valid and invalid inputs.
 
+## [2.13.0] - 2026-10-20
+
+**New decoders:**
+
+- [`ksuid()`](https://decoders.cc/ksuid)
+
 ## [2.12.3] - 2026-10-19
 
 **Fixes:**
