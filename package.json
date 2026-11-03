@@ -65,7 +65,7 @@
     "@arethetypeswrong/cli": "^0.18.5",
     "@release-it/keep-a-changelog": "^8.0.1",
     "@standard-schema/spec": "^1.1.0",
-    "@vitest/coverage-istanbul": "^4.1.12",
+    "@vitest/coverage-istanbul": "^5.0.5",
     "fast-check": "^4.10.2",
     "itertools": "^2.7.1",
     "oxlint": "^1.90.0",
@@ -77,7 +77,8 @@
     "tsd": "^0.33.0",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
-    "vitest": "^4.1.12"
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
   },
   "githubUrl": "https://github.com/nvie/decoders",
   "sideEffects": false,
