@@ -70,7 +70,7 @@
     "itertools": "^2.7.1",
     "oxlint": "^1.83.0",
     "pkg-pr-new": "^0.0.88",
-    "prettier": "^3.9.9",
+    "prettier": "^3.9.10",
     "publint": "^0.3.24",
     "release-it": "^21.0.3",
     "ts-morph": "^28.0.0",
