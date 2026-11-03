@@ -68,7 +68,7 @@
     "@vitest/coverage-istanbul": "^4.1.12",
     "fast-check": "^4.10.2",
     "itertools": "^2.7.1",
-    "oxlint": "^1.83.0",
+    "oxlint": "^1.90.0",
     "pkg-pr-new": "^0.0.93",
     "prettier": "^3.9.10",
     "publint": "^0.3.25",
