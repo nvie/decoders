@@ -82,5 +82,5 @@
   },
   "githubUrl": "https://github.com/nvie/decoders",
   "sideEffects": false,
-  "packageManager": "pnpm@11.28.10"
+  "packageManager": "pnpm@12.16.1"
 }
