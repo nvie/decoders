@@ -1,5 +1,5 @@
 import { partition } from 'itertools';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 
 import {
   array,
@@ -52,6 +52,32 @@ describe('lazy', () => {
       expect(eagerResult.value).toEqual(lazyResult.value);
       expect(eagerResult.error).toEqual(lazyResult.error);
     }
+  });
+
+  test('calls the factory once, on first decode', () => {
+    const factory = vi.fn(() => string);
+    const decoder = lazy(factory);
+    expect(factory).not.toHaveBeenCalled();
+
+    expect(decoder.verify('a')).toBe('a');
+    expect(decoder.verify('b')).toBe('b');
+    expect(() => decoder.verify(42)).toThrow('Must be string');
+    expect(factory).toHaveBeenCalledTimes(1);
+  });
+
+  test('calls the factory again if it threw', () => {
+    const factory = vi
+      .fn<() => Decoder<string>>()
+      .mockImplementationOnce(() => {
+        throw new Error('Not ready yet');
+      })
+      .mockImplementation(() => string);
+    const decoder = lazy(factory);
+
+    expect(() => decoder.verify('a')).toThrow('Not ready yet');
+    expect(decoder.verify('a')).toBe('a');
+    expect(decoder.verify('b')).toBe('b');
+    expect(factory).toHaveBeenCalledTimes(2);
   });
 
   test('build self-referential types with lazy()', () => {

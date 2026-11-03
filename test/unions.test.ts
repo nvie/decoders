@@ -82,7 +82,10 @@ describe('either', () => {
     );
     expect(() => d2.verify({ name: 42 })).toThrow('Either');
 
-    const d3 = either(regex(/1/, 'Must contain 1'), regex(/2/, 'Must contain 2'));
+    const d3 = either(
+      regex(/1/, { message: 'Must contain 1' }),
+      regex(/2/, { message: 'Must contain 2' }),
+    );
     expect(() => d3.verify(42)).toThrow('Either');
     expect(() => d3.verify('foobar')).toThrow('Either');
   });

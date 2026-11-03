@@ -31,6 +31,10 @@ const config = {
         destination: "/legacy-redirect",
       },
       {
+        source: "/docs/api/sets-and-maps",
+        destination: "/legacy-redirect",
+      },
+      {
         source: "/docs.mdx",
         destination: "/llms.mdx/docs",
       },

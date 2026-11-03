@@ -8,8 +8,8 @@ import {
   exact,
   formatInline,
   inexact,
-  mapping,
   number,
+  numeric,
   object,
   optional,
   pojo,
@@ -306,8 +306,9 @@ describe('inexact objects', () => {
       bar: 'default',
     };
 
+    // Not readonly, so the result is a copy
     const decoder = inexact({
-      foo: optional(string),
+      foo: optional(string.transform((s) => s)),
     });
 
     expect({
@@ -316,6 +317,28 @@ describe('inexact objects', () => {
     }).toEqual({
       foo: 'default', // 'foo' is known and allowed-optional, so this will be implicit-undefined
       bar: undefined, // 'bar' is ignored so the explicit-undefined will override here
+    });
+  });
+
+  test('non-readonly inexact objects reject bad fields', () => {
+    const decoder = inexact({ a: numeric });
+    expect(decoder.verify({ a: '1', b: 2 })).toEqual({ a: 1, b: 2 });
+    expect(() => decoder.verify({ a: 'x', b: 2 })).toThrow('Must only contain digits');
+  });
+
+  test('readonly inexact objects keep explicit undefineds', () => {
+    const decoder = inexact({
+      foo: optional(string),
+    });
+
+    // Readonly, so the result is the input itself
+    expect({
+      foo: 'default',
+      bar: 'default',
+      ...decoder.verify({ foo: undefined, bar: undefined }),
+    }).toEqual({
+      foo: undefined,
+      bar: undefined,
     });
   });
 });
@@ -420,39 +443,6 @@ describe('arrays are not objects', () => {
   });
 });
 
-describe('mapping', () => {
-  const decoder = mapping(object({ name: string }));
-
-  test('valid', () => {
-    const input = {
-      '18': { name: 'foo' },
-      '23': { name: 'bar' },
-      key: { name: 'value' },
-    };
-    const output = new Map([
-      ['18', { name: 'foo' }],
-      ['23', { name: 'bar' }],
-      ['key', { name: 'value' }],
-    ]);
-    expect(decoder.verify(input)).toEqual(output);
-  });
-
-  test('invalid', () => {
-    expect(() => decoder.verify('foo')).toThrow('Must be an object');
-    expect(() => decoder.verify({ foo: 1 })).toThrow('Must be an object');
-    expect(() => decoder.verify({ foo: {} })).toThrow("Missing key: 'name'");
-    expect(() =>
-      decoder.verify({
-        '124': { invalid: true },
-        '125': { name: 'bar' },
-      }),
-    ).toThrow("Missing key: 'name'");
-
-    // More than one error
-    expect(() => decoder.verify({ foo: 42, bar: 42 })).toThrow();
-  });
-});
-
 // Single-argument form of record() only specifies value type
 describe('record', () => {
   const decoder = record(object({ name: string }));
@@ -520,7 +510,7 @@ describe('record with key validation', () => {
   });
 
   test('valid (another example)', () => {
-    const key = regex(/^a+$/, "Must be all a's");
+    const key = regex(/^a+$/, { message: "Must be all a's" });
     const decoder = record(key, boolean);
     expect(decoder.verify({ a: true })).toEqual({ a: true });
     expect(decoder.verify({ aa: true })).toEqual({ aa: true });
@@ -531,7 +521,7 @@ describe('record with key validation', () => {
   });
 
   test('valid (another example with key transformations)', () => {
-    const key = regex(/^a+$/, "Must be all a's");
+    const key = regex(/^a+$/, { message: "Must be all a's" });
     const decoder = record(
       key.transform(() => 'a'),
       boolean,
@@ -552,6 +542,50 @@ describe('record with key validation', () => {
     );
     expect(() => decoder.verify({ '': true })).toThrow(
       "Invalid key '': Must only contain digits",
+    );
+  });
+});
+
+describe('record with size options', () => {
+  test('rejects too many keys before validating values', () => {
+    const decoder = record(string, { max: 2 });
+    expect(() => decoder.verify({ a: 'x', b: 'y', c: 42 })).toThrow(
+      'Must have at most 2 keys',
+    );
+  });
+
+  test('rejects too few keys', () => {
+    const decoder = record(string, { min: 1 });
+    expect(() => decoder.verify({})).toThrow('Must have at least 1 key');
+    expect(decoder.verify({ a: 'x' })).toEqual({ a: 'x' });
+  });
+
+  test('still validates values when the size is acceptable', () => {
+    const decoder = record(string, { min: 1, max: 2 });
+    expect(decoder.verify({ a: 'x', b: 'y' })).toEqual({ a: 'x', b: 'y' });
+    expect(() => decoder.verify({ a: 'x', b: 42 })).toThrow('Must be string');
+  });
+
+  test('accepts an exact size', () => {
+    const decoder = record(string, { size: 2 });
+    expect(decoder.verify({ a: 'x', b: 'y' })).toEqual({ a: 'x', b: 'y' });
+    expect(() => decoder.verify({ a: 'x' })).toThrow('Must have 2 keys');
+  });
+
+  test('tells a callable value decoder apart from options', () => {
+    const decoder = record(string, number);
+    expect(decoder.verify({ a: 1 })).toEqual({ a: 1 });
+    expect(() => decoder.verify({ a: 'x' })).toThrow('Must be number');
+  });
+
+  test('works with a key decoder', () => {
+    const decoder = record(decimal, boolean, { max: 1 });
+    expect(decoder.verify({ '1': true })).toEqual({ '1': true });
+    expect(() => decoder.verify({ '1': true, '2': false })).toThrow(
+      'Must have at most 1 key',
+    );
+    expect(() => decoder.verify({ x: true })).toThrow(
+      "Invalid key 'x': Must only contain digits",
     );
   });
 });
@@ -587,10 +621,6 @@ describe('__proto__ keys', () => {
 
   test('record() rejects it', () => {
     expect(() => record(unknown).verify(payload())).toThrow('Unsafe key');
-  });
-
-  test('mapping() rejects it too, being built on record()', () => {
-    expect(() => mapping(unknown).verify(payload())).toThrow('Unsafe key');
   });
 
   test('declaring one in the definition is refused outright', () => {

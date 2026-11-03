@@ -1,6 +1,6 @@
 import * as fc from 'fast-check';
 import { partition } from 'itertools';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 
 import {
   array,
@@ -13,12 +13,12 @@ import {
   nanoid,
   nonEmptyString,
   number,
-  setFromArray,
   sized,
   numeric,
   regex,
   startsWith,
   string,
+  trimmed,
   url,
   urlString,
   ksuid,
@@ -48,6 +48,21 @@ describe('string', () => {
   });
 });
 
+describe('string({ ... })', () => {
+  test('called without options', () => {
+    expect(string()).toBe(string);
+  });
+
+  test('size options', () => {
+    const decoder = string({ min: 2, max: 3 });
+    expect(decoder.verify('ab')).toBe('ab');
+    expect(() => decoder.verify('a')).toThrow('Too short, must be at least 2 chars');
+    expect(() => decoder.verify('abcd')).toThrow('Too long, must be at most 3 chars');
+    expect(() => decoder.verify('ABCD')).toThrow('Too long, must be at most 3 chars');
+    expect(() => decoder.verify(42)).toThrow('Must be string');
+  });
+});
+
 describe('regex', () => {
   const decoder = regex(/[0-9]{4}-[0-9]{2}-[0-9]{2}/, 'Must be YYYY-MM-DD');
 
@@ -63,6 +78,36 @@ describe('regex', () => {
     expect(() => decoder.verify(42)).toThrow('Must be string'); // All regexes must be strings
     expect(() => decoder.verify('11-22-33')).toThrow('Must be YYYY-MM-DD');
     expect(() => decoder.verify('invalid')).toThrow('Must be YYYY-MM-DD');
+  });
+});
+
+describe('regex with options', () => {
+  test('message', () => {
+    const decoder = regex(/^[a-z]+$/, { message: 'Must be lowercase' });
+    expect(decoder.verify('abc')).toBe('abc');
+    expect(() => decoder.verify('ABC')).toThrow('Must be lowercase');
+  });
+
+  test('default message', () => {
+    expect(() => regex(/^[a-z]+$/).verify('ABC')).toThrow('Must match /^[a-z]+$/');
+  });
+
+  test('size options', () => {
+    const decoder = regex(/^[a-z]+$/, { min: 2, max: 3, message: 'Must be lowercase' });
+    expect(decoder.verify('abc')).toBe('abc');
+    expect(() => decoder.verify('a')).toThrow('Too short, must be at least 2 chars');
+    expect(() => decoder.verify('abcd')).toThrow('Too long, must be at most 3 chars');
+    expect(() => decoder.verify('AB')).toThrow('Must be lowercase');
+  });
+
+  test('checks the length before running the regex', () => {
+    const re = /^[a-z]+$/;
+    const spy = vi.spyOn(re, 'test');
+    const decoder = regex(re, { max: 3, message: 'Must be lowercase' });
+    expect(() => decoder.verify('ABCDEFGHIJ')).toThrow(
+      'Too long, must be at most 3 chars',
+    );
+    expect(spy).not.toHaveBeenCalled();
   });
 });
 
@@ -82,6 +127,15 @@ describe('startsWith', () => {
     expect(() => decoder.verify('FoO')).toThrow("Must start with 'foo'");
     expect(() => decoder.verify('fo')).toThrow("Must start with 'foo'");
   });
+
+  test('size options count the whole string, prefix included', () => {
+    const decoder = startsWith('foo_', { size: 6 });
+    expect(decoder.verify('foo_ab')).toBe('foo_ab');
+    expect(() => decoder.verify('foo_a')).toThrow('Too short, must be 6 chars');
+    expect(() => decoder.verify('foo_abc')).toThrow('Too long, must be 6 chars');
+    // Length is checked before the prefix
+    expect(() => decoder.verify('bar')).toThrow('Too short, must be 6 chars');
+  });
 });
 
 describe('endsWith', () => {
@@ -100,6 +154,16 @@ describe('endsWith', () => {
     expect(() => decoder.verify('baro')).toThrow("Must end with 'bar'");
     expect(() => decoder.verify('arb')).toThrow("Must end with 'bar'");
     expect(() => decoder.verify('BaR')).toThrow("Must end with 'bar'");
+  });
+
+  test('size options count the whole string, suffix included', () => {
+    const decoder = endsWith('.ts', { min: 4, max: 6 });
+    expect(decoder.verify('a.ts')).toBe('a.ts');
+    expect(decoder.verify('abc.ts')).toBe('abc.ts');
+    expect(() => decoder.verify('.ts')).toThrow('Too short, must be at least 4 chars');
+    expect(() => decoder.verify('abcd.ts')).toThrow('Too long, must be at most 6 chars');
+    // Length is checked before the suffix
+    expect(() => decoder.verify('abcdefgh')).toThrow('Too long, must be at most 6 chars');
   });
 });
 
@@ -340,6 +404,28 @@ describe('nonEmptyString', () => {
   });
 });
 
+describe('trimmed', () => {
+  test('trims', () => {
+    expect(trimmed.verify('hi')).toBe('hi');
+    expect(trimmed.verify('  hi  ')).toBe('hi');
+    expect(trimmed.verify(' \n\thi there\n ')).toBe('hi there');
+    expect(trimmed.verify('   ')).toBe('');
+    expect(() => trimmed.verify(42)).toThrow('Must be string');
+  });
+
+  test('called without options', () => {
+    expect(trimmed()).toBe(trimmed);
+  });
+
+  test('size options apply to the trimmed value', () => {
+    const decoder = trimmed({ min: 1, max: 3 });
+    expect(decoder.verify('  ab  ')).toBe('ab');
+    expect(decoder.verify('   abc   ')).toBe('abc');
+    expect(() => decoder.verify('   ')).toThrow('Too short, must be at least 1 char');
+    expect(() => decoder.verify(' abcd ')).toThrow('Too long, must be at most 3 chars');
+  });
+});
+
 describe('numeric', () => {
   const decoder = numeric;
 
@@ -355,16 +441,37 @@ describe('numeric', () => {
     expect(() => decoder.verify('7e4')).toThrow();
   });
 
+  test('rejects unsafe integers', () => {
+    expect(decoder.verify('9007199254740991')).toBe(9007199254740991);
+    expect(() => decoder.verify('9007199254740992')).toThrow(
+      'Number must be a safe integer',
+    );
+  });
+
+  test('range options apply to the decoded number', () => {
+    const decoder = numeric({ min: 1, max: 100 });
+    expect(decoder.verify('100')).toBe(100);
+    expect(decoder.verify('0001')).toBe(1);
+    expect(() => decoder.verify('0')).toThrow('Too low, must be between 1 and 100');
+    expect(() => decoder.verify('101')).toThrow('Too high, must be between 1 and 100');
+  });
+
   test('fuzz', () => {
     fc.assert(
       fc.property(fc.anything(), (input) => {
-        if (typeof input === 'string' && /^[0-9]+$/.test(input)) {
+        if (
+          typeof input === 'string' &&
+          /^[0-9]+$/.test(input) &&
+          BigInt(input) <= 9007199254740991n
+        ) {
           expect(decoder.verify(input)).toBe(Number(input));
         } else {
           expect(() => decoder.verify(input)).toThrow();
         }
       }),
-      { examples: [['0 '], ['.0'], ['0.'], ['-0'], ['+0'], ['00']] },
+      {
+        examples: [['0 '], ['.0'], ['0.'], ['-0'], ['+0'], ['00'], ['9007199254740992']],
+      },
     );
   });
 });
@@ -460,6 +567,45 @@ describe('identifier', () => {
   });
 });
 
+describe('callable string atomics', () => {
+  test.each([
+    {
+      decoder: nonEmptyString,
+      valid: 'ab',
+      invalid: '  ',
+      message: 'Must be non-empty string',
+    },
+    { decoder: decimal, valid: '12', invalid: 'xy', message: 'Must only contain digits' },
+    {
+      decoder: hexadecimal,
+      valid: 'ff',
+      invalid: 'xy',
+      message: 'Must only contain hexadecimal digits',
+    },
+    {
+      decoder: identifier,
+      valid: 'ab',
+      invalid: '1x',
+      message: 'Must be valid identifier',
+    },
+  ])('$valid / $invalid', ({ decoder, valid, invalid, message }) => {
+    expect(decoder()).toBe(decoder);
+
+    const sized = decoder({ min: 2, max: 3 });
+    expect(sized.verify(valid)).toBe(valid);
+    expect(() => sized.verify(invalid)).toThrow(message);
+    expect(() => sized.verify('a')).toThrow('Too short, must be at least 2 chars');
+    expect(() => sized.verify(42)).toThrow('Must be string');
+
+    // Length is checked before the regex
+    expect(() => sized.verify('!!!!')).toThrow('Too long, must be at most 3 chars');
+
+    const exact = decoder({ size: 2 });
+    expect(exact.verify(valid)).toBe(valid);
+    expect(() => exact.verify(valid + valid)).toThrow('Too long, must be 2 chars');
+  });
+});
+
 describe('nanoid', () => {
   test('default accepts', () => {
     expect(nanoid().verify('1-QskICa3CaPGcKuYYTm1')).toEqual('1-QskICa3CaPGcKuYYTm1');
@@ -516,6 +662,8 @@ describe('nanoid', () => {
 });
 
 describe('sized', () => {
+  const numberSet = array(number).transform((xs) => new Set(xs));
+
   test('exact size (string)', () => {
     const decoder = sized(string, { size: 5 });
     expect(decoder.verify('hello')).toBe('hello');
@@ -575,14 +723,14 @@ describe('sized', () => {
   });
 
   test('exact size (set)', () => {
-    const decoder = sized(setFromArray(number), { size: 3 });
+    const decoder = sized(numberSet, { size: 3 });
     expect(decoder.verify([1, 2, 3])).toEqual(new Set([1, 2, 3]));
     expect(() => decoder.verify([1])).toThrow('Must have 3 items');
     expect(() => decoder.verify([1, 2, 3, 4])).toThrow('Must have 3 items');
   });
 
   test('min and max (set)', () => {
-    const decoder = sized(setFromArray(number), { min: 2, max: 5 });
+    const decoder = sized(numberSet, { min: 2, max: 5 });
     expect(decoder.verify([1, 2])).toEqual(new Set([1, 2]));
     expect(() => decoder.verify([1])).toThrow('Must have at least 2 items');
     expect(() => decoder.verify([1, 2, 3, 4, 5, 6])).toThrow('Must have at most 5 items');

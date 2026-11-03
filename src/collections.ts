@@ -1,34 +1,56 @@
-import type { Annotation, Decoder } from '~/core';
-import { annotate, annotateObject, formatShort, merge } from '~/core';
+import type { Annotation, Decoder, ReadonlyDecoder } from '~/core';
+import { annotate, annotateObject, formatShort, isDecoder, make, merge } from '~/core';
+import type { SizeOptions } from '~/lib/options';
+import { bySizeOptions } from '~/lib/options';
 import { quote } from '~/lib/text';
 import { MAX_ERRORS } from '~/lib/utils';
 
-import { array } from './arrays';
 import { pojo } from './objects';
 
 /**
  * Accepts objects where all values match the given decoder, and returns the
- * result as a `Record<string, V>`.
+ * result as a `Record<string, V>`. The optional size options constrain the
+ * number of keys.
  */
-export function record<V>(valueDecoder: Decoder<V>): Decoder<Record<string, V>>;
+export function record<V>(valueDecoder: ReadonlyDecoder<V>, options?: SizeOptions): ReadonlyDecoder<Record<string, V>>; // prettier-ignore
+export function record<V>(valueDecoder: Decoder<V>, options?: SizeOptions): Decoder<Record<string, V>>; // prettier-ignore
 /**
  * Accepts objects where all keys and values match the given decoders, and
  * returns the result as a `Record<K, V>`. The given key decoder must return
- * strings.
+ * strings. The optional size options constrain the number of keys.
  */
-export function record<K extends string, V>(keyDecoder: Decoder<K>, valueDecoder: Decoder<V>): Decoder<Record<K, V>>; // prettier-ignore
+export function record<K extends string, V>(keyDecoder: ReadonlyDecoder<K>, valueDecoder: ReadonlyDecoder<V>, options?: SizeOptions): ReadonlyDecoder<Record<K, V>>; // prettier-ignore
+export function record<K extends string, V>(keyDecoder: Decoder<K>, valueDecoder: Decoder<V>, options?: SizeOptions): Decoder<Record<K, V>>; // prettier-ignore
 /* #__NO_SIDE_EFFECTS__ */
 export function record<K extends string, V>(
   fst: Decoder<K> | Decoder<V>,
-  snd?: Decoder<V>,
+  snd?: Decoder<V> | SizeOptions,
+  trd?: SizeOptions,
 ): Decoder<Record<K, V>> {
-  const keyDecoder = snd !== undefined ? (fst as Decoder<K>) : undefined;
-  const valueDecoder = snd ?? (fst as Decoder<V>);
-  return pojo.chain((input, ok, err) => {
+  const twoDecoders = isDecoder(snd);
+  const keyDecoder = twoDecoders ? (fst as Decoder<K>) : undefined;
+  const valueDecoder = twoDecoders ? snd : (fst as Decoder<V>);
+  const options = twoDecoders ? trd : snd;
+  const checkSize = options !== undefined ? bySizeOptions(options, 'key') : undefined;
+  const ro = valueDecoder.isReadonly && (keyDecoder?.isReadonly ?? true);
+  return make((blob, ok, err) => {
+    const base = pojo.decode(blob);
+    if (!base.ok) return base;
+
+    const input = base.value;
+    const keys = Object.keys(input);
+
+    // Check the number of keys before decoding any of them, so large inputs
+    // get rejected without walking them
+    const sizeError = checkSize?.(keys);
+    if (sizeError) {
+      return err(sizeError);
+    }
+
     let rv = {} as Record<K, V>;
     const errors = new Map<string, Annotation>();
 
-    for (const key of Object.keys(input)) {
+    for (const key of keys) {
       const value = input[key];
 
       // Writing this key would reassign the prototype of `rv` rather than
@@ -51,7 +73,7 @@ export function record<K extends string, V>(
 
       const result = valueDecoder.decode(value);
       if (result.ok) {
-        if (errors.size === 0) {
+        if (!ro && errors.size === 0) {
           rv[k] = result.value;
         }
       } else {
@@ -67,26 +89,9 @@ export function record<K extends string, V>(
     if (errors.size > 0) {
       return err(merge(annotateObject(input), errors));
     } else {
-      return ok(rv);
+      // Readonly keys and values were all accepted as-is, so the input is
+      // a valid Record<K, V>
+      return ok(ro ? (input as Record<K, V>) : rv);
     }
-  });
-}
-
-/**
- * Similar to `array()`, but returns the result as an [ES6
- * Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set).
- */
-/* #__NO_SIDE_EFFECTS__ */
-export function setFromArray<T>(decoder: Decoder<T>): Decoder<Set<T>> {
-  return array(decoder).transform((items) => new Set(items));
-}
-
-/**
- * Similar to `record()`, but returns the result as a `Map<string, T>` (an [ES6
- * Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map))
- * instead.
- */
-/* #__NO_SIDE_EFFECTS__ */
-export function mapping<T>(decoder: Decoder<T>): Decoder<Map<string, T>> {
-  return record(decoder).transform((obj) => new Map(Object.entries(obj)));
+  }, ro);
 }

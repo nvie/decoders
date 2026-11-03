@@ -95,7 +95,8 @@ for (const sf of project.getSourceFiles()) {
 // Special: the Decoder methods, which live on the DecoderImpl class in
 // core/Decoder.ts. `.decode`, `.verify` and `.value` are property
 // declarations there, implemented as same-named locals in the constructor, so
-// they point to those. The rest are regular methods.
+// they point to those. Other properties point to their own declaration, and
+// the rest are regular methods.
 const decoderFile = project.getSourceFile(
   path.join(SRC_DIR, 'core', 'Decoder.ts'),
 );
@@ -112,7 +113,7 @@ if (decoderFile) {
       const name = member.getName();
       if (!name) continue;
       const range = declRange(
-        Node.isPropertyDeclaration(member) ? ctor.getVariableStatementOrThrow(name) : member,
+        (Node.isPropertyDeclaration(member) && ctor.getVariableStatement(name)) || member,
       );
       addEntry('core/Decoder.ts', `.${name}`, range.start, range.end);
     }

@@ -1,4 +1,4 @@
-import type { Decoder } from '~/core';
+import type { ReadonlyDecoder } from '~/core';
 
 import { array } from './arrays';
 import { null_ } from './basics';
@@ -16,12 +16,16 @@ export type JSONArray = JSONValue[];
 /**
  * Accepts objects that contain only valid JSON values.
  */
-export const jsonObject: Decoder<JSONObject> = lazy(() => record(json));
+export const jsonObject: ReadonlyDecoder<JSONObject> = lazy(() => record(json), {
+  readonly: true,
+});
 
 /**
  * Accepts arrays that contain only valid JSON values.
  */
-export const jsonArray: Decoder<JSONArray> = lazy(() => array(json));
+export const jsonArray: ReadonlyDecoder<JSONArray> = lazy(() => array(json), {
+  readonly: true,
+});
 
 /**
  * Accepts any value that's a valid JSON value.
@@ -39,7 +43,7 @@ export const jsonArray: Decoder<JSONArray> = lazy(() => array(json));
  *     | JSONValue[]
  * ```
  */
-export const json: Decoder<JSONValue> = /* #__PURE__ */ either(
+export const json: ReadonlyDecoder<JSONValue> = /* #__PURE__ */ either(
   null_,
   string,
   number,

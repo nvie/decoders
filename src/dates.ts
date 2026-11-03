@@ -1,5 +1,5 @@
-import type { Decoder } from '~/core';
-import { define } from '~/core';
+import type { Decoder, ReadonlyDecoder } from '~/core';
+import { defineReadonly } from '~/core';
 import { isDate } from '~/lib/utils';
 
 import { regex } from './strings';
@@ -15,17 +15,14 @@ const iso8601_re =
 /**
  * Accepts and returns `Date` instances.
  */
-export const date: Decoder<Date> = define((blob, ok, err) => {
-  return isDate(blob) ? ok(blob) : err('Must be a Date');
-});
+export const date: ReadonlyDecoder<Date> = defineReadonly(isDate, 'Must be a Date');
 
 /**
  * Accepts and returns [ISO8601](https://en.wikipedia.org/wiki/ISO_8601)-formatted strings.
  */
-export const isoDateString: Decoder<string> = /* #__PURE__ */ regex(
-  iso8601_re,
-  'Must be ISO8601 format',
-).refine(
+export const isoDateString: ReadonlyDecoder<string> = /* #__PURE__ */ regex(iso8601_re, {
+  message: 'Must be ISO8601 format',
+}).refine(
   (value: string) => !Number.isNaN(new Date(value).getTime()),
   'Must be valid date/time value',
 );
@@ -50,10 +47,3 @@ export const flexDate: Decoder<Date> = select(unknown, (blob) =>
       ? date
       : never('Must be a Date or date string'),
 );
-
-/** @deprecated Renamed to `isoDateString`. This alias will be removed in 3.x. */
-export const dateString: Decoder<string> = isoDateString;
-/** @deprecated Renamed to `isoDate`. */
-export const iso8601: Decoder<Date> = isoDate;
-/** @deprecated Renamed to `flexDate`. This alias will be removed in 3.x. */
-export const datelike: Decoder<Date> = flexDate;

@@ -9,9 +9,9 @@
     "choices",
     "objects",
     "arrays",
-    "sets-and-maps",
     "constants",
     "json",
-    "utilities"
+    "utilities",
+    "deprecated"
   ]
 }

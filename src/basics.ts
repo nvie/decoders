@@ -1,5 +1,5 @@
-import type { Decoder } from '~/core';
-import { define } from '~/core';
+import type { Decoder, ReadonlyDecoder } from '~/core';
+import { define, defineReadonly } from '~/core';
 import { quote } from '~/lib/text';
 import type { Scalar } from '~/lib/types';
 
@@ -19,9 +19,10 @@ export const null_ = constant(null);
  */
 export const undefined_ = constant(undefined);
 
-const nullish_: Decoder<null | undefined> = define((blob, ok, err) =>
-  // Equiv to either(undefined_, null_), but combined for better error message
-  blob == null ? ok(blob) : err('Must be undefined or null'),
+// Equiv to either(undefined_, null_), but combined for better error message
+const nullish_: ReadonlyDecoder<null | undefined> = defineReadonly(
+  (blob): blob is null | undefined => blob == null,
+  'Must be undefined or null',
 );
 
 /**
@@ -30,6 +31,7 @@ const nullish_: Decoder<null | undefined> = define((blob, ok, err) =>
  * If a default value is explicitly provided, return that instead in the
  * `undefined` case.
  */
+export function optional<T>(decoder: ReadonlyDecoder<T>): ReadonlyDecoder<T | undefined>;
 export function optional<T>(decoder: Decoder<T>): Decoder<T | undefined>;
 export function optional<T, C extends Scalar>(decoder: Decoder<T>, defaultValue: (() => C) | C): Decoder<NonNullable<T> | C>; // prettier-ignore
 export function optional<T, V>(decoder: Decoder<T>, defaultValue: (() => V) | V): Decoder<NonNullable<T> | V>; // prettier-ignore
@@ -50,6 +52,7 @@ export function optional<T, V>(
  * If a default value is explicitly provided, return that instead in the `null`
  * case.
  */
+export function nullable<T>(decoder: ReadonlyDecoder<T>): ReadonlyDecoder<T | null>;
 export function nullable<T>(decoder: Decoder<T>): Decoder<T | null>;
 export function nullable<T, C extends Scalar>(decoder: Decoder<T>, defaultValue: (() => C) | C): Decoder<NonNullable<T> | C>; // prettier-ignore
 export function nullable<T, V>(decoder: Decoder<T>, defaultValue: (() => V) | V): Decoder<NonNullable<T> | V>; // prettier-ignore
@@ -70,6 +73,9 @@ export function nullable<T, V>(
  * If a default value is explicitly provided, return that instead in the
  * `null`/`undefined` case.
  */
+export function nullish<T>(
+  decoder: ReadonlyDecoder<T>,
+): ReadonlyDecoder<T | null | undefined>;
 export function nullish<T>(decoder: Decoder<T>): Decoder<T | null | undefined>;
 export function nullish<T, C extends Scalar>(decoder: Decoder<T>, defaultValue: (() => C) | C): Decoder<NonNullable<T> | C>; // prettier-ignore
 export function nullish<T, V>(decoder: Decoder<T>, defaultValue: (() => V) | V): Decoder<NonNullable<T> | V>; // prettier-ignore
@@ -88,11 +94,10 @@ export function nullish<T, V>(
  * Accepts only the given constant value.
  */
 /* #__NO_SIDE_EFFECTS__ */
-export function constant<C extends Scalar>(value: C): Decoder<C> {
-  return define((blob, ok, err) =>
-    blob === value
-      ? ok(value)
-      : err(`Must be ${typeof value === 'symbol' ? String(value) : quote(value)}`),
+export function constant<C extends Scalar>(value: C): ReadonlyDecoder<C> {
+  return defineReadonly(
+    (blob): blob is C => blob === value,
+    `Must be ${typeof value === 'symbol' ? String(value) : quote(value)}`,
   );
 }
 
@@ -118,8 +123,8 @@ export function always<T>(value: (() => T) | T): Decoder<T> {
  * useful for explicitly disallowing keys, or for testing purposes.
  */
 /* #__NO_SIDE_EFFECTS__ */
-export function never(msg: string): Decoder<never> {
-  return define((_, __, err) => err(msg));
+export function never(msg: string): ReadonlyDecoder<never> {
+  return defineReadonly((_): _ is never => false, msg);
 }
 
 /**
@@ -134,9 +139,12 @@ export const fail = never;
  * course, the downside is that you won't know the type of the value statically
  * and you'll have to further refine it yourself.
  */
-export const unknown: Decoder<unknown> = define((blob, ok, _) => ok(blob));
+export const unknown: ReadonlyDecoder<unknown> = defineReadonly(
+  (_): _ is unknown => true,
+  'Must be anything',
+);
 
 /**
  * Alias of `unknown`.
  */
-export const anything: Decoder<unknown> = unknown;
+export const anything: ReadonlyDecoder<unknown> = unknown;

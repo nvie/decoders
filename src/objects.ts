@@ -1,7 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { Annotation, Decoder, DecodeResult, DecoderType } from '~/core';
-import { annotate, annotateObject, define, merge, updateText } from '~/core';
+import type {
+  Annotation,
+  Decoder,
+  DecodeResult,
+  DecoderType,
+  ReadonlyDecoder,
+} from '~/core';
+import {
+  annotate,
+  annotateObject,
+  defineReadonly,
+  make,
+  merge,
+  updateText,
+} from '~/core';
 import { quote } from '~/lib/text';
 import { isPlainObject } from '~/lib/utils';
 
@@ -77,14 +90,78 @@ function annotateUnsafeKey(plainObj: Record<string, unknown>): Annotation {
  * Accepts any "plain old JavaScript object", but doesn't validate its keys or
  * values further.
  */
-export const pojo: Decoder<Record<string, unknown>> = define((blob, ok, err) =>
-  isPlainObject(blob) ? ok(blob) : err('Must be an object'),
+export const pojo: ReadonlyDecoder<Record<string, unknown>> = defineReadonly(
+  isPlainObject,
+  'Must be an object',
 );
 
 /**
  * Accepts objects with fields matching the given decoders. Extra fields that
  * exist on the input object are ignored and will not be returned.
  */
+/**
+ * Decodes the given fields of a plain object. Decoded values are written into
+ * `out`, or only validated when `out` is null. Returns the error annotation for
+ * the object, or null when all fields were accepted.
+ */
+function decodeFields(
+  decoders: Record<string, Decoder<unknown>>,
+  knownKeys: readonly string[],
+  plainObj: Record<string, unknown>,
+  out: Record<string, unknown> | null,
+): Annotation | null {
+  let errors: Map<string, Annotation> | null = null;
+  let missingKeys: string[] | null = null;
+
+  for (const key of knownKeys) {
+    const decoder = decoders[key];
+    const rawValue = plainObj[key];
+    const result: DecodeResult<unknown> = decoder.decode(rawValue);
+
+    if (result.ok) {
+      const value = result.value;
+      if (out !== null && value !== undefined) {
+        out[key] = value;
+      }
+    } else {
+      const ann = result.error;
+
+      // Keep track of the annotation, but don't return just yet. We
+      // want to collect more error information.
+      if (rawValue === undefined) {
+        // A rejected undefined value counts as a missing key. This treats
+        // explicit undefineds the same as implicit undefineds (aka missing
+        // keys).
+        (missingKeys ??= []).push(key);
+      } else {
+        (errors ??= new Map()).set(key, ann);
+      }
+    }
+  }
+
+  // Deal with errors now. There are two classes of errors we want to
+  // report.  First of all, we want to report any inline errors in this
+  // object.  Lastly, any fields that are missing should be annotated on
+  // the outer object itself.
+  if (errors || missingKeys) {
+    let objAnn = annotateObject(plainObj);
+
+    if (errors) {
+      objAnn = merge(objAnn, errors);
+    }
+
+    if (missingKeys) {
+      const errMsg = missingKeys.map(quote).join(', ');
+      const pluralized = missingKeys.length > 1 ? 'keys' : 'key';
+      objAnn = updateText(objAnn, `Missing ${pluralized}: ${errMsg}`);
+    }
+
+    return objAnn;
+  }
+
+  return null;
+}
+
 /**
  * The shared implementation of `object()`, for callers that have already
  * rejected a `__proto__` key in the definition.
@@ -98,56 +175,8 @@ function buildObject<Ds extends Record<string, Decoder<unknown>>>(
 
   return pojo.chain((plainObj, ok, err) => {
     const record: Record<string, unknown> = {};
-    let errors: Map<string, Annotation> | null = null;
-    let missingKeys: string[] | null = null;
-
-    for (const key of knownKeys) {
-      const decoder = decoders[key];
-      const rawValue = plainObj[key];
-      const result: DecodeResult<unknown> = decoder.decode(rawValue);
-
-      if (result.ok) {
-        const value = result.value;
-        if (value !== undefined) {
-          record[key] = value;
-        }
-      } else {
-        const ann = result.error;
-
-        // Keep track of the annotation, but don't return just yet. We
-        // want to collect more error information.
-        if (rawValue === undefined) {
-          // A rejected undefined value counts as a missing key. This treats
-          // explicit undefineds the same as implicit undefineds (aka missing
-          // keys).
-          (missingKeys ??= []).push(key);
-        } else {
-          (errors ??= new Map()).set(key, ann);
-        }
-      }
-    }
-
-    // Deal with errors now. There are two classes of errors we want to
-    // report.  First of all, we want to report any inline errors in this
-    // object.  Lastly, any fields that are missing should be annotated on
-    // the outer object itself.
-    if (errors || missingKeys) {
-      let objAnn = annotateObject(plainObj);
-
-      if (errors) {
-        objAnn = merge(objAnn, errors);
-      }
-
-      if (missingKeys) {
-        const errMsg = missingKeys.map(quote).join(', ');
-        const pluralized = missingKeys.length > 1 ? 'keys' : 'key';
-        objAnn = updateText(objAnn, `Missing ${pluralized}: ${errMsg}`);
-      }
-
-      return err(objAnn);
-    }
-
-    return ok(record as ObjectDecoderType<Ds>);
+    const ann = decodeFields(decoders, knownKeys, plainObj, record);
+    return ann ? err(ann) : ok(record as ObjectDecoderType<Ds>);
   });
 }
 
@@ -167,7 +196,12 @@ export function object<Ds extends Record<string, Decoder<unknown>>>(
  * Like `object()`, but will reject inputs that contain extra fields that are
  * not specified explicitly.
  */
-export function exact(decoders: Record<any, never>): Decoder<Record<string, never>>;
+export function exact(
+  decoders: Record<any, never>,
+): ReadonlyDecoder<Record<string, never>>;
+export function exact<Ds extends Record<string, ReadonlyDecoder<unknown>>>(
+  decoders: Ds,
+): ReadonlyDecoder<ObjectDecoderType<Ds>>;
 export function exact<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds>>;
@@ -178,10 +212,16 @@ export function exact<Ds extends Record<string, Decoder<unknown>>>(
   rejectUnsafeKey(decoders);
 
   // Compute these at decoder definition time
-  const allowedKeys = new Set(Object.keys(decoders));
+  const knownKeys = Object.keys(decoders);
+  const allowedKeys = new Set(knownKeys);
   const objDecoder = buildObject(decoders);
+  const ro = knownKeys.every((key) => decoders[key].isReadonly);
 
-  return pojo.chain<ObjectDecoderType<Ds>>((plainObj, _ok, err) => {
+  return make<ObjectDecoderType<Ds>>((blob, ok, err) => {
+    const base = pojo.decode(blob);
+    if (!base.ok) return base;
+
+    const plainObj = base.value;
     // Check the inputted object for any unexpected extra keys
     let extraKeys: string[] | null = null;
     for (const key of Object.keys(plainObj)) {
@@ -200,9 +240,16 @@ export function exact<Ds extends Record<string, Decoder<unknown>>>(
       return err(`Unexpected extra keys: ${extraKeys.map(quote).join(', ')}`);
     }
 
+    if (ro) {
+      // Readonly fields were all accepted as-is, so the input is a valid
+      // ObjectDecoderType<Ds>
+      const ann = decodeFields(decoders, knownKeys, plainObj, null);
+      return ann ? err(ann) : ok(plainObj as ObjectDecoderType<Ds>);
+    }
+
     // Defer to the "object" decoder for doing the real decoding work
     return objDecoder.decode(plainObj);
-  });
+  }, ro);
 }
 
 /**
@@ -213,7 +260,12 @@ export function exact<Ds extends Record<string, Decoder<unknown>>>(
  * reassigning the prototype of the returned object, so inputs containing one
  * are rejected.
  */
-export function inexact(decoders: Record<any, never>): Decoder<Record<string, unknown>>;
+export function inexact(
+  decoders: Record<any, never>,
+): ReadonlyDecoder<Record<string, unknown>>;
+export function inexact<Ds extends Record<string, ReadonlyDecoder<unknown>>>(
+  decoders: Ds,
+): ReadonlyDecoder<ObjectDecoderType<Ds> & Record<string, unknown>>;
 export function inexact<Ds extends Record<string, Decoder<unknown>>>(
   decoders: Ds,
 ): Decoder<ObjectDecoderType<Ds> & Record<string, unknown>>;
@@ -223,38 +275,51 @@ export function inexact<Ds extends Record<string, Decoder<unknown>>>(
 ): Decoder<ObjectDecoderType<Ds> & Record<string, unknown>> {
   rejectUnsafeKey(decoders);
 
-  const safekeys = new Set(Object.keys(decoders));
+  const knownKeys = Object.keys(decoders);
+  const safekeys = new Set(knownKeys);
   const safeDecoder = buildObject(decoders);
-  return pojo.chain<ObjectDecoderType<Ds> & Record<string, unknown>>(
-    (plainObj, ok, err) => {
-      const allkeys = new Set(Object.keys(plainObj));
+  const ro = knownKeys.every((key) => decoders[key].isReadonly);
+  return make<ObjectDecoderType<Ds> & Record<string, unknown>>((blob, ok, err) => {
+    const base = pojo.decode(blob);
+    if (!base.ok) return base;
 
-      // Bail out before validating anything else. Passing this key through
-      // would reassign the prototype of the result rather than adding a key
-      // to it, and there is no way to ask for it explicitly.
-      if (allkeys.has('__proto__')) {
-        return err(annotateUnsafeKey(plainObj));
-      }
+    const plainObj = base.value;
+    const allkeys = new Set(Object.keys(plainObj));
 
-      const result = safeDecoder.decode(plainObj);
-      if (!result.ok) return result;
-      const safepart = result.value;
+    // Bail out before validating anything else. Passing this key through
+    // would reassign the prototype of the result rather than adding a key
+    // to it, and there is no way to ask for it explicitly.
+    if (allkeys.has('__proto__')) {
+      return err(annotateUnsafeKey(plainObj));
+    }
 
-      // To account for hard-coded keys that aren't part of the input
-      for (const k of safekeys) allkeys.add(k);
+    if (ro) {
+      // Readonly fields were all accepted as-is, so the input is a valid
+      // ObjectDecoderType<Ds> & Record<string, unknown>
+      const ann = decodeFields(decoders, knownKeys, plainObj, null);
+      return ann
+        ? err(ann)
+        : ok(plainObj as ObjectDecoderType<Ds> & Record<string, unknown>);
+    }
 
-      const rv: Record<string, unknown> = {};
-      for (const k of allkeys) {
-        if (safekeys.has(k)) {
-          const value = safepart[k];
-          if (value !== undefined) {
-            rv[k] = value;
-          }
-        } else {
-          rv[k] = plainObj[k];
+    const result = safeDecoder.decode(plainObj);
+    if (!result.ok) return result;
+    const safepart = result.value;
+
+    // To account for hard-coded keys that aren't part of the input
+    for (const k of safekeys) allkeys.add(k);
+
+    const rv: Record<string, unknown> = {};
+    for (const k of allkeys) {
+      if (safekeys.has(k)) {
+        const value = safepart[k];
+        if (value !== undefined) {
+          rv[k] = value;
         }
+      } else {
+        rv[k] = plainObj[k];
       }
-      return ok(rv as ObjectDecoderType<Ds> & Record<string, unknown>);
-    },
-  );
+    }
+    return ok(rv as ObjectDecoderType<Ds> & Record<string, unknown>);
+  }, ro);
 }

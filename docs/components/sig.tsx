@@ -179,15 +179,22 @@ export function Sig({
   returnType,
   source,
   multiline,
+  removed,
 }: {
   name: string;
   params?: string;
   returnType: ReactNode;
   source?: string;
   multiline?: boolean;
+  /**
+   * Version in which this was removed from the library. Removed APIs stay
+   * documented, so that links to them keep redirecting and they remain
+   * searchable.
+   */
+  removed?: string;
 }) {
-  return (
-    <pre className="fn-sig font-mono overflow-x-auto" style={{ margin: 0, background: 'none', border: 'none', padding: 0 }}>
+  const content = (
+    <>
       {params !== undefined ? (
         name.includes('.') ? (
           <span className="font-sans" style={{ color: GRAY }}>
@@ -211,6 +218,20 @@ export function Sig({
       ) : null}
       {': '}
       {returnType}
+    </>
+  );
+  return (
+    <pre
+      className={`fn-sig font-mono overflow-x-auto${removed ? ' fn-sig-deprecated' : ''}`}
+      style={{ margin: 0, background: 'none', border: 'none', padding: 0 }}
+    >
+      {removed ? (
+        <span className="fn-sig-content">
+          {content} <span className="fn-sig-badge">removed in {removed}</span>
+        </span>
+      ) : (
+        content
+      )}
       {source ? (
         <>
           {' '}
@@ -236,6 +257,12 @@ interface Alias {
   name: string;
   info?: ReactNode;
   deprecated: boolean;
+  /**
+   * Version in which the alias was removed from the library. Removed aliases
+   * stay documented, so that links to them keep redirecting and they remain
+   * searchable.
+   */
+  removed?: string;
 }
 
 function renderDecoderReturnType(type: string): ReactNode {
@@ -255,6 +282,7 @@ export function DecoderSig({
   type,
   source,
   multiline,
+  removed,
 }: {
   name: string;
   aliases?: Alias[];
@@ -262,6 +290,7 @@ export function DecoderSig({
   type: string;
   source?: string;
   multiline?: boolean;
+  removed?: string;
 }) {
   return (
     <>
@@ -271,14 +300,17 @@ export function DecoderSig({
         multiline={multiline}
         returnType={renderDecoderReturnType(type)}
         source={source}
+        removed={removed}
       />
       {aliases?.map((alias) => (
         <pre
           key={alias.name}
-          className={`fn-sig font-mono${alias.deprecated ? ' fn-sig-deprecated' : ''}`}
+          className={`fn-sig font-mono${alias.deprecated || alias.removed ? ' fn-sig-deprecated' : ''}`}
           style={{ margin: 0, background: 'none', border: 'none', padding: 0 }}
         >
-          <span className={alias.deprecated ? 'fn-sig-content' : undefined}>
+          <span
+            className={alias.deprecated || alias.removed ? 'fn-sig-content' : undefined}
+          >
             <strong style={{ fontWeight: 700 }}>{alias.name}</strong>
             {params !== undefined ? (
               multiline ? (
@@ -294,7 +326,11 @@ export function DecoderSig({
             {': '}
             {renderDecoderReturnType(type)}{' '}
             <span className="fn-sig-badge">
-              {alias.deprecated ? 'deprecated' : 'alias'}
+              {alias.removed
+                ? `removed in ${alias.removed}`
+                : alias.deprecated
+                  ? 'deprecated'
+                  : 'alias'}
             </span>
           </span>
           {alias.info && <Info>{alias.info}</Info>}

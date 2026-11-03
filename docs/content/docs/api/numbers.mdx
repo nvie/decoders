@@ -5,7 +5,7 @@ description: Number decoders for validating and parsing numeric values.
 
 ## number
 
-<DecoderSig name="number" type="number" source="numbers.ts#L16-L23" />
+<DecoderSig name="number" type="number" source="numbers.ts#L29-L37" />
 
 Accepts only finite numbers (e.g. -3.14, 0, 1, 42, ...). Integers or floats, but not `NaN`
 or `Infinity`.
@@ -19,13 +19,14 @@ or `Infinity`.
 
 ## integer
 
-<DecoderSig name="integer" type="number" source="numbers.ts#L25-L32" />
+<DecoderSig name="integer" type="number" source="numbers.ts#L39-L55" />
 
-Accepts only integers (e.g. ..., -2, -1, 0, 1, 2, ...). Whole numbers, and finite.
+Accepts only integers (e.g. ..., -2, -1, 0, 1, 2, ...). Whole numbers, and safe (between
+-(2^53-1) and 2^53-1).
 
 <DecoderPlayground
   decoder="integer"
-  examples={['123', '-3.14', 'Infinity', 'NaN', "'not a integer'"]}
+  examples={['123', '-3.14', '2 ** 53', 'Infinity', 'NaN', "'not a integer'"]}
 />
 
 ---
@@ -46,7 +47,7 @@ Accepts only integers (e.g. ..., -2, -1, 0, 1, 2, ...). Whole numbers, and finit
     },
   ]}
   type="number"
-  source="numbers.ts#L34-L41"
+  source="numbers.ts#L57-L71"
 />
 
 <Since version="2.11" />
@@ -77,12 +78,13 @@ and finite.
     },
   ]}
   type="number"
-  source="numbers.ts#L43-L50"
+  source="numbers.ts#L73-L91"
 />
 
 <Since version="2.11" />
 
-Accepts only the natural numbers (e.g. 0, 1, 2, 3, ...). Whole numbers, >= 0, and finite.
+Accepts only the natural numbers (e.g. 0, 1, 2, 3, ...). Whole numbers, >= 0, and safe (up
+to 2^53-1).
 
 <DecoderPlayground
   decoder="natural"
@@ -93,12 +95,13 @@ Accepts only the natural numbers (e.g. 0, 1, 2, 3, ...). Whole numbers, >= 0, an
 
 ## anyNumber
 
-<DecoderSig name="anyNumber" type="number" source="numbers.ts#L5-L14" />
+<DecoderSig name="anyNumber" type="number" source="numbers.ts#L17-L27" />
 
 Accepts any valid `number` value.
 
-This also accepts special values like `NaN` and `Infinity`. Unless you want to
-deliberately accept those, you'll likely want to use the [`number`][] decoder instead.
+This also accepts special values like `NaN` and `Infinity`, and unsafe integers (beyond
+±(2^53-1)). Unless you want to deliberately accept those, you'll likely want to use the
+[`number`][] or [`integer`][] decoder instead.
 
 <DecoderPlayground
   decoder="anyNumber"
@@ -109,7 +112,7 @@ deliberately accept those, you'll likely want to use the [`number`][] decoder in
 
 ## bigint
 
-<DecoderSig name="bigint" type="bigint" source="numbers.ts#L101-L106" />
+<DecoderSig name="bigint" type="bigint" source="numbers.ts#L127-L130" />
 
 Accepts any valid `bigint` value.
 
@@ -122,49 +125,51 @@ Accepts any valid `bigint` value.
 
 ## Limiting number ranges
 
+Every number decoder can be called with range options, to put the bounds right next to the
+type. `min` and `max` are inclusive, `gt` and `lt` are exclusive.
+
+<DecoderPlayground
+  decoder={[
+    ['number({ min: 0 })', 'number({ min: 0 })'],
+    ['number({ max: 100 })', 'number({ max: 100 })'],
+    ['number({ gt: 0, lt: 100 })', 'number({ gt: 0, lt: 100 })'],
+    ['integer({ min: 1, max: 100 })', 'integer({ min: 1, max: 100 })'],
+  ]}
+  examples={['42', 'Math.PI', '0', '100', '-1', '123']}
+/>
+
+### min, max, between
+
 <DecoderSig
   name="min"
   params="min: number, decoder?: Decoder<number>"
   type="number"
-  source="numbers.ts#L57-L67"
+  source="numbers.ts#L99-L105"
 />
 <DecoderSig
   name="max"
   params="max: number, decoder?: Decoder<number>"
   type="number"
-  source="numbers.ts#L69-L79"
+  source="numbers.ts#L107-L113"
 />
 <DecoderSig
   name="between"
   params="min: number, max: number, decoder?: Decoder<number>"
   multiline
   type="number"
-  source="numbers.ts#L81-L99"
+  source="numbers.ts#L115-L125"
 />
 
 <Since version="2.9" />
 
-Rejects values outside the given bounds. Bounds are inclusive. Defaults to the `number`
-decoder if none is provided.
+Deprecated in 3.0. Use the range options instead:
 
-<DecoderPlayground
-  decoder={[
-    ['min', 'min(0)'],
-    ['max', 'max(100)'],
-    ['between', 'between(0, 100)'],
-  ]}
-  examples={['42', 'Math.PI', '100', '-1', '123']}
-/>
-
-You can pass `integer` as the number decoder to use to further restrict what kind of
-numbers are accepted:
-
-<DecoderPlayground
-  decoder={[
-    ['between(1, 100)', 'between(1, 100)'],
-    ['between(1, 100, integer)', 'between(1, 100, integer)'],
-  ]}
-  examples={['5', '3.14', 'Math.PI * 100']}
-/>
+| Deprecated                | Use instead                    |
+| :------------------------ | :----------------------------- |
+| `min(0)`                  | `number({ min: 0 })`           |
+| `max(100, integer)`       | `integer({ max: 100 })`        |
+| `between(1, 10)`          | `number({ min: 1, max: 10 })`  |
+| `between(1, 10, natural)` | `natural({ min: 1, max: 10 })` |
 
 [`number`]: /number
+[`integer`]: /integer
