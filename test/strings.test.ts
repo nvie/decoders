@@ -302,6 +302,15 @@ describe('url', () => {
     );
   });
 
+  test('httpsUrl accepts HTTPS URLs', () => {
+    const decoder = httpsUrl;
+
+    expect(decoder.verify('https://nvie.com').toString()).toBe('https://nvie.com/');
+    expect(decoder.verify(new URL('https://nvie.com/foo')).toString()).toBe(
+      'https://nvie.com/foo',
+    );
+  });
+
   test('invalid', () => {
     const decoder = httpsUrl;
 
@@ -699,6 +708,7 @@ describe('uuidv1', () => {
 
   test('rejects', () => {
     expect(decoder.decode('123e4567-e89b-12d3-a456-42661417400x').ok).toBe(false);
+    expect(decoder.decode('123E4567-E89B-42d3-A456-426614174000').ok).toBe(false);
     expect(decoder.decode('123e4567e89b12d3a456426614174000').ok).toBe(false);
   });
 
